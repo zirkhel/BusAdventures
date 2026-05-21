@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bus Adventures — Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & variables ──────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:       #0e0f12;
+  --surface:  #16181e;
+  --surface2: #1e2028;
+  --surface3: #272a34;
+  --line:     #2e3140;
+  --line2:    #3a3e50;
+  --text:     #d8dae8;
+  --muted:    #6b7090;
+  --accent:   #5b7cf6;
+  --accent2:  #7c9aff;
+  --green:    #4caf7d;
+  --red:      #e05555;
+  --amber:    #e0a840;
+  --font:     'IBM Plex Sans', sans-serif;
+  --mono:     'IBM Plex Mono', monospace;
+  --radius:   8px;
+  --nav-w:    220px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5}
+
+/* ── Layout ─────────────────────────────────────────────────────── */
+.layout{display:grid;grid-template-columns:var(--nav-w) 1fr;grid-template-rows:44px 1fr;height:100vh;overflow:hidden}
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--surface);border-bottom:1px solid var(--line);z-index:10}
+.nav{grid-row:2;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.main{grid-row:2;overflow-y:auto;padding:24px}
+
+/* ── Topbar ─────────────────────────────────────────────────────── */
+.logo{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent2);letter-spacing:.06em}
+.logo span{color:var(--muted)}
+.topbar-title{font-size:13px;color:var(--muted);flex:1}
+.topbar-title strong{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--line2);background:var(--surface2);color:var(--text);font:inherit;font-size:13px;cursor:pointer;transition:.15s}
+.btn:hover{background:var(--surface3);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn.danger{border-color:var(--red);color:var(--red)}
+.btn.danger:hover{background:rgba(224,85,85,.12)}
+.btn.sm{padding:4px 10px;font-size:12px}
+.btn.icon-btn{padding:6px;width:28px;height:28px;justify-content:center}
+
+/* ── Nav ────────────────────────────────────────────────────────── */
+.nav-section{padding:10px 0}
+.nav-section+.nav-section{border-top:1px solid var(--line)}
+.nav-label{padding:4px 14px;font-size:11px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.nav-item{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;cursor:pointer;border-radius:0;transition:.1s;font-size:13px;gap:8px}
+.nav-item:hover{background:var(--surface2)}
+.nav-item.active{background:var(--surface3);color:var(--accent2)}
+.nav-item .nav-icon{font-size:15px;flex-shrink:0}
+.nav-item .nav-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-badge{font-family:var(--mono);font-size:10px;color:var(--muted);flex-shrink:0}
+.nav-add{display:flex;align-items:center;gap:6px;padding:6px 14px;color:var(--accent);font-size:12px;cursor:pointer;opacity:.7}
+.nav-add:hover{opacity:1}
+
+/* ── Panel / form ───────────────────────────────────────────────── */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface2)}
+.panel-head h2{font-size:14px;font-weight:600;letter-spacing:.02em}
+.panel-head .actions{display:flex;gap:8px}
+.panel-body{padding:16px}
+.panel-body.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel-body.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── Form fields ────────────────────────────────────────────────── */
+.field{display:flex;flex-direction:column;gap:4px}
+.field.full{grid-column:1/-1}
+label{font-size:12px;color:var(--muted);font-family:var(--mono)}
+input,textarea,select{background:var(--surface2);border:1px solid var(--line2);border-radius:6px;color:var(--text);font:inherit;font-size:13px;padding:8px 10px;width:100%;transition:.15s;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:80px;font-family:var(--mono);font-size:12px;line-height:1.6}
+select option{background:var(--surface2)}
+.checkbox-row{display:flex;align-items:center;gap:8px;font-size:13px}
+.checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);flex-shrink:0}
+
+/* ── Tags ───────────────────────────────────────────────────────── */
+.tag-input-wrap{display:flex;flex-wrap:wrap;gap:6px;padding:6px 8px;background:var(--surface2);border:1px solid var(--line2);border-radius:6px;cursor:text;min-height:38px;align-items:center}
+.tag-input-wrap:focus-within{border-color:var(--accent)}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface3);border:1px solid var(--line2);border-radius:4px;padding:2px 8px;font-size:12px;font-family:var(--mono)}
+.tag-chip button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0}
+.tag-chip button:hover{color:var(--red)}
+.tag-bare-input{background:none;border:none;outline:none;font:inherit;font-size:12px;font-family:var(--mono);color:var(--text);min-width:80px;padding:0}
+
+/* ── List items (exits, actions, etc.) ──────────────────────────── */
+.list-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surface2);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:8px}
+.list-item .handle{color:var(--muted);font-size:16px;padding-top:2px;flex-shrink:0;cursor:grab}
+.list-item .fields{flex:1;display:grid;gap:8px}
+.list-item .fields.g2{grid-template-columns:1fr 1fr}
+.list-item .fields.g3{grid-template-columns:1fr 1fr 1fr}
+.list-item .remove-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:2px;flex-shrink:0}
+.list-item .remove-btn:hover{color:var(--red)}
+.add-row{display:flex;align-items:center;gap:8px;padding:8px 0 4px;color:var(--accent);font-size:12px;cursor:pointer;opacity:.7;width:fit-content}
+.add-row:hover{opacity:1}
+
+/* ── Condition / effect builder ─────────────────────────────────── */
+.cond-block,.effect-block{background:var(--surface2);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px}
+.cond-block h4,.effect-block h4{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.cond-row,.effect-row{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:6px}
+.cond-row select,.effect-row select{padding:5px 8px;font-size:12px}
+.cond-row input,.effect-row input{padding:5px 8px;font-size:12px}
+
+/* ── Hazard / state sections ────────────────────────────────────── */
+.state-tab-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.state-tab{padding:5px 12px;border-radius:6px;border:1px solid var(--line2);background:var(--surface2);font-size:12px;font-family:var(--mono);cursor:pointer;color:var(--muted)}
+.state-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── Map grid ───────────────────────────────────────────────────── */
+.map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:480px}
+.map-cell{aspect-ratio:1;border:1px solid var(--line);border-radius:6px;background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;text-align:center;padding:4px;cursor:pointer;transition:.15s;color:var(--muted);gap:2px}
+.map-cell.occupied{background:var(--surface3);border-color:var(--line2);color:var(--text)}
+.map-cell.occupied:hover{border-color:var(--accent)}
+.map-cell.active-cell{border-color:var(--accent);box-shadow:0 0 0 2px rgba(91,124,246,.3)}
+.map-cell .cell-id{font-family:var(--mono);font-size:9px;color:var(--muted)}
+
+/* ── Empty state ────────────────────────────────────────────────── */
+.empty-state{text-align:center;padding:40px;color:var(--muted)}
+.empty-state h3{font-size:16px;color:var(--text);margin-bottom:8px}
+
+/* ── Status bar ─────────────────────────────────────────────────── */
+.status-bar{position:fixed;bottom:0;left:var(--nav-w);right:0;padding:6px 16px;background:var(--surface);border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:16px;z-index:10}
+.status-ok{color:var(--green)}
+.status-err{color:var(--red)}
+.status-warn{color:var(--amber)}
+
+/* ── Inline expand ──────────────────────────────────────────────── */
+.expandable summary{cursor:pointer;user-select:none;font-size:12px;color:var(--accent);margin-bottom:6px;list-style:none}
+.expandable summary::before{content:"▶ ";font-size:10px}
+details[open] summary::before{content:"▼ "}
+
+/* ── Section divider ────────────────────────────────────────────── */
+.section-divider{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:4px 0;margin:16px 0 8px;border-top:1px solid var(--line)}
+
+/* ── Toast ──────────────────────────────────────────────────────── */
+.toast{position:fixed;top:54px;right:16px;background:var(--surface3);border:1px solid var(--line2);border-radius:var(--radius);padding:10px 16px;font-size:13px;z-index:100;animation:fadeup .2s ease;pointer-events:none}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Topbar ── -->
+<header class="topbar">
+  <div class="logo">BUS<span>/</span>EDITOR</div>
+  <div class="topbar-title" id="topTitle">No game loaded</div>
+  <button class="btn sm" id="btnLoad">Load game.js</button>
+  <button class="btn sm primary" id="btnExport">Export JS files</button>
+</header>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <div class="nav-section">
+    <div class="nav-label">Game</div>
+    <div class="nav-item" data-view="game"><span class="nav-icon">⚙</span><span class="nav-text">Settings</span></div>
+    <div class="nav-item" data-view="map"><span class="nav-icon">⬜</span><span class="nav-text">Room Map</span></div>
+  </div>
+  <div class="nav-section" style="flex:1;overflow-y:auto">
+    <div class="nav-label">Rooms</div>
+    <div id="navRooms"></div>
+    <div class="nav-add" id="btnAddRoom">＋ Add Room</div>
+  </div>
+  <div class="nav-section" style="max-height:35%;overflow-y:auto">
+    <div class="nav-label">Items</div>
+    <div id="navItems"></div>
+    <div class="nav-add" id="btnAddItem">＋ Add Item</div>
+  </div>
+</nav>
+
+<!-- ── Main ── -->
+<main class="main" id="mainArea">
+  <div class="empty-state">
+    <h3>Bus Adventures Editor</h3>
+    <p>Load your game files or start with a template.</p>
+    <br>
+    <button class="btn primary" id="btnLoadTemplate">Load Ward B template</button>
+  </div>
+</main>
+
+</div>
+
+<div class="status-bar">
+  <span id="statusMsg" class="status-ok">Ready</span>
+  <span id="statusRooms">0 rooms</span>
+  <span id="statusItems">0 items</span>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════
+
+const STATE = {
+  game:  { id:"my-game", title:"My Game", startRoom:"", intro:{title:"",subtitle:"",text:"",startLabel:"Begin"}, win:{title:"",text:"",playAgainLabel:"Play again"} },
+  rooms: {},
+  items: {},
+  currentView: null,
+  currentRoom: null,
+  currentItem: null,
+};
+
+// ══════════════════════════════════════════════════════════════════
+// WARD B BOOTSTRAP DATA
+// ══════════════════════════════════════════════════════════════════
+
+function loadWardBTemplate() {
+  STATE.game = {
+    id: "ward-b", title: "Death Trap: Ward B", startRoom: "reception",
+    intro: { title:"Death Trap", subtitle:"Ward B", text:"The asylum was sealed three years ago.\n\nYou wake in the reception hall. The doors behind you are chained shut.", startLabel:"Enter Ward B" },
+    win:   { title:"Escaped", text:"Cold air hits your face. You are out.", playAgainLabel:"Play again" },
+  };
+  STATE.rooms = {
+    reception: { title:"Dead Reception", gridPosition:{col:1,row:2}, media:"reception", fx:"mist",
+      baseDescription:"The reception desk sits beneath a dead security monitor. {keycard}\n\nA corridor leads north. The front doors are chained shut.",
+      itemText:{ keycard:{ present:"A cracked keycard lies in the open drawer.", taken:"The drawer is empty." } },
+      exits:{ north:"corridor" }, states:{}, hazards:[], actions:[], enterRules:[],
+      objects:{ desk:{id:"desk",aliases:["desk"],examineText:"The drawers are swollen from damp."}, monitor:{id:"monitor",aliases:["monitor","screen"],examineText:"The screen reflects you a fraction too late.",useText:"Nothing responds."} },
+      flavourTargets:{ cards:{id:"cards",aliases:["cards","appointment cards"],examineText:"Too damp to read."} } },
+
+    corridor: { title:"Long Corridor", gridPosition:{col:1,row:1}, media:"corridor", fx:"flicker",
+      baseDescription:"A long corridor stretches under weak yellow light. {mask}\n\nRecords north. Pharmacy west. Surgery east. Stairwell down.",
+      itemText:{ mask:{ present:"A filter mask hangs from a hook on the wall.", taken:"An empty hook remains." } },
+      exits:{ south:"reception", north:"records", west:"pharmacy", east:"surgery", down:"stairwell" },
+      states:{}, hazards:[], actions:[], enterRules:[],
+      objects:{ numbers:{id:"numbers",aliases:["numbers","scratches"],examineText:"The numbers repeat: 3, 3, 3."} },
+      flavourTargets:{ notice:{id:"notice",aliases:["notice","sign"],examineText:"AIRBORNE RISK. MASKS REQUIRED IN SURGICAL WING.",readText:"AIRBORNE RISK. MASKS REQUIRED IN SURGICAL WING."} } },
+
+    records: { title:"Records Room", gridPosition:{col:1,row:0}, media:"records", fx:"mist",
+      baseDescription:"Dusty shelves of patient records. A desk lamp still works.\n\nCorridor is south.",
+      itemText:{}, exits:{ south:"corridor" }, states:{}, hazards:[], actions:[], enterRules:[],
+      objects:{}, flavourTargets:{ shelves:{id:"shelves",aliases:["shelves","folders"],examineText:"Too wet to separate."}, lamp:{id:"lamp",aliases:["lamp"],examineText:"Warm. Been on a long time."} } },
+
+    pharmacy: { title:"Pharmacy", gridPosition:{col:0,row:1}, media:"pharmacy", fx:null,
+      baseDescription:"Glass shelves. Most bottles burst from age. {sedative}\n\nCorridor is east.",
+      itemText:{ sedative:{ present:"A sedative ampoule in a yellow tray.", taken:"The yellow tray is empty." } },
+      exits:{ east:"corridor" }, states:{}, hazards:[], actions:[], enterRules:[],
+      objects:{ tray:{id:"tray",aliases:["tray"],examineText:"A pharmaceutical tray."} }, flavourTargets:{} },
+
+    surgery: { title:"Surgery Ward", gridPosition:{col:2,row:1}, media:"surgery", fx:"flicker",
+      baseDescription:"",
+      itemText:{},
+      states:{
+        default:{ description:"The operating theatre waits. Chemical fumes. A figure moves beneath a sheet.\n\nCorridor west. Sealed door east.", fx:"flicker" },
+        sedated:{ description:"The theatre is still. The shape no longer moves. A green light blinks.\n\nCorridor west. Observation east.", fx:null }
+      },
+      hazards:[{ type:"onEnter", safeIf:{ wearingTag:"respirator" }, deathText:"You step into the chemical air without protection. Your lungs close." }],
+      exits:{ west:"corridor", east:{ to:"observation", condition:{ flag:"patientCalmed" }, lockedText:"The door is sealed. Patient alarm still active." } },
+      actions:[{ id:"use_sedative", verbs:["use","inject"], targets:["iv","patient","sedative"], requires:{ carriedTag:"medical" }, failText:"You have nothing suitable to administer.", successText:"You push the sedative into the IV line. The breathing slows and stops.", effects:{ setGlobalFlag:"patientCalmed", setRoomState:{ room:"surgery", state:"sedated" }, removeItem:"sedative" } }],
+      enterRules:[],
+      objects:{ table:{id:"table",aliases:["table","restraint table"],examineText:"Restraints torn from the inside."}, iv:{id:"iv",aliases:["iv","iv line","drip"],examineText:"An old IV stand.",useText:"The IV leads into the wall."} },
+      flavourTargets:{ sheet:{id:"sheet",aliases:["sheet","figure","patient"],examineText:"Something moves beneath the sheet.",touchText:"You do not touch the sheet."} } },
+
+    observation: { title:"Observation Corridor", gridPosition:{col:3,row:1}, media:"observation", fx:null,
+      baseDescription:"A long corridor. Glass panels look into dark rooms. Handprints on the inside of the glass.\n\nSurgery west. Courtyard south.",
+      itemText:{}, exits:{ west:"surgery", south:"courtyard" }, states:{}, hazards:[], actions:[], enterRules:[],
+      objects:{}, flavourTargets:{ handprints:{id:"handprints",aliases:["handprints","prints"],examineText:"Five fingers. Pressed from the inside."}, glass:{id:"glass",aliases:["glass","panels"],examineText:"Thick glass. The handprints are on the inside."} } },
+
+    courtyard: { title:"Sealed Courtyard", gridPosition:{col:3,row:2}, media:"courtyard", fx:"mist",
+      baseDescription:"Dead grass. Sky too dark for the hour.\n\nObservation north. Escape gate south.",
+      itemText:{}, exits:{ north:"observation", south:"escape_gate" }, states:{}, hazards:[], actions:[], enterRules:[],
+      objects:{}, flavourTargets:{ sky:{id:"sky",aliases:["sky"],examineText:"Wrong for the hour."}, grass:{id:"grass",aliases:["grass"],examineText:"Grows in rectangular patches."} } },
+
+    escape_gate: { title:"Escape Gate", gridPosition:{col:3,row:3}, media:"escape_gate", fx:null,
+      baseDescription:"",
+      itemText:{},
+      states:{
+        default:{ description:"A heavy iron gate. Thick chain and padlock. Through the bars: the road.\n\nCourtyard north.", fx:null },
+        forced_open:{ description:"The chain lies broken. The gate stands open.\n\nCourtyard north. Squeeze through the gap.", fx:null }
+      },
+      exits:{ north:"courtyard", "squeeze through":{ to:"outside", special:true, condition:{ flag:"gateForcedOpen" } }, "go through gap":{ to:"outside", special:true, condition:{ flag:"gateForcedOpen" } } },
+      actions:[{ id:"force_chain", verbs:["use","force","pry","break","attack"], targets:["chain","gate","padlock"], requires:{ heldTag:"pry_tool" }, failText:"The chain is too strong. You need something to force it.", successText:"You wedge the crowbar into the chain. The rusted links snap. The gate swings open.", effects:{ setGlobalFlag:"gateForcedOpen", setRoomState:{ room:"escape_gate", state:"forced_open" } } }],
+      enterRules:[],
+      objects:{ chain:{id:"chain",aliases:["chain","padlock","lock"],examineText:"Heavy chain and padlock. Rusted but solid."}, gate:{id:"gate",aliases:["gate","bars","iron gate"],examineText:"Heavy iron bars. Just wide enough to squeeze through if the chain were gone.",useText:"Does not move with the chain in place."} },
+      flavourTargets:{ road:{id:"road",aliases:["road","outside"],examineText:"Through the bars — a road. Empty. Cold. Free."} } },
+
+    outside: { title:"Outside", gridPosition:{col:3,row:3}, media:"outside", fx:null,
+      baseDescription:"Cold air. You are out.", itemText:{}, exits:{}, states:{}, hazards:[], actions:[], enterRules:{}, win:true,
+      objects:{}, flavourTargets:{} },
+
+    stairwell: { title:"Red Stairwell", gridPosition:{col:2,row:2}, media:"stairwell", fx:"mist",
+      baseDescription:"Tight red turns. Wet footprints climb beside yours.\n\nCorridor up. Basement below.",
+      itemText:{}, exits:{ up:"corridor", down:"basement" },
+      states:{}, actions:[], enterRules:[],
+      hazards:[{ type:"visitCount", safeUnder:2, deathText:"On your third visit, something grabs your ankle.", warningStages:[{ at:2, text:"The footprints are very fresh." }] }],
+      objects:{ footprints:{id:"footprints",aliases:["footprints","prints"],examineText:"Climbed beside yours. Did not descend."} },
+      flavourTargets:{ numbers:{id:"numbers",aliases:["numbers"],examineText:"The number 3 scratched into every landing."} } },
+
+    basement: { title:"Flooded Basement", gridPosition:{col:2,row:3}, media:"basement", fx:"mist",
+      baseDescription:"Black water covers the floor. Emergency lighting red. {crowbar}\n\nStairwell up.",
+      itemText:{ crowbar:{ present:"A heavy crowbar on a rusted wall bracket.", taken:"The bracket is empty." } },
+      exits:{ up:"stairwell" }, states:{}, actions:[], enterRules:[],
+      hazards:[{ type:"commandPressure", counter:"basementPressure", threshold:6, warningStages:[{ at:2, text:"You hear water moving deeper below." },{ at:4, text:"The red light flickers violently." },{ at:5, text:"Something splashes nearby." }], deathText:"Something in the flooded dark finally reaches you." }],
+      objects:{ bracket:{id:"bracket",aliases:["bracket","wall bracket"],examineText:"A rusted steel bracket. Something heavy was here."}, water:{id:"water",aliases:["water","flood","floor"],examineText:"Black and cold. You cannot see the bottom.",touchText:"Ice cold."} },
+      flavourTargets:{ shadows:{id:"shadows",aliases:["shadows","darkness"],examineText:"The red light does not reach the far end."} } },
+  };
+
+  STATE.items = {
+    keycard: { name:"Cracked Keycard", icon:"keycard", aliases:["keycard","card","key card"], description:"A cracked plastic keycard.", tags:["key","plastic"], canCarry:true, canHold:true, canWear:false, pickupText:"You pocket the keycard.", dropText:"You set the keycard down.", defaultActions:{ look:"A cracked keycard. WARD B printed on one side.", hold:"You hold it ready.", use:"It needs a reader.", read:"WARD B — STAFF ACCESS." } },
+    mask:    { name:"Filter Mask",      icon:"mask",    aliases:["mask","filter mask","respirator"], description:"A rubber filter mask.", tags:["wearable","respirator","protection"], canCarry:true, canHold:true, canWear:true, pickupText:"You take the mask.", dropText:"You set the mask down.", wornText:"You pull the mask over your face.", defaultActions:{ look:"A rubber filter mask. Straps brittle but it will hold.", wear:"You pull it on.", use:"Press it to your face properly.", smell:"Rubber and dust." } },
+    sedative:{ name:"Sedative Ampoule", icon:"sedative",aliases:["sedative","ampoule","vial"],       description:"FOR AGITATION — 10ml.", tags:["medical","consumable"], canCarry:true, canHold:true, canWear:false, pickupText:"You take the ampoule.", dropText:"You set it down.", defaultActions:{ look:"A sealed sedative ampoule. FOR AGITATION in red.", use:"Using it here would be wasteful.", read:"FOR AGITATION — 10ml.", inject:"Nothing here needs sedating." } },
+    crowbar:  { name:"Crowbar",         icon:"crowbar", aliases:["crowbar","pry bar","iron bar","bar"], description:"Heavy rusted crowbar from the basement.", tags:["pry_tool","weapon_like","metal","heavy"], canCarry:true, canHold:true, canWear:false, pickupText:"You wrench the crowbar free.", dropText:"Heavy clank as it hits the floor.", heldText:"You grip it tightly.", defaultActions:{ look:"Heavy rusted crowbar. Cold to the touch.", hold:"Good weight.", use:"Nothing here to pry.", swing:"Swish through empty air.", force:"Nothing to force here.", attack:"You strike at nothing." } },
+  };
+
+  refreshAll();
+  toast("Ward B loaded");
+}
+
+// ══════════════════════════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════════════════════════
+
+function el(id){ return document.getElementById(id); }
+function make(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html)e.innerHTML=html;return e;}
+
+function toast(msg, type="ok"){
+  const t=make("div","toast");
+  t.style.borderColor=type==="err"?"var(--red)":type==="warn"?"var(--amber)":"var(--green)";
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2200);
+}
+
+function setStatus(msg, type="ok"){
+  const s=el("statusMsg");
+  s.textContent=msg;
+  s.className="status-"+type;
+}
+
+function refreshStatus(){
+  el("statusRooms").textContent=Object.keys(STATE.rooms).length+" rooms";
+  el("statusItems").textContent=Object.keys(STATE.items).length+" items";
+}
+
+// ── Tag input widget ──────────────────────────────────────────────
+function makeTagInput(tags, onChange){
+  const wrap=make("div","tag-input-wrap");
+  const inp=make("input","tag-bare-input");
+  inp.placeholder="add tag…";
+
+  function render(){
+    wrap.innerHTML="";
+    tags.forEach((t,i)=>{
+      const chip=make("div","tag-chip");
+      chip.innerHTML=`${t}<button data-i="${i}">×</button>`;
+      chip.querySelector("button").onclick=()=>{ tags.splice(i,1); render(); onChange(tags); };
+      wrap.appendChild(chip);
+    });
+    wrap.appendChild(inp);
+  }
+
+  inp.onkeydown=(e)=>{
+    if((e.key==="Enter"||e.key===","||e.key===" ")&&inp.value.trim()){
+      e.preventDefault();
+      const v=inp.value.trim().replace(/,$/,"");
+      if(v&&!tags.includes(v)){ tags.push(v); onChange(tags); }
+      inp.value="";
+      render();
+    }
+    if(e.key==="Backspace"&&!inp.value&&tags.length){
+      tags.pop(); render(); onChange(tags);
+    }
+  };
+
+  render();
+  return wrap;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════════════════
+
+function refreshNav(){
+  const navR=el("navRooms"); navR.innerHTML="";
+  Object.entries(STATE.rooms).forEach(([id,r])=>{
+    const d=make("div","nav-item");
+    d.dataset.roomId=id;
+    d.innerHTML=`<span class="nav-icon">🚪</span><span class="nav-text">${r.title||id}</span><span class="nav-badge">${id}</span>`;
+    d.onclick=()=>showRoom(id);
+    navR.appendChild(d);
+  });
+
+  const navI=el("navItems"); navI.innerHTML="";
+  Object.entries(STATE.items).forEach(([id,it])=>{
+    const d=make("div","nav-item");
+    d.dataset.itemId=id;
+    d.innerHTML=`<span class="nav-icon">🎒</span><span class="nav-text">${it.name||id}</span>`;
+    d.onclick=()=>showItem(id);
+    navI.appendChild(d);
+  });
+
+  refreshStatus();
+  el("topTitle").innerHTML=STATE.game.title ? `<strong>${STATE.game.title}</strong>` : "No game loaded";
+}
+
+function setActiveNav(selector){
+  document.querySelectorAll(".nav-item.active").forEach(e=>e.classList.remove("active"));
+  const el2=document.querySelector(selector);
+  if(el2) el2.classList.add("active");
+}
+
+// ══════════════════════════════════════════════════════════════════
+// VIEWS
+// ══════════════════════════════════════════════════════════════════
+
+function refreshAll(){ refreshNav(); }
+
+// ── Game settings ─────────────────────────────────────────────────
+function showGame(){
+  setActiveNav('[data-view="game"]');
+  const g=STATE.game;
+  el("mainArea").innerHTML=`
+  <div class="panel">
+    <div class="panel-head"><h2>Game Settings</h2></div>
+    <div class="panel-body grid2">
+      <div class="field"><label>Game ID</label><input id="gId" value="${g.id||""}"></div>
+      <div class="field"><label>Title</label><input id="gTitle" value="${g.title||""}"></div>
+      <div class="field"><label>Start Room</label><input id="gStart" value="${g.startRoom||""}"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h2>Intro Screen</h2></div>
+    <div class="panel-body grid2">
+      <div class="field"><label>Title</label><input id="iTitle" value="${g.intro?.title||""}"></div>
+      <div class="field"><label>Subtitle</label><input id="iSub" value="${g.intro?.subtitle||""}"></div>
+      <div class="field full"><label>Text</label><textarea id="iText" rows="4">${g.intro?.text||""}</textarea></div>
+      <div class="field"><label>Start button label</label><input id="iBtn" value="${g.intro?.startLabel||"Begin"}"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h2>Win Screen</h2></div>
+    <div class="panel-body grid2">
+      <div class="field"><label>Title</label><input id="wTitle" value="${g.win?.title||""}"></div>
+      <div class="field"><label>Play again label</label><input id="wBtn" value="${g.win?.playAgainLabel||"Play again"}"></div>
+      <div class="field full"><label>Text</label><textarea id="wText" rows="3">${g.win?.text||""}</textarea></div>
+    </div>
+  </div>
+  <button class="btn primary" id="saveGame">Save Settings</button>`;
+
+  el("saveGame").onclick=()=>{
+    STATE.game.id         = el("gId").value.trim();
+    STATE.game.title      = el("gTitle").value.trim();
+    STATE.game.startRoom  = el("gStart").value.trim();
+    STATE.game.intro      = { title:el("iTitle").value, subtitle:el("iSub").value, text:el("iText").value, startLabel:el("iBtn").value };
+    STATE.game.win        = { title:el("wTitle").value, text:el("wText").value, playAgainLabel:el("wBtn").value };
+    refreshNav(); toast("Game settings saved");
+  };
+}
+
+// ── Map ───────────────────────────────────────────────────────────
+function showMap(){
+  setActiveNav('[data-view="map"]');
+  const grid=make("div","map-grid");
+  for(let row=0;row<4;row++){
+    for(let col=0;col<4;col++){
+      const roomId=Object.keys(STATE.rooms).find(id=>{
+        const p=STATE.rooms[id].gridPosition;
+        return p&&p.col===col&&p.row===row;
+      });
+      const cell=make("div","map-cell");
+      if(roomId){
+        cell.classList.add("occupied");
+        if(roomId===STATE.currentRoom) cell.classList.add("active-cell");
+        const r=STATE.rooms[roomId];
+        cell.innerHTML=`<span>${r.title}</span><span class="cell-id">${roomId}</span>`;
+        cell.onclick=()=>showRoom(roomId);
+      } else {
+        cell.textContent=`${col},${row}`;
+        cell.style.opacity=".3";
+      }
+      grid.appendChild(cell);
+    }
+  }
+  el("mainArea").innerHTML="<h2 style='margin-bottom:16px;font-size:16px'>Room Map</h2>";
+  el("mainArea").appendChild(grid);
+}
+
+// ── Room editor ───────────────────────────────────────────────────
+function showRoom(id){
+  STATE.currentRoom=id;
+  STATE.currentView="room";
+  setActiveNav(`[data-room-id="${id}"]`);
+
+  const r=STATE.rooms[id];
+  if(!r) return;
+
+  const stateKeys=Object.keys(r.states||{});
+  const hasStates=stateKeys.length>0;
+
+  el("mainArea").innerHTML=`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <h2 style="font-size:16px">${r.title||id} <span style="font-size:12px;color:var(--muted);font-family:var(--mono)">${id}</span></h2>
+    <button class="btn danger sm" id="deleteRoom">Delete Room</button>
+  </div>
+
+  <!-- Basic fields -->
+  <div class="panel">
+    <div class="panel-head"><h2>Room Details</h2></div>
+    <div class="panel-body grid2">
+      <div class="field"><label>Room ID</label><input id="rId" value="${id}"></div>
+      <div class="field"><label>Title</label><input id="rTitle" value="${r.title||""}"></div>
+      <div class="field"><label>Media key</label><input id="rMedia" value="${r.media||""}"></div>
+      <div class="field"><label>FX</label>
+        <select id="rFx">
+          <option value="">none</option>
+          <option value="mist" ${r.fx==="mist"?"selected":""}>mist</option>
+          <option value="flicker" ${r.fx==="flicker"?"selected":""}>flicker</option>
+        </select>
+      </div>
+      <div class="field"><label>Grid col</label><input id="rCol" type="number" value="${r.gridPosition?.col??0}"></div>
+      <div class="field"><label>Grid row</label><input id="rRow" type="number" value="${r.gridPosition?.row??0}"></div>
+      <div class="field full checkbox-row"><input type="checkbox" id="rWin" ${r.win?"checked":""}><label for="rWin">Win room (entering = victory)</label></div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="panel">
+    <div class="panel-head"><h2>Description</h2></div>
+    <div class="panel-body">
+      ${hasStates ? `
+      <div class="section-divider">Room States</div>
+      <div class="state-tab-row" id="stateTabRow">
+        ${stateKeys.map((s,i)=>`<div class="state-tab ${i===0?"active":""}" data-state="${s}">${s}</div>`).join("")}
+        <div class="state-tab" style="opacity:.6" id="addStateTab">＋ state</div>
+      </div>
+      ${stateKeys.map((s,i)=>`
+      <div class="state-panel" data-state-panel="${s}" style="${i>0?"display:none":""}">
+        <div class="field" style="margin-bottom:8px">
+          <label>State name</label>
+          <input class="state-name-inp" data-state="${s}" value="${s}">
+        </div>
+        <div class="field" style="margin-bottom:8px">
+          <label>Description</label>
+          <textarea class="state-desc-ta" data-state="${s}" rows="4">${r.states[s].description||""}</textarea>
+        </div>
+        <div class="field">
+          <label>FX override</label>
+          <select class="state-fx-sel" data-state="${s}">
+            <option value="">none</option>
+            <option value="mist" ${r.states[s].fx==="mist"?"selected":""}>mist</option>
+            <option value="flicker" ${r.states[s].fx==="flicker"?"selected":""}>flicker</option>
+          </select>
+        </div>
+      </div>`).join("")}
+      ` : `
+      <div class="field"><label>Base Description</label><textarea id="rDesc" rows="5">${r.baseDescription||""}</textarea></div>
+      <button class="btn sm" id="addStateBtn" style="margin-top:8px">＋ Add room states</button>
+      `}
+    </div>
+  </div>
+
+  <!-- Exits -->
+  <div class="panel">
+    <div class="panel-head"><h2>Exits</h2><div class="actions"><button class="btn sm" id="addExit">＋ Add exit</button></div></div>
+    <div class="panel-body" id="exitsList">${renderExitsList(r.exits||{})}</div>
+  </div>
+
+  <!-- Actions -->
+  <div class="panel">
+    <div class="panel-head"><h2>Room Actions</h2><div class="actions"><button class="btn sm" id="addAction">＋ Add action</button></div></div>
+    <div class="panel-body" id="actionsList">${renderActionsList(r.actions||[])}</div>
+  </div>
+
+  <!-- Hazards -->
+  <div class="panel">
+    <div class="panel-head"><h2>Hazards</h2><div class="actions"><button class="btn sm" id="addHazard">＋ Add hazard</button></div></div>
+    <div class="panel-body" id="hazardsList">${renderHazardsList(r.hazards||[])}</div>
+  </div>
+
+  <!-- Objects -->
+  <div class="panel">
+    <div class="panel-head"><h2>Objects</h2><div class="actions"><button class="btn sm" id="addObj">＋ Add object</button></div></div>
+    <div class="panel-body" id="objectsList">${renderObjList(r.objects||{}, "object")}</div>
+  </div>
+
+  <!-- Flavour targets -->
+  <div class="panel">
+    <div class="panel-head"><h2>Flavour Targets</h2><div class="actions"><button class="btn sm" id="addFlavour">＋ Add target</button></div></div>
+    <div class="panel-body" id="flavourList">${renderObjList(r.flavourTargets||{}, "flavour")}</div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:60px">
+    <button class="btn primary" id="saveRoom">Save Room</button>
+  </div>`;
+
+  // State tabs
+  document.querySelectorAll(".state-tab[data-state]").forEach(tab=>{
+    tab.onclick=()=>{
+      document.querySelectorAll(".state-tab").forEach(t=>t.classList.remove("active"));
+      tab.classList.add("active");
+      document.querySelectorAll("[data-state-panel]").forEach(p=>p.style.display="none");
+      document.querySelector(`[data-state-panel="${tab.dataset.state}"]`).style.display="";
+    };
+  });
+
+  el("deleteRoom")?.onclick=()=>{
+    if(!confirm(`Delete room "${id}"?`)) return;
+    delete STATE.rooms[id];
+    refreshAll();
+    el("mainArea").innerHTML=`<div class="empty-state"><p>Room deleted.</p></div>`;
+    toast("Room deleted","warn");
+  };
+
+  el("addExit")?.onclick=()=>addExitRow(r);
+  el("addAction")?.onclick=()=>addActionRow(r);
+  el("addHazard")?.onclick=()=>addHazardRow(r);
+  el("addObj")?.onclick=()=>addObjRow(r,"objects");
+  el("addFlavour")?.onclick=()=>addObjRow(r,"flavourTargets");
+
+  el("addStateBtn")?.onclick=()=>{
+    const name=prompt("State name (e.g. open, sedated, burned):");
+    if(!name) return;
+    if(!r.states) r.states={};
+    r.states[name]={ description:"", fx:null };
+    showRoom(id);
+  };
+
+  el("addStateTab")?.onclick=()=>{
+    const name=prompt("New state name:");
+    if(!name) return;
+    if(!r.states) r.states={};
+    r.states[name]={ description:"", fx:null };
+    showRoom(id);
+  };
+
+  el("saveRoom").onclick=()=>saveRoom(id);
+}
+
+function renderExitsList(exits){
+  return Object.entries(exits).map(([dir,def])=>{
+    const to   = typeof def==="string" ? def : (def.to||"");
+    const cond = typeof def==="string" ? "" : JSON.stringify(def.condition||"");
+    const locked=typeof def==="string" ? "" : (def.lockedText||"");
+    const special=typeof def!=="string"&&def.special ? "checked" : "";
+    const hidden=typeof def!=="string"&&def.hidden ? "checked" : "";
+    return `<div class="list-item" data-exit-dir="${esc(dir)}">
+      <div class="fields g3">
+        <div class="field"><label>Direction</label><input class="exit-dir" value="${esc(dir)}"></div>
+        <div class="field"><label>Target room</label><input class="exit-to" value="${esc(to)}"></div>
+        <div class="field"><label>Locked text</label><input class="exit-locked" value="${esc(locked)}"></div>
+        <div class="field full"><label>Condition (JSON)</label><input class="exit-cond" value="${esc(cond)}" placeholder='{ "flag": "patientCalmed" }'></div>
+        <div class="checkbox-row"><input type="checkbox" class="exit-special" ${special}><label>Special (no button)</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="exit-hidden" ${hidden}><label>Hidden until condition</label></div>
+      </div>
+      <button class="remove-btn" onclick="this.closest('.list-item').remove()">×</button>
+    </div>`;
+  }).join("")||"<p style='color:var(--muted);font-size:13px'>No exits.</p>";
+}
+
+function renderActionsList(actions){
+  return (actions||[]).map((a,i)=>`
+  <div class="list-item" data-action-i="${i}">
+    <div class="fields">
+      <div class="fields g2">
+        <div class="field"><label>ID</label><input class="a-id" value="${esc(a.id||"")}"></div>
+        <div class="field"><label>Verbs (comma separated)</label><input class="a-verbs" value="${esc((a.verbs||[]).join(","))}"></div>
+        <div class="field"><label>Targets (comma separated)</label><input class="a-targets" value="${esc((a.targets||a.target||[]).join(","))}"></div>
+        <div class="field"><label>Requires (JSON)</label><input class="a-req" value="${esc(JSON.stringify(a.requires||""))}" placeholder='{ "heldTag":"pry_tool" }'></div>
+      </div>
+      <div class="field"><label>Success text</label><textarea class="a-ok" rows="2">${esc(a.successText||a.text||"")}</textarea></div>
+      <div class="field"><label>Fail text</label><input class="a-fail" value="${esc(a.failText||"")}"></div>
+      <div class="field"><label>Effects (JSON)</label><textarea class="a-fx" rows="2">${esc(JSON.stringify(a.effects||{}))}</textarea></div>
+    </div>
+    <button class="remove-btn" onclick="this.closest('.list-item').remove()">×</button>
+  </div>`).join("")||"<p style='color:var(--muted);font-size:13px'>No actions.</p>";
+}
+
+function renderHazardsList(hazards){
+  return (hazards||[]).map((h,i)=>`
+  <div class="list-item" data-hazard-i="${i}">
+    <div class="fields g2">
+      <div class="field"><label>Type</label>
+        <select class="h-type">
+          <option value="onEnter" ${h.type==="onEnter"?"selected":""}>onEnter (instant death)</option>
+          <option value="visitCount" ${h.type==="visitCount"?"selected":""}>visitCount</option>
+          <option value="commandPressure" ${h.type==="commandPressure"?"selected":""}>commandPressure</option>
+        </select>
+      </div>
+      <div class="field"><label>Counter ID</label><input class="h-counter" value="${esc(h.counter||"")}"></div>
+      <div class="field"><label>Safe if (JSON)</label><input class="h-safe" value="${esc(JSON.stringify(h.safeIf||""))}" placeholder='{ "wearingTag":"respirator" }'></div>
+      <div class="field"><label>Threshold / safeUnder</label><input type="number" class="h-thresh" value="${h.threshold||h.safeUnder||0}"></div>
+      <div class="field full"><label>Death text</label><textarea class="h-death" rows="2">${esc(h.deathText||"")}</textarea></div>
+      <div class="field full"><label>Warning stages (JSON array)</label><textarea class="h-warn" rows="2">${esc(JSON.stringify(h.warningStages||[]))}</textarea></div>
+    </div>
+    <button class="remove-btn" onclick="this.closest('.list-item').remove()">×</button>
+  </div>`).join("")||"<p style='color:var(--muted);font-size:13px'>No hazards.</p>";
+}
+
+function renderObjList(objs, type){
+  return Object.entries(objs).map(([key,o])=>`
+  <div class="list-item" data-obj-key="${esc(key)}">
+    <div class="fields g2">
+      <div class="field"><label>ID / key</label><input class="o-id" value="${esc(o.id||key)}"></div>
+      <div class="field"><label>Aliases (comma)</label><input class="o-aliases" value="${esc((o.aliases||[]).join(","))}"></div>
+      <div class="field full"><label>Examine text</label><textarea class="o-examine" rows="2">${esc(o.examineText||"")}</textarea></div>
+      <div class="field full"><label>Use text</label><input class="o-use" value="${esc(o.useText||"")}"></div>
+      ${type==="flavour"?`
+      <div class="field full"><label>Read text</label><input class="o-read" value="${esc(o.readText||"")}"></div>
+      <div class="field full"><label>Touch text</label><input class="o-touch" value="${esc(o.touchText||"")}"></div>
+      <div class="field full"><label>Smell text</label><input class="o-smell" value="${esc(o.smellText||"")}"></div>
+      `:""}
+    </div>
+    <button class="remove-btn" onclick="this.closest('.list-item').remove()">×</button>
+  </div>`).join("")||`<p style='color:var(--muted);font-size:13px'>No ${type}s.</p>`;
+}
+
+function addExitRow(r){
+  const list=el("exitsList");
+  const frag=document.createElement("div");
+  frag.innerHTML=renderExitsList({"new_exit":""});
+  list.appendChild(frag.firstElementChild);
+}
+function addActionRow(r){
+  const list=el("actionsList");
+  const frag=document.createElement("div");
+  frag.innerHTML=renderActionsList([{id:"",verbs:[],targets:[],successText:"",failText:"",effects:{}}]);
+  list.appendChild(frag.firstElementChild);
+}
+function addHazardRow(r){
+  const list=el("hazardsList");
+  const frag=document.createElement("div");
+  frag.innerHTML=renderHazardsList([{type:"onEnter",deathText:""}]);
+  list.appendChild(frag.firstElementChild);
+}
+function addObjRow(r,field){
+  const listId=field==="objects"?"objectsList":"flavourList";
+  const list=el(listId);
+  const frag=document.createElement("div");
+  frag.innerHTML=renderObjList({new_obj:{id:"",aliases:[],examineText:"",useText:""}}, field==="objects"?"object":"flavour");
+  list.appendChild(frag.firstElementChild);
+}
+
+function saveRoom(oldId){
+  const r=STATE.rooms[oldId];
+  const newId=el("rId").value.trim()||oldId;
+
+  // Basic
+  r.title   = el("rTitle").value.trim();
+  r.media   = el("rMedia").value.trim();
+  r.fx      = el("rFx").value||null;
+  r.win     = el("rWin").checked||undefined;
+  r.gridPosition={ col:parseInt(el("rCol").value)||0, row:parseInt(el("rRow").value)||0 };
+
+  // Description / states
+  const descEl=el("rDesc");
+  if(descEl) r.baseDescription=descEl.value;
+  document.querySelectorAll("[data-state-panel]").forEach(panel=>{
+    const s=panel.dataset.statePanel;
+    if(!r.states) r.states={};
+    const descTa=panel.querySelector(".state-desc-ta");
+    const fxSel=panel.querySelector(".state-fx-sel");
+    if(descTa) r.states[s]={ description:descTa.value, fx:fxSel?.value||null };
+  });
+
+  // Exits
+  r.exits={};
+  document.querySelectorAll("#exitsList .list-item").forEach(row=>{
+    const dir  = row.querySelector(".exit-dir").value.trim();
+    const to   = row.querySelector(".exit-to").value.trim();
+    const locked=row.querySelector(".exit-locked").value.trim();
+    const condStr=row.querySelector(".exit-cond").value.trim();
+    const special=row.querySelector(".exit-special").checked;
+    const hidden=row.querySelector(".exit-hidden").checked;
+    if(!dir) return;
+    if(!locked&&!condStr&&!special&&!hidden){ r.exits[dir]=to; return; }
+    const def={ to };
+    if(locked)  def.lockedText=locked;
+    if(special) def.special=true;
+    if(hidden)  def.hidden=true;
+    if(condStr) try{ def.condition=JSON.parse(condStr); }catch{}
+    r.exits[dir]=def;
+  });
+
+  // Actions
+  r.actions=[];
+  document.querySelectorAll("#actionsList .list-item").forEach(row=>{
+    const id2=row.querySelector(".a-id").value.trim();
+    const verbs=row.querySelector(".a-verbs").value.split(",").map(v=>v.trim()).filter(Boolean);
+    const targets=row.querySelector(".a-targets").value.split(",").map(v=>v.trim()).filter(Boolean);
+    const reqStr=row.querySelector(".a-req").value.trim();
+    const ok=row.querySelector(".a-ok").value.trim();
+    const fail=row.querySelector(".a-fail").value.trim();
+    const fxStr=row.querySelector(".a-fx").value.trim();
+    if(!verbs.length) return;
+    const act={ id:id2, verbs, targets, successText:ok, failText:fail };
+    if(reqStr) try{ act.requires=JSON.parse(reqStr); }catch{}
+    if(fxStr)  try{ act.effects=JSON.parse(fxStr); }catch{}
+    r.actions.push(act);
+  });
+
+  // Hazards
+  r.hazards=[];
+  document.querySelectorAll("#hazardsList .list-item").forEach(row=>{
+    const h={
+      type:   row.querySelector(".h-type").value,
+      counter:row.querySelector(".h-counter").value.trim()||undefined,
+      deathText:row.querySelector(".h-death").value.trim(),
+    };
+    const safeStr=row.querySelector(".h-safe").value.trim();
+    const warnStr=row.querySelector(".h-warn").value.trim();
+    const thresh=parseInt(row.querySelector(".h-thresh").value)||0;
+    if(safeStr) try{ h.safeIf=JSON.parse(safeStr); }catch{}
+    if(warnStr) try{ h.warningStages=JSON.parse(warnStr); }catch{}
+    if(h.type==="visitCount") h.safeUnder=thresh;
+    else if(h.type==="commandPressure") h.threshold=thresh;
+    r.hazards.push(h);
+  });
+
+  // Objects
+  r.objects={};
+  document.querySelectorAll("#objectsList .list-item").forEach(row=>{
+    const id2=row.querySelector(".o-id").value.trim();
+    if(!id2) return;
+    r.objects[id2]={ id:id2, aliases:row.querySelector(".o-aliases").value.split(",").map(v=>v.trim()).filter(Boolean), examineText:row.querySelector(".o-examine").value, useText:row.querySelector(".o-use").value };
+  });
+
+  // Flavour targets
+  r.flavourTargets={};
+  document.querySelectorAll("#flavourList .list-item").forEach(row=>{
+    const id2=row.querySelector(".o-id").value.trim();
+    if(!id2) return;
+    const obj={ id:id2, aliases:row.querySelector(".o-aliases").value.split(",").map(v=>v.trim()).filter(Boolean), examineText:row.querySelector(".o-examine").value, useText:row.querySelector(".o-use").value };
+    const readEl=row.querySelector(".o-read");
+    const touchEl=row.querySelector(".o-touch");
+    const smellEl=row.querySelector(".o-smell");
+    if(readEl?.value)  obj.readText=readEl.value;
+    if(touchEl?.value) obj.touchText=touchEl.value;
+    if(smellEl?.value) obj.smellText=smellEl.value;
+    r.flavourTargets[id2]=obj;
+  });
+
+  // Rename room if id changed
+  if(newId!==oldId){
+    STATE.rooms[newId]=r;
+    delete STATE.rooms[oldId];
+    STATE.currentRoom=newId;
+  }
+
+  refreshAll();
+  showRoom(newId);
+  toast("Room saved");
+}
+
+// ── Item editor ───────────────────────────────────────────────────
+function showItem(id){
+  STATE.currentItem=id;
+  STATE.currentView="item";
+  setActiveNav(`[data-item-id="${id}"]`);
+  const it=STATE.items[id];
+
+  const VERBS=["look","hold","wear","use","read","open","swing","attack","cut","force","inject","touch","smell","listen","drop"];
+
+  el("mainArea").innerHTML=`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <h2 style="font-size:16px">${it.name||id} <span style="font-size:12px;color:var(--muted);font-family:var(--mono)">${id}</span></h2>
+    <button class="btn danger sm" id="deleteItem">Delete Item</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h2>Item Details</h2></div>
+    <div class="panel-body grid2">
+      <div class="field"><label>Item ID</label><input id="itId" value="${id}"></div>
+      <div class="field"><label>Name</label><input id="itName" value="${it.name||""}"></div>
+      <div class="field"><label>Icon key</label><input id="itIcon" value="${it.icon||""}"></div>
+      <div class="field"><label>Description</label><input id="itDesc" value="${it.description||""}"></div>
+      <div class="field full"><label>Aliases</label><input id="itAliases" value="${(it.aliases||[]).join(", ")}"></div>
+      <div class="field full"><label>Tags</label><div id="itTagsWrap"></div></div>
+      <div class="checkbox-row"><input type="checkbox" id="itCarry" ${it.canCarry?"checked":""}><label for="itCarry">canCarry</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="itHold" ${it.canHold?"checked":""}><label for="itHold">canHold</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="itWear" ${it.canWear?"checked":""}><label for="itWear">canWear</label></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h2>Item Texts</h2></div>
+    <div class="panel-body grid2">
+      <div class="field"><label>Pickup text</label><input id="itPickup" value="${esc(it.pickupText||"")}"></div>
+      <div class="field"><label>Drop text</label><input id="itDrop" value="${esc(it.dropText||"")}"></div>
+      <div class="field"><label>Held text</label><input id="itHeld" value="${esc(it.heldText||"")}"></div>
+      <div class="field"><label>Worn text</label><input id="itWorn" value="${esc(it.wornText||"")}"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h2>Default Actions</h2></div>
+    <div class="panel-body">
+      ${VERBS.map(v=>`<div class="field" style="margin-bottom:8px">
+        <label>${v}</label>
+        <input class="da-inp" data-verb="${v}" value="${esc(it.defaultActions?.[v]||"")}">
+      </div>`).join("")}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:60px">
+    <button class="btn primary" id="saveItem">Save Item</button>
+  </div>`;
+
+  // Tags widget
+  const tags=[...(it.tags||[])];
+  const tagWrap=el("itTagsWrap");
+  tagWrap.appendChild(makeTagInput(tags, updated=>{ it.tags=[...updated]; }));
+
+  el("deleteItem").onclick=()=>{
+    if(!confirm(`Delete item "${id}"?`)) return;
+    delete STATE.items[id];
+    refreshAll();
+    el("mainArea").innerHTML=`<div class="empty-state"><p>Item deleted.</p></div>`;
+    toast("Item deleted","warn");
+  };
+
+  el("saveItem").onclick=()=>{
+    const newId=el("itId").value.trim()||id;
+    it.name        = el("itName").value.trim();
+    it.icon        = el("itIcon").value.trim();
+    it.description = el("itDesc").value.trim();
+    it.aliases     = el("itAliases").value.split(",").map(v=>v.trim()).filter(Boolean);
+    it.canCarry    = el("itCarry").checked;
+    it.canHold     = el("itHold").checked;
+    it.canWear     = el("itWear").checked;
+    it.pickupText  = el("itPickup").value;
+    it.dropText    = el("itDrop").value;
+    it.heldText    = el("itHeld").value;
+    it.wornText    = el("itWorn").value;
+    it.defaultActions={};
+    document.querySelectorAll(".da-inp").forEach(inp=>{
+      if(inp.value.trim()) it.defaultActions[inp.dataset.verb]=inp.value.trim();
+    });
+    if(newId!==id){
+      STATE.items[newId]=it;
+      delete STATE.items[id];
+      STATE.currentItem=newId;
+    }
+    refreshAll();
+    showItem(newId);
+    toast("Item saved");
+  };
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ADD ROOM / ITEM
+// ══════════════════════════════════════════════════════════════════
+
+function addRoom(){
+  const id=prompt("Room ID (e.g. hallway):");
+  if(!id||STATE.rooms[id]) return;
+  STATE.rooms[id]={ title:id, gridPosition:{col:0,row:0}, media:id, fx:null, baseDescription:"", itemText:{}, exits:{}, states:{}, hazards:[], actions:[], enterRules:[], objects:{}, flavourTargets:{} };
+  refreshAll();
+  showRoom(id);
+  toast("Room created");
+}
+
+function addItem(){
+  const id=prompt("Item ID (e.g. lantern):");
+  if(!id||STATE.items[id]) return;
+  STATE.items[id]={ name:id, icon:id, aliases:[id], description:"", tags:[], canCarry:true, canHold:false, canWear:false, pickupText:"", dropText:"", defaultActions:{} };
+  refreshAll();
+  showItem(id);
+  toast("Item created");
+}
+
+// ══════════════════════════════════════════════════════════════════
+// EXPORT
+// ══════════════════════════════════════════════════════════════════
+
+function exportFiles(){
+  const gameJs = `// data/game.js\n"use strict";\nexport const GAME = ${JSON.stringify(STATE.game,null,2)};\n`;
+  const roomsJs= `// data/rooms.js\n"use strict";\nexport const ROOMS = ${JSON.stringify(STATE.rooms,null,2)};\n`;
+  const itemsJs= `// data/items.js\n"use strict";\nexport const ITEMS = ${JSON.stringify(STATE.items,null,2)};\n`;
+
+  [["game.js",gameJs],["rooms.js",roomsJs],["items.js",itemsJs]].forEach(([name,content])=>{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([content],{type:"text/javascript"}));
+    a.download=name;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  });
+  toast("3 files exported");
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LOAD from JS (paste/eval approach)
+// ══════════════════════════════════════════════════════════════════
+
+function promptLoad(){
+  const info=`Paste your game.js, rooms.js, or items.js content below.\n\nThe editor will extract the exported const.`;
+  const code=prompt(info);
+  if(!code) return;
+  try{
+    // Extract object from export const XXX = { ... }
+    const match=code.match(/export\s+const\s+\w+\s*=\s*([\s\S]+)/);
+    if(!match) throw new Error("Could not find export const");
+    const obj=Function('"use strict";return ('+match[1].replace(/;?\s*$/,"")+");")();
+    // Detect type
+    if(obj.startRoom!==undefined){ STATE.game=obj; toast("game.js loaded"); }
+    else if(Object.values(obj)[0]?.exits!==undefined){ Object.assign(STATE.rooms,obj); toast("rooms.js loaded"); }
+    else if(Object.values(obj)[0]?.canCarry!==undefined){ Object.assign(STATE.items,obj); toast("items.js loaded"); }
+    else throw new Error("Unknown file type");
+    refreshAll();
+  } catch(e){ toast("Load failed: "+e.message,"err"); }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// WIRE EVENTS
+// ══════════════════════════════════════════════════════════════════
+
+function esc(s){ return String(s??""").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll("[data-view]").forEach(item=>{
+    item.onclick=()=>{
+      if(item.dataset.view==="game") showGame();
+      if(item.dataset.view==="map")  showMap();
+    };
+  });
+  el("btnAddRoom").onclick=addRoom;
+  el("btnAddItem").onclick=addItem;
+  el("btnExport").onclick=exportFiles;
+  el("btnLoad").onclick=promptLoad;
+  el("btnLoadTemplate").onclick=loadWardBTemplate;
+});
+</script>
+</body>
+</html>

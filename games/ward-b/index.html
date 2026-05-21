@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Death Trap: Ward B — Bus Adventures</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <section id="introScreen" class="card">
+    <div id="introImage" class="scene"></div>
+    <div class="intro">
+      <h1>Death Trap</h1>
+      <h2>Ward B</h2>
+      <p>The asylum was sealed three years ago. Officially, everyone got out.</p>
+      <p>You wake in the reception hall. The doors behind you are chained from the inside.</p>
+      <button id="startBtn" class="btn-primary">Enter Ward B</button>
+    </div>
+  </section>
+
+  <section id="gameScreen" class="card hidden">
+    <div id="scene" class="scene"></div>
+
+    <div class="inv-header" id="invToggle">
+      <strong id="invTitle">Inventory (0)</strong>
+      <span class="inv-arrow" id="invArrow">▾</span>
+    </div>
+    <div id="inventory" class="inv-list"></div>
+
+    <div class="room">
+      <h2 id="roomTitle" class="room-title"></h2>
+      <div id="roomText" class="room-text"></div>
+      <div id="exits" class="exits"></div>
+    </div>
+
+    <div id="feedback" class="feedback">Type a command, or try <strong>look</strong>.</div>
+
+    <form id="commandForm" class="controls" autocomplete="off">
+      <input id="commandInput" class="cmd-input"
+        placeholder="Enter command..."
+        autocomplete="off" autocorrect="off"
+        autocapitalize="off" spellcheck="false">
+      <button type="submit" class="cmd-submit">↵</button>
+    </form>
+
+    <div class="footer-actions">
+      <button id="helpBtn" class="btn-secondary">Help</button>
+      <button id="restartBtn" class="btn-secondary">Restart</button>
+    </div>
+  </section>
+
+  <section id="deathScreen" class="card hidden">
+    <div id="deathImage" class="scene fx-mist"></div>
+    <div class="death-content">
+      <h1>You Died</h1>
+      <p id="deathText" class="death-text"></p>
+      <button id="continueBtn" class="btn-primary">Continue</button>
+    </div>
+  </section>
+
+  <section id="winScreen" class="card hidden">
+    <div id="winImage" class="scene fx-mist"></div>
+    <div class="win-content">
+      <h1>Escaped</h1>
+      <p class="win-text">The gate opens into cold night air. Behind you, Ward B settles back into silence.</p>
+      <button id="playAgainBtn" class="btn-primary">Play again</button>
+    </div>
+  </section>
+
+</div>
+<script type="module">
+  import { GAME }  from "./data/game.js";
+  import { ROOMS } from "./data/rooms.js";
+  import { ITEMS } from "./data/items.js";
+  import { getMedia, getItemIcon } from "./assets.js";
+  import { configure, startGame } from "../../ui/renderer.js";
+
+  configure({ getMedia, getItemIcon });
+  startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
+</script>
+</body>
+</html>

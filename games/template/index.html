@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Change title to your game name -->
+<title>My Adventure — Bus Adventures</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ─── INTRO SCREEN ─────────────────────────────────────────────────────
+       Shown before the player starts. Edit title, subtitle, flavor text.
+  -->
+  <section id="introScreen" class="card">
+    <div id="introImage" class="scene"></div>
+    <div class="intro">
+      <h1>My Adventure</h1>
+      <h2>A Subtitle</h2>
+      <p>A sentence or two of atmosphere. Where is the player? What happened?</p>
+      <p>A second paragraph if you want. Keep it short.</p>
+      <button id="startBtn" class="btn-primary">Begin</button>
+    </div>
+  </section>
+
+  <!-- ─── GAME SCREEN ──────────────────────────────────────────────────────
+       Do not edit the structure here. IDs are used by the engine.
+  -->
+  <section id="gameScreen" class="card hidden">
+    <div id="scene" class="scene"></div>
+
+    <div class="inv-header" id="invToggle">
+      <strong id="invTitle">Inventory (0)</strong>
+      <span class="inv-arrow">▾</span>
+    </div>
+    <div id="inventory" class="inv-list"></div>
+
+    <div class="room">
+      <h2 id="roomTitle" class="room-title"></h2>
+      <div id="roomText" class="room-text"></div>
+      <div id="exits" class="exits"></div>
+    </div>
+
+    <div id="feedback" class="feedback">Type a command, or try <strong>look</strong>.</div>
+
+    <form id="commandForm" class="controls" autocomplete="off">
+      <input
+        id="commandInput"
+        class="cmd-input"
+        placeholder="Enter command..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+      <button type="submit" class="cmd-submit">↵</button>
+    </form>
+
+    <div class="footer-actions">
+      <button id="helpBtn" class="btn-secondary">Help</button>
+      <button id="restartBtn" class="btn-secondary">Restart</button>
+    </div>
+  </section>
+
+  <!-- ─── DEATH SCREEN ─────────────────────────────────────────────────────
+       Edit the h1 and the win text to fit your game's tone.
+  -->
+  <section id="deathScreen" class="card hidden">
+    <div id="deathImage" class="scene fx-mist"></div>
+    <div class="death-content">
+      <h1>You Died</h1>
+      <p id="deathText" class="death-text"></p>
+      <button id="continueBtn" class="btn-primary">Continue</button>
+    </div>
+  </section>
+
+  <!-- ─── WIN SCREEN ───────────────────────────────────────────────────────
+       Edit the h1 and win text here, or handle it via game.js win.text
+  -->
+  <section id="winScreen" class="card hidden">
+    <div id="winImage" class="scene fx-mist"></div>
+    <div class="win-content">
+      <h1>You Won</h1>
+      <p class="win-text">Your win message here. What does the player see as the adventure ends?</p>
+      <button id="playAgainBtn" class="btn-primary">Play again</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ─── ENGINE BOOTSTRAP ───────────────────────────────────────────────────
+     This is all you need to wire a game to the engine.
+     Change the import paths if you rename your files.
+-->
+<script type="module">
+  import { ADVENTURE } from "./game.js";
+  import { getMedia, getItemIcon } from "./assets.js";
+  import { configure, startGame } from "../../engine/renderer.js";
+
+  configure({ getMedia, getItemIcon });
+  startGame(ADVENTURE);
+</script>
+</body>
+</html>
