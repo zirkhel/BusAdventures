@@ -1,24 +1,14 @@
 // ui/fx.js
 // Visual and ambient FX hooks. Stateless — called by renderer.
-// Games can override via overrides/ui-hooks.js.
 
 "use strict";
 
-// Apply FX class to scene element based on room fx + state
 function applySceneFX(sceneEl, fx) {
   if (!sceneEl) return;
-  // Strip all fx classes
-  sceneEl.className = sceneEl.className
-    .replace(/\bfx-\S+/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
   sceneEl.className = "scene";
   if (fx) sceneEl.classList.add("fx-" + fx);
 }
 
-// Render media into a scene element
-// media: { type: "svg"|"img"|"video", src, fx, svgFallback }
-// For type "img": if file fails to load, svgFallback SVG is shown instead.
 function renderMedia(el, media) {
   if (!el) return;
   if (!media) {
@@ -34,17 +24,22 @@ function renderMedia(el, media) {
     el.innerHTML = `<video src="${esc(media.src)}" autoplay loop muted playsinline></video>`;
   } else {
     // type === "img"
+    // Create img, append to scene el.
+    // On error: replace entire scene content with SVG fallback.
+    el.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = media.src;
+    img.alt = "";
+    img.style.cssText = "width:100%;height:100%;object-fit:cover;display:block";
     if (media.svgFallback) {
-      // Store fallback as encoded attribute; swap on error
-      const encoded = encodeURIComponent(media.svgFallback);
-      el.innerHTML = `<img src="${esc(media.src)}" alt="" data-fb="${encoded}" onerror="var fb=decodeURIComponent(this.dataset.fb);this.outerHTML=fb">`;
-    } else {
-      el.innerHTML = `<img src="${esc(media.src)}" alt="">`;
+      img.addEventListener("error", () => {
+        el.innerHTML = media.svgFallback;
+      }, { once: true });
     }
+    el.appendChild(img);
   }
 }
 
-// Placeholder when media is missing
 function defaultPlaceholder() {
   return `<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
     <rect width="1280" height="720" fill="#111"/>
