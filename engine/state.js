@@ -144,6 +144,8 @@ function clear() {
 //   holdsItem     — player holds item id ready
 //   wearsItem     — player wears item id
 //   itemHere      — item is in current room
+//   itemNotHere   — item is NOT in current room (picked up or elsewhere)
+//   itemGone      — item has been removed from world (loc === null)
 //   itemInRoom    — { id, room } item is in specific room
 //   flag          — global flag is truthy
 //   flagFalse     — global flag is falsy
@@ -161,6 +163,9 @@ function check(cond) {
   if (cond.holdsItem    && !holdsItem(cond.holdsItem))                  return false;
   if (cond.wearsItem    && !wearsItem(cond.wearsItem))                  return false;
   if (cond.itemHere     && !itemIsInRoom(cond.itemHere))                return false;
+  if (cond.itemNotHere  &&  itemIsInRoom(cond.itemNotHere))             return false;
+  if (cond.itemGone     &&  _st.itemLoc[cond.itemGone] !== null &&
+                            _st.itemLoc[cond.itemGone] !== undefined)   return false;
   if (cond.flag         && !getFlag(cond.flag))                         return false;
   if (cond.flagFalse    &&  getFlag(cond.flagFalse))                    return false;
   if (cond.roomFlag     && !getRoomFlag(_st.room, cond.roomFlag))       return false;

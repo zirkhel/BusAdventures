@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Death Trap: Ward B — Bus Adventures</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -41,8 +41,8 @@
       <input id="commandInput" class="cmd-input"
         placeholder="Enter command..."
         autocomplete="off" autocorrect="off"
-        autocapitalize="off" spellcheck="false">
-      <button type="submit" class="cmd-submit">↵</button>
+        autocapitalize="off" spellcheck="false"
+        readonly>
     </form>
 
     <div class="footer-actions">
@@ -79,6 +79,29 @@
 
   configure({ getMedia, getItemIcon });
   startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
+
+  // Keyboard: only open when user taps input area, close after submit
+  const inp = document.getElementById('commandInput');
+  const form = document.getElementById('commandForm');
+
+  // Tap on feedback/room area focuses input
+  document.getElementById('feedback')?.addEventListener('click', () => {
+    inp.removeAttribute('readonly');
+    inp.focus();
+  });
+
+  // Remove readonly on tap of input itself
+  inp.addEventListener('touchstart', () => {
+    inp.removeAttribute('readonly');
+  }, { passive: true });
+
+  // After submit: blur + restore readonly to dismiss keyboard
+  form.addEventListener('submit', () => {
+    setTimeout(() => {
+      inp.blur();
+      inp.setAttribute('readonly', true);
+    }, 50);
+  });
 </script>
 </body>
 </html>

@@ -17,7 +17,8 @@ function applySceneFX(sceneEl, fx) {
 }
 
 // Render media into a scene element
-// media: { type: "svg"|"img"|"video", src, fx }
+// media: { type: "svg"|"img"|"video", src, fx, svgFallback }
+// For type "img": if file fails to load, svgFallback SVG is shown instead.
 function renderMedia(el, media) {
   if (!el) return;
   if (!media) {
@@ -32,7 +33,14 @@ function renderMedia(el, media) {
   } else if (media.type === "video") {
     el.innerHTML = `<video src="${esc(media.src)}" autoplay loop muted playsinline></video>`;
   } else {
-    el.innerHTML = `<img src="${esc(media.src)}" alt="">`;
+    // type === "img"
+    if (media.svgFallback) {
+      // Store fallback as encoded attribute; swap on error
+      const encoded = encodeURIComponent(media.svgFallback);
+      el.innerHTML = `<img src="${esc(media.src)}" alt="" data-fb="${encoded}" onerror="var fb=decodeURIComponent(this.dataset.fb);this.outerHTML=fb">`;
+    } else {
+      el.innerHTML = `<img src="${esc(media.src)}" alt="">`;
+    }
   }
 }
 

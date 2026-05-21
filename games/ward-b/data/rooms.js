@@ -16,6 +16,9 @@ export const ROOMS = {
         taken:   "The open drawer holds nothing now but dust and old paper clips.",
       },
     },
+    mediaStates: [
+      { condition: { itemNotHere: "keycard" }, media: "reception_empty" },
+    ],
     exits: {
       north: "corridor",
     },
@@ -199,6 +202,9 @@ export const ROOMS = {
     title: "Escape Gate",
     gridPosition: { col: 3, row: 3 },
     media: "escape_gate",
+    mediaStates: [
+      { condition: { flag: "gateForcedOpen" }, media: "escape_gate_open" },
+    ],
     states: {
       default: {
         description: "A heavy iron gate blocks the exit. A thick chain and padlock holds it shut. Through the bars you can see the road beyond.\n\nThe courtyard is north.",

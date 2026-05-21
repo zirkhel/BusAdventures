@@ -42,8 +42,9 @@ function showScreen(name) {
 
 function resolveMedia(roomId) {
   if (!CFG.getMedia) return null;
-  const state = S.getRoomState(roomId);
-  return CFG.getMedia(roomId, S.get(), state);
+  const mediaKey = E.resolveMediaKey(roomId);
+  const stateName = S.getRoomState(roomId);
+  return CFG.getMedia(mediaKey, S.get(), stateName);
 }
 
 // ── Room render ───────────────────────────────────────────────────────────────

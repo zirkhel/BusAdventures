@@ -520,6 +520,12 @@ function showRoom(id){
     </div>
   </div>
 
+  <!-- Media States -->
+  <div class="panel">
+    <div class="panel-head"><h2>Media States</h2><div class="actions"><button class="btn sm" id="addMediaState">＋ Add</button></div></div>
+    <div class="panel-body" id="mediaStatesList">${renderMediaStatesList(r.mediaStates||[])}</div>
+  </div>
+
   <!-- Description -->
   <div class="panel">
     <div class="panel-head"><h2>Description</h2></div>
@@ -608,6 +614,12 @@ function showRoom(id){
     toast("Room deleted","warn");
   };
 
+  el("addMediaState")?.onclick=()=>{
+    const list=el("mediaStatesList");
+    const frag=document.createElement("div");
+    frag.innerHTML=renderMediaStatesList([{media:"",condition:{}}]);
+    list.appendChild(frag.firstElementChild);
+  };
   el("addExit")?.onclick=()=>addExitRow(r);
   el("addAction")?.onclick=()=>addActionRow(r);
   el("addHazard")?.onclick=()=>addHazardRow(r);
@@ -631,6 +643,17 @@ function showRoom(id){
   };
 
   el("saveRoom").onclick=()=>saveRoom(id);
+}
+
+function renderMediaStatesList(ms) {
+  return (ms||[]).map((m,i)=>`
+  <div class="list-item" data-ms-i="${i}">
+    <div class="fields g2">
+      <div class="field"><label>Media key</label><input class="ms-media" value="${esc(m.media||"")}"></div>
+      <div class="field"><label>Condition (JSON)</label><input class="ms-cond" value="${esc(JSON.stringify(m.condition||{}))}" placeholder='{ "itemNotHere": "keycard" }'></div>
+    </div>
+    <button class="remove-btn" onclick="this.closest('.list-item').remove()">×</button>
+  </div>`).join("")||"<p style='color:var(--muted);font-size:13px'>No media states. Default media key is always used.</p>";
 }
 
 function renderExitsList(exits){
@@ -757,6 +780,17 @@ function saveRoom(oldId){
     const descTa=panel.querySelector(".state-desc-ta");
     const fxSel=panel.querySelector(".state-fx-sel");
     if(descTa) r.states[s]={ description:descTa.value, fx:fxSel?.value||null };
+  });
+
+  // Media states
+  r.mediaStates=[];
+  document.querySelectorAll("#mediaStatesList .list-item").forEach(row=>{
+    const media=row.querySelector(".ms-media").value.trim();
+    const condStr=row.querySelector(".ms-cond").value.trim();
+    if(!media) return;
+    const ms={ media };
+    if(condStr) try{ ms.condition=JSON.parse(condStr); }catch{}
+    r.mediaStates.push(ms);
   });
 
   // Exits

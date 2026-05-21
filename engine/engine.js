@@ -73,6 +73,38 @@ function hasRoomChanged(effects) {
   );
 }
 
+// ── Media key resolver ───────────────────────────────────────────────────────
+//
+// Returns the media key for a room, checking mediaStates conditions first.
+// mediaStates is an ordered array — first matching condition wins.
+//
+// Example in rooms.js:
+//   reception: {
+//     media: "reception",
+//     mediaStates: [
+//       { condition: { itemNotHere: "keycard" }, media: "reception_empty" },
+//       { condition: { roomState: "flooded" },   media: "reception_flood" },
+//     ]
+//   }
+
+function resolveMediaKey(roomId) {
+  const rid = roomId || S.get().room;
+  const r = S.roomDef(rid);
+  if (!r) return rid;
+
+  // Named room state may define its own media key
+  const stateName = S.getRoomState(rid);
+  const stateData = r.states?.[stateName];
+  if (stateData?.media) return stateData.media;
+
+  // mediaStates: conditional overrides, first match wins
+  for (const ms of (r.mediaStates || [])) {
+    if (S.check(ms.condition)) return ms.media;
+  }
+
+  return r.media || rid;
+}
+
 // ── Room description ──────────────────────────────────────────────────────────
 
 function buildDescription(roomId) {
@@ -151,10 +183,15 @@ function buildExits(roomId) {
 // ── Movement ──────────────────────────────────────────────────────────────────
 
 function go(dir) {
+  const d = (dir || "").toLowerCase().trim();
   const norm = ({
     n:"north", s:"south", e:"east", w:"west", u:"up", d:"down",
     ne:"northeast", nw:"northwest", se:"southeast", sw:"southwest",
-  }[dir] || dir);
+    north:"north", south:"south", east:"east", west:"west",
+    up:"up", down:"down",
+    northeast:"northeast", northwest:"northwest",
+    southeast:"southeast", southwest:"southwest",
+  }[d] || d);
 
   const r = S.currentRoom();
   const state = S.getRoomState();
@@ -543,6 +580,6 @@ function findFlavour(r, target) {
 
 export {
   runCommand, go, take, drop, wear, removeWorn, hold, examine, use,
-  buildDescription, buildExits, inventoryList, helpText,
+  buildDescription, buildExits, resolveMediaKey, inventoryList, helpText,
   enterRoom, applyEffects, tickPressure,
 };
