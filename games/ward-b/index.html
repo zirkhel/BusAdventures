@@ -145,11 +145,8 @@
     historyBox.appendChild(entry);
     roomHistory.push({ cmd, text, type });
 
-    // Auto-collapse desc after first command
-    if (!descCollapsed) {
-      descCollapsed = true;
-      roomDesc.classList.add('collapsed');
-      descToggle.textContent = '▸ desc';
+    // Show history once there are entries
+    if (roomHistory.length === 1) {
       historyBox.classList.add('visible');
     }
     // Scroll history to bottom
@@ -176,6 +173,32 @@
     descToggle.textContent = descCollapsed ? '▸ desc' : '▾ desc';
   });
 
+  // Collapse desc when user starts typing
+  commandInput.addEventListener('focus', () => {
+    if (!descCollapsed && roomHistory.length === 0) {
+      // Small delay so it feels intentional
+      setTimeout(() => {
+        if (document.activeElement === commandInput) {
+          descCollapsed = true;
+          roomDesc.classList.add('collapsed');
+          descToggle.textContent = '▸ desc';
+        }
+      }, 300);
+    } else if (!descCollapsed) {
+      descCollapsed = true;
+      roomDesc.classList.add('collapsed');
+      descToggle.textContent = '▸ desc';
+    }
+  });
+
+  commandInput.addEventListener('input', () => {
+    if (!descCollapsed) {
+      descCollapsed = true;
+      roomDesc.classList.add('collapsed');
+      descToggle.textContent = '▸ desc';
+    }
+  });
+
   // Dismiss keyboard after submit
   document.getElementById('commandForm').addEventListener('submit', () => {
     setTimeout(() => commandInput.blur(), 50);
@@ -187,9 +210,6 @@
 
   settingsBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    const rect = settingsBtn.getBoundingClientRect();
-    settingsMenu.style.top  = (rect.bottom + 6) + 'px';
-    settingsMenu.style.right = (window.innerWidth - rect.right) + 'px';
     settingsMenu.classList.toggle('hidden');
   });
 
