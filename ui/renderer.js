@@ -55,16 +55,29 @@ function renderRoom() {
   showScreen("gameScreen");
 
   renderMedia(qs("scene"), resolveMedia(roomId));
-  qs("roomTitle").textContent = roomDef.title;
-  qs("roomText").textContent  = E.buildDescription(roomId);
+
+  const titleEl = qs("roomTitle");
+  if (titleEl) titleEl.textContent = roomDef.title;
+
+  const textEl = qs("roomText");
+  if (textEl) textEl.textContent = E.buildDescription(roomId);
 
   renderExits(roomId);
   renderInventory();
+
+  // Notify index.html hooks
+  if (typeof window._onRoomEnter === "function") window._onRoomEnter(roomId);
 
   CFG.hooks?.onRoomRender?.(roomId, roomDef);
 }
 
 // ── Exits ─────────────────────────────────────────────────────────────────────
+
+const DIR_ARROWS = {
+  north:"↑", south:"↓", east:"→", west:"←",
+  up:"⬆", down:"⬇", northeast:"↗", northwest:"↖",
+  southeast:"↘", southwest:"↙",
+};
 
 function renderExits(roomId) {
   const el = qs("exits");
@@ -78,7 +91,11 @@ function renderExits(roomId) {
   visible.forEach(ex => {
     const btn = document.createElement("button");
     btn.className = "exit-btn" + (ex.type === "locked" ? " locked" : "");
-    btn.textContent = ex.label || ex.dir;
+    const arrow = DIR_ARROWS[ex.dir] || "";
+    const label = ex.label || ex.dir;
+    btn.innerHTML = arrow
+      ? `<span class="exit-arrow">${arrow}</span>${label}`
+      : label;
     btn.dataset.dir = ex.dir;
     btn.addEventListener("click", () => handleCommand(ex.dir));
     el.appendChild(btn);
@@ -127,12 +144,16 @@ function showFeedback(text, type = "neutral", command = null, warning = null) {
     html += `<span class="feedback-text">${esc(text).replace(/\n/g, "<br>")}</span>`;
   }
 
-  // Pressure warning appended below normal output — never replaces it
   if (warning) {
     html += `<span class="feedback-warning">${esc(warning)}</span>`;
   }
 
   el.innerHTML = html;
+
+  // Notify history hook
+  if (command && typeof window._onCommand === "function") {
+    window._onCommand(command, text + (warning ? "\n" + warning : ""), type);
+  }
 }
 
 // ── Death / Win ───────────────────────────────────────────────────────────────

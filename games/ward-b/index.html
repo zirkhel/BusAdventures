@@ -30,11 +30,20 @@
     <div id="inventory" class="inv-list"></div>
 
     <div class="room">
-      <h2 id="roomTitle" class="room-title"></h2>
-      <div id="roomText" class="room-text"></div>
-      <div id="exits" class="exits"></div>
+      <h2 class="room-title" id="roomTitleEl">
+        <span class="room-title-text" id="roomTitle"></span>
+        <span class="room-title-toggle" id="descToggle">▾ desc</span>
+      </h2>
+      <div class="room-desc" id="roomDesc">
+        <div id="roomText" class="room-text"></div>
+        <div id="exits" class="exits"></div>
+      </div>
     </div>
 
+    <!-- History — shown when desc is collapsed -->
+    <div id="historyBox" class="history-box"></div>
+
+    <!-- Current feedback -->
     <div id="feedback" class="feedback">Type a command, or try <strong>look</strong>.</div>
 
     <form id="commandForm" class="controls" autocomplete="off">
@@ -80,10 +89,63 @@
   configure({ getMedia, getItemIcon });
   startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
 
-  // Keyboard: submit blurs input to dismiss keyboard on mobile
-  const inp = document.getElementById('commandInput');
+  // ── Collapsible description ──────────────────────────────────────
+  const roomDesc    = document.getElementById('roomDesc');
+  const descToggle  = document.getElementById('descToggle');
+  const historyBox  = document.getElementById('historyBox');
+  const commandInput = document.getElementById('commandInput');
+  let descCollapsed = false;
+
+  // History entries for current room session
+  let roomHistory = [];
+  let currentRoomId = null;
+
+  // Called by renderer after room change — reset history
+  window._onRoomEnter = (roomId) => {
+    if (roomId !== currentRoomId) {
+      currentRoomId = roomId;
+      roomHistory = [];
+      historyBox.innerHTML = '';
+      historyBox.classList.remove('visible');
+      // Expand desc on room change
+      descCollapsed = false;
+      roomDesc.classList.remove('collapsed');
+      descToggle.textContent = '▾ desc';
+    }
+  };
+
+  // Called by renderer after each command response
+  window._onCommand = (cmd, text, type) => {
+    if (!cmd) return;
+    // Add to history
+    const entry = document.createElement('div');
+    entry.className = `history-entry ${type||'neutral'}`;
+    entry.innerHTML = `<span class="history-cmd">&gt; ${cmd}</span><span class="history-text">${text||''}</span>`;
+    historyBox.appendChild(entry);
+    roomHistory.push({ cmd, text, type });
+
+    // Auto-collapse desc after first command
+    if (!descCollapsed) {
+      descCollapsed = true;
+      roomDesc.classList.add('collapsed');
+      descToggle.textContent = '▸ desc';
+      historyBox.classList.add('visible');
+    }
+    // Scroll history to bottom
+    historyBox.scrollTop = historyBox.scrollHeight;
+  };
+
+  // Toggle desc on title tap
+  document.getElementById('roomTitleEl').addEventListener('click', () => {
+    descCollapsed = !descCollapsed;
+    roomDesc.classList.toggle('collapsed', descCollapsed);
+    historyBox.classList.toggle('visible', descCollapsed && roomHistory.length > 0);
+    descToggle.textContent = descCollapsed ? '▸ desc' : '▾ desc';
+  });
+
+  // Dismiss keyboard after submit
   document.getElementById('commandForm').addEventListener('submit', () => {
-    setTimeout(() => inp.blur(), 50);
+    setTimeout(() => commandInput.blur(), 50);
   });
 </script>
 </body>
