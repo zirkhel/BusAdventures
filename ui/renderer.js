@@ -31,13 +31,15 @@ const qs = id => document.getElementById(id);
 const SCREENS = ["introScreen", "gameScreen", "deathScreen", "winScreen"];
 
 function showScreen(name) {
+  if (typeof window._showScreen === "function") {
+    window._showScreen(name);
+    CFG.hooks?.onScreenChange?.(name);
+    return;
+  }
   SCREENS.forEach(id => {
     const el = qs(id);
     if (el) el.classList.toggle("hidden", id !== name);
   });
-  // Show input only during game
-  const controls = qs("commandForm");
-  if (controls) controls.classList.toggle("active", name === "gameScreen");
   CFG.hooks?.onScreenChange?.(name);
 }
 
@@ -275,13 +277,13 @@ function wireControls(adventure) {
   // Start game
   qs("startBtn")?.addEventListener("click", () => {
     S.fresh();
-    // Reset any UI state from previous session
     if (typeof window._resetUI === "function") window._resetUI();
     S.incVisit(S.get().room);
+    if (typeof window._showScreen === "function") window._showScreen("gameScreen");
+    else showScreen("gameScreen");
     renderRoom();
-    showFeedback(adventure.game.intro?.firstText || "");
+    if (adventure.game.intro?.firstText) showFeedback(adventure.game.intro.firstText);
     S.save();
-    // Input via overlay
   });
 
   // Continue after death

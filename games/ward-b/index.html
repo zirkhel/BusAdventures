@@ -161,10 +161,7 @@ window._onCommand = (cmd, text, type) => {
   outputBox.scrollTop = outputBox.scrollHeight;
 };
 
-// ── Start button ──────────────────────────────────────────────────
-document.getElementById('startBtn').addEventListener('click', () => {
-  handleCommand('__start__');
-});
+// startBtn wired by renderer
 
 // ── Overlay ───────────────────────────────────────────────────────
 outputBox.addEventListener('click', openOverlay);
