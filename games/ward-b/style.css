@@ -24,6 +24,7 @@ html, body {
   height: 100%;
   background: #030405;
   overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 body {
@@ -52,14 +53,16 @@ body {
   border: 1px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 24px 80px rgba(0,0,0,.5);
-  overflow: visible; /* allow settings menu to overflow */
+  overflow: hidden;
   margin: 12px 12px 0;
   position: relative;
 }
 
 /* ── Scene ── */
 .scene {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 5;
   aspect-ratio: 16/9;
   background: #050608;
   overflow: hidden;
@@ -351,33 +354,33 @@ button.btn-secondary:active { transform: translateY(1px); }
   top: 8px;
   right: 8px;
   z-index: 10;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.15);
-  background: rgba(0,0,0,.45);
-  color: rgba(255,255,255,.5);
-  font-size: 15px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(0,0,0,.55);
+  color: rgba(255,255,255,.75);
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
   transition: color .15s, background .15s, border-color .15s;
   line-height: 1;
 }
 
-.scene-gear:hover {
+.scene-gear:hover, .scene-gear:active {
   color: var(--gold);
-  background: rgba(0,0,0,.65);
-  border-color: rgba(215,181,109,.4);
+  background: rgba(0,0,0,.75);
+  border-color: rgba(215,181,109,.6);
 }
 
 /* ── Settings dropdown ── */
 .settings-menu {
-  position: absolute;
-  top: 46px;
-  right: 8px;
+  position: fixed;
+  top: 54px;
+  right: 20px;
   z-index: 20;
   background: rgba(10,11,16,.92);
   border: 1px solid var(--line);

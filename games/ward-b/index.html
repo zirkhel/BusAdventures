@@ -164,12 +164,15 @@
     setTimeout(() => commandInput.blur(), 50);
   });
 
-  // Settings menu toggle
+  // Settings menu toggle — position menu below gear button
   const settingsBtn  = document.getElementById('settingsBtn');
   const settingsMenu = document.getElementById('settingsMenu');
 
   settingsBtn.addEventListener('click', (e) => {
     e.stopPropagation();
+    const rect = settingsBtn.getBoundingClientRect();
+    settingsMenu.style.top  = (rect.bottom + 6) + 'px';
+    settingsMenu.style.right = (window.innerWidth - rect.right) + 'px';
     settingsMenu.classList.toggle('hidden');
   });
 
