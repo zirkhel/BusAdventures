@@ -38,13 +38,8 @@ export const ROOMS = {
     gridPosition: { col: 1, row: 1 },
     media: "corridor",
     fx: "flicker",
-    baseDescription: "A long corridor stretches under weak yellow light. Doors line both sides. Something has scratched numbers into the floor tiles.\n\n{mask}\n\nRecords is north. Pharmacy is west. Surgery Ward is east. A stairwell descends below.",
-    itemText: {
-      mask: {
-        present: "A filter mask hangs from a hook on the wall.",
-        taken:   "An empty hook remains where the mask was.",
-      },
-    },
+    baseDescription: "A long corridor stretches under weak yellow light. Doors line both sides. Something has scratched numbers into the floor tiles.\n\nRecords is north. Pharmacy is west. Surgery Ward is east. A stairwell descends below.",
+    itemText: {},
     exits: {
       south: "reception",
       north: "records",
@@ -68,7 +63,13 @@ export const ROOMS = {
     gridPosition: { col: 1, row: 0 },
     media: "records",
     fx: "mist",
-    baseDescription: "Dusty shelves of patient records line the walls. A single desk lamp still works, casting a yellow circle on the floor.\n\nThe corridor is south.",
+    baseDescription: "Dusty shelves of patient records line the walls. A single desk lamp still works. {mask}\n\nBeside the evacuation notice on the far wall, the hook catches your eye.\n\nThe corridor is south.",
+    itemText: {
+      mask: {
+        present: "A filter mask hangs from a hook beside a faded evacuation notice.",
+        taken:   "An empty hook remains beside the evacuation notice.",
+      },
+    },
     exits: {
       south: "corridor",
     },
@@ -115,13 +116,11 @@ export const ROOMS = {
         fx: null,
       },
     },
-    hazards: [
-      {
-        type:      "onEnter",
-        safeIf:    { wearingTag: "respirator" },
-        deathText: "You step into the chemical air without protection. Your lungs close before you reach the table.",
-      },
-    ],
+    enterRequires: {
+      condition: { wearingTag: "respirator" },
+      failText: "The chemical smell burns your throat before you cross the threshold. You instinctively pull back from the Surgery Wing.",
+    },
+    hazards: [],
     exits: {
       west: "corridor",
       east: {
@@ -253,7 +252,7 @@ export const ROOMS = {
 
   outside: {
     title: "Outside",
-    gridPosition: { col: 3, row: 3 },
+    gridPosition: { col: 4, row: 3 },
     media: "outside",
     baseDescription: "Cold air hits your face. The road stretches away into the dark. Behind you, Ward B settles back into silence.\n\nYou are out.",
     win: true,

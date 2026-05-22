@@ -176,6 +176,11 @@ function check(cond) {
   if (cond.counterGte   &&  getCounter(cond.counterGte.id) < cond.counterGte.n) return false;
   if (cond.heldTag      && !findCarriedByTag(cond.heldTag))             return false;
   if (cond.carriedTag   && !findCarriedByTag(cond.carriedTag))          return false;
+  if (cond.wearingTag) {
+    // Check if player wears any item with this tag
+    const wearingMatch = _st.worn.some(id => (_adv.items[id]?.tags||[]).includes(cond.wearingTag));
+    if (!wearingMatch) return false;
+  }
   return true;
 }
 

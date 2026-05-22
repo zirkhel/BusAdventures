@@ -215,9 +215,12 @@ function enterRoom(targetId, moveDir) {
   const target = S.roomDef(targetId);
   if (!target) return res("That way leads nowhere.", "bad");
 
-  // enterRequires — hard block on room entry
-  if (target.enterRequires && !S.check(target.enterRequires)) {
-    return res(target.enterRequires.failText || "The way is blocked.", "bad");
+  // enterRequires — soft block on room entry
+  if (target.enterRequires) {
+    const req = target.enterRequires;
+    if (!S.check(req.condition || req)) {
+      return res(req.failText || "The way is blocked.", "bad");
+    }
   }
 
   S.get().room = targetId;

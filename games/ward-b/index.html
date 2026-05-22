@@ -227,7 +227,14 @@ settingsBtn.addEventListener('click', (e) => {
   settingsMenu.classList.toggle('hidden');
 });
 document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
-settingsMenu.addEventListener('click', (e) => e.stopPropagation());
+// Don't stopPropagation on menu itself — let clicks bubble to close menu
+// But do close menu when items are clicked
+document.getElementById('helpBtn').addEventListener('click', () => {
+  settingsMenu.classList.add('hidden');
+});
+document.getElementById('restartBtn').addEventListener('click', () => {
+  settingsMenu.classList.add('hidden');
+});
 
 function esc(s) {
   return String(s||'').replace(/[&<>"']/g,
