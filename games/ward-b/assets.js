@@ -15,7 +15,7 @@
 
 const ROOM_MEDIA = {
 
-  __intro__: img("__intro__", "mist", SVG_INTRO()),
+  __intro__: img("reception", "mist", SVG_RECEPTION()),
   reception: img("reception", "mist", SVG_RECEPTION()),
   reception_empty: img("reception_empty", "mist", SVG_RECEPTION()),  // keycard taken
   corridor:  img("corridor", "flicker", SVG_CORRIDOR()),
