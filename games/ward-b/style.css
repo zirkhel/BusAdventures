@@ -52,8 +52,9 @@ body {
   border: 1px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 24px 80px rgba(0,0,0,.5);
-  overflow: hidden;
+  overflow: visible; /* allow settings menu to overflow */
   margin: 12px 12px 0;
+  position: relative;
 }
 
 /* ── Scene ── */
@@ -343,3 +344,67 @@ button.btn-secondary:active { transform: translateY(1px); }
   color: var(--ok); margin: 0 0 12px;
 }
 .win-text { color: var(--muted); font-size: 15px; line-height: 1.55; margin: 0 0 20px; }
+
+/* ── Scene gear button ── */
+.scene-gear {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(0,0,0,.45);
+  color: rgba(255,255,255,.5);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: color .15s, background .15s, border-color .15s;
+  line-height: 1;
+}
+
+.scene-gear:hover {
+  color: var(--gold);
+  background: rgba(0,0,0,.65);
+  border-color: rgba(215,181,109,.4);
+}
+
+/* ── Settings dropdown ── */
+.settings-menu {
+  position: absolute;
+  top: 46px;
+  right: 8px;
+  z-index: 20;
+  background: rgba(10,11,16,.92);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  min-width: 160px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+
+.settings-item {
+  display: block;
+  width: 100%;
+  padding: 11px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: .03em;
+  cursor: pointer;
+  transition: background .1s;
+}
+
+.settings-item:last-child { border-bottom: none; }
+.settings-item:hover { background: rgba(255,255,255,.06); }
+.settings-item.danger { color: var(--bad); }
+.settings-item.danger:hover { background: rgba(224,110,101,.1); }

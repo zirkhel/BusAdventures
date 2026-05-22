@@ -21,7 +21,9 @@
   </section>
 
   <section id="gameScreen" class="card hidden">
-    <div id="scene" class="scene"></div>
+    <div id="scene" class="scene">
+      <button id="settingsBtn" class="scene-gear" aria-label="Settings">⚙</button>
+    </div>
 
     <div class="inv-header" id="invToggle">
       <strong id="invTitle">Inventory (0)</strong>
@@ -54,9 +56,10 @@
         inputmode="text">
     </form>
 
-    <div class="footer-actions">
-      <button id="helpBtn" class="btn-secondary">Help</button>
-      <button id="restartBtn" class="btn-secondary">Restart</button>
+    <!-- Settings menu (hidden by default) -->
+    <div id="settingsMenu" class="settings-menu hidden">
+      <button id="helpBtn" class="settings-item">Help / Commands</button>
+      <button id="restartBtn" class="settings-item danger">Restart Journey</button>
     </div>
   </section>
 
@@ -99,6 +102,19 @@
   // History entries for current room session
   let roomHistory = [];
   let currentRoomId = null;
+
+  // Full UI reset — called by renderer on restart/continue
+  window._resetUI = () => {
+    currentRoomId = null;
+    roomHistory = [];
+    historyBox.innerHTML = '';
+    historyBox.classList.remove('visible');
+    descCollapsed = false;
+    roomDesc.classList.remove('collapsed');
+    descToggle.textContent = '▾ desc';
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('feedback').innerHTML = 'Type a command, or try <strong>look</strong>.';
+  };
 
   // Called by renderer after room change — reset history
   window._onRoomEnter = (roomId) => {
@@ -146,6 +162,24 @@
   // Dismiss keyboard after submit
   document.getElementById('commandForm').addEventListener('submit', () => {
     setTimeout(() => commandInput.blur(), 50);
+  });
+
+  // Settings menu toggle
+  const settingsBtn  = document.getElementById('settingsBtn');
+  const settingsMenu = document.getElementById('settingsMenu');
+
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsMenu.classList.toggle('hidden');
+  });
+
+  // Close on tap outside
+  document.addEventListener('click', () => {
+    settingsMenu.classList.add('hidden');
+  });
+
+  settingsMenu.addEventListener('click', (e) => {
+    e.stopPropagation();
   });
 </script>
 </body>

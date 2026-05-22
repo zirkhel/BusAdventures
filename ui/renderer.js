@@ -244,6 +244,7 @@ function wireControls(adventure) {
   qs("restartBtn")?.addEventListener("click", () => {
     if (!confirm("Restart from the beginning?")) return;
     S.clear(); S.fresh();
+    if (typeof window._resetUI === "function") window._resetUI();
     showScreen("introScreen");
     renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
   });
@@ -251,6 +252,8 @@ function wireControls(adventure) {
   // Start game
   qs("startBtn")?.addEventListener("click", () => {
     S.fresh();
+    // Reset any UI state from previous session
+    if (typeof window._resetUI === "function") window._resetUI();
     S.incVisit(S.get().room);
     renderRoom();
     showFeedback(adventure.game.intro?.firstText || "");
@@ -261,6 +264,7 @@ function wireControls(adventure) {
   // Continue after death
   qs("continueBtn")?.addEventListener("click", () => {
     S.fresh();
+    if (typeof window._resetUI === "function") window._resetUI();
     showScreen("introScreen");
     renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
   });
@@ -268,6 +272,7 @@ function wireControls(adventure) {
   // Play again after win
   qs("playAgainBtn")?.addEventListener("click", () => {
     S.fresh();
+    if (typeof window._resetUI === "function") window._resetUI();
     showScreen("introScreen");
     renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
   });
