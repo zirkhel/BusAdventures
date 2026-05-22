@@ -10,39 +10,28 @@
 
 <!-- INTRO -->
 <div id="introScreen" class="screen">
-  <div class="card">
-    <div id="introImage" class="scene"></div>
-    <div class="pad">
-      <h1>Death Trap</h1>
-      <h2>Ward B</h2>
-      <p>The asylum was sealed three years ago. Officially, everyone got out.</p>
-      <p>You wake in the reception hall. The doors behind you are chained from the inside.</p>
-      <button id="startBtn" class="btn-primary">Enter Ward B</button>
-    </div>
+  <div id="introImage" class="intro-scene"></div>
+  <div class="intro-body">
+    <h1>Death Trap</h1>
+    <h2>Ward B</h2>
+    <p>The asylum was sealed three years ago. Officially, everyone got out.</p>
+    <p>You wake in the reception hall. The doors behind you are chained from the inside.</p>
+    <button id="startBtn" class="btn-primary">Enter Ward B</button>
   </div>
 </div>
 
 <!-- GAME -->
 <div id="gameScreen" class="screen hidden">
   <div class="game-layout">
-
-    <!-- 1. Image -->
     <div id="scene" class="scene flex-none"></div>
-
-    <!-- 2. Action bar -->
     <div class="action-bar flex-none">
       <button id="settingsBtn" class="action-btn">⚙</button>
-      <span class="action-spacer"></span>
     </div>
-
-    <!-- 3. Inventory -->
     <div class="section-header flex-none" id="invToggle">
       <span id="invTitle">Inventory (0)</span>
       <span id="invArrow">▾</span>
     </div>
     <div id="inventory" class="inv-list flex-none"></div>
-
-    <!-- 4. Room description -->
     <div class="section-header flex-none" id="roomTitleEl">
       <span id="roomTitle">Room</span>
       <span id="descToggle">▾</span>
@@ -51,38 +40,29 @@
       <div id="roomText" class="room-text"></div>
       <div id="exits" class="exits"></div>
     </div>
-
-    <!-- 5. Output box — fills rest, scrollable, tap to type -->
     <div id="outputBox" class="output-box">
-      <div id="outputInner" class="output-inner">
-        <div id="feedback" class="feedback-msg"></div>
-      </div>
+      <div id="outputInner" class="output-inner"></div>
     </div>
-
   </div>
 </div>
 
 <!-- DEATH -->
 <div id="deathScreen" class="screen hidden">
-  <div class="card">
-    <div id="deathImage" class="scene"></div>
-    <div class="pad">
-      <h1 class="red">You Died</h1>
-      <p id="deathText" class="muted"></p>
-      <button id="continueBtn" class="btn-primary">Continue</button>
-    </div>
+  <div id="deathImage" class="intro-scene"></div>
+  <div class="intro-body">
+    <h1 class="red">You Died</h1>
+    <p id="deathText" class="muted"></p>
+    <button id="continueBtn" class="btn-primary">Continue</button>
   </div>
 </div>
 
 <!-- WIN -->
 <div id="winScreen" class="screen hidden">
-  <div class="card">
-    <div id="winImage" class="scene"></div>
-    <div class="pad">
-      <h1 class="green">Escaped</h1>
-      <p class="muted">The gate opens into cold night air. Behind you, Ward B settles back into silence.</p>
-      <button id="playAgainBtn" class="btn-primary">Play again</button>
-    </div>
+  <div id="winImage" class="intro-scene"></div>
+  <div class="intro-body">
+    <h1 class="green">Escaped</h1>
+    <p class="muted">The gate opens into cold night air. Behind you, Ward B settles back into silence.</p>
+    <button id="playAgainBtn" class="btn-primary">Play again</button>
   </div>
 </div>
 
@@ -95,15 +75,16 @@
 
 <!-- Command overlay -->
 <div id="cmdOverlay" class="overlay hidden">
-  <div class="overlay-input-row">
-    <form id="commandForm" autocomplete="off" style="flex:1;display:flex;gap:8px;margin:0">
+  <div class="overlay-bg" id="overlayBg"></div>
+  <div class="overlay-panel">
+    <form id="commandForm" autocomplete="off">
       <input id="commandInput" class="overlay-input"
         placeholder="Enter command…"
         autocomplete="off" autocorrect="off"
         autocapitalize="off" spellcheck="false"
         enterkeyhint="send">
+      <button type="button" id="cmdClose" class="overlay-close">✕</button>
     </form>
-    <button id="cmdClose" class="overlay-close">✕</button>
   </div>
 </div>
 
@@ -114,13 +95,24 @@ import { ITEMS } from "./data/items.js";
 import { getMedia, getItemIcon } from "./assets.js";
 import { configure, startGame, handleCommand } from "../../ui/renderer.js";
 
+// ── Configure renderer ────────────────────────────────────────────
 configure({ getMedia, getItemIcon });
+
+// ── Screen switching (override renderer default) ──────────────────
+// We handle screens ourselves to avoid commandForm issues
+const SCREENS = ['introScreen','gameScreen','deathScreen','winScreen'];
+window._showScreen = (name) => {
+  SCREENS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', id !== name);
+  });
+};
+
 startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
 
 // ── Elements ──────────────────────────────────────────────────────
 const outputBox   = document.getElementById('outputBox');
 const outputInner = document.getElementById('outputInner');
-const feedback    = document.getElementById('feedback');
 const roomDesc    = document.getElementById('roomDesc');
 const descToggle  = document.getElementById('descToggle');
 const cmdOverlay  = document.getElementById('cmdOverlay');
@@ -129,10 +121,9 @@ const settingsBtn = document.getElementById('settingsBtn');
 const settingsMenu= document.getElementById('settingsMenu');
 
 let descCollapsed = false;
-let roomHistory   = [];
 let currentRoomId = null;
 
-// ── Collapse / expand ─────────────────────────────────────────────
+// ── Collapse / expand desc ────────────────────────────────────────
 function collapse() {
   if (descCollapsed) return;
   descCollapsed = true;
@@ -147,43 +138,41 @@ function expand() {
 
 // ── Renderer hooks ────────────────────────────────────────────────
 window._resetUI = () => {
-  currentRoomId = null; roomHistory = [];
+  currentRoomId = null;
   outputInner.innerHTML = '';
-  feedback.className = 'feedback-msg';
-  feedback.textContent = '';
-  outputInner.appendChild(feedback);
   expand();
 };
 
 window._onRoomEnter = (roomId) => {
-  currentRoomId = roomId; roomHistory = [];
+  if (roomId === currentRoomId) return;
+  currentRoomId = roomId;
   outputInner.innerHTML = '';
-  outputInner.appendChild(feedback);
-  feedback.textContent = '';
   expand();
+  outputBox.scrollTop = 0;
 };
 
 window._onCommand = (cmd, text, type) => {
-  // Remove placeholder
-  if (feedback.parentNode) feedback.remove();
-
   const entry = document.createElement('div');
   entry.className = `output-entry ${type||'neutral'}`;
   entry.innerHTML =
     `<span class="ocmd">&gt; ${esc(cmd)}</span>` +
     (text ? `<span class="otxt">${esc(text)}</span>` : '');
   outputInner.appendChild(entry);
-  // Scroll to bottom
   outputBox.scrollTop = outputBox.scrollHeight;
 };
 
-// ── Output box tap → open overlay ────────────────────────────────
+// ── Start button ──────────────────────────────────────────────────
+document.getElementById('startBtn').addEventListener('click', () => {
+  handleCommand('__start__');
+});
+
+// ── Overlay ───────────────────────────────────────────────────────
 outputBox.addEventListener('click', openOverlay);
 
 function openOverlay() {
   cmdOverlay.classList.remove('hidden');
   cmdInput.value = '';
-  cmdInput.focus();
+  requestAnimationFrame(() => cmdInput.focus());
 }
 
 function closeOverlay() {
@@ -191,9 +180,9 @@ function closeOverlay() {
   cmdInput.blur();
 }
 
+document.getElementById('overlayBg').addEventListener('click', closeOverlay);
 document.getElementById('cmdClose').addEventListener('click', closeOverlay);
 
-// Form submit (Enter key triggers this)
 document.getElementById('commandForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const val = cmdInput.value.trim();
@@ -208,7 +197,7 @@ document.getElementById('roomTitleEl').addEventListener('click', () => {
   descCollapsed ? expand() : collapse();
 });
 
-// ── Inventory toggle ──────────────────────────────────────────────
+// ── Inventory ─────────────────────────────────────────────────────
 document.getElementById('invToggle').addEventListener('click', () => {
   const inv = document.getElementById('inventory');
   inv.classList.toggle('open');
@@ -225,14 +214,8 @@ settingsBtn.addEventListener('click', (e) => {
   settingsMenu.classList.toggle('hidden');
 });
 document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
-// Don't stopPropagation on menu itself — let clicks bubble to close menu
-// But do close menu when items are clicked
-document.getElementById('helpBtn').addEventListener('click', () => {
-  settingsMenu.classList.add('hidden');
-});
-document.getElementById('restartBtn').addEventListener('click', () => {
-  settingsMenu.classList.add('hidden');
-});
+document.getElementById('helpBtn').addEventListener('click', () => settingsMenu.classList.add('hidden'));
+document.getElementById('restartBtn').addEventListener('click', () => settingsMenu.classList.add('hidden'));
 document.getElementById('backBtn').addEventListener('click', () => {
   settingsMenu.classList.add('hidden');
   window.location.href = '../../index.html';

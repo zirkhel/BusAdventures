@@ -55,7 +55,8 @@ function resolveMedia(roomId) {
 function renderRoom() {
   const roomId = S.get().room;
   const roomDef = S.roomDef(roomId);
-  showScreen("gameScreen");
+  if (typeof window._showScreen === "function") window._showScreen("gameScreen");
+  else showScreen("gameScreen");
 
   renderMedia(qs("scene"), resolveMedia(roomId));
 
@@ -195,6 +196,17 @@ function renderWin() {
 function handleCommand(input) {
   const raw = (input || "").trim();
   if (!raw) return;
+
+  // Special internal command from startBtn
+  if (raw === "__start__") {
+    S.fresh();
+    if (typeof window._resetUI === "function") window._resetUI();
+    S.incVisit(S.get().room);
+    renderRoom();
+    if (typeof window._showScreen === "function") window._showScreen("gameScreen");
+    S.save();
+    return;
+  }
 
   const result = E.runCommand(raw);
 

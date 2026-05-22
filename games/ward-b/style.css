@@ -31,8 +31,31 @@ body {
 
 /* ── Screens ── */
 .screen {
-  min-height: 100dvh;
-  padding: 10px 10px 24px;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* Intro / death / win layout */
+#introScreen, #deathScreen, #winScreen {
+  display: flex;
+  flex-direction: column;
+}
+
+.intro-scene {
+  flex: 1;
+  background: #050608;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+}
+.intro-scene img, .intro-scene video { width:100%; height:100%; object-fit:cover; display:block; }
+.intro-scene svg { width:100%; height:100%; display:block; }
+
+.intro-body {
+  flex-shrink: 0;
+  padding: 20px 20px 28px;
+  background: linear-gradient(180deg, rgba(18,20,28,.97), rgba(8,9,14,.99));
+  border-top: 1px solid var(--line);
 }
 
 /* ── Card ── */
@@ -334,4 +357,25 @@ body {
   font-style: italic;
   line-height: 1.5;
   font-family: var(--fb);
+}
+
+/* Overlay layout fix */
+.overlay {
+  position: fixed; inset: 0; z-index: 500;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.overlay.hidden { display: none; }
+.overlay-bg {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.5);
+}
+.overlay-panel {
+  position: relative; z-index: 1;
+  background: rgba(9,10,16,.98);
+  border-top: 1px solid var(--line);
+  padding: 12px 14px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.overlay-panel form {
+  display: flex; gap: 8px;
 }
