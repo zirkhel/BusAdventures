@@ -226,8 +226,14 @@ function startGame(adventure) {
 }
 
 function wireControls(adventure) {
-  // Command form handled by overlay in index.html
-  // (submit fires handleCommand via busadv:command event)
+  // Command form — wired here, blur handled by index.html
+  qs("commandForm")?.addEventListener("submit", e => {
+    e.preventDefault();
+    const inp = qs("commandInput");
+    const val = inp.value.trim();
+    inp.value = "";
+    if (val) handleCommand(val);
+  });
 
   // Inventory toggle
   qs("invToggle")?.addEventListener("click", () => {
