@@ -226,14 +226,8 @@ function startGame(adventure) {
 }
 
 function wireControls(adventure) {
-  // Command form
-  qs("commandForm")?.addEventListener("submit", e => {
-    e.preventDefault();
-    const inp = qs("commandInput");
-    const val = inp.value.trim();
-    inp.value = "";
-    handleCommand(val);
-  });
+  // Command form handled by overlay in index.html
+  // (submit fires handleCommand via busadv:command event)
 
   // Inventory toggle
   qs("invToggle")?.addEventListener("click", () => {
@@ -263,7 +257,7 @@ function wireControls(adventure) {
     renderRoom();
     showFeedback(adventure.game.intro?.firstText || "");
     S.save();
-    qs("commandInput")?.focus();
+    // Input via overlay
   });
 
   // Continue after death
