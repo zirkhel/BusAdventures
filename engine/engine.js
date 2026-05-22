@@ -314,7 +314,12 @@ function hold(target) {
 // ── Examine ───────────────────────────────────────────────────────────────────
 
 function examine(target) {
-  if (!target) return res("", "neutral", { roomChanged: true });
+  if (!target) {
+    // "look" alone — return current room description as feedback text
+    // Also trigger room re-render to update image/exits
+    const desc = buildDescription(S.get().room);
+    return res(desc, "neutral", { roomChanged: true, skipHistory: true });
+  }
 
   // Item in room or inventory
   const id = S.findVisibleItem(target);

@@ -150,8 +150,8 @@ function showFeedback(text, type = "neutral", command = null, warning = null) {
 
   el.innerHTML = html;
 
-  // Notify history hook
-  if (command && typeof window._onCommand === "function") {
+  // Notify history hook (skip for bare "look")
+  if (command && !result?.skipHistory && typeof window._onCommand === "function") {
     window._onCommand(command, text + (warning ? "\n" + warning : ""), type);
   }
 }
@@ -181,6 +181,11 @@ function handleCommand(input) {
   if (!raw) return;
 
   const result = E.runCommand(raw);
+
+  // Re-expand description on bare "look"
+  if (raw.toLowerCase() === "look" && typeof window._expandDesc === "function") {
+    window._expandDesc();
+  }
 
   if (result.type === "death") { renderDeath(result.text); return; }
   if (result.type === "win")   { renderWin(); return; }

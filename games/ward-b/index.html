@@ -25,28 +25,30 @@
       <button id="settingsBtn" class="scene-gear" aria-label="Settings">⚙</button>
     </div>
 
-    <div class="inv-header" id="invToggle">
-      <strong id="invTitle">Inventory (0)</strong>
-      <span class="inv-arrow" id="invArrow">▾</span>
-    </div>
-    <div id="inventory" class="inv-list"></div>
-
-    <div class="room">
-      <h2 class="room-title" id="roomTitleEl">
-        <span class="room-title-text" id="roomTitle"></span>
-        <span class="room-title-toggle" id="descToggle">▾ desc</span>
-      </h2>
-      <div class="room-desc" id="roomDesc">
-        <div id="roomText" class="room-text"></div>
-        <div id="exits" class="exits"></div>
+    <div class="game-scroll">
+      <div class="inv-header" id="invToggle">
+        <strong id="invTitle">Inventory (0)</strong>
+        <span class="inv-arrow" id="invArrow">▾</span>
       </div>
+      <div id="inventory" class="inv-list"></div>
+
+      <div class="room">
+        <h2 class="room-title" id="roomTitleEl">
+          <span class="room-title-text" id="roomTitle"></span>
+          <span class="room-title-toggle" id="descToggle">▾ desc</span>
+        </h2>
+        <div class="room-desc" id="roomDesc">
+          <div id="roomText" class="room-text"></div>
+          <div id="exits" class="exits"></div>
+        </div>
+      </div>
+
+      <!-- History — shown when desc is collapsed -->
+      <div id="historyBox" class="history-box"></div>
+
+      <!-- Current feedback -->
+      <div id="feedback" class="feedback">Type a command, or try <strong>look</strong>.</div>
     </div>
-
-    <!-- History — shown when desc is collapsed -->
-    <div id="historyBox" class="history-box"></div>
-
-    <!-- Current feedback -->
-    <div id="feedback" class="feedback">Type a command, or try <strong>look</strong>.</div>
 
     <form id="commandForm" class="controls" autocomplete="off">
       <input id="commandInput" class="cmd-input"
@@ -116,18 +118,18 @@
     document.getElementById('feedback').innerHTML = 'Type a command, or try <strong>look</strong>.';
   };
 
-  // Called by renderer after room change — reset history
+  // Called by renderer after room change — always expand desc
   window._onRoomEnter = (roomId) => {
-    if (roomId !== currentRoomId) {
-      currentRoomId = roomId;
-      roomHistory = [];
-      historyBox.innerHTML = '';
-      historyBox.classList.remove('visible');
-      // Expand desc on room change
-      descCollapsed = false;
-      roomDesc.classList.remove('collapsed');
-      descToggle.textContent = '▾ desc';
-    }
+    currentRoomId = roomId;
+    roomHistory = [];
+    historyBox.innerHTML = '';
+    historyBox.classList.remove('visible');
+    descCollapsed = false;
+    roomDesc.classList.remove('collapsed');
+    descToggle.textContent = '▾ desc';
+    // Scroll to top of game-scroll on room change
+    const gs = document.querySelector('.game-scroll');
+    if (gs) gs.scrollTop = 0;
   };
 
   // Called by renderer after each command response
@@ -149,6 +151,18 @@
     }
     // Scroll history to bottom
     historyBox.scrollTop = historyBox.scrollHeight;
+
+    // Scroll feedback into view
+    const feedback = document.getElementById('feedback');
+    if (feedback) feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+
+  // Expand desc — called by renderer on "look"
+  window._expandDesc = () => {
+    descCollapsed = false;
+    roomDesc.classList.remove('collapsed');
+    descToggle.textContent = '▾ desc';
+    historyBox.classList.remove('visible');
   };
 
   // Toggle desc on title tap
