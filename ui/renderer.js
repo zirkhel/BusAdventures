@@ -135,27 +135,22 @@ function renderInventory() {
 // ── Feedback ──────────────────────────────────────────────────────────────────
 
 function showFeedback(text, type = "neutral", command = null, warning = null) {
-  const el = qs("feedback");
-  if (!el) return;
-  el.className = "feedback " + type;
-
-  let html = command
-    ? `<span class="cmd">&gt; ${esc(command)}</span>`
-    : "";
-
-  if (text) {
-    html += `<span class="feedback-text">${esc(text).replace(/\n/g, "<br>")}</span>`;
-  }
-
-  if (warning) {
-    html += `<span class="feedback-warning">${esc(warning)}</span>`;
-  }
-
-  el.innerHTML = html;
-
-  // Notify history hook (skip for bare "look")
-  if (command && !result?.skipHistory && typeof window._onCommand === "function") {
+  // Notify hooks — they handle rendering
+  if (command && typeof window._onCommand === "function") {
     window._onCommand(command, text + (warning ? "\n" + warning : ""), type);
+    return;
+  }
+  // No command (e.g. room enter message) — append to output
+  if (text) {
+    const inner = document.getElementById("outputInner");
+    if (inner) {
+      const entry = document.createElement("div");
+      entry.className = "output-entry " + type;
+      entry.innerHTML = `<span class="otxt">${esc(text).replace(/\n/g,"<br>")}</span>`;
+      inner.appendChild(entry);
+      const box = document.getElementById("outputBox");
+      if (box) box.scrollTop = box.scrollHeight;
+    }
   }
 }
 
