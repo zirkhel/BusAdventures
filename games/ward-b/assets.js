@@ -54,11 +54,12 @@ export function getMedia(mediaKey, state, roomStateName) {
 // ── Item icons ────────────────────────────────────────────────────
 
 export function getItemIcon(itemId) {
-  // Try image file first; fall back to inline SVG
-  const svg = ITEM_SVG[itemId];
-  if (!svg) return FALLBACK_ICON;
-  // Return img tag — if file missing, browser shows nothing, SVG is inline fallback
-  return `<img src="assets/items/${itemId}.png" onerror="this.outerHTML='${svg.replace(/'/g, "\\'")}'">`;
+  const svg = ITEM_SVG[itemId] || FALLBACK_ICON;
+  const enc = encodeURIComponent(svg);
+  return '<img src="assets/items/' + itemId + '.png" '
+    + 'style="width:100%;height:100%;object-fit:contain" '
+    + 'onerror="this.outerHTML=decodeURIComponent(\'' + enc + '\')">';
+}.png" onerror="this.outerHTML='${svg.replace(/'/g, "\\'")}'">`;
 }
 
 const ITEM_SVG = {

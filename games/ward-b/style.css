@@ -304,3 +304,34 @@ body {
   font-family: var(--fb); font-size: 16px; cursor: pointer;
 }
 .btn-primary:active { filter: brightness(1.2); }
+
+/* Hide empty feedback msg */
+.feedback-msg:empty { display: none; }
+
+/* no tap hint */
+
+/* Inventory tap detail */
+.inv-item {
+  flex-wrap: wrap;
+  cursor: pointer;
+  position: relative;
+}
+.inv-expand {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+  align-self: center;
+  flex-shrink: 0;
+  padding-left: 6px;
+}
+.inv-detail {
+  width: 100%;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.5;
+  font-family: var(--fb);
+}

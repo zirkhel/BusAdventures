@@ -55,7 +55,7 @@
     <!-- 5. Output box — fills rest, scrollable, tap to type -->
     <div id="outputBox" class="output-box">
       <div id="outputInner" class="output-inner">
-        <div id="feedback" class="feedback-msg">Tap here to enter a command.</div>
+        <div id="feedback" class="feedback-msg"></div>
       </div>
     </div>
 
@@ -148,7 +148,7 @@ window._resetUI = () => {
   currentRoomId = null; roomHistory = [];
   outputInner.innerHTML = '';
   feedback.className = 'feedback-msg';
-  feedback.textContent = 'Tap here to enter a command.';
+  feedback.textContent = '';
   outputInner.appendChild(feedback);
   expand();
 };
@@ -157,7 +157,7 @@ window._onRoomEnter = (roomId) => {
   currentRoomId = roomId; roomHistory = [];
   outputInner.innerHTML = '';
   outputInner.appendChild(feedback);
-  feedback.textContent = 'Tap here to enter a command.';
+  feedback.textContent = '';
   expand();
 };
 
@@ -181,8 +181,7 @@ outputBox.addEventListener('click', openOverlay);
 function openOverlay() {
   cmdOverlay.classList.remove('hidden');
   cmdInput.value = '';
-  // Use timeout so overlay is visible before focus (iOS)
-  setTimeout(() => cmdInput.focus(), 80);
+  cmdInput.focus();
 }
 
 function closeOverlay() {
