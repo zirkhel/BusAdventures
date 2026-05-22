@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Death Trap: Ward B — Bus Adventures</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app">
 
+  <!-- INTRO -->
   <section id="introScreen" class="card">
     <div id="introImage" class="scene"></div>
     <div class="intro">
@@ -20,16 +21,23 @@
     </div>
   </section>
 
+  <!-- GAME -->
   <section id="gameScreen" class="card hidden">
+
+    <!-- Scene image — sticky top, gear overlay -->
     <div id="scene" class="scene">
       <button id="settingsBtn" class="scene-gear" aria-label="Settings">⚙</button>
-      <div id="settingsMenu" class="settings-menu hidden">
-        <button id="helpBtn" class="settings-item">Help / Commands</button>
-        <button id="restartBtn" class="settings-item danger">Restart Journey</button>
-      </div>
     </div>
 
-    <div class="game-scroll">
+    <!-- Settings dropdown — outside scene so overflow works -->
+    <div id="settingsMenu" class="settings-menu hidden">
+      <button id="helpBtn" class="settings-item">Help / Commands</button>
+      <button id="restartBtn" class="settings-item danger">Restart Journey</button>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="game-scroll" id="gameScroll">
+
       <div class="inv-header" id="invToggle">
         <strong id="invTitle">Inventory (0)</strong>
         <span class="inv-arrow" id="invArrow">▾</span>
@@ -38,36 +46,24 @@
 
       <div class="room">
         <h2 class="room-title" id="roomTitleEl">
-          <span class="room-title-text" id="roomTitle"></span>
-          <span class="room-title-toggle" id="descToggle">▾ desc</span>
+          <span id="roomTitle"></span>
+          <span class="room-title-toggle" id="descToggle">▾</span>
         </h2>
         <div class="room-desc" id="roomDesc">
           <div id="roomText" class="room-text"></div>
           <div id="exits" class="exits"></div>
         </div>
+        <div id="historyBox" class="history-box"></div>
       </div>
 
-      <!-- History — shown when desc is collapsed -->
-      <div id="historyBox" class="history-box"></div>
-
-      <!-- Current feedback -->
       <div id="feedback" class="feedback">Type a command, or try <strong>look</strong>.</div>
 
-      <!-- Spacer so content clears fixed input bar -->
       <div class="input-spacer"></div>
     </div>
 
   </section>
 
-  <!-- Fixed command input — outside all cards, overlays everything -->
-  <form id="commandForm" class="controls" autocomplete="off">
-    <input id="commandInput" class="cmd-input"
-      placeholder="Enter command..."
-      autocomplete="off" autocorrect="off"
-      autocapitalize="off" spellcheck="false"
-      inputmode="text">
-  </form>
-
+  <!-- DEATH -->
   <section id="deathScreen" class="card hidden">
     <div id="deathImage" class="scene fx-mist"></div>
     <div class="death-content">
@@ -77,6 +73,7 @@
     </div>
   </section>
 
+  <!-- WIN -->
   <section id="winScreen" class="card hidden">
     <div id="winImage" class="scene fx-mist"></div>
     <div class="win-content">
@@ -87,140 +84,126 @@
   </section>
 
 </div>
+
+<!-- Fixed command input — rendered over everything, always at bottom -->
+<form id="commandForm" class="controls" autocomplete="off">
+  <input id="commandInput" class="cmd-input"
+    placeholder="Enter command..."
+    autocomplete="off" autocorrect="off"
+    autocapitalize="off" spellcheck="false"
+    enterkeyhint="send">
+</form>
+
 <script type="module">
-  import { GAME }  from "./data/game.js";
-  import { ROOMS } from "./data/rooms.js";
-  import { ITEMS } from "./data/items.js";
-  import { getMedia, getItemIcon } from "./assets.js";
-  import { configure, startGame } from "../../ui/renderer.js";
+import { GAME }  from "./data/game.js";
+import { ROOMS } from "./data/rooms.js";
+import { ITEMS } from "./data/items.js";
+import { getMedia, getItemIcon } from "./assets.js";
+import { configure, startGame } from "../../ui/renderer.js";
 
-  configure({ getMedia, getItemIcon });
-  startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
+configure({ getMedia, getItemIcon });
+startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
 
-  // ── Collapsible description ──────────────────────────────────────
-  const roomDesc    = document.getElementById('roomDesc');
-  const descToggle  = document.getElementById('descToggle');
-  const historyBox  = document.getElementById('historyBox');
-  const commandInput = document.getElementById('commandInput');
-  let descCollapsed = false;
+// ── Elements ──────────────────────────────────────────────────────
+const roomDesc    = document.getElementById('roomDesc');
+const descToggle  = document.getElementById('descToggle');
+const historyBox  = document.getElementById('historyBox');
+const gameScroll  = document.getElementById('gameScroll');
+const feedback    = document.getElementById('feedback');
+const cmdInput    = document.getElementById('commandInput');
+const cmdForm     = document.getElementById('commandForm');
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsMenu= document.getElementById('settingsMenu');
 
-  // History entries for current room session
-  let roomHistory = [];
-  let currentRoomId = null;
+// ── State ─────────────────────────────────────────────────────────
+let descCollapsed = false;
+let roomHistory   = [];
+let currentRoomId = null;
 
-  // Full UI reset — called by renderer on restart/continue
-  window._resetUI = () => {
-    currentRoomId = null;
-    roomHistory = [];
-    historyBox.innerHTML = '';
+// ── Collapse helpers ──────────────────────────────────────────────
+function collapse() {
+  if (descCollapsed) return;
+  descCollapsed = true;
+  roomDesc.classList.add('collapsed');
+  descToggle.textContent = '▸';
+}
+
+function expand() {
+  if (!descCollapsed) return;
+  descCollapsed = false;
+  roomDesc.classList.remove('collapsed');
+  descToggle.textContent = '▾';
+}
+
+// ── Reset UI (called by renderer on restart/continue/play again) ──
+window._resetUI = () => {
+  currentRoomId = null;
+  roomHistory   = [];
+  historyBox.innerHTML = '';
+  historyBox.classList.remove('visible');
+  expand();
+  feedback.className   = 'feedback';
+  feedback.innerHTML   = 'Type a command, or try <strong>look</strong>.';
+};
+
+// ── Room enter (called by renderer on every room change) ──────────
+window._onRoomEnter = (roomId) => {
+  currentRoomId = roomId;
+  roomHistory   = [];
+  historyBox.innerHTML = '';
+  historyBox.classList.remove('visible');
+  expand();
+  if (gameScroll) gameScroll.scrollTop = 0;
+};
+
+// ── After command (called by renderer after each response) ────────
+window._onCommand = (cmd, text, type) => {
+  if (!cmd) return;
+  const entry = document.createElement('div');
+  entry.className = `history-entry ${type || 'neutral'}`;
+  entry.innerHTML =
+    `<span class="history-cmd">&gt; ${esc(cmd)}</span>` +
+    `<span class="history-text">${esc(text || '')}</span>`;
+  historyBox.appendChild(entry);
+  roomHistory.push({ cmd, text, type });
+  if (roomHistory.length === 1) historyBox.classList.add('visible');
+  historyBox.scrollTop = historyBox.scrollHeight;
+};
+
+// ── Collapse on typing ────────────────────────────────────────────
+cmdInput.addEventListener('input', () => collapse());
+
+// Submit is handled by renderer.js wireControls()
+// Just blur keyboard after submit
+cmdForm.addEventListener('submit', () => {
+  setTimeout(() => cmdInput.blur(), 30);
+});
+
+// ── Title tap toggles desc ────────────────────────────────────────
+document.getElementById('roomTitleEl').addEventListener('click', () => {
+  if (descCollapsed) {
+    expand();
     historyBox.classList.remove('visible');
-    descCollapsed = false;
-    roomDesc.classList.remove('collapsed');
-    descToggle.textContent = '▾ desc';
-    document.getElementById('feedback').className = 'feedback';
-    document.getElementById('feedback').innerHTML = 'Type a command, or try <strong>look</strong>.';
-  };
+  } else {
+    collapse();
+    if (roomHistory.length > 0) historyBox.classList.add('visible');
+  }
+});
 
-  // Called by renderer after room change — always expand desc
-  window._onRoomEnter = (roomId) => {
-    currentRoomId = roomId;
-    roomHistory = [];
-    historyBox.innerHTML = '';
-    historyBox.classList.remove('visible');
-    descCollapsed = false;
-    roomDesc.classList.remove('collapsed');
-    descToggle.textContent = '▾ desc';
-    // Scroll to top of game-scroll on room change
-    const gs = document.querySelector('.game-scroll');
-    if (gs) gs.scrollTop = 0;
-  };
+// ── Settings menu ─────────────────────────────────────────────────
+settingsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  settingsMenu.classList.toggle('hidden');
+});
 
-  // Called by renderer after each command response
-  window._onCommand = (cmd, text, type) => {
-    if (!cmd) return;
-    // Add to history
-    const entry = document.createElement('div');
-    entry.className = `history-entry ${type||'neutral'}`;
-    entry.innerHTML = `<span class="history-cmd">&gt; ${cmd}</span><span class="history-text">${text||''}</span>`;
-    historyBox.appendChild(entry);
-    roomHistory.push({ cmd, text, type });
+document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
+settingsMenu.addEventListener('click', (e) => e.stopPropagation());
 
-    // Show history once there are entries
-    if (roomHistory.length === 1) {
-      historyBox.classList.add('visible');
-    }
-    // Scroll history to bottom
-    historyBox.scrollTop = historyBox.scrollHeight;
-
-    // Scroll feedback into view
-    const feedback = document.getElementById('feedback');
-    if (feedback) feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  };
-
-  // Expand desc — called by renderer on "look"
-  window._expandDesc = () => {
-    descCollapsed = false;
-    roomDesc.classList.remove('collapsed');
-    descToggle.textContent = '▾ desc';
-    historyBox.classList.remove('visible');
-  };
-
-  // Toggle desc on title tap
-  document.getElementById('roomTitleEl').addEventListener('click', () => {
-    descCollapsed = !descCollapsed;
-    roomDesc.classList.toggle('collapsed', descCollapsed);
-    historyBox.classList.toggle('visible', descCollapsed && roomHistory.length > 0);
-    descToggle.textContent = descCollapsed ? '▸ desc' : '▾ desc';
-  });
-
-  // Collapse desc when user starts typing
-  commandInput.addEventListener('focus', () => {
-    if (!descCollapsed && roomHistory.length === 0) {
-      // Small delay so it feels intentional
-      setTimeout(() => {
-        if (document.activeElement === commandInput) {
-          descCollapsed = true;
-          roomDesc.classList.add('collapsed');
-          descToggle.textContent = '▸ desc';
-        }
-      }, 300);
-    } else if (!descCollapsed) {
-      descCollapsed = true;
-      roomDesc.classList.add('collapsed');
-      descToggle.textContent = '▸ desc';
-    }
-  });
-
-  commandInput.addEventListener('input', () => {
-    if (!descCollapsed) {
-      descCollapsed = true;
-      roomDesc.classList.add('collapsed');
-      descToggle.textContent = '▸ desc';
-    }
-  });
-
-  // Dismiss keyboard after submit
-  document.getElementById('commandForm').addEventListener('submit', () => {
-    setTimeout(() => commandInput.blur(), 50);
-  });
-
-  // Settings menu toggle — position menu below gear button
-  const settingsBtn  = document.getElementById('settingsBtn');
-  const settingsMenu = document.getElementById('settingsMenu');
-
-  settingsBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    settingsMenu.classList.toggle('hidden');
-  });
-
-  // Close on tap outside
-  document.addEventListener('click', () => {
-    settingsMenu.classList.add('hidden');
-  });
-
-  settingsMenu.addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
+// ── Utility ───────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '').replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[c]));
+}
 </script>
 </body>
 </html>

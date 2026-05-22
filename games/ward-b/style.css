@@ -1,11 +1,10 @@
-/* games/ward-b/style.css — Ward B horror theme */
+/* games/ward-b/style.css */
 
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
   --bg:        #07080b;
   --panel:     #12141d;
-  --panel2:    #1a1d29;
   --ink:       #eee5d8;
   --muted:     #aaa194;
   --line:      #343849;
@@ -19,27 +18,29 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html {
+/* ── Lock to device, no scroll bleed ── */
+html, body {
+  margin: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   background: #030405;
+  overscroll-behavior: none;
 }
 
 body {
-  margin: 0;
-  height: 100%;
-  overflow: hidden;
   background: radial-gradient(circle at top, #22283a 0, #08090d 44%, #030405 100%);
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 17px;
   line-height: 1.5;
-  overscroll-behavior: none;
 }
 
 .hidden { display: none !important; }
 
+/* ── App — fills screen, no scroll ── */
 .app {
+  width: 100%;
   max-width: 820px;
   margin: 0 auto;
   height: 100%;
@@ -54,58 +55,35 @@ body {
   border: 1px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 24px 80px rgba(0,0,0,.5);
+  margin: 10px 10px 0;
   overflow: hidden;
-  margin: 12px 12px 12px;
-  position: relative;
+  flex-shrink: 0;
 }
 
-/* Game screen fills all available height */
+/* Game screen fills remaining height */
 #gameScreen {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  margin-bottom: 10px;
+  position: relative; /* for settings menu */
 }
 
-/* Scrollable middle section */
-.game-scroll {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+/* ── Scene — sticky, clips image but not gear/menu ── */
+.scene-wrapper {
+  position: relative;
+  flex-shrink: 0;
 }
 
-/* ── Scene ── */
 .scene {
-  position: sticky;
-  top: 0;
-  z-index: 5;
   aspect-ratio: 16/9;
   background: #050608;
   overflow: hidden;
-}
-
-/* Scene wrapper for gear overlay */
-#gameScreen .scene {
-  overflow: visible; /* allow gear menu to escape */
-}
-
-#gameScreen .scene img,
-#gameScreen .scene video,
-#gameScreen .scene svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#gameScreen .scene::before,
-#gameScreen .scene::after {
-  z-index: 3;
+  display: block;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .scene img, .scene video {
@@ -122,6 +100,7 @@ body {
     radial-gradient(circle at center, transparent 36%, rgba(0,0,0,.68) 100%),
     linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.25));
   pointer-events: none;
+  z-index: 1;
 }
 
 /* FX */
@@ -130,226 +109,230 @@ body {
   position: absolute; inset: -20%; z-index: 2;
   background:
     radial-gradient(circle at 20% 50%, rgba(255,255,255,.12), transparent 22%),
-    radial-gradient(circle at 74% 40%, rgba(255,255,255,.09), transparent 24%),
-    radial-gradient(circle at 48% 75%, rgba(255,255,255,.06), transparent 20%);
+    radial-gradient(circle at 74% 40%, rgba(255,255,255,.09), transparent 24%);
   filter: blur(14px);
   animation: mist 9s ease-in-out infinite alternate;
   pointer-events: none;
 }
-
 .fx-flicker .glow { animation: flicker 1.2s infinite alternate; }
 
 @keyframes mist {
   from { transform: translateX(-4%) translateY(0); }
   to   { transform: translateX(6%) translateY(-2%); }
 }
-@keyframes flicker {
-  from { opacity: .32; } to { opacity: .88; }
+@keyframes flicker { from { opacity: .32; } to { opacity: .88; } }
+
+/* ── Gear button ── */
+.scene-gear {
+  position: absolute;
+  top: 8px; right: 8px;
+  z-index: 10;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.4);
+  background: rgba(0,0,0,.55);
+  color: rgba(255,255,255,.8);
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: color .15s, border-color .15s;
+  line-height: 1;
+}
+.scene-gear:hover, .scene-gear:active {
+  color: var(--gold);
+  border-color: rgba(215,181,109,.6);
 }
 
-/* ── Intro ── */
-.intro, .death-content, .win-content { padding: 20px 22px 24px; }
-
-.intro h1 {
-  font-size: clamp(32px, 8vw, 52px);
-  letter-spacing: .08em; text-transform: uppercase;
-  margin: 0 0 4px; color: var(--ink);
+/* ── Settings menu — absolute to #gameScreen ── */
+.settings-menu {
+  position: absolute;
+  top: calc(9/16 * 100% - 4px); /* just below scene */
+  right: 8px;
+  z-index: 50;
+  background: rgba(10,11,16,.97);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 190px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.8);
 }
 
-.intro h2 {
-  font-size: clamp(20px, 5vw, 30px);
-  color: var(--gold); margin: 0 0 16px;
-  font-weight: normal; font-style: italic;
+.settings-item {
+  display: block; width: 100%;
+  padding: 13px 18px; text-align: left;
+  background: none; border: none;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  color: var(--ink); font-family: var(--font-mono);
+  font-size: 14px; cursor: pointer;
+  transition: background .1s;
 }
+.settings-item:last-child { border-bottom: none; }
+.settings-item:hover { background: rgba(255,255,255,.07); }
+.settings-item.danger { color: var(--bad); }
+.settings-item.danger:hover { background: rgba(224,110,101,.12); }
 
-.intro p { margin: 0 0 12px; color: var(--muted); font-size: 16px; }
+/* ── Scrollable game content ── */
+.game-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
 
 /* ── Inventory ── */
 .inv-header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 9px 14px;
-  background: rgba(255,255,255,.035);
-  border-top: 1px solid rgba(255,255,255,.04);
+  background: rgba(255,255,255,.03);
   border-bottom: 1px solid rgba(255,255,255,.04);
-  cursor: pointer; user-select: none;
+  cursor: pointer; user-select: none; flex-shrink: 0;
 }
-
 .inv-header strong {
   font-family: var(--font-mono); font-size: 12px;
   letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
 }
-
-.inv-header .inv-arrow { color: var(--muted); font-size: 12px; }
-
+.inv-arrow { color: var(--muted); font-size: 12px; }
 .inv-list { display: none; flex-direction: column; gap: 7px; padding: 8px 12px; }
 .inv-list.open { display: flex; }
-
 .inv-item {
   display: flex; align-items: center; gap: 10px;
   border: 1px solid #3b4051; border-radius: 12px;
-  background: rgba(255,255,255,.035); padding: 7px 10px;
+  background: rgba(255,255,255,.03); padding: 7px 10px;
 }
-
 .inv-icon {
   width: 42px; height: 42px; border-radius: 10px;
   border: 1px solid #5b6074; display: grid; place-items: center;
   background: #0d0f15; flex: 0 0 auto;
 }
-
 .inv-icon svg, .inv-icon img { width: 34px; height: 34px; }
 .inv-info strong { display: block; font-size: 14px; color: var(--ink); }
-.inv-status { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.inv-status { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-transform: uppercase; }
 .inv-empty { color: var(--muted); font-style: italic; font-size: 13px; padding: 4px 2px; }
 
 /* ── Room ── */
-.room { padding: 14px 16px 10px; }
+.room { padding: 14px 16px 6px; }
 
 .room-title {
-  font-size: clamp(18px, 4.5vw, 26px);
-  font-weight: normal; margin: 0 0 4px;
-  color: var(--ink); letter-spacing: .02em;
+  font-size: clamp(18px, 4.5vw, 26px); font-weight: normal;
+  margin: 0 0 4px; color: var(--ink);
   cursor: pointer; user-select: none;
   display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
 }
 
-.room-title::after { display: none; } /* remove old underline — done differently now */
+.room-title-toggle {
+  font-family: var(--font-mono); font-size: 14px;
+  color: var(--muted); flex-shrink: 0;
+}
 
-.room-title-text::after {
+/* Underline on first span */
+#roomTitle::after {
   content: '';
   display: block; width: 28px; height: 1px;
   background: var(--gold); margin-top: 4px; opacity: .5;
 }
 
-.room-title-toggle {
-  font-family: var(--font-mono); font-size: 11px;
-  color: var(--muted); opacity: .6; flex-shrink: 0;
-}
-
-/* Description — collapsible */
+/* Collapsible desc */
 .room-desc {
   overflow: hidden;
-  transition: max-height .3s ease, opacity .3s ease;
-  max-height: 600px;
+  transition: max-height .25s ease, opacity .25s ease;
+  max-height: 800px;
   opacity: 1;
 }
-
-.room-desc.collapsed {
-  max-height: 0;
-  opacity: 0;
-}
+.room-desc.collapsed { max-height: 0; opacity: 0; }
 
 .room-text {
   white-space: pre-line; font-size: 16px;
-  line-height: 1.55; color: var(--ink);
-  margin: 8px 0 0; padding-bottom: 4px;
+  line-height: 1.55; color: var(--ink); margin: 8px 0 0;
 }
 
-/* ── Exits — compact ── */
+/* ── Exits ── */
 .exits {
   margin-top: 10px; padding-top: 10px;
   border-top: 1px solid rgba(255,255,255,.06);
-  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  display: flex; flex-wrap: wrap; gap: 6px;
 }
-
 .exit-btn {
   font-family: var(--font-mono); font-size: 12px;
   background: rgba(255,255,255,.04);
   border: 1px solid var(--line); border-radius: 6px;
   color: var(--gold); padding: 5px 10px;
-  cursor: pointer; transition: background .15s, border-color .15s;
+  cursor: pointer; transition: background .15s;
   display: flex; align-items: center; gap: 4px;
 }
-
 .exit-btn:hover { background: rgba(215,181,109,.1); border-color: var(--gold); }
 .exit-btn:active { transform: translateY(1px); }
-
-.exit-btn.locked {
-  color: var(--muted); border-color: rgba(255,255,255,.08);
-  cursor: not-allowed; opacity: .55;
-}
+.exit-btn.locked { color: var(--muted); opacity: .55; cursor: not-allowed; }
 .exit-btn.locked::after { content: '🔒'; font-size: 10px; margin-left: 2px; }
+.exit-arrow { font-size: 13px; }
 
-/* Exit arrow icons */
-.exit-arrow { font-size: 14px; line-height: 1; }
-
-/* ── History (replaces feedback when collapsed) ── */
+/* ── History ── */
 .history-box {
-  display: none;
-  flex-direction: column-reverse; /* newest at bottom */
-  gap: 0;
-  max-height: 180px;
-  overflow-y: auto;
-  margin: 0 14px 4px;
-  padding: 8px 0 0;
-  border-top: 1px solid rgba(255,255,255,.06);
-  scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
+  display: none; flex-direction: column;
+  gap: 0; max-height: 200px; overflow-y: auto;
+  margin: 6px 0 0; padding: 0;
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
 }
-
 .history-box.visible { display: flex; }
-
 .history-entry {
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.4;
+  padding: 6px 16px; font-size: 14px; line-height: 1.4;
   border-left: 2px solid transparent;
 }
-
-.history-entry.ok   { border-left-color: var(--ok); }
-.history-entry.bad  { border-left-color: var(--bad); }
-.history-entry.neutral { border-left-color: var(--line); }
-
+.history-entry.ok     { border-left-color: var(--ok); }
+.history-entry.bad    { border-left-color: var(--bad); }
+.history-entry.neutral{ border-left-color: var(--line); }
 .history-cmd {
   font-family: var(--font-mono); font-size: 12px;
   color: var(--gold); display: block; margin-bottom: 2px;
 }
+.history-text { color: #ddd3c5; white-space: pre-line; }
 
-.history-text { color: #ddd3c5; }
-
-/* Current feedback (latest response, always visible) */
+/* ── Feedback ── */
 .feedback {
-  margin: 6px 14px 6px;
+  margin: 8px 14px 6px;
   padding: 10px 12px;
   border-left: 3px solid var(--gold);
-  background: rgba(0,0,0,.24);
-  color: #ddd3c5;
-  white-space: pre-line;
-  line-height: 1.45;
-  font-size: 15px;
+  background: rgba(0,0,0,.2);
+  color: #ddd3c5; white-space: pre-line;
+  line-height: 1.45; font-size: 15px;
   border-radius: 0 6px 6px 0;
-  transition: border-left-color .2s;
 }
-
 .feedback.ok    { border-left-color: var(--ok); }
 .feedback.bad   { border-left-color: var(--bad); }
 .feedback.death { border-left-color: var(--accent); }
 .feedback-warning { display: block; margin-top: 6px; color: var(--bad); font-style: italic; }
+.cmd { display: block; margin-bottom: 4px; color: var(--gold); font-family: var(--font-mono); font-size: 12px; }
 
-.cmd {
-  display: block; margin-bottom: 4px;
-  color: var(--gold); font-family: var(--font-mono); font-size: 12px;
-}
+/* Spacer above fixed input */
+.input-spacer { height: 70px; flex-shrink: 0; }
 
-/* ── Controls — fixed overlay at bottom ── */
+/* ── Fixed command input ── */
 .controls {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  display: flex;
-  padding: 10px 14px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, rgba(7,8,11,.82), rgba(7,8,11,.99));
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+  display: none; /* shown via JS .active */
+  padding: 10px 12px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(7,8,11,.85), rgba(7,8,11,.99));
   border-top: 1px solid rgba(255,255,255,.08);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  max-width: 820px;
+  margin: 0 auto;
 }
+.controls.active { display: flex; }
 
-/* Spacer so content is not hidden behind fixed input */
-.input-spacer {
-  height: 64px;
-  flex-shrink: 0;
+/* Center controls within max-width */
+@media (min-width: 820px) {
+  .controls {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 820px;
+  }
 }
 
 .cmd-input {
@@ -358,115 +341,39 @@ body {
   padding: 12px 14px; font-family: var(--font-mono);
   font-size: 15px; outline: none; transition: border-color .15s;
 }
-
 .cmd-input:focus { border-color: var(--gold); }
 .cmd-input::placeholder { color: var(--muted); opacity: .6; }
 .cmd-submit { display: none; }
 
-/* Footer */
-.footer-actions {
-  display: flex; justify-content: space-between; gap: 8px;
-  padding: 0 12px 14px;
-}
-
-/* Buttons */
+/* ── Buttons ── */
 button.btn-primary {
   background: linear-gradient(180deg, #87342e, #4b1817);
   color: #fff2e0; border: 1px solid #bd5d53; border-radius: 12px;
   padding: 12px 20px; font-family: var(--font-body);
-  font-size: 16px; cursor: pointer; letter-spacing: .03em; transition: filter .15s;
+  font-size: 16px; cursor: pointer; transition: filter .15s;
 }
 button.btn-primary:hover { filter: brightness(1.15); }
 button.btn-primary:active { transform: translateY(1px); }
 
-button.btn-secondary {
-  background: linear-gradient(180deg, #272b38, #151721);
-  color: #ddd3c5; border: 1px solid #484e63; border-radius: 12px;
-  padding: 10px 16px; font-family: var(--font-mono);
-  font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
-  cursor: pointer; transition: filter .15s;
+/* ── Intro / Death / Win ── */
+.intro, .death-content, .win-content { padding: 20px 22px 24px; }
+
+.intro h1, .death-content h1, .win-content h1 {
+  font-size: clamp(30px, 8vw, 50px);
+  letter-spacing: .06em; text-transform: uppercase; margin: 0 0 4px;
 }
-button.btn-secondary:hover { filter: brightness(1.2); }
-button.btn-secondary:active { transform: translateY(1px); }
+.intro h1 { color: var(--ink); }
+.death-content h1 { color: var(--accent); }
+.win-content h1 { color: var(--ok); }
 
-/* Death / Win */
-.death-content h1 {
-  font-size: clamp(32px, 8vw, 52px); text-transform: uppercase;
-  color: var(--accent); margin: 0 0 12px;
+.intro h2 {
+  font-size: clamp(18px, 5vw, 28px);
+  color: var(--gold); margin: 0 0 16px;
+  font-weight: normal; font-style: italic;
 }
-.death-text { color: var(--muted); white-space: pre-line; font-size: 15px; line-height: 1.55; margin: 0 0 20px; }
+.intro p { margin: 0 0 12px; color: var(--muted); font-size: 16px; }
 
-.win-content h1 {
-  font-size: clamp(32px, 8vw, 52px); text-transform: uppercase;
-  color: var(--ok); margin: 0 0 12px;
+.death-text, .win-text {
+  color: var(--muted); white-space: pre-line;
+  font-size: 15px; line-height: 1.55; margin: 0 0 20px;
 }
-.win-text { color: var(--muted); font-size: 15px; line-height: 1.55; margin: 0 0 20px; }
-
-/* ── Scene gear button ── */
-.scene-gear {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.35);
-  background: rgba(0,0,0,.55);
-  color: rgba(255,255,255,.75);
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: color .15s, background .15s, border-color .15s;
-  line-height: 1;
-}
-
-.scene-gear:hover, .scene-gear:active {
-  color: var(--gold);
-  background: rgba(0,0,0,.75);
-  border-color: rgba(215,181,109,.6);
-}
-
-/* ── Settings dropdown ── */
-.settings-menu {
-  position: fixed;
-  top: 60px;
-  right: 12px;
-  z-index: 30;
-  background: rgba(10,11,16,.96);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  min-width: 190px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.7);
-}
-
-.settings-item {
-  display: block;
-  width: 100%;
-  padding: 11px 16px;
-  text-align: left;
-  background: none;
-  border: none;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: .03em;
-  cursor: pointer;
-  transition: background .1s;
-}
-
-.settings-item:last-child { border-bottom: none; }
-.settings-item:hover { background: rgba(255,255,255,.06); }
-.settings-item.danger { color: var(--bad); }
-.settings-item.danger:hover { background: rgba(224,110,101,.1); }
-
-/* Controlled via JS in renderer */
-.controls { display: none; }
-.controls.active { display: flex; }
