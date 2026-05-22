@@ -23,6 +23,10 @@
   <section id="gameScreen" class="card hidden">
     <div id="scene" class="scene">
       <button id="settingsBtn" class="scene-gear" aria-label="Settings">⚙</button>
+      <div id="settingsMenu" class="settings-menu hidden">
+        <button id="helpBtn" class="settings-item">Help / Commands</button>
+        <button id="restartBtn" class="settings-item danger">Restart Journey</button>
+      </div>
     </div>
 
     <div class="game-scroll">
@@ -48,22 +52,21 @@
 
       <!-- Current feedback -->
       <div id="feedback" class="feedback">Type a command, or try <strong>look</strong>.</div>
+
+      <!-- Spacer so content clears fixed input bar -->
+      <div class="input-spacer"></div>
     </div>
 
-    <form id="commandForm" class="controls" autocomplete="off">
-      <input id="commandInput" class="cmd-input"
-        placeholder="Enter command..."
-        autocomplete="off" autocorrect="off"
-        autocapitalize="off" spellcheck="false"
-        inputmode="text">
-    </form>
-
-    <!-- Settings menu (hidden by default) -->
-    <div id="settingsMenu" class="settings-menu hidden">
-      <button id="helpBtn" class="settings-item">Help / Commands</button>
-      <button id="restartBtn" class="settings-item danger">Restart Journey</button>
-    </div>
   </section>
+
+  <!-- Fixed command input — outside all cards, overlays everything -->
+  <form id="commandForm" class="controls" autocomplete="off">
+    <input id="commandInput" class="cmd-input"
+      placeholder="Enter command..."
+      autocomplete="off" autocorrect="off"
+      autocapitalize="off" spellcheck="false"
+      inputmode="text">
+  </form>
 
   <section id="deathScreen" class="card hidden">
     <div id="deathImage" class="scene fx-mist"></div>

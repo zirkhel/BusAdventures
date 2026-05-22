@@ -35,6 +35,9 @@ function showScreen(name) {
     const el = qs(id);
     if (el) el.classList.toggle("hidden", id !== name);
   });
+  // Show input only during game
+  const controls = qs("commandForm");
+  if (controls) controls.classList.toggle("active", name === "gameScreen");
   CFG.hooks?.onScreenChange?.(name);
 }
 
@@ -182,10 +185,7 @@ function handleCommand(input) {
 
   const result = E.runCommand(raw);
 
-  // Re-expand description on bare "look"
-  if (raw.toLowerCase() === "look" && typeof window._expandDesc === "function") {
-    window._expandDesc();
-  }
+  // "look" does NOT expand desc — result shows in feedback
 
   if (result.type === "death") { renderDeath(result.text); return; }
   if (result.type === "win")   { renderWin(); return; }
