@@ -42,7 +42,7 @@
         placeholder="Enter command..."
         autocomplete="off" autocorrect="off"
         autocapitalize="off" spellcheck="false"
-        readonly>
+        inputmode="text">
     </form>
 
     <div class="footer-actions">
@@ -80,27 +80,10 @@
   configure({ getMedia, getItemIcon });
   startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
 
-  // Keyboard: only open when user taps input area, close after submit
+  // Keyboard: submit blurs input to dismiss keyboard on mobile
   const inp = document.getElementById('commandInput');
-  const form = document.getElementById('commandForm');
-
-  // Tap on feedback/room area focuses input
-  document.getElementById('feedback')?.addEventListener('click', () => {
-    inp.removeAttribute('readonly');
-    inp.focus();
-  });
-
-  // Remove readonly on tap of input itself
-  inp.addEventListener('touchstart', () => {
-    inp.removeAttribute('readonly');
-  }, { passive: true });
-
-  // After submit: blur + restore readonly to dismiss keyboard
-  form.addEventListener('submit', () => {
-    setTimeout(() => {
-      inp.blur();
-      inp.setAttribute('readonly', true);
-    }, 50);
+  document.getElementById('commandForm').addEventListener('submit', () => {
+    setTimeout(() => inp.blur(), 50);
   });
 </script>
 </body>

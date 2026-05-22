@@ -1,6 +1,4 @@
 // ui/fx.js
-// Visual and ambient FX hooks. Stateless — called by renderer.
-
 "use strict";
 
 function applySceneFX(sceneEl, fx) {
@@ -11,6 +9,7 @@ function applySceneFX(sceneEl, fx) {
 
 function renderMedia(el, media) {
   if (!el) return;
+
   if (!media) {
     el.innerHTML = defaultPlaceholder();
     return;
@@ -21,27 +20,39 @@ function renderMedia(el, media) {
   if (media.type === "svg") {
     el.innerHTML = media.src;
   } else if (media.type === "video") {
-    el.innerHTML = `<video src="${esc(media.src)}" autoplay loop muted playsinline></video>`;
+    el.innerHTML = "";
+    const v = document.createElement("video");
+    v.src = media.src;
+    v.autoplay = true;
+    v.loop = true;
+    v.muted = true;
+    v.playsInline = true;
+    el.appendChild(v);
   } else {
-    // type === "img"
-    // Create img, append to scene el.
-    // On error: replace entire scene content with SVG fallback.
+    // type === "img" — create element, fall back to SVG on error
     el.innerHTML = "";
     const img = document.createElement("img");
-    img.src = media.src;
     img.alt = "";
-    img.style.cssText = "width:100%;height:100%;object-fit:cover;display:block";
     if (media.svgFallback) {
       img.addEventListener("error", () => {
+        // Replace entire scene content with fallback SVG
         el.innerHTML = media.svgFallback;
+        // Ensure SVG fills scene
+        const svg = el.querySelector("svg");
+        if (svg) {
+          svg.style.width = "100%";
+          svg.style.height = "100%";
+          svg.style.display = "block";
+        }
       }, { once: true });
     }
+    img.src = media.src; // set src after event listener
     el.appendChild(img);
   }
 }
 
 function defaultPlaceholder() {
-  return `<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  return `<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
     <rect width="1280" height="720" fill="#111"/>
     <text x="640" y="370" text-anchor="middle" font-size="28"
       font-family="monospace" fill="#333">[ no image ]</text>
