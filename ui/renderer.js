@@ -239,14 +239,7 @@ function startGame(adventure) {
 }
 
 function wireControls(adventure) {
-  // Command form — wired here, blur handled by index.html
-  qs("commandForm")?.addEventListener("submit", e => {
-    e.preventDefault();
-    const inp = qs("commandInput");
-    const val = inp.value.trim();
-    inp.value = "";
-    if (val) handleCommand(val);
-  });
+  // Command form submit handled by index.html (overlay)
 
   // Inventory toggle
   qs("invToggle")?.addEventListener("click", () => {

@@ -96,11 +96,13 @@
 <!-- Command overlay -->
 <div id="cmdOverlay" class="overlay hidden">
   <div class="overlay-input-row">
-    <input id="commandInput" class="overlay-input"
-      placeholder="Enter command…"
-      autocomplete="off" autocorrect="off"
-      autocapitalize="off" spellcheck="false"
-      enterkeyhint="send">
+    <form id="commandForm" autocomplete="off" style="flex:1;display:flex;gap:8px;margin:0">
+      <input id="commandInput" class="overlay-input"
+        placeholder="Enter command…"
+        autocomplete="off" autocorrect="off"
+        autocapitalize="off" spellcheck="false"
+        enterkeyhint="send">
+    </form>
     <button id="cmdClose" class="overlay-close">✕</button>
   </div>
 </div>
@@ -191,18 +193,14 @@ function closeOverlay() {
 
 document.getElementById('cmdClose').addEventListener('click', closeOverlay);
 
-// Enter submits
-cmdInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    const val = cmdInput.value.trim();
-    closeOverlay();
-    if (val) {
-      // Collapse desc on first command
-      collapse();
-      setTimeout(() => handleCommand(val), 60);
-    }
-  }
+// Form submit (Enter key triggers this)
+document.getElementById('commandForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const val = cmdInput.value.trim();
+  if (!val) return;
+  closeOverlay();
+  collapse();
+  handleCommand(val);
 });
 
 // ── Room title tap ────────────────────────────────────────────────
