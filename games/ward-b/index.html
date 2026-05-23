@@ -38,8 +38,8 @@
     </div>
     <div id="roomDesc" class="room-desc flex-none">
       <div id="roomText" class="room-text"></div>
-      <div id="exits" class="exits"></div>
     </div>
+    <div id="exits" class="exits flex-none"></div>
     <div id="outputBox" class="output-box">
       <div id="outputInner" class="output-inner"></div>
     </div>
@@ -74,16 +74,14 @@
 </div>
 
 <!-- Command overlay — sits above keyboard on iOS -->
-<div id="cmdOverlay" class="cmd-overlay hidden">
-  <form id="commandForm" class="cmd-overlay-form" autocomplete="off">
-    <input id="commandInput" class="cmd-overlay-input"
-      placeholder="Enter command…"
-      autocomplete="off" autocorrect="off"
-      autocapitalize="off" spellcheck="false"
-      enterkeyhint="send">
-    <button type="button" id="cmdClose" class="cmd-overlay-close">✕</button>
-  </form>
-</div>
+<!-- Invisible input — focus triggers keyboard, no visual layout shift -->
+<form id="commandForm" autocomplete="off" style="position:fixed;top:-200px;left:0;width:100%;pointer-events:none">
+  <input id="commandInput"
+    autocomplete="off" autocorrect="off"
+    autocapitalize="off" spellcheck="false"
+    enterkeyhint="send"
+    style="opacity:0;position:absolute;width:1px;height:1px">
+</form>
 
 <script type="module">
 import { GAME }  from "./data/game.js";
@@ -101,7 +99,6 @@ const outputBox   = document.getElementById('outputBox');
 const outputInner = document.getElementById('outputInner');
 const roomDesc    = document.getElementById('roomDesc');
 const descToggle  = document.getElementById('descToggle');
-const cmdOverlay  = document.getElementById('cmdOverlay');
 const cmdInput    = document.getElementById('commandInput');
 const settingsBtn = document.getElementById('settingsBtn');
 const settingsMenu= document.getElementById('settingsMenu');
@@ -149,39 +146,34 @@ window._onCommand = (cmd, text, type) => {
 
 // startBtn wired by renderer
 
-// ── Command overlay ───────────────────────────────────────────────
-// Tap anywhere in output → open overlay, focus input immediately
-// iOS requires focus() directly in click handler (no setTimeout)
-outputBox.addEventListener('click', openOverlay);
-
-function openOverlay() {
-  cmdOverlay.classList.remove('hidden');
+// ── Invisible input — tap output to focus, no layout shift ───────
+outputBox.addEventListener('click', () => {
   cmdInput.value = '';
-  cmdInput.focus(); // must be synchronous for iOS keyboard
-}
+  cmdInput.focus();
+});
 
-function closeOverlay() {
-  cmdOverlay.classList.add('hidden');
-  cmdInput.blur();
-}
-
-document.getElementById('cmdClose').addEventListener('click', (e) => {
-  e.preventDefault();
-  closeOverlay();
+// Also allow tapping exits area
+document.getElementById('roomDesc').addEventListener('click', (e) => {
+  // Only if tapping output, not a button
+  if (e.target.classList.contains('exit-btn')) return;
 });
 
 document.getElementById('commandForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const val = cmdInput.value.trim();
-  if (!val) { closeOverlay(); return; }
-  closeOverlay();
+  if (!val) return;
+  cmdInput.value = '';
+  cmdInput.blur();
   collapse();
   handleCommand(val);
 });
 
-// Close if user taps outside the form (on the dimmed area)
-cmdOverlay.addEventListener('click', (e) => {
-  if (e.target === cmdOverlay) closeOverlay();
+// Show visual feedback that input is active
+cmdInput.addEventListener('focus', () => {
+  outputBox.classList.add('input-active');
+});
+cmdInput.addEventListener('blur', () => {
+  outputBox.classList.remove('input-active');
 });
 
 // ── Room title tap ────────────────────────────────────────────────

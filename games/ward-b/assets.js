@@ -55,13 +55,11 @@ export function getMedia(mediaKey, state, roomStateName) {
 
 export function getItemIcon(itemId) {
   const svg = ITEM_SVG[itemId] || FALLBACK_ICON;
-  // Show PNG if available, SVG always visible as fallback
-  return `<span class="item-icon-wrap">
-    <img src="assets/items/${itemId}.png"
-      style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0"
-      onerror="this.remove()" alt="">
-    <span class="item-icon-svg">${svg}</span>
-  </span>`;
+  return `<img src="assets/items/${itemId}.png"
+    style="width:100%;height:100%;object-fit:contain"
+    onerror="this.outerHTML=this.dataset.fb"
+    data-fb="${svg.replace(/"/g, '&quot;')}"
+    alt="">`;
 }
 
 
