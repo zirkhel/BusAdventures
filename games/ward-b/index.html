@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ward B">
+<meta name="theme-color" content="#07080b">
 <title>Death Trap: Ward B</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -100,6 +105,21 @@ import { configure, startGame, handleCommand } from "../../ui/renderer.js";
 configure({ getMedia, getItemIcon });
 startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
 
+// ── Visual viewport: lock layout and position input bar ──────────
+const gameLayout = document.querySelector('.game-layout');
+function onViewport() {
+  if (!window.visualViewport) return;
+  const vv = window.visualViewport;
+  // Lock game height to visible area
+  if (gameLayout) gameLayout.style.height = vv.height + 'px';
+}
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', onViewport);
+  window.visualViewport.addEventListener('scroll', onViewport);
+  onViewport();
+}
+
 // ── Elements ──────────────────────────────────────────────────────
 const outputBox   = document.getElementById('outputBox');
 const outputInner = document.getElementById('outputInner');
@@ -165,11 +185,6 @@ function collapseAll() {
     inv.classList.remove('open');
     document.getElementById('invArrow').textContent = '▾';
   }
-}
-
-function expandAll() {
-  expand();
-  // Leave inventory as user had it
 }
 
 function focusInput() {

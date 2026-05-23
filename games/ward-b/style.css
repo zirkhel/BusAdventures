@@ -322,6 +322,8 @@ body {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 500;
+  /* iOS Safari: push above address bar */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .cmd-overlay.hidden { display: none; }
@@ -330,10 +332,11 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  padding: 10px 12px 14px;
   background: rgba(10,11,18,.98);
   border-top: 1px solid var(--line);
+  /* Extra room so Safari toolbar doesn't cover input */
+  margin-bottom: 0;
 }
 
 .cmd-overlay-input {
@@ -435,8 +438,8 @@ body {
 .input-bar {
   flex-shrink: 0;
   padding: 8px 12px;
+  background: rgba(8,9,14,.97);
   border-top: 1px solid rgba(255,255,255,.07);
-  border-bottom: 1px solid rgba(255,255,255,.07);
 }
 
 .input-bar-inner {
