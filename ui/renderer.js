@@ -31,11 +31,6 @@ const qs = id => document.getElementById(id);
 const SCREENS = ["introScreen", "gameScreen", "deathScreen", "winScreen"];
 
 function showScreen(name) {
-  if (typeof window._showScreen === "function") {
-    window._showScreen(name);
-    CFG.hooks?.onScreenChange?.(name);
-    return;
-  }
   SCREENS.forEach(id => {
     const el = qs(id);
     if (el) el.classList.toggle("hidden", id !== name);
@@ -57,8 +52,7 @@ function resolveMedia(roomId) {
 function renderRoom() {
   const roomId = S.get().room;
   const roomDef = S.roomDef(roomId);
-  if (typeof window._showScreen === "function") window._showScreen("gameScreen");
-  else showScreen("gameScreen");
+
 
   renderMedia(qs("scene"), resolveMedia(roomId));
 
@@ -279,8 +273,7 @@ function wireControls(adventure) {
     S.fresh();
     if (typeof window._resetUI === "function") window._resetUI();
     S.incVisit(S.get().room);
-    if (typeof window._showScreen === "function") window._showScreen("gameScreen");
-    else showScreen("gameScreen");
+    showScreen("gameScreen");
     renderRoom();
     if (adventure.game.intro?.firstText) showFeedback(adventure.game.intro.firstText);
     S.save();

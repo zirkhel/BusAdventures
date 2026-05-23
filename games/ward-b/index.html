@@ -96,15 +96,6 @@ import { getMedia, getItemIcon } from "./assets.js";
 import { configure, startGame, handleCommand } from "../../ui/renderer.js";
 
 // ── Configure renderer ────────────────────────────────────────────
-// ── Screen switching — must be set BEFORE startGame ──────────────
-const SCREENS = ['introScreen','gameScreen','deathScreen','winScreen'];
-window._showScreen = (name) => {
-  SCREENS.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('hidden', id !== name);
-  });
-};
-
 configure({ getMedia, getItemIcon });
 startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
 

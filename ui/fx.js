@@ -3,7 +3,9 @@
 
 function applySceneFX(sceneEl, fx) {
   if (!sceneEl) return;
-  sceneEl.className = "scene";
+  // Remove only fx classes, preserve existing classes
+  sceneEl.className = sceneEl.className
+    .split(" ").filter(c => !c.startsWith("fx-")).join(" ").trim();
   if (fx) sceneEl.classList.add("fx-" + fx);
 }
 
