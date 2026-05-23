@@ -156,10 +156,27 @@ window._onCommand = (cmd, text, type) => {
 const inputBar     = document.getElementById('inputBar');
 const inputBarText = document.getElementById('inputBarText');
 
+function collapseAll() {
+  // Collapse room description
+  if (!descCollapsed) collapse();
+  // Collapse inventory
+  const inv = document.getElementById('inventory');
+  if (inv.classList.contains('open')) {
+    inv.classList.remove('open');
+    document.getElementById('invArrow').textContent = '▾';
+  }
+}
+
+function expandAll() {
+  expand();
+  // Leave inventory as user had it
+}
+
 function focusInput() {
   cmdInput.value = '';
   inputBarText.textContent = '';
   inputBar.classList.add('active');
+  collapseAll();
   cmdInput.focus();
 }
 
