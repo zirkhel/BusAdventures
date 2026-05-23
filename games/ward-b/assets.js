@@ -56,10 +56,9 @@ export function getMedia(mediaKey, state, roomStateName) {
 export function getItemIcon(itemId) {
   const svg = ITEM_SVG[itemId] || FALLBACK_ICON;
   const enc = encodeURIComponent(svg);
-  return '<img src="assets/items/' + itemId + '.png" '
-    + 'style="width:100%;height:100%;object-fit:contain" '
-    + 'onerror="this.outerHTML=decodeURIComponent(\'' + enc + '\')">';
-}.png" onerror="this.outerHTML='${svg.replace(/'/g, "\\'")}'">`;
+  return `<img src="assets/items/${itemId}.png" 
+    style="width:100%;height:100%;object-fit:contain" 
+    onerror="this.outerHTML=decodeURIComponent('${enc}')">`;
 }
 
 const ITEM_SVG = {
