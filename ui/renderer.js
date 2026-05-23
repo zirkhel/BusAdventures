@@ -120,12 +120,14 @@ function renderInventory() {
   listEl.innerHTML = items.map(it => {
     const iconHtml = CFG.getItemIcon ? CFG.getItemIcon(it.id) : "";
     return `<div class="inv-item" data-id="${esc(it.id)}" tabindex="0">
-      <span class="inv-icon">${iconHtml}</span>
-      <div class="inv-info">
-        <strong>${esc(it.name)}</strong>
-        <div class="inv-status">${esc(it.status)}</div>
+      <div class="inv-row">
+        <span class="inv-icon">${iconHtml}</span>
+        <div class="inv-info">
+          <strong>${esc(it.name)}</strong>
+          <div class="inv-status">${esc(it.status)}</div>
+        </div>
+        <span class="inv-expand">▾</span>
       </div>
-      <span class="inv-expand">▾</span>
       <div class="inv-detail hidden">${esc(it.description || "")}</div>
     </div>`;
   }).join("");

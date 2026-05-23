@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
 <title>Death Trap: Ward B</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -74,7 +74,12 @@
 </div>
 
 <!-- Command overlay — sits above keyboard on iOS -->
-<!-- Invisible input — focus triggers keyboard, no visual layout shift -->
+<!-- Visible typing indicator — shows above keyboard -->
+<div id="typingIndicator">
+  <span class="typing-prompt">&gt;</span><span id="typingText"></span><span class="typing-cursor">_</span>
+</div>
+
+<!-- Invisible input — focus triggers keyboard, no layout shift -->
 <form id="commandForm" autocomplete="off" style="position:fixed;top:-200px;left:0;width:100%;pointer-events:none">
   <input id="commandInput"
     autocomplete="off" autocorrect="off"
@@ -168,13 +173,37 @@ document.getElementById('commandForm').addEventListener('submit', (e) => {
   handleCommand(val);
 });
 
-// Show visual feedback that input is active
+// Typing indicator — shows what user is typing
+const typingIndicator = document.getElementById('typingIndicator');
+const typingText = document.getElementById('typingText');
+
 cmdInput.addEventListener('focus', () => {
-  outputBox.classList.add('input-active');
+  typingIndicator.classList.add('visible');
+  typingText.textContent = '';
+  positionIndicator();
 });
+
+cmdInput.addEventListener('input', () => {
+  typingText.textContent = cmdInput.value;
+});
+
 cmdInput.addEventListener('blur', () => {
-  outputBox.classList.remove('input-active');
+  typingIndicator.classList.remove('visible');
+  typingText.textContent = '';
 });
+
+// Move indicator above keyboard using visualViewport
+function positionIndicator() {
+  if (!window.visualViewport) return;
+  const vv = window.visualViewport;
+  const bottom = window.innerHeight - (vv.offsetTop + vv.height);
+  typingIndicator.style.bottom = Math.max(0, bottom) + 'px';
+}
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', positionIndicator);
+  window.visualViewport.addEventListener('scroll', positionIndicator);
+}
 
 // ── Room title tap ────────────────────────────────────────────────
 document.getElementById('roomTitleEl').addEventListener('click', () => {
