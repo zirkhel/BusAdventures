@@ -63,13 +63,18 @@ function applyEffects(effects, sourceRoomId) {
   if (effects.incCounter) {
     S.incCounter(effects.incCounter.id, effects.incCounter.by ?? 1);
   }
+  if (effects.goTo) {
+    S.get().room = effects.goTo;
+    S.incVisit(effects.goTo);
+  }
 }
 
 function hasRoomChanged(effects) {
   if (!effects) return false;
   return !!(
     effects.revealItem || effects.removeItem || effects.moveItem ||
-    effects.openExit   || effects.setRoomState || effects.setRoomFlag
+    effects.openExit   || effects.setRoomState || effects.setRoomFlag ||
+    effects.goTo
   );
 }
 
@@ -511,8 +516,8 @@ function runCommand(rawInput) {
   let result;
 
   switch (p.verb) {
-    case "empty":     return res("You wait. Nothing changes.", "neutral", { skipPressure: true });
-    case "unknown":   return res("Nothing answers that intention.", "bad");
+    case "empty":     result = res("You wait. Nothing changes.", "neutral"); break;
+    case "unknown":   result = res("Nothing answers that intention.", "bad"); break;
     case "help":      return res(helpText(), "neutral", { skipPressure: true });
     case "inventory": return res("", "neutral", { inventoryOnly: true, skipPressure: true });
 

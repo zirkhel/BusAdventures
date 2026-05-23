@@ -1,84 +1,51 @@
-// games/template/assets.js
-// Replace all placeholder content with your game's visuals.
-//
-// Room media: each key matches a room id in game.js (plus "__intro__")
-// Item icons: each key matches an item id in game.js
-//
-// media type can be:
-//   "svg"   — inline SVG string (no external file needed)
-//   "img"   — path to image file, e.g. "assets/rooms/start.jpg"
-//   "video" — path to video file, e.g. "assets/rooms/start.mp4"
-//
-// fx can be: "mist" | "flicker" | null
-
+// assets.js — Media and icon lookups for your game
+// Add your room image keys and item SVG fallbacks here.
 "use strict";
 
-export const ROOM_MEDIA = {
+// ── Room images ───────────────────────────────────────────────────
+// Keys must match the "media" field in rooms.js
+// Files live in assets/rooms/{key}.png
+// SVG is shown if the PNG is missing
 
-  __intro__: {
-    type: "svg",
-    fx: "mist",
-    src: `<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
-      <rect width="1280" height="720" fill="#111"/>
-      <text x="640" y="380" text-anchor="middle"
-        font-size="64" font-family="serif" fill="#555">
-        YOUR GAME
-      </text>
-    </svg>`,
-  },
-
-  // One entry per room id in game.js
-  start: {
-    type: "svg",
-    fx: null,
-    src: `<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
-      <rect width="1280" height="720" fill="#181818"/>
-      <text x="640" y="380" text-anchor="middle"
-        font-size="40" font-family="serif" fill="#444">
-        Starting Room
-      </text>
-    </svg>`,
-  },
-
-  // Example: image file
-  // forest: {
-  //   type: "img",
-  //   fx: "mist",
-  //   src: "assets/rooms/forest.jpg",
-  // },
-
-  // Example: video
-  // fire_room: {
-  //   type: "video",
-  //   fx: null,
-  //   src: "assets/rooms/fire.mp4",
-  // },
-
+const ROOM_MEDIA = {
+  __intro__: { file: "assets/rooms/start.png", fx: null },
+  start:     { file: "assets/rooms/start.png", fx: null },
+  // Add more rooms here:
+  // room_id: { file: "assets/rooms/room_id.png", fx: "mist" },
 };
 
-// 64x64 SVG icons for inventory items.
-// Key matches item id in game.js.
-export const ITEM_ICONS = {
-
-  // example_item: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  //   <circle cx="32" cy="32" r="24" fill="#555"/>
-  //   <text x="32" y="38" text-anchor="middle" font-size="20" fill="#ccc">?</text>
-  // </svg>`,
-
-};
-
-// Fallback icon shown when item has no entry above
-const FALLBACK_ICON = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <rect x="8" y="8" width="48" height="48" rx="8" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
-  <text x="32" y="40" text-anchor="middle" font-size="28" fill="#666">?</text>
-</svg>`;
-
-// Called by renderer for each room transition
-export function getMedia(roomId, state) {
-  return ROOM_MEDIA[roomId] || ROOM_MEDIA["__intro__"];
+export function getMedia(mediaKey, state, roomState) {
+  const entry = ROOM_MEDIA[mediaKey] || ROOM_MEDIA["__intro__"];
+  if (!entry) return null;
+  return {
+    type:   "image",
+    src:    entry.file,
+    fx:     entry.fx || null,
+    svgFallback: `<svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg">
+      <rect width="160" height="90" fill="#08090d"/>
+      <text x="80" y="48" font-size="10" fill="#2a2e40" font-family="monospace" text-anchor="middle">${mediaKey}</text>
+    </svg>`,
+  };
 }
 
-// Called by renderer for each inventory item
+// ── Item icons ────────────────────────────────────────────────────
+// Files live in assets/items/{itemId}.png
+// SVG is shown if the PNG is missing
+
+const ITEM_SVG = {
+  // Add SVG fallbacks here if desired, keyed by item ID:
+  // my_item: `<svg viewBox="0 0 64 64" ...>...</svg>`,
+};
+
+const FALLBACK_ICON = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="8" width="48" height="48" rx="6" fill="#1a1c24" stroke="#3a3e50" stroke-width="2"/>
+  <text x="32" y="38" font-size="20" fill="#3a3e50" font-family="monospace" text-anchor="middle">?</text>
+</svg>`;
+
 export function getItemIcon(itemId) {
-  return ITEM_ICONS[itemId] || FALLBACK_ICON;
+  const svg = ITEM_SVG[itemId] || FALLBACK_ICON;
+  const enc = encodeURIComponent(svg);
+  return '<img src="assets/items/' + itemId + '.png" '
+    + 'style="width:100%;height:100%;object-fit:contain" '
+    + 'onerror="this.outerHTML=decodeURIComponent(\'' + enc + '\')">';
 }

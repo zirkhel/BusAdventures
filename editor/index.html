@@ -624,6 +624,16 @@ function showRoom(id) {
   </div>
 
   <div class="panel">
+    <div class="panel-head"><h2>Entry Requirement (enterRequires)</h2></div>
+    <div class="panel-body grid2">
+      <div class="field full"><label>Condition (JSON) — player must meet this to enter</label>
+        <input id="rEnterCond" value="${esc(JSON.stringify(r.enterRequires?.condition||""))}" placeholder='{"wearingTag":"respirator"}'></div>
+      <div class="field full"><label>Fail text — shown when blocked</label>
+        <input id="rEnterFail" value="${esc(r.enterRequires?.failText||"")}"></div>
+    </div>
+  </div>
+
+  <div class="panel">
     <div class="panel-head"><h2>Objects</h2><div class="actions"><button class="btn sm" id="addObj">＋</button></div></div>
     <div class="panel-body" id="objList">${renderObjs(r.objects||{}, false)}</div>
   </div>
@@ -792,6 +802,24 @@ function renderObjs(objs, isFlavour) {
   </div>`).join("");
 }
 
+function renderContextActions(cas) {
+  if (!cas.length) return `<p style="color:var(--muted);font-size:12px">No context actions.</p>`;
+  return cas.map((ca,i) => `
+  <div class="list-item" data-ca="${i}">
+    <div class="fields">
+      <div class="grid2">
+        <div class="field"><label>Room ID</label><input class="ca-room" value="${esc(ca.room||"")}" placeholder="surgery"></div>
+        <div class="field"><label>Verbs (comma)</label><input class="ca-verbs" value="${esc((ca.verbs||[]).join(","))}"></div>
+        <div class="field"><label>Requires (JSON)</label><input class="ca-req" value="${esc(JSON.stringify(ca.requires||""))}" placeholder='{"holdsItem":"crowbar"}'></div>
+        <div class="field"><label>Fail text</label><input class="ca-fail" value="${esc(ca.failText||"")}"></div>
+      </div>
+      <div class="field"><label>Success text</label><textarea class="ca-ok" rows="2">${esc(ca.successText||"")}</textarea></div>
+      <div class="field"><label>Effects (JSON)</label><textarea class="ca-fx" rows="2">${esc(JSON.stringify(ca.effects||{}))}</textarea></div>
+    </div>
+    <button class="remove-btn" onclick="this.closest('[data-ca]').remove()">×</button>
+  </div>`).join("");
+}
+
 function saveRoom(oldId) {
   const r = STATE.rooms[oldId];
   const newId = el("rId").value.trim() || oldId;
@@ -899,6 +927,15 @@ function saveRoom(oldId) {
     r.flavourTargets[id] = obj;
   });
 
+  // enterRequires
+  const enterCond = el("rEnterCond")?.value.trim();
+  const enterFail = el("rEnterFail")?.value.trim();
+  if (enterCond && enterCond !== '""') {
+    try { r.enterRequires = { condition: JSON.parse(enterCond), failText: enterFail }; } catch {}
+  } else {
+    delete r.enterRequires;
+  }
+
   // Rename if ID changed
   if (newId !== oldId) {
     STATE.rooms[newId] = r;
@@ -957,6 +994,11 @@ function showItem(id) {
     </div>
   </div>
 
+  <div class="panel">
+    <div class="panel-head"><h2>Context Actions</h2><div class="actions"><button class="btn sm" id="addCA">＋</button></div></div>
+    <div class="panel-body" id="caList">${renderContextActions(it.contextActions||[])}</div>
+  </div>
+
   <div style="display:flex;gap:8px;margin-bottom:60px">
     <button class="btn primary" id="saveItem">Save Item</button>
   </div>`;
@@ -964,6 +1006,7 @@ function showItem(id) {
   const tags = [...(it.tags||[])];
   el("itTagsWrap").appendChild(makeTagInput(tags, updated => it.tags = [...updated]));
 
+  el("addCA")?.onclick = () => appendTo("caList", renderContextActions([{room:"",verbs:[],effects:{}}]));
   el("deleteItem").onclick = () => {
     if (!confirm(`Delete item "${id}"?`)) return;
     delete STATE.items[id];
@@ -990,6 +1033,22 @@ function showItem(id) {
     document.querySelectorAll(".da-inp").forEach(inp => {
       if (inp.value.trim()) it.defaultActions[inp.dataset.verb] = inp.value.trim();
     });
+    // contextActions
+    it.contextActions = [];
+    document.querySelectorAll("#caList [data-ca]").forEach(row => {
+      const room = row.querySelector(".ca-room").value.trim(); if (!room) return;
+      const verbs = row.querySelector(".ca-verbs").value.split(",").map(v=>v.trim()).filter(Boolean);
+      const ok    = row.querySelector(".ca-ok").value.trim();
+      const fail  = row.querySelector(".ca-fail").value.trim();
+      const fxStr = row.querySelector(".ca-fx").value.trim();
+      const reqStr= row.querySelector(".ca-req").value.trim();
+      const ca = { room, verbs, successText: ok };
+      if (fail)   ca.failText = fail;
+      if (reqStr) try { ca.requires = JSON.parse(reqStr); } catch {}
+      if (fxStr)  try { ca.effects  = JSON.parse(fxStr);  } catch {}
+      it.contextActions.push(ca);
+    });
+
     if (newId !== id) {
       STATE.items[newId] = it;
       delete STATE.items[id];

@@ -108,7 +108,7 @@ export const ROOMS = {
     media: "surgery",
     states: {
       default: {
-        description: "The operating theatre waits beneath a dead surgical lamp. The air is thick with chemical fumes. A figure moves beneath a sheet on the restraint table.\n\nThe corridor is west. A locked door leads east.",
+        description: "The operating theatre waits beneath a dead surgical lamp. The air is thick with chemical fumes. A figure moves beneath a sheet on the restraint table. An IV stand feeds something into the wall.\n\nTo unlock the east door you need to sedate the patient. Use something injectable on the IV line.\n\nThe corridor is west. A locked door leads east.",
         fx: "flicker",
       },
       sedated: {
@@ -146,7 +146,7 @@ export const ROOMS = {
     ],
     objects: {
       table:  { id: "table",  aliases: ["table", "restraint table", "operating table"], examineText: "The restraints have been torn from the inside." },
-      iv:     { id: "iv",     aliases: ["iv", "iv line", "iv stand", "drip"],           examineText: "An old IV stand. A cracked bag feeds a line running into the wall.", useText: "The IV line leads somewhere behind the wall." },
+      iv:     { id: "iv",     aliases: ["iv", "iv line", "iv stand", "drip"],           examineText: "An old IV stand. The bag is nearly empty — whatever sedative remained is gone. The line runs directly into the patient. If you had something injectable, this is where it would go.", useText: "You need something injectable to put into the IV line." },
       reader: { id: "reader", aliases: ["reader", "keycard reader", "door reader"],     examineText: "A door reader with a red warning light." },
     },
     flavourTargets: {
@@ -159,11 +159,29 @@ export const ROOMS = {
     title: "Observation Corridor",
     gridPosition: { col: 3, row: 1 },
     media: "observation",
-    baseDescription: "A long observation corridor runs alongside the surgical wing. Glass panels look into darkened rooms. Something has left handprints on the inside of the glass.\n\nSurgery Ward is west. The courtyard is south.",
+    baseDescription: "A long observation corridor runs alongside the surgical wing. Glass panels look into darkened rooms. Something has left handprints on the inside of the glass.\n\nA security gate blocks the south end. A keycard reader is mounted on the wall.\n\nSurgery Ward is west.",
     exits: {
       west:  "surgery",
-      south: "courtyard",
+      south: {
+        to:         "courtyard",
+        condition:  { hasItem: "keycard" },
+        lockedText: "The security gate is locked. A keycard reader blinks red on the wall.",
+      },
     },
+    actions: [
+      {
+        verbs:   ["use", "swipe", "scan", "insert", "tap"],
+        targets: ["keycard", "card", "reader", "gate", "door", "security gate"],
+        requires:   { hasItem: "keycard" },
+        requiresText: "You have nothing to use on the reader.",
+        condition:  null,
+        successText: "You swipe the keycard through the reader. A green light blinks. The security gate clicks open.",
+        effects: {
+          openExit: { dir: "south", to: "courtyard" },
+          setFlag:  "gateUnlocked",
+        },
+      },
+    ],
     enterRules: [
       {
         onFirstEnter: true,
@@ -210,21 +228,16 @@ export const ROOMS = {
         fx: null,
       },
       forced_open: {
-        description: "The chain lies broken on the ground. The gate stands open. The road is right there.\n\nThe courtyard is north. You can squeeze through the gap.",
+        description: "The chain lies broken on the ground. The gate stands open. The road is right there.\n\nThe courtyard is north. The gap is open — squeeze through, go through, or type \'through\'.",
         fx: null,
       },
     },
     exits: {
       north: "courtyard",
-      "squeeze through": {
-        to:        "outside",
-        special:   true,
-        condition: { flag: "gateForcedOpen" },
-      },
-      "go through gap": {
-        to:        "outside",
-        special:   true,
-        condition: { flag: "gateForcedOpen" },
+      through: {
+        to:         "outside",
+        hidden:     true,
+        condition:  { flag: "gateForcedOpen" },
       },
     },
     actions: [
@@ -238,6 +251,17 @@ export const ROOMS = {
         effects: {
           setGlobalFlag: "gateForcedOpen",
           setRoomState:  { room: "escape_gate", state: "forced_open" },
+        },
+      },
+      {
+        id:      "squeeze",
+        verbs:   ["squeeze", "crawl", "go", "enter", "through", "escape", "run", "climb", "step", "push", "move", "leave", "exit"],
+        targets: ["gap", "opening", "gate", "through", "out", "crack", "hole", "bars", "outside", "road", "fence"],
+        condition:  { flag: "gateForcedOpen" },
+        failText:   "The gate is still chained shut.",
+        successText: "You squeeze through the gap in the gate. Cold air hits your face. You are out.",
+        effects: {
+          goTo: "outside",
         },
       },
     ],

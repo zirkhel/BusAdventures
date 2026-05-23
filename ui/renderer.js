@@ -215,7 +215,18 @@ function handleCommand(input) {
 
   if (result.inventoryOnly) {
     renderInventory();
-    showFeedback("You check your inventory.", "neutral", raw);
+    // Build inventory text for output box
+    const items = E.inventoryList();
+    let invText;
+    if (!items.length) {
+      invText = "You are carrying nothing.";
+    } else {
+      invText = items.map(it => {
+        const status = it.status === "worn" ? " (worn)" : it.status === "held" ? " (held)" : "";
+        return it.name + status;
+      }).join("\n");
+    }
+    showFeedback(invText, "neutral", raw);
     return;
   }
 

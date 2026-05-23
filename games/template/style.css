@@ -1,563 +1,489 @@
-/* games/template/style.css
- *
- * This file defines the complete visual theme for your game.
- * The engine provides structure (layout, card, scene, exits, inventory, feedback).
- * You provide atmosphere (colors, fonts, effects, tone).
- *
- * Steps:
- * 1. Set CSS variables in :root
- * 2. Choose fonts (Google Fonts import or system fonts)
- * 3. Adjust or override any section below
- *
- * Every game gets its own copy of this file — change anything freely.
- */
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Courier+Prime:wght@400;700&display=swap');
 
-/* ─── FONTS ──────────────────────────────────────────────────────────────────
-   Import from Google Fonts or use system fonts.
-   Examples:
-     Horror:  'IM Fell English', 'Courier Prime'
-     Fantasy: 'MedievalSharp', 'Cinzel'
-     Sci-fi:  'Share Tech Mono', 'Exo 2'
-     Cute:    'Nunito', 'Patrick Hand'
-     Retro:   'VT323', 'Space Mono'
-*/
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Courier+Prime&display=swap');
-
-
-/* ─── THEME VARIABLES ────────────────────────────────────────────────────────
-   Override these to change the entire feel of your game.
-*/
 :root {
-  /* Backgrounds */
-  --bg:          #07080b;   /* page background */
-  --panel:       #12141d;   /* card background */
-  --panel2:      #1a1d29;   /* secondary panel (inventory) */
-
-  /* Text */
-  --ink:         #eee5d8;   /* primary text */
-  --muted:       #aaa194;   /* secondary / dimmed text */
-
-  /* Borders */
-  --line:        #343849;   /* default border color */
-
-  /* Accents */
-  --accent:      #c24f47;   /* danger, death, highlight */
-  --gold:        #d7b56d;   /* exits, commands, decorative */
-  --ok:          #9fd08c;   /* success feedback */
-  --bad:         #e46f65;   /* failure feedback */
-
-  /* Fonts */
-  --font-body:   'IM Fell English', Georgia, serif;
-  --font-mono:   'Courier Prime', 'Courier New', monospace;
+  --ink:    #eee5d8;
+  --muted:  #aaa194;
+  --line:   #2e3244;
+  --gold:   #d7b56d;
+  --accent: #c24f47;
+  --ok:     #9fd08c;
+  --bad:    #e46f65;
+  --bg:     #07080b;
+  --panel:  rgba(18,20,28,.97);
+  --fb:     'IM Fell English', Georgia, serif;
+  --fm:     'Courier Prime', monospace;
 }
 
-
-/* ─── BASE ───────────────────────────────────────────────────────────────────*/
-*, *::before, *::after { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  min-height: 100%;
-  background: var(--bg);
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; background: #030405; }
+body {
+  height: 100%;
+  font-family: var(--fb);
+  font-size: 16px;
+  line-height: 1.55;
   color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.5;
+  background: radial-gradient(circle at top, #1c2235, #030405 55%);
+  overflow-x: hidden;
 }
-
-/* Optional: gradient background instead of flat color */
-/* body { background: radial-gradient(circle at top, #22283a, #030405 60%); } */
 
 .hidden { display: none !important; }
+.flex-none { flex-shrink: 0; }
 
-
-/* ─── APP CONTAINER ──────────────────────────────────────────────────────────*/
-.app {
-  max-width: 820px;
-  margin: 0 auto;
-  min-height: 100vh;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-
-/* ─── CARD ───────────────────────────────────────────────────────────────────
-   The main rounded container for each screen.
-*/
-.card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  box-shadow: 0 24px 80px rgba(0,0,0,.5);
+/* ── Screens ── */
+.screen {
+  height: 100dvh;
   overflow: hidden;
 }
 
+/* Intro / death / win layout */
+#introScreen, #deathScreen, #winScreen {
+  display: flex;
+  flex-direction: column;
+}
 
-/* ─── SCENE IMAGE ────────────────────────────────────────────────────────────
-   16:9 area at top of card. Holds SVG, img, or video.
-*/
-.scene {
+.intro-scene {
+  flex: 1;
+  background: #050608;
+  overflow: hidden;
   position: relative;
+  min-height: 0;
+}
+.intro-scene img, .intro-scene video { width:100%; height:100%; object-fit:cover; display:block; }
+.intro-scene svg { width:100%; height:100%; display:block; }
+
+.intro-body {
+  flex-shrink: 0;
+  padding: 20px 20px 28px;
+  background: linear-gradient(180deg, rgba(18,20,28,.97), rgba(8,9,14,.99));
+  border-top: 1px solid var(--line);
+}
+
+/* ── Card ── */
+.card {
+  background: linear-gradient(180deg, rgba(20,22,32,.97), rgba(8,9,14,.99));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* ── Game layout — full screen, flex column ── */
+.game-layout {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(20,22,32,.97), rgba(8,9,14,.99));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* ── Scene ── */
+.scene {
   aspect-ratio: 16/9;
   background: #050608;
   overflow: hidden;
+  position: relative;
 }
-
-.scene img, .scene video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.scene svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Vignette overlay — darken edges of scene */
+.scene img, .scene video { width:100%; height:100%; object-fit:cover; display:block; }
+.scene svg { width:100%; height:100%; display:block; }
 .scene::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at center, transparent 40%, rgba(0,0,0,.6) 100%),
-    linear-gradient(180deg, transparent, rgba(0,0,0,.2));
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(circle at center, transparent 45%, rgba(0,0,0,.55) 100%);
   pointer-events: none;
 }
-
-
-/* ─── FX OVERLAYS ────────────────────────────────────────────────────────────
-   Add fx: "mist" or fx: "flicker" to rooms in game.js.
-   Customize or add new effects here.
-*/
-
-/* Drifting mist */
 .fx-mist::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  z-index: 2;
+  content:''; position:absolute; inset:-20%; z-index:2;
   background:
-    radial-gradient(circle at 20% 50%, rgba(255,255,255,.10), transparent 22%),
-    radial-gradient(circle at 74% 40%, rgba(255,255,255,.07), transparent 24%),
-    radial-gradient(circle at 48% 75%, rgba(255,255,255,.05), transparent 20%);
-  filter: blur(14px);
-  animation: mist 9s ease-in-out infinite alternate;
+    radial-gradient(circle at 22% 50%, rgba(255,255,255,.09), transparent 22%),
+    radial-gradient(circle at 70% 44%, rgba(255,255,255,.06), transparent 24%);
+  filter: blur(12px);
+  animation: mist 10s ease-in-out infinite alternate;
   pointer-events: none;
 }
+.fx-flicker .glow { animation: flicker 1.3s infinite alternate; }
+@keyframes mist { from{transform:translateX(-3%)} to{transform:translateX(4%)} }
+@keyframes flicker { from{opacity:.28} to{opacity:.85} }
 
-/* Flickering light source (apply to .glow elements in SVG) */
-.fx-flicker .glow { animation: flicker 1.2s infinite alternate; }
-
-@keyframes mist {
-  from { transform: translateX(-4%) translateY(0); }
-  to   { transform: translateX(6%) translateY(-2%); }
+/* ── Action bar ── */
+.action-bar {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  gap: 8px;
 }
-
-@keyframes flicker {
-  from { opacity: .32; }
-  to   { opacity: .88; }
+.action-btn {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  color: rgba(255,255,255,.6);
+  font-size: 15px;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
 }
+.action-btn:active { background: rgba(255,255,255,.12); }
+.action-spacer { flex: 1; }
 
-
-/* ─── INTRO SCREEN ───────────────────────────────────────────────────────────*/
-.intro {
-  padding: 20px 22px 24px;
-}
-
-.intro h1 {
-  font-size: clamp(28px, 7vw, 48px);
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  margin: 0 0 4px;
-}
-
-.intro h2 {
-  font-size: clamp(18px, 4vw, 26px);
-  color: var(--gold);
-  font-weight: normal;
-  font-style: italic;
-  margin: 0 0 14px;
-}
-
-.intro p {
-  color: var(--muted);
-  font-size: 16px;
-  margin: 0 0 10px;
-}
-
-
-/* ─── INVENTORY ──────────────────────────────────────────────────────────────*/
-.inv-header {
+/* ── Section headers (inventory, room title) ── */
+.section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
-  background: rgba(255,255,255,.03);
-  border-top: 1px solid rgba(255,255,255,.04);
-  border-bottom: 1px solid rgba(255,255,255,.04);
+  padding: 8px 14px;
   cursor: pointer;
   user-select: none;
-}
-
-.inv-header strong {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  font-family: var(--fm);
+  font-size: 12px;
+  letter-spacing: .05em;
   color: var(--muted);
 }
-
-.inv-arrow { color: var(--muted); font-size: 12px; }
-
-.inv-list {
-  display: none;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px 12px;
-}
-
-.inv-list.open { display: flex; }
-
-.inv-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid #3b4051;
-  border-radius: 14px;
-  background: rgba(255,255,255,.03);
-  padding: 8px 10px;
-}
-
-.inv-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 10px;
-  border: 1px solid #5b6074;
-  display: grid;
-  place-items: center;
-  background: rgba(0,0,0,.4);
-  flex: 0 0 auto;
-}
-
-.inv-icon svg { width: 38px; height: 38px; }
-
-.inv-info strong {
-  display: block;
-  font-size: 15px;
+#roomTitleEl {
+  font-family: var(--fb);
+  font-size: clamp(16px, 4vw, 22px);
   color: var(--ink);
+  letter-spacing: 0;
+  padding: 10px 14px 6px;
+  border-bottom: none;
+}
+#roomTitleEl::after { display: none; }
+#roomTitle::after {
+  content: '';
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--gold);
+  margin-top: 3px;
+  opacity: .5;
 }
 
-.inv-status {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .04em;
+/* ── Inventory ── */
+.inv-list { display: none; flex-direction: column; gap: 5px; padding: 6px 10px; }
+.inv-list.open { display: flex; }
+.inv-item {
+  display: flex; align-items: center; gap: 9px;
+  border: 1px solid #2e3346; border-radius: 10px;
+  background: rgba(255,255,255,.025); padding: 6px 9px;
+}
+.inv-icon {
+  width: 38px; height: 38px; border-radius: 8px;
+  border: 1px solid #424860; display: grid; place-items: center;
+  background: #0c0e14; flex-shrink: 0;
+}
+.inv-icon svg, .inv-icon img { width: 30px; height: 30px; }
+.inv-info strong { display: block; font-size: 13px; }
+.inv-status { font-family: var(--fm); font-size: 10px; color: var(--muted); text-transform: uppercase; }
+.inv-empty { color: var(--muted); font-style: italic; font-size: 12px; padding: 2px 0; }
+
+/* ── Room description ── */
+.room-desc {
+  padding: 0 14px 8px;
+  overflow: hidden;
+  max-height: 600px;
+  transition: max-height .22s ease, padding .22s ease, opacity .2s ease;
+  opacity: 1;
+}
+.room-desc.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
+.room-text { white-space: pre-line; font-size: 15px; line-height: 1.55; }
+
+/* ── Exits ── */
+.exits {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.exit-btn {
+  font-family: var(--fm); font-size: 11px;
+  background: rgba(255,255,255,.04); border: 1px solid var(--line);
+  border-radius: 6px; color: var(--gold); padding: 4px 9px;
+  cursor: pointer; display: flex; align-items: center; gap: 3px;
+}
+.exit-btn:active { opacity: .6; }
+.exit-btn.locked { color: var(--muted); opacity: .45; cursor: not-allowed; }
+.exit-btn.locked::after { content: ' 🔒'; font-size: 9px; }
+.exit-arrow { font-size: 12px; }
+
+/* ── Output box — fills remaining space ── */
+.output-box {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  cursor: text;
+  padding: 6px 0 10px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  min-height: 0;
+}
+.output-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 14px;
+  min-height: 100%;
 }
 
-.inv-empty {
+.feedback-msg {
   color: var(--muted);
   font-style: italic;
   font-size: 14px;
-  padding: 4px 2px;
+  padding: 8px 0;
 }
 
-
-/* ─── ROOM ───────────────────────────────────────────────────────────────────*/
-.room {
-  padding: 18px 20px 14px;
+.output-entry {
+  padding: 6px 0 4px;
+  border-left: 2px solid var(--line);
+  padding-left: 10px;
+  font-size: 14px;
+  line-height: 1.4;
 }
-
-.room-title {
-  font-size: clamp(18px, 4vw, 26px);
-  font-weight: normal;
-  margin: 0 0 6px;
-  color: var(--ink);
-  letter-spacing: .02em;
-}
-
-/* Decorative rule under title — remove or restyle */
-.room-title::after {
-  content: '';
+.output-entry.ok      { border-color: var(--ok); }
+.output-entry.bad     { border-color: var(--bad); }
+.output-entry.neutral { border-color: var(--line); }
+.output-entry.death   { border-color: var(--accent); }
+.ocmd {
   display: block;
-  width: 28px;
-  height: 1px;
-  background: var(--gold);
-  margin-top: 5px;
-  opacity: .45;
+  font-family: var(--fm); font-size: 12px;
+  color: var(--gold); margin-bottom: 2px;
 }
-
-.room-text {
-  white-space: pre-line;
-  font-size: 17px;
-  line-height: 1.55;
-  color: var(--ink);
-  margin: 10px 0 0;
-}
+.otxt { color: #ddd3c5; white-space: pre-line; }
+.owarn { display: block; margin-top: 4px; color: var(--bad); font-style: italic; font-size: 13px; }
 
 
-/* ─── EXITS ──────────────────────────────────────────────────────────────────*/
-.exits {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255,255,255,.05);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
 
-.exits-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--muted);
-  width: 100%;
-  margin-bottom: 2px;
-}
 
-.exit-btn {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: .04em;
-  text-transform: capitalize;
-  background: rgba(255,255,255,.04);
+/* ── Float menu (settings) ── */
+.float-menu {
+  position: fixed; z-index: 600;
+  background: rgba(10,11,18,.98);
   border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--gold);
-  padding: 7px 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 190px;
+  box-shadow: 0 6px 28px rgba(0,0,0,.85);
+}
+.float-item {
+  display: block; width: 100%;
+  padding: 13px 18px; text-align: left;
+  background: none; border: none;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  color: var(--ink); font-family: var(--fm);
+  font-size: 14px; cursor: pointer;
+}
+.float-item:last-child { border: none; }
+.float-item:active { background: rgba(255,255,255,.07); }
+.float-item.red-text { color: var(--bad); }
+
+/* ── Intro / death / win ── */
+.pad { padding: 18px 20px 24px; }
+.pad h1 { font-size: clamp(26px, 8vw, 46px); text-transform: uppercase; letter-spacing:.05em; margin-bottom: 4px; }
+.pad h2 { font-size: clamp(16px, 5vw, 24px); color: var(--gold); font-weight: normal; font-style: italic; margin-bottom: 14px; }
+.pad p { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
+.red   { color: var(--accent); }
+.green { color: var(--ok); }
+.muted { color: var(--muted); font-size: 15px; line-height: 1.55; margin-bottom: 18px; white-space: pre-line; }
+
+.btn-primary {
+  background: linear-gradient(180deg, #87342e, #4b1817);
+  color: #fff2e0; border: 1px solid #bd5d53;
+  border-radius: 12px; padding: 13px 22px;
+  font-family: var(--fb); font-size: 16px; cursor: pointer;
+}
+.btn-primary:active { filter: brightness(1.2); }
+
+/* Hide empty feedback msg */
+.feedback-msg:empty { display: none; }
+
+/* no tap hint */
+
+/* Inventory tap detail */
+.inv-item {
+  flex-wrap: wrap;
   cursor: pointer;
-  transition: background .15s, border-color .15s;
+  position: relative;
 }
-
-.exit-btn:hover {
-  background: rgba(215,181,109,.08);
-  border-color: var(--gold);
-}
-
-.exit-btn:active { transform: translateY(1px); }
-
-.exit-btn.locked {
+.inv-expand {
+  font-size: 11px;
   color: var(--muted);
-  border-color: rgba(255,255,255,.07);
-  cursor: not-allowed;
-  opacity: .55;
+  margin-left: auto;
+  align-self: center;
+  flex-shrink: 0;
+  padding-left: 6px;
 }
-
-.exit-btn.locked::after { content: ' 🔒'; font-size: 11px; }
-
-
-/* ─── FEEDBACK PANEL ─────────────────────────────────────────────────────────*/
-.feedback {
-  margin: 0 14px 10px;
-  padding: 12px 14px;
-  min-height: 50px;
-  border-left: 3px solid var(--gold);
-  background: rgba(0,0,0,.2);
-  color: var(--ink);
-  white-space: pre-line;
-  line-height: 1.45;
-  font-size: 15px;
-  border-radius: 0 6px 6px 0;
-}
-
-.feedback.ok    { border-left-color: var(--ok); }
-.feedback.bad   { border-left-color: var(--bad); }
-.feedback.death { border-left-color: var(--accent); }
-
-/* Command echo ("> take mask") */
-.cmd {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--gold);
-  font-family: var(--font-mono);
+.inv-detail {
+  width: 100%;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.06);
   font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.5;
+  font-family: var(--fb);
 }
 
+/* Overlay layout fix */
+.overlay {
+  position: fixed; inset: 0; z-index: 500;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.overlay.hidden { display: none; }
 
-/* ─── COMMAND INPUT ──────────────────────────────────────────────────────────*/
-.controls {
+
+
+
+/* ── Command overlay — hugs keyboard on iOS ── */
+.cmd-overlay {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 500;
+}
+
+.cmd-overlay.hidden { display: none; }
+
+.cmd-overlay-form {
   display: flex;
+  align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  position: sticky;
-  bottom: 0;
-  background: linear-gradient(180deg, rgba(7,8,11,.8), rgba(7,8,11,.98));
-  border-top: 1px solid rgba(255,255,255,.05);
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(10,11,18,.98);
+  border-top: 1px solid var(--line);
 }
 
-.cmd-input {
+.cmd-overlay-input {
   flex: 1;
-  background: rgba(0,0,0,.5);
-  color: var(--ink);
-  border: 1px solid var(--line);
+  background: #0e0f18;
+  border: 1.5px solid var(--gold);
   border-radius: 12px;
-  padding: 12px 14px;
-  font-family: var(--font-mono);
-  font-size: 15px;
+  color: var(--ink);
+  font-family: var(--fm);
+  font-size: 16px;
+  padding: 11px 14px;
   outline: none;
+  min-width: 0;
+}
+
+.cmd-overlay-close {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.7);
+  font-size: 17px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+}
+.cmd-overlay-close:active { background: rgba(255,255,255,.18); }
+
+/* Visual cue when input is active */
+.output-box.input-active {
+  border: 1px solid rgba(215,181,109,.3);
+  border-radius: 0 0 6px 6px;
+}
+
+/* Hint text at bottom of output when empty */
+.output-box::after {
+  content: 'tap to type';
+  display: block;
+  padding: 8px 14px;
+  color: rgba(255,255,255,.12);
+  font-family: var(--fm);
+  font-size: 11px;
+  font-style: italic;
+  pointer-events: none;
+}
+.output-box:has(.output-entry)::after {
+  display: none;
+}
+
+/* ── Inventory item fix ── */
+.inv-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+}
+.inv-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.inv-detail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.5;
+  font-family: var(--fb);
+}
+.inv-detail.hidden { display: none; }
+
+/* ── Visible typing indicator ── */
+#typingIndicator {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+  display: none;
+  padding: 12px 16px;
+  background: #0d0e18;
+  border-top: 2px solid var(--gold);
+  font-family: var(--fm);
+  font-size: 16px;
+  color: var(--ink);
+  /* iOS: this moves up with the keyboard */
+  transform: translateY(0);
+}
+#typingIndicator .typing-prompt {
+  color: var(--gold);
+  margin-right: 6px;
+}
+.typing-cursor {
+  animation: blink .8s step-end infinite;
+  color: var(--gold);
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+#typingIndicator.visible { display: block; }
+
+/* ── Input bar ── */
+.input-bar {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.input-bar-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0e0f18;
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: text;
   transition: border-color .15s;
 }
 
-.cmd-input:focus { border-color: var(--gold); }
+.input-bar.active .input-bar-inner {
+  border-color: var(--gold);
+}
 
-.cmd-input::placeholder { color: var(--muted); opacity: .6; }
-
-.cmd-submit {
-  background: rgba(255,255,255,.05);
+.input-bar-prompt {
   color: var(--gold);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0 18px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background .15s;
+  font-family: var(--fm);
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
-.cmd-submit:hover  { background: rgba(255,255,255,.1); }
-.cmd-submit:active { transform: translateY(1px); }
-
-
-/* ─── FOOTER BUTTONS ─────────────────────────────────────────────────────────*/
-.footer-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 0 12px 14px;
+.input-bar-text {
+  font-family: var(--fm);
+  font-size: 14px;
+  color: var(--muted);
+  flex: 1;
 }
 
-
-/* ─── BUTTON STYLES ──────────────────────────────────────────────────────────*/
-
-/* Primary: start game, continue after death, play again */
-button.btn-primary {
-  background: linear-gradient(180deg, #4a2020, #2a1010);
+.input-bar.active .input-bar-text {
   color: var(--ink);
-  border: 1px solid var(--accent);
-  border-radius: 12px;
-  padding: 12px 22px;
-  font-family: var(--font-body);
-  font-size: 16px;
-  cursor: pointer;
-  letter-spacing: .03em;
-  transition: filter .15s;
 }
-
-button.btn-primary:hover  { filter: brightness(1.2); }
-button.btn-primary:active { transform: translateY(1px); }
-
-/* Secondary: help, restart */
-button.btn-secondary {
-  background: rgba(255,255,255,.04);
-  color: var(--muted);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: filter .15s;
-}
-
-button.btn-secondary:hover  { filter: brightness(1.3); }
-button.btn-secondary:active { transform: translateY(1px); }
-
-
-/* ─── DEATH SCREEN ───────────────────────────────────────────────────────────*/
-.death-content {
-  padding: 20px 22px 24px;
-}
-
-.death-content h1 {
-  font-size: clamp(28px, 7vw, 48px);
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 12px;
-}
-
-.death-text {
-  color: var(--muted);
-  white-space: pre-line;
-  font-size: 15px;
-  line-height: 1.55;
-  margin: 0 0 20px;
-}
-
-
-/* ─── WIN SCREEN ─────────────────────────────────────────────────────────────*/
-.win-content {
-  padding: 20px 22px 24px;
-}
-
-.win-content h1 {
-  font-size: clamp(28px, 7vw, 48px);
-  text-transform: uppercase;
-  color: var(--ok);
-  margin: 0 0 12px;
-}
-
-.win-text {
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.55;
-  margin: 0 0 20px;
-}
-
-
-/* ─── THEME EXAMPLES ─────────────────────────────────────────────────────────
-   Uncomment and adapt a block below to quickly switch aesthetic direction.
-   Each overrides only the :root variables — everything else follows.
-
-   FANTASY (warm parchment):
-   :root {
-     --bg:      #1a1408;
-     --panel:   #241c0e;
-     --ink:     #f0e6c8;
-     --muted:   #b09a70;
-     --line:    #4a3c24;
-     --accent:  #c0392b;
-     --gold:    #e8c86a;
-     --ok:      #7dba5a;
-     --bad:     #e07050;
-     --font-body: 'Cinzel', Georgia, serif;
-     --font-mono: 'IM Fell English', serif;
-   }
-
-   SCI-FI (cold cyan):
-   :root {
-     --bg:      #040810;
-     --panel:   #080e1a;
-     --ink:     #d0eeff;
-     --muted:   #4a7a99;
-     --line:    #0d2a40;
-     --accent:  #e05050;
-     --gold:    #40c8ff;
-     --ok:      #50e0a0;
-     --bad:     #e06050;
-     --font-body: 'Exo 2', sans-serif;
-     --font-mono: 'Share Tech Mono', monospace;
-   }
-
-   COZY / CUTE (soft warm):
-   :root {
-     --bg:      #fdf6ef;
-     --panel:   #fff8f2;
-     --ink:     #3d2b1a;
-     --muted:   #9a7a60;
-     --line:    #e8d4c0;
-     --accent:  #e05080;
-     --gold:    #d4882a;
-     --ok:      #60b060;
-     --bad:     #e06040;
-     --font-body: 'Nunito', sans-serif;
-     --font-mono: 'Patrick Hand', cursive;
-   }
-*/
