@@ -445,3 +445,45 @@ body {
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 #typingIndicator.visible { display: block; }
+
+/* ── Input bar ── */
+.input-bar {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.input-bar-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0e0f18;
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: text;
+  transition: border-color .15s;
+}
+
+.input-bar.active .input-bar-inner {
+  border-color: var(--gold);
+}
+
+.input-bar-prompt {
+  color: var(--gold);
+  font-family: var(--fm);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.input-bar-text {
+  font-family: var(--fm);
+  font-size: 14px;
+  color: var(--muted);
+  flex: 1;
+}
+
+.input-bar.active .input-bar-text {
+  color: var(--ink);
+}

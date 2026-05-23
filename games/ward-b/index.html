@@ -40,6 +40,15 @@
       <div id="roomText" class="room-text"></div>
     </div>
     <div id="exits" class="exits flex-none"></div>
+
+    <!-- Visible input bar — always shown, tapping focuses keyboard -->
+    <div class="input-bar flex-none" id="inputBar">
+      <div class="input-bar-inner" id="inputTrigger">
+        <span class="input-bar-prompt">❯</span>
+        <span class="input-bar-text" id="inputBarText">Enter command…</span>
+      </div>
+    </div>
+
     <div id="outputBox" class="output-box">
       <div id="outputInner" class="output-inner"></div>
     </div>
@@ -74,18 +83,10 @@
 </div>
 
 <!-- Command overlay — sits above keyboard on iOS -->
-<!-- Visible typing indicator — shows above keyboard -->
-<div id="typingIndicator">
-  <span class="typing-prompt">&gt;</span><span id="typingText"></span><span class="typing-cursor">_</span>
-</div>
-
-<!-- Invisible input — focus triggers keyboard, no layout shift -->
-<form id="commandForm" autocomplete="off" style="position:fixed;top:-200px;left:0;width:100%;pointer-events:none">
-  <input id="commandInput"
-    autocomplete="off" autocorrect="off"
-    autocapitalize="off" spellcheck="false"
-    enterkeyhint="send"
-    style="opacity:0;position:absolute;width:1px;height:1px">
+<!-- Hidden input — keyboard trigger only -->
+<form id="commandForm" autocomplete="off" style="position:fixed;top:-500px;opacity:0;pointer-events:none">
+  <input id="commandInput" autocomplete="off" autocorrect="off"
+    autocapitalize="off" spellcheck="false" enterkeyhint="send">
 </form>
 
 <script type="module">
@@ -151,59 +152,43 @@ window._onCommand = (cmd, text, type) => {
 
 // startBtn wired by renderer
 
-// ── Invisible input — tap output to focus, no layout shift ───────
-outputBox.addEventListener('click', () => {
+// ── Input bar ─────────────────────────────────────────────────────
+const inputBar     = document.getElementById('inputBar');
+const inputBarText = document.getElementById('inputBarText');
+
+function focusInput() {
   cmdInput.value = '';
+  inputBarText.textContent = '';
+  inputBar.classList.add('active');
   cmdInput.focus();
-});
+}
 
-// Also allow tapping exits area
-document.getElementById('roomDesc').addEventListener('click', (e) => {
-  // Only if tapping output, not a button
-  if (e.target.classList.contains('exit-btn')) return;
-});
+// Tap input bar or output box → open keyboard
+document.getElementById('inputTrigger').addEventListener('click', focusInput);
+outputBox.addEventListener('click', focusInput);
 
+// Submit on enter
 document.getElementById('commandForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const val = cmdInput.value.trim();
-  if (!val) return;
   cmdInput.value = '';
   cmdInput.blur();
+  inputBar.classList.remove('active');
+  inputBarText.textContent = 'Enter command…';
+  if (!val) return;
   collapse();
   handleCommand(val);
 });
 
-// Typing indicator — shows what user is typing
-const typingIndicator = document.getElementById('typingIndicator');
-const typingText = document.getElementById('typingText');
-
-cmdInput.addEventListener('focus', () => {
-  typingIndicator.classList.add('visible');
-  typingText.textContent = '';
-  positionIndicator();
-});
-
+// Live text mirroring in input bar
 cmdInput.addEventListener('input', () => {
-  typingText.textContent = cmdInput.value;
+  inputBarText.textContent = cmdInput.value || '';
 });
 
 cmdInput.addEventListener('blur', () => {
-  typingIndicator.classList.remove('visible');
-  typingText.textContent = '';
+  inputBar.classList.remove('active');
+  if (!cmdInput.value) inputBarText.textContent = 'Enter command…';
 });
-
-// Move indicator above keyboard using visualViewport
-function positionIndicator() {
-  if (!window.visualViewport) return;
-  const vv = window.visualViewport;
-  const bottom = window.innerHeight - (vv.offsetTop + vv.height);
-  typingIndicator.style.bottom = Math.max(0, bottom) + 'px';
-}
-
-if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', positionIndicator);
-  window.visualViewport.addEventListener('scroll', positionIndicator);
-}
 
 // ── Room title tap ────────────────────────────────────────────────
 document.getElementById('roomTitleEl').addEventListener('click', () => {
