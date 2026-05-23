@@ -436,10 +436,18 @@ body {
 
 /* ── Input bar ── */
 .input-bar {
-  flex-shrink: 0;
+  position: fixed;
+  left: 0; right: 0;
+  bottom: 0;
+  z-index: 100;
   padding: 8px 12px;
   background: rgba(8,9,14,.97);
   border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.input-bar-spacer {
+  height: 56px;
+  flex-shrink: 0;
 }
 
 .input-bar-inner {
