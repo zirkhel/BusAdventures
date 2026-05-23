@@ -2,216 +2,410 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Death Trap: Ward B</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bus Adventures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c08;
+  --green: #39ff14;
+  --green-dim: #1a7a08;
+  --green-glow: rgba(57,255,20,0.15);
+  --amber: #ffb000;
+  --text: #c8e6b0;
+  --muted: #5a7a48;
+  --scanline: rgba(0,0,0,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  overflow-x: hidden;
+}
+
+/* CRT scanline overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--scanline) 2px,
+    var(--scanline) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.35;
+}
+
+/* CRT flicker */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.5) 100%);
+  pointer-events: none;
+  z-index: 99;
+  animation: flicker 8s infinite;
+}
+
+@keyframes flicker {
+  0%, 97%, 100% { opacity: 1; }
+  98% { opacity: 0.92; }
+  99% { opacity: 0.97; }
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* Header */
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--green-dim);
+  border-radius: 4px 4px 0 0;
+  background: rgba(57,255,20,0.05);
+  margin-bottom: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.terminal-bar .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--green-dim);
+  box-shadow: 0 0 6px var(--green-dim);
+}
+
+.terminal-body {
+  border: 1px solid var(--green-dim);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  padding: 28px 24px 32px;
+  background: rgba(0,8,0,0.6);
+  margin-bottom: 32px;
+}
+
+.ascii-title {
+  font-family: 'VT323', monospace;
+  font-size: clamp(48px, 12vw, 80px);
+  color: var(--green);
+  text-shadow:
+    0 0 10px var(--green),
+    0 0 30px rgba(57,255,20,0.4),
+    0 0 60px rgba(57,255,20,0.1);
+  line-height: 1;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.ascii-sub {
+  font-family: 'VT323', monospace;
+  font-size: clamp(22px, 5vw, 32px);
+  color: var(--amber);
+  text-shadow: 0 0 8px rgba(255,176,0,0.5);
+  letter-spacing: 0.12em;
+  margin-bottom: 24px;
+}
+
+.tagline {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 12px;
+  line-height: 1.6;
+  border-left: 2px solid var(--green-dim);
+  padding-left: 12px;
+  margin-bottom: 20px;
+}
+
+.tagline em {
+  color: var(--text);
+  font-style: normal;
+}
+
+.prompt-line {
+  color: var(--green);
+  font-size: 12px;
+  animation: blink-cursor 1.2s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Genre sections */
+.genre-section {
+  margin-bottom: 36px;
+}
+
+.genre-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--green-dim);
+}
+
+.genre-tag {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  color: var(--amber);
+  text-shadow: 0 0 6px rgba(255,176,0,0.4);
+  letter-spacing: 0.1em;
+}
+
+.genre-count {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* Game cards */
+.game-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.game-card {
+  display: block;
+  text-decoration: none;
+  border: 1px solid var(--green-dim);
+  border-radius: 3px;
+  padding: 14px 16px;
+  background: rgba(57,255,20,0.03);
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card::before {
+  content: '> ';
+  position: absolute;
+  left: -20px;
+  top: 14px;
+  color: var(--green);
+  font-size: 13px;
+  transition: left 0.15s;
+}
+
+.game-card:hover {
+  background: rgba(57,255,20,0.07);
+  border-color: var(--green);
+  box-shadow: 0 0 12px rgba(57,255,20,0.1), inset 0 0 20px rgba(57,255,20,0.03);
+}
+
+.game-card:hover::before {
+  left: 10px;
+}
+
+.game-card-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.game-icon {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--green-dim);
+  border-radius: 3px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.4);
+  font-size: 24px;
+  filter: sepia(1) hue-rotate(60deg) saturate(0.6);
+  transition: filter 0.15s;
+}
+
+.game-card:hover .game-icon {
+  filter: sepia(0) saturate(1);
+}
+
+.game-info { flex: 1; }
+
+.game-title {
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  color: var(--green);
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+
+.game-meta {
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.game-meta span { color: var(--amber); }
+
+.game-desc {
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.game-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border: 1px solid var(--green-dim);
+  border-radius: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Coming soon */
+.coming-soon {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.coming-soon .game-title::after {
+  content: ' [LOCKED]';
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Footer */
+.terminal-footer {
+  border-top: 1px solid var(--green-dim);
+  padding-top: 16px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.terminal-footer a {
+  color: var(--green-dim);
+  text-decoration: none;
+}
+
+.terminal-footer a:hover { color: var(--green); }
+
+/* Noise texture overlay */
+.noise {
+  position: fixed;
+  inset: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 98;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+</style>
 </head>
 <body>
+<div class="noise"></div>
+<div class="wrap">
 
-<!-- INTRO -->
-<div id="introScreen" class="screen">
-  <div id="introImage" class="intro-scene"></div>
-  <div class="intro-body">
-    <h1>Death Trap</h1>
-    <h2>Ward B</h2>
-    <p>The asylum was sealed three years ago. Officially, everyone got out.</p>
-    <p>You wake in the reception hall. The doors behind you are chained from the inside.</p>
-    <button id="startBtn" class="btn-primary">Enter Ward B</button>
+  <div class="terminal-bar">
+    <div class="dot"></div>
+    <span>bus-adventures v0.1.0 — terminal interface</span>
   </div>
-</div>
 
-<!-- GAME -->
-<div id="gameScreen" class="screen hidden">
-  <div class="game-layout">
-    <div id="scene" class="scene flex-none"></div>
-    <div class="action-bar flex-none">
-      <button id="settingsBtn" class="action-btn">⚙</button>
+  <div class="terminal-body">
+    <div class="ascii-title">BUS ADV.</div>
+    <div class="ascii-sub">POCKET ADVENTURES</div>
+    <p class="tagline">
+      Old-school text adventures. <em>Finished before your stop.</em><br>
+      Pick a genre. Type commands. See what happens.
+    </p>
+    <div class="prompt-line">SELECT ADVENTURE_</div>
+  </div>
+
+  <!-- HORROR -->
+  <div class="genre-section">
+    <div class="genre-header">
+      <span class="genre-tag">// HORROR</span>
+      <span class="genre-count">1 available</span>
     </div>
-    <div class="section-header flex-none" id="invToggle">
-      <span id="invTitle">Inventory (0)</span>
-      <span id="invArrow">▾</span>
-    </div>
-    <div id="inventory" class="inv-list flex-none"></div>
-    <div class="section-header flex-none" id="roomTitleEl">
-      <span id="roomTitle">Room</span>
-      <span id="descToggle">▾</span>
-    </div>
-    <div id="roomDesc" class="room-desc flex-none">
-      <div id="roomText" class="room-text"></div>
-      <div id="exits" class="exits"></div>
-    </div>
-    <div id="outputBox" class="output-box">
-      <div id="outputInner" class="output-inner"></div>
+    <div class="game-grid">
+
+      <a class="game-card" href="games/ward-b/index.html">
+        <div class="game-card-inner">
+          <div class="game-icon">🏥</div>
+          <div class="game-info">
+            <div class="game-title">Death Trap: Ward B</div>
+            <div class="game-meta"><span>7 rooms</span> · ~10 min · keyboard</div>
+            <div class="game-desc">The asylum was sealed after the evacuation. Officially, everyone got out. You wake in the reception hall.</div>
+            <div class="game-tags">
+              <span class="tag">horror</span>
+              <span class="tag">puzzle</span>
+              <span class="tag">permadeath</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
     </div>
   </div>
-</div>
 
-<!-- DEATH -->
-<div id="deathScreen" class="screen hidden">
-  <div id="deathImage" class="intro-scene"></div>
-  <div class="intro-body">
-    <h1 class="red">You Died</h1>
-    <p id="deathText" class="muted"></p>
-    <button id="continueBtn" class="btn-primary">Continue</button>
+  <!-- COMING SOON -->
+  <div class="genre-section">
+    <div class="genre-header">
+      <span class="genre-tag">// MORE GENRES</span>
+      <span class="genre-count">in development</span>
+    </div>
+    <div class="game-grid">
+
+      <div class="game-card coming-soon">
+        <div class="game-card-inner">
+          <div class="game-icon">🥷</div>
+          <div class="game-info">
+            <div class="game-title">Shadow Protocol</div>
+            <div class="game-meta"><span>ninja · stealth</span></div>
+            <div class="game-desc">Coming soon.</div>
+            <div class="game-tags"><span class="tag">action</span><span class="tag">stealth</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card coming-soon">
+        <div class="game-card-inner">
+          <div class="game-icon">🚀</div>
+          <div class="game-info">
+            <div class="game-title">Drift Station Kepler</div>
+            <div class="game-meta"><span>sci-fi · mystery</span></div>
+            <div class="game-desc">Coming soon.</div>
+            <div class="game-tags"><span class="tag">sci-fi</span><span class="tag">exploration</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
 
-<!-- WIN -->
-<div id="winScreen" class="screen hidden">
-  <div id="winImage" class="intro-scene"></div>
-  <div class="intro-body">
-    <h1 class="green">Escaped</h1>
-    <p class="muted">The gate opens into cold night air. Behind you, Ward B settles back into silence.</p>
-    <button id="playAgainBtn" class="btn-primary">Play again</button>
+  <div class="terminal-footer">
+    <div>bus-adventures · text adventures for the commute</div>
+    <div style="margin-top:4px; color:#3a5030">type · explore · survive · repeat</div>
   </div>
+
 </div>
-
-<!-- Settings menu -->
-<div id="settingsMenu" class="float-menu hidden">
-  <button id="helpBtn" class="float-item">Help / Commands</button>
-  <button id="restartBtn" class="float-item red-text">Restart</button>
-  <button id="backBtn" class="float-item">← Game Select</button>
-</div>
-
-<!-- Command overlay -->
-<div id="cmdOverlay" class="overlay hidden">
-  <div class="overlay-bg" id="overlayBg"></div>
-  <div class="overlay-panel">
-    <form id="commandForm" autocomplete="off">
-      <input id="commandInput" class="overlay-input"
-        placeholder="Enter command…"
-        autocomplete="off" autocorrect="off"
-        autocapitalize="off" spellcheck="false"
-        enterkeyhint="send">
-      <button type="button" id="cmdClose" class="overlay-close">✕</button>
-    </form>
-  </div>
-</div>
-
-<script type="module">
-import { GAME }  from "./data/game.js";
-import { ROOMS } from "./data/rooms.js";
-import { ITEMS } from "./data/items.js";
-import { getMedia, getItemIcon } from "./assets.js";
-import { configure, startGame, handleCommand } from "../../ui/renderer.js";
-
-// ── Configure renderer ────────────────────────────────────────────
-configure({ getMedia, getItemIcon });
-startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
-
-// ── Elements ──────────────────────────────────────────────────────
-const outputBox   = document.getElementById('outputBox');
-const outputInner = document.getElementById('outputInner');
-const roomDesc    = document.getElementById('roomDesc');
-const descToggle  = document.getElementById('descToggle');
-const cmdOverlay  = document.getElementById('cmdOverlay');
-const cmdInput    = document.getElementById('commandInput');
-const settingsBtn = document.getElementById('settingsBtn');
-const settingsMenu= document.getElementById('settingsMenu');
-
-let descCollapsed = false;
-let currentRoomId = null;
-
-// ── Collapse / expand desc ────────────────────────────────────────
-function collapse() {
-  if (descCollapsed) return;
-  descCollapsed = true;
-  roomDesc.classList.add('collapsed');
-  descToggle.textContent = '▸';
-}
-function expand() {
-  descCollapsed = false;
-  roomDesc.classList.remove('collapsed');
-  descToggle.textContent = '▾';
-}
-
-// ── Renderer hooks ────────────────────────────────────────────────
-window._resetUI = () => {
-  currentRoomId = null;
-  outputInner.innerHTML = '';
-  expand();
-};
-
-window._onRoomEnter = (roomId) => {
-  if (roomId === currentRoomId) return;
-  currentRoomId = roomId;
-  outputInner.innerHTML = '';
-  expand();
-  outputBox.scrollTop = 0;
-};
-
-window._onCommand = (cmd, text, type) => {
-  const entry = document.createElement('div');
-  entry.className = `output-entry ${type||'neutral'}`;
-  entry.innerHTML =
-    `<span class="ocmd">&gt; ${esc(cmd)}</span>` +
-    (text ? `<span class="otxt">${esc(text)}</span>` : '');
-  outputInner.appendChild(entry);
-  outputBox.scrollTop = outputBox.scrollHeight;
-};
-
-// ── Overlay (forbedret) ───────────────────────────────────────────
-outputBox.addEventListener('click', openOverlay);
-
-function openOverlay() {
-  cmdOverlay.classList.remove('hidden');
-  cmdInput.value = '';
-  // Hindrer scrolling
-  setTimeout(() => {
-    cmdInput.focus();
-  }, 10);
-}
-
-function closeOverlay() {
-  cmdOverlay.classList.add('hidden');
-  cmdInput.blur();
-}
-
-document.getElementById('overlayBg').addEventListener('click', closeOverlay);
-document.getElementById('cmdClose').addEventListener('click', closeOverlay);
-
-document.getElementById('commandForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const val = cmdInput.value.trim();
-  if (!val) return;
-  closeOverlay();
-  collapse();           // collapse room desc når man skriver kommando
-  handleCommand(val);
-});
-
-// ── Room title tap ────────────────────────────────────────────────
-document.getElementById('roomTitleEl').addEventListener('click', () => {
-  descCollapsed ? expand() : collapse();
-});
-
-// ── Inventory ─────────────────────────────────────────────────────
-document.getElementById('invToggle').addEventListener('click', () => {
-  const inv = document.getElementById('inventory');
-  inv.classList.toggle('open');
-  document.getElementById('invArrow').textContent =
-    inv.classList.contains('open') ? '▴' : '▾';
-});
-
-// ── Settings ──────────────────────────────────────────────────────
-settingsBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const r = settingsBtn.getBoundingClientRect();
-  settingsMenu.style.top  = (r.bottom + 6) + 'px';
-  settingsMenu.style.left = r.left + 'px';
-  settingsMenu.classList.toggle('hidden');
-});
-document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
-document.getElementById('helpBtn').addEventListener('click', () => settingsMenu.classList.add('hidden'));
-document.getElementById('restartBtn').addEventListener('click', () => settingsMenu.classList.add('hidden'));
-document.getElementById('backBtn').addEventListener('click', () => {
-  settingsMenu.classList.add('hidden');
-  window.location.href = '../../index.html';
-});
-
-function esc(s) {
-  return String(s||'').replace(/[&<>"']/g,
-    c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-}
-</script>
 </body>
 </html>

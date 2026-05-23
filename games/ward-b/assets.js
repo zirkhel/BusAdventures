@@ -55,11 +55,15 @@ export function getMedia(mediaKey, state, roomStateName) {
 
 export function getItemIcon(itemId) {
   const svg = ITEM_SVG[itemId] || FALLBACK_ICON;
-  const enc = encodeURIComponent(svg);
-  return `<img src="assets/items/${itemId}.png" 
-    style="width:100%;height:100%;object-fit:contain" 
-    onerror="this.outerHTML=decodeURIComponent('${enc}')">`;
+  // Show PNG if available, SVG always visible as fallback
+  return `<span class="item-icon-wrap">
+    <img src="assets/items/${itemId}.png"
+      style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0"
+      onerror="this.remove()" alt="">
+    <span class="item-icon-svg">${svg}</span>
+  </span>`;
 }
+
 
 const ITEM_SVG = {
   keycard: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">

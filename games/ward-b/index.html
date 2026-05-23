@@ -73,19 +73,16 @@
   <button id="backBtn" class="float-item">← Game Select</button>
 </div>
 
-<!-- Command overlay -->
-<div id="cmdOverlay" class="overlay hidden">
-  <div class="overlay-bg" id="overlayBg"></div>
-  <div class="overlay-panel">
-    <form id="commandForm" autocomplete="off">
-      <input id="commandInput" class="overlay-input"
-        placeholder="Enter command…"
-        autocomplete="off" autocorrect="off"
-        autocapitalize="off" spellcheck="false"
-        enterkeyhint="send">
-      <button type="button" id="cmdClose" class="overlay-close">✕</button>
-    </form>
-  </div>
+<!-- Command overlay — sits above keyboard on iOS -->
+<div id="cmdOverlay" class="cmd-overlay hidden">
+  <form id="commandForm" class="cmd-overlay-form" autocomplete="off">
+    <input id="commandInput" class="cmd-overlay-input"
+      placeholder="Enter command…"
+      autocomplete="off" autocorrect="off"
+      autocapitalize="off" spellcheck="false"
+      enterkeyhint="send">
+    <button type="button" id="cmdClose" class="cmd-overlay-close">✕</button>
+  </form>
 </div>
 
 <script type="module">
@@ -152,13 +149,15 @@ window._onCommand = (cmd, text, type) => {
 
 // startBtn wired by renderer
 
-// ── Overlay ───────────────────────────────────────────────────────
+// ── Command overlay ───────────────────────────────────────────────
+// Tap anywhere in output → open overlay, focus input immediately
+// iOS requires focus() directly in click handler (no setTimeout)
 outputBox.addEventListener('click', openOverlay);
 
 function openOverlay() {
   cmdOverlay.classList.remove('hidden');
   cmdInput.value = '';
-  requestAnimationFrame(() => cmdInput.focus());
+  cmdInput.focus(); // must be synchronous for iOS keyboard
 }
 
 function closeOverlay() {
@@ -166,16 +165,23 @@ function closeOverlay() {
   cmdInput.blur();
 }
 
-document.getElementById('overlayBg').addEventListener('click', closeOverlay);
-document.getElementById('cmdClose').addEventListener('click', closeOverlay);
+document.getElementById('cmdClose').addEventListener('click', (e) => {
+  e.preventDefault();
+  closeOverlay();
+});
 
 document.getElementById('commandForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const val = cmdInput.value.trim();
-  if (!val) return;
+  if (!val) { closeOverlay(); return; }
   closeOverlay();
   collapse();
   handleCommand(val);
+});
+
+// Close if user taps outside the form (on the dimmed area)
+cmdOverlay.addEventListener('click', (e) => {
+  if (e.target === cmdOverlay) closeOverlay();
 });
 
 // ── Room title tap ────────────────────────────────────────────────

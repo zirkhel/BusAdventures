@@ -247,28 +247,9 @@ function startGame(adventure) {
 }
 
 function wireControls(adventure) {
-  // Command form submit handled by index.html (overlay)
-
-  // Inventory toggle
-  qs("invToggle")?.addEventListener("click", () => {
-    qs("inventory")?.classList.toggle("open");
-    const arrow = qs("invArrow");
-    if (arrow) arrow.textContent = qs("inventory")?.classList.contains("open") ? "▴" : "▾";
-  });
-
-  // Help
-  qs("helpBtn")?.addEventListener("click", () => handleCommand("help"));
-
-  // Restart
-  qs("restartBtn")?.addEventListener("click", () => {
-    if (!confirm("Restart from the beginning?")) return;
-    S.clear(); S.fresh();
-    if (typeof window._resetUI === "function") window._resetUI();
-    showScreen("introScreen");
-    renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
-  });
-
-  // Start game
+  // All UI wiring is handled by index.html
+  // Renderer only wires what index.html cannot: startBtn, continueBtn, playAgainBtn, restartBtn
+  
   qs("startBtn")?.addEventListener("click", () => {
     S.fresh();
     if (typeof window._resetUI === "function") window._resetUI();
@@ -279,21 +260,29 @@ function wireControls(adventure) {
     S.save();
   });
 
-  // Continue after death
   qs("continueBtn")?.addEventListener("click", () => {
-    S.fresh();
+    S.clear(); S.fresh();
     if (typeof window._resetUI === "function") window._resetUI();
     showScreen("introScreen");
     renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
   });
 
-  // Play again after win
   qs("playAgainBtn")?.addEventListener("click", () => {
-    S.fresh();
+    S.clear(); S.fresh();
     if (typeof window._resetUI === "function") window._resetUI();
     showScreen("introScreen");
     renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
   });
+
+  qs("restartBtn")?.addEventListener("click", () => {
+    if (!confirm("Restart from the beginning?")) return;
+    S.clear(); S.fresh();
+    if (typeof window._resetUI === "function") window._resetUI();
+    showScreen("introScreen");
+    renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
+  });
+
+  qs("helpBtn")?.addEventListener("click", () => handleCommand("help"));
 }
 
 // ── Utility ───────────────────────────────────────────────────────────────────
