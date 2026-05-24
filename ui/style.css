@@ -1,10 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Courier+Prime:wght@400;700&display=swap');
 
-/* ── Bus Adventures — shared UI stylesheet ───────────────────────────────────
-   Games import this first, then override only CSS variables in their style.css
-   ─────────────────────────────────────────────────────────────────────────── */
-
-/* ── Default tokens (games override in their style.css) ── */
 :root {
   --ink:    #eee5d8;
   --muted:  #aaa194;
@@ -203,19 +198,15 @@ body {
 
 /* ── Exits ── */
 .exits {
-  display: flex; flex-wrap: nowrap;
-  gap: 4px; padding: 4px 10px;
+  display: flex; flex-wrap: wrap; gap: 5px;
+  padding: 5px 10px;
   border-top: 1px solid rgba(255,255,255,.06);
-  overflow-x: auto; overflow-y: hidden;
-  height: 34px; align-items: center;
-  -webkit-overflow-scrolling: touch;
 }
 .exit-btn {
   font-family: var(--fm); font-size: 11px;
   background: rgba(255,255,255,.04); border: 1px solid var(--line);
-  border-radius: 6px; color: var(--gold); padding: 3px 8px;
+  border-radius: 6px; color: var(--gold); padding: 4px 9px;
   cursor: pointer; display: flex; align-items: center; gap: 3px;
-  white-space: nowrap; flex-shrink: 0; height: 24px;
 }
 .exit-btn:active { opacity: .6; }
 .exit-btn.locked { color: var(--muted); opacity: .45; cursor: not-allowed; }
@@ -266,8 +257,8 @@ body {
 .otxt { color: #ddd3c5; white-space: pre-line; }
 .owarn { display: block; margin-top: 4px; color: var(--bad); font-size: 13px; }
 
-/* Hide empty feedback msg */
-.feedback-msg:empty { display: none; }
+
+
 
 /* ── Float menu (settings) ── */
 .float-menu {
@@ -308,12 +299,127 @@ body {
 }
 .btn-primary:active { filter: brightness(1.2); }
 
-/* ── Overlay ── */
+/* Hide empty feedback msg */
+.feedback-msg:empty { display: none; }
+
+/* no tap hint */
+
+
+/* Overlay layout fix */
 .overlay {
   position: fixed; inset: 0; z-index: 500;
   display: flex; flex-direction: column; justify-content: flex-end;
 }
 .overlay.hidden { display: none; }
+
+
+
+
+/* ── Command overlay — hugs keyboard on iOS ── */
+.cmd-overlay {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 500;
+  /* iOS Safari: push above address bar */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.cmd-overlay.hidden { display: none; }
+
+.cmd-overlay-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 14px;
+  background: rgba(10,11,18,.98);
+  border-top: 1px solid var(--line);
+  /* Extra room so Safari toolbar doesn't cover input */
+  margin-bottom: 0;
+}
+
+.cmd-overlay-input {
+  flex: 1;
+  background: #0e0f18;
+  border: 1.5px solid var(--gold);
+  border-radius: 12px;
+  color: var(--ink);
+  font-family: var(--fm);
+  font-size: 16px;
+  padding: 11px 14px;
+  outline: none;
+  min-width: 0;
+}
+
+.cmd-overlay-close {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.7);
+  font-size: 17px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+}
+.cmd-overlay-close:active { background: rgba(255,255,255,.18); }
+
+/* Visual cue when input is active */
+.output-box.input-active {
+  border: 1px solid rgba(215,181,109,.3);
+  border-radius: 0 0 6px 6px;
+}
+
+/* Hint text at bottom of output when empty */
+.output-box::after {
+  content: 'tap to type';
+  display: block;
+  padding: 8px 14px;
+  color: rgba(255,255,255,.12);
+  font-family: var(--fm);
+  font-size: 11px;
+  font-style: italic;
+  pointer-events: none;
+}
+.output-box:has(.output-entry)::after {
+  display: none;
+}
+
+/* ── Inventory item fix ── */
+.inv-detail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  font-family: var(--fb);
+}
+.inv-detail.hidden { display: none; }
+
+/* ── Visible typing indicator ── */
+#typingIndicator {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+  display: none;
+  padding: 12px 16px;
+  background: #0d0e18;
+  border-top: 2px solid var(--gold);
+  font-family: var(--fm);
+  font-size: 16px;
+  color: var(--ink);
+  /* iOS: this moves up with the keyboard */
+  transform: translateY(0);
+}
+#typingIndicator .typing-prompt {
+  color: var(--gold);
+  margin-right: 6px;
+}
+.typing-cursor {
+  animation: blink .8s step-end infinite;
+  color: var(--gold);
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+#typingIndicator.visible { display: block; }
 
 /* ── Input bar ── */
 .input-bar {
@@ -440,20 +546,3 @@ body {
   color: var(--muted); letter-spacing: .06em;
   text-align: center;
 }
-
-/* ── Inventory item detail ── */
-.inv-item {
-  flex-wrap: wrap;
-  cursor: pointer;
-}
-.inv-detail {
-  width: 100%;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255,255,255,.07);
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.5;
-  font-family: var(--fb);
-}
-.inv-detail.hidden { display: none; }
