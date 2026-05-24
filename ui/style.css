@@ -203,17 +203,19 @@ body {
 
 /* ── Exits ── */
 .exits {
-  display: flex; flex-wrap: nowrap; gap: 4px;
-  padding: 5px 10px;
+  display: flex; flex-wrap: nowrap;
+  gap: 4px; padding: 4px 10px;
   border-top: 1px solid rgba(255,255,255,.06);
-  overflow-x: auto;
+  overflow-x: auto; overflow-y: hidden;
+  height: 34px; align-items: center;
+  -webkit-overflow-scrolling: touch;
 }
 .exit-btn {
   font-family: var(--fm); font-size: 11px;
   background: rgba(255,255,255,.04); border: 1px solid var(--line);
   border-radius: 6px; color: var(--gold); padding: 3px 8px;
   cursor: pointer; display: flex; align-items: center; gap: 3px;
-  white-space: nowrap; flex-shrink: 0;
+  white-space: nowrap; flex-shrink: 0; height: 24px;
 }
 .exit-btn:active { opacity: .6; }
 .exit-btn.locked { color: var(--muted); opacity: .45; cursor: not-allowed; }
