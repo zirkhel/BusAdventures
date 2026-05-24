@@ -24,7 +24,7 @@ export function initShell({ handleCommand, game = {} }) {
 
 <!-- INTRO -->
 <div id="introScreen" class="screen">
-  <div id="introImage" class="intro-scene"></div>
+  <div id="introImage" class="intro-scene"><img src="assets/intro.png" onerror="this.style.display='none'"></div>
   <div class="intro-body">
     <h1>${esc(intro.title || game.title || '')}</h1>
     <h2>${esc(intro.subtitle || '')}</h2>
