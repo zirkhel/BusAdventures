@@ -385,16 +385,6 @@ body {
 }
 
 /* ── Inventory item fix ── */
-.inv-item {
-  display: flex;
-  flex-direction: column;
-  padding: 8px 10px;
-}
-.inv-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 .inv-detail {
   margin-top: 8px;
   padding-top: 8px;

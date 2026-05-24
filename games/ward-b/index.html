@@ -192,12 +192,13 @@ window._resetUI = () => {
 };
 
 window._onRoomEnter = (roomId) => {
-  if (roomId === currentRoomId) return;
   currentRoomId = roomId;
   outputInner.innerHTML = '';
   expand();
   outputBox.scrollTop = 0;
 };
+
+const inputBarText = document.getElementById('inputBarText');
 
 window._onCommand = (cmd, text, type) => {
   const entry = document.createElement('div');
@@ -206,7 +207,7 @@ window._onCommand = (cmd, text, type) => {
     `<span class="ocmd">&gt; ${esc(cmd)}</span>` +
     (text ? `<span class="otxt">${esc(text)}</span>` : '');
   outputInner.prepend(entry);
-  // With column-reverse, newest is at top — scroll to top
+  // column-reverse + prepend = newest at visual top
   outputBox.scrollTop = 0;
 };
 
@@ -214,7 +215,6 @@ window._onCommand = (cmd, text, type) => {
 
 // ── Input bar ─────────────────────────────────────────────────────
 const inputBar     = document.getElementById('inputBar');
-const inputBarText = document.getElementById('inputBarText');
 
 function collapseAll() {
   // Collapse room description
