@@ -1,8 +1,14 @@
 // engine/parser.js
-// Input string → { verb, target }
-// Verb synonyms live here, not in game data.
+// Input string → { verb, target, on? }
+// Verb synonyms live here. Games can add aliases via configureParser(gameVerbs).
 
 "use strict";
+
+// Games call configureParser({ scan: ["scan","swipe"], ... }) from game.js or shell
+let _extraVerbs = {};
+export function configureParser(gameVerbs = {}) {
+  _extraVerbs = gameVerbs;
+}
 
 const VERBS = {
   look:      ["look at", "examine", "inspect", "study", "check", "look"],
@@ -45,6 +51,9 @@ const DIRECTIONS = {
 
 const STRIP_ARTICLES = /^(at|the|a|an|to|on|with|into|inside|under|through|using)\s+/;
 
+// Prepositions that separate "use X on Y"
+const ON_PREPS = [" on ", " on the ", " with ", " with the ", " at ", " at the ", " against "];
+
 function parse(rawInput) {
   const raw = (rawInput || "").trim().toLowerCase().replace(/\s+/g, " ");
   if (!raw) return { verb: "empty", target: "" };
@@ -61,20 +70,41 @@ function parse(rawInput) {
   if (["help", "?", "h", "commands"].includes(raw))
     return { verb: "help", target: "" };
 
+  // Merge game-specific aliases into verb table
+  const allVerbs = { ...VERBS };
+  for (const [verb, aliases] of Object.entries(_extraVerbs)) {
+    if (allVerbs[verb]) {
+      allVerbs[verb] = [...allVerbs[verb], ...aliases];
+    } else {
+      allVerbs[verb] = aliases;
+    }
+  }
+
   // Sort aliases longest-first so "pick up" beats "pick"
-  const sorted = Object.entries(VERBS)
+  const sorted = Object.entries(allVerbs)
     .flatMap(([verb, arr]) => arr.map(alias => [verb, alias]))
     .sort((a, b) => b[1].length - a[1].length);
 
   for (const [verb, alias] of sorted) {
     if (raw === alias) return { verb, target: "" };
     if (raw.startsWith(alias + " ")) {
-      const target = raw.slice(alias.length).trim().replace(STRIP_ARTICLES, "");
-      return { verb, target };
+      let rest = raw.slice(alias.length).trim().replace(STRIP_ARTICLES, "");
+
+      // Check for "use X on Y" pattern
+      for (const prep of ON_PREPS) {
+        const idx = rest.indexOf(prep);
+        if (idx !== -1) {
+          const target = rest.slice(0, idx).trim();
+          const on     = rest.slice(idx + prep.length).trim().replace(STRIP_ARTICLES, "");
+          return { verb, target, on };
+        }
+      }
+
+      return { verb, target: rest };
     }
   }
 
   return { verb: "unknown", target: raw };
 }
 
-export { parse, VERBS, DIRECTIONS };
+export { parse, configureParser, VERBS, DIRECTIONS };

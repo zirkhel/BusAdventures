@@ -12,7 +12,7 @@
 "use strict";
 
 import * as S from "./state.js";
-import { parse } from "./parser.js";
+import { parse, configureParser } from "./parser.js";
 
 // ── Result builder ────────────────────────────────────────────────────────────
 
@@ -365,7 +365,7 @@ function examine(target) {
 //   5. Flavour target response
 //   6. Generic fallback
 
-function use(verb, target) {
+function use(verb, target, on) {
   const r = S.currentRoom();
   const roomId = S.get().room;
 
@@ -405,16 +405,25 @@ function use(verb, target) {
   }
 
   // 3 ── Item contextActions ──────────────────────────────────────────────────
-  const itemId = S.findCarriedItem(target);
-  if (itemId) {
+  // When "use X on Y": try item=X+on=Y, then item=Y+on=X (both orderings)
+  const candidateItems = on
+    ? [S.findCarriedItem(target), S.findCarriedItem(on)].filter(Boolean)
+    : [S.findCarriedItem(target)].filter(Boolean);
+
+  for (const itemId of candidateItems) {
     const def = S.itemDef(itemId);
+    // The "on" target from the player's perspective
+    const onTarget = on ? (itemId === S.findCarriedItem(target) ? on : target) : null;
 
     for (const ca of (def.contextActions || [])) {
       const roomOk = !ca.room ||
         ca.room === roomId ||
         (Array.isArray(ca.room) && ca.room.includes(roomId));
       const verbOk = !ca.verbs || ca.verbs.includes(verb);
-      if (!roomOk || !verbOk) continue;
+      // If contextAction specifies an "on" target, match it
+      const onOk = !ca.on || !onTarget ||
+        matchesTarget(ca.on, onTarget);
+      if (!roomOk || !verbOk || !onOk) continue;
       if (!S.check(ca.condition)) continue;
 
       if (ca.requires && !checkRequires(ca.requires)) {
@@ -534,7 +543,7 @@ function runCommand(rawInput) {
     case "swing": case "attack": case "cut": case "inject":
     case "throw": case "listen": case "smell": case "touch":
     case "talk":
-      result = use(p.verb, p.target); break;
+      result = use(p.verb, p.target, p.on); break;
 
     default:
       result = res("Nothing answers that intention.", "bad");
@@ -592,7 +601,7 @@ function findFlavour(r, target) {
 }
 
 export {
-  runCommand, go, take, drop, wear, removeWorn, hold, examine, use,
+  configureParser, runCommand, go, take, drop, wear, removeWorn, hold, examine, use,
   buildDescription, buildExits, resolveMediaKey, inventoryList, helpText,
   enterRoom, applyEffects, tickPressure,
 };
