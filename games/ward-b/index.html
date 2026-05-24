@@ -87,6 +87,37 @@
   <button id="helpBtn" class="float-item">Help / Commands</button>
   <button id="restartBtn" class="float-item red-text">Restart</button>
   <button id="backBtn" class="float-item">← Game Select</button>
+  <button id="aboutBtn" class="float-item">About</button>
+</div>
+
+<!-- About overlay -->
+<div id="aboutOverlay" class="about-overlay hidden">
+  <div class="about-panel">
+    <button class="about-close" id="aboutClose">✕</button>
+    <div class="about-content">
+      <div class="about-logo">BUS<span>/</span>ADVENTURES</div>
+      <div class="about-version">v1.0 — Ward B</div>
+
+      <p class="about-body">
+        Text adventures were born in the late 1970s. Games like Zork and the Hitchhiker's Guide to the Galaxy proved that a parser, a room graph, and good writing were enough to hold a player for hours.
+      </p>
+      <p class="about-body">
+        Bus Adventures is that format rebuilt for the mobile screen — short, sharp adventures completable in a single bus ride. Same DNA. New engine.
+      </p>
+
+      <div class="about-divider">— ENGINE —</div>
+      <p class="about-body">
+        Custom JavaScript engine. Room graph navigation, item systems, pressure hazards, puzzle logic. Games are plain data files — rooms, items, descriptions. No external dependencies.
+      </p>
+
+      <div class="about-divider">— CONTACT —</div>
+      <a class="about-contact" href="mailto:anders.risvold@gmail.com">
+        anders.risvold@gmail.com
+      </a>
+
+      <div class="about-footer">© 2025 Anders Risvold</div>
+    </div>
+  </div>
 </div>
 
 <!-- Command overlay — sits above keyboard on iOS -->
@@ -174,11 +205,9 @@ window._onCommand = (cmd, text, type) => {
   entry.innerHTML =
     `<span class="ocmd">&gt; ${esc(cmd)}</span>` +
     (text ? `<span class="otxt">${esc(text)}</span>` : '');
-  outputInner.appendChild(entry);
-  // Small delay ensures DOM is painted before scroll
-  requestAnimationFrame(() => {
-    outputBox.scrollTop = outputBox.scrollHeight;
-  });
+  outputInner.prepend(entry);
+  // With column-reverse, newest is at top — scroll to top
+  outputBox.scrollTop = 0;
 };
 
 // startBtn wired by renderer
@@ -260,6 +289,19 @@ document.getElementById('restartBtn').addEventListener('click', () => settingsMe
 document.getElementById('backBtn').addEventListener('click', () => {
   settingsMenu.classList.add('hidden');
   window.location.href = '../../index.html';
+});
+
+// About overlay
+const aboutOverlay = document.getElementById('aboutOverlay');
+document.getElementById('aboutBtn').addEventListener('click', () => {
+  settingsMenu.classList.add('hidden');
+  aboutOverlay.classList.remove('hidden');
+});
+document.getElementById('aboutClose').addEventListener('click', () => {
+  aboutOverlay.classList.add('hidden');
+});
+aboutOverlay.addEventListener('click', (e) => {
+  if (e.target === aboutOverlay) aboutOverlay.classList.add('hidden');
 });
 
 function esc(s) {
