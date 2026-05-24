@@ -291,7 +291,6 @@ function wireControls(adventure) {
     renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
   });
 
-  qs("helpBtn")?.addEventListener("click", () => handleCommand("help"));
 }
 
 // ── Utility ───────────────────────────────────────────────────────────────────

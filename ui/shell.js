@@ -15,6 +15,12 @@
 
 export function initShell({ handleCommand, game = {} }) {
 
+  // ── Util (defined first — used in HTML injection below) ───────────────────
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g,
+      c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c]));
+  }
+
   // ── Inject HTML ───────────────────────────────────────────────────────────
   document.body.insertAdjacentHTML('afterbegin', `
 
@@ -25,7 +31,7 @@ export function initShell({ handleCommand, game = {} }) {
     <h1 id="shellGameTitle"></h1>
     <h2 id="shellGameSubtitle"></h2>
     <div id="shellIntroParagraphs"></div>
-    <button id="startBtn" class="btn-primary" id="shellStartBtn">Begin</button>
+    <button id="startBtn" class="btn-primary">Begin</button>
   </div>
 </div>
 
@@ -268,7 +274,7 @@ export function initShell({ handleCommand, game = {} }) {
     settingsMenu.classList.toggle('hidden');
   });
   document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
-  document.getElementById('helpBtn').addEventListener('click',    () => settingsMenu.classList.add('hidden'));
+  document.getElementById('helpBtn').addEventListener('click', () => { settingsMenu.classList.add('hidden'); handleCommand('help'); });
   document.getElementById('restartBtn').addEventListener('click', () => settingsMenu.classList.add('hidden'));
   document.getElementById('backBtn').addEventListener('click', () => {
     settingsMenu.classList.add('hidden');
@@ -287,9 +293,4 @@ export function initShell({ handleCommand, game = {} }) {
     if (e.target === aboutOverlay) aboutOverlay.classList.add('hidden');
   });
 
-  // ── Util ──────────────────────────────────────────────────────────────────
-  function esc(s) {
-    return String(s || '').replace(/[&<>"']/g,
-      c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c]));
-  }
 }
