@@ -52,13 +52,13 @@ export function initShell({ handleCommand, game = {} }) {
     <div id="roomDesc" class="room-desc flex-none">
       <div id="roomText" class="room-text"></div>
     </div>
+    <div id="exits" class="exits flex-none"></div>
     <div class="input-bar flex-none" id="inputBar">
       <div class="input-bar-inner" id="inputTrigger">
         <span class="input-bar-prompt">❯</span>
         <span class="input-bar-text" id="inputBarText">Enter command…</span>
       </div>
     </div>
-    <div id="exits" class="exits flex-none"></div>
     <div class="input-bar-spacer"></div>
     <div id="outputBox" class="output-box">
       <div id="outputInner" class="output-inner"></div>
