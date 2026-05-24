@@ -3,246 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="My Adventure">
+<meta name="theme-color" content="#07080b">
 <title>My Adventure — Bus Adventures</title>
 <link rel="stylesheet" href="../../ui/style.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- INTRO -->
-<div id="introScreen" class="screen">
-  <div id="introImage" class="intro-scene"></div>
-  <div class="intro-body">
-    <h1>My Adventure</h1>
-    <h2>A Subtitle</h2>
-    <p>The asylum was sealed three years ago. Officially, everyone got out.</p>
-    <p>You wake in the reception hall. The doors behind you are chained from the inside.</p>
-    <button id="startBtn" class="btn-primary">Begin</button>
-  </div>
-</div>
-
-<!-- GAME -->
-<div id="gameScreen" class="screen hidden">
-  <div class="game-layout">
-    <div id="scene" class="scene flex-none"></div>
-    <div class="action-bar flex-none">
-      <button id="settingsBtn" class="action-btn">⚙</button>
-    </div>
-    <div class="section-header flex-none" id="invToggle">
-      <span id="invTitle">Inventory (0)</span>
-      <span id="invArrow">▾</span>
-    </div>
-    <div id="inventory" class="inv-list flex-none"></div>
-    <div class="section-header flex-none" id="roomTitleEl">
-      <span id="roomTitle">Room</span>
-      <span id="descToggle">▾</span>
-    </div>
-    <div id="roomDesc" class="room-desc flex-none">
-      <div id="roomText" class="room-text"></div>
-    </div>
-    <div id="exits" class="exits flex-none"></div>
-
-    <!-- Visible input bar — always shown, tapping focuses keyboard -->
-    <div class="input-bar flex-none" id="inputBar">
-      <div class="input-bar-inner" id="inputTrigger">
-        <span class="input-bar-prompt">❯</span>
-        <span class="input-bar-text" id="inputBarText">Enter command…</span>
-      </div>
-    </div>
-
-    <div id="outputBox" class="output-box">
-      <div id="outputInner" class="output-inner"></div>
-    </div>
-  </div>
-</div>
-
-<!-- DEATH -->
-<div id="deathScreen" class="screen hidden">
-  <div id="deathImage" class="intro-scene"></div>
-  <div class="intro-body">
-    <h1 class="red">You Died</h1>
-    <p id="deathText" class="muted"></p>
-    <button id="continueBtn" class="btn-primary">Continue</button>
-  </div>
-</div>
-
-<!-- WIN -->
-<div id="winScreen" class="screen hidden">
-  <div id="winImage" class="intro-scene"></div>
-  <div class="intro-body">
-    <h1 class="green">Escaped</h1>
-    <p class="muted">Your win message here.</p>
-    <button id="playAgainBtn" class="btn-primary">Play again</button>
-  </div>
-</div>
-
-<!-- Settings menu -->
-<div id="settingsMenu" class="float-menu hidden">
-  <button id="helpBtn" class="float-item">Help / Commands</button>
-  <button id="restartBtn" class="float-item red-text">Restart</button>
-  <button id="backBtn" class="float-item">← Game Select</button>
-</div>
-
-<!-- Command overlay — sits above keyboard on iOS -->
-<!-- Hidden input — keyboard trigger only -->
-<form id="commandForm" autocomplete="off" style="position:fixed;top:-500px;opacity:0;pointer-events:none">
-  <input id="commandInput" autocomplete="off" autocorrect="off"
-    autocapitalize="off" spellcheck="false" enterkeyhint="send">
-</form>
-
 <script type="module">
-// ── Edit these imports to match your game files ──
 import { GAME }  from "./data/game.js";
 import { ROOMS } from "./data/rooms.js";
 import { ITEMS } from "./data/items.js";
 import { getMedia, getItemIcon } from "./assets.js";
 import { configure, startGame, handleCommand } from "../../ui/renderer.js";
+import { initShell } from "../../ui/shell.js";
 
-// ── Configure renderer ────────────────────────────────────────────
 configure({ getMedia, getItemIcon });
+initShell({ handleCommand, game: GAME });
 startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
-// ── Do not edit below this line ──
-
-// ── Elements ──────────────────────────────────────────────────────
-const outputBox   = document.getElementById('outputBox');
-const outputInner = document.getElementById('outputInner');
-const roomDesc    = document.getElementById('roomDesc');
-const descToggle  = document.getElementById('descToggle');
-const cmdInput    = document.getElementById('commandInput');
-const settingsBtn = document.getElementById('settingsBtn');
-const settingsMenu= document.getElementById('settingsMenu');
-
-let descCollapsed = false;
-let currentRoomId = null;
-
-// ── Collapse / expand desc ────────────────────────────────────────
-function collapse() {
-  if (descCollapsed) return;
-  descCollapsed = true;
-  roomDesc.classList.add('collapsed');
-  descToggle.textContent = '▸';
-}
-function expand() {
-  descCollapsed = false;
-  roomDesc.classList.remove('collapsed');
-  descToggle.textContent = '▾';
-}
-
-// ── Renderer hooks ────────────────────────────────────────────────
-window._resetUI = () => {
-  currentRoomId = null;
-  outputInner.innerHTML = '';
-  expand();
-};
-
-window._onRoomEnter = (roomId) => {
-  if (roomId === currentRoomId) return;
-  currentRoomId = roomId;
-  outputInner.innerHTML = '';
-  expand();
-  outputBox.scrollTop = 0;
-};
-
-window._onCommand = (cmd, text, type) => {
-  const entry = document.createElement('div');
-  entry.className = `output-entry ${type||'neutral'}`;
-  entry.innerHTML =
-    `<span class="ocmd">&gt; ${esc(cmd)}</span>` +
-    (text ? `<span class="otxt">${esc(text)}</span>` : '');
-  outputInner.appendChild(entry);
-  outputBox.scrollTop = outputBox.scrollHeight;
-};
-
-// startBtn wired by renderer
-
-// ── Input bar ─────────────────────────────────────────────────────
-const inputBar     = document.getElementById('inputBar');
-const inputBarText = document.getElementById('inputBarText');
-
-function collapseAll() {
-  // Collapse room description
-  if (!descCollapsed) collapse();
-  // Collapse inventory
-  const inv = document.getElementById('inventory');
-  if (inv.classList.contains('open')) {
-    inv.classList.remove('open');
-    document.getElementById('invArrow').textContent = '▾';
-  }
-}
-
-function expandAll() {
-  expand();
-  // Leave inventory as user had it
-}
-
-function focusInput() {
-  cmdInput.value = '';
-  inputBarText.textContent = '';
-  inputBar.classList.add('active');
-  collapseAll();
-  cmdInput.focus();
-}
-
-// Tap input bar or output box → open keyboard
-document.getElementById('inputTrigger').addEventListener('click', focusInput);
-outputBox.addEventListener('click', focusInput);
-
-// Submit on enter
-document.getElementById('commandForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const val = cmdInput.value.trim();
-  cmdInput.value = '';
-  cmdInput.blur();
-  inputBar.classList.remove('active');
-  inputBarText.textContent = 'Enter command…';
-  if (!val) return;
-  collapse();
-  handleCommand(val);
-});
-
-// Live text mirroring in input bar
-cmdInput.addEventListener('input', () => {
-  inputBarText.textContent = cmdInput.value || '';
-});
-
-cmdInput.addEventListener('blur', () => {
-  inputBar.classList.remove('active');
-  if (!cmdInput.value) inputBarText.textContent = 'Enter command…';
-});
-
-// ── Room title tap ────────────────────────────────────────────────
-document.getElementById('roomTitleEl').addEventListener('click', () => {
-  descCollapsed ? expand() : collapse();
-});
-
-// ── Inventory ─────────────────────────────────────────────────────
-document.getElementById('invToggle').addEventListener('click', () => {
-  const inv = document.getElementById('inventory');
-  inv.classList.toggle('open');
-  document.getElementById('invArrow').textContent =
-    inv.classList.contains('open') ? '▴' : '▾';
-});
-
-// ── Settings ──────────────────────────────────────────────────────
-settingsBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const r = settingsBtn.getBoundingClientRect();
-  settingsMenu.style.top  = (r.bottom + 6) + 'px';
-  settingsMenu.style.left = r.left + 'px';
-  settingsMenu.classList.toggle('hidden');
-});
-document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
-document.getElementById('helpBtn').addEventListener('click', () => settingsMenu.classList.add('hidden'));
-document.getElementById('restartBtn').addEventListener('click', () => settingsMenu.classList.add('hidden'));
-document.getElementById('backBtn').addEventListener('click', () => {
-  settingsMenu.classList.add('hidden');
-  window.location.href = '../../index.html';
-});
-
-function esc(s) {
-  return String(s||'').replace(/[&<>"']/g,
-    c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-}
 </script>
 </body>
 </html>
