@@ -126,6 +126,7 @@ function renderInventory() {
           <strong>${esc(it.name)}</strong>
           <div class="inv-status">${esc(it.status)}</div>
         </div>
+        <span class="inv-expand">▾</span>
       </div>
       <div class="inv-detail hidden">${esc(it.description || "")}</div>
     </div>`;
@@ -135,11 +136,14 @@ function renderInventory() {
   listEl.querySelectorAll(".inv-item").forEach(row => {
     row.addEventListener("click", () => {
       const detail  = row.querySelector(".inv-detail");
+      const arrow   = row.querySelector(".inv-expand");
       const isOpen  = !detail.classList.contains("hidden");
       // Close all others
       listEl.querySelectorAll(".inv-detail").forEach(d => d.classList.add("hidden"));
+      listEl.querySelectorAll(".inv-expand").forEach(a => a.textContent = "▾");
       if (!isOpen) {
         detail.classList.remove("hidden");
+        arrow.textContent = "▴";
       }
     });
   });
@@ -291,6 +295,7 @@ function wireControls(adventure) {
     renderMedia(qs("introImage"), CFG.getMedia?.("__intro__", S.get(), "default"));
   });
 
+  qs("helpBtn")?.addEventListener("click", () => handleCommand("help"));
 }
 
 // ── Utility ───────────────────────────────────────────────────────────────────
