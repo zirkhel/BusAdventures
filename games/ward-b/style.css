@@ -161,27 +161,27 @@ body {
 .inv-list { display: none; flex-direction: column; gap: 3px; padding: 5px 10px 8px; }
 .inv-list.open { display: flex; }
 .inv-item {
-  display: flex; align-items: center; gap: 9px;
+  display: flex; align-items: center; gap: 12px;
   border: 1px solid rgba(255,255,255,.06); border-radius: 8px;
-  background: rgba(255,255,255,.02); padding: 6px 10px;
+  background: rgba(255,255,255,.02); padding: 8px 10px;
   cursor: pointer; flex-wrap: wrap;
 }
 .inv-icon {
-  width: 26px; height: 26px; border-radius: 5px;
+  width: 64px; height: 64px; border-radius: 8px;
   border: 1px solid rgba(255,255,255,.1); display: grid; place-items: center;
   background: #0c0e14; flex-shrink: 0;
 }
-.inv-icon svg, .inv-icon img { width: 20px; height: 20px; object-fit: contain; }
+.inv-icon svg, .inv-icon img { width: 56px; height: 56px; object-fit: contain; }
 .inv-info { flex: 1; min-width: 0; }
-.inv-info strong { display: block; font-size: 15px; font-family: var(--fb); font-weight: normal; color: var(--ink); }
-.inv-status { font-family: var(--fm); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
-.inv-empty { color: var(--muted); font-style: italic; font-size: 13px; padding: 4px 2px; }
-.inv-expand { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+.inv-info strong { display: block; font-size: 16px; font-family: var(--fb); font-weight: normal; color: var(--ink); }
+.inv-status { font-family: var(--fm); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.inv-empty { color: var(--muted); font-style: italic; font-size: 14px; padding: 4px 2px; }
+.inv-expand { font-size: 11px; color: var(--muted); flex-shrink: 0; }
 .inv-detail {
-  width: 100%; margin-top: 5px; padding-top: 5px;
+  width: 100%; margin-top: 6px; padding-top: 6px;
   border-top: 1px solid rgba(255,255,255,.05);
-  font-size: 13px; color: var(--muted);
-  font-style: italic; line-height: 1.5;
+  font-size: 14px; color: var(--muted);
+  font-style: italic; line-height: 1.55;
   font-family: var(--fb);
 }
 

@@ -163,9 +163,9 @@ export const ROOMS = {
     exits: {
       west:  "surgery",
       south: {
-        to:         "courtyard",
-        condition:  { hasItem: "keycard" },
-        lockedText: "The security gate is locked. A keycard reader blinks red on the wall.",
+        to:        "courtyard",
+        hidden:    true,
+        condition: { flag: "gateUnlocked" },
       },
     },
     actions: [
@@ -174,12 +174,19 @@ export const ROOMS = {
         targets: ["keycard", "card", "reader", "gate", "door", "security gate"],
         requires:   { hasItem: "keycard" },
         requiresText: "You have nothing to use on the reader.",
-        condition:  null,
+        failText: "The gate is locked. Try using your keycard on the reader.",
         successText: "You swipe the keycard through the reader. A green light blinks. The security gate clicks open.",
         effects: {
           openExit: { dir: "south", to: "courtyard" },
           setFlag:  "gateUnlocked",
         },
+      },
+      {
+        verbs:   ["go", "south", "push", "open"],
+        targets: ["gate", "south", "door", "security gate"],
+        condition:  { flagFalse: "gateUnlocked" },
+        successText: "The security gate is locked. A keycard reader blinks red beside it.",
+        effects: {},
       },
     ],
     enterRules: [

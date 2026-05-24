@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#07080b">
 <title>Death Trap: Ward B</title>
 <link rel="stylesheet" href="style.css">
+<link rel="preload" href="assets/rooms/reception.png" as="image">
 </head>
 <body>
 
@@ -174,7 +175,10 @@ window._onCommand = (cmd, text, type) => {
     `<span class="ocmd">&gt; ${esc(cmd)}</span>` +
     (text ? `<span class="otxt">${esc(text)}</span>` : '');
   outputInner.appendChild(entry);
-  outputBox.scrollTop = outputBox.scrollHeight;
+  // Small delay ensures DOM is painted before scroll
+  requestAnimationFrame(() => {
+    outputBox.scrollTop = outputBox.scrollHeight;
+  });
 };
 
 // startBtn wired by renderer
