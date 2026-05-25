@@ -4,6 +4,12 @@
 
 "use strict";
 
+let _extraVerbs = {};
+export function configureParser(gameVerbs = {}) {
+  _extraVerbs = gameVerbs;
+}
+
+
 const VERBS = {
   look:      ["look at", "examine", "inspect", "study", "check", "look"],
   take:      ["pick up", "take", "get", "grab", "collect"],
@@ -68,9 +74,15 @@ function parse(rawInput) {
   if (["help", "?", "h", "commands"].includes(raw))
     return { verb: "help", target: "" };
 
+  // Merge game-specific aliases
+  const allVerbs = Object.assign({}, VERBS);
+  for (const [verb, aliases] of Object.entries(_extraVerbs)) {
+    allVerbs[verb] = [...(allVerbs[verb] || []), ...aliases];
+  }
+
   // Sort aliases longest-first so "pick up" beats "pick"
-  const sorted = Object.entries(VERBS)
-    .flatMap(([verb, arr]) => arr.map(alias => [verb, alias]))
+  const sorted = Object.entries(allVerbs)
+    .flatMap(([verb, arr]) => (arr || []).map(alias => [verb, alias]))
     .sort((a, b) => b[1].length - a[1].length);
 
   for (const [verb, alias] of sorted) {
