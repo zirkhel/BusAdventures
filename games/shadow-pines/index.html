@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shadow Over Iron Pines">
+<meta name="theme-color" content="#080a0e">
+<title>Shadow Over Iron Pines</title>
+<link rel="stylesheet" href="../../ui/style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script type="module">
+import { GAME }  from "./data/game.js";
+import { ROOMS } from "./data/rooms.js";
+import { ITEMS } from "./data/items.js";
+import { getMedia, getItemIcon } from "./assets.js";
+import { configure, startGame, handleCommand } from "../../ui/renderer.js";
+import { initShell } from "../../ui/shell.js";
+
+configure({ getMedia, getItemIcon });
+initShell({ handleCommand, game: GAME });
+startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
+</script>
+</body>
+</html>

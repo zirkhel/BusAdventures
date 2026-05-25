@@ -1,0 +1,19 @@
+/* Shadow Over Iron Pines — game-specific overrides
+   All layout and component styles live in ui/style.css
+   Only override CSS variables here */
+
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Courier+Prime:wght@400;700&display=swap');
+
+:root {
+  --ink:    #e8dfc8;
+  --muted:  #9a9080;
+  --line:   #2a2e3a;
+  --gold:   #c8a840;
+  --accent: #8a2020;
+  --ok:     #8ab070;
+  --bad:    #c85030;
+  --bg:     #080a0e;
+  --panel:  rgba(14,16,24,.97);
+  --fb:     'IM Fell English', Georgia, serif;
+  --fm:     'Courier Prime', monospace;
+}
