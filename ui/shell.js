@@ -47,9 +47,7 @@ export function initShell({ handleCommand, game = {} }) {
         <span class="input-bar-text" id="inputBarText">Enter command…</span>
       </div>
     </div>
-
     <div id="exits" class="exits flex-none"></div>
-    <div class="input-bar-spacer"></div>
     <div id="outputBox" class="output-box">
       <div id="outputInner" class="output-inner"></div>
     </div>
@@ -150,12 +148,7 @@ function onViewport() {
   const vv = window.visualViewport;
   // Lock game height to visible area
   if (gameLayout) gameLayout.style.height = vv.height + 'px';
-  // Pin input-bar above keyboard
-  const inputBar = document.getElementById('inputBar');
-  if (inputBar) {
-    const offset = window.innerHeight - vv.offsetTop - vv.height;
-    inputBar.style.bottom = Math.max(0, offset) + 'px';
-  }
+
 }
 
 if (window.visualViewport) {

@@ -291,6 +291,46 @@ function drop(target) {
   return res(def.dropText || "Dropped: " + def.name + ".", "neutral", { roomChanged: true });
 }
 
+function takeAll() {
+  const st = S.get();
+  const room = st.room;
+  // Finn alle items i rommet som kan tas
+  const ids = Object.entries(st.itemLoc)
+    .filter(([id, loc]) => loc === room)
+    .map(([id]) => id)
+    .filter(id => {
+      const def = S.itemDef(id);
+      return def && def.canCarry !== false;
+    });
+
+  if (!ids.length) return res("There is nothing here to take.", "bad");
+
+  ids.forEach(id => {
+    st.inventory.push(id);
+    st.itemLoc[id] = "inventory";
+  });
+  S.save();
+  const names = ids.map(id => S.itemDef(id).name).join(", ");
+  return res("Taken: " + names + ".", "ok", { roomChanged: true });
+}
+
+function dropAll() {
+  const st = S.get();
+  const ids = [...st.inventory];
+
+  if (!ids.length) return res("You are not carrying anything.", "bad");
+
+  ids.forEach(id => {
+    st.inventory = st.inventory.filter(x => x !== id);
+    st.worn      = st.worn.filter(x => x !== id);
+    if (st.held === id) st.held = null;
+    st.itemLoc[id] = st.room;
+  });
+  S.save();
+  const names = ids.map(id => S.itemDef(id).name).join(", ");
+  return res("Dropped: " + names + ".", "neutral", { roomChanged: true });
+}
+
 function wear(target) {
   const id = S.findCarriedItem(target);
   if (!id) return res("You are not carrying that.", "bad");
@@ -525,6 +565,8 @@ function runCommand(rawInput) {
     case "look":      result = examine(p.target); break;
     case "take":      result = take(p.target); break;
     case "drop":      result = drop(p.target); break;
+    case "takeall":   result = takeAll(); break;
+    case "dropall":   result = dropAll(); break;
     case "wear":      result = wear(p.target); break;
     case "remove":    result = removeWorn(p.target); break;
     case "hold":      result = hold(p.target); break;
@@ -592,7 +634,7 @@ function findFlavour(r, target) {
 }
 
 export {
-  runCommand, go, take, drop, wear, removeWorn, hold, examine, use,
+  runCommand, go, take, drop, takeAll, dropAll, wear, removeWorn, hold, examine, use,
   buildDescription, buildExits, resolveMediaKey, inventoryList, helpText,
   enterRoom, applyEffects, tickPressure,
 };

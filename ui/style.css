@@ -172,6 +172,7 @@ body {
   background: #0c0e14; flex-shrink: 0;
 }
 .inv-icon svg, .inv-icon img { width: 56px; height: 56px; object-fit: contain; }
+.inv-row { display: flex; align-items: flex-start; gap: 12px; width: 100%; }
 .inv-info { flex: 1; min-width: 0; padding-top: 4px; }
 .inv-info strong { display: block; font-size: 16px; font-family: var(--fb); font-weight: normal; color: var(--ink); }
 .inv-status { font-family: var(--fm); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
@@ -423,18 +424,14 @@ body {
 
 /* ── Input bar ── */
 .input-bar {
-  position: fixed;
-  left: 0; right: 0;
-  bottom: 0;
-  z-index: 100;
+  flex-shrink: 0;
   padding: 8px 12px;
   background: rgba(8,9,14,.97);
   border-top: 1px solid rgba(255,255,255,.07);
 }
 
 .input-bar-spacer {
-  height: 56px;
-  flex-shrink: 0;
+  display: none;
 }
 
 .input-bar-inner {

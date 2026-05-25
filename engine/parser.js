@@ -7,7 +7,9 @@
 const VERBS = {
   look:      ["look at", "examine", "inspect", "study", "check", "look"],
   take:      ["pick up", "take", "get", "grab", "collect"],
+  takeall:   ["take all", "get all", "grab all", "pick up all", "collect all"],
   drop:      ["put down", "drop", "leave"],
+  dropall:   ["drop all", "put down all", "leave all"],
   wear:      ["put on", "equip", "wear"],
   remove:    ["take off", "unequip", "remove"],
   hold:      ["wield", "ready", "hold"],
