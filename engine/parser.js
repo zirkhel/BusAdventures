@@ -14,6 +14,7 @@ const VERBS = {
   remove:    ["take off", "unequip", "remove"],
   hold:      ["wield", "ready", "hold"],
   use:       ["activate", "use", "try"],
+  swipe:     ["swipe", "scan", "insert", "tap", "slide"],
   read:      ["decipher", "translate", "read"],
   open:      ["unlock", "open"],
   close:     ["shut", "close"],
@@ -41,6 +42,7 @@ const DIRECTIONS = {
   ne: "northeast", nw: "northwest", se: "southeast", sw: "southwest",
   north: "north", south: "south", east: "east", west: "west",
   up: "up", down: "down",
+  through: "through", out: "out", in: "in",
   northeast: "northeast", northwest: "northwest",
   southeast: "southeast", southwest: "southwest",
 };

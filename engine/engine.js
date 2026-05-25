@@ -571,7 +571,7 @@ function runCommand(rawInput) {
     case "remove":    result = removeWorn(p.target); break;
     case "hold":      result = hold(p.target); break;
 
-    case "use": case "read": case "open": case "close":
+    case "use": case "swipe": case "read": case "open": case "close":
     case "push": case "pull": case "force": case "light":
     case "swing": case "attack": case "cut": case "inject":
     case "throw": case "listen": case "smell": case "touch":
