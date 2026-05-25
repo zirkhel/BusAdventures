@@ -1,5 +1,5 @@
 // engine/parser.js
-// Input string → { verb, target }
+// Input string → { verb, target, on? }
 // Verb synonyms live here, not in game data.
 
 "use strict";
@@ -47,7 +47,10 @@ const DIRECTIONS = {
   southeast: "southeast", southwest: "southwest",
 };
 
-const STRIP_ARTICLES = /^(at|the|a|an|to|on|with|into|inside|under|through|using)\s+/;
+const STRIP_ARTICLES = /^(at|the|a|an|to|into|inside|under|using)\s+/;
+
+// Prepositions that split "use X on Y" / "use X with Y"
+const ON_PREPS = [" on the ", " on ", " with the ", " with ", " at the ", " at ", " into the ", " into ", " against "];
 
 function parse(rawInput) {
   const raw = (rawInput || "").trim().toLowerCase().replace(/\s+/g, " ");
@@ -73,7 +76,19 @@ function parse(rawInput) {
   for (const [verb, alias] of sorted) {
     if (raw === alias) return { verb, target: "" };
     if (raw.startsWith(alias + " ")) {
-      const target = raw.slice(alias.length).trim().replace(STRIP_ARTICLES, "");
+      let rest = raw.slice(alias.length).trim();
+
+      // Split "use X on Y" → { verb, target: X, on: Y }
+      for (const prep of ON_PREPS) {
+        const idx = rest.indexOf(prep);
+        if (idx !== -1) {
+          const target = rest.slice(0, idx).trim().replace(STRIP_ARTICLES, "");
+          const on     = rest.slice(idx + prep.length).trim().replace(STRIP_ARTICLES, "");
+          return { verb, target, on };
+        }
+      }
+
+      const target = rest.replace(STRIP_ARTICLES, "");
       return { verb, target };
     }
   }

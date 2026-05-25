@@ -405,14 +405,15 @@ function examine(target) {
 //   5. Flavour target response
 //   6. Generic fallback
 
-function use(verb, target) {
+function use(verb, target, on) {
   const r = S.currentRoom();
   const roomId = S.get().room;
 
   // 1 ── Room actions ─────────────────────────────────────────────────────────
   for (const action of (r.actions || [])) {
     const verbOk   = action.verbs?.includes(verb);
-    const targetOk = matchesTarget(action.targets || action.target, target);
+    const targetOk = matchesTarget(action.targets || action.target, target)
+                   || (on && matchesTarget(action.targets || action.target, on));
     if (!verbOk || !targetOk) continue;
     if (!S.check(action.condition)) continue;
 
@@ -576,7 +577,7 @@ function runCommand(rawInput) {
     case "swing": case "attack": case "cut": case "inject":
     case "throw": case "listen": case "smell": case "touch":
     case "talk":
-      result = use(p.verb, p.target); break;
+      result = use(p.verb, p.target, p.on); break;
 
     default:
       result = res("Nothing answers that intention.", "bad");
