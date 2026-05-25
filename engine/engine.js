@@ -33,6 +33,14 @@ function applyEffects(effects, sourceRoomId) {
   if (effects.clearFlag)     S.setFlag(effects.clearFlag, false);
   if (effects.setRoomFlag)   S.setRoomFlag(room, effects.setRoomFlag, effects.flagValue ?? true);
   if (effects.setGlobalFlag) S.setFlag(effects.setGlobalFlag, effects.flagValue ?? true);
+  if (effects.setGlobalFlags) {
+    (Array.isArray(effects.setGlobalFlags) ? effects.setGlobalFlags : [effects.setGlobalFlags])
+      .forEach(f => S.setFlag(f, true));
+  }
+  if (effects.clearFlags) {
+    (Array.isArray(effects.clearFlags) ? effects.clearFlags : [effects.clearFlags])
+      .forEach(f => S.setFlag(f, false));
+  }
 
   if (effects.setRoomState) {
     const r = effects.setRoomState.room || room;
