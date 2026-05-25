@@ -96,4 +96,4 @@ function parse(rawInput) {
   return { verb: "unknown", target: raw };
 }
 
-export { parse, VERBS, DIRECTIONS };
+export { parse, configureParser, VERBS, DIRECTIONS };

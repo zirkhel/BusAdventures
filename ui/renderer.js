@@ -170,19 +170,33 @@ function showFeedback(text, type = "neutral", command = null, warning = null) {
 // ── Death / Win ───────────────────────────────────────────────────────────────
 
 function renderDeath(text) {
-  if (CFG.hooks?.onDeath?.(text) === true) return;  // hook can handle it
+  if (CFG.hooks?.onDeath?.(text) === true) return;
+  const roomId  = S.get().room;
+  const roomDef = S.roomDef(roomId);
   S.clear();
   showScreen("deathScreen");
-  renderMedia(qs("deathImage"), resolveMedia(S.get().room));
+  // Priority: room.deathMedia → __death__ → room image
+  const deathMedia =
+    (roomDef?.deathMedia && CFG.getMedia?.(roomDef.deathMedia, S.get(), "default")) ||
+    CFG.getMedia?.("__death__", S.get(), "default") ||
+    resolveMedia(roomId);
+  renderMedia(qs("deathImage"), deathMedia);
   const el = qs("deathText");
   if (el) el.textContent = text;
 }
 
 function renderWin() {
   if (CFG.hooks?.onWin?.() === true) return;
+  const roomId  = S.get().room;
+  const roomDef = S.roomDef(roomId);
   S.clear();
   showScreen("winScreen");
-  renderMedia(qs("winImage"), resolveMedia(S.get().room));
+  // Priority: room.winMedia → __win__ → room image
+  const winMedia =
+    (roomDef?.winMedia && CFG.getMedia?.(roomDef.winMedia, S.get(), "default")) ||
+    CFG.getMedia?.("__win__", S.get(), "default") ||
+    resolveMedia(roomId);
+  renderMedia(qs("winImage"), winMedia);
 }
 
 // ── Command handler ───────────────────────────────────────────────────────────

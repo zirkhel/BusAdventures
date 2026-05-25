@@ -12,7 +12,7 @@ export function initShell({ handleCommand, game = {} }) {
   document.body.insertAdjacentHTML('afterbegin', `
 <!-- INTRO -->
 <div id="introScreen" class="screen">
-  <div id="introImage" class="intro-scene"><img src="assets/intro.png" onerror="this.style.display='none'"></div>
+  <div id="introImage" class="intro-scene"><img src="assets/screens/intro.png" onerror="this.style.display='none'"></div>
   <div class="intro-body">
     <h1 id="shellTitle"></h1>
     <h2 id="shellSubtitle"></h2>
@@ -56,7 +56,7 @@ export function initShell({ handleCommand, game = {} }) {
 
 <!-- DEATH -->
 <div id="deathScreen" class="screen hidden">
-  <div id="deathImage" class="intro-scene"></div>
+  <div id="deathImage" class="intro-scene"><img src="assets/screens/death.png" onerror="this.style.display='none'"></div>
   <div class="intro-body">
     <h1 class="red">You Died</h1>
     <p id="deathText" class="muted"></p>
@@ -66,11 +66,12 @@ export function initShell({ handleCommand, game = {} }) {
 
 <!-- WIN -->
 <div id="winScreen" class="screen hidden">
-  <div id="winImage" class="intro-scene"></div>
+  <div id="winImage" class="intro-scene"><img src="assets/screens/win.png" onerror="this.style.display='none'"></div>
   <div class="intro-body">
     <h1 class="green" id="shellWinTitle">Escaped</h1>
     <p class="muted" id="shellWinText"></p>
     <button id="playAgainBtn" class="btn-primary">Play again</button>
+    <button id="winBackBtn" class="btn-primary" style="margin-top:10px;background:linear-gradient(180deg,#1e2a1e,#0e160e);border-color:#3a5a3a">&#8592; All Adventures</button>
   </div>
 </div>
 
@@ -288,6 +289,10 @@ document.getElementById('backBtn').addEventListener('click', () => {
   settingsMenu.classList.add('hidden');
   window.location.href = '../../index.html';
 });
+
+  document.getElementById('winBackBtn')?.addEventListener('click', () => {
+    window.location.href = '../../index.html';
+  });
 
 // About overlay
 const aboutOverlay = document.getElementById('aboutOverlay');

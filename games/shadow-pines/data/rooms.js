@@ -59,6 +59,7 @@ export const ROOMS = {
     gridPosition: { col: 1, row: 1 },
     media: "courtyard_default",
     fx: "mist",
+    deathMedia: "death_guard",
     baseDescription: "The courtyard is open, wet, and dangerous. Guards patrol beneath swinging lanterns. Sweet smoke drifts from the main hall to the east, making your throat sting even from here.",
     itemText: {},
     states: {
@@ -318,6 +319,7 @@ export const ROOMS = {
     gridPosition: { col: 3, row: 1 },
     media: "archive_default",
     fx: "flicker",
+    deathMedia: "death_guard",
     baseDescription: "The shogun's private archive is silent and dry. The hall beyond reeks of thick ceremonial incense. A sealed chest rests beneath the shelves.",
     itemText: {},
     states: {
@@ -539,6 +541,7 @@ export const ROOMS = {
     gridPosition: { col: 1, row: 3 },
     media: "storage_cellar",
     fx: null,
+    deathMedia: "death_cellar",
     baseDescription: "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally.",
     itemText: {
       climbing_claws: {

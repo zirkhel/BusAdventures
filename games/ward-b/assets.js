@@ -16,6 +16,10 @@
 const ROOM_MEDIA = {
 
   __intro__: img("reception", "mist", SVG_RECEPTION()),
+  __death__:        { type: "img", src: "assets/screens/death.png",          fx: null, svgFallback: SVG_DEATH_BASEMENT() },
+  death_basement:   { type: "img", src: "assets/screens/death_basement.png",  fx: null, svgFallback: SVG_DEATH_BASEMENT() },
+  death_stairwell:  { type: "img", src: "assets/screens/death_stairwell.png", fx: "mist", svgFallback: SVG_STAIRWELL() },
+  __win__:   { type: "img", src: "assets/screens/win.png",   fx: null, svgFallback: SVG_OUTSIDE() },
   reception: img("reception", "mist", SVG_RECEPTION()),
   reception_empty: img("reception_empty", "mist", SVG_RECEPTION()),  // keycard taken
   corridor:  img("corridor", "flicker", SVG_CORRIDOR()),

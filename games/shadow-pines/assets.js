@@ -5,7 +5,11 @@
 "use strict";
 
 const ROOM_MEDIA = {
-  __intro__:                   img("intro",                       "mist",    SVG_OUTER_WALL()),
+  __intro__:                   { type: "img", src: "assets/screens/intro.png", fx: "mist",    svgFallback: SVG_OUTER_WALL() },
+  __death__:                   { type: "img", src: "assets/screens/death.png",        fx: null,   svgFallback: SVG_COURTYARD_ALERTED() },
+  death_guard:                 { type: "img", src: "assets/screens/death_guard.png",  fx: null,   svgFallback: SVG_COURTYARD_ALERTED() },
+  death_cellar:                { type: "img", src: "assets/screens/death_cellar.png", fx: null,   svgFallback: SVG_CELLAR() },
+  __win__:                     { type: "img", src: "assets/screens/win.png",   fx: "mist",    svgFallback: SVG_ROOF() },
   outer_wall:                  img("outer_wall",                  "mist",    SVG_OUTER_WALL()),
   courtyard_default:           img("courtyard_default",           "mist",    SVG_COURTYARD()),
   courtyard_alerted:           img("courtyard_alerted",           "flicker", SVG_COURTYARD_ALERTED()),

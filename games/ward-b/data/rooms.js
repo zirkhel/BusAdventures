@@ -171,7 +171,7 @@ export const ROOMS = {
     actions: [
       {
         verbs:   ["use", "swipe", "scan", "insert", "tap"],
-        targets: ["keycard", "card", "reader", "gate", "door", "security gate", "terminal", "keycard reader", "card reader", "scanner", "slot"],
+        targets: ["keycard", "card", "reader", "gate", "door", "security gate"],
         requires:   { hasItem: "keycard" },
         requiresText: "You have nothing to use on the reader.",
         failText: "The gate is locked. Try using your keycard on the reader.",
@@ -197,10 +197,7 @@ export const ROOMS = {
         text: "The corridor is quieter than the ward. Your footsteps sound wrong here.",
       },
     ],
-    objects: {
-      reader:   { id: "reader",   aliases: ["reader", "keycard reader", "card reader", "terminal", "security terminal", "scanner"], examineText: "A wall-mounted keycard reader. A red light blinks slowly. It is waiting for a valid card." },
-      gate:     { id: "gate",     aliases: ["gate", "security gate", "door", "bars"],  examineText: "A heavy security gate. Locked. A keycard reader is mounted beside it." },
-    },
+    objects: {},
     flavourTargets: {
       glass:       { id: "glass",       aliases: ["glass", "panels", "windows"],     examineText: "The glass is thick. The handprints are on the inside." },
       handprints:  { id: "handprints",  aliases: ["handprints", "prints", "hands"],  examineText: "Five fingers. Pressed hard. From the inside." },
@@ -298,6 +295,7 @@ export const ROOMS = {
     gridPosition: { col: 2, row: 2 },
     media: "stairwell",
     fx: "mist",
+    deathMedia: "death_stairwell",
     baseDescription: "The stairwell descends in tight red turns. Wet footprints climb beside yours — though nobody passed you.\n\nThe corridor is up. The basement is below.",
     hazards: [
       {
