@@ -1293,33 +1293,141 @@ export const ROOMS = {
 
   win: false,
 },
- {
-  verbs: ["jump", "swing", "escape", "climb", "leap"],
+roof_path: {
+  title: "Roof Path",
+  gridPosition: { col: 3, row: 0 },
+  media: "roof_path",
+  fx: "mist",
 
-  targets: [
-    "tree",
-    "pine",
-    "branch",
-    "rope",
-    "forest",
-    "cliff",
-    "line"
+  baseDescription:
+    "The roof path is slick with rain. Black tiles drop away into the courtyard far below, and a storm-bent pine tree reaches toward the outer wall.",
+
+  itemText: {},
+
+  states: {
+    default: {
+      description:
+        "The roof path is slick with rain. Black tiles drop away into the courtyard far below, and a storm-bent pine tree reaches toward the outer wall.",
+      fx: "mist",
+      media: "roof_path",
+    },
+  },
+
+  mediaStates: [],
+
+  enterRequires: {
+    condition: { hasItem: "climbing_claws" },
+    failText:
+      "You step onto the rain-slick roof without climbing claws. Your foot slides, the tiles vanish beneath you, and the courtyard rushes upward through the storm.",
+  },
+
+  exits: {
+    south: "archive",
+  },
+
+  hazards: [],
+
+  actions: [
+    {
+      verbs: ["climb", "cross", "grip", "hook", "scale", "crawl"],
+      targets: [
+        "roof",
+        "tiles",
+        "wet tiles",
+        "climbing_claws",
+        "claws",
+        "path",
+        "ridge",
+      ],
+      requires: { hasItem: "climbing_claws" },
+      requiresText:
+        "You need climbing claws to cross the wet roof safely.",
+      failText:
+        "The roof tiles are too slick to trust barehanded.",
+      condition: { flag: "scrollTaken" },
+      successText:
+        "You drive the climbing claws into the wet roof tiles and pull yourself higher along the roofline. The pine branches beyond the wall are almost within reach.",
+      effects: {
+        setGlobalFlag: "roofCrossed",
+      },
+    },
+
+    {
+      verbs: ["jump", "leap", "swing", "escape", "grab"],
+      targets: [
+        "tree",
+        "pine",
+        "branch",
+        "branches",
+        "forest",
+        "outer wall",
+        "wall",
+      ],
+      requires: { hasItem: "climbing_claws" },
+      requiresText:
+        "You need the climbing claws to keep your grip long enough to make the leap.",
+      failText:
+        "The storm wind nearly tears you from the roof.",
+      condition: { flag: "roofCrossed" },
+      successText:
+        "You leap from the rain-slick roof and catch the pine branches beyond the outer wall. By the time the guards reach the rooftops, you have vanished into the mountain forest.",
+      effects: {
+        win: true,
+      },
+    },
   ],
 
-  requires: { hasItem: "climbing_claws" },
+  objects: {
+    roof_tiles: {
+      id: "roof_tiles",
+      aliases: ["roof", "tiles", "wet tiles", "black tiles", "roof path"],
+      examineText:
+        "The black ceramic tiles are slick with rain. Without a secure grip, crossing them would be fatal.",
+      useText:
+        "The roof can be crossed only with something that bites into the tiles.",
+    },
 
-  requiresText:
-    "The roof edge is too slick to cross without proper climbing gear.",
+    pine_tree: {
+      id: "pine_tree",
+      aliases: ["tree", "pine", "branch", "branches", "forest"],
+      examineText:
+        "A storm-bent pine reaches close to the outer wall. It is just far enough away to make the jump dangerous.",
+      useText:
+        "You will need to cross higher along the roofline before you can reach it.",
+    },
 
-  failText:
-    "The storm wind nearly tears you from the roof.",
-
-  condition: { flag: "scrollTaken" },
-
-  successText:
-    "You leap from the rain-slick roof and catch the pine branches below the castle wall. By the time the guards reach the rooftops, you have vanished into the mountain forest.",
-
-  effects: {
-    win: true,
+    archive_view: {
+      id: "archive_view",
+      aliases: ["archive", "south", "ceiling panel", "way back"],
+      examineText:
+        "The open ceiling panel leads back down into the archive.",
+      useText:
+        "You can retreat to the archive if the roof becomes too dangerous.",
+    },
   },
-}
+
+  flavourTargets: {
+    rooftops: {
+      id: "rooftops",
+      aliases: ["rooftops", "roofline", "castle roofs"],
+      examineText:
+        "Black rooftops stretch into the storm like waves.",
+    },
+
+    wind: {
+      id: "wind",
+      aliases: ["wind", "air", "storm"],
+      examineText:
+        "The mountain wind nearly tears the breath from your lungs.",
+    },
+
+    moon: {
+      id: "moon",
+      aliases: ["moon", "sky", "clouds"],
+      examineText:
+        "The moon appears only in broken flashes between storm clouds.",
+    },
+  },
+  win: false,
+  },
+};
