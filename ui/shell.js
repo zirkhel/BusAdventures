@@ -2,6 +2,8 @@
 // Injects all game UI and wires all interaction.
 // Call initShell({ handleCommand, game: GAME }) before startGame().
 
+import { initAudio, setEnabled, isEnabled } from "./audio.js";
+
 export function initShell({ handleCommand, game = {} }) {
 
   // ── Util ────────────────────────────────────────────────────────
@@ -79,6 +81,7 @@ export function initShell({ handleCommand, game = {} }) {
 
 <!-- Settings menu -->
 <div id="settingsMenu" class="float-menu hidden">
+  <button id="audioBtn"   class="float-item">&#x1F509; Sound: On</button>
   <button id="helpBtn"    class="float-item">Help / Commands</button>
   <button id="restartBtn" class="float-item red-text">Restart</button>
   <button id="backBtn"    class="float-item">&#8592; Game Select</button>
@@ -130,6 +133,9 @@ export function initShell({ handleCommand, game = {} }) {
   if (game.version) {
     el('shellAboutVersion').textContent = game.version + ' — ' + (intro.title || '');
   }
+
+  // ── Audio ──────────────────────────────────────────────────────────
+  initAudio("assets/audio/");
 
   // ── Viewport height lock ─────────────────────────────────────────
   const gameLayout = document.querySelector('.game-layout');
@@ -258,6 +264,16 @@ export function initShell({ handleCommand, game = {} }) {
     settingsMenu.classList.toggle('hidden');
   });
   document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
+
+  const audioBtn = document.getElementById('audioBtn');
+  function updateAudioBtn() {
+    audioBtn.textContent = isEnabled() ? '\u{1F509} Sound: On' : '\u{1F507} Sound: Off';
+  }
+  updateAudioBtn();
+  audioBtn.addEventListener('click', () => {
+    setEnabled(!isEnabled());
+    updateAudioBtn();
+  });
 
   document.getElementById('helpBtn').addEventListener('click', () => {
     settingsMenu.classList.add('hidden');

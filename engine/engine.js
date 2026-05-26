@@ -436,7 +436,7 @@ function use(verb, target, on) {
     if (action.effects?.kill) return res(action.effects.killText || "You die.", "death");
     if (action.effects?.win)  return res("", "win");
     return res(action.successText || action.text || "Done.", "ok",
-      { roomChanged: hasRoomChanged(action.effects) });
+      { roomChanged: hasRoomChanged(action.effects), sound: action.effects?.playSound || null });
   }
 
   // 2 ── Object actions ───────────────────────────────────────────────────────
@@ -474,7 +474,7 @@ function use(verb, target, on) {
       if (ca.effects?.kill) return res(ca.effects.killText || "You die.", "death");
       if (ca.effects?.win)  return res("", "win");
       return res(ca.successText || ca.text || "Done.", "ok",
-        { roomChanged: hasRoomChanged(ca.effects) });
+        { roomChanged: hasRoomChanged(ca.effects), sound: ca.effects?.playSound || null });
     }
 
     // 4 ── Item defaultActions ───────────────────────────────────────────────

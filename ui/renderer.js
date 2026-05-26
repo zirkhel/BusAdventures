@@ -5,6 +5,7 @@
 "use strict";
 
 import * as S from "../engine/state.js";
+import { playBg, playSfx } from "./audio.js";
 import * as E from "../engine/engine.js";
 import { renderMedia } from "./fx.js";
 
@@ -55,6 +56,10 @@ function renderRoom() {
 
 
   renderMedia(qs("scene"), resolveMedia(roomId));
+
+  // Play room music if defined
+  const music = roomDef?.music || roomDef?.states?.[S.getRoomState(roomId)]?.music;
+  if (music !== undefined) playBg(music || null);
 
   const titleEl = qs("roomTitle");
   if (titleEl) titleEl.textContent = roomDef.title;
@@ -241,6 +246,7 @@ function handleCommand(input) {
   }
 
   if (result.roomChanged) renderRoom();
+  if (result.sound) playSfx(result.sound);
   showFeedback(result.text || "", result.type, raw, result.warning || null);
 }
 

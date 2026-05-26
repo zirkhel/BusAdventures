@@ -16,10 +16,25 @@ export const ROOMS = {
     mediaStates: [],
     enterRequires: null,
     exits: {
-      east: "courtyard",
+      east: {
+        to: "courtyard",
+        condition: null,
+      },
     },
     hazards: [],
-    actions: [],
+    actions: [
+      {
+        verbs: ["crawl", "squeeze", "sneak", "slip", "climb", "go", "enter", "move", "creep", "crouch"],
+        targets: ["east", "hole", "gap", "breach", "wall", "stones", "courtyard", "inside", "through"],
+        requires: null,
+        requiresText: null,
+        condition: null,
+        successText: "You flatten yourself and squeeze through the broken stonework. Cold rain soaks through your robe as you slip into the inner courtyard.",
+        effects: {
+          goTo: "courtyard",
+        },
+      },
+    ],
     objects: {
       broken_ladder: {
         id: "broken_ladder",
@@ -60,11 +75,11 @@ export const ROOMS = {
     media: "courtyard_default",
     fx: "mist",
     deathMedia: "death_guard",
-    baseDescription: "The courtyard is open, wet, and dangerous. Guards patrol beneath swinging lanterns. Sweet smoke drifts from the main hall to the east, making your throat sting even from here.",
+    baseDescription: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop. To the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
     itemText: {},
     states: {
       default: {
-        description: "The courtyard is open, wet, and dangerous. Guards patrol beneath swinging lanterns. Sweet smoke drifts from the main hall to the east, making your throat sting even from here.",
+        description: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop. To the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
         fx: "mist",
         media: "courtyard_default",
       },
@@ -161,16 +176,16 @@ export const ROOMS = {
     gridPosition: { col: 1, row: 0 },
     media: "watch_tower",
     fx: "flicker",
-    baseDescription: "The watch tower overlooks the courtyard and the roofline. A small weapons rack sits beside a cold signal brazier.",
+    baseDescription: "The watch tower gives a clear view of the courtyard below and the rain-slicked roofline beyond. A weapons rack stands against the north wall — most of it empty, stripped before the tower was abandoned. A cold signal brazier sits unlit beside it. To the south, the courtyard.",
     itemText: {
       shuriken: {
-        present: "A steel shuriken lies forgotten beneath the rack.",
+        present: "A steel shuriken has slipped down behind the lower bar of the weapons rack. It catches a faint gleam.",
         taken: "",
       },
     },
     states: {
       default: {
-        description: "The watch tower overlooks the courtyard and the roofline. A small weapons rack sits beside a cold signal brazier.",
+        description: "The watch tower gives a clear view of the courtyard below and the rain-slicked roofline beyond. A weapons rack stands against the north wall — most of it empty, stripped before the tower was abandoned. A cold signal brazier sits unlit beside it. To the south, the courtyard.",
         fx: "flicker",
         media: "watch_tower",
       },
@@ -196,6 +211,12 @@ export const ROOMS = {
         aliases: ["bell", "signal bell", "alarm bell"],
         examineText: "If this bell rings, every guard in the castle will know.",
         useText: "That would be a very short infiltration.",
+      },
+      weapons_rack: {
+        id: "weapons_rack",
+        aliases: ["rack", "weapons rack", "weapon rack", "shelf", "stand"],
+        examineText: "The rack has been picked almost clean. Most hooks are bare. But something small and flat has slipped down behind the lower bar — a steel shuriken, easy to miss in the poor light.",
+        useText: "The rack holds nothing useful except what you have already spotted.",
       },
     },
     flavourTargets: {
@@ -233,10 +254,14 @@ export const ROOMS = {
       },
     },
     mediaStates: [],
-    enterRequires: {
-      condition: { wearingTag: "respirator" },
-      failText: "You step into the main hall without covering your breath. The incense burns sweet, then sharp. Your knees fold before you can turn back.",
-    },
+    enterRequires: null,
+    hazards: [
+      {
+        type: "onEnter",
+        safeIf: { wearingTag: "respirator" },
+        deathText: "You step into the main hall without covering your breath. The incense burns sweet, then sharp. Your knees fold before you can turn back.",
+      },
+    ],
     exits: {
       west: "courtyard",
       east: {
