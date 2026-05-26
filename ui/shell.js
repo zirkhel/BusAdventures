@@ -206,7 +206,7 @@ export function initShell({ handleCommand, game = {} }) {
       `<span class="ocmd">&gt; ${esc(cmd)}</span>` +
       (text ? `<span class="otxt">${esc(text)}</span>` : '');
     outputInner.prepend(entry);
-    outputBox.scrollTop = 0;
+    requestAnimationFrame(() => { outputBox.scrollTop = 0; });
   };
 
   // ── Input bar ────────────────────────────────────────────────────
@@ -216,6 +216,8 @@ export function initShell({ handleCommand, game = {} }) {
     inputBar.classList.add('active');
     collapseAll();
     cmdInput.focus();
+    // Push address bar off screen on iOS Safari
+    requestAnimationFrame(() => window.scrollTo(0, 1));
   }
 
   document.getElementById('inputTrigger').addEventListener('click', focusInput);
