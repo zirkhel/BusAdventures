@@ -566,11 +566,54 @@ function runCommand(rawInput) {
 
   switch (p.verb) {
     case "empty":     result = res("You wait. Nothing changes.", "neutral"); break;
-    case "unknown":   result = res("Nothing answers that intention.", "bad"); break;
+    case "unknown": {
+      // Try room actions before giving up — rooms define their own verbs
+      const _ru = S.currentRoom();
+      let _foundU = false;
+      for (const _au of (_ru.actions || [])) {
+        const _vOk = _au.verbs?.includes(p.verb) || _au.verbs?.includes(p.target);
+        const _tOk = !_au.targets || matchesTarget(_au.targets || _au.target, p.target) || matchesTarget(_au.targets || _au.target, p.verb);
+        if (_vOk && _tOk && S.check(_au.condition)) {
+          if (_au.requires && !checkRequires(_au.requires)) {
+            result = res(_au.requiresText || _au.failText || "You do not have what you need.", "bad");
+          } else {
+            applyEffects(_au.effects, S.get().room);
+            S.save();
+            if (_au.effects?.win) result = res("", "win");
+            else result = res(_au.successText || "Done.", "ok", { roomChanged: hasRoomChanged(_au.effects) });
+          }
+          _foundU = true;
+          break;
+        }
+      }
+      if (!_foundU) result = res("Nothing answers that intention.", "bad");
+      break;
+    }
     case "help":      return res(helpText(), "neutral", { skipPressure: true });
     case "inventory": return res("", "neutral", { inventoryOnly: true, skipPressure: true });
 
-    case "go":        result = go(p.target); break;
+    case "go": {
+      const _r = S.currentRoom();
+      let _matched = false;
+      for (const _act of (_r.actions || [])) {
+        const _vOk = _act.verbs?.includes("go");
+        const _tOk = matchesTarget(_act.targets || _act.target, p.target);
+        if (_vOk && _tOk && S.check(_act.condition)) {
+          if (_act.requires && !checkRequires(_act.requires)) {
+            result = res(_act.requiresText || _act.failText || "You do not have what you need.", "bad");
+          } else {
+            applyEffects(_act.effects, S.get().room);
+            S.save();
+            if (_act.effects?.win) result = res("", "win");
+            else result = res(_act.successText || "Done.", "ok", { roomChanged: hasRoomChanged(_act.effects) });
+          }
+          _matched = true;
+          break;
+        }
+      }
+      if (!_matched) result = go(p.target);
+      break;
+    }
     case "look":      result = examine(p.target); break;
     case "take":      result = take(p.target); break;
     case "drop":      result = drop(p.target); break;
