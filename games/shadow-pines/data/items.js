@@ -134,49 +134,57 @@ export const ITEMS = {
     ],
   },
 
-  oil_lantern: {
-    name: "Oil Lantern",
-    icon: "oil_lantern",
-    aliases: ["oil_lantern", "lantern", "oil lantern", "lamp", "light"],
-    description: "A small oil lantern with a dim but steady flame.",
-    tags: ["light_source", "flammable"],
-    canCarry: true,
-    canHold: true,
-    canWear: false,
-    pickupText: "You take the oil lantern.",
-    dropText: "You set the oil lantern down.",
-    heldText: "You hold the lantern low, shielding the flame.",
-    wornText: "You cannot wear the lantern.",
-    defaultActions: {
-      look: "The lantern's flame is weak but steady enough to reveal markings.",
-      use: "You lift the lantern and let its light spread.",
-      hold: "You hold the lantern low to avoid being seen.",
-      smell: "It smells of smoke and old oil.",
-      touch: "The metal handle is warm.",
-    },
-    contextActions: [
-      {
-        room: "escape_tunnel",
-        verbs: ["use", "light", "shine", "raise", "inspect"],
-        condition: null,
-        requires: { hasItem: "oil_lantern" },
-        requiresText: "You need a light source to inspect the tunnel clearly.",
-        effects: {},
-        successText: "The lantern reveals old scrape marks leading to the stone hatch.",
-        failText: "The tunnel remains dark.",
-      },
-      {
-        room: "archive",
-        verbs: ["use", "light", "shine", "raise", "inspect"],
-        condition: null,
-        requires: { hasItem: "oil_lantern" },
-        requiresText: "You need a light source to inspect the archive shadows.",
-        effects: {},
-        successText: "Lantern light reveals a draft moving dust near the ceiling beam.",
-        failText: "The archive shadows hide their secrets.",
-      },
-    ],
+ oil_lantern: {
+  name: "Oil Lantern",
+  icon: "oil_lantern",
+  aliases: ["oil_lantern", "lantern", "oil lantern", "lamp", "light"],
+  description: "A small oil lantern with a dim but steady flame.",
+  tags: ["light_source", "flammable"],
+  canCarry: true,
+  canHold: true,
+  canWear: false,
+  pickupText: "You take the oil lantern.",
+  dropText: "You set the oil lantern down.",
+  heldText: "You hold the lantern low, shielding the flame.",
+  wornText: "You cannot wear the lantern.",
+
+  defaultActions: {
+    look: "The lantern's flame is weak but steady enough to reveal markings.",
+    use: "You lift the lantern and let its light spread.",
+    hold: "You hold the lantern low to avoid being seen.",
+    smell: "It smells of smoke and old oil.",
+    touch: "The metal handle is warm.",
   },
+
+  contextActions: [
+    {
+      room: "escape_tunnel",
+      verbs: ["use", "light", "shine", "raise", "inspect"],
+      condition: { flagFalse: "hatchRevealed" },
+      requires: { hasItem: "oil_lantern" },
+      requiresText: "You need a light source to inspect the tunnel clearly.",
+      effects: {
+        setGlobalFlag: "hatchRevealed",
+        setRoomState: { room: "escape_tunnel", state: "hatch_revealed" },
+      },
+      successText:
+        "You light the oil lantern. Warm light crawls across the tunnel ceiling, revealing the outline of an old stone escape hatch hidden beneath roots and packed earth.",
+      failText: "The tunnel remains dark.",
+    },
+
+    {
+      room: "archive",
+      verbs: ["use", "light", "shine", "raise", "inspect"],
+      condition: { flagFalse: "roofPathRevealed" },
+      requires: { hasItem: "oil_lantern" },
+      requiresText: "You need a light source to inspect the archive shadows.",
+      effects: {},
+      successText:
+        "Lantern light reveals a draft moving dust near the ceiling beam. A carved shelf support below it looks slightly polished from use.",
+      failText: "The archive shadows hide their secrets.",
+    },
+  ],
+},
 
   sealed_scroll: {
     name: "Sealed Scroll",
