@@ -472,6 +472,7 @@ export const ROOMS = {
   gridPosition: { col: 2, row: 1 },
   media: "main_hall",
   fx: "mist",
+  deathMedia: "death_incense",
 
   baseDescription:
     "Thick ceremonial smoke hangs between lacquered armor displays and glowing paper screens. Even through protection, the incense burns at your throat.\n\nThe archive door waits to the east, sealed without a visible lock. The courtyard lies west. A quieter tea room opens to the south.",
