@@ -1,514 +1,911 @@
 export const ROOMS = {
   outer_wall: {
-    title: "Outer Wall",
-    gridPosition: { col: 0, row: 1 },
-    media: "outer_wall",
-    fx: "mist",
-    baseDescription: "Rain lashes the outer wall of the shogun's mountain castle. Broken stones offer a narrow way inside.",
-    itemText: {},
-    states: {
-      default: {
-        description: "Rain lashes the outer wall of the shogun's mountain castle. Broken stones offer a narrow way inside.",
-        fx: "mist",
-        media: "outer_wall",
-      },
+  title: "Outer Wall",
+  gridPosition: { col: 0, row: 1 },
+  media: "outer_wall",
+  fx: "mist",
+
+  baseDescription:
+    "Rain lashes the outer wall of the shogun's mountain castle. Near the base of the wet stonework, a small breach hides in shadow — just wide enough to crawl through.",
+
+  itemText: {},
+
+  states: {
+    default: {
+      description:
+        "Rain lashes the outer wall of the shogun's mountain castle. Near the base of the wet stonework, a small breach hides in shadow — just wide enough to crawl through.",
+      fx: "mist",
+      media: "outer_wall",
     },
-    mediaStates: [],
-    enterRequires: null,
-    exits: {},
-    hazards: [],
-    actions: [
-      {
-        verbs: ["crawl", "squeeze", "sneak", "slip", "climb", "go", "enter", "move", "creep", "crouch"],
-        targets: ["east", "hole", "gap", "breach", "wall", "stones", "courtyard", "inside", "through"],
-        requires: null,
-        requiresText: null,
-        condition: null,
-        successText: "You flatten yourself and squeeze through the broken stonework. Cold rain soaks through your robe as you slip into the inner courtyard.",
-        effects: {
-          goTo: "courtyard",
-        },
-      },
-    ],
-    objects: {
-      broken_ladder: {
-        id: "broken_ladder",
-        aliases: ["ladder", "broken ladder", "wooden ladder"],
-        examineText: "The ladder is split and useless. Whoever came before you climbed the stone itself.",
-        useText: "The ladder breaks further under your hand.",
-      },
-      wall_stones: {
-        id: "wall_stones",
-        aliases: ["stones", "wall", "broken stones", "stonework", "opening", "crack", "gap", "breach", "hole"],
-        examineText: "Several stones have collapsed inward, leaving a gap just wide enough for a person to squeeze through. The edges are rough and wet. Beyond it, you can make out the dim shapes of the inner courtyard.",
-        useText: "You flatten yourself and squeeze through. Cold rain soaks through your robe as you slip inside.",
-      },
-    },
-    flavourTargets: {
-      opening: {
-        id: "opening",
-        aliases: ["opening", "gap", "crack", "hole", "breach", "way in", "way through"],
-        examineText: "The gap in the wall is just wide enough. The stones around it are slick with rain. You could squeeze through if you tried.",
-      },
-      rain_tiles: {
-        id: "rain_tiles",
-        aliases: ["tiles", "roof", "rain"],
-        examineText: "Rainwater streams down the black roof tiles like flowing ink.",
-      },
-      claw_marks: {
-        id: "claw_marks",
-        aliases: ["marks", "scratches", "claw marks"],
-        examineText: "Old climbing scars cut into the stone. Someone used this route before you.",
-      },
-      banner: {
-        id: "banner",
-        aliases: ["banner", "flag", "crest"],
-        examineText: "The shogun's crest hangs motionless despite the storm.",
-      },
-    },
-    win: false,
   },
+
+  mediaStates: [],
+  enterRequires: null,
+  exits: {},
+  hazards: [],
+
+  actions: [
+    {
+      verbs: ["crawl", "squeeze", "sneak", "slip", "climb", "go", "enter", "move", "creep", "crouch"],
+      targets: ["opening", "gap", "crack", "hole", "breach", "wall", "stones", "courtyard", "inside", "through"],
+      requires: null,
+      requiresText: null,
+      condition: null,
+      successText:
+        "You drop low, scrape through the narrow breach, and slip into the inner courtyard with rainwater running down your sleeves.",
+      effects: {
+        goTo: "courtyard",
+      },
+    },
+  ],
+
+  objects: {
+    broken_ladder: {
+      id: "broken_ladder",
+      aliases: ["ladder", "broken ladder", "wooden ladder"],
+      examineText:
+        "The ladder is split and useless. Whoever came before you climbed the stone itself.",
+      useText: "The ladder breaks further under your hand.",
+    },
+
+    wall_stones: {
+      id: "wall_stones",
+      aliases: ["stones", "wall", "broken stones", "stonework", "opening", "crack", "gap", "breach", "hole"],
+      examineText:
+        "Several stones have collapsed inward, leaving a narrow breach just wide enough to squeeze through. The edges are rough, wet, and dark with rain.",
+      useText:
+        "You flatten yourself and squeeze through the breach.",
+    },
+  },
+
+  flavourTargets: {
+    opening: {
+      id: "opening",
+      aliases: ["opening", "gap", "crack", "hole", "breach", "way in", "way through"],
+      examineText:
+        "The gap in the wall is just wide enough. The stones around it are slick with rain. You could squeeze through if you tried.",
+    },
+
+    mud_path: {
+      id: "mud_path",
+      aliases: ["mud", "path", "ground", "trail"],
+      examineText:
+        "Fresh mud has been pressed flat by careful footsteps leading toward the breach.",
+    },
+
+    lantern_glow: {
+      id: "lantern_glow",
+      aliases: ["light", "glow", "lantern light"],
+      examineText:
+        "Warm lantern light flickers somewhere beyond the broken wall.",
+    },
+
+    rain_tiles: {
+      id: "rain_tiles",
+      aliases: ["tiles", "roof", "rain"],
+      examineText:
+        "Rainwater streams down the black roof tiles like flowing ink.",
+    },
+
+    claw_marks: {
+      id: "claw_marks",
+      aliases: ["marks", "scratches", "claw marks"],
+      examineText:
+        "Old climbing scars cut into the stone. Someone used this route before you.",
+    },
+
+    banner: {
+      id: "banner",
+      aliases: ["banner", "flag", "crest"],
+      examineText:
+        "The shogun's crest hangs motionless despite the storm.",
+    },
+  },
+
+  win: false,
+},
 
   courtyard: {
-    title: "Inner Courtyard",
-    gridPosition: { col: 1, row: 1 },
-    media: "courtyard_default",
-    fx: "mist",
-    deathMedia: "death_guard",
-    baseDescription: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop.\n\nTo the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
-    itemText: {},
-    states: {
-      default: {
-        description: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop.\n\nTo the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
-        fx: "mist",
-        media: "courtyard_default",
-      },
-      alerted: {
-        description: "The courtyard is alive with alarm. Bells ring, torches flare, and guards search every shadow.",
-        fx: "flicker",
-        media: "courtyard_alerted",
-      },
-      smoke_covered: {
-        description: "Smoke rolls low across the courtyard stones. The guards cough and lose sight of the walls.",
-        fx: "mist",
-        media: "courtyard_smoke",
-      },
+  title: "Inner Courtyard",
+  gridPosition: { col: 1, row: 1 },
+  media: "courtyard_default",
+  fx: "mist",
+  deathMedia: "death_guard",
+
+  baseDescription:
+    "Rainwater glistens across the open courtyard stones. Guards patrol beneath swinging lanterns while ceremonial smoke drifts from the main hall to the east.\n\nA watch tower overlooks the grounds to the north. A narrow servant corridor disappears south between the wooden buildings. The broken outer wall lies west.",
+
+  itemText: {},
+
+  states: {
+    default: {
+      description:
+        "Rainwater glistens across the open courtyard stones. Guards patrol beneath swinging lanterns while ceremonial smoke drifts from the main hall to the east.",
+      fx: "mist",
+      media: "courtyard_default",
     },
-    mediaStates: [
-      { condition: { flag: "castleAlerted" }, media: "courtyard_alerted" },
-      { condition: { flag: "smokeCoverUsed" }, media: "courtyard_smoke" },
-    ],
-    enterRequires: null,
-    exits: {
-      west: "outer_wall",
-      east: "main_hall",
-      south: "servant_corridor",
-      north: "watch_tower",
+
+    alerted: {
+      description:
+        "The courtyard is alive with alarm. Guards sweep the rain with raised lanterns while bells echo through the castle.",
+      fx: "flicker",
+      media: "courtyard_alerted",
     },
-    hazards: [
-      {
-        type: "visitCount",
-        safeUnder: 4,
-        warningStages: [
-          { at: 2, text: "A guard pauses and looks toward your hiding place." },
-          { at: 3, text: "The patrol pattern tightens. You should not keep crossing the courtyard." },
-        ],
-        deathText: "A lantern swings toward you. Steel flashes. The courtyard fills with shouting, and your mission ends beneath the rain.",
-      },
-    ],
-    actions: [
-      {
-        verbs: ["use", "throw", "drop", "ignite", "deploy"],
-        targets: ["smoke_bomb", "smoke bomb", "guards", "patrol", "courtyard", "lanterns"],
-        requires: { hasItem: "smoke_bomb" },
-        requiresText: "You have nothing that could cover your movement.",
-        failText: "The guards remain alert.",
-        condition: null,
-        successText: "You crack the smoke bomb against the wet stone. Pale smoke spreads across the courtyard, swallowing the patrol line.",
-        effects: {
-          setGlobalFlags: ["smokeCoverUsed"],
-          setRoomState: { room: "courtyard", state: "smoke_covered" },
-          removeItem: "smoke_bomb",
-        },
-      },
-    ],
-    objects: {
-      patrol_route: {
-        id: "patrol_route",
-        aliases: ["route", "patrol route", "guards", "patrol"],
-        examineText: "The guards loop through the courtyard with disciplined timing. Every return here risks notice.",
-        useText: "You wait for a narrow gap between patrols.",
-      },
-      rain_basin: {
-        id: "rain_basin",
-        aliases: ["basin", "water basin", "stone basin"],
-        examineText: "The basin catches rainwater from the roof. Ripples distort the lantern reflections.",
-        useText: "The water is too shallow to hide anything useful.",
-      },
+
+    smoke_covered: {
+      description:
+        "Pale smoke rolls low across the courtyard stones. Guards stumble through the haze with lanterns raised, shouting blindly into the storm.",
+      fx: "mist",
+      media: "courtyard_smoke",
     },
-    flavourTargets: {
-      basin: {
-        id: "basin",
-        aliases: ["basin", "water", "pool"],
-        examineText: "Raindrops explode across the stone basin in endless ripples.",
-      },
-      guards: {
-        id: "guards",
-        aliases: ["guards", "soldiers", "patrol"],
-        examineText: "Their armor barely makes a sound. These are not careless men.",
-      },
-      lanterns: {
-        id: "lanterns",
-        aliases: ["lanterns", "lights", "torches"],
-        examineText: "Orange light sways across wet stone and paper walls.",
-      },
-      bell: {
-        id: "bell",
-        aliases: ["bell", "gong"],
-        examineText: "A single alarm bell waits above the courtyard.",
-      },
-    },
-    win: false,
   },
+
+  mediaStates: [
+    { condition: { flag: "castleAlerted" }, media: "courtyard_alerted" },
+    { condition: { flag: "smokeCoverUsed" }, media: "courtyard_smoke" },
+  ],
+
+  enterRequires: null,
+
+  exits: {
+    west: "outer_wall",
+    east: "main_hall",
+    south: "servant_corridor",
+    north: "watch_tower",
+  },
+
+  hazards: [
+    {
+      type: "visitCount",
+      safeUnder: 4,
+      disabledIf: { flag: "smokeCoverUsed" },
+
+      warningStages: [
+        {
+          at: 2,
+          text: "A guard slows and turns his lantern toward your hiding place.",
+        },
+        {
+          at: 3,
+          text: "The patrol pattern tightens. Staying in the courtyard much longer will get you killed.",
+        },
+      ],
+
+      deathText:
+        "A lantern beam catches your movement. Steel flashes through the rain as the guards close in from every side.",
+    },
+  ],
+
+  actions: [
+    {
+      verbs: ["use", "throw", "drop", "ignite", "deploy"],
+
+      targets: [
+        "smoke_bomb",
+        "smoke bomb",
+        "smoke",
+        "guards",
+        "patrol",
+        "courtyard",
+        "lanterns",
+      ],
+
+      requires: { hasItem: "smoke_bomb" },
+
+      requiresText:
+        "You have nothing that could conceal your movement.",
+
+      failText:
+        "The guards remain disciplined and alert.",
+
+      condition: { flagFalse: "smokeCoverUsed" },
+
+      successText:
+        "You crack the smoke bomb against the wet stone. Thick pale smoke floods the courtyard, breaking the patrol formation.",
+
+      effects: {
+        setGlobalFlags: ["smokeCoverUsed"],
+        setRoomState: {
+          room: "courtyard",
+          state: "smoke_covered",
+        },
+        removeItem: "smoke_bomb",
+      },
+    },
+  ],
+
+  objects: {
+    patrol_route: {
+      id: "patrol_route",
+
+      aliases: [
+        "route",
+        "patrol route",
+        "guards",
+        "patrol",
+      ],
+
+      examineText:
+        "The guards move in disciplined loops across the courtyard. Every return here increases the chance of being recognized.",
+
+      useText:
+        "You wait for a narrow gap between patrols.",
+    },
+
+    rain_basin: {
+      id: "rain_basin",
+
+      aliases: [
+        "basin",
+        "water basin",
+        "stone basin",
+      ],
+
+      examineText:
+        "The basin catches rainwater from the roof. Lantern reflections ripple across the surface.",
+
+      useText:
+        "The water is too shallow to hide anything useful.",
+    },
+
+    watch_tower_view: {
+      id: "watch_tower_view",
+
+      aliases: [
+        "tower",
+        "watch tower",
+        "north",
+        "roofline",
+      ],
+
+      examineText:
+        "The watch tower rises above the northern roofline. From there, someone could watch the entire courtyard — or hide something the guards overlooked.",
+
+      useText:
+        "The tower can be reached by crossing north through the courtyard.",
+    },
+
+    main_hall_view: {
+      id: "main_hall_view",
+
+      aliases: [
+        "hall",
+        "main hall",
+        "east",
+        "doorway",
+        "smoke",
+        "incense",
+      ],
+
+      examineText:
+        "Warm light glows through thick ceremonial smoke drifting from the eastern hall. Even from here, the incense burns your throat. Entering without covering your breath would be suicide.",
+
+      useText:
+        "Crossing directly into the smoke without protection would be fatal.",
+    },
+
+    servant_corridor_view: {
+      id: "servant_corridor_view",
+
+      aliases: [
+        "corridor",
+        "servant corridor",
+        "south",
+        "passage",
+      ],
+
+      examineText:
+        "A narrow servant corridor disappears south between the wooden structures. It looks quieter than the open courtyard.",
+
+      useText:
+        "The servant route offers better cover than the open grounds.",
+    },
+
+    outer_wall_view: {
+      id: "outer_wall_view",
+
+      aliases: [
+        "wall",
+        "outer wall",
+        "west",
+        "breach",
+      ],
+
+      examineText:
+        "The broken outer wall still waits to the west. The same hidden breach that brought you inside could become your escape route.",
+
+      useText:
+        "The breach remains open behind you.",
+    },
+  },
+
+  flavourTargets: {
+    basin: {
+      id: "basin",
+      aliases: ["basin", "water", "pool"],
+      examineText:
+        "Rain explodes across the basin in endless silver ripples.",
+    },
+
+    guards: {
+      id: "guards",
+      aliases: ["guards", "soldiers", "patrol"],
+      examineText:
+        "Their armor barely makes a sound. These are disciplined killers.",
+    },
+
+    lanterns: {
+      id: "lanterns",
+      aliases: ["lanterns", "lights", "torches"],
+      examineText:
+        "Orange lantern light sways across wet stone and black wood.",
+    },
+
+    bell: {
+      id: "bell",
+      aliases: ["bell", "gong"],
+      examineText:
+        "A heavy alarm bell hangs above the courtyard.",
+    },
+
+    smoke: {
+      id: "smoke",
+      aliases: [
+        "smoke",
+        "incense",
+        "ceremonial smoke",
+        "haze",
+      ],
+      examineText:
+        "Sweet ceremonial smoke drifts from the eastern hall. Even out here, it stings the lungs.",
+    },
+  },
+
+  win: false,
+},
 
   watch_tower: {
-    title: "Watch Tower",
-    gridPosition: { col: 1, row: 0 },
-    media: "watch_tower",
-    fx: "flicker",
-    baseDescription: "The watch tower gives a clear view of the courtyard below and the rain-slicked roofline beyond. A weapons rack stands against the north wall — most of it empty, stripped before the tower was abandoned. A cold signal brazier sits unlit beside it. To the south, the courtyard.",
-    itemText: {
-      shuriken: {
-        present: "A steel shuriken has slipped down behind the lower bar of the weapons rack. It catches a faint gleam.",
-        taken: "",
-      },
+  title: "Watch Tower",
+  gridPosition: { col: 1, row: 0 },
+  media: "watch_tower",
+  fx: "flicker",
+
+  baseDescription:
+    "Rain blows through the open watch tower slats. Below, lantern light drifts across the courtyard stones. A stripped weapons rack leans against the north wall beside a cold signal brazier. {shuriken}\n\nTo the south, the courtyard.",
+
+  itemText: {
+    shuriken: {
+      present:
+        "A single steel shuriken rests half-hidden behind the lower bar of the weapons rack, catching faint lantern light.",
+      taken:
+        "The lower bar of the weapons rack is empty now.",
     },
-    states: {
-      default: {
-        description: "The watch tower gives a clear view of the courtyard below and the rain-slicked roofline beyond. A weapons rack stands against the north wall — most of it empty, stripped before the tower was abandoned. A cold signal brazier sits unlit beside it. To the south, the courtyard.",
-        fx: "flicker",
-        media: "watch_tower",
-      },
-    },
-    mediaStates: [
-      { condition: { itemNotHere: "shuriken" }, media: "watch_tower_empty" },
-    ],
-    enterRequires: null,
-    exits: {
-      south: "courtyard",
-    },
-    hazards: [],
-    actions: [],
-    objects: {
-      map_fragments: {
-        id: "map_fragments",
-        aliases: ["map", "fragments", "map fragments", "paper"],
-        examineText: "The fragments show a private archive east of the main hall. A note warns: ceremonial smoke is not ordinary incense.",
-        useText: "The fragments are too torn to guide more than that.",
-      },
-      signal_bell: {
-        id: "signal_bell",
-        aliases: ["bell", "signal bell", "alarm bell"],
-        examineText: "If this bell rings, every guard in the castle will know.",
-        useText: "That would be a very short infiltration.",
-      },
-      weapons_rack: {
-        id: "weapons_rack",
-        aliases: ["rack", "weapons rack", "weapon rack", "shelf", "stand"],
-        examineText: "The rack has been picked almost clean. Most hooks are bare. But something small and flat has slipped down behind the lower bar — a steel shuriken, easy to miss in the poor light.",
-        useText: "The rack holds nothing useful except what you have already spotted.",
-      },
-    },
-    flavourTargets: {
-      mountains: {
-        id: "mountains",
-        aliases: ["mountains", "cliffs", "valley"],
-        examineText: "Dark mountains vanish into mist beyond the fortress walls.",
-      },
-      arrows: {
-        id: "arrows",
-        aliases: ["arrows", "quiver"],
-        examineText: "The arrow shafts are perfectly aligned with obsessive precision.",
-      },
-      signal_fire: {
-        id: "signal_fire",
-        aliases: ["fire", "signal fire", "brazier"],
-        examineText: "Cold ash fills the brazier. No signal has been lit tonight.",
-      },
-    },
-    win: false,
   },
 
+  states: {
+    default: {
+      description:
+        "Rain blows through the open watch tower slats. Below, lantern light drifts across the courtyard stones. A stripped weapons rack leans against the north wall beside a cold signal brazier. {shuriken}\n\nTo the south, the courtyard.",
+      fx: "flicker",
+      media: "watch_tower",
+    },
+  },
+
+  mediaStates: [
+    { condition: { itemNotHere: "shuriken" }, media: "watch_tower_empty" },
+  ],
+
+  enterRequires: null,
+
+  exits: {
+    south: "courtyard",
+  },
+
+  hazards: [],
+  actions: [],
+
+  objects: {
+    map_fragments: {
+      id: "map_fragments",
+      aliases: ["map", "fragments", "map fragments", "paper"],
+      examineText:
+        "The torn map fragments point toward a hidden archive east of the ceremonial hall. A warning beside it reads: the incense is lethal in enclosed spaces.",
+      useText:
+        "The fragments are too torn to guide more than that.",
+    },
+
+    signal_bell: {
+      id: "signal_bell",
+      aliases: ["bell", "signal bell", "alarm bell"],
+      examineText:
+        "If this bell rings, every guard in the castle will know.",
+      useText:
+        "That would be a very short infiltration.",
+    },
+
+    weapons_rack: {
+      id: "weapons_rack",
+      aliases: ["rack", "weapons rack", "weapon rack", "shelf", "stand"],
+      examineText:
+        "The rack has been stripped nearly clean. Most hooks are empty, but a single steel shuriken lies wedged behind the lower support beam.",
+      useText:
+        "The rack holds nothing useful except what you have already spotted.",
+    },
+
+    courtyard_view: {
+      id: "courtyard_view",
+      aliases: ["courtyard", "below", "grounds", "patrol"],
+      examineText:
+        "From the tower you can follow the entire patrol pattern below. The guards repeat the same looping route through the rain.",
+      useText:
+        "Watching too long risks exposing your silhouette in the tower opening.",
+    },
+  },
+
+  flavourTargets: {
+    mountains: {
+      id: "mountains",
+      aliases: ["mountains", "cliffs", "valley"],
+      examineText:
+        "Dark mountains vanish into mist beyond the fortress walls.",
+    },
+
+    arrows: {
+      id: "arrows",
+      aliases: ["arrows", "quiver"],
+      examineText:
+        "The arrow shafts are perfectly aligned with obsessive precision.",
+    },
+
+    signal_fire: {
+      id: "signal_fire",
+      aliases: ["fire", "signal fire", "brazier"],
+      examineText:
+        "Cold ash fills the brazier. No signal has been lit tonight.",
+    },
+  },
+
+  win: false,
+},
   main_hall: {
-    title: "Main Hall",
-    gridPosition: { col: 2, row: 1 },
-    media: "main_hall",
-    fx: "mist",
-    baseDescription: "Ceremonial smoke hangs thick between lacquered armor and paper screens. The archive door waits to the east.",
-    itemText: {},
-    states: {
-      default: {
-        description: "Ceremonial smoke hangs thick between lacquered armor and paper screens. The archive door waits to the east.",
-        fx: "mist",
-        media: "main_hall",
-      },
+  title: "Main Hall",
+  gridPosition: { col: 2, row: 1 },
+  media: "main_hall",
+  fx: "mist",
+
+  baseDescription:
+    "Thick ceremonial smoke hangs between lacquered armor displays and glowing paper screens. Even through protection, the incense burns at your throat.\n\nThe archive door waits to the east, sealed without a visible lock. The courtyard lies west. A quieter tea room opens to the south.",
+
+  itemText: {},
+
+  states: {
+    default: {
+      description:
+        "Thick ceremonial smoke hangs between lacquered armor displays and glowing paper screens. Even through protection, the incense burns at your throat.\n\nThe archive door waits to the east, sealed without a visible lock. The courtyard lies west. A quieter tea room opens to the south.",
+      fx: "mist",
+      media: "main_hall",
     },
-    mediaStates: [],
-    enterRequires: null,
-    hazards: [
-      {
-        type: "onEnter",
-        safeIf: { wearingTag: "respirator" },
-        deathText: "You step into the main hall without covering your breath. The incense burns sweet, then sharp. Your knees fold before you can turn back.",
-      },
-    ],
-    exits: {
-      west: "courtyard",
-      east: {
-        to: "archive",
-        condition: { flag: "archiveUnlocked" },
-        lockedText: "The archive door is sealed by a hidden rope tension lock inside the frame.",
-      },
-      south: "tea_room",
-    },
-    actions: [
-      {
-        verbs: ["use", "cut", "slice", "throw", "strike", "break"],
-        targets: ["shuriken", "cord", "rope", "tension line", "archive door", "door"],
-        requires: { hasItem: "shuriken" },
-        requiresText: "You need something sharp enough to cut the hidden cord.",
-        failText: "The archive door does not move.",
-        condition: null,
-        successText: "The shuriken slips through the narrow frame gap. A hidden cord snaps inside the door.",
-        effects: {
-          setGlobalFlag: "archiveUnlocked",
-          openExit: { dir: "east", to: "archive" },
-        },
-      },
-      {
-        verbs: ["use", "hook", "pull", "break", "force", "pry"],
-        targets: ["climbing_claws", "claws", "cord", "rope", "tension line", "archive door"],
-        requires: { hasItem: "climbing_claws" },
-        requiresText: "You need a tool that can catch the hidden cord.",
-        failText: "The archive door remains sealed.",
-        condition: null,
-        successText: "You slide the climbing claws into the frame and hook the hidden cord. It tears loose with a dry snap.",
-        effects: {
-          setGlobalFlag: "archiveUnlocked",
-          openExit: { dir: "east", to: "archive" },
-        },
-      },
-    ],
-    objects: {
-      archive_door: {
-        id: "archive_door",
-        aliases: ["door", "archive door", "sealed door", "east door"],
-        examineText: "The door has no visible lock. A thin cord vanishes into the wooden frame.",
-        useText: "The door resists. The cord inside the frame must be cut or pulled loose.",
-      },
-      incense_burners: {
-        id: "incense_burners",
-        aliases: ["incense", "burners", "smoke", "ceremonial smoke"],
-        examineText: "This is not ordinary incense. The smoke bites the lungs even through cloth.",
-        useText: "Disturbing the burners would only fill the hall faster.",
-      },
-    },
-    flavourTargets: {
-      incense: {
-        id: "incense",
-        aliases: ["incense", "smoke", "burners"],
-        examineText: "Sweet ceremonial smoke curls through the hall in suffocating waves.",
-      },
-      armor: {
-        id: "armor",
-        aliases: ["armor", "samurai armor", "statue"],
-        examineText: "The lacquered armor stares ahead with an expressionless iron mask.",
-      },
-      screens: {
-        id: "screens",
-        aliases: ["screens", "paper walls", "shoji"],
-        examineText: "Thin paper screens glow softly from lantern light behind them.",
-      },
-      floor: {
-        id: "floor",
-        aliases: ["floor", "wood", "boards"],
-        examineText: "The polished wood reflects torchlight like dark water.",
-      },
-    },
-    win: false,
   },
 
-  archive: {
-    title: "Hidden Archive",
-    gridPosition: { col: 3, row: 1 },
-    media: "archive_default",
-    fx: "flicker",
-    deathMedia: "death_guard",
-    baseDescription: "The shogun's private archive is silent and dry. The hall beyond reeks of thick ceremonial incense. A sealed chest rests beneath the shelves.",
-    itemText: {},
-    states: {
-      default: {
-        description: "The shogun's private archive is silent and dry. The hall beyond reeks of thick ceremonial incense. A sealed chest rests beneath the shelves.",
-        fx: "flicker",
-        media: "archive_default",
-      },
-      alarm: {
-        description: "The stolen scroll is under your robe. Somewhere inside the walls, mechanisms clatter. Rain breathes through a newly opened ceiling gap.",
-        fx: "flicker",
-        media: "archive_alarm",
-      },
+  mediaStates: [],
+  enterRequires: null,
+
+  hazards: [
+    {
+      type: "onEnter",
+      safeIf: { wearingTag: "respirator" },
+      deathText:
+        "You step into the main hall without covering your breath. The incense burns sweet, then sharp. Your knees fold before you can turn back.",
     },
-    mediaStates: [
-      { condition: { flag: "scrollTaken" }, media: "archive_alarm" },
-    ],
-    enterRequires: null,
-    exits: {
-      west: "main_hall",
-      south: {
-        to: "roof_path",
-        hidden: true,
-        condition: { flag: "roofPathRevealed" },
-      },
+  ],
+
+  exits: {
+    west: "courtyard",
+    east: {
+      to: "archive",
+      condition: { flag: "archiveUnlocked" },
+      lockedText:
+        "The archive door is sealed. There is no visible keyhole — only a thin cord disappearing into the wooden frame.",
     },
-    hazards: [
-      {
-        type: "commandPressure",
-        counter: "alarmCountdown",
-        threshold: 7,
-        warningStages: [
-          { at: 2, text: "Footsteps gather somewhere beyond the walls." },
-          { at: 4, text: "The alarm gong sounds again. You are running out of time." },
-          { at: 6, text: "Steel scrapes outside the archive. The elite guard has found the door." },
-        ],
-        deathText: "The archive doors burst open. Black-armored guards flood the room. The scroll is torn from your hand before the final blow falls.",
-      },
-    ],
-    actions: [
-      {
-        verbs: ["open", "take", "steal", "grab", "remove", "get"],
-        targets: ["scroll", "sealed scroll", "chest", "document", "evidence", "record"],
-        requires: null,
-        requiresText: null,
-        failText: "You cannot reach the scroll from here.",
-        condition: { flagFalse: "scrollTaken" },
-        successText: "You open the chest and take the sealed scroll. A hidden gong answers from deep inside the castle.",
-        effects: {
-          setGlobalFlags: ["scrollTaken", "castleAlerted"],
-          setCounter: { id: "alarmCountdown", value: 0 },
-          setRoomState: { room: "archive", state: "alarm" },
-          giveItem: "sealed_scroll",
-        },
-      },
-      {
-        verbs: ["examine", "inspect", "pull", "press", "slide", "open", "look"],
-        targets: ["ceiling", "beam", "loose beam", "panel", "latch", "shelf", "airflow"],
-        requires: null,
-        requiresText: null,
-        failText: "You find only dust and old wood.",
-        condition: { flag: "scrollTaken" },
-        successText: "You press the carved shelf support. A ceiling panel slides open, revealing a wet roof path above.",
-        effects: {
-          setGlobalFlag: "roofPathRevealed",
-          openExit: { dir: "south", to: "roof_path" },
-        },
-      },
-    ],
-    objects: {
-      sealed_chest: {
-        id: "sealed_chest",
-        aliases: ["chest", "sealed chest", "document chest", "box"],
-        examineText: "The chest bears the shogun's private crest. It contains the scroll you came for.",
-        useText: "The chest opens with a quiet wooden click.",
-      },
-      loose_ceiling_panel: {
-        id: "loose_ceiling_panel",
-        aliases: ["ceiling", "panel", "loose panel", "beam", "latch"],
-        examineText: "Cold rain air leaks around one ceiling beam. It may hide another way out.",
-        useText: "The panel will not move until the hidden latch is found.",
-      },
-    },
-    flavourTargets: {
-      scrolls: {
-        id: "scrolls",
-        aliases: ["scrolls", "documents", "records"],
-        examineText: "Centuries of secrets sleep in tightly bound scroll cases.",
-      },
-      candles: {
-        id: "candles",
-        aliases: ["candles", "wax", "flames"],
-        examineText: "The candle flames twitch whenever the storm wind slips inside.",
-      },
-      shelves: {
-        id: "shelves",
-        aliases: ["shelves", "bookcases", "wood"],
-        examineText: "Dustless shelves suggest this room is still visited often.",
-      },
-      ceiling: {
-        id: "ceiling",
-        aliases: ["ceiling", "beams", "rafters"],
-        examineText: "One ceiling beam seems strangely loose.",
-      },
-    },
-    win: false,
+    south: "tea_room",
   },
 
-  tea_room: {
-    title: "Tea Room",
-    gridPosition: { col: 2, row: 2 },
-    media: "tea_room",
-    fx: null,
-    baseDescription: "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway. Your eyes water.",
-    itemText: {
-      cloth_mask: {
-        present: "A folded cloth mask is tucked beneath servant robes.",
-        taken: "",
+  actions: [
+    {
+      verbs: ["use", "cut", "slice", "throw", "strike", "break"],
+      targets: ["shuriken", "cord", "rope", "tension line", "archive door", "door", "frame"],
+      requires: { hasItem: "shuriken" },
+      requiresText: "You need something sharp enough to cut the hidden cord.",
+      failText: "The archive door does not move.",
+      condition: { flagFalse: "archiveUnlocked" },
+      successText:
+        "The shuriken slips through the narrow frame gap. A hidden cord snaps inside the door.",
+      effects: {
+        setGlobalFlag: "archiveUnlocked",
+        openExit: { dir: "east", to: "archive" },
       },
     },
-    states: {
-      default: {
-        description: "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway. Your eyes water.",
-        fx: null,
-        media: "tea_room",
+    {
+      verbs: ["use", "hook", "pull", "break", "force", "pry"],
+      targets: ["climbing_claws", "claws", "cord", "rope", "tension line", "archive door", "door", "frame"],
+      requires: { hasItem: "climbing_claws" },
+      requiresText: "You need a hooked tool that can catch the hidden cord.",
+      failText: "The archive door remains sealed.",
+      condition: { flagFalse: "archiveUnlocked" },
+      successText:
+        "You slide the climbing claws into the frame and hook the hidden cord. It tears loose with a dry snap.",
+      effects: {
+        setGlobalFlag: "archiveUnlocked",
+        openExit: { dir: "east", to: "archive" },
       },
     },
-    mediaStates: [
-      { condition: { itemNotHere: "cloth_mask" }, media: "tea_room_opened" },
-    ],
-    enterRequires: null,
-    exits: {
-      north: "main_hall",
-      west: "servant_corridor",
+  ],
+
+  objects: {
+    archive_door: {
+      id: "archive_door",
+      aliases: ["door", "archive door", "sealed door", "east door", "frame", "cord", "rope", "tension line"],
+      examineText:
+        "The archive door has no visible keyhole. A thin cord vanishes into the wooden frame — too narrow for fingers, but not for a blade or hook.",
+      useText:
+        "The door resists. The cord inside the frame must be cut or pulled loose.",
     },
-    hazards: [],
-    actions: [],
-    objects: {
-      servant_robes: {
-        id: "servant_robes",
-        aliases: ["robes", "servant robes", "clothes", "garments"],
-        examineText: "The robes are plain, but beneath them you notice a folded cloth mask.",
-        useText: "The robes are too bulky to wear over your own gear.",
-      },
+
+    incense_burners: {
+      id: "incense_burners",
+      aliases: ["incense", "burners", "smoke", "ceremonial smoke"],
+      examineText:
+        "The burners release a sweet, heavy smoke that turns sharp in the lungs. Without a mask, this hall would kill you quickly.",
+      useText:
+        "Disturbing the burners would only fill the hall faster.",
     },
-    flavourTargets: {
-      tea_set: {
-        id: "tea_set",
-        aliases: ["tea", "cups", "teapot"],
-        examineText: "The tea has long gone cold.",
-      },
-      robes: {
-        id: "robes",
-        aliases: ["robes", "clothes", "garments"],
-        examineText: "Servant robes hang neatly despite the growing panic outside.",
-      },
-      mat: {
-        id: "mat",
-        aliases: ["mat", "tatami", "floor"],
-        examineText: "The tatami smells faintly of smoke and old straw.",
-      },
+
+    tea_room_view: {
+      id: "tea_room_view",
+      aliases: ["tea room", "south", "side room", "quiet room"],
+      examineText:
+        "A quieter tea room lies to the south, dim and still beyond the haze.",
+      useText:
+        "The southern room looks safer than standing in the smoke.",
     },
-    win: false,
+
+    courtyard_view: {
+      id: "courtyard_view",
+      aliases: ["courtyard", "west", "outside", "yard"],
+      examineText:
+        "Through the western doorway, rain and lantern light flicker across the courtyard stones.",
+      useText:
+        "The courtyard remains exposed, but at least the air is breathable.",
+    },
   },
 
+  flavourTargets: {
+    incense: {
+      id: "incense",
+      aliases: ["incense", "smoke", "burners"],
+      examineText:
+        "Sweet ceremonial smoke curls through the hall in suffocating waves.",
+    },
+
+    armor: {
+      id: "armor",
+      aliases: ["armor", "samurai armor", "statue"],
+      examineText:
+        "The lacquered armor stares ahead with an expressionless iron mask.",
+    },
+
+    screens: {
+      id: "screens",
+      aliases: ["screens", "paper walls", "shoji"],
+      examineText:
+        "Thin paper screens glow softly from lantern light behind them.",
+    },
+
+    floor: {
+      id: "floor",
+      aliases: ["floor", "wood", "boards"],
+      examineText:
+        "The polished wood reflects torchlight like dark water.",
+    },
+  },
+
+  win: false,
+},
+ archive: {
+  title: "Hidden Archive",
+  gridPosition: { col: 3, row: 1 },
+  media: "archive_default",
+  fx: "flicker",
+  deathMedia: "death_guard",
+
+  baseDescription:
+    "The shogun's private archive is silent and dry. Shelves of sealed records line the walls, and a heavy document chest rests beneath them. The hall beyond reeks of thick ceremonial incense. {sealed_scroll}",
+
+  itemText: {
+    sealed_scroll: {
+      present:
+        "Inside the open chest lies the sealed scroll you came for, bound in dark cord and stamped with the shogun's crest.",
+      taken:
+        "The document chest lies open and empty. The stolen scroll is hidden under your robe.",
+    },
+  },
+
+  states: {
+    default: {
+      description:
+        "The shogun's private archive is silent and dry. Shelves of sealed records line the walls, and a heavy document chest rests beneath them. The hall beyond reeks of thick ceremonial incense. {sealed_scroll}",
+      fx: "flicker",
+      media: "archive_default",
+    },
+
+    alarm: {
+      description:
+        "The archive is no longer silent. The stolen scroll is under your robe, mechanisms clatter inside the walls, and rain breathes through a newly opened ceiling gap. {sealed_scroll}",
+      fx: "flicker",
+      media: "archive_alarm",
+    },
+  },
+
+  mediaStates: [
+    { condition: { flag: "scrollTaken" }, media: "archive_alarm" },
+  ],
+
+  enterRequires: null,
+
+  exits: {
+    west: "main_hall",
+
+    south: {
+      to: "roof_path",
+      hidden: true,
+      condition: { flag: "roofPathRevealed" },
+    },
+  },
+
+  hazards: [
+    {
+      type: "commandPressure",
+      condition: { flag: "scrollTaken" },
+      counter: "alarmCountdown",
+      threshold: 7,
+      warningStages: [
+        {
+          at: 2,
+          text: "Footsteps gather somewhere beyond the archive walls.",
+        },
+        {
+          at: 4,
+          text: "The alarm gong sounds again. The castle is narrowing around you.",
+        },
+        {
+          at: 6,
+          text: "Steel scrapes outside the archive. The elite guard has found the door.",
+        },
+      ],
+      deathText:
+        "The archive doors burst open. Black-armored guards flood the room. The scroll is torn from your robe before the final blow falls.",
+    },
+  ],
+
+  actions: [
+    {
+      verbs: ["open", "take", "steal", "grab", "remove", "get"],
+      targets: [
+        "scroll",
+        "sealed_scroll",
+        "sealed scroll",
+        "chest",
+        "document",
+        "evidence",
+        "record",
+      ],
+      requires: null,
+      requiresText: null,
+      failText: "You cannot reach the scroll from here.",
+      condition: { flagFalse: "scrollTaken" },
+      successText:
+        "You open the chest and take the sealed scroll. A hidden gong answers from deep inside the castle.",
+      effects: {
+        setGlobalFlags: ["scrollTaken", "castleAlerted"],
+        setCounter: { id: "alarmCountdown", value: 0 },
+        setRoomState: { room: "archive", state: "alarm" },
+        giveItem: "sealed_scroll",
+      },
+    },
+
+    {
+      verbs: ["examine", "inspect", "pull", "press", "slide", "open", "look"],
+      targets: [
+        "ceiling",
+        "beam",
+        "loose beam",
+        "panel",
+        "ceiling panel",
+        "latch",
+        "shelf",
+        "shelves",
+        "airflow",
+        "draft",
+      ],
+      requires: null,
+      requiresText: null,
+      failText: "You find only dust and old wood.",
+      condition: { flagFalse: "roofPathRevealed" },
+      successText:
+        "You press the carved shelf support. A ceiling panel slides open, revealing a wet roof path above the archive.",
+      effects: {
+        setGlobalFlag: "roofPathRevealed",
+        openExit: { dir: "south", to: "roof_path" },
+      },
+    },
+  ],
+
+  objects: {
+    sealed_chest: {
+      id: "sealed_chest",
+      aliases: ["chest", "sealed chest", "document chest", "box", "scroll"],
+      examineText:
+        "The chest bears the shogun's private crest. Inside lies the sealed scroll you came for.",
+      useText:
+        "The chest opens with a quiet wooden click.",
+    },
+
+    loose_ceiling_panel: {
+      id: "loose_ceiling_panel",
+      aliases: [
+        "ceiling",
+        "panel",
+        "loose panel",
+        "ceiling panel",
+        "beam",
+        "latch",
+        "draft",
+        "airflow",
+      ],
+      examineText:
+        "Cold rain air leaks around one ceiling beam. A carved shelf support below it looks slightly polished from use.",
+      useText:
+        "The panel will not move until the hidden latch is pressed.",
+    },
+
+    main_hall_view: {
+      id: "main_hall_view",
+      aliases: ["hall", "main hall", "west", "incense", "smoke"],
+      examineText:
+        "The main hall lies west, still filled with lethal ceremonial smoke.",
+      useText:
+        "Going back through the hall means trusting your mask.",
+    },
+  },
+
+  flavourTargets: {
+    scrolls: {
+      id: "scrolls",
+      aliases: ["scrolls", "documents", "records"],
+      examineText:
+        "Centuries of secrets sleep in tightly bound scroll cases.",
+    },
+
+    candles: {
+      id: "candles",
+      aliases: ["candles", "wax", "flames"],
+      examineText:
+        "The candle flames twitch whenever the storm wind slips inside.",
+    },
+
+    shelves: {
+      id: "shelves",
+      aliases: ["shelves", "bookcases", "wood"],
+      examineText:
+        "Dustless shelves suggest this room is still visited often. One support carving is worn smooth by repeated touch.",
+    },
+
+    ceiling: {
+      id: "ceiling",
+      aliases: ["ceiling", "beams", "rafters"],
+      examineText:
+        "One ceiling beam seems strangely loose. Cold air slips around it.",
+    },
+  },
+
+  win: false,
+},
+
+ tea_room: {
+  title: "Tea Room",
+  gridPosition: { col: 2, row: 2 },
+  media: "tea_room",
+  fx: null,
+
+  baseDescription:
+    "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway, sharp enough to make your eyes water. Folded servant robes rest near the wall. {cloth_mask}",
+
+  itemText: {
+    cloth_mask: {
+      present:
+        "A folded cloth mask is tucked beneath the servant robes.",
+      taken:
+        "The servant robes lie disturbed where the cloth mask was hidden.",
+    },
+  },
+
+  states: {
+    default: {
+      description:
+        "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway, sharp enough to make your eyes water. Folded servant robes rest near the wall. {cloth_mask}",
+      fx: null,
+      media: "tea_room",
+    },
+  },
+
+  mediaStates: [
+    { condition: { itemNotHere: "cloth_mask" }, media: "tea_room_opened" },
+  ],
+
+  enterRequires: null,
+
+  exits: {
+    north: "main_hall",
+    west: "servant_corridor",
+  },
+
+  hazards: [],
+  actions: [],
+
+  objects: {
+    servant_robes: {
+      id: "servant_robes",
+      aliases: ["robes", "servant robes", "clothes", "garments", "mask", "cloth mask"],
+      examineText:
+        "The robes are plain servant clothing, folded in a careful stack. Beneath them, you notice a cloth mask suitable for covering your breath.",
+      useText:
+        "The robes are too bulky to wear over your own gear, but the mask beneath them is useful.",
+    },
+
+    main_hall_view: {
+      id: "main_hall_view",
+      aliases: ["main hall", "hall", "north", "smoke", "incense"],
+      examineText:
+        "The main hall lies north, thick with ceremonial smoke. Even from here, the incense makes your eyes water.",
+      useText:
+        "You should not enter that smoke without covering your breath.",
+    },
+
+    servant_corridor_view: {
+      id: "servant_corridor_view",
+      aliases: ["corridor", "servant corridor", "west", "passage"],
+      examineText:
+        "A narrow servant corridor lies west, darker and quieter than the formal rooms.",
+      useText:
+        "The corridor looks like a safer way deeper into the castle.",
+    },
+  },
+
+  flavourTargets: {
+    tea_set: {
+      id: "tea_set",
+      aliases: ["tea", "cups", "teapot"],
+      examineText:
+        "The tea has long gone cold.",
+    },
+
+    mat: {
+      id: "mat",
+      aliases: ["mat", "tatami", "floor"],
+      examineText:
+        "The tatami smells faintly of smoke and old straw.",
+    },
+
+    paper_doors: {
+      id: "paper_doors",
+      aliases: ["doors", "paper doors", "screens", "shoji"],
+      examineText:
+        "The paper doors glow softly with lantern light from the hall beyond.",
+    },
+  },
+
+  win: false,
+},
   servant_corridor: {
     title: "Servant Corridor",
     gridPosition: { col: 1, row: 2 },
@@ -561,225 +958,367 @@ export const ROOMS = {
   },
 
   storage_cellar: {
-    title: "Storage Cellar",
-    gridPosition: { col: 1, row: 3 },
-    media: "storage_cellar",
-    fx: null,
-    deathMedia: "death_cellar",
-    baseDescription: "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally.",
-    itemText: {
-      climbing_claws: {
-        present: "A pair of climbing claws rests behind a rice barrel.",
-        taken: "",
-      },
-      smoke_bomb: {
-        present: "Several smoke bombs sit in a lacquered case.",
-        taken: "",
-      },
-      oil_lantern: {
-        present: "An oil lantern hangs from a cracked beam.",
-        taken: "",
-      },
+  title: "Storage Cellar",
+  gridPosition: { col: 1, row: 3 },
+  media: "storage_cellar",
+  fx: null,
+  deathMedia: "death_cellar",
+
+  baseDescription:
+    "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally. An open crate sits behind stacked barrels beneath a hanging oil lantern.\n\n{climbing_claws}\n{smoke_bomb}\n{oil_lantern}",
+
+  itemText: {
+    climbing_claws: {
+      present:
+        "A pair of iron climbing claws rests inside the open crate behind the barrels.",
+      taken:
+        "Only fresh scratches remain where the climbing claws rested.",
     },
-    states: {
-      default: {
-        description: "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally.",
-        fx: null,
-        media: "storage_cellar",
-      },
+
+    smoke_bomb: {
+      present:
+        "Several smoke bombs sit in a lacquered wooden case beside the climbing tools.",
+      taken:
+        "The lacquered smoke bomb case stands open and empty.",
     },
-    mediaStates: [
-      { condition: { itemNotHere: "smoke_bomb" }, media: "storage_cellar_empty_rack" },
-    ],
-    enterRequires: null,
-    exits: {
-      north: "servant_corridor",
-      south: "escape_tunnel",
+
+    oil_lantern: {
+      present:
+        "An old oil lantern hangs from the cracked ceiling beam above the cache.",
+      taken:
+        "The lantern hook sways gently from the cracked beam.",
     },
-    hazards: [
-      {
-        type: "visitCount",
-        safeUnder: 4,
-        warningStages: [
-          { at: 2, text: "The stacked shelves groan as the floor shifts." },
-          { at: 3, text: "Dust falls from the beams. This cellar will not tolerate much more movement." },
-        ],
-        deathText: "The shelves collapse in a roar of wood, jars, and stone. The cellar buries you before you can draw breath.",
-      },
-    ],
-    actions: [],
-    objects: {
-      rope_bundles: {
-        id: "rope_bundles",
-        aliases: ["rope", "bundles", "rope bundles", "cord"],
-        examineText: "The rope is damp but strong. It explains how tools were smuggled in.",
-        useText: "The bundles are too tangled to move quickly.",
-      },
-    },
-    flavourTargets: {
-      crates: {
-        id: "crates",
-        aliases: ["crates", "boxes"],
-        examineText: "Supply crates are stacked almost to the ceiling.",
-      },
-      rope: {
-        id: "rope",
-        aliases: ["rope", "bundles"],
-        examineText: "The rope fibers are rough and damp from cellar moisture.",
-      },
-      powder: {
-        id: "powder",
-        aliases: ["powder", "dust"],
-        examineText: "Dark powder stains nearby shelves.",
-      },
-    },
-    win: false,
   },
 
-  escape_tunnel: {
-    title: "Escape Tunnel",
-    gridPosition: { col: 1, row: 4 },
-    media: "escape_tunnel",
-    fx: "mist",
-    baseDescription: "A cramped tunnel slopes beneath the castle. Cold water trickles around a blocked stone hatch.",
-    itemText: {},
-    states: {
-      default: {
-        description: "A cramped tunnel slopes beneath the castle. Cold water trickles around a blocked stone hatch.",
-        fx: "mist",
-        media: "escape_tunnel",
-      },
-      opened: {
-        description: "The stone hatch stands open. Rain and pine-scented air pour in from the mountainside.",
-        fx: "mist",
-        media: "escape_tunnel_open",
-      },
+  states: {
+    default: {
+      description:
+        "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally. An open crate sits behind stacked barrels beneath a hanging oil lantern.\n\n{climbing_claws}\n{smoke_bomb}\n{oil_lantern}",
+      fx: null,
+      media: "storage_cellar",
     },
-    mediaStates: [
-      { condition: { flag: "tunnelOpened" }, media: "escape_tunnel_open" },
-    ],
-    enterRequires: null,
-    exits: {
-      north: "storage_cellar",
-    },
-    hazards: [],
-    actions: [
-      {
-        verbs: ["use", "throw", "drop", "ignite", "deploy"],
-        targets: ["smoke_bomb", "smoke bomb", "hatch", "guards", "tunnel", "shadow"],
-        requires: { hasItem: "smoke_bomb" },
-        requiresText: "You need cover before opening the hatch; guards are searching above.",
-        failText: "The tunnel remains exposed.",
-        condition: { flag: "scrollTaken" },
-        successText: "You release smoke through the hatch seam. Guards above shout blindly as you force the stone open and slip out into the mountain rain.",
-        effects: {
-          setGlobalFlags: ["smokeCoverUsed", "tunnelOpened"],
-          setRoomState: { room: "escape_tunnel", state: "opened" },
-          removeItem: "smoke_bomb",
-          win: true,
-        },
-      },
-      {
-        verbs: ["open", "push", "force", "lift", "move"],
-        targets: ["hatch", "stone hatch", "gate", "exit", "door"],
-        requires: null,
-        requiresText: null,
-        failText: "The hatch shifts, but guards above would see you instantly. You need smoke cover first.",
-        condition: { flagFalse: "scrollTaken" },
-        successText: "The hatch moves, but you have not taken the scroll yet. There is nothing to escape with.",
-        effects: {},
-      },
-    ],
-    objects: {
-      stone_hatch: {
-        id: "stone_hatch",
-        aliases: ["hatch", "stone hatch", "door", "gate"],
-        examineText: "The old escape hatch has not opened in years. Voices move somewhere above it.",
-        useText: "Opening it without cover would expose you to the search party.",
-      },
-    },
-    flavourTargets: {
-      water: {
-        id: "water",
-        aliases: ["water", "stream"],
-        examineText: "Cold water trickles through cracks in the stone.",
-      },
-      hatch: {
-        id: "hatch",
-        aliases: ["hatch", "door", "gate"],
-        examineText: "The old escape hatch has not been opened in years.",
-      },
-      roots: {
-        id: "roots",
-        aliases: ["roots", "vines"],
-        examineText: "Tree roots have pushed through the tunnel ceiling.",
-      },
-    },
-    win: false,
   },
 
-  roof_path: {
-    title: "Roof Path",
-    gridPosition: { col: 3, row: 0 },
-    media: "roof_path",
-    fx: "mist",
-    baseDescription: "The roof path is slick with rain. Black tiles drop away into the courtyard far below.",
-    itemText: {},
-    states: {
-      default: {
-        description: "The roof path is slick with rain. Black tiles drop away into the courtyard far below.",
-        fx: "mist",
-        media: "roof_path",
-      },
-    },
-    mediaStates: [],
-    enterRequires: {
-      condition: { heldTag: "tool" },
-      failText: "You step onto the rain-slick roof without a grip tool. Your foot slides. The courtyard rushes upward through the storm.",
-    },
-    exits: {
-      south: "archive",
-    },
-    hazards: [],
-    actions: [
-      {
-        verbs: ["use", "climb", "grip", "hook", "scale", "escape", "cross"],
-        targets: ["climbing_claws", "claws", "roof", "tiles", "edge", "escape line", "line"],
-        requires: { hasItem: "climbing_claws" },
-        requiresText: "You need climbing claws to cross the wet roof safely.",
-        failText: "The tiles are too slick to cross barehanded.",
-        condition: { flag: "scrollTaken" },
-        successText: "You hook the climbing claws into the roof seams and cross the storm-black tiles. By the time the guards reach the courtyard, you are gone.",
-        effects: {
-          win: true,
-        },
-      },
-    ],
-    objects: {
-      escape_line: {
-        id: "escape_line",
-        aliases: ["line", "escape line", "rope", "roof edge"],
-        examineText: "A thin escape line disappears into the pines below the castle wall.",
-        useText: "You need a secure grip before trusting the line.",
-      },
-    },
-    flavourTargets: {
-      rooftops: {
-        id: "rooftops",
-        aliases: ["roof", "rooftops", "tiles"],
-        examineText: "Black rooftops stretch into the storm like waves.",
-      },
-      wind: {
-        id: "wind",
-        aliases: ["wind", "air", "storm"],
-        examineText: "The mountain wind nearly tears the breath from your lungs.",
-      },
-      moon: {
-        id: "moon",
-        aliases: ["moon", "sky", "clouds"],
-        examineText: "The moon appears only in broken flashes between storm clouds.",
-      },
-    },
-    win: false,
+  mediaStates: [
+    { condition: { itemNotHere: "smoke_bomb" }, media: "storage_cellar_empty_rack" },
+  ],
+
+  enterRequires: null,
+
+  exits: {
+    north: "servant_corridor",
+    south: "escape_tunnel",
   },
-};
+
+  hazards: [
+    {
+      type: "visitCount",
+      safeUnder: 4,
+      warningStages: [
+        {
+          at: 2,
+          text: "The stacked shelves groan as the floor shifts.",
+        },
+        {
+          at: 3,
+          text: "Dust falls from the beams. This cellar will not tolerate much more movement.",
+        },
+      ],
+      deathText:
+        "The shelves collapse in a roar of wood, jars, and stone. The cellar buries you before you can draw breath.",
+    },
+  ],
+
+  actions: [],
+
+  objects: {
+    shinobi_cache: {
+      id: "shinobi_cache",
+      aliases: [
+        "cache",
+        "crate",
+        "open crate",
+        "shinobi cache",
+        "tools",
+        "equipment",
+        "stash",
+      ],
+      examineText:
+        "The open crate contains infiltration tools prepared for someone expected to pass through here.",
+      useText:
+        "The crate already holds everything useful inside it.",
+    },
+
+    rice_barrels: {
+      id: "rice_barrels",
+      aliases: [
+        "barrels",
+        "barrel",
+        "rice barrels",
+        "rice barrel",
+      ],
+      examineText:
+        "Heavy rice barrels partly conceal the hidden tool cache.",
+      useText:
+        "The barrels are too heavy to move quietly.",
+    },
+
+    oil_lamp_hook: {
+      id: "oil_lamp_hook",
+      aliases: [
+        "lantern",
+        "oil lantern",
+        "lamp",
+        "hook",
+        "beam",
+      ],
+      examineText:
+        "An oil lantern hangs from a cracked ceiling beam, still half-filled with fuel.",
+      useText:
+        "The lantern could still burn if needed.",
+    },
+
+    rope_bundles: {
+      id: "rope_bundles",
+      aliases: ["rope", "bundles", "rope bundles", "cord"],
+      examineText:
+        "The rope is damp but strong. It explains how tools were smuggled into the cellar.",
+      useText:
+        "The bundles are too tangled to move quickly.",
+    },
+
+    escape_tunnel_view: {
+      id: "escape_tunnel_view",
+      aliases: ["tunnel", "escape tunnel", "south", "passage"],
+      examineText:
+        "A dark passage slopes south beneath the castle. Cold air rises from below.",
+      useText:
+        "The tunnel leads deeper under the castle.",
+    },
+
+    servant_corridor_view: {
+      id: "servant_corridor_view",
+      aliases: ["corridor", "servant corridor", "north", "passage"],
+      examineText:
+        "The servant corridor lies north, narrow and quiet behind the formal rooms.",
+      useText:
+        "The corridor leads back toward the castle interior.",
+    },
+  },
+
+  flavourTargets: {
+    crates: {
+      id: "crates",
+      aliases: ["crates", "boxes"],
+      examineText:
+        "Supply crates are stacked almost to the ceiling.",
+    },
+
+    powder: {
+      id: "powder",
+      aliases: ["powder", "dust", "black powder"],
+      examineText:
+        "Dark powder stains nearby shelves and the edge of the open case.",
+    },
+
+    damp_floor: {
+      id: "damp_floor",
+      aliases: ["floor", "stone floor", "damp floor"],
+      examineText:
+        "The stone floor is slick with cellar moisture.",
+    },
+  },
+
+  win: false,
+},
+ escape_tunnel: {
+  title: "Escape Tunnel",
+  gridPosition: { col: 1, row: 4 },
+  media: "escape_tunnel",
+  fx: "mist",
+
+  baseDescription:
+    "A cramped tunnel slopes beneath the castle into near-total darkness. Cold water trickles across the stone floor while tangled roots push through the ceiling somewhere ahead.",
+
+  itemText: {},
+
+  states: {
+    default: {
+      description:
+        "A cramped tunnel slopes beneath the castle into near-total darkness. Cold water trickles across the stone floor while tangled roots push through the ceiling somewhere ahead.",
+      fx: "mist",
+      media: "escape_tunnel",
+    },
+
+    hatch_revealed: {
+      description:
+        "Lantern light reveals an old stone escape hatch set into the tunnel ceiling above you, half-hidden by roots and packed earth. Faint voices move somewhere beyond it.",
+      fx: "mist",
+      media: "escape_tunnel",
+    },
+  },
+
+  mediaStates: [],
+  enterRequires: null,
+
+  exits: {
+    north: "storage_cellar",
+  },
+
+  hazards: [],
+
+  actions: [
+    {
+      verbs: ["use", "light", "ignite", "raise", "hold"],
+      targets: [
+        "oil_lantern",
+        "oil lantern",
+        "lantern",
+        "light",
+        "darkness",
+        "tunnel",
+        "walls",
+        "ceiling",
+        "roots",
+      ],
+      requires: { hasItem: "oil_lantern" },
+      requiresText: "You have no light source.",
+      failText: "The darkness swallows the tunnel.",
+      condition: { flagFalse: "hatchRevealed" },
+      successText:
+        "You light the oil lantern. Warm light crawls across the tunnel ceiling, revealing the outline of an old stone escape hatch hidden beneath roots and packed earth.",
+      effects: {
+        setGlobalFlag: "hatchRevealed",
+        setRoomState: { room: "escape_tunnel", state: "hatch_revealed" },
+      },
+    },
+
+    {
+      verbs: ["use", "throw", "drop", "ignite", "deploy"],
+      targets: [
+        "smoke_bomb",
+        "smoke bomb",
+        "smoke",
+        "hatch",
+        "stone hatch",
+        "ceiling",
+        "guards",
+        "voices",
+      ],
+      requires: { hasItem: "smoke_bomb" },
+      requiresText:
+        "You have no smoke bomb left. Without cover, opening the ceiling hatch would expose you to the guards above. You need another escape route.",
+      failText:
+        "The hatch shifts, but voices above move closer. Without smoke cover, this route is suicide.",
+      condition: { flag: "hatchRevealed" },
+      successText:
+        "You release smoke through the hatch seams above. Guards outside shout blindly as you force the stone upward and pull yourself into the mountain rain.",
+      effects: {
+        setGlobalFlags: ["tunnelOpened"],
+        removeItem: "smoke_bomb",
+        win: true,
+      },
+    },
+
+    {
+      verbs: ["open", "push", "force", "lift", "move"],
+      targets: ["hatch", "stone hatch", "gate", "exit", "door", "ceiling"],
+      requires: null,
+      requiresText: null,
+      failText:
+        "You cannot find the hatch clearly in the dark. You need light first.",
+      condition: { flagFalse: "hatchRevealed" },
+      successText:
+        "Your hands find only wet stone, roots, and loose mud above you.",
+      effects: {},
+    },
+
+    {
+      verbs: ["open", "push", "force", "lift", "move"],
+      targets: ["hatch", "stone hatch", "gate", "exit", "door", "ceiling"],
+      requires: null,
+      requiresText: null,
+      failText:
+        "The hatch shifts, but voices above move closer. Without smoke cover, this route is suicide.",
+      condition: { flag: "hatchRevealed" },
+      successText:
+        "The hatch moves slightly overhead, but guards are waiting above. You need smoke cover or another escape route.",
+      effects: {},
+    },
+  ],
+
+  objects: {
+    stone_hatch: {
+      id: "stone_hatch",
+      aliases: ["hatch", "stone hatch", "ceiling hatch", "door", "gate", "exit"],
+      examineText:
+        "An old stone hatch is set into the tunnel ceiling above you, half-concealed by roots and wet earth. Faint voices move somewhere beyond it.",
+      useText:
+        "Opening the ceiling hatch without smoke cover would expose you to the guards above.",
+    },
+
+    tunnel_darkness: {
+      id: "tunnel_darkness",
+      aliases: ["darkness", "dark", "shadows", "tunnel"],
+      examineText:
+        "The darkness hides the far end of the tunnel and the ceiling above. The sound of water makes the space feel larger than it is.",
+      useText:
+        "You need a light source to make sense of the tunnel.",
+    },
+  },
+
+  flavourTargets: {
+    water: {
+      id: "water",
+      aliases: ["water", "stream"],
+      examineText:
+        "Cold water trickles through cracks in the stone floor.",
+    },
+
+    roots: {
+      id: "roots",
+      aliases: ["roots", "vines"],
+      examineText:
+        "Tree roots have pushed through the tunnel ceiling and wrapped around the old stone hatch.",
+    },
+
+    stonework: {
+      id: "stonework",
+      aliases: ["stone", "stones", "wall", "walls", "masonry"],
+      examineText:
+        "The stones are older than the castle above. Some have shifted from years of rain and pressure.",
+    },
+  },
+
+  win: false,
+},
+ {
+  verbs: ["jump", "swing", "escape", "climb", "leap"],
+
+  targets: [
+    "tree",
+    "pine",
+    "branch",
+    "rope",
+    "forest",
+    "cliff",
+    "line"
+  ],
+
+  requires: { hasItem: "climbing_claws" },
+
+  requiresText:
+    "The roof edge is too slick to cross without proper climbing gear.",
+
+  failText:
+    "The storm wind nearly tears you from the roof.",
+
+  condition: { flag: "scrollTaken" },
+
+  successText:
+    "You leap from the rain-slick roof and catch the pine branches below the castle wall. By the time the guards reach the rooftops, you have vanished into the mountain forest.",
+
+  effects: {
+    win: true,
+  },
+}
