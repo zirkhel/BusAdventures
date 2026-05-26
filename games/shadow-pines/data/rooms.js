@@ -15,11 +15,6 @@ export const ROOMS = {
     },
     mediaStates: [],
     enterRequires: null,
-    exits: {
-      east: {
-        to: "courtyard",
-        condition: null,
-      },
     },
     hazards: [],
     actions: [
