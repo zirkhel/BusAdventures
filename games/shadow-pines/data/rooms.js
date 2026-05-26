@@ -44,12 +44,17 @@ export const ROOMS = {
       },
       wall_stones: {
         id: "wall_stones",
-        aliases: ["stones", "wall", "broken stones", "stonework"],
-        examineText: "The stones are wet, but the gaps are deep enough for careful fingers.",
-        useText: "You climb through the breach and slip toward the courtyard.",
+        aliases: ["stones", "wall", "broken stones", "stonework", "opening", "crack", "gap", "breach", "hole"],
+        examineText: "Several stones have collapsed inward, leaving a gap just wide enough for a person to squeeze through. The edges are rough and wet. Beyond it, you can make out the dim shapes of the inner courtyard.",
+        useText: "You flatten yourself and squeeze through. Cold rain soaks through your robe as you slip inside.",
       },
     },
     flavourTargets: {
+      opening: {
+        id: "opening",
+        aliases: ["opening", "gap", "crack", "hole", "breach", "way in", "way through"],
+        examineText: "The gap in the wall is just wide enough. The stones around it are slick with rain. You could squeeze through if you tried.",
+      },
       rain_tiles: {
         id: "rain_tiles",
         aliases: ["tiles", "roof", "rain"],
@@ -75,11 +80,11 @@ export const ROOMS = {
     media: "courtyard_default",
     fx: "mist",
     deathMedia: "death_guard",
-    baseDescription: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop. To the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
+    baseDescription: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop.\n\nTo the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
     itemText: {},
     states: {
       default: {
-        description: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop. To the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
+        description: "The courtyard is open, wet, and watched. Guards patrol beneath swinging lanterns in a slow, practiced loop.\n\nTo the north, a watch tower rises above the roofline. To the east, the main hall — sweet ceremonial smoke drifts from its doorway, sharp enough to sting. To the south, a narrow servant corridor runs behind the formal rooms. The outer wall waits to the west.",
         fx: "mist",
         media: "courtyard_default",
       },
