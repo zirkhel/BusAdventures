@@ -15,7 +15,7 @@ export const ROOMS = {
     },
     mediaStates: [],
     enterRequires: null,
-    },
+    exits: {},
     hazards: [],
     actions: [
       {
@@ -271,7 +271,6 @@ export const ROOMS = {
       },
       south: "tea_room",
     },
-    hazards: [],
     actions: [
       {
         verbs: ["use", "cut", "slice", "throw", "strike", "break"],
