@@ -152,16 +152,16 @@ body::after {
   50% { opacity: 0; }
 }
 
-/* Genre sections */
+/* Format sections */
 .genre-section {
   margin-bottom: 36px;
 }
 
 .genre-header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 6px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--green-dim);
 }
@@ -177,6 +177,13 @@ body::after {
 .genre-count {
   color: var(--muted);
   font-size: 11px;
+}
+
+.genre-note {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: italic;
+  margin-bottom: 14px;
 }
 
 /* Game cards */
@@ -331,25 +338,26 @@ body::after {
 
   <div class="terminal-bar">
     <div class="dot"></div>
-    <span>bus-adventures v0.1.0 — terminal interface</span>
+    <span>bus-adventures v0.2.0 — terminal interface</span>
   </div>
 
   <div class="terminal-body">
     <div class="ascii-title">BUS ADV.</div>
     <div class="ascii-sub">POCKET ADVENTURES</div>
     <p class="tagline">
-      Old-school text adventures. <em>Finished before your stop.</em><br>
-      Pick a genre. Type commands. See what happens.
+      Text adventures and handheld arcade. <em>Finished before your stop.</em><br>
+      Pick a format. One hand, no sound needed.
     </p>
     <div class="prompt-line">SELECT ADVENTURE_</div>
   </div>
 
-  <!-- HORROR -->
+  <!-- TEXT ADVENTURES -->
   <div class="genre-section">
     <div class="genre-header">
-      <span class="genre-tag">// HORROR</span>
+      <span class="genre-tag">// TEXT</span>
       <span class="genre-count">2 available</span>
     </div>
+    <div class="genre-note">Type commands. Take your time. Death is permanent.</div>
     <div class="game-grid">
 
       <a class="game-card" href="games/ward-b/index.html">
@@ -387,11 +395,39 @@ body::after {
     </div>
   </div>
 
+  <!-- ARCADE -->
+  <div class="genre-section">
+    <div class="genre-header">
+      <span class="genre-tag">// ARCADE</span>
+      <span class="genre-count">1 available</span>
+    </div>
+    <div class="genre-note">Two buttons. No reading. Play one round or forty.</div>
+    <div class="game-grid">
+
+      <a class="game-card" href="games/lich-tower/index.html">
+        <div class="game-card-inner">
+          <div class="game-icon">🗼</div>
+          <div class="game-info">
+            <div class="game-title">Lich Tower</div>
+            <div class="game-meta"><span>3 modes</span> · endless · two buttons</div>
+            <div class="game-desc">The tower is burning and the acolytes are jumping. Catch each one three times on the way down, or explain yourself to the archmage.</div>
+            <div class="game-tags">
+              <span class="tag">arcade</span>
+              <span class="tag">reflex</span>
+              <span class="tag">endless</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
   <!-- COMING SOON -->
   <div class="genre-section">
     <div class="genre-header">
-      <span class="genre-tag">// MORE GENRES</span>
-      <span class="genre-count">in development</span>
+      <span class="genre-tag">// IN DEVELOPMENT</span>
+      <span class="genre-count">not yet</span>
     </div>
     <div class="game-grid">
 
@@ -400,9 +436,21 @@ body::after {
           <div class="game-icon">🚀</div>
           <div class="game-info">
             <div class="game-title">Drift Station Kepler</div>
-            <div class="game-meta"><span>sci-fi · mystery</span></div>
+            <div class="game-meta"><span>text · sci-fi mystery</span></div>
             <div class="game-desc">Coming soon.</div>
             <div class="game-tags"><span class="tag">sci-fi</span><span class="tag">exploration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card coming-soon">
+        <div class="game-card-inner">
+          <div class="game-icon">💀</div>
+          <div class="game-info">
+            <div class="game-title">Gravferd</div>
+            <div class="game-meta"><span>arcade · wave defence</span></div>
+            <div class="game-desc">Coming soon.</div>
+            <div class="game-tags"><span class="tag">arcade</span><span class="tag">reflex</span></div>
           </div>
         </div>
       </div>
@@ -411,7 +459,7 @@ body::after {
   </div>
 
   <div class="terminal-footer">
-    <div>bus-adventures · text adventures for the commute</div>
+    <div>bus-adventures · pocket games for the commute</div>
     <div style="margin-top:4px; color:#3a5030">type · explore · survive · repeat</div>
   </div>
 
