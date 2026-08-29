@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>GUARDIAN KRAKEN — Bus Adventures</title>
+<style>
+  :root{
+    --case:#141a21; --case-hi:#26313d;
+    --key:#1f2a33; --key-lip:#0b1015; --key-on:#2f4050;
+    --alarm:#c8412f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;overflow:hidden;background:#070b0f;
+    font-family:"Helvetica Neue",Arial,sans-serif;touch-action:none;
+    -webkit-user-select:none;user-select:none}
+  body{display:flex;align-items:stretch;justify-content:center;
+    padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom)}
+  #device{width:100%;max-width:520px;background:var(--case);
+    display:flex;flex-direction:column;
+    border-radius:18px;padding:10px 10px 14px;margin:6px 0;
+    border-top:1px solid var(--case-hi);
+    box-shadow:0 18px 44px rgba(0,0,0,.7)}
+  #brand{display:flex;justify-content:space-between;align-items:center;
+    padding:2px 4px 8px;color:#5f7383;font-size:10px;letter-spacing:.2em}
+  #brand b{color:#b6cbd9;font-size:12px;letter-spacing:.3em;flex:1;text-align:left}
+  #btnHjem{padding:5px 9px;border-radius:7px;background:#1b242c;border:0;
+    border-bottom:2px solid var(--key-lip);line-height:0;margin-right:2px}
+  #btnHjem svg{width:13px;height:13px;fill:#6d8291}
+  #btnHjem:active{background:#33475a}
+  #btnHjem:active svg{fill:#dceaf3}
+  #alarm{width:8px;height:8px;border-radius:50%;background:#1f2a33;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+  #alarm.lit{background:var(--alarm);box-shadow:0 0 9px var(--alarm)}
+  #btnMeny{padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;
+    border-radius:7px;background:#1b242c;color:#6d8291;border:0;
+    border-bottom:2px solid var(--key-lip)}
+  #btnMeny:active{background:#33475a;color:#dceaf3}
+  #screen{position:relative;background:#060a0e;border-radius:6px;padding:5px;
+    flex:1 1 auto;display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 2px 12px rgba(0,0,0,.6)}
+  canvas{display:block;width:100%;height:auto;image-rendering:pixelated;
+    border-radius:3px}
+  #pad{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  #pad button{background:var(--key);border:0;border-radius:16px;padding:0;
+    height:76px;border-bottom:4px solid var(--key-lip);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    color:#8aa3b5;font-size:10px;font-weight:700;letter-spacing:.14em;
+    touch-action:manipulation}
+  #pad svg{width:30px;height:30px;fill:#8aa3b5;pointer-events:none}
+  #pad button:active,#pad button.ned{background:var(--key-on);
+    border-bottom-width:2px;transform:translateY(2px);color:#e2f1fa}
+  #pad button:active svg,#pad button.ned svg{fill:#e2f1fa}
+  #meny{position:absolute;inset:5px;display:none;align-items:center;
+    justify-content:center;border-radius:4px;background:rgba(4,8,12,.92);z-index:5}
+  #meny.vis{display:flex}
+  #menyKort{width:min(300px,92%);text-align:center;padding:4px}
+  #menyKort h1{margin:0;font-size:15px;letter-spacing:.26em;color:#e8c15c}
+  #menyKort .under{margin:4px 0 12px;font-size:11px;letter-spacing:.16em;color:#6d8291}
+  #menyResultat{margin:0 0 12px;display:none}
+  #menyResultat.vis{display:block}
+  #menyResultat .tittel{font-size:12px;color:#c8412f;letter-spacing:.14em;font-weight:700}
+  #menyResultat .tall{font-size:13px;color:#7fd4c8;margin-top:5px;
+    font-family:"Courier New",monospace;font-weight:700}
+  #menyResultat .poeng{font-size:11px;color:#e8c15c;margin-top:2px;
+    font-family:"Courier New",monospace}
+  .valg{display:flex;align-items:baseline;justify-content:space-between;width:100%;
+    margin-bottom:8px;padding:13px 16px;border-radius:11px;background:#1f2a33;
+    border:0;border-bottom:3px solid var(--key-lip);touch-action:manipulation}
+  .valg b{font-size:13px;letter-spacing:.14em;color:#dceaf3}
+  .valg span{font-size:10px;color:#6d8291}
+  .valg:active{background:var(--key-on);transform:translateY(1px)}
+  .hint{font-size:10px;color:#5f7383;line-height:1.6;margin-top:10px}
+  #err{display:none;position:absolute;left:6px;right:6px;top:6px;z-index:20;
+    padding:8px;background:#3a1414;color:#ffb3a7;
+    font:11px/1.4 ui-monospace,Menlo,monospace;white-space:pre-wrap;
+    border-radius:6px;max-height:60%;overflow:auto}
+  #err.on{display:block}
+</style>
+</head>
+<body>
+<div id="device">
+  <div id="brand">
+    <button id="btnHjem" aria-label="Back to Bus Adventures">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20 Z"/></svg>
+    </button>
+    <b>GUARDIAN KRAKEN</b>
+    <span id="alarm"></span>
+    <button id="btnMeny">MENU</button>
+  </div>
+  <div id="screen">
+    <canvas id="lcd" width="640" height="520"></canvas>
+    <div id="meny">
+      <div id="menyKort">
+        <div id="menyResultat"></div>
+        <h1>GUARDIAN KRAKEN</h1>
+        <p class="under">Choose game</p>
+        <button class="valg" data-mode="A"><b>GAME A</b><span>Slow tide.</span></button>
+        <button class="valg" data-mode="B"><b>GAME B</b><span>Restless.</span></button>
+        <button class="valg" data-mode="C"><b>GAME C</b><span>It knows.</span></button>
+        <p class="hint">Wait. A tentacle glows before it strikes.<br>
+          A rearing arm can be outrun — if you read the ring.<br>
+          Higher games post more arms, closer together.<br>
+          The hoard itself is within reach of an arm.<br>
+          Gold is heavy — each coin burns your air faster.<br>
+          Air only refills in the boat. Three coins pay six times one.</p>
+      </div>
+    </div>
+    <pre id="err"></pre>
+  </div>
+  <div id="pad">
+    <button id="back" aria-label="Retreat">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M25 8 L11 20 L25 32 Z"/></svg>
+      BACK
+    </button>
+    <button id="fwd" aria-label="Advance">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M15 8 L29 20 L15 32 Z"/></svg>
+      DIVE
+    </button>
+  </div>
+</div>
+<script>
+const HJEM = '../../index.html';
+const errBox = document.getElementById('err');
+function report(m){ errBox.textContent = String(m).slice(0,600); errBox.classList.add('on'); }
+addEventListener('error', e => report('ERROR: ' + (e.message||e.error) +
+  '\nline ' + e.lineno + ':' + e.colno));
+
+const cv = document.getElementById('lcd');
+const ctx = cv.getContext('2d');
+const alarmLed = document.getElementById('alarm');
+const W = 320;
+let H = 260, BUNN = 220;
+
+const P = {
+  dyp1:'#071a26', dyp2:'#0d3040', dyp3:'#14485c',
+  vann:'#1c6076', skum:'#8fd4dd',
+  baat:'#6b4a32', baatLys:'#a6764f', seil:'#e6e0d0',
+  dykker:'#d9a878', drakt:'#2e6b7a', draktLys:'#4f9fb0',
+  messing:'#b8913f', messingLys:'#e8c46a', messingMork:'#6d5320',
+  glass:'#9fd8e6', lampe:'#fff3c4', lerret:'#3f5f66', lerretLys:'#5c8a92',
+  krak:'#2b3d16', krakLys:'#4f6b22', krakHud:'#6f8f2e',
+  krakDyp:'#141d09', krakVarm:'#c9d94a',
+  krakLuma:'#d9ff5e', krakGlo:'#a8e83c', krakHvit:'#f2ffd0',
+  fare:'#ffc21f', fareLys:'#fff0a8', fareRod:'#ff3b20',
+  gull:'#e8c15c', gullLys:'#ffe9a8',
+  bein:'#e6e0d0'
+};
+
+/* ---------- banen: 0 = baaten, 7 = skatten ---------- */
+const POS = 8;
+const HOARD = 7;
+const FRAC = [
+  [.14,.10], [.24,.24], [.35,.37], [.46,.49],
+  [.57,.60], [.68,.70], [.79,.79], [.88,.89]
+];
+let pkt = [];
+let krakX = 0, krakY = 0;
+function layout(){
+  const skjerm = document.getElementById('screen');
+  let cssW = skjerm.clientWidth - 10, cssH = skjerm.clientHeight - 10;
+  if (!(cssW > 40)) cssW = Math.min(500, (window.innerWidth || 360) - 40);
+  if (!(cssH > 40)) cssH = Math.max(200, (window.innerHeight || 640) - 190);
+  H = Math.round(Math.min(620, Math.max(250, W * cssH / cssW)));
+  cv.width = W*2; cv.height = H*2;
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(2,2);
+  ctx.imageSmoothingEnabled = false;
+  BUNN = H - 40;                                   // sandkanten
+  const topp = 54, bunn = BUNN - 16;
+  pkt = FRAC.map(f => ({x: 26 + f[0]*(W-52), y: topp + f[1]*(bunn-topp)}));
+  pkt[HOARD].y = BUNN - 14;                        // kisten star pa sanden
+  krakX = 34; krakY = BUNN - 16;
+}
+
+/* Armene dekker post 2, 4 og 6. Hver har sin egen takt og forskyvning,
+   slik at vinduene aldri lukker seg samtidig for alle tre. */
+/* Armene er ikke laast til bestemte poster. Det eneste kravet er at hver
+   farlig post alltid har en nabo som er trygg neste tikk - fluktveien.
+   Taktene under er sokt fram og verifisert mot det kravet. */
+/* luft: satt slik at en perfekt tur med tre mynter bruker 91% av tanken.
+   To mynter gir god margin, tre gir halvannet sekund a ta feil pa. */
+/* varsel er valgt slik at forvarselet aldri er kortere enn et halvt sekund
+   i klokketid, uansett hvor raskt tikket gar: 600, 500 og 630 ms. */
+/* Varselet er et vindu du kan velge a lope gjennom. Det starter langt og
+   krymper med poengsummen - fra over ett sekund ned til under et halvt.
+   Taktene er sokt fram slik at kravet holder for ALLE tre lengdene:
+   staar du pa en post som varsler, kan du alltid komme deg unna. */
+const NIVA = {
+  A: {interval:300, arm:[2,4,7],       takt:[13,17,14],         ute:[2,3,2],
+      fase:[4,3,8],        varsel:[4,3,2], luft:126},
+  B: {interval:250, arm:[1,3,5,7],     takt:[16,14,18,13],      ute:[3,3,3,4],
+      fase:[1,10,8,7],     varsel:[4,3,2], luft:142},
+  C: {interval:210, arm:[1,2,4,6,7],   takt:[13,15,17,13,13],   ute:[4,4,2,2,3],
+      fase:[11,8,15,4,11], varsel:[4,3,2], luft:126}
+};
+const VARSEL_TRAPP = [0, 120, 300];      // poeng der varselet krymper
+const GRIP = 3;   // tikk per mynt du haler opp av kisten
+/* Vekten koster luft, ikke bevegelse. En las som holder deg fast pa en
+   farlig post fjerner valget ditt; en tom tank er en klokke du kan lese. */
+
+let S = null;
+function reset(mode){
+  const n = NIVA[mode];
+  S = { mode, n, pos:0, visX:0, visY:0, paused:false,
+        bar:0, score:0, levert:0, tapt:0, liv:3, kastet:null, blinkInn:0,
+        arsak:null, arsakT:0,
+        menyPlanlagt:false,
+        oksygen:n.luft, laas:0, druknet:0, grip:0, slept:0,
+        tick:0, fase:[0,0,0], varsel:n.varsel[0], grep:0, blink:0, shake:0,
+        bobler:[], glimt:[],
+        over:false, acc:0, last:0, interval:n.interval };
+  S.fase = n.fase.slice();
+  S.varsel = n.varsel[0];
+  S.visX = pkt[0].x; S.visY = pkt[0].y;
+}
+function buzz(p){ if (navigator.vibrate) navigator.vibrate(p); }
+
+function boble(x, y, r, liv, sval, vx, vy){
+  S.bobler.push({x, y, r, liv, sval, vx: vx||0, vy: vy||0,
+                 fase: Math.random()*7, stig: 0});
+}
+function luftutbrudd(x, y, antall, kraft){
+  for (let i=0; i<antall; i++){
+    const v = Math.random() * Math.PI * 2;
+    boble(x + Math.cos(v)*4, y + Math.sin(v)*4,
+          .9 + Math.random()*2.2, 70 + Math.random()*50, .9,
+          Math.cos(v) * kraft * (.5 + Math.random()),
+          Math.sin(v) * kraft * (.5 + Math.random()));
+  }
+}
+
+function varselNa(){
+  let v = S.n.varsel[0];
+  for (let k = 1; k < VARSEL_TRAPP.length; k++)
+    if (S.score >= VARSEL_TRAPP[k]) v = S.n.varsel[k];
+  return v;
+}
+function armTilstand(i, tick){
+  const m = S.n.takt[i];
+  const t = ((tick + S.fase[i]) % m + m) % m;
+  if (t < S.n.ute[i]) return 'ute';                          // slaar til
+  if (t >= m - S.varsel) return 'varsel';                    // lyser opp forst
+  return 'inne';
+}
+function farlig(pos, tick){
+  const i = S.n.arm.indexOf(pos);
+  return i !== -1 && armTilstand(i, tick) === 'ute';
+}
+
+function step(){
+  S.tick++;
+  if (S.blink > 0) S.blink--;
+  S.glimt = S.glimt.filter(g => --g.t > 0);
+  // svakt liv i vannet, langt fra dykkeren
+  if (S.tick % 7 === 0)
+    boble(16 + Math.random()*(W-32), H, 1+Math.random()*1.5, 150, .3);
+  // luften du bruker slipper ut av hjelmen: en boble per enhet forbruk
+  if (S.pos > 0 && S.slept === 0){
+    const del = S.oksygen / S.n.luft;
+    const antall = 1 + S.bar;                       // last = raskere forbruk
+    for (let i=0; i<antall; i++)
+      boble(S.visX + 4 + (Math.random()-.5)*5, S.visY - 12,
+            del > .3 ? 1.3 + Math.random()*1.6 : .8 + Math.random()*.8,
+            90 + Math.random()*40, .85, (Math.random()-.5)*.5);
+  }
+
+
+  // tatt av en arm?
+  if (farlig(S.pos, S.tick) && S.slept === 0){
+    S.liv--; S.tapt += S.bar; S.bar = 0; S.grip = 0; S.shake = 8;
+    S.glimt.push({x: pkt[S.pos].x, y: pkt[S.pos].y, t: 12, farge: P.fare});
+    S.arsak = 'arm'; S.arsakT = 16;
+    luftutbrudd(pkt[S.pos].x, pkt[S.pos].y - 8, 12, 1.5);
+    S.kastet = {x: pkt[S.pos].x, y: pkt[S.pos].y, vy: -4.2, vx: (Math.random()-.5)*2,
+                rot: 0, vrot: (Math.random()-.5)*.3};
+    S.pos = 0; S.slept = 10; S.blinkInn = 0; S.laas = 0;
+    buzz([60,60,60]);
+    if (S.liv <= 0) S.over = true;
+  }
+  if (S.slept > 0){
+    S.slept--;
+    if (S.slept === 0){
+      S.oksygen = S.n.luft; S.kastet = null; S.blinkInn = 10;
+      S.visX = pkt[0].x; S.visY = pkt[0].y;
+    }
+    return;
+  }
+  if (S.blinkInn > 0) S.blinkInn--;
+  if (S.arsakT > 0) S.arsakT--;
+
+  if (S.laas > 0) S.laas--;
+
+  // luft: fylles i baaten, tappes under vann
+  if (S.pos === 0){
+    S.oksygen = Math.min(S.n.luft, S.oksygen + 13);   // raskere pafyll i baaten
+  } else {
+    S.oksygen -= 1 + S.bar;          // tre mynter tapper fire ganger sa fort
+    if (S.oksygen <= 0){
+      S.oksygen = 0;
+      S.liv--; S.tapt += S.bar; S.bar = 0; S.grip = 0;
+      S.arsak = 'luft'; S.arsakT = 20;
+      luftutbrudd(S.visX + 4, S.visY - 10, 18, 1.9);
+      // ingen luft igjen a stige pa: han synker, sakte, med en svak rotasjon
+      S.kastet = {x: S.visX, y: S.visY, vy: .35, vx: (Math.random()-.5)*.3,
+                  rot: 0, vrot: (Math.random()-.5)*.05, synker: true};
+      S.pos = 0; S.slept = 16; S.blinkInn = 0; S.druknet = 14; S.shake = 6;
+      S.glimt.push({x: pkt[S.pos].x, y: pkt[S.pos].y, t: 14, farge: P.skum});
+      buzz([80,80,80]);
+      if (S.liv <= 0) S.over = true;
+      return;
+    }
+  }
+  if (S.druknet > 0) S.druknet--;
+
+  // ved skatten: en mynt per tikk, maks tre
+  if (S.pos === HOARD && S.bar < 3){
+    S.grip++;
+    if (S.grip >= GRIP){
+      S.grip = 0; S.bar++;
+      S.glimt.push({x: pkt[HOARD].x, y: pkt[HOARD].y, t: 8, farge: P.gullLys});
+      buzz(8);
+    }
+  }
+  // tilbake i baaten: gullet er ditt
+  if (S.pos === 0 && S.bar > 0){
+    S.score += S.bar * (S.bar + 1);                 // 2, 6, 12
+    S.levert += S.bar;
+    S.glimt.push({x: pkt[0].x, y: pkt[0].y, t: 12, farge: P.gullLys});
+    S.bar = 0; S.blink = 8;
+    buzz(20);
+  }
+  if (S.score > 999) S.score = 999;
+  S.varsel = varselNa();
+}
+
+/* ---------- tegning ---------- */
+function blandFarge(a, b, u){
+  const p = h => [1,3,5].map(i => parseInt(h.substr(i,2),16));
+  const x = p(a), y = p(b);
+  return 'rgb(' + x.map((v,i) => Math.round(v + (y[i]-v)*u)).join(',') + ')';
+}
+function glow(x, y, r, farge, a){
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, farge); g.addColorStop(1, 'rgba(0,0,0,0)');
+  const prev = ctx.globalAlpha;
+  ctx.globalAlpha = prev * a; ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+  ctx.globalAlpha = prev;
+}
+function sjobunn(t){
+  // sanden, med en boelgende kant
+  const g = ctx.createLinearGradient(0, BUNN-6, 0, H);
+  g.addColorStop(0, '#3a4a44'); g.addColorStop(.4, '#2b3833'); g.addColorStop(1, '#1a231f');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  ctx.lineTo(0, BUNN + Math.sin(t/2200)*1.5);
+  for (let x=0; x<=W; x+=16)
+    ctx.quadraticCurveTo(x+8, BUNN - 5 + Math.sin(x/37 + 2)*4,
+                         x+16, BUNN - 1 + Math.sin(x/23)*3);
+  ctx.lineTo(W, H); ctx.closePath(); ctx.fill();
+  // lysere sandkant
+  ctx.strokeStyle = 'rgba(180,205,190,.16)'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(0, BUNN + Math.sin(t/2200)*1.5);
+  for (let x=0; x<=W; x+=16)
+    ctx.quadraticCurveTo(x+8, BUNN - 5 + Math.sin(x/37 + 2)*4,
+                         x+16, BUNN - 1 + Math.sin(x/23)*3);
+  ctx.stroke();
+  // steiner
+  ctx.fillStyle = '#232e2a';
+  for (const [rx, rr] of [[78,7],[132,5],[196,9],[248,6],[300,5]]){
+    ctx.beginPath();
+    ctx.ellipse(rx, BUNN + 6, rr, rr*.62, 0, 0, 7); ctx.fill();
+  }
+  // tang som svaier
+  for (let i=0; i<9; i++){
+    const bx = 22 + i*33, h = 16 + (i%4)*9;
+    const sv = Math.sin(t/700 + i) * 5;
+    ctx.strokeStyle = i%2 ? '#2f5a3a' : '#264a31';
+    ctx.lineWidth = 2.2; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(bx, BUNN + 4);
+    ctx.quadraticCurveTo(bx + sv*.5, BUNN - h*.55, bx + sv, BUNN - h);
+    ctx.stroke();
+  }
+}
+function havet(t){
+  const g = ctx.createLinearGradient(0, 40, 0, H);
+  g.addColorStop(0, P.dyp3); g.addColorStop(.5, P.dyp2); g.addColorStop(1, P.dyp1);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#0a1e2b'; ctx.fillRect(0, 0, W, 40);
+  // overflaten
+  ctx.strokeStyle = P.skum; ctx.lineWidth = 1.5; ctx.globalAlpha = .5;
+  ctx.beginPath();
+  for (let x=0; x<=W; x+=4)
+    ctx[x ? 'lineTo' : 'moveTo'](x, 40 + Math.sin(x/22 + t/420)*2.5);
+  ctx.stroke(); ctx.globalAlpha = 1;
+  // lysstriper ned i dypet
+  ctx.globalAlpha = .05; ctx.fillStyle = P.skum;
+  for (let i=0; i<4; i++){
+    const x = 40 + i*76 + Math.sin(t/900 + i)*10;
+    ctx.beginPath();
+    ctx.moveTo(x, 40); ctx.lineTo(x+26, 40); ctx.lineTo(x+58, H); ctx.lineTo(x+6, H);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  // Boblene lever i bilderuter, ikke i tikk - ellers kryper de.
+  const dt = Math.min(3, (t - (bobleTid || t)) / 16.7);
+  bobleTid = t;
+  S.bobler = S.bobler.filter(b => {
+    b.stig = (b.stig || 0) + .04 * dt;                  // akselererer oppover
+    if (b.vx){ b.x += b.vx * dt; b.vx *= Math.pow(.9, dt); }
+    if (b.vy){ b.y += b.vy * dt; b.vy *= Math.pow(.88, dt); }
+    b.y -= (0.9 + b.r * .5 + b.stig) * dt;
+    b.liv -= dt;
+    const naerOverflaten = Math.max(0, Math.min(1, (b.y - 40) / 40));
+    ctx.globalAlpha = Math.min(b.sval, b.liv / 40) * naerOverflaten * .8;
+    ctx.strokeStyle = P.skum; ctx.lineWidth = 1;
+    const sv = Math.sin(t/260 + b.fase) * 2.4;
+    ctx.beginPath(); ctx.arc(b.x + sv, b.y, b.r, 0, 7); ctx.stroke();
+    ctx.globalAlpha = 1;
+    return b.liv > 0 && b.y > 40;
+  });
+  ctx.globalAlpha = 1;
+}
+function baaten(t){
+  const p = pkt[0], bob = Math.sin(t/500)*2;
+  ctx.fillStyle = P.baat;
+  ctx.beginPath();
+  ctx.moveTo(p.x-20, 34+bob); ctx.lineTo(p.x+20, 34+bob);
+  ctx.lineTo(p.x+13, 46+bob); ctx.lineTo(p.x-13, 46+bob);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = P.baatLys; ctx.fillRect(p.x-18, 34+bob, 36, 3);
+  ctx.fillStyle = P.baat;    ctx.fillRect(p.x-1, 12+bob, 2, 22);
+  ctx.fillStyle = P.seil;
+  ctx.beginPath();
+  ctx.moveTo(p.x+1, 14+bob); ctx.lineTo(p.x+14, 32+bob); ctx.lineTo(p.x+1, 32+bob);
+  ctx.closePath(); ctx.fill();
+  if (S.blink > 0 && Math.floor(S.blink/2) % 2 === 0) glow(p.x, 40+bob, 26, P.gullLys, .7);
+}
+function skatten(t){
+  const p = pkt[HOARD];
+  const puls = .6 + .4*Math.abs(Math.sin(t/380));
+  glow(p.x, p.y+4, 30, P.gull, .38*puls);
+  // skygge i sanden
+  ctx.fillStyle = 'rgba(0,0,0,.28)';
+  ctx.beginPath(); ctx.ellipse(p.x, p.y+15, 22, 5, 0, 0, 7); ctx.fill();
+  // kisten
+  ctx.fillStyle = '#3a2718';
+  ctx.fillRect(p.x-18, p.y-2, 36, 16);
+  ctx.fillStyle = P.baat;
+  ctx.fillRect(p.x-17, p.y-1, 34, 14);
+  ctx.fillStyle = '#2a1c10';                          // jernbeslag
+  ctx.fillRect(p.x-18, p.y+4, 36, 2);
+  ctx.fillRect(p.x-6, p.y-2, 3, 16);
+  ctx.fillRect(p.x+4, p.y-2, 3, 16);
+  // apent lokk
+  ctx.fillStyle = P.baatLys;
+  ctx.beginPath();
+  ctx.moveTo(p.x-18, p.y-2); ctx.lineTo(p.x-13, p.y-13);
+  ctx.lineTo(p.x+19, p.y-13); ctx.lineTo(p.x+18, p.y-2);
+  ctx.closePath(); ctx.fill();
+  // gullet i kisten
+  ctx.fillStyle = P.gull;
+  ctx.fillRect(p.x-15, p.y-5, 30, 5);
+  ctx.fillStyle = P.gullLys;
+  for (let i=0; i<6; i++){
+    const b = Math.abs(Math.sin(t/500 + i)) * 1.5;
+    ctx.fillRect(p.x-14 + i*5, p.y-8-b, 4, 4);
+  }
+  glow(p.x, p.y-6, 13, P.gullLys, .3*puls);
+}
+function kraken(t){
+  const pust = Math.sin(t/900) * 2.5;
+  // hvor mye av udyret er i sving akkurat na
+  let vaaken = 0;
+  for (let i=0; i<S.n.arm.length; i++){
+    const st = armTilstand(i, S.tick);
+    if (st === 'ute') vaaken = Math.max(vaaken, 1);
+    else if (st === 'varsel') vaaken = Math.max(vaaken, .55);
+  }
+  const cx = krakX + 12, cy = krakY - 2;
+  glow(cx, cy, 68, P.krakDyp, .6);
+  if (vaaken > 0) glow(cx, cy, 54, P.krakLuma, .12 * vaaken);
+
+  // kappen: hoy og tung, med spisse folder langs kanten
+  ctx.fillStyle = P.krakDyp;
+  ctx.beginPath(); ctx.ellipse(cx, cy+4, 42, 34, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = P.krak;
+  ctx.beginPath(); ctx.ellipse(cx, cy, 39, 32 + pust, 0, 0, 7); ctx.fill();
+  // finner som stikker ut oppe
+  ctx.fillStyle = P.krakDyp;
+  for (const sd of [-1, 1]){
+    ctx.beginPath();
+    ctx.moveTo(cx + sd*20, cy - 22);
+    ctx.quadraticCurveTo(cx + sd*40, cy - 40 - pust, cx + sd*13, cy - 33 - pust);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.fillStyle = P.krakLys;
+  ctx.beginPath(); ctx.ellipse(cx, cy-10, 27, 17 + pust*.5, 0, 0, 7); ctx.fill();
+
+  // hudfolder og arr
+  ctx.strokeStyle = P.krakDyp; ctx.lineWidth = 1.8;
+  for (let i=0; i<4; i++){
+    ctx.beginPath();
+    ctx.arc(cx, cy+6, 11 + i*8, Math.PI*.12, Math.PI*.78);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = P.krakHud; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(cx-26, cy-16); ctx.lineTo(cx-12, cy-9); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+22, cy-20); ctx.lineTo(cx+9, cy-13); ctx.stroke();
+
+  // lysprikker langs kappen, sterkere jo mer den er i sving
+  for (let i=0; i<7; i++){
+    const v = -2.5 + i*.42;
+    const px = cx + Math.cos(v)*30, py = cy + Math.sin(v)*22 - 4;
+    const p2 = .3 + .7*Math.abs(Math.sin(t/420 + i*.9));
+    const st2 = (.15 + .85*vaaken) * p2;
+    glow(px, py, 4 + 6*st2, P.krakLuma, .45*st2);
+    ctx.fillStyle = st2 > .6 ? P.krakHvit : P.krakLuma;
+    ctx.globalAlpha = .35 + .65*st2;
+    ctx.beginPath(); ctx.arc(px, py, 1.6 + st2, 0, 7); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // tung brynskant over oynene
+  ctx.fillStyle = P.krakDyp;
+  ctx.beginPath();
+  ctx.ellipse(cx+1, cy-16, 25, 9, 0, Math.PI, 0); ctx.fill();
+
+  // nebb med tenner
+  ctx.fillStyle = '#0b1105';
+  ctx.beginPath();
+  ctx.moveTo(cx-11, cy+16); ctx.lineTo(cx+11, cy+16);
+  ctx.lineTo(cx+3, cy+34); ctx.lineTo(cx-3, cy+34);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = P.krakHvit;
+  for (let i=0; i<3; i++){
+    ctx.beginPath();
+    ctx.moveTo(cx-8 + i*7, cy+17); ctx.lineTo(cx-5 + i*7, cy+24);
+    ctx.lineTo(cx-2 + i*7, cy+17); ctx.closePath(); ctx.fill();
+  }
+  // oynene folger deg og gloder
+  const dx = Math.max(-5, Math.min(5, (S.visX - cx) * .05));
+  const dy = Math.max(-4, Math.min(4, (S.visY - cy) * .04));
+  for (const ox of [-12, 13]){
+    glow(cx+ox+dx, cy-9+dy, 13 + 6*vaaken, P.krakVarm, .4 + .3*vaaken);
+    ctx.fillStyle = P.krakVarm;
+    ctx.beginPath(); ctx.ellipse(cx+ox+dx, cy-9+dy, 6, 4.6, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#0b1105';                       // vannrett pupill
+    ctx.fillRect(cx+ox+dx-5, cy-10.4+dy, 10, 3);
+  }
+}
+function tentakkel(fx, fy, tx, ty, bue, t, seed, farge, tykk, lengde, lys, front){
+  const N = 16;
+  const cx = (fx+tx)/2, cy = (fy+ty)/2 + bue;
+  const pts = [];
+  for (let k=0; k<=N; k++){
+    const u = (k/N) * lengde;
+    const a = (1-u)*(1-u), b = 2*(1-u)*u, c = u*u;
+    let x = a*fx + b*cx + c*tx;
+    let y = a*fy + b*cy + c*ty;
+    // bolge pa tvers av retningen, sterkest ute mot tuppen
+    const dx = tx-fx, dy = ty-fy, l = Math.hypot(dx,dy) || 1;
+    const nx = -dy/l, ny = dx/l;
+    const amp = Math.sin(k*.8 - t/180 + seed) * (3.5 + 5*u) * (.4 + .6*lengde);
+    pts.push({x: x + nx*amp, y: y + ny*amp, u});
+  }
+  ctx.lineCap = 'round';
+  for (let k=0; k<N; k++){
+    const u = k/N;
+    ctx.strokeStyle = farge;
+    ctx.lineWidth = tykk * (1 - u*.82);
+    ctx.beginPath();
+    ctx.moveTo(pts[k].x, pts[k].y);
+    ctx.lineTo(pts[k+1].x, pts[k+1].y);
+    ctx.stroke();
+  }
+  // sugekopper. De lyser opp nar armen lades, i en bolge som vandrer utover.
+  for (let k=2; k<N-1; k+=2){
+    const u = k/N;
+    const dx = pts[k+1].x-pts[k].x, dy = pts[k+1].y-pts[k].y;
+    const l = Math.hypot(dx,dy)||1;
+    const r = Math.max(.7, tykk*(1-u*.82)*.22);
+    const sx = pts[k].x + (-dy/l)*r*1.1, sy = pts[k].y + (dx/l)*r*1.1;
+    if (lys > 0){
+      const naer = 1 - Math.min(1, Math.abs(u - front) / .3);
+      const styrke = lys * (.25 + .75 * naer);
+      if (styrke > .05){
+        glow(sx, sy, 4 + 7*styrke, P.krakLuma, .5*styrke);
+        ctx.fillStyle = styrke > .6 ? P.krakHvit : P.krakLuma;
+        ctx.beginPath(); ctx.arc(sx, sy, r * (1 + styrke*.8), 0, 7); ctx.fill();
+        continue;
+      }
+    }
+    ctx.fillStyle = P.krakHud;
+    ctx.beginPath(); ctx.arc(sx, sy, r, 0, 7); ctx.fill();
+  }
+  return pts[N];
+}
+function armen(i, t, prog){
+  const forrige = armTilstand(i, S.tick - 1);
+  const mal = pkt[S.n.arm[i]];
+  const st = armTilstand(i, S.tick);
+  const fra = {x: krakX + 34, y: krakY - 22 + i * (44 / S.n.arm.length)};
+  let lengde = 0, farge = P.krak, glo = 0, lys = 0, front = 0;
+  const x = ((S.tick + S.fase[i]) % S.n.takt[i] + S.n.takt[i]) % S.n.takt[i];
+  if (st === 'ute'){
+    farge = P.krakHud; glo = .55;       // samme gronn - lyset gjor jobben
+    lengde = 1; lys = 1; front = Math.min(1, .3 + prog * 1.4);
+  }
+  if (st === 'varsel'){
+    farge = P.krakLys; glo = .35;
+    lys = .85; front = Math.min(.85, .1 + prog * .5);   // lyset samler seg utover
+    // siste varseltikk: armen strekker seg fram mot posten, sa den er
+    // visuelt framme i samme oyeblikk som slaget registreres
+    const sisteTikk = (S.n.takt[i] - x) <= 1;
+    lengde = sisteTikk ? .3 + .62 * prog : .28;
+  }
+  if (st === 'inne'){
+    farge = P.krakLys; glo = .06;
+    lys = .12; front = ((t/900 + i) % 1);               // svakt liv i hvile
+    lengde = forrige === 'ute' ? 1 - .82 * Math.min(1, prog*1.4) : .18;
+  }
+  const bue = Math.sin(t/280 + i*1.9) * 26 * (1 - lengde*.55);
+  ctx.globalAlpha = .3;
+  const skygge = tentakkel(fra.x, fra.y, mal.x, mal.y, bue + 3, t, i*2.1,
+                           P.krakDyp, 13, lengde, 0, 0);
+  ctx.globalAlpha = 1;
+  const tupp = tentakkel(fra.x, fra.y, mal.x, mal.y, bue, t, i*2.1,
+                         farge, 9.5, lengde, lys, front);
+  const ex = tupp.x, ey = tupp.y;
+  if (glo > 0) glow(ex, ey, st === 'ute' ? 24 : 16, P.krakLuma, glo);
+  if (st === 'ute'){                       // klype pa tuppen
+    ctx.strokeStyle = P.krakHvit; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(ex-5, ey-5); ctx.lineTo(ex, ey); ctx.lineTo(ex+5, ey-5);
+    ctx.stroke();
+  }
+  if (st === 'varsel'){
+    // ringen trekker seg sammen mot posten: jo mindre, jo naermere slaget
+    const x = ((S.tick + S.fase[i]) % S.n.takt[i] + S.n.takt[i]) % S.n.takt[i];
+    const igjen = S.n.takt[i] - x - prog;              // tikk til slaget
+    const del = Math.max(0, Math.min(1, igjen / S.varsel));
+    // gul nar du har god tid, rod nar slaget er rett rundt hjornet.
+    // Er hele varselet kort, starter den allerede oransje.
+    const msIgjen = del * S.varsel * S.interval;
+    const hast = Math.max(0, Math.min(1, 1 - msIgjen / 700));
+    const varselFarge = blandFarge(P.fare, P.fareRod, hast);
+    ctx.strokeStyle = varselFarge;
+    ctx.lineWidth = 2 + (1 - del) * 2.5;
+    ctx.globalAlpha = .4 + .6 * (1 - del);
+    ctx.beginPath(); ctx.arc(mal.x, mal.y, 9 + del * 20, 0, 7); ctx.stroke();
+    // urskive: hvor mye av varselet som gjenstaar
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = varselFarge;
+    ctx.beginPath();
+    ctx.arc(mal.x, mal.y, 22, -Math.PI/2, -Math.PI/2 + Math.PI*2*del);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    glow(mal.x, mal.y, 14 + (1-del)*10, varselFarge, .35 + .4*(1-del));
+  }
+}
+function dykkeren(t){
+  const x = S.visX, y = S.visY;
+  const slapp = S.kastet && S.kastet.synker;
+  const spark = slapp ? 0 : Math.sin(t/140) * 3;
+  const retning = S.pos >= 4 ? 1 : (S.visX < pkt[S.pos].x - 2 ? 1 : -1);
+
+  if (S.druknet > 0){
+    ctx.strokeStyle = P.skum; ctx.lineWidth = 1; ctx.globalAlpha = .7;
+    for (let i=0; i<4; i++){
+      const o = (14 - S.druknet) * 2 + i*5;
+      ctx.beginPath(); ctx.arc(x + 5 + i*3, y - 14 - o, 1.5 + i*.5, 0, 7); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // lyskjegle fra hjelmlampa
+  if (!slapp){
+    const g = ctx.createLinearGradient(x, y-10, x + retning*46, y - 2);
+    g.addColorStop(0, 'rgba(255,243,196,.30)');
+    g.addColorStop(1, 'rgba(255,243,196,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(x + retning*5, y-11);
+    ctx.lineTo(x + retning*48, y-25);
+    ctx.lineTo(x + retning*48, y+9);
+    ctx.closePath(); ctx.fill();
+  }
+
+  // luftslange som slynger seg opp mot overflaten
+  ctx.strokeStyle = P.lerret; ctx.lineWidth = 2;
+  ctx.globalAlpha = .55;
+  ctx.beginPath();
+  ctx.moveTo(x - retning*7, y - 6);
+  ctx.quadraticCurveTo(x - retning*26 + Math.sin(t/600)*7, y - 34,
+                       x - retning*16 + Math.sin(t/900)*11, y - 62);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  glow(x, y, 17, P.draktLys, .22);
+
+  // beina: tunge stovler
+  ctx.fillStyle = P.lerret;
+  ctx.fillRect(x-6, y+8, 4, slapp ? 10 : 8+spark);
+  ctx.fillRect(x+2, y+8, 4, slapp ? 10 : 8-spark);
+  ctx.fillStyle = P.messingMork;
+  ctx.fillRect(x-7, y + (slapp ? 18 : 16+spark), 6, 4);
+  ctx.fillRect(x+1, y + (slapp ? 18 : 16-spark), 6, 4);
+
+  // drakten
+  ctx.fillStyle = P.drakt;
+  ctx.beginPath(); ctx.ellipse(x, y+2, 8, 11, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = P.lerret;
+  ctx.beginPath(); ctx.ellipse(x-1, y+3, 6, 9, 0, 0, 7); ctx.fill();
+  ctx.strokeStyle = P.lerretLys; ctx.lineWidth = 1;      // folder i lerretet
+  for (let i=0; i<3; i++){
+    ctx.beginPath();
+    ctx.moveTo(x-6, y-2+i*4); ctx.lineTo(x+6, y-3+i*4); ctx.stroke();
+  }
+  ctx.fillStyle = P.messingMork;                          // beltet
+  ctx.fillRect(x-8, y+5, 16, 3);
+  ctx.fillStyle = P.messingLys; ctx.fillRect(x-2, y+5, 4, 3);
+
+  // armene
+  ctx.fillStyle = P.lerret;
+  if (slapp){
+    ctx.fillRect(x-11, y-1, 4, 10); ctx.fillRect(x+7, y-1, 4, 10);
+  } else {
+    const sv = Math.sin(t/160)*2;
+    ctx.fillRect(x-11, y-3+sv, 4, 8);
+    ctx.fillRect(x+7, y-3-sv, 4, 8);
+  }
+
+  // kobberhjelmen
+  ctx.fillStyle = P.messingMork;
+  ctx.beginPath(); ctx.arc(x, y-9, 8.4, 0, 7); ctx.fill();
+  ctx.fillStyle = P.messing;
+  ctx.beginPath(); ctx.arc(x, y-9, 7.4, 0, 7); ctx.fill();
+  ctx.fillStyle = P.messingLys;                           // hoylys
+  ctx.beginPath(); ctx.arc(x-2.5, y-11.5, 2.6, 0, 7); ctx.fill();
+  ctx.fillStyle = P.messingMork;                          // krage
+  ctx.fillRect(x-8, y-3, 16, 3);
+  ctx.fillStyle = P.messing;
+  for (let i=0; i<5; i++) ctx.fillRect(x-7 + i*3.4, y-2.5, 1.6, 2);
+  // glasset
+  ctx.fillStyle = P.glass;
+  ctx.beginPath(); ctx.arc(x + retning*1.6, y-9, 4.2, 0, 7); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.55)';
+  ctx.beginPath(); ctx.arc(x + retning*.4, y-10.6, 1.5, 0, 7); ctx.fill();
+  ctx.fillStyle = P.messingMork;                          // naglerekke rundt glasset
+  for (let i=0; i<6; i++){
+    const v = i/6 * Math.PI*2;
+    ctx.fillRect(x + Math.cos(v)*6.4 - .7, y-9 + Math.sin(v)*6.4 - .7, 1.4, 1.4);
+  }
+  // lampa
+  if (!slapp){
+    ctx.fillStyle = P.lampe;
+    ctx.fillRect(x + retning*6 - 1, y-14, 3, 3);
+    glow(x + retning*6, y-13, 9, P.lampe, .6);
+  }
+
+  {                                                      // lufttanken pa ryggen
+    const del = S.oksygen / S.n.luft;
+    const lav = del < .3;
+    const tx = x - retning*13 - 2, ty = y - 11, th = 21;
+    ctx.fillStyle = '#0e1c22';
+    ctx.fillRect(tx-1, ty-1, 6, th+2);
+    ctx.fillStyle = lav
+      ? (Math.floor(naa/160) % 2 === 0 ? '#ff6b5e' : '#6d322c')
+      : P.draktLys;
+    ctx.fillRect(tx, ty + th*(1-del), 4, th*del);
+    ctx.fillStyle = '#7f9aa8';
+    ctx.fillRect(tx, ty-3, 4, 2);
+    if (lav) glow(tx+2, y, 15, '#ff6b5e', .3);
+  }
+
+  if (S.grip > 0){                                       // haler opp en mynt
+    ctx.strokeStyle = P.gullLys; ctx.lineWidth = 2.5;
+    ctx.globalAlpha = .7;
+    ctx.beginPath();
+    ctx.arc(x, y, 17, -Math.PI/2, -Math.PI/2 + Math.PI*2*(S.grip/GRIP));
+    ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  for (let i=0; i<S.bar; i++){                           // gullet i beltet
+    ctx.fillStyle = P.gullLys;
+    ctx.beginPath(); ctx.arc(x - 7 + i*7, y+6.5, 2.6, 0, 7); ctx.fill();
+    glow(x - 7 + i*7, y+6.5, 6, P.gull, .45);
+  }
+}
+function hud(){
+  ctx.fillStyle = P.gull;
+  ctx.font = 'bold 20px "Courier New",monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText(String(S.score).padStart(3,'0'), 8, 24);
+  ctx.fillStyle = '#6d8291';
+  ctx.font = 'bold 10px "Courier New",monospace';
+  ctx.fillText('GAME ' + S.mode, 58, 24);
+  if (S.bar > 0){
+    ctx.fillStyle = P.gullLys;
+    ctx.font = 'bold 11px "Courier New",monospace';
+    ctx.fillText('CARRYING ' + S.bar + '  = ' + (S.bar*(S.bar+1)), 112, 24);
+  }
+  // liten luftstripe oppe, som stotte - hovedmaleren folger dykkeren
+  const del = S.oksygen / S.n.luft;
+  const lav = del < .3;
+  ctx.fillStyle = 'rgba(255,255,255,.08)';
+  ctx.fillRect(112, 15, 60, 6);
+  ctx.fillStyle = lav ? '#ff6b5e' : P.draktLys;
+  ctx.fillRect(112, 15, 60*del, 6);
+
+  for (let i=0; i<3; i++){
+    const x = 254 + i*20;
+    ctx.fillStyle = i < S.liv ? P.draktLys : 'rgba(255,255,255,.12)';
+    ctx.beginPath();
+    ctx.moveTo(x+8,10); ctx.lineTo(x+16,18); ctx.lineTo(x+8,26); ctx.lineTo(x,18);
+    ctx.closePath(); ctx.fill();
+  }
+}
+
+function draw(t){
+  const prog = (S.over || S.paused) ? 0 : Math.min(1, S.acc / S.interval);
+  ctx.save();
+  if (S.shake > 0){
+    ctx.translate((Math.random()-.5)*S.shake, (Math.random()-.5)*S.shake);
+    S.shake *= .84; if (S.shake < .2) S.shake = 0;
+  }
+  havet(t);
+  skatten(t);
+  kraken(t);
+  for (let i=0; i<S.n.arm.length; i++) armen(i, t, prog);
+  baaten(t);
+
+  if (S.kastet){
+    const k = S.kastet;
+    k.x += k.vx; k.y += k.vy;
+    k.vy += k.synker ? .028 : .06;          // synker tregt, kastes raskt
+    if (k.synker){ k.vy = Math.min(k.vy, 1.5); k.vx *= .99; }
+    k.rot += k.vrot;
+    // den som synker slipper bare noen fa siste bobler
+    if (Math.random() < (k.synker ? .12 : .7))
+      boble(k.x + (Math.random()-.5)*8, k.y - 8,
+            .7 + Math.random()*(k.synker ? .5 : 1.4),
+            55 + Math.random()*30, k.synker ? .5 : .75,
+            (Math.random()-.5)*.6,
+            k.synker ? -1.6 : 0);        // stotes oppover, ellers folger de ham ned
+    ctx.save();
+    ctx.translate(k.x, k.y); ctx.rotate(k.rot); ctx.translate(-k.x, -k.y);
+    S.visX = k.x; S.visY = k.y;
+    dykkeren(t);
+    ctx.restore();
+  } else {
+    const mal = pkt[S.pos];
+    const tyngde = .27 / (1 + S.bar * .55);
+    S.visX += (mal.x - S.visX) * tyngde;
+    S.visY += (mal.y - S.visY) * tyngde;
+    if (S.blinkInn > 0 && Math.floor(S.blinkInn/2) % 2 === 0) ctx.globalAlpha = .25;
+    dykkeren(t);
+    ctx.globalAlpha = 1;
+  }
+
+  for (const g of S.glimt) glow(g.x, g.y, 8 + (14 - g.t) * 1.6, g.farge, .6);
+  // luftmangel farger kantene av skjermen
+  const delLuft = S.oksygen / S.n.luft;
+  if (delLuft < .3 && !S.paused && !S.over){
+    const styrke = (1 - delLuft/.3);
+    const puls = .55 + .45*Math.abs(Math.sin(t / (delLuft < .15 ? 180 : 340)));
+    const g = ctx.createRadialGradient(W/2, H/2, H*.28, W/2, H/2, H*.62);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(200,45,30,' + (.42*styrke*puls).toFixed(3) + ')');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    if (delLuft < .18){
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(255,110,90,' + puls.toFixed(2) + ')';
+      ctx.font = 'bold 13px "Courier New",monospace';
+      ctx.fillText('AIR LOW', W/2, 46);
+      ctx.textAlign = 'left';
+    }
+  }
+  // og spillet sier hva som tok deg
+  if (S.arsakT > 0){
+    const a = Math.min(1, S.arsakT / 8);
+    ctx.textAlign = 'center';
+    ctx.globalAlpha = a;
+    ctx.fillStyle = S.arsak === 'luft' ? '#ff6b5e' : P.fareRod;
+    ctx.font = 'bold 17px "Courier New",monospace';
+    ctx.fillText(S.arsak === 'luft' ? 'OUT OF AIR' : 'CAUGHT', W/2, H/2 - 6);
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'left';
+  }
+  hud();
+  alarmLed.classList.toggle('lit',
+    S.n.arm.indexOf(S.pos) !== -1 &&
+    armTilstand(S.n.arm.indexOf(S.pos), S.tick) === 'varsel');
+  ctx.restore();
+}
+
+/* ---------- meny ---------- */
+const meny = document.getElementById('meny');
+const menyResultat = document.getElementById('menyResultat');
+let menyTimer = null;
+let startetVed = 0;
+function visMeny(res, fraKnapp){
+  // Nadetid: ingenting far kaste deg tilbake til menyen rett etter at du
+  // har valgt vanskelighetsgrad - heller ikke en sluttmeny fra forrige runde.
+  if (!fraKnapp && S && !S.paused && !S.over && Date.now() - startetVed < 2000) return;
+  clearTimeout(menyTimer); menyTimer = null;
+  if (res){
+    menyResultat.innerHTML =
+      '<div class="tittel">' + (res.arsak === 'luft' ? 'YOUR AIR RAN OUT'
+        : 'THE DEEP KEPT YOU') + '</div>' +
+      '<div class="tall">LANDED ' + res.levert + '   LOST ' + res.tapt + '</div>' +
+      '<div class="poeng">SCORE ' + String(res.score).padStart(3,'0') + '</div>';
+    menyResultat.classList.add('vis');
+  } else menyResultat.classList.remove('vis');
+  meny.classList.add('vis');
+  if (S) S.paused = true;
+}
+function skjulMeny(){ meny.classList.remove('vis'); }
+function planleggMeny(){
+  if (menyTimer || S.menyPlanlagt) return;
+  S.menyPlanlagt = true;                       // bare en gang per tap
+  const res = {levert:S.levert, tapt:S.tapt, score:S.score, arsak:S.arsak};
+  menyTimer = setTimeout(() => { menyTimer = null; visMeny(res); }, 1100);
+}
+
+let crashed = false, rammer = 0, bobleTid = 0, naa = 0;
+function frame(t){
+  if (crashed) return;
+  try {
+    naa = t;
+    if (!S.last) S.last = t;
+    const dt = t - S.last; S.last = t;
+    if (!S.over && !S.paused){
+      S.acc += dt;
+      while (S.acc >= S.interval){ S.acc -= S.interval; step(); }
+    }
+    if (S.over) planleggMeny();
+    draw(t);
+    rammer++;
+    if (rammer === 4) ettermaling();
+  } catch (e){
+    crashed = true;
+    report('LOOP: ' + (e && e.message) + '\n' + (e && e.stack || ''));
+    return;
+  }
+  requestAnimationFrame(frame);
+}
+function ettermaling(){
+  const skjerm = document.getElementById('screen');
+  const ekte = skjerm.clientHeight - 10;
+  sisteW = skjerm.clientWidth; sisteH = skjerm.clientHeight;
+  if (!(ekte > 40)) return;
+  if (S && !S.paused && !S.over) return;         // aldri midt i en runde
+  const forventet = Math.round((skjerm.clientWidth - 10) * H / W);
+  if (Math.abs(ekte - forventet) < 10) return;
+  const iMeny = S && (S.paused || S.over);
+  layout();
+  if (iMeny){ const m = S ? S.mode : 'A'; reset(m); S.paused = true; }
+}
+
+/* ---------- input ---------- */
+/* Vekt koster tid i begge retninger. Men star du pa en post der armen
+   varsler eller allerede slaar, oppheves lasen - fluktveien maa alltid
+   vaere apen, ellers kan du do uten at et tastetrykk kunne hjulpet. */
+function nodutgang(){
+  const i = S.n.arm.indexOf(S.pos);
+  if (i === -1) return false;
+  const st = armTilstand(i, S.tick);
+  return st === 'varsel' || st === 'ute';
+}
+function flytt(d){
+  if (S.over || S.paused || S.slept > 0) return;
+  if (S.laas > 0 && !nodutgang()) return;
+  const ny = Math.max(0, Math.min(POS-1, S.pos + d));
+  if (ny === S.pos) return;
+  S.pos = ny;
+  S.grip = 0;
+  S.laas = 1;
+  S.blinkInn = 0;                        // dykket er i gang, slutt a blinke
+}
+let touchUsed = false;
+function bindRetning(id, d){
+  const el = document.getElementById(id);
+  let forsink = null, gjenta = null;
+  const start = e => {
+    e.preventDefault();
+    if (e.type === 'touchstart') touchUsed = true;
+    el.classList.add('ned'); flytt(d);
+    clearTimeout(forsink); clearInterval(gjenta);
+    forsink = setTimeout(() => { gjenta = setInterval(() => flytt(d), 200); }, 380);
+  };
+  const slutt = () => { el.classList.remove('ned');
+    clearTimeout(forsink); clearInterval(gjenta); };
+  el.addEventListener('touchstart', start, {passive:false});
+  el.addEventListener('touchend', slutt);
+  el.addEventListener('touchcancel', slutt);
+  el.addEventListener('pointerdown', e => { if (e.pointerType !== 'touch') start(e); });
+  addEventListener('pointerup', slutt);
+}
+function bindEl(el, fn){
+  if (!el) return;
+  el.addEventListener('touchstart', e => {
+    e.preventDefault(); touchUsed = true; fn(); }, {passive:false});
+  el.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch') return; e.preventDefault(); fn(); });
+  el.addEventListener('click', e => { if (touchUsed) return; e.preventDefault(); fn(); });
+}
+bindRetning('back', -1);
+bindRetning('fwd', 1);
+for (const el of document.querySelectorAll('.valg'))
+  bindEl(el, () => { skjulMeny(); start(el.dataset.mode); });
+bindEl(document.getElementById('btnMeny'), () => visMeny(null, true));
+bindEl(document.getElementById('btnHjem'), () => { location.href = HJEM; });
+document.addEventListener('touchstart', e => {
+  if (e.target && e.target.tagName === 'BUTTON') return;
+  if (e.target && e.target.closest && e.target.closest('#meny')) return;
+  if (Date.now() - startetVed < 300) return;      // fingeren fra menyvalget
+  if (Date.now() - startetVed < 0) return;
+  const r = cv.getBoundingClientRect();
+  flytt(e.changedTouches[0].clientX - r.left < r.width/2 ? -1 : 1);
+}, {passive:true});
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  flytt(-1);
+  if (e.key === 'ArrowRight') flytt(1);
+});
+
+function start(mode){
+  clearTimeout(menyTimer); menyTimer = null;   // drep en ventende sluttmeny
+  reset(mode); S.paused = false; startetVed = Date.now(); skjulMeny();
+}
+/* iOS fyrer av resize nar adresselinja glir inn og ut. Det tok deg
+   tilbake til menyen midt i en runde. Na maales endringen, og et spill
+   som er i gang far ligge i fred. */
+let layoutTimer = null, sisteH = 0, sisteW = 0;
+function omLayout(tvungen){
+  const skjerm = document.getElementById('screen');
+  const nyW = skjerm.clientWidth, nyH = skjerm.clientHeight;
+  const spiller = S && !S.paused && !S.over;
+  const liten = Math.abs(nyH - sisteH) < 90 && nyW === sisteW;
+  if (!tvungen && spiller && liten) return;      // adresselinja, ikke rotasjon
+  if (!tvungen && spiller) return;               // ikke avbryt en runde
+  sisteW = nyW; sisteH = nyH;
+  layout();
+  const m = S ? S.mode : 'A';
+  reset(m); S.paused = true; visMeny(null);
+}
+addEventListener('resize', () => {
+  clearTimeout(layoutTimer); layoutTimer = setTimeout(() => omLayout(false), 200); });
+let liggende = null;
+addEventListener('orientationchange', () => setTimeout(() => {
+  const na = window.innerWidth > window.innerHeight;
+  if (liggende === null){ liggende = na; return; }
+  if (na === liggende) return omLayout(false);   // falskt varsel, behandles som resize
+  liggende = na;
+  omLayout(true);
+}, 300));
+
+try {
+  layout(); reset('A'); S.paused = true; visMeny(null);
+  requestAnimationFrame(frame);
+} catch (e){ report('STARTUP: ' + (e && e.message) + '\n' + (e && e.stack || '')); }
+</script>
+</body>
+</html>
