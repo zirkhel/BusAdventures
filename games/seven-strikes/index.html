@@ -1,0 +1,1346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>SEVEN STRIKES — Bus Adventures</title>
+<style>
+  :root{
+    --case:#1a1a20; --case-hi:#31313d;
+    --key:#26262f; --key-lip:#0f0f14; --key-on:#3b3b4a;
+    --alarm:#ffd447;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;overflow:hidden;background:#0a0a0d;
+    font-family:"Helvetica Neue",Arial,sans-serif;touch-action:none;
+    -webkit-user-select:none;user-select:none}
+  body{display:flex;align-items:stretch;justify-content:center;
+    padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom)}
+  #device{width:100%;max-width:520px;background:var(--case);
+    display:flex;flex-direction:column;
+    border-radius:18px;padding:10px 10px 14px;margin:6px 0;
+    border-top:1px solid var(--case-hi);
+    box-shadow:0 18px 44px rgba(0,0,0,.7)}
+  #brand{display:flex;justify-content:space-between;align-items:center;
+    padding:2px 4px 8px;color:#76768a;font-size:10px;letter-spacing:.2em}
+  #brand b{color:#d2d2e0;font-size:12px;letter-spacing:.3em;flex:1;text-align:left}
+  #btnHjem{padding:5px 9px;border-radius:7px;background:#232330;border:0;
+    border-bottom:2px solid var(--key-lip);line-height:0;margin-right:2px}
+  #btnHjem svg{width:13px;height:13px;fill:#83839a}
+  #btnHjem:active{background:#3b3b4a}
+  #alarm{width:8px;height:8px;border-radius:50%;background:#26262f;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+  #alarm.lit{background:var(--alarm);box-shadow:0 0 10px var(--alarm)}
+  #btnMeny{padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;
+    border-radius:7px;background:#232330;color:#83839a;border:0;
+    border-bottom:2px solid var(--key-lip)}
+  #btnMeny:active{background:#3b3b4a;color:#eaeaf5}
+  #screen{position:relative;background:#07070a;border-radius:6px;padding:5px;
+    flex:1 1 auto;display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 2px 12px rgba(0,0,0,.6)}
+  canvas{display:block;width:100%;height:auto;image-rendering:pixelated;
+    border-radius:3px}
+  #pad{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  #pad button{background:var(--key);border:0;border-radius:16px;padding:0;
+    height:76px;border-bottom:4px solid var(--key-lip);
+    display:flex;align-items:center;justify-content:center;
+    touch-action:manipulation}
+  #pad svg{width:38px;height:38px;fill:#b5b5c8;pointer-events:none}
+  #pad button:active,#pad button.ned{background:var(--key-on);
+    border-bottom-width:2px;transform:translateY(2px)}
+  #pad button:active svg,#pad button.ned svg{fill:#f2f2ff}
+  #meny{position:absolute;inset:5px;display:none;align-items:center;
+    justify-content:center;border-radius:4px;background:rgba(6,6,10,.92);z-index:5}
+  #meny.vis{display:flex}
+  #menyKort{width:min(300px,92%);text-align:center;padding:4px}
+  #menyKort h1{margin:0;font-size:15px;letter-spacing:.26em;color:#ffd447}
+  #menyKort .under{margin:4px 0 12px;font-size:11px;letter-spacing:.16em;color:#83839a}
+  #menyResultat{margin:0 0 12px;display:none}
+  #menyResultat.vis{display:block}
+  #menyResultat .tittel{font-size:12px;color:#ffd447;letter-spacing:.14em;font-weight:700}
+  #menyResultat .tall{font-size:13px;color:#8fd4ff;margin-top:5px;
+    font-family:"Courier New",monospace;font-weight:700}
+  #menyResultat .poeng{font-size:11px;color:#ffd447;margin-top:2px;
+    font-family:"Courier New",monospace}
+  #menyResultat .rekord{font-size:11px;color:#7fd4c8;margin-top:6px;
+    font-family:"Courier New",monospace;font-weight:700;letter-spacing:.1em}
+  #menyResultat .rekord.dempet{color:#6b6b80;font-weight:400}
+  .valg{display:flex;align-items:baseline;justify-content:space-between;width:100%;
+    margin-bottom:8px;padding:13px 16px;border-radius:11px;background:#26262f;
+    border:0;border-bottom:3px solid var(--key-lip);touch-action:manipulation}
+  .valg b{font-size:13px;letter-spacing:.14em;color:#eaeaf5}
+  .valg span{font-size:10px;color:#83839a}
+  .valg:active{background:var(--key-on);transform:translateY(1px)}
+  .hint{font-size:10px;color:#76768a;line-height:1.6;margin-top:10px}
+  #err{display:none;position:absolute;left:6px;right:6px;top:6px;z-index:20;
+    padding:8px;background:#3a1414;color:#ffb3a7;
+    font:11px/1.4 ui-monospace,Menlo,monospace;white-space:pre-wrap;
+    border-radius:6px;max-height:60%;overflow:auto}
+  #err.on{display:block}
+</style>
+</head>
+<body>
+<div id="device">
+  <div id="brand">
+    <button id="btnHjem" aria-label="Back to Bus Adventures">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20 Z"/></svg>
+    </button>
+    <b>SEVEN STRIKES</b>
+    <span id="alarm"></span>
+    <button id="btnMeny">MENU</button>
+  </div>
+  <div id="screen">
+    <canvas id="lcd" width="640" height="520"></canvas>
+    <div id="meny">
+      <div id="menyKort">
+        <div id="menyResultat"></div>
+        <h1>SEVEN STRIKES</h1>
+        <p class="under">Choose game</p>
+        <button class="valg" data-mode="A"><b>GAME A</b><span>Distant thunder.</span></button>
+        <button class="valg" data-mode="B"><b>GAME B</b><span>Overhead.</span></button>
+        <button class="valg" data-mode="C"><b>GAME C</b><span>It wants you.</span></button>
+        <p class="hint">The ground lights up where the bolt will land.<br>
+          Some fork to a second patch. Some fall in pairs.<br>
+          Rocks and trees block a lane — you will be shoved aside.<br>
+          It aims for where you stand. Standing still is a choice.<br>
+          Seven strikes ends it — a ranger really took that many.</p>
+      </div>
+    </div>
+    <pre id="err"></pre>
+  </div>
+  <div id="pad">
+    <button id="left" aria-label="Move left">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M25 8 L11 20 L25 32 Z"/></svg>
+    </button>
+    <button id="right" aria-label="Move right">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M15 8 L29 20 L15 32 Z"/></svg>
+    </button>
+  </div>
+</div>
+<script>
+const HJEM = '../../index.html';
+const NOKKEL = 'seven-best-';
+const rekordMinne = {A:0, B:0, C:0};
+function beste(m){
+  try { const v = localStorage.getItem(NOKKEL + m);
+    if (v !== null) return parseInt(v,10) || 0; } catch (e) {}
+  return rekordMinne[m] || 0;
+}
+function settBeste(m, v){
+  if (v <= beste(m)) return false;
+  rekordMinne[m] = v;
+  try { localStorage.setItem(NOKKEL + m, String(v)); } catch (e) {}
+  return true;
+}
+
+const errBox = document.getElementById('err');
+function report(m){ errBox.textContent = String(m).slice(0,600); errBox.classList.add('on'); }
+addEventListener('error', e => report('ERROR: ' + (e.message||e.error) +
+  '\nline ' + e.lineno + ':' + e.colno));
+
+const cv = document.getElementById('lcd');
+const ctx = cv.getContext('2d');
+const alarmLed = document.getElementById('alarm');
+const W = 320;
+let H = 260, BAKKE = 210, HORISONT = 120, SKY = 70, KONTAKT = 216;
+
+const P = {
+  sky1:'#141824', sky2:'#242a3a', sky3:'#39405a',
+  skyMork:'#0d1018', skyLys:'#4a5372',
+  mark1:'#2b3524', mark2:'#1d2419', mark3:'#141a12',
+  gress:'#3c5230', gressLys:'#557040',
+  tre:'#22301c', treLys:'#33482a', stamme:'#2a2118',
+  lyn:'#fff6c9', lynKjerne:'#ffffff', lynGlo:'#ffe680', lynSvak:'#8f7f3a',
+  varsel:'#ffb02e', varselRod:'#ff4a2e',
+  jakke:'#4a5a2e', jakkeLys:'#6d8242', hud:'#c99b6e', hatt:'#3a2c18',
+  gull:'#ffd447', blaa:'#8fd4ff', regn:'rgba(160,185,215,.5)'
+};
+
+const KOL = 5;
+const SMAL = .26;                          // hvor mye stiene trekkes sammen i det fjerne
+const dybdeX = (x, d) => W/2 + (x - W/2) * (SMAL + (1-SMAL) * d);
+/* d = 1 er kontaktpunktet: der foettene dine er. Ting fortsetter til d = 1.4
+   og forsvinner nedover forbi deg. Alt som kan treffe deg maler mot d = 1. */
+const dybdeY = d => HORISONT + (KONTAKT - HORISONT) * d;
+/* Alt som ligger pa marka beveger seg med den samme formelen. Andel er hvor
+   stor del av et tikk som har gatt, sa ting som oppdateres per bilderute og
+   per tikk holder folge. */
+const GRUNNFART = 0.075;
+const fram = (d, andel) => d + GRUNNFART * andel * (.35 + .65 * d);
+let kolX = [];
+function layout(){
+  const skjerm = document.getElementById('screen');
+  let cssW = skjerm.clientWidth - 10, cssH = skjerm.clientHeight - 10;
+  if (!(cssW > 40)) cssW = Math.min(500, (window.innerWidth || 360) - 40);
+  if (!(cssH > 40)) cssH = Math.max(200, (window.innerHeight || 640) - 190);
+  H = Math.round(Math.min(620, Math.max(250, W * cssH / cssW)));
+  cv.width = W*2; cv.height = H*2;
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(2,2);
+  ctx.imageSmoothingEnabled = false;
+  SKY = Math.round(H * .3);
+  HORISONT = Math.round(H * .53);          // der skogen star
+  BAKKE = H - 74;                          // der rangeren gar
+  KONTAKT = BAKKE + 8;                     // foettene hans
+  kolX = [];
+  for (let i=0; i<KOL; i++) kolX.push(Math.round(30 + (W-60) * i / (KOL-1)));
+}
+
+/* Stormen tetner mens du overlever: kortere varsel, flere greiner, tettere
+   nedslag. Ingenting annet - dette er en mann som ikke skal bli truffet. */
+/* jakt = hvor ofte lynet sikter rett pa der du staar. Det er dette som gjor
+   at a sta stille er den sikreste maten a do pa. */
+const NIVA = {
+  A: {interval:240, varsel:[4,3,3], mellom:[8,11], minMellom:5,
+      greinStart:.18, maksMal:2, jakt:[.60,.70,.78]},
+  B: {interval:205, varsel:[3,3,2], mellom:[6,9],  minMellom:4,
+      greinStart:.34, maksMal:3, jakt:[.72,.80,.88]},
+  C: {interval:175, varsel:[3,2,2], mellom:[5,7],  minMellom:3,
+      greinStart:.50, maksMal:3, jakt:[.82,.88,.94]}
+};
+const TRAPP = [0, 60, 140];
+
+let S = null;
+function reset(mode){
+  const n = NIVA[mode];
+  S = { mode, n, kol:2, visX:0, paused:false,
+        varsler:[], nedslag:[], regn:[], mark:[], merker:[],
+        drift:[0,0,0,0], dyr:[], svidd:[],
+        score:0, meter:0, truffet:0, tick:0,
+        hinder:[], nesteHinder:9, dyttet:0, sisteKol:2, frys:0,
+        fjern:[], fjernBlitz:0, nesteFjern:6,
+        flair:[], nesteFlair:5,
+        intro:70, storm:0, varsel:n.varsel[0], grein:n.greinStart,
+        mellom:n.mellom.slice(), jakt:n.jakt[0],
+        nesteLyn:5, blitz:0, shake:0, doeT:0, nyRekord:false,
+        over:false, acc:0, last:0, interval:n.interval };
+  S.visX = kolX[S.kol];
+  for (let i=0; i<40; i++){
+    const r = Math.random();
+    S.mark.push({x0: Math.random()*W*1.7 - W*.35, d: Math.random(),
+                 s: .6 + Math.random()*.7,
+                 type: r < .62 ? 'gras' : r < .84 ? 'lyng' : 'stein',
+                 v: Math.random()*7});
+  }
+  // landemerker som sakte passerer i det fjerne
+  S.merker = [
+    {type:'taarn',   x: W*.70, lag:1, fart:.10},
+    {type:'gjerde',  x: W*.20, lag:2, fart:.20},
+    {type:'doedtre', x: W*1.35,lag:1, fart:.13},
+    {type:'hytte',   x: W*1.9, lag:2, fart:.18},
+    {type:'jaktbu',  x: W*2.6, lag:1, fart:.11},
+    {type:'stein',   x: W*.95, lag:0, fart:.05}
+  ];
+  // et dyr eller to som beiter langs skogkanten
+  S.dyr = [
+    {x: W*.35, r: 1, fart:.16, redd:0, type:'hjort'},
+    {x: W*1.2, r:-1, fart:.13, redd:0, type:'hjort'}
+  ];
+}
+function buzz(p){ if (navigator.vibrate) navigator.vibrate(p); }
+
+/* ---------------------------------------------------------------
+   Et lyn varsles med et merke i bakken. Forgreininger far sitt eget
+   merke. Regelen: merkene skal aldri dekke alle kolonner, og aldri
+   sperre bade spillerens kolonne og begge naboene samtidig.
+   --------------------------------------------------------------- */
+function stengt(kol){
+  return S.hinder.some(hh => hh.kol === kol && hh.d > .8 && hh.d < 1.2);
+}
+function velgMal(){
+  const n = S.n;
+  const mulige = [];
+  for (let i=0; i<KOL; i++) mulige.push(i);
+  // Stormen sikter pa deg. Ikke alltid - da ville spillet vaere rent reaktivt -
+  // men ofte nok til at det a bli staaende er en avgjorelse med kort levetid.
+  const mal = [Math.random() < S.jakt
+    ? S.kol
+    : mulige[Math.floor(Math.random()*KOL)]];
+  // forgreining: hopper til en nabo, av og til to
+  if (Math.random() < S.grein){
+    // greinen slaar mot en av sidene - men aldri begge, du skal alltid ha en vei
+    const d = Math.random() < .5 ? -1 : 1;
+    const g = mal[0] + d*(Math.random() < .7 ? 1 : 2);
+    if (g >= 0 && g < KOL) mal.push(g);
+  }
+  if (mal.length < n.maksMal && Math.random() < S.grein*.45){
+    const g = Math.floor(Math.random()*KOL);
+    if (mal.indexOf(g) === -1) mal.push(g);
+  }
+  // fluktkrav: spilleren skal alltid ha et lovlig trekk igjen
+  const alle = new Set(mal);
+  for (const v of S.varsler) for (const m of v.mal) alle.add(m);
+  if (alle.size >= KOL) return null;
+  for (let c=0; c<KOL; c++) if (stengt(c)) alle.add(c);
+  if (alle.size >= KOL) return null;
+  const naboer = [S.kol-1, S.kol, S.kol+1].filter(c => c>=0 && c<KOL);
+  if (naboer.every(c => alle.has(c))) return null;
+  return mal;
+}
+
+/* Et lyn har en form. Den lages i det oyeblikket det slar ned og ligger
+   fast gjennom hele levetiden - ellers flimrer det som stoy. Animasjonen
+   ligger i hvor mye av formen som er tent, ikke i formen selv. */
+function byggLyn(kol, sterk){
+  const x = kolX[kol], topp = 22, bunn = BAKKE + 10;
+  const pkt = [{x: x + (Math.random()-.5)*40, y: topp}];
+  let px = pkt[0].x, py = topp;
+  while (py < bunn){
+    py += 16 + Math.random()*16;
+    px += (Math.random()-.5)*30;
+    px = px*.72 + x*.28;                       // trekkes mot malet
+    pkt.push({x: px, y: Math.min(py, bunn)});
+  }
+  pkt[pkt.length-1].x = x;
+  // sidegreiner som dor ut i lufta
+  const greiner = [];
+  const antall = (sterk ? 3 : 2) + Math.floor(Math.random()*3);
+  for (let g=0; g<antall; g++){
+    const i = 1 + Math.floor(Math.random()*(pkt.length-2));
+    const retn = Math.random() < .5 ? -1 : 1;
+    const gp = [{x: pkt[i].x, y: pkt[i].y}];
+    let gx = pkt[i].x, gy = pkt[i].y;
+    const ledd = 2 + Math.floor(Math.random()*4);
+    for (let k=0; k<ledd; k++){
+      gx += retn * (8 + Math.random()*16);
+      gy += 6 + Math.random()*14;
+      gp.push({x: gx, y: gy});
+    }
+    greiner.push({pkt: gp, fra: i / pkt.length});
+  }
+  return {kol, t: 9, maks: 9, pkt, greiner, sterk};
+}
+function step(){
+  /* Treffet stopper verden. Marka star stille, ingen nye varsler, ingen
+     bevegelse - bare selve nedslaget og skjelettet spiller ferdig. */
+  if (S.frys > 0){
+    S.frys--;
+    if (S.doeT > 0) S.doeT--;
+    if (S.blitz > 0) S.blitz--;
+    S.nedslag = S.nedslag.filter(n => --n.t > 0);
+    for (const sv of S.svidd) sv.liv -= .06;
+    S.svidd = S.svidd.filter(sv => sv.liv > 0);
+    return;
+  }
+
+  S.tick++;
+  S.meter++;
+  if (S.intro > 0) S.intro--;
+
+  // ting som star i veien
+  for (const hh of S.hinder){ hh.d = fram(hh.d, 1); if (hh.brann > 0) hh.brann--; }
+  S.hinder = S.hinder.filter(hh => hh.d < 1.4);
+  if (S.tick >= S.nesteHinder){
+    // En hindring far ikke lukke den siste apningen. Vi regner ut hvilke
+    // kolonner som allerede er lovet bort til lyn eller ting, og krever at
+    // det blir minst to igjen etter at denne er satt ut.
+    const tatt = new Set();
+    for (const hh of S.hinder) if (hh.d < .35 || stengt(hh.kol)) tatt.add(hh.kol);
+    for (const v of S.varsler) for (const mm of v.mal) tatt.add(mm);
+    const ledige = [];
+    for (let i=0; i<KOL; i++) if (!tatt.has(i)) ledige.push(i);
+    if (ledige.length > 2){
+      const r = Math.random();
+      S.hinder.push({kol: ledige[Math.floor(Math.random()*ledige.length)], d:0,
+                     type: r < .5 ? 'tre' : r < .8 ? 'stein' : 'stubbe',
+                     v: Math.random()*7, brann:0});
+    }
+    S.nesteHinder = S.tick + 6 + Math.floor(Math.random()*7);
+  }
+  // star du i veien for noe, blir du dyttet til side
+  const iVeien = S.hinder.find(hh => hh.kol === S.kol && hh.d > .88 && hh.d < 1.12);
+  if (iVeien && S.dyttet === 0){
+    // Du skal aldri bli dyttet inn i et varsel. Finnes det ingen trygg side,
+    // blir du staaende inntil steinen - det koster ingenting.
+    const farlig = new Set();
+    for (const v of S.varsler) for (const mm of v.mal) farlig.add(mm);
+    const fri = [S.kol-1, S.kol+1]
+      .filter(c => c>=0 && c<KOL && !stengt(c) && !farlig.has(c));
+    if (fri.length){
+      S.kol = fri[Math.floor(Math.random()*fri.length)];
+      S.dyttet = 5; S.shake = 5; S.score = Math.max(0, S.score - 1);
+      buzz(15);
+    }
+  }
+  if (S.dyttet > 0) S.dyttet--;
+
+  // flairlaget: liv som krysser enga foran deg. Ren pynt, ingen kollisjon.
+  for (const fl of S.flair){
+    fl.d = fram(fl.d, 1);
+    fl.x0 += fl.vx;
+  }
+  S.flair = S.flair.filter(fl => fl.d < 1.45 && fl.x0 > -W && fl.x0 < W*2);
+  if (S.tick >= S.nesteFlair){
+    const r = Math.random();
+    const type = r < .42 ? 'hare' : r < .7 ? 'rev' : r < .88 ? 'busk' : 'fugl';
+    const fraVenstre = Math.random() < .5;
+    S.flair.push({
+      type, d: .05 + Math.random()*.5,
+      x0: fraVenstre ? -30 : W+30,
+      vx: (type === 'busk' ? 0 : (fraVenstre ? 1 : -1) * (2.2 + Math.random()*2.4)),
+      r: fraVenstre ? 1 : -1, v: Math.random()*7
+    });
+    S.nesteFlair = S.tick + 4 + Math.floor(Math.random()*8);
+  }
+
+  // lyn langt borte. Ren stemning - de kan ikke treffe deg.
+  if (S.fjernBlitz > 0) S.fjernBlitz--;
+  if (S.tick >= S.nesteFjern){
+    const fx = 20 + Math.random()*(W-40);
+    const pkt = [{x: fx, y: 6}];
+    let px = fx, py = 6;
+    const bunn = HORISONT - 6 - Math.random()*20;
+    while (py < bunn){
+      py += 12 + Math.random()*14;
+      px += (Math.random()-.5)*26;
+      pkt.push({x: px, y: Math.min(py, bunn)});
+    }
+    S.fjern.push({pkt, t: 5, maks: 5});
+    S.fjernBlitz = 4;
+    S.nesteFjern = S.tick + 3 + Math.floor(Math.random()*8);
+  }
+  S.fjern = S.fjern.filter(fj => --fj.t > 0);
+
+  // stormen tetner etter hvert som du overlever
+  let sniva = 0;
+  for (let i=1; i<TRAPP.length; i++) if (S.score >= TRAPP[i]) sniva = i;
+  if (sniva !== S.storm){
+    S.storm = sniva;
+    S.varsel = S.n.varsel[sniva];
+    S.grein  = Math.min(.75, S.n.greinStart + sniva*.16);
+    S.jakt   = S.n.jakt[sniva];
+    S.mellom = [Math.max(S.n.minMellom, S.n.mellom[0] - sniva*2),
+                Math.max(S.n.minMellom+2, S.n.mellom[1] - sniva*2)];
+    S.interval = Math.max(140, S.n.interval - sniva*24);
+  }
+  if (S.blitz > 0) S.blitz--;
+  if (S.doeT > 0) S.doeT--;
+  S.nedslag = S.nedslag.filter(n => --n.t > 0);
+  for (const sv of S.svidd){ sv.d = fram(sv.d, 1); sv.liv -= .16; }
+  S.svidd = S.svidd.filter(sv => sv.liv > 0 && sv.d < 1.3);
+  if (S.meter % 4 === 0) S.score++;
+
+  // varsler modnes
+  const beholdt = [];
+  for (const v of S.varsler){
+    v.igjen--;
+    if (v.igjen > 0){ beholdt.push(v); continue; }
+    // NEDSLAG
+    S.blitz = 6; S.shake = 13;
+    for (const m of v.mal){
+      S.nedslag.push(byggLyn(m, v.mal.length > 1));
+      S.svidd.push({kol:m, d:.97, liv:1});
+      const tre = S.hinder.find(hh => hh.kol === m && hh.d > .8 && hh.type === 'tre');
+      if (tre) tre.brann = 40;                 // det tar fyr
+    }
+    /* Treffet males mot figurens synlige plassering. Trykker du i siste
+       oyeblikk, er du fortsatt halvveis inne i feltet - og da treffer det.
+       Det du ser er det som gjelder. */
+    const bredde = Math.abs(kolX[1] - kolX[0]);
+    const truffetNa = v.mal.some(mm => Math.abs(S.visX - kolX[mm]) < bredde * .42);
+    if (truffetNa && S.doeT > 0){
+      // du er allerede truffet og star i sjokket - dette teller ikke
+    } else if (truffetNa){
+      S.truffet++; S.doeT = 16;
+      // frysen males i millisekunder, ikke i tikk: rundt et sekund uansett tempo
+      S.frys = Math.max(3, Math.round(950 / S.interval));
+      buzz([70,50,70]);
+      if (S.truffet >= 7){ S.over = true; S.nyRekord = settBeste(S.mode, S.score); }
+    } else {
+      // sto lynet i kolonnen du nettopp forlot, var det en ekte unnamanover
+      S.score += v.mal.indexOf(S.sisteKol) !== -1 ? 4 : 2;
+    }
+  }
+  S.varsler = beholdt;
+
+  // nytt lyn pa vei
+  if (S.tick >= S.nesteLyn){
+    const mal = velgMal();
+    if (mal){
+      S.varsler.push({mal, igjen: S.varsel, start: S.varsel});
+      const [a,b] = S.mellom;
+      S.nesteLyn = S.tick + a + Math.floor(Math.random()*(b-a+1));
+    } else {
+      S.nesteLyn = S.tick + 1;
+    }
+  }
+
+  if (S.score > 999) S.score = 999;
+}
+
+/* ---------- tegning ---------- */
+function glow(x, y, r, farge, a){
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, farge); g.addColorStop(1, 'rgba(0,0,0,0)');
+  const prev = ctx.globalAlpha;
+  ctx.globalAlpha = prev * a; ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+  ctx.globalAlpha = prev;
+}
+function himmel(t){
+  const g = ctx.createLinearGradient(0, 0, 0, BAKKE);
+  g.addColorStop(0, P.skyMork); g.addColorStop(.45, P.sky1); g.addColorStop(1, P.sky2);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, BAKKE);
+  // skyer som velter
+  for (let i=0; i<7; i++){
+    const cx2 = ((i*67 + t/90) % (W+120)) - 60;
+    const cy = 18 + (i%3)*16;
+    const r = 30 + (i%4)*11;
+    ctx.fillStyle = i%2 ? P.sky1 : P.skyMork;
+    ctx.globalAlpha = .8;
+    ctx.beginPath(); ctx.ellipse(cx2, cy, r, r*.45, 0, 0, 7); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+  if (S.blitz > 0){
+    // Forste ramme er nesten hvitt. Deretter faller det raskt. Det er dette
+    // oyeblikket som gjor at du VET at det slo ned.
+    const b = S.blitz / 6;
+    const styrke = b > .8 ? .82 : .34 * b;
+    ctx.fillStyle = 'rgba(255,250,225,' + styrke.toFixed(3) + ')';
+    ctx.fillRect(0, 0, W, H);
+  }
+}
+function bakken(t){
+  const g = ctx.createLinearGradient(0, HORISONT, 0, H);
+  g.addColorStop(0, P.mark2); g.addColorStop(.4, P.mark1); g.addColorStop(1, P.mark3);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, HORISONT, W, H - HORISONT);
+  // ujevn eng: brede, myke flekker som gir terreng uten a lage baner
+  for (let i=0; i<9; i++){
+    const d = ((i*0.13 + (t/26000)) % 1);
+    const y = dybdeY(d), x = dybdeX(30 + ((i*97) % (W-60)), d);
+    const r = (24 + (i%4)*16) * (.3 + d);
+    ctx.fillStyle = i % 2 ? 'rgba(60,82,48,.16)' : 'rgba(20,26,18,.2)';
+    ctx.beginPath(); ctx.ellipse(x, y, r, r*.32, 0, 0, 7); ctx.fill();
+  }
+}
+function gran(fx, gy, h, b, fyll){
+  ctx.fillStyle = fyll;
+  ctx.beginPath();
+  ctx.moveTo(fx, gy);
+  ctx.lineTo(fx - b, gy);
+  ctx.lineTo(fx - b*.55, gy - h*.42);
+  ctx.lineTo(fx - b*.8, gy - h*.4);
+  ctx.lineTo(fx - b*.35, gy - h*.75);
+  ctx.lineTo(fx - b*.5, gy - h*.72);
+  ctx.lineTo(fx, gy - h);
+  ctx.lineTo(fx + b*.5, gy - h*.72);
+  ctx.lineTo(fx + b*.35, gy - h*.75);
+  ctx.lineTo(fx + b*.8, gy - h*.4);
+  ctx.lineTo(fx + b*.55, gy - h*.42);
+  ctx.lineTo(fx + b, gy);
+  ctx.closePath(); ctx.fill();
+}
+function landemerke(m, gy, fyll, t){
+  const x = m.x;
+  if (x < -60 || x > W + 60) return;
+  ctx.fillStyle = fyll;
+  if (m.type === 'taarn'){                       // branntarn pa en kolle
+    ctx.beginPath();
+    ctx.moveTo(x-13, gy); ctx.lineTo(x-6, gy-34);
+    ctx.lineTo(x+6, gy-34); ctx.lineTo(x+13, gy);
+    ctx.closePath(); ctx.fill();
+    ctx.fillRect(x-11, gy-42, 22, 9);
+    ctx.beginPath();
+    ctx.moveTo(x-13, gy-42); ctx.lineTo(x, gy-51); ctx.lineTo(x+13, gy-42);
+    ctx.closePath(); ctx.fill();
+    for (let i=1; i<4; i++) ctx.fillRect(x-11+i*1.5, gy-34+i*8, 22-i*3, 1.6);
+  } else if (m.type === 'gjerde'){
+    for (let i=0; i<7; i++) ctx.fillRect(x + i*13, gy-13, 2.4, 13);
+    ctx.fillRect(x, gy-11, 84, 2);
+    ctx.fillRect(x, gy-6, 84, 2);
+  } else if (m.type === 'hytte'){                 // liten seterbu
+    ctx.fillRect(x-14, gy-14, 28, 14);
+    ctx.beginPath();
+    ctx.moveTo(x-18, gy-13); ctx.lineTo(x, gy-25); ctx.lineTo(x+18, gy-13);
+    ctx.closePath(); ctx.fill();
+    ctx.fillRect(x+6, gy-32, 3, 8);               // pipe
+  } else if (m.type === 'jaktbu'){                // jakttarn pa bein
+    ctx.fillRect(x-11, gy-30, 22, 13);
+    ctx.beginPath();
+    ctx.moveTo(x-13, gy-30); ctx.lineTo(x, gy-38); ctx.lineTo(x+13, gy-30);
+    ctx.closePath(); ctx.fill();
+    ctx.fillRect(x-9, gy-17, 2.4, 17);
+    ctx.fillRect(x+7, gy-17, 2.4, 17);
+    ctx.fillRect(x-9, gy-9, 18, 1.8);
+  } else if (m.type === 'stein'){                 // kampestein i lia
+    ctx.beginPath();
+    ctx.ellipse(x, gy-6, 20, 12, 0, Math.PI, 0); ctx.fill();
+    ctx.fillRect(x-20, gy-6, 40, 6);
+  } else {                                        // dodt tre, lynslatt for
+    ctx.fillRect(x-2, gy-40, 4, 40);
+    ctx.save(); ctx.translate(x, gy-30);
+    for (const [a, l] of [[-.9, 17], [.7, 20], [-.5, 12]]){
+      ctx.rotate(0);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(a)*l, -Math.abs(Math.sin(a))*l);
+      ctx.lineWidth = 3; ctx.strokeStyle = fyll; ctx.stroke();
+    }
+    ctx.restore();
+  }
+}
+function dyret(d, gy, fyll, t){
+  const x = d.x, sk = 1;
+  const spring = d.redd > 0;
+  const bein = Math.sin(t / (spring ? 60 : 260)) * (spring ? 4 : 1.5);
+  ctx.fillStyle = fyll;
+  ctx.beginPath();                               // kropp
+  ctx.ellipse(x, gy - 9*sk, 9*sk, 5*sk, 0, 0, 7); ctx.fill();
+  ctx.fillRect(x - 7*sk, gy - 6*sk, 2.2*sk, 6*sk + bein);
+  ctx.fillRect(x + 5*sk, gy - 6*sk, 2.2*sk, 6*sk - bein);
+  // hals og hode, hevet nar den er redd
+  const hh = spring ? 17 : 13;
+  ctx.fillRect(x + d.r*6*sk, gy - hh*sk, 2.4*sk, 7*sk);
+  ctx.beginPath();
+  ctx.ellipse(x + d.r*8*sk, gy - (hh+2)*sk, 3.4*sk, 2.4*sk, 0, 0, 7); ctx.fill();
+  ctx.strokeStyle = fyll; ctx.lineWidth = 1.2*sk;   // gevir
+  ctx.beginPath();
+  ctx.moveTo(x + d.r*8*sk, gy - (hh+4)*sk);
+  ctx.lineTo(x + d.r*10*sk, gy - (hh+10)*sk);
+  ctx.moveTo(x + d.r*8*sk, gy - (hh+4)*sk);
+  ctx.lineTo(x + d.r*5*sk, gy - (hh+9)*sk);
+  ctx.stroke();
+}
+function fjellene(t){
+  // Bakerste lag: en fjellrekke som knapt beveger seg. Den ligger nesten
+  // usynlig i morket og rives fram i sin helhet nar lynet gar - ogsa av
+  // lyn langt borte, som ikke har noe med spillet a gjore.
+  const lys = Math.max(S.blitz > 0 ? S.blitz / 6 : 0,
+                       S.fjernBlitz > 0 ? S.fjernBlitz / 4 * .8 : 0);
+  const gy = HORISONT + 4;
+
+  const grunn = 18;
+  ctx.fillStyle = lys > 0
+    ? 'rgb(' + Math.round(grunn + 62*lys) + ',' + Math.round(grunn+6 + 66*lys) +
+      ',' + Math.round(grunn+12 + 74*lys) + ')'
+    : 'rgb(' + grunn + ',' + (grunn+6) + ',' + (grunn+12) + ')';
+  ctx.beginPath();
+  ctx.moveTo(-40, gy);
+  const topper = [46, 70, 38, 88, 54, 76, 42, 64, 92, 50];
+  for (let i=0; i<topper.length; i++){
+    const x0 = -40 + i*46 - (S.drift[3] % 46);
+    ctx.lineTo(x0 + 23, gy - topper[i]);
+    ctx.lineTo(x0 + 46, gy - topper[(i+1) % topper.length] * .35);
+  }
+  ctx.lineTo(W + 60, gy); ctx.closePath(); ctx.fill();
+  // snofonner pa de hoyeste
+  if (lys > .15){
+    ctx.fillStyle = 'rgba(220,235,245,' + (.5*lys).toFixed(2) + ')';
+    for (let i=0; i<topper.length; i++){
+      if (topper[i] < 70) continue;
+      const x0 = -40 + i*46 - (S.drift[3] % 46);
+      ctx.beginPath();
+      ctx.moveTo(x0 + 23, gy - topper[i]);
+      ctx.lineTo(x0 + 15, gy - topper[i] + 13);
+      ctx.lineTo(x0 + 31, gy - topper[i] + 13);
+      ctx.closePath(); ctx.fill();
+    }
+  }
+}
+function skoglinje(t){
+  // Tre lag som glir i hver sin fart. Da ser scenen ny ut for hvert glimt,
+  // uten at noe hopper. Lynet river dem fram i ulik styrke etter avstand.
+  const lys = Math.max(S.blitz > 0 ? S.blitz / 6 : 0,
+                       S.fjernBlitz > 0 ? S.fjernBlitz / 4 * .55 : 0);
+  const gy = HORISONT + 2;
+  if (lys > 0) glow(W/2, gy - 40, 210, P.lynGlo, .18 * lys);
+
+  /* Du gar rett fram, ikke sidelengs. Skogen star stille. Livet i bildet
+     kommer fra dyra, fra lynet og fra flairlaget naermere deg. */
+  const lag = [
+    {n: 26, y: gy - 16, h: [14, 26], b: [5, 8],  fart: 0, m: .18, dybde:.35},
+    {n: 22, y: gy - 6,  h: [22, 40], b: [7, 11], fart: 0, m: .55, dybde:.6},
+    {n: 18, y: gy + 3,  h: [30, 56], b: [9, 15], fart: 0, m: 1,   dybde:1}
+  ];
+  lag.forEach((L, li) => {
+    if (S.frys === 0) S.drift[li] = (S.drift[li] + L.fart) % (W + 200);
+    const grunn = [21, 30, 42][li];              // morkhet i hvile
+    const f = lys > 0
+      ? 'rgb(' + Math.round(grunn + 110*lys*L.dybde) + ',' +
+                 Math.round(grunn+8 + 118*lys*L.dybde) + ',' +
+                 Math.round(grunn-4 + 82*lys*L.dybde) + ')'
+      : 'rgb(' + grunn + ',' + (grunn+8) + ',' + (grunn-4) + ')';
+    for (let i=0; i<L.n; i++){
+      const sprei = (W + 160) / L.n;
+      const fx = ((i*sprei + Math.sin(i*3.1)*13 - S.drift[li]) % (W + 160)) - 80;
+      const hh = L.h[0] + ((i*37) % (L.h[1]-L.h[0]));
+      const bb = L.b[0] + ((i*17) % (L.b[1]-L.b[0]));
+      gran(fx, L.y, hh, bb, f);
+    }
+    // dyra beiter langs det midterste laget og stikker av nar det lyner
+    if (li === 1){
+      for (const d of S.dyr){
+        if (S.blitz > 4 && d.redd === 0) d.redd = 90;
+        if (S.frys > 0) { dyret(d, L.y, f, t); continue; }
+        if (d.redd > 0) d.redd--;
+        d.x += d.r * d.fart * (d.redd > 0 ? 5 : 1);
+        if (d.x < -50){ d.x = W + 40; }
+        if (d.x > W + 50){ d.x = -40; }
+        dyret(d, L.y, f, t);
+      }
+    }
+    // landemerker
+    for (const m of S.merker){
+      if (m.lag !== li) continue;
+      landemerke(m, L.y, f, t);
+    }
+  });
+
+  // underskog
+  ctx.fillStyle = lys > 0
+    ? 'rgba(70,95,54,' + (.5 + .5*lys).toFixed(2) + ')' : '#1b2416';
+  ctx.beginPath();
+  ctx.moveTo(0, gy + 5);
+  for (let x=0; x<=W; x+=14)
+    ctx.quadraticCurveTo(x+7, gy - 4 + Math.sin(x/23)*3, x+14, gy + 3);
+  ctx.lineTo(W, gy + 12); ctx.lineTo(0, gy + 12); ctx.closePath(); ctx.fill();
+}
+function marka(t){
+  // Dybde 0 er horisonten, 1 er nede hos deg. Ingen baner - bare terreng.
+  let dt = Math.min(4, (t - (markTid || t)) / S.interval);
+  markTid = t;
+  if (S.frys > 0) dt = 0;                    // verden star stille i treffet
+  const lys = S.blitz > 0 ? S.blitz / 6 : 0;
+  for (const m of S.mark){
+    m.d = fram(m.d, dt);
+    if (m.d > 1.06){
+      m.d = 0; m.x0 = Math.random()*W*1.7 - W*.35;
+      const r = Math.random();
+      m.type = r < .62 ? 'gras' : r < .84 ? 'lyng' : 'stein';
+    }
+    const x = dybdeX(m.x0, m.d), y = dybdeY(m.d);
+    if (x < -24 || x > W+24) continue;
+    const sk = m.s * (.25 + 1.15 * m.d);
+    ctx.globalAlpha = Math.min(1, m.d*3);
+
+    if (m.type === 'gras'){
+      ctx.strokeStyle = lys > .3 ? P.gressLys : P.gress;
+      ctx.lineWidth = Math.max(.6, 1.7*sk); ctx.lineCap = 'round';
+      for (let i=-1; i<2; i++){
+        ctx.beginPath();
+        ctx.moveTo(x + i*2.2*sk, y);
+        ctx.lineTo(x + i*4.4*sk + Math.sin(t/900 + m.v)*sk, y - 8*sk);
+        ctx.stroke();
+      }
+    } else if (m.type === 'lyng'){
+      ctx.fillStyle = lys > .3 ? 'rgba(120,140,80,.55)' : 'rgba(48,62,38,.6)';
+      ctx.beginPath();
+      ctx.ellipse(x, y, 9*sk, 3.4*sk, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = lys > .3 ? 'rgba(150,120,150,.5)' : 'rgba(70,60,75,.5)';
+      for (let i=0; i<3; i++)
+        ctx.fillRect(x - 5*sk + i*4*sk, y - 4*sk, 1.6*sk, 4*sk);
+    } else if (m.type === 'stein'){
+      ctx.fillStyle = lys > .3 ? '#7a7f6e' : '#2c3128';
+      ctx.beginPath();
+      ctx.ellipse(x, y, 6.5*sk, 4.2*sk, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = lys > .3 ? '#9aa08a' : '#383e33';
+      ctx.beginPath();
+      ctx.ellipse(x-1.4*sk, y-1.2*sk, 4*sk, 2.4*sk, 0, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+function regnet(t){
+  // to lag: tett og tynt langt bak, faerre og kraftigere naer deg
+  ctx.strokeStyle = 'rgba(160,185,215,.32)'; ctx.lineWidth = 1;
+  for (let i=0; i<95; i++){
+    const x = ((i*97 + t/3.4) % (W+60)) - 30;
+    const y = ((i*53 + t/1.7) % (H+40)) - 20;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x-2.5, y+8); ctx.stroke();
+  }
+  ctx.strokeStyle = 'rgba(190,215,240,.5)'; ctx.lineWidth = 1.8;
+  for (let i=0; i<26; i++){
+    const x = ((i*163 + t/1.5) % (W+80)) - 40;
+    const y = ((i*211 + t/0.7) % (H+60)) - 30;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x-6, y+20); ctx.stroke();
+  }
+  // sprut der regnet treffer bakken
+  ctx.strokeStyle = 'rgba(190,215,240,.3)'; ctx.lineWidth = 1;
+  for (let i=0; i<14; i++){
+    const px = ((i*211 + Math.floor(t/90)*37) % W);
+    const pd = .25 + ((i*17) % 70)/100;
+    const py = dybdeY(pd);
+    const f = ((t/90 + i) % 1);
+    ctx.globalAlpha = (1-f) * .5;
+    ctx.beginPath();
+    ctx.ellipse(px, py, 4 + f*7, (4 + f*7)*.3, 0, 0, 7); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+}
+function merket(v, t){
+  // varselmerket i bakken: en ring som trekker seg sammen, gul mot rod
+  const del = v.igjen / v.start;
+  const hast = 1 - del;
+  const farge = 'rgb(' + Math.round(255) + ',' +
+    Math.round(176 - 130*hast) + ',' + Math.round(46 - 20*hast) + ')';
+  for (const m of v.mal){
+    const x = kolX[m], y = KONTAKT;
+    // kileformet felt fra horisonten ned til foettene, sa du ser at DU staar i det
+    const xt = dybdeX(kolX[m], 0), xb = kolX[m];
+    const gg = ctx.createLinearGradient(0, HORISONT, 0, y);
+    gg.addColorStop(0, 'rgba(0,0,0,0)');
+    gg.addColorStop(1, farge.replace('rgb(', 'rgba(').replace(')', ',' +
+      (.14 + .2*hast).toFixed(2) + ')'));
+    ctx.fillStyle = gg;
+    ctx.beginPath();
+    ctx.moveTo(xt-6, HORISONT); ctx.lineTo(xt+6, HORISONT);
+    ctx.lineTo(xb+26, y+4); ctx.lineTo(xb-26, y+4);
+    ctx.closePath(); ctx.fill();
+    glow(x, y, 24 + 16*hast, farge, .32 + .42*hast);
+    ctx.strokeStyle = farge;
+    ctx.lineWidth = 2 + 2*hast;
+    ctx.beginPath(); ctx.ellipse(x, y, 10 + del*16, (10 + del*16)*.4, 0, 0, 7); ctx.stroke();
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.ellipse(x, y, 22, 9, 0, -Math.PI/2, -Math.PI/2 + Math.PI*2*del);
+    ctx.stroke();
+    if (del < .3){                     // siste oyeblikk: ringen blinker hardt
+      ctx.globalAlpha = Math.floor(t/60) % 2 === 0 ? .95 : .35;
+      ctx.strokeStyle = '#fff2c4'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.ellipse(x, y, 26, 10, 0, 0, 7); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    // ladningen kryper opp fra bakken
+    ctx.globalAlpha = .5 + .5*hast;
+    ctx.strokeStyle = farge; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    let ly = y;
+    ctx.moveTo(x, ly);
+    for (let i=0; i<4; i++){
+      ly -= 7 * hast;
+      ctx.lineTo(x + (Math.random()-.5)*7, ly);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+}
+function tegnBane(pkt, andel, bredde, farge, alfa){
+  if (andel <= 0) return;
+  ctx.strokeStyle = farge; ctx.lineWidth = bredde;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.globalAlpha = alfa;
+  const n = Math.max(1, Math.floor((pkt.length-1) * andel));
+  ctx.beginPath();
+  ctx.moveTo(pkt[0].x, pkt[0].y);
+  for (let i=1; i<=n && i<pkt.length; i++) ctx.lineTo(pkt[i].x, pkt[i].y);
+  // delvis siste ledd, sa forkanten glir istedenfor a hoppe
+  const rest = (pkt.length-1) * andel - n;
+  if (rest > 0 && n+1 < pkt.length){
+    const a = pkt[n], b = pkt[n+1];
+    ctx.lineTo(a.x + (b.x-a.x)*rest, a.y + (b.y-a.y)*rest);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+function lynet(n, t){
+  const alder = 1 - n.t / n.maks;              // 0 = nytt, 1 = borte
+  const x = kolX[n.kol], bunn = KONTAKT;
+
+  if (alder < .22){
+    // FORLOPER: en tynn kanal soker seg nedover
+    const andel = alder / .22;
+    tegnBane(n.pkt, andel, 1.6, P.lynSvak, .85);
+    const i = Math.min(n.pkt.length-1, Math.floor((n.pkt.length-1)*andel));
+    glow(n.pkt[i].x, n.pkt[i].y, 12, P.lynGlo, .5);
+    return;
+  }
+
+  // HOVEDSLAG: hele kanalen tenner, sterkest med en gang
+  const styrke = Math.max(0, 1 - (alder - .22) / .78);
+  const flimmer = alder > .45
+    ? (Math.floor(t / 55) % 2 === 0 ? 1 : .35)  // etterskjelv
+    : 1;
+  const k = styrke * flimmer;
+
+  glow(x, (22 + bunn)/2, 70, P.lynGlo, .28*k);
+  tegnBane(n.pkt, 1, 9 * (.4 + .6*k), 'rgba(255,230,128,.35)', .8*k);
+  tegnBane(n.pkt, 1, 4.2 * (.5 + .5*k), P.lyn, .95*k);
+  tegnBane(n.pkt, 1, 1.6, P.lynKjerne, k);
+
+  // greinene tenner litt etter hovedkanalen og dor fortere
+  for (const g of n.greiner){
+    const gk = Math.max(0, k - .18) * (alder > .6 ? .4 : 1);
+    if (gk <= 0) continue;
+    tegnBane(g.pkt, 1, 2.6*gk + .6, P.lyn, .75*gk);
+    tegnBane(g.pkt, 1, 1, P.lynKjerne, .6*gk);
+    const sis = g.pkt[g.pkt.length-1];
+    glow(sis.x, sis.y, 9, P.lynGlo, .35*gk);
+  }
+
+  // trykkbolge som brer seg utover i graset
+  if (alder < .5){
+    const r = alder * 130;
+    ctx.strokeStyle = 'rgba(255,246,201,' + ((1 - alder*2)*.7).toFixed(2) + ')';
+    ctx.lineWidth = 3 * (1 - alder*2) + .5;
+    ctx.beginPath(); ctx.ellipse(x, bunn, r, r*.34, 0, 0, 7); ctx.stroke();
+  }
+  // nedslaget i bakken
+  glow(x, bunn, 40*(1+alder), P.lynGlo, .7*styrke);
+  ctx.fillStyle = 'rgba(255,246,201,' + (.55*styrke).toFixed(2) + ')';
+  ctx.beginPath();
+  ctx.ellipse(x, bunn, 30*(1+alder*1.6), 9*(1+alder), 0, 0, 7); ctx.fill();
+  // gnister som spretter utover
+  ctx.strokeStyle = P.lyn; ctx.lineWidth = 1.4;
+  ctx.globalAlpha = .8*styrke;
+  for (let i=0; i<7; i++){
+    const a = Math.PI + (i/6)*Math.PI;
+    const l = 12 + alder*40 + (i%3)*7;
+    ctx.beginPath();
+    ctx.moveTo(x, bunn);
+    ctx.lineTo(x + Math.cos(a)*l, bunn + Math.sin(a)*l*.45);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+const FIGUR = 1.75;
+function hindring(hh, t){
+  const x = dybdeX(kolX[hh.kol], hh.d), y = dybdeY(hh.d);
+  const sk = (.22 + hh.d * 1.5) * 1.5;
+  const lys = S.blitz > 0 ? S.blitz/6 : 0;
+  const naer = hh.d > .8 && hh.d < 1.2;
+  ctx.globalAlpha = Math.min(1, hh.d*4) * (hh.d > 1.2 ? (1.4-hh.d)/.2 : 1);
+
+  ctx.fillStyle = 'rgba(0,0,0,.35)';             // skygge
+  ctx.beginPath(); ctx.ellipse(x, y+1*sk, 11*sk, 3.4*sk, 0, 0, 7); ctx.fill();
+
+  if (hh.type === 'tre'){
+    const brenner = hh.brann > 0;
+    ctx.fillStyle = brenner ? '#3a2415' : (lys > .3 ? '#4a3a26' : '#2a2118');
+    ctx.fillRect(x - 2.4*sk, y - 20*sk, 4.8*sk, 20*sk);
+    const gronn = brenner ? '#5a3a1a' : (lys > .3 ? '#4f7a3a' : '#22351d');
+    for (let i=0; i<3; i++){
+      ctx.fillStyle = gronn;
+      ctx.beginPath();
+      ctx.moveTo(x, y - 46*sk + i*11*sk);
+      ctx.lineTo(x - 15*sk + i*2.5*sk, y - 20*sk + i*9*sk);
+      ctx.lineTo(x + 15*sk - i*2.5*sk, y - 20*sk + i*9*sk);
+      ctx.closePath(); ctx.fill();
+    }
+    if (brenner){                                // flammer i krona
+      for (let i=0; i<5; i++){
+        const f = Math.sin(t/90 + i*1.4);
+        const fx = x - 10*sk + i*5*sk, fy = y - 34*sk + Math.abs(f)*4*sk;
+        glow(fx, fy, 12*sk, '#ff8a2b', .5);
+        ctx.fillStyle = i % 2 ? '#ffd447' : '#ff8a2b';
+        ctx.beginPath();
+        ctx.moveTo(fx - 3*sk, fy);
+        ctx.lineTo(fx, fy - (9 + f*5)*sk);
+        ctx.lineTo(fx + 3*sk, fy);
+        ctx.closePath(); ctx.fill();
+      }
+    }
+  } else if (hh.type === 'stein'){
+    ctx.fillStyle = lys > .3 ? '#8a8f7e' : '#333a30';
+    ctx.beginPath(); ctx.ellipse(x, y - 6*sk, 13*sk, 9*sk, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = lys > .3 ? '#a8ae98' : '#434a3e';
+    ctx.beginPath(); ctx.ellipse(x - 3*sk, y - 9*sk, 8*sk, 5*sk, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(70,110,60,.5)';        // mose
+    ctx.beginPath(); ctx.ellipse(x + 4*sk, y - 11*sk, 5*sk, 2.4*sk, 0, 0, 7); ctx.fill();
+  } else {
+    ctx.fillStyle = lys > .3 ? '#5a4632' : '#2c2419';
+    ctx.fillRect(x - 7*sk, y - 9*sk, 14*sk, 9*sk);
+    ctx.fillStyle = lys > .3 ? '#7a6244' : '#3c3222';
+    ctx.beginPath(); ctx.ellipse(x, y - 9*sk, 7*sk, 3*sk, 0, 0, 7); ctx.fill();
+    ctx.strokeStyle = lys > .3 ? '#4a3a26' : '#241d14'; ctx.lineWidth = 1.2*sk;
+    for (let i=1; i<3; i++){
+      ctx.beginPath(); ctx.ellipse(x, y - 9*sk, i*2.4*sk, i*1*sk, 0, 0, 7); ctx.stroke();
+    }
+  }
+  if (naer){                                     // markering av at den sperrer
+    ctx.strokeStyle = 'rgba(200,210,190,.35)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.ellipse(x, y+1*sk, 13*sk, 4*sk, 0, 0, 7); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+function flairting(fl, t){
+  const x = dybdeX(fl.x0, fl.d), y = dybdeY(fl.d);
+  const sk = (.2 + fl.d * 1.2);
+  const lys = S.blitz > 0 ? S.blitz/6 : 0;
+  ctx.globalAlpha = Math.min(1, fl.d*4) * (fl.d > 1.2 ? (1.45-fl.d)/.25 : .9);
+  const m = lys > .3 ? '#8a8f6e' : '#2a3122';
+
+  if (fl.type === 'hare'){
+    const spr = Math.abs(Math.sin(t/70));
+    ctx.fillStyle = m;
+    ctx.beginPath(); ctx.ellipse(x, y - 5*sk - spr*3*sk, 6*sk, 3.6*sk, 0, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + fl.r*5*sk, y - 8*sk - spr*3*sk, 2.6*sk, 0, 7); ctx.fill();
+    ctx.fillRect(x + fl.r*4*sk, y - 14*sk - spr*3*sk, 1.4*sk, 5*sk);   // orene
+    ctx.fillRect(x + fl.r*6*sk, y - 14*sk - spr*3*sk, 1.4*sk, 5*sk);
+    ctx.fillRect(x - fl.r*6*sk, y - 4*sk - spr*2*sk, 2*sk, 4*sk);
+  } else if (fl.type === 'rev'){
+    const lop = Math.sin(t/60);
+    ctx.fillStyle = lys > .3 ? '#9a6a3a' : '#3a2a1a';
+    ctx.beginPath(); ctx.ellipse(x, y - 6*sk, 9*sk, 3.4*sk, 0, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + fl.r*8*sk, y - 8*sk, 2.8*sk, 0, 7); ctx.fill();
+    ctx.beginPath();                                    // halen
+    ctx.ellipse(x - fl.r*11*sk, y - 7*sk, 5*sk, 2.2*sk, fl.r*.3, 0, 7); ctx.fill();
+    ctx.fillRect(x - 4*sk, y - 4*sk, 1.8*sk, 4*sk + lop*sk);
+    ctx.fillRect(x + 3*sk, y - 4*sk, 1.8*sk, 4*sk - lop*sk);
+  } else if (fl.type === 'fugl'){
+    const slag = Math.sin(t/50) * 5;
+    ctx.strokeStyle = m; ctx.lineWidth = 1.6*sk; ctx.lineCap = 'round';
+    const fy = y - 40*sk;
+    ctx.beginPath();
+    ctx.moveTo(x - 6*sk, fy + slag*sk);
+    ctx.lineTo(x, fy);
+    ctx.lineTo(x + 6*sk, fy + slag*sk);
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = m;                                   // einerbusk
+    for (let i=0; i<3; i++){
+      ctx.beginPath();
+      ctx.ellipse(x - 5*sk + i*5*sk, y - 4*sk - (i%2)*2*sk,
+                  4.5*sk, 4*sk, 0, 0, 7); ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+function rangeren(t){
+  const x = S.visX, y = BAKKE + 6;
+  ctx.save();
+  ctx.translate(x, y); ctx.scale(FIGUR, FIGUR); ctx.translate(-x, -y);
+  const truffet = S.doeT > 0;
+  const skritt = Math.sin(t/78) * 4.5;
+  /* Rontgen: NOYAKTIG samme form, samme storrelse, samme skritt - bare tegnet
+     som skjelett i stedet for kropp. Ingen ekstra sprite oppa. */
+  const rontgen = truffet && (S.frys > 0 || S.doeT > 11) && Math.floor(t/50) % 2 === 0;
+  const bein = '#eaf6ff';
+
+  if (truffet) glow(x, y-12, 30, '#dff2ff', rontgen ? .5 : .25);
+
+  ctx.fillStyle = 'rgba(0,0,0,.3)';                       // skygge
+  ctx.beginPath(); ctx.ellipse(x, y+9, 10, 3.5, 0, 0, 7); ctx.fill();
+
+  // bein - samme rektangler, samme skritt
+  if (rontgen){
+    ctx.strokeStyle = bein; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x-3, y-2); ctx.lineTo(x-3, y+7+skritt);
+    ctx.moveTo(x+3, y-2); ctx.lineTo(x+3, y+7-skritt);
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = '#2c2a20';
+    ctx.fillRect(x-5, y-2, 4, 9 + skritt);
+    ctx.fillRect(x+1, y-2, 4, 9 - skritt);
+  }
+
+  // overkroppen, med samme foroverlening
+  ctx.save();
+  ctx.translate(x, y-8); ctx.rotate(.09); ctx.translate(-x, -(y-8));
+  if (rontgen){
+    ctx.strokeStyle = bein; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x, y-15); ctx.lineTo(x, y-1); ctx.stroke();
+    for (let i=0; i<4; i++){                              // ribbein
+      const ry = y-14 + i*3.2;
+      ctx.beginPath();
+      ctx.moveTo(x-5.5, ry+1.4);
+      ctx.quadraticCurveTo(x, ry-1.6, x+5.5, ry+1.4);
+      ctx.stroke();
+    }
+    ctx.fillStyle = bein;                                 // bekken
+    ctx.beginPath();
+    ctx.moveTo(x-4.4, y-2); ctx.lineTo(x+4.4, y-2);
+    ctx.lineTo(x+3, y+1.6); ctx.lineTo(x-3, y+1.6);
+    ctx.closePath(); ctx.fill();
+  } else {
+    ctx.fillStyle = P.jakke;
+    ctx.beginPath(); ctx.ellipse(x, y-8, 8, 10, 0, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+  if (!rontgen){ ctx.fillStyle = P.jakkeLys; ctx.fillRect(x-7, y-11, 14, 3); }
+
+  // armer - samme plassering og samme pendel
+  if (rontgen){
+    // strommen kaster armene rett ut, med et lite rykk i albuen
+    const rykk = Math.sin(t/40) * 1.4;
+    ctx.strokeStyle = bein; ctx.lineWidth = 1.5; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x-5, y-12);
+    ctx.lineTo(x-11, y-13.5 + rykk);
+    ctx.lineTo(x-16, y-11 - rykk);
+    ctx.moveTo(x+5, y-12);
+    ctx.lineTo(x+11, y-13.5 - rykk);
+    ctx.lineTo(x+16, y-11 + rykk);
+    ctx.stroke();
+    ctx.fillStyle = bein;                      // handflater
+    ctx.beginPath(); ctx.arc(x-16.6, y-11 - rykk, 1.5, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+16.6, y-11 + rykk, 1.5, 0, 7); ctx.fill();
+  } else {
+    ctx.fillStyle = P.jakke;
+    ctx.fillRect(x-10, y-11+skritt*.6, 3.5, 9);
+    ctx.fillRect(x+6.5, y-11-skritt*.6, 3.5, 9);
+  }
+
+  // hode - samme sirkel, hatten blir vaerende
+  if (rontgen){
+    // sett bakfra: bakhodet, med nakkevirvlene under. Ingen oyne.
+    ctx.fillStyle = bein;
+    ctx.beginPath(); ctx.arc(x, y-19, 4.6, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#16243c'; ctx.lineWidth = .9;
+    ctx.beginPath();
+    ctx.moveTo(x-3.4, y-19.6); ctx.quadraticCurveTo(x, y-21.4, x+3.4, y-19.6);
+    ctx.stroke();
+    ctx.fillStyle = bein;
+    ctx.fillRect(x-1, y-15.6, 2, 2);
+  } else {
+    ctx.fillStyle = P.hud;
+    ctx.beginPath(); ctx.arc(x, y-19, 4.6, 0, 7); ctx.fill();
+  }
+  ctx.fillStyle = rontgen ? '#5a4a2e' : P.hatt;
+  ctx.fillRect(x-8, y-22, 16, 2.6);
+  ctx.beginPath(); ctx.ellipse(x, y-24, 5, 3.4, 0, 0, 7); ctx.fill();
+
+  ctx.restore();
+}
+function hud(){
+  ctx.fillStyle = P.gull;
+  ctx.font = 'bold 20px "Courier New",monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText(String(S.score).padStart(3,'0'), 8, 24);
+  ctx.fillStyle = '#83839a';
+  ctx.font = 'bold 10px "Courier New",monospace';
+  ctx.fillText('GAME ' + S.mode, 62, 24);
+  const b = beste(S.mode);
+  if (b > 0) ctx.fillText('BEST ' + String(b).padStart(3,'0'), 62, 36);
+  // sju nedslag
+  ctx.font = 'bold 9px "Courier New",monospace';
+  ctx.fillStyle = '#83839a';
+  ctx.textAlign = 'right';
+  ctx.fillText('STRUCK ' + S.truffet + '/7', W-8, 12);
+  ctx.textAlign = 'left';
+  for (let i=0; i<7; i++){
+    const x = W - 8 - (6-i)*15;
+    ctx.fillStyle = i < S.truffet ? '#ff4a2e' : 'rgba(255,255,255,.14)';
+    ctx.beginPath();
+    ctx.moveTo(x+4, 18); ctx.lineTo(x-2, 27); ctx.lineTo(x+2, 27);
+    ctx.lineTo(x-1, 34); ctx.lineTo(x+7, 24); ctx.lineTo(x+3, 24);
+    ctx.closePath(); ctx.fill();
+  }
+}
+
+function draw(t){
+  ctx.save();
+  if (S.shake > 0){
+    ctx.translate((Math.random()-.5)*S.shake, (Math.random()-.5)*S.shake);
+    S.shake *= .8; if (S.shake < .2) S.shake = 0;
+  }
+  himmel(t);
+  for (const fj of S.fjern){
+    const k = fj.t / fj.maks;
+    ctx.globalAlpha = k * .55;
+    glow(fj.pkt[0].x, HORISONT - 40, 130, P.lynGlo, .3*k);
+    ctx.strokeStyle = 'rgba(255,246,201,.75)'; ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(fj.pkt[0].x, fj.pkt[0].y);
+    for (const q of fj.pkt) ctx.lineTo(q.x, q.y);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = .9;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  fjellene(t);
+  skoglinje(t);
+  bakken(t);
+  marka(t);
+  for (const sv of S.svidd){            // brent gras der det slo ned
+    const x = dybdeX(kolX[sv.kol], sv.d), y = dybdeY(sv.d);
+    const sk = .3 + sv.d * 1.1;
+    ctx.globalAlpha = Math.min(1, sv.liv);
+    // svidd gras: ujevn flekk, aldri en ring - den lignet pa et varsel som ble igjen
+    ctx.fillStyle = 'rgba(16,12,8,.8)';
+    for (let i=0; i<4; i++){
+      ctx.beginPath();
+      ctx.ellipse(x - 9*sk + i*6*sk, y + Math.sin(i*2.2)*2*sk,
+                  (7 - i%2*2)*sk, 3.4*sk, 0, 0, 7); ctx.fill();
+    }
+    if (sv.liv > .7){                                    // noen glor som dor fort
+      ctx.fillStyle = 'rgba(255,150,60,' + ((sv.liv-.7)*2.4).toFixed(2) + ')';
+      for (let i=0; i<3; i++)
+        ctx.fillRect(x - 6*sk + i*6*sk, y - 1*sk, 1.8*sk, 1.8*sk);
+    }
+    ctx.globalAlpha = 1;
+  }
+  for (const v of S.varsler) merket(v, t);
+  for (const fl of S.flair) flairting(fl, t);
+  for (const hh of S.hinder) hindring(hh, t);
+
+  const mal = kolX[S.kol];
+  if (S.frys === 0) S.visX += (mal - S.visX) * .46;
+  rangeren(t);
+
+  for (const n of S.nedslag) lynet(n, t);
+  regnet(t);
+  if (S.intro > 0 && !S.paused){
+    const a = Math.min(1, S.intro/20);
+    ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffd447';
+    ctx.font = 'bold 13px "Courier New",monospace';
+    ctx.fillText('DO NOT GET HIT', W/2, HORISONT - 40);
+    ctx.fillStyle = '#c9c9dd';
+    ctx.font = '10px "Courier New",monospace';
+    ctx.fillText('the ground is marked before the sky fires', W/2, HORISONT - 24);
+    ctx.textAlign = 'left'; ctx.globalAlpha = 1;
+  }
+  hud();
+  alarmLed.classList.toggle('lit',
+    S.varsler.some(v => v.mal.indexOf(S.kol) !== -1));
+  ctx.restore();
+}
+
+/* ---------- meny ---------- */
+const meny = document.getElementById('meny');
+const menyResultat = document.getElementById('menyResultat');
+let menyTimer = null, startetVed = 0;
+const VALG_TEKST = {A:'Distant thunder.', B:'Overhead.', C:'It wants you.'};
+function oppdaterValg(){
+  try {
+    for (const el of document.querySelectorAll('.valg')){
+      const m = el.dataset.mode, b = beste(m);
+      const sp = el.querySelector && el.querySelector('span');
+      if (sp) sp.textContent = VALG_TEKST[m] + (b > 0 ? '   BEST ' + b : '');
+    }
+  } catch (e) {}
+}
+function visMeny(res, fraKnapp){
+  if (!fraKnapp && S && !S.paused && !S.over && Date.now() - startetVed < 2000) return;
+  clearTimeout(menyTimer); menyTimer = null;
+  if (res){
+    menyResultat.innerHTML =
+      '<div class="tittel">SEVEN AND DONE</div>' +
+      '<div class="tall">SURVIVED ' + res.tid + '</div>' +
+      '<div class="poeng">SCORE ' + String(res.score).padStart(3,'0') + '</div>' +
+      (res.ny ? '<div class="rekord">NEW BEST</div>'
+              : '<div class="rekord dempet">BEST ' +
+                String(beste(res.mode)).padStart(3,'0') + '</div>');
+    menyResultat.classList.add('vis');
+  } else menyResultat.classList.remove('vis');
+  oppdaterValg();
+  meny.classList.add('vis');
+  if (S) S.paused = true;
+}
+function skjulMeny(){ meny.classList.remove('vis'); }
+function planleggMeny(){
+  if (menyTimer || S.menyPlanlagt) return;
+  S.menyPlanlagt = true;
+  const res = {score:S.score, mode:S.mode, ny:S.nyRekord,
+               tid: Math.round(S.meter * S.n.interval / 1000) + 's'};
+  menyTimer = setTimeout(() => { menyTimer = null; visMeny(res); }, 1300);
+}
+
+let crashed = false, rammer = 0, markTid = 0;
+function frame(t){
+  if (crashed) return;
+  try {
+    if (!S.last) S.last = t;
+    const dt = t - S.last; S.last = t;
+    if (!S.over && !S.paused){
+      S.acc += dt;
+      while (S.acc >= S.interval){ S.acc -= S.interval; step(); }
+    }
+    if (S.over) planleggMeny();
+    draw(t);
+    rammer++;
+    if (rammer === 4) ettermaling();
+  } catch (e){
+    crashed = true;
+    report('LOOP: ' + (e && e.message) + '\n' + (e && e.stack || ''));
+    return;
+  }
+  requestAnimationFrame(frame);
+}
+function ettermaling(){
+  const skjerm = document.getElementById('screen');
+  const ekte = skjerm.clientHeight - 10;
+  sisteW = skjerm.clientWidth; sisteH = skjerm.clientHeight;
+  if (!(ekte > 40)) return;
+  if (S && !S.paused && !S.over) return;
+  const forventet = Math.round((skjerm.clientWidth - 10) * H / W);
+  if (Math.abs(ekte - forventet) < 10) return;
+  layout();
+  const m = S ? S.mode : 'A';
+  reset(m); S.paused = true;
+}
+
+/* ---------- input ---------- */
+function flytt(d){
+  if (S.over || S.paused || S.frys > 0) return;
+  S.sisteKol = S.kol;
+  S.kol = Math.max(0, Math.min(KOL-1, S.kol + d));
+}
+let touchUsed = false;
+function bindRetning(id, d){
+  const el = document.getElementById(id);
+  let forsink = null, gjenta = null;
+  const start = e => {
+    e.preventDefault();
+    if (e.type === 'touchstart') touchUsed = true;
+    el.classList.add('ned'); flytt(d);
+    clearTimeout(forsink); clearInterval(gjenta);
+    forsink = setTimeout(() => { gjenta = setInterval(() => flytt(d), 110); }, 260);
+  };
+  const slutt = () => { el.classList.remove('ned');
+    clearTimeout(forsink); clearInterval(gjenta); };
+  el.addEventListener('touchstart', start, {passive:false});
+  el.addEventListener('touchend', slutt);
+  el.addEventListener('touchcancel', slutt);
+  el.addEventListener('pointerdown', e => { if (e.pointerType !== 'touch') start(e); });
+  addEventListener('pointerup', slutt);
+}
+function bindEl(el, fn){
+  if (!el) return;
+  el.addEventListener('touchstart', e => {
+    e.preventDefault(); touchUsed = true; fn(); }, {passive:false});
+  el.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch') return; e.preventDefault(); fn(); });
+  el.addEventListener('click', e => { if (touchUsed) return; e.preventDefault(); fn(); });
+}
+bindRetning('left', -1);
+bindRetning('right', 1);
+for (const el of document.querySelectorAll('.valg'))
+  bindEl(el, () => { skjulMeny(); start(el.dataset.mode); });
+bindEl(document.getElementById('btnMeny'), () => visMeny(null, true));
+bindEl(document.getElementById('btnHjem'), () => { location.href = HJEM; });
+document.addEventListener('touchstart', e => {
+  if (e.target && e.target.tagName === 'BUTTON') return;
+  if (e.target && e.target.closest && e.target.closest('#meny')) return;
+  if (Date.now() - startetVed < 300) return;
+  const r = cv.getBoundingClientRect();
+  flytt(e.changedTouches[0].clientX - r.left < r.width/2 ? -1 : 1);
+}, {passive:true});
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  flytt(-1);
+  if (e.key === 'ArrowRight') flytt(1);
+});
+
+function start(mode){
+  clearTimeout(menyTimer); menyTimer = null;
+  reset(mode); S.paused = false; startetVed = Date.now(); skjulMeny();
+}
+let layoutTimer = null, sisteH = 0, sisteW = 0, liggende = null;
+function omLayout(tvungen){
+  const skjerm = document.getElementById('screen');
+  const nyW = skjerm.clientWidth, nyH = skjerm.clientHeight;
+  const spiller = S && !S.paused && !S.over;
+  if (!tvungen && spiller) return;
+  sisteW = nyW; sisteH = nyH;
+  layout();
+  const m = S ? S.mode : 'A';
+  reset(m); S.paused = true; visMeny(null);
+}
+addEventListener('resize', () => {
+  clearTimeout(layoutTimer); layoutTimer = setTimeout(() => omLayout(false), 200); });
+addEventListener('orientationchange', () => setTimeout(() => {
+  const na = window.innerWidth > window.innerHeight;
+  if (liggende === null){ liggende = na; return; }
+  if (na === liggende) return omLayout(false);
+  liggende = na; omLayout(true);
+}, 300));
+
+try {
+  layout(); reset('A'); S.paused = true; visMeny(null);
+  requestAnimationFrame(frame);
+} catch (e){ report('STARTUP: ' + (e && e.message) + '\n' + (e && e.stack || '')); }
+</script>
+</body>
+</html>
