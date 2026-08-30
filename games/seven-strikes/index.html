@@ -189,14 +189,20 @@ function layout(){
    nedslag. Ingenting annet - dette er en mann som ikke skal bli truffet. */
 /* jakt = hvor ofte lynet sikter rett pa der du staar. Det er dette som gjor
    at a sta stille er den sikreste maten a do pa. */
+/* Varsel og mellomrom oppgis i MILLISEKUNDER, ikke i tikk. Tikket blir
+   kortere for hvert stormtrinn, sa tikkbaserte tall krympet varselet under
+   menneskelig reaksjonstid uten at det var meningen. */
+const VARSEL_GULV = 520;                 // aldri kortere forvarsel enn dette
+const MELLOM_GULV = 700;                 // aldri tettere lyn enn dette
 const NIVA = {
-  A: {interval:240, varsel:[4,3,3], mellom:[8,11], minMellom:5,
+  A: {interval:240, varselMs:[1150, 950, 800], mellomMs:[1900, 2600],
       greinStart:.18, maksMal:2, jakt:[.60,.70,.78]},
-  B: {interval:205, varsel:[3,3,2], mellom:[6,9],  minMellom:4,
+  B: {interval:205, varselMs:[ 950, 820, 700], mellomMs:[1300, 1900],
       greinStart:.34, maksMal:3, jakt:[.72,.80,.88]},
-  C: {interval:175, varsel:[3,2,2], mellom:[5,7],  minMellom:3,
+  C: {interval:175, varselMs:[ 820, 700, 600], mellomMs:[ 950, 1350],
       greinStart:.50, maksMal:3, jakt:[.82,.88,.94]}
 };
+function tikk(ms, gulv, iv){ return Math.max(2, Math.round(Math.max(ms, gulv) / iv)); }
 const TRAPP = [0, 60, 140];
 
 let S = null;
@@ -209,8 +215,11 @@ function reset(mode){
         hinder:[], nesteHinder:9, dyttet:0, sisteKol:2, frys:0,
         fjern:[], fjernBlitz:0, nesteFjern:6,
         flair:[], nesteFlair:5,
-        intro:70, storm:0, varsel:n.varsel[0], grein:n.greinStart,
-        mellom:n.mellom.slice(), jakt:n.jakt[0],
+        intro:70, storm:0, grein:n.greinStart,
+        varsel: tikk(n.varselMs[0], VARSEL_GULV, n.interval),
+        mellom: [tikk(n.mellomMs[0], MELLOM_GULV, n.interval),
+                 tikk(n.mellomMs[1], MELLOM_GULV, n.interval)],
+        jakt:n.jakt[0],
         nesteLyn:5, blitz:0, shake:0, doeT:0, nyRekord:false,
         over:false, acc:0, last:0, interval:n.interval };
   S.visX = kolX[S.kol];
@@ -365,7 +374,9 @@ function step(){
 
   // flairlaget: liv som krysser enga foran deg. Ren pynt, ingen kollisjon.
   for (const fl of S.flair){
-    fl.d = fram(fl.d, 1);
+    // Busker star i marka og folger den. Dyr lopar TVERS over synsfeltet -
+    // de skal ut av bildet i siden lenge for de rekker a komme naer.
+    fl.d = fram(fl.d, fl.type === 'busk' ? 1 : .15);
     fl.x0 += fl.vx;
   }
   S.flair = S.flair.filter(fl => fl.d < 1.45 && fl.x0 > -W && fl.x0 < W*2);
@@ -374,9 +385,9 @@ function step(){
     const type = r < .42 ? 'hare' : r < .7 ? 'rev' : r < .88 ? 'busk' : 'fugl';
     const fraVenstre = Math.random() < .5;
     S.flair.push({
-      type, d: .05 + Math.random()*.5,
-      x0: fraVenstre ? -30 : W+30,
-      vx: (type === 'busk' ? 0 : (fraVenstre ? 1 : -1) * (2.2 + Math.random()*2.4)),
+      type, d: type === 'busk' ? .04 : .18 + Math.random()*.42,
+      x0: fraVenstre ? -W*.8 : W*1.8,
+      vx: (type === 'busk' ? 0 : (fraVenstre ? 1 : -1) * (20 + Math.random()*12)),
       r: fraVenstre ? 1 : -1, v: Math.random()*7
     });
     S.nesteFlair = S.tick + 4 + Math.floor(Math.random()*8);
@@ -405,12 +416,13 @@ function step(){
   for (let i=1; i<TRAPP.length; i++) if (S.score >= TRAPP[i]) sniva = i;
   if (sniva !== S.storm){
     S.storm = sniva;
-    S.varsel = S.n.varsel[sniva];
+    S.interval = Math.max(140, S.n.interval - sniva*18);
+    // regnes om mot det nye tikket, sa millisekundene holder seg
+    S.varsel = tikk(S.n.varselMs[sniva], VARSEL_GULV, S.interval);
+    S.mellom = [tikk(S.n.mellomMs[0] - sniva*220, MELLOM_GULV, S.interval),
+                tikk(S.n.mellomMs[1] - sniva*320, MELLOM_GULV, S.interval)];
     S.grein  = Math.min(.75, S.n.greinStart + sniva*.16);
     S.jakt   = S.n.jakt[sniva];
-    S.mellom = [Math.max(S.n.minMellom, S.n.mellom[0] - sniva*2),
-                Math.max(S.n.minMellom+2, S.n.mellom[1] - sniva*2)];
-    S.interval = Math.max(140, S.n.interval - sniva*24);
   }
   if (S.blitz > 0) S.blitz--;
   if (S.doeT > 0) S.doeT--;
