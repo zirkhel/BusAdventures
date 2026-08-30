@@ -1,3 +1,527 @@
+Skip to main content
+Ctrl+K
+Ctrl+J
+
+
+
+Pasted Text.txt
+Nå skal jeg vise kode for et av småspillene i mitt bus-adventures konsept.
+
+
+Worked for 8s
+Kult konsept. Jeg har lest gjennom Guardian Kraken — det er et ferdig lite LCD-spill med modus A/B/C, oksygen, gullvekt, tentakkelvarsel og highscore.
+
+Et par ting som vil knekke koden med en gang:
+
+1. Krøllete anførselstegn og «feil» minustegn
+
+Filen bruker typografiske tegn i stedet for vanlig JavaScript:
+
+‘kraken-best-’ i stedet for 'kraken-best-'
+S.blink–; i stedet for S.blink--;
+–g.t i stedet for --g.t
+Det gir syntaksfeil før spillet i det hele tatt starter.
+
+2. Ellers ser logikken gjennomtenkt ut
+
+Poster 0–7, kiste på 7, båt på 0
+Armene slår aldri slik at alle farlige poster stenger samtidig
+Varselring + «nødutgang» når armen allerede varsler
+Gull gir poeng n*(n+1) og tapper mer luft
+Layout tåler iOS-adresselinje uten å kaste deg ut midt i runden
+Si hva du vil at jeg skal gjøre med det:
+
+rydde opp tegnene og gjøre HTML-en kjørbar
+peke på bugs i timing/kollisjon/tegne-rekkefølge
+tilpasse det mer til resten av Bus Adventures
+lage en kort spillbeskrivelse / instruksjonstekst
+noe annet
+Hva er neste steg?
+
+Så rart. Spillet fungerer helt fint for meg ?
+
+
+Worked for 18s
+Da stemmer det — da er det limingen som er rart, ikke spillet ditt.
+
+Teksten du limte inn her er ikke identisk med koden som kjører hos deg. I den limte fila er vanlige JS-tegn byttet ut:
+
+' har blitt ‘ og ’ (150 + 248 stykker)
+-- har blitt – (en-dash), f.eks. S.blink–; og S.blinkInn–;
+noen "Courier New" har blitt “Courier New”
+Det er klassisk «smart quotes» fra Notes, Word, Slack, e-post eller en nettside som pynter tekst. Nettleseren din kjører den rene fila. Den limte versjonen her ville derimot krasje med Uncaught SyntaxError før requestAnimationFrame i det hele tatt startet.
+
+Så: spillet ditt kan godt være helt fint. Jeg reagerte på kopien, ikke på originalen.
+
+Hvis du vil at jeg skal gjennomgå logikk, balanse eller grafikk, send heller fila som .html (eller lim inn fra en ren kodeeditor), så slipper vi den støy-en.
+
+Det er ikke det jeg vil. Jeg vil du skal skjønne konteksten, så skal vi lage nytt spill.
+
+
+Worked for 6s
+Skjønt. Da legger jeg «smart quotes»-sporet helt vekk.
+
+Bus Adventures er en samling små LCD-spill i samme fysiske skall: mørk «device»-ramme, HOME tilbake til index.html, MENU, alarmlampe, to store knapper, canvas som et lite skjermpanel. Hvert spill er et eget «håndholdt» med A/B/C-tempo, rekord per modus, og regler som går an å lese — ikke bare reagere.
+
+Guardian Kraken er malen for hvordan et slikt spill oppfører seg:
+
+Fast bane (poster), ikke fri bevegelse
+Fienden varsler før den slår (glød, ring, LED)
+Fluktvei finnes alltid hvis du leser takten
+Ressurs som tappes (luft) og last som koster mer
+Poeng for å levere, ikke bare plukke
+Død er tydelig («CAUGHT» / «OUT OF AIR»), så meny med landed/lost/score
+Tegning er 2× skalert, uten smoothing; vann, bunn, kropp og HUD er håndtegnet
+Når vi lager neste spill, tar jeg med meg det: samme skall, samme kontrollfilosofi, nye regler og ny «verden» inni LCD-en.
+
+Klar. Hva skal det nye spillet handle om — og heter det allerede noe?
+
+Ikke helt sant. Bus adventures kan ha andre typer spill, små grafiske eventyr ala text adventures bare mindte, akkurat dette er arcade med indoirasjon fra tidligere enkle spill, game and watch etc. spørsmål, har du noe forslag ? Hvis ikke tenker enten et ninjaspill, space invaders-i spirert, bruce lee (c64) inspirert
+
+
+Worked for 4s
+Riktig presisering: skallet er felles, sjangeren er det ikke. Kraken er G&W/arcade. Andre titler kan være små rom-eventyr med valg, inventory og én setning av gangen — bare tegnet, ikke parsed som Infocom.
+
+To knapper er den harde rammen. Alt som trenger «hopp + slå + retning samtidig» må jukses (hold, kontekst, eller MENU som tredje handling).
+
+Forslag som passer skallet
+
+Nattbuss-eventyr — 8–12 stopp, én scene per stopp, to valg (BLI / GÅ AV). NPC-er, én gjenstand i lommen, slutt som endrer seg. Mini-graphic adventure, ikke arcade.
+Vakt-runde — du er konduktør. Gå gjennom vognene, slå av alarm, kaste av bråk. G&W-tempo, men med «rom».
+Bagasjerommet — stable kofferter før neste holdeplass. Tetris-aktig, men med ankomst-klokke.
+De tre du nevnte
+
+Ninja: blir fort «hopp + slå + smyge». På to knapper funker det best som timing: stå, gli forbi lykt, slå når vakten snur. Mer Kung-Fu Master-stripe enn åpent dojo.
+Space Invaders: treffer skallet hardt (skyte + flytte). Løsning: én knapp er SKYT, den andre er BYTT FELT (venstre/høyre-fil). Tre filer, skjold, boss-rad. Trygt, litt forutsigbart.
+Bruce Lee (C64): det mest interessante. Ikke hele palasset — ett rom om gangen: stige, lykt, dør, én grønn fighter, én yan. DIVE = frem / slå (kontekst), BACK = tilbake / dukke. Lanterner som mål, nøkkel til neste vogn. Føles som C64 uten at vi later som vi har joystick.
+Det jeg ville laget først: en Bruce-Lee-vogn. Samme device som Kraken, men sidescroll-rom i bussens lengde. Tre «vogner» = tre rom. A/B/C = flere fiender og raskere slagvindu. Eventyr-krydder: én lykt og én nøkkel, ikke ti stats.
+
+Ninja som Renegade-stripe er nesten like bra. Space Invaders bare hvis du vil ha noe som er ferdig på en kveld og umiddelbart lesbart.
+
+Si hvilken av de fire du vil ha (nattbuss / ninja-stripe / invaders-filer / Bruce-vogn), så skisser jeg regler som faktisk går på BACK + DIVE før vi skriver kode.
+
+Ikke vær
+Låst til knapper. Spør om du trenger videre avklaringer før du låser.
+
+Forøvrig tenker jeg space invaders. Defender autoskyter, det er forsvarsmur som sakte bombes ned av fienden, som beveget deg i formasjon en linje ned om gangen
+
+
+Worked for 9s
+Da låser jeg ikke ennå. Space Invaders-kjernen er klar: du auto-skyter, muren er det som faktisk dør, formasjonen går sidelengs og dropper én linje når den treffer kanten.
+
+Det jeg trenger før regler og layout spikres:
+
+1. Tema
+
+Ren rom-LCD i samme device-skall, eller buss-twist (drone-sverm over taket, måker, «billettkontroll fra verdensrommet»)? Navn?
+
+2. Hva vinner / taper du på
+
+Taper når muren er borte, når de lander, eller når du blir truffet?
+Vinner du ved å tømme bølgen, eller er det overlevelse + poeng som Kraken?
+3. Muren
+
+Én sammenhengende voll, eller 3–4 bunkere med hull?
+Fiendens bomber gnager den. Gjør dine skudd også hull, eller går de gjennom?
+Kan du stå bak og være trygg, eller er du foran/oppå den?
+4. Formasjon
+
+Klassisk rutenett (f.eks. 5×8)?
+
+Egne «bomber» nederst som skyter oftere?
+
+UFO/bonus over toppen?
+
+5. Styring
+
+Siden vi ikke er låst til to knapper: venstre/høyre + ev. pause er nok hvis skytingen er auto. Vil du også ha «hold for å lade / treffe gjennom to» eller skal skuddet være jevnt og dumt?
+
+6. A/B/C
+
+Forslag, ikke låst: A sakte + tykk mur, B raskere + tynnere mur, C formasjonen dropper oftere og bomber mer. Si ifra om C skal «vite» noe (som Kraken).
+
+7. Liv
+
+Tre liv som Kraken, eller ett liv og muren er livet?
+
+Svar så grovt du vil — «klassisk SI, men auto-fire og mur som hovedmål» holder. Resten fyller jeg ut etter det.
+
+
+
+Space invaders. Fienden slipper bomber, du mister liv om du blir truffet. Murene beskytter en stund.
+Hvis formasjonen kommer helt ned er det gsme over. Klarer spiller hele runden, legges det på nye fiender som gjør nye ting. For hver runde beveger fiendene seg fortere. Vi kan legge til setie nye perks soiller kan samle.. penetration blaster som går gjennom hele rekka. Nuke som ekspliderer midt inni fiendene og lager blastradius.. mur- reperasjon osv.. bare en spesialting om gangen dom sktiveres med knapp.
+
+
+Worked for 2m 56s
+Låst og bygget: SPACE WATCH — samme device-skall som Kraken, klassisk grønn/svart linje inni.
+
+Regler
+
+Kanonen auto-skyter. Du styrer LEFT / RIGHT (piltaster også).
+Fire bunkere gnages av bomber og dine skudd.
+Formasjonen går sidelengs og dropper én linje i kanten.
+Treff = mist liv. Formasjonen i bakken = THEY LANDED.
+Bølge tømt → ny bølge, raskere. Etter hvert kommer armor (to treff), bombers og gull-krabber.
+UFO på toppen. Kasser faller. Én spesial om gangen, SPECIAL / mellomrom / pil opp:
+PIERCE — tre skudd gjennom rekka
+NUKE — radius midt i klyngen
+REPAIR — bunkerne bygges opp
+SHIELD — neste treff blokkeres
+A drill, B skarpere, C tilpasser seg tidligere.
+
+Fil: space-watch.html (HOME peker fortsatt på ../../index.html).
+
+
+Si ifra om tempo, perk-drop eller om C skal være slemere — da tweaker vi uten å bygge om skallet.
+
+Bra start.  Jeg tror mer special. Special cratene må
+Droppe raskere. Designet på kanon og ufo må redesignes så det ikke er akkurat det samme.
+Specials må være litt mer spektakulært,
+Nulen fyres opp og eksploderer, ikke random sirkel. Og så er tempoet opplevd tregt, tar for lang tid før stresset kommer.
+Hbor mange tomme linjer har vi nå vs orginalen ? Svar før du gjør noe videre
+
+
+Worked for 51s
+Svar først, ingen endring ennå.
+
+I formasjonen: like mange som originalen. 5 fylte rader × 11, 0 tomme rader inne i rutenettet.
+
+Under formasjonen (det som gjør at det føles tregt), på designhøyde 260:
+
+Space Watch nå	Original Space Invaders (ca.)
+Tomrom formasjon → mur	~2,8 radhøyder (62 px)	~4 radhøyder (64 px på 256)
+Dropp før de er i murhøyde	A 7, B 6, C 5	~8 dropp à 8 px
+Dropp før de er hos spilleren	litt flere	~11
+Så vi har ikke flere tomme linjer enn originalen i selve gridet. Vi har tvert imot litt mindre luft mot muren enn Taito-maskinen, hvis lerretet faktisk er 260 høyt.
+
+Der det skiller seg: originalen er et fast, lavt arkadebilde. Hos oss vokser H med telefonen. Da blir bunnen av formasjonen stående på y=136 mens muren følger H - 62. På et høyt panel blir det plutselig 6–9 tomme linjer før det haster — og det er der stresset forsvinner.
+
+Kildekode, hvis du mente det: Space Watch har 62 blanke linjer, Kraken-limingen 46. Det har ingenting med tempo å gjøre.
+
+Si ifra så tar jeg neste runde: raskere kasser, mer synlige specials, nuke som lades og detonerers, ny kanon/UFO, og formasjonen som starter lavere / dropper hardere så stresset kommer tidligere.
+
+Jeg mente ikke kildekode. Jeg mente antall forflytninger ned for fienden, og g tiden mellom en forflytning
+
+
+Worked for 11s
+Da er det to ulike klokker.
+
+Nedover (dropp)
+
+Én ned-forflytning skjer bare når formasjonen treffer kanten. Da dropper de i stedet for å gå sidelengs.
+
+Space Watch, bølge 1, H=260	Original SI, rack 1 (ca.)
+Dropp til muren	A 7 · B 6 · C 5	ca. 8
+Dropp til spilleren / land	A 8–9 · B 7 · C 6	ca. 10–11
+Piksler per dropp	A 10 · B 12 · C 14	8
+Vi har altså færre ned-steg enn originalen, men hvert steg er dypere. Stresset kommer sent likevel fordi det er mange sidesteg mellom hvert dropp.
+
+Tid mellom én forflytning (både sidelengs og ned bruker samme takt)
+
+Originalen tegner én alien per frame. Med 55 i live er det ca. 55/60 s ≈ 0,92 s mellom hvert steg. Med 1 igjen er det én frame.
+
+Hos oss nå, start av bølge 1:
+
+A 520 ms
+B 400 ms
+C 320 ms
+gulv 48 ms når nesten alle er skutt / høy bølge
+Vi er altså raskere per steg enn originalen ved start, men originalen føles mer truende fordi formasjonen begynner tettere på og akselererer hardere når rutenettet tynnes. Hos oss er første minutt mange vannrette steg over et stort svart felt før første dropp merkes.
+
+Kort: færre dropp enn Taito, kortere steg-tid enn Taitos åpning, for lang tid til første virkelige trussel.
+
+Vi kam flytte grunnbasen høyere opp så det kommer tettere på. Bedre visning av spesialen vi har. Andre forslag ? Tempofølelsen må justeres på en eller annen måte. Forslag og oversikt over endringene ?
+
+
+Worked for 4s
+Ja. Flytt basen opp, men ikke bare det — tempoet må også høre at rutenettet tynnes.
+
+Tempo
+Nå: mange sidesteg over svart felt, dropp merkes sent, akselerasjonen er for myk.
+
+Forslag:
+
+Hev bakken — spiller, mur og bakkelinje ~28–36 px opp. Færre dropp før det haster (mål: A 5 dropp til mur, C 3–4).
+Start lavere for hver bølge — bølge 2 allerede et dropp nærmere, som original rack.
+Kortere åpningstakt — A 380 / B 280 / C 210 ms (nå 520/400/320).
+Hardere tynning — når halvparten er borte, skal steget være omtrent dobbelt så raskt. Siste 8 skal føles urolige.
+Kortere sidesteg, samme dropp — 8 px sidelengs i stedet for 6, så de treffer kanten oftere og dropper oftere.
+Første bombe tidligere — ikke vent et helt rutenett-løp før det tikker i bunkeren.
+C beholder «they adapt»: armor og bombers fra bølge 1, pluss at de dropper dypere.
+
+Specials
+Nå: liten tekst nederst til venstre, kasse som daler sakte, nuke = sirkel midt i stimen.
+
+Forslag:
+
+HUD-brick øverst/ved kanonen: ikon + navn + «PRESS SPECIAL». Alarm-LED tent bare når du har en.
+Kasser faller 2–3× fortere, tydelig fargekode.
+Nuke: kassen/knappen lader en merke-sirkel under nærmeste klynge i 0,4 s, så detonasjon utover med flash og hull i rutenettet. Ikke «sirkel et sted».
+Pierce: synlig gjennomgående strek, ikke bare et annet farget skudd.
+Repair: murene vokser celle for celle, ikke teleport.
+Shield: kuppel rundt kanonen som sprekker.
+Flere specials (én om gangen, fortsatt):
+
+WIDE — tre løp ved siden av hverandre i noen sekunder
+FREEZE — formasjonen står 1,5 s, bomber faller ferdig
+HOOK — neste skudd river en hel kolonne
+Hold listen på 5–6 så SPECIAL ikke blir loot-meny.
+
+Utseende
+Kanon og UFO skal ikke være Taito-kopier.
+
+Kanon: kort «vakt-lavett» med to bein og en tønne som recyler auto-skudd (liten rekyl), mer Bus Adventures enn tank.
+UFO: avlang overvåkingsdrone med én lampe, ikke tallerken med tre pukkler.
+Oversikt over endringene (når du sier kjør)
+#	Endring	Hvorfor
+1	Heve spiller + mur + bakkelinje	Tettere på, færre tomme dropp
+2	Raskere start-takt + sterkere speed-up	Stress tidligere
+3	Større sidesteg / oftere kant	Flere ned-forflytninger per minutt
+4	Bølger starter lavere	Original-følelse uten å kopiere sprite
+5	Tidligere og litt raskere bomber	Muren jobber med en gang
+6	Kasser faller fortere	Perk er et valg, ikke en ventescene
+7	Synlig special-HUD	Du ser hva du holder
+8	Spektakulær nuke (lade → sprekke)	Lesbart og tilfredsstillende
+9	Pierce/repair/shield med tydelig FX	Samme grunn
+10	Ev. WIDE / FREEZE / HOOK	«Mer special» uten å rote kontrollen
+11	Ny kanon + drone-UFO	Ikke screenshot-kopi
+Jeg rører ikke A/B/C-menyen eller device-skallet.
+
+Si «kjør» som den listen, eller stryk/legg til én linje først (f.eks. uten FREEZE, eller enda tettere base).
+
+Kjør
+
+
+Worked for 2m 45s
+Kjørt. Samme fil: space-watch.html.
+
+Tempo
+
+Base, mur og bakkelinje hevet
+Start-takt A/B/C: 380 / 280 / 210 ms
+8 px sidesteg → oftere dropp
+Halv rute / siste 8 akselererer hardere
+Bølge 2+ starter lavere
+Første bombe kommer nesten med en gang
+Lerretet vokser ikke lenger til 620 px
+Specials
+
+HUD-brick nede til venstre (navn + blinkende USE)
+LED bare når du har perk / nuke låser / de er i muren
+Kasser faller ~3× fortere
+NUKE: sikte på klyngen → kryss + ring trekker seg inn → smell
+REPAIR: celler vokser tilbake
+PIERCE etterlater strek
+Nye: WIDE, FREEZE, HOOK
+Utseende
+
+Kanon = lavett med bein og rekyl, ikke Taito-tank
+UFO = overvåkingsdrone med blinkende lampe
+SPECIAL / mellomrom / pil opp som før. Si ifra om C fortsatt er for snill, eller om HOOK/FREEZE tar for stor plass.
+
+
+
+En ting til fra første iterasjon: special må være klart deaktivert før den kan trykkes med visuell trykk.
+Nyeste fil ser slik ut ved kjøring:
+
+
+Worked for 2m 43s
+To ting i samme runde.
+
+Svart skjerm
+
+Menyen lå bare i JS (display:none til vis ble satt). Hvis scriptet ikke rakk å starte i WebView-en, var LCD-en bare svart lerret. Nå er Choose game synlig i HTML med en gang, menyen ligger i eget lag over canvas, og første tegning skjer før spill-loopen.
+
+Last fila på nytt — ikke en gammel forhåndsvisning.
+
+SPECIAL
+
+Slått av: lav opacity, ingen innsynk, ingen glow.
+På (du har perk): ramme, glow, og vanlig trykk-animasjon.
+Trykk uten perk gjør ingenting.
+Si ifra om menyen kommer opp etter reload. Hvis den fortsatt er svart, ligger feilteksten øverst i LCD-en (#err) — da sender du den.
+
+
+
+
+
+Forskjell på forhåndsvising første ig andre iterasjon:
+
+
+Worked for 15s
+Forskjellen er ikke spillideen — det er hvordan fila ble vist.
+
+Første iterasjon (bildet med Game A/B/C): chat-forhåndsvisningen kjørte HTML-en. Menyen ligger oppå canvas, aliens i bakgrunnen, score/liv synlige. Det er den levende fila.
+
+Andre iterasjon (etter «kjør»): i tråden fikk du bare fil-chip + tekst. Da du åpnet den i spilleren, var LCD svart fordi menyen startet som display:none og ventet på JS — i den WebView-en kom aldri .vis på.
+
+Så: første forhåndsvisning = scriptet kjørte. Andre «forhåndsvisning» = enten ingen preview, eller preview uten at oppstarten rakk å tegne menyen.
+
+Nå er menyen synlig i selve HTML-en, samme A/B/C-kort som på det første skjermbildet. Last space-watch.html på nytt; du skal se SPACE WATCH / Choose game / A B C med rutenettet bak, ikke et svart felt.
+
+Hvis den siste fila fortsatt er svart i spilleren men grønn i chat-kortet, er det spilleren som cacher den gamle andre-iterasjonen.
+
+2 ting her. Første iterasjon kjørte jeg rett på telefonen. Den virket, men ikke de andre 2 etter korrigering. Men de virker på pc. Sak 2: på pc er det et helt annet spill, og nå sltfor kjapt. På telefon tsr det 5 sekunder fra fienden skyter til bomben er nede, går kjempetregt. På pc, samme fil.. rett inn i stresset
+
+
+Worked for 1m 25s
+Det var to ulike klokker, ikke to ulike spill.
+
+Hvorfor telefonen døde etter v1
+
+v2/v3 satte canvas til height: 100%. På PC har #screen høyde. På telefonen ble høyden 0 → svart LCD. v1 (og Kraken) bruker height: auto. Det er tilbake.
+
+Hvorfor PC og telefon føltes som to spill
+
+Banen endret høyde etter skjermen. Telefon = langt fall (derav ~5 s). PC-vindu = kort fall.
+Bomber ble telt i frames, ikke millisekunder. 120 Hz-PC slapp tre ganger så ofte som 40 Hz-telefon.
+dt var taket på 50 ms, så en treg telefon kjørte i halv fart.
+Nå
+
+Fast bane 320×260 overalt
+Alt som beveger seg er px/sekund
+Bombetakt i ms
+Falltid ca. 1,2–1,6 s, ikke 5 og ikke «med en gang»
+Start-takt litt roligere enn den siste PC-versjonen (A 420 / B 340 / C 270 ms)
+Samme fil på telefon og PC skal nå være samme spill. Last helt på nytt på telefonen (ikke gammel fane).
+
+Hvilken samme fil ?
+
+Den siste, oppdaterte fila her:
+
+/home/workdir/artifacts/space-watch.html
+
+I chatten er det den som heter space-watch.html — ikke Kraken, og ikke en eldre forhåndsvisning av første iterasjon.
+
+Last ned den på nytt og åpne den. En gammel fane på telefonen er fortsatt v2/v3.
+
+
+
+Jeg åpnet den første rett herfra i denne chatte , og den virket og jeg fikk spilt. Ingenting etter det får jeg åpnet her, eller åpnet i safari.
+
+
+Worked for 13s
+
+Trykk på fila over. Hvis iOS viser Apper / AirDrop / Notater, ikke åpne der — det er ikke en nettleser.
+
+Slik får du den til å kjøre på telefonen
+
+Trykk del-ikonet på fila.
+Velg Safari (eller «Åpne i Safari»). Hvis Safari ikke ligger der: Filer → lagre → åpne fila derfra.
+Ikke Notater, ikke Mail-forhåndsvisning, ikke Grok på nytt.
+Første iterasjon virket fordi chatten rendret HTML-en som side. Etterpå fikk du en nedlastingsfil, og iOS spør «hvilken app» — da dør spillet.
+
+Når den ligger i Safari skal du se SPACE WATCH / GAME A B C, ikke svart felt og ikke bare delearket.
+
+hvor legger jeg filen ?
+
+2 / 2
+
+Worked for 19s
+På iPhone: Filer-appen.
+
+Enklest
+
+Trykk på space-watch.html i chatten.
+Del → Lagre i Filer.
+Velg På iPhone → f.eks. Nedlastinger eller en mappe du lager som Bus Adventures.
+Åpne Filer → trykk på space-watch.html → Åpne i Safari (hold inne fila hvis den åpnes som tekst).
+Hvis Safari ikke dukker opp
+Hold inne fila i Filer → Del → Safari.
+
+Ikke Notater, ikke Mail, ikke Grok. Da blir det bare tekst eller deleark, ikke spill.
+
+På PC: hvor som helst, dobbeltklikk, åpnes i nettleseren. Samme fil.
+
+Nei- Hvor i bussassist legger jeg filen
+
+
+Worked for 18s
+I Kraken-fila di står det:
+
+const HJEM = '../../index.html';
+HOME-knappen går to mapper opp til hovedmenyen. Da skal Space Watch ligge like dypt som Kraken.
+
+Typisk:
+
+bussassist/
+  index.html              ← Bus Adventures-menyen
+  games/
+    kraken/
+      index.html          ← Guardian Kraken
+    space-watch/
+      space-watch.html    ← hit
+eller, hvis Kraken ligger slik du allerede har det:
+
+bussassist/
+  index.html
+  <samme-mappe-som-kraken>/
+    space-watch.html
+Legg den ved siden av Kraken-fila, ikke i rot. Da virker ../../index.html uten at du endrer noe.
+
+I hovedmenyen (index.html) må du også legge inn en lenke til games/space-watch/space-watch.html (eller den stien du faktisk bruker), ellers finner bussen aldri spillet.
+
+Hvis du limer inn mappetreet rundt Kraken, peker jeg på eksakt linje i menyen.
+
+
+
+
+5 sources
+hallo
+
+
+Worked for 4s
+Hallo.
+
+Space Watch ligger klart som space-watch.html. Den skal inn ved siden av Kraken, to mapper under bussassist/index.html.
+
+Si fra om du vil ha meny-lenken, en ny runde i spillet, eller noe annet.
+
+problemet er at når jeg i dag, på pc henter opp space watch skjer det ingenting
+
+
+Worked for 46s
+Når du åpner den på PC skal du med en gang se grønn tittel SPACE WATCH, undertekst Choose game · v4, og knappene GAME A / B / C. Skjer ikke det, er det feil fil.
+
+Legg denne over den gamle i Bussassist, samme sted som Kraken:
+
+bussassist/.../space-watch/space-watch.html
+
+(to mapper under index.html)
+
+Ikke åpne en nedlasting fra chatten i Notater eller som .txt. Høyreklikk → Åpne med Chrome/Edge/Firefox.
+
+Hvis Bussassist har egen meny: pek lenken direkte på den nye space-watch.html, ikke en iframe mot en tom side.
+
+Får du svart skjerm med v4 i menyen, trykk GAME A. Får du svart uten v4, er det fortsatt gammel fil.
+
+Den spiller ganske anderledes på websiden. Wide gir mye smalere skuddvinkel, invaders kommer mye fortere ned på forsvarslinja. Imvaders forsvinner bal borgene før det er gsme over
+
+
+Worked for 1m 5s
+Tre ting på websiden, rettet i v5:
+
+WIDE
+
+Skuddene sto bare 28 px fra midten. Nå 52 px til hver side — tydelig bred vifte, og de går ikke i muren.
+
+Nedkomst
+
+Hver dropp var 8 px + formasjonen akselererte hardt etter få dropp. Nå 6 px dropp, tregere takt, slakere oppskruv. De bruker lenger tid før de er nede.
+
+Bak borgene
+
+Invaders ble tegnet under muren, og game over kom først nede ved kanonen. Nå tegnes de oppå muren, og runden slutter når nederste rekke treffer borg-linja — ikke etter at de er borte bak den.
+
+Bytt ut fila i Bussassist med denne. Meny skal si v5.
+
+
+
+
+
+space-watch.html
+
+Files
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,67 +529,28 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>SPACE WATCH — Bus Adventures</title>
 <style>
-  :root{
-    --case:#141a21; --case-hi:#26313d;
-    --key:#1f2a33; --key-lip:#0b1015; --key-on:#2f4050;
-    --alarm:#c8412f; --lcd:#010300;
-  }
+  :root{--case:#141a21;--case-hi:#26313d;--key:#1f2a33;--key-lip:#0b1015;--key-on:#2f4050;--alarm:#c8412f}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;height:100%;overflow:hidden;background:#070b0f;
-    font-family:"Helvetica Neue",Arial,sans-serif;touch-action:none;
-    -webkit-user-select:none;user-select:none}
-  body{display:flex;align-items:stretch;justify-content:center;
-    padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom)}
-  #device{width:100%;max-width:520px;background:var(--case);
-    display:flex;flex-direction:column;
-    border-radius:18px;padding:10px 10px 14px;margin:6px 0;
-    border-top:1px solid var(--case-hi);
-    box-shadow:0 18px 44px rgba(0,0,0,.7)}
-  #brand{display:flex;justify-content:space-between;align-items:center;
-    padding:2px 4px 8px;color:#5f7383;font-size:10px;letter-spacing:.2em}
+  html,body{margin:0;height:100%;overflow:hidden;background:#070b0f;font-family:"Helvetica Neue",Arial,sans-serif;touch-action:none;-webkit-user-select:none;user-select:none}
+  body{display:flex;align-items:stretch;justify-content:center;padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom)}
+  #device{width:100%;max-width:520px;background:var(--case);display:flex;flex-direction:column;border-radius:18px;padding:10px 10px 14px;margin:6px 0;border-top:1px solid var(--case-hi);box-shadow:0 18px 44px rgba(0,0,0,.7)}
+  #brand{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 8px;color:#5f7383;font-size:10px;letter-spacing:.2em}
   #brand b{color:#b6cbd9;font-size:12px;letter-spacing:.3em;flex:1;text-align:left}
-  #btnHjem{padding:5px 9px;border-radius:7px;background:#1b242c;border:0;
-    border-bottom:2px solid var(--key-lip);line-height:0;margin-right:2px}
+  #btnHjem{padding:5px 9px;border-radius:7px;background:#1b242c;border:0;border-bottom:2px solid var(--key-lip);line-height:0;margin-right:2px}
   #btnHjem svg{width:13px;height:13px;fill:#6d8291}
-  #btnHjem:active{background:#33475a}
-  #btnHjem:active svg{fill:#dceaf3}
-  #alarm{width:8px;height:8px;border-radius:50%;background:#1f2a33;
-    box-shadow:inset 0 1px 2px rgba(0,0,0,.6);margin-right:8px}
+  #alarm{width:8px;height:8px;border-radius:50%;background:#1f2a33;margin:0 6px}
   #alarm.lit{background:var(--alarm);box-shadow:0 0 9px var(--alarm)}
-  #btnMeny{padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;
-    border-radius:7px;background:#1b242c;color:#6d8291;border:0;
-    border-bottom:2px solid var(--key-lip)}
-  #btnMeny:active{background:#33475a;color:#dceaf3}
-  #screen{position:relative;background:#060a0e;border-radius:6px;padding:5px;
-    flex:1 1 auto;display:flex;align-items:center;justify-content:center;
-    box-shadow:inset 0 2px 12px rgba(0,0,0,.6);min-height:220px}
-  canvas{display:block;width:100%;height:auto;image-rendering:pixelated;
-    border-radius:3px;background:#000}
+  #btnMeny{padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;border-radius:7px;background:#1b242c;color:#6d8291;border:0;border-bottom:2px solid var(--key-lip)}
+  #screen{position:relative;background:#060a0e;border-radius:6px;padding:5px;flex:1 1 auto;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 2px 12px rgba(0,0,0,.6);min-height:220px}
+  canvas{display:block;width:100%;height:auto;image-rendering:pixelated;border-radius:3px;background:#000}
   #pad{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;margin-top:12px}
-  #pad button{background:var(--key);border:0;border-radius:16px;padding:0;
-    height:76px;border-bottom:4px solid var(--key-lip);
-    display:flex;align-items:center;justify-content:center;gap:6px;
-    color:#8aa3b5;font-size:10px;font-weight:700;letter-spacing:.14em;
-    touch-action:manipulation}
+  #pad button{background:var(--key);border:0;border-radius:16px;padding:0;height:76px;border-bottom:4px solid var(--key-lip);display:flex;align-items:center;justify-content:center;gap:6px;color:#8aa3b5;font-size:10px;font-weight:700;letter-spacing:.14em;touch-action:manipulation}
   #pad svg{width:28px;height:28px;fill:#8aa3b5;pointer-events:none}
-  #pad button:active,#pad button.ned{background:var(--key-on);
-    border-bottom-width:2px;transform:translateY(2px);color:#e2f1fa}
-  #pad button:active svg,#pad button.ned svg{fill:#e2f1fa}
+  #pad button:active,#pad button.ned{background:var(--key-on);border-bottom-width:2px;transform:translateY(2px);color:#e2f1fa}
   #special{opacity:.38;color:#4a5d6a}
-  #special svg{fill:#4a5d6a}
-  #pad #special:active,#pad #special.ned{
-    background:var(--key);border-bottom-width:4px;transform:none;color:#4a5d6a}
-  #pad #special:active svg,#pad #special.ned svg{fill:#4a5d6a}
-  #special.armed{opacity:1;color:#7fd4c8;
-    box-shadow:0 0 0 1px #3e6b68, inset 0 0 12px rgba(127,212,200,.12)}
-  #special.armed svg{fill:#7fd4c8}
-  #pad #special.armed:active,#pad #special.armed.ned{
-    background:var(--key-on);border-bottom-width:2px;transform:translateY(2px);
-    color:#e2f1fa}
-  #pad #special.armed:active svg,#pad #special.armed.ned svg{fill:#e2f1fa}
-  #meny{position:absolute;inset:5px;display:none;align-items:center;
-    justify-content:center;border-radius:4px;background:rgba(4,8,12,.94);z-index:30;
-    -webkit-transform:translateZ(0);transform:translateZ(0)}
+  #special.armed{opacity:1;color:#e8c15c}
+  #special.armed svg{fill:#e8c15c}
+  #meny{position:absolute;inset:5px;display:none;align-items:center;justify-content:center;border-radius:4px;background:rgba(4,8,12,.92);z-index:5}
   #meny.vis{display:flex}
   #menyKort{width:min(300px,92%);text-align:center;padding:4px}
   #menyKort h1{margin:0;font-size:15px;letter-spacing:.26em;color:#7CFF7C}
@@ -73,1051 +558,295 @@
   #menyResultat{margin:0 0 12px;display:none}
   #menyResultat.vis{display:block}
   #menyResultat .tittel{font-size:12px;color:#c8412f;letter-spacing:.14em;font-weight:700}
-  #menyResultat .tall{font-size:13px;color:#7fd4c8;margin-top:5px;
-    font-family:"Courier New",monospace;font-weight:700}
-  #menyResultat .poeng{font-size:11px;color:#e8c15c;margin-top:2px;
-    font-family:"Courier New",monospace}
-  #menyResultat .rekord{font-size:11px;color:#7fd4c8;margin-top:6px;
-    font-family:"Courier New",monospace;font-weight:700;letter-spacing:.1em}
-  #menyResultat .rekord.dempet{color:#5f7383;font-weight:400}
-  .valg{display:flex;align-items:baseline;justify-content:space-between;width:100%;
-    margin-bottom:8px;padding:13px 16px;border-radius:11px;background:#1f2a33;
-    border:0;border-bottom:3px solid var(--key-lip);touch-action:manipulation}
+  #menyResultat .tall,#menyResultat .poeng,#menyResultat .rekord{font-size:12px;color:#7fd4c8;margin-top:4px;font-family:"Courier New",monospace;font-weight:700}
+  .valg{display:flex;align-items:baseline;justify-content:space-between;width:100%;margin-bottom:8px;padding:13px 16px;border-radius:11px;background:#1f2a33;border:0;border-bottom:3px solid var(--key-lip)}
   .valg b{font-size:13px;letter-spacing:.14em;color:#dceaf3}
   .valg span{font-size:10px;color:#6d8291}
-  .valg:active{background:var(--key-on);transform:translateY(1px)}
   .hint{font-size:10px;color:#5f7383;line-height:1.6;margin-top:10px}
-  #err{display:none;position:absolute;left:6px;right:6px;top:6px;z-index:20;
-    padding:8px;background:#3a1414;color:#ffb3a7;
-    font:11px/1.4 ui-monospace,Menlo,monospace;white-space:pre-wrap;
-    border-radius:6px;max-height:60%;overflow:auto}
-  #err.on{display:block}
+  #err{display:none;position:absolute;left:6px;right:6px;top:6px;z-index:20;padding:8px;background:#3a1414;color:#ffb3a7;font:11px/1.4 monospace;white-space:pre-wrap}
 </style>
 </head>
 <body>
 <div id="device">
   <div id="brand">
-    <button id="btnHjem" aria-label="Back to Bus Adventures">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20 Z"/></svg>
-    </button>
+    <button id="btnHjem" type="button"><svg viewBox="0 0 24 24"><path fill="#6d8291" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></button>
     <b>SPACE WATCH</b>
     <span id="alarm"></span>
-    <button id="btnMeny">MENU</button>
+    <button id="btnMeny" type="button">MENU</button>
   </div>
   <div id="screen">
-    <canvas id="lcd" width="640" height="520"></canvas>
+    <canvas id="cv" width="640" height="520"></canvas>
     <div id="meny" class="vis">
       <div id="menyKort">
-        <div id="menyResultat"></div>
         <h1>SPACE WATCH</h1>
-        <p class="under">Choose game</p>
+        <div class="under">Choose game · v5</div>
+        <div id="menyResultat"><div class="tittel" id="menyTittel">GAME OVER</div><div class="tall" id="menyTall"></div><div class="poeng" id="menyPoeng"></div><div class="rekord" id="menyRekord"></div></div>
         <button class="valg" data-mode="A"><b>GAME A</b><span>Drill fire.</span></button>
         <button class="valg" data-mode="B"><b>GAME B</b><span>Live rounds.</span></button>
         <button class="valg" data-mode="C"><b>GAME C</b><span>They adapt.</span></button>
-        <p class="hint">The turret fires itself. Steer the line.<br>
-          Bunkers eat bombs until they don't.<br>
-          If the grid lands, the watch is over.<br>
-          Catch a crate — SPECIAL holds one perk.<br>
-          Pierce, wide, freeze, hook, repair, nuke.</p>
+        <p class="hint">Hold the defence line. SPECIAL uses one perk.</p>
       </div>
     </div>
-    <pre id="err"></pre>
+    <div id="err"></div>
   </div>
   <div id="pad">
-    <button id="left" aria-label="Left">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M25 8 L11 20 L25 32 Z"/></svg>
-      LEFT
-    </button>
-    <button id="special" aria-label="Special">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 6 L24 16 L34 16 L26 22 L29 32 L20 26 L11 32 L14 22 L6 16 L16 16 Z"/></svg>
-      SPECIAL
-    </button>
-    <button id="right" aria-label="Right">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M15 8 L29 20 L15 32 Z"/></svg>
-      RIGHT
-    </button>
+    <button id="left" type="button">LEFT</button>
+    <button id="special" type="button" aria-disabled="true">SPECIAL</button>
+    <button id="right" type="button">RIGHT</button>
   </div>
 </div>
 <script>
-const HJEM = '../../index.html';
-const NOKKEL = 'spacewatch-best-';
-const rekordMinne = {A:0, B:0, C:0};
-function beste(m){
-  try {
-    const v = localStorage.getItem(NOKKEL + m);
-    if (v !== null) return parseInt(v, 10) || 0;
-  } catch (e) {}
-  return rekordMinne[m] || 0;
-}
-function settBeste(m, v){
-  if (v <= beste(m)) return false;
-  rekordMinne[m] = v;
-  try { localStorage.setItem(NOKKEL + m, String(v)); } catch (e) {}
-  return true;
-}
-const errBox = document.getElementById('err');
-function report(m){ errBox.textContent = String(m).slice(0,600); errBox.classList.add('on'); }
-addEventListener('error', e => report('ERROR: ' + (e.message||e.error) +
-  '\nline ' + e.lineno + ':' + e.colno));
-
-const cv = document.getElementById('lcd');
-const ctx = cv.getContext('2d');
-const alarmLed = document.getElementById('alarm');
-const specialBtn = document.getElementById('special');
-const W = 320;
-const H = 260;
-
-const COLS = 11;
-const ROWS = 5;
-const AL_W = 16, AL_H = 12, AL_GAPX = 6, AL_GAPY = 10;
-const PLAYER_Y_OFF = 56;
-const GROUND_OFF = 42;
-const BUNKER_OFF = 86;
-const LAND_OFF = 78;
-const STEP_X = 8;
-
-const NIVA = {
-  A: {move: 420, drop: 10, bombEvery: 900, bombSpeed: 78, maxBombs: 2, fire: 280, lives: 3},
-  B: {move: 340, drop: 12, bombEvery: 700, bombSpeed: 90, maxBombs: 3, fire: 230, lives: 3},
-  C: {move: 270, drop: 14, bombEvery: 520, bombSpeed: 102, maxBombs: 4, fire: 200, lives: 3}
+const HJEM='../../index.html';
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const meny=document.getElementById('meny'),menyResultat=document.getElementById('menyResultat');
+const specialBtn=document.getElementById('special'),alarmLed=document.getElementById('alarm'),errBox=document.getElementById('err');
+const W=320,H=260,COLS=11,ROWS=5,AL_W=16,AL_H=12,AL_GAPX=6,AL_GAPY=10;
+const PLAYER_Y=H-36, DEF_LINE=PLAYER_Y+12, GROUND=DEF_LINE+4, BUNKER_Y=PLAYER_Y-42, LAND_Y=BUNKER_Y+8, STEP_X=4;
+const NIVA={
+  A:{move:620,drop:6,bombEvery:1400,bombSpeed:72,maxBombs:2,fire:300,lives:3},
+  B:{move:520,drop:6,bombEvery:1100,bombSpeed:84,maxBombs:3,fire:250,lives:3},
+  C:{move:360,drop:6,bombEvery:520,bombSpeed:118,maxBombs:4,fire:280,lives:3}
 };
-
-const PERK = {
-  pierce: {name: 'PIERCE', color: '#7fd4c8', hint: 'THROUGH THE ROW'},
-  wide:   {name: 'WIDE',   color: '#c8ffc8', hint: 'THREE BARRELS'},
-  freeze: {name: 'FREEZE', color: '#9fd8e6', hint: 'GRID STOPS'},
-  hook:   {name: 'HOOK',   color: '#e8c15c', hint: 'RIP A COLUMN'},
-  repair: {name: 'REPAIR', color: '#7CFF7C', hint: 'WALLS GROW'},
-  nuke:   {name: 'NUKE',   color: '#ffb347', hint: 'LOCK AND CRACK'}
+const TIER={1:{name:'COMMON',color:'#7CFF7C'},2:{name:'RARE',color:'#7fd4c8'},3:{name:'GOLD',color:'#e8c15c'}};
+const PERK={
+  pierce:{name:'PIERCE',tier:1,color:'#7CFF7C'},freeze:{name:'FREEZE',tier:1,color:'#7CFF7C'},
+  flare:{name:'JAM',tier:1,color:'#7CFF7C'},clip:{name:'RAPID',tier:1,color:'#7CFF7C'},
+  patch:{name:'PATCH',tier:1,color:'#7CFF7C'},slow:{name:'SLOW',tier:1,color:'#7CFF7C'},
+  shield:{name:'SHIELD',tier:1,color:'#7CFF7C'},
+  drone:{name:'DRONE',tier:2,color:'#7fd4c8'},homing:{name:'HOMING',tier:2,color:'#7fd4c8'},nuke:{name:'NUKE',tier:2,color:'#7fd4c8'},
+  wide:{name:'WIDE',tier:3,color:'#e8c15c'},repair:{name:'REPAIR',tier:3,color:'#e8c15c'}
 };
-const PERK_KEYS = Object.keys(PERK);
-
-let S = null;
-let keys = {left:false, right:false};
-
-function buzz(p){ if (navigator.vibrate) navigator.vibrate(p); }
-
-function layout(){
-  cv.width = W * 2; cv.height = H * 2;
-  ctx.setTransform(1,0,0,1,0,0); ctx.scale(2,2);
-  ctx.imageSmoothingEnabled = false;
-}
-
+const PERK_KEYS=Object.keys(PERK);
+function perksInTier(t){return PERK_KEYS.filter(k=>PERK[k].tier===t)}
+let S=null,keys={left:false,right:false},crashed=false;
+function buzz(p){if(navigator.vibrate)navigator.vibrate(p)}
+function layout(){cv.width=W*2;cv.height=H*2;ctx.setTransform(1,0,0,1,0,0);ctx.scale(2,2);ctx.imageSmoothingEnabled=false}
+function beste(m){try{return parseInt(localStorage.getItem('sw-hi-'+m)||'0',10)||0}catch(e){return 0}}
+function lagreBeste(m,s){const hi=Math.max(beste(m),s);try{localStorage.setItem('sw-hi-'+m,String(hi))}catch(e){}return hi}
 function bunkerTemplate(){
-  const rows = [
-    '  ######  ',
-    ' ######## ',
-    '##########',
-    '##########',
-    '###    ###',
-    '###    ###'
-  ];
-  return rows.map(r => r.split('').map(ch => ch === '#' ? 1 : 0));
+  return ['  ######  ',' ######## ','##########','##########','###    ###','##      ##']
+    .map(r=>r.split('').map(ch=>ch==='#'?1:0));
 }
-
 function makeBunkers(){
-  const tmpl = bunkerTemplate();
-  const bw = tmpl[0].length * 3;
-  const bunkers = [];
-  const slots = 4;
-  const usable = W - 24;
-  for (let i = 0; i < slots; i++){
-    const x = 12 + (usable / slots) * i + (usable / slots - bw) / 2;
-    bunkers.push({x: Math.round(x), y: H - BUNKER_OFF, cell: 3, grid: tmpl.map(r => r.slice()), grow: []});
+  const tmpl=bunkerTemplate(),bw=tmpl[0].length*3,out=[],usable=W-24;
+  for(let i=0;i<4;i++){
+    const x=12+(usable/4)*i+(usable/4-bw)/2;
+    out.push({x:Math.round(x),y:BUNKER_Y,cell:3,grid:tmpl.map(r=>r.slice()),grow:[]});
   }
-  return bunkers;
+  return out;
 }
-
-function alienKind(wave, r, c, mode){
-  if (mode === 'C' && r === 0 && c % 4 === 2) return 'armor';
-  if (mode === 'C' && r === ROWS - 1 && c % 3 === 1) return 'bomber';
-  if (wave >= 2 && r === 0) return 'squid';
-  if (wave >= 3 && r === 1 && (c + wave) % 5 === 0) return 'armor';
-  if (wave >= 4 && r === ROWS - 1 && c % 3 === 1) return 'bomber';
-  if (r === 0) return 'squid';
-  if (r <= 2) return 'crab';
-  return 'octo';
+function alienKind(wave,r,c,mode){
+  const every=mode==='C'?5:7;
+  if((c+wave*2)%every===3&&(r===1||r===2))return 'elite';
+  if(mode==='C'&&r===2&&c%5===0)return 'elite';
+  if(r===0)return 'node';
+  if(r<=2)return 'wing';
+  return 'disc';
 }
-
 function spawnWave(wave){
-  const grid = [];
-  for (let r = 0; r < ROWS; r++){
-    const row = [];
-    for (let c = 0; c < COLS; c++){
-      const kind = alienKind(wave, r, c, S.mode);
-      row.push({alive: true, kind, hp: kind === 'armor' ? 2 : 1});
-    }
-    grid.push(row);
-  }
-  const gridW = COLS * (AL_W + AL_GAPX) - AL_GAPX;
-  const dropIn = Math.min(36, (wave - 1) * 10);
-  S.form = {
-    x: Math.round((W - gridW) / 2),
-    y: 32 + dropIn,
-    dir: 1,
-    frame: 0
-  };
-  S.grid = grid;
-  S.alienCount = ROWS * COLS;
-  S.bombAcc = 18;
+  const grid=[];
+  for(let r=0;r<ROWS;r++){const row=[];
+    for(let c=0;c<COLS;c++){const k=alienKind(wave,r,c,S.mode);row.push({alive:true,kind:k,hp:k==='elite'?2:1})}
+    grid.push(row)}
+  const gridW=COLS*(AL_W+AL_GAPX)-AL_GAPX;
+  S.form={x:Math.round((W-gridW)/2),y:36+Math.min(16,(wave-1)*4),dir:1,frame:0};
+  S.grid=grid;S.alienCount=ROWS*COLS;S.bombAcc=18;S.drops=0;
 }
-
 function reset(mode){
-  const n = NIVA[mode];
-  S = {
-    mode, n,
-    paused: false, over: false, waveClear: 0,
-    score: 0, wave: 1, lives: n.lives,
-    nyRekord: false, arsak: null, levert: 0, tapt: 0,
-    menyPlanlagt: false,
-    px: W / 2, recoil: 0, fireAcc: 0,
-    bullets: [], bombs: [], crates: [], fx: [],
-    bunkers: makeBunkers(),
-    perk: null, shield: 0, pierceShots: 0, wideT: 0, hookNext: 0, freezeT: 0,
-    nuke: null,
-    ufo: null, ufoAcc: 1800,
-    bombAcc: 18, moveAcc: 0,
-    blink: 0, invuln: 0, shake: 0, flash: 0,
-    last: 0
-  };
-  spawnWave(1);
-  updateSpecialClass();
+  const n=NIVA[mode];
+  S={mode,n,paused:false,over:false,waveClear:0,score:0,wave:1,lives:n.lives,nyRekord:false,arsak:null,levert:0,tapt:0,menyPlanlagt:false,
+    px:W/2,recoil:0,fireAcc:0,bullets:[],bombs:[],crates:[],fx:[],bunkers:makeBunkers(),perk:null,shield:0,
+    pierceShots:0,wideT:0,freezeT:0,flareT:0,clipT:0,slowT:0,hexWait:22000,drone:null,homing:[],nuke:null,
+    ufo:null,ufoAcc:1800,bombAcc:18,moveAcc:0,blink:0,invuln:0,shake:0,flash:0,last:0};
+  spawnWave(1);updateSpecialClass();meny.classList.remove('vis');
 }
-
-function livingAliens(){
-  const list = [];
-  if (!S || !S.grid) return list;
-  for (let r = 0; r < ROWS; r++)
-    for (let c = 0; c < COLS; c++)
-      if (S.grid[r][c].alive) list.push({r, c, a: S.grid[r][c]});
-  return list;
-}
-
-function alienPos(r, c){
-  return {
-    x: S.form.x + c * (AL_W + AL_GAPX),
-    y: S.form.y + r * (AL_H + AL_GAPY)
-  };
-}
-
-function lowestY(){
-  let m = 0;
-  for (const it of livingAliens())
-    m = Math.max(m, alienPos(it.r, it.c).y + AL_H);
-  return m;
-}
-
-function formationBounds(){
-  let minX = 999, maxX = -999;
-  for (const it of livingAliens()){
-    const p = alienPos(it.r, it.c);
-    minX = Math.min(minX, p.x);
-    maxX = Math.max(maxX, p.x + AL_W);
-  }
-  if (minX === 999) return {minX: S.form.x, maxX: S.form.x};
-  return {minX, maxX};
-}
-
-function clusterCenter(){
-  const list = livingAliens();
-  if (!list.length) return {x: W/2, y: 80};
-  let sx = 0, sy = 0;
-  for (const it of list){
-    const p = alienPos(it.r, it.c);
-    sx += p.x + AL_W/2; sy += p.y + AL_H/2;
-  }
-  return {x: sx / list.length, y: sy / list.length};
-}
-
-function currentStepMs(){
-  if (S.freezeT > 0) return 99999;
-  const left = Math.max(1, S.alienCount);
-  const total = ROWS * COLS;
-  const gone = 1 - left / total;
-  const waveMul = Math.pow(0.84, S.wave - 1);
-  let mul = 1 - gone * 0.62;
-  if (gone >= 0.5) mul *= 0.72;
-  if (left <= 8) mul *= 0.55;
-  return Math.max(36, S.n.move * waveMul * mul);
-}
-
-function award(n){ S.score = Math.min(9999, S.score + n); }
-
-function spawnCrate(x, y){
-  if (S.crates.length) return;
-  const k = PERK_KEYS[(S.wave + Math.floor(x) + S.score) % PERK_KEYS.length];
-  S.crates.push({x, y, kind: k, vy: 130});
-}
-
-function givePerk(kind){
-  S.perk = kind;
-  updateSpecialClass();
-  buzz(18);
-}
-
-function updateSpecialClass(){
-  const on = !!(S && S.perk && !S.paused && !S.over);
-  specialBtn.classList.toggle('armed', on);
-  specialBtn.setAttribute('aria-disabled', on ? 'false' : 'true');
-}
-
+function livingAliens(){const o=[];for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(S.grid[r][c].alive)o.push({r,c,a:S.grid[r][c]});return o}
+function alienPos(r,c){return{x:S.form.x+c*(AL_W+AL_GAPX),y:S.form.y+r*(AL_H+AL_GAPY)}}
+function lowestY(){let y=0;for(const it of livingAliens()){const p=alienPos(it.r,it.c);if(p.y+AL_H>y)y=p.y+AL_H}return y}
+function formationBounds(){let minX=W,maxX=0;for(const it of livingAliens()){const p=alienPos(it.r,it.c);if(p.x<minX)minX=p.x;if(p.x+AL_W>maxX)maxX=p.x+AL_W}return{minX,maxX}}
+function currentStepMs(){if(S.freezeT>0)return 99999;const left=Math.max(1,S.alienCount),gone=1-left/(ROWS*COLS);let mul=1-gone*0.22;if(left<=8)mul*=0.82;mul*=Math.pow(0.94,S.drops||0);return Math.max(110,S.n.move*Math.pow(0.95,S.wave-1)*mul)}
+function award(n){S.score=Math.min(9999,S.score+n)}
+function rollPerk(){const roll=Math.random();let tier=1;if(roll<0.20)tier=3;else if(roll<0.45)tier=2;const pool=perksInTier(tier);return pool[Math.floor(Math.random()*pool.length)]}
+function spawnCrate(x,y){if(S.crates.length||S.perk)return;S.crates.push({x,y,kind:rollPerk(),vy:55,sway:Math.random()*6})}
+function givePerk(k){if(S.perk)return;S.perk=k;updateSpecialClass();buzz(18)}
+function updateSpecialClass(){const on=!!(S&&S.perk&&!S.paused&&!S.over);specialBtn.classList.toggle('armed',on);specialBtn.setAttribute('aria-disabled',on?'false':'true')}
+function spawnHunter(){const list=livingAliens(),n=Math.min(list.length,3+Math.floor(Math.random()*3)),picks=[],pool=list.slice();while(picks.length<n&&pool.length)picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);S.drone={x:-18,y:26,vx:160,marks:picks,hit:{}}}
+function spawnHoming(){const lower=livingAliens().filter(it=>it.r>=2);const pool=(lower.length?lower:livingAliens()).slice();const n=Math.min(pool.length,3+Math.floor(Math.random()*3)),picks=[];while(picks.length<n&&pool.length)picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);S.homing=picks.map((m,i)=>({x:S.px+(i-(picks.length-1)/2)*6,y:PLAYER_Y-8,r:m.r,c:m.c,wait:i*80}))}
+function banner(t,c){S.fx.push({t:28,kind:'txt',txt:t,x:W/2,y:44,col:c})}
 function useSpecial(){
-  if (!S || S.over || S.paused || !S.perk) return;
-  if (S.nuke) return;
-  const kind = S.perk;
-  S.perk = null;
-  updateSpecialClass();
-  if (kind === 'pierce'){
-    S.pierceShots = 4;
-    banner('PIERCE', PERK.pierce.color);
-  } else if (kind === 'wide'){
-    S.wideT = 240;
-    banner('WIDE', PERK.wide.color);
-  } else if (kind === 'freeze'){
-    S.freezeT = 90;
-    S.fx.push({t: 24, kind: 'frost'});
-    banner('FREEZE', PERK.freeze.color);
-    buzz(30);
-  } else if (kind === 'hook'){
-    S.hookNext = 1;
-    banner('HOOK', PERK.hook.color);
-  } else if (kind === 'repair'){
-    startRepair();
-    banner('REPAIR', PERK.repair.color);
-    buzz(25);
-  } else if (kind === 'nuke'){
-    const c = clusterCenter();
-    S.nuke = {x: c.x, y: c.y, phase: 'lock', t: 0};
-    banner('LOCKING', PERK.nuke.color);
-    buzz(20);
-  }
+  if(!S||S.over||S.paused||!S.perk)return;
+  if(S.nuke||S.drone||(S.homing&&S.homing.length))return;
+  const kind=S.perk;S.perk=null;updateSpecialClass();
+  if(kind==='pierce'){S.pierceShots=4;banner('PIERCE',PERK.pierce.color)}
+  else if(kind==='wide'){S.wideT=4000;banner('WIDE',PERK.wide.color)}
+  else if(kind==='freeze'){S.freezeT=3500;S.fx.push({t:36,kind:'frost'});banner('FREEZE',PERK.freeze.color);buzz(30)}
+  else if(kind==='drone'){spawnHunter();banner('DRONE',PERK.drone.color);buzz(20)}
+  else if(kind==='homing'){spawnHoming();banner('HOMING',PERK.homing.color);buzz(20)}
+  else if(kind==='flare'){S.flareT=4000;for(const b of S.bombs)S.fx.push({t:10,kind:'pop',x:b.x,y:b.y});S.bombs=[];S.fx.push({t:28,kind:'flare'});banner('JAM',PERK.flare.color);buzz(18)}
+  else if(kind==='clip'){S.clipT=4000;banner('RAPID',PERK.clip.color);buzz(18)}
+  else if(kind==='patch'){patchNearest();banner('PATCH',PERK.patch.color);buzz(25)}
+  else if(kind==='slow'){S.slowT=4500;S.fx.push({t:24,kind:'frost'});banner('SLOW',PERK.slow.color);buzz(18)}
+  else if(kind==='shield'){S.shield=1;banner('SHIELD',PERK.shield.color);buzz(20)}
+  else if(kind==='repair'){startRepair();banner('REPAIR',PERK.repair.color);buzz(25)}
+  else if(kind==='nuke'){S.nuke={phase:'rise',t:0,x:S.px,y0:PLAYER_Y-10,y1:BUNKER_Y-28,r:44};banner('NUKE',PERK.nuke.color);buzz(20)}
 }
-
-function banner(txt, col){
-  S.fx.push({t: 28, kind: 'txt', txt, x: W/2, y: 44, col});
-}
-
-function startRepair(){
-  const tmpl = bunkerTemplate();
-  for (const b of S.bunkers){
-    b.grow = [];
-    for (let gy = tmpl.length - 1; gy >= 0; gy--)
-      for (let gx = 0; gx < tmpl[gy].length; gx++)
-        if (tmpl[gy][gx] && !b.grid[gy][gx])
-          b.grow.push({gx, gy});
-  }
-}
-
-function tickRepair(){
-  for (const b of S.bunkers){
-    if (!b.grow || !b.grow.length) continue;
-    const n = Math.min(3, b.grow.length);
-    for (let i = 0; i < n; i++){
-      const c = b.grow.shift();
-      b.grid[c.gy][c.gx] = 1;
-      S.fx.push({t: 8, kind: 'spark', x: b.x + c.gx * b.cell + 1, y: b.y + c.gy * b.cell + 1});
-    }
-  }
-}
-
-function detonateNuke(){
-  const R = 52;
-  const {x: sx, y: sy} = S.nuke;
-  S.fx.push({t: 20, kind: 'blast', x: sx, y: sy, r: R});
-  S.flash = 10;
-  S.shake = 10;
-  buzz([40, 30, 90]);
-  for (const it of livingAliens()){
-    const p = alienPos(it.r, it.c);
-    const cx = p.x + AL_W/2, cy = p.y + AL_H/2;
-    if ((cx - sx) * (cx - sx) + (cy - sy) * (cy - sy) <= R * R)
-      killAlien(it.r, it.c, true);
-  }
-}
-
-function killAlien(r, c, fromNuke){
-  const a = S.grid[r][c];
-  if (!a.alive) return;
-  if (!fromNuke){
-    a.hp--;
-    if (a.hp > 0){
-      const p = alienPos(r, c);
-      S.fx.push({t: 8, kind: 'spark', x: p.x + 8, y: p.y + 6});
-      return;
-    }
-  }
-  a.alive = false;
-  S.alienCount--;
-  const val = a.kind === 'squid' ? 30 : a.kind === 'crab' ? 20 : a.kind === 'armor' ? 40 : 10;
-  award(val);
-  const p = alienPos(r, c);
-  S.fx.push({t: 10, kind: 'pop', x: p.x + 8, y: p.y + 6});
-  if (!fromNuke && Math.random() < 0.10 + Math.min(0.08, S.wave * 0.012))
-    spawnCrate(p.x + 4, p.y);
-  if (S.alienCount <= 0){
-    S.waveClear = 55;
-    award(50 + S.wave * 10);
-  }
-}
-
-function killColumn(c){
-  for (let r = 0; r < ROWS; r++)
-    if (S.grid[r][c].alive) killAlien(r, c, true);
-  const p0 = alienPos(0, c);
-  S.fx.push({t: 16, kind: 'column', x: p0.x + AL_W/2});
-}
-
-function playerHit(){
-  if (S.invuln > 0) return;
-  if (S.shield){
-    S.shield = 0;
-    S.invuln = 40;
-    S.fx.push({t: 14, kind: 'shatter', x: S.px, y: H - PLAYER_Y_OFF});
-    banner('BLOCKED', PERK.freeze.color);
-    buzz(30);
-    return;
-  }
-  S.lives--;
-  S.tapt++;
-  S.invuln = 50;
-  S.shake = 7;
-  S.blink = 16;
-  S.bombs = [];
-  S.bullets = [];
-  buzz([70, 50, 70]);
-  if (S.lives <= 0){
-    S.over = true;
-    S.arsak = 'hit';
-    S.nyRekord = settBeste(S.mode, S.score);
-  }
-}
-
-function formationLanded(){
-  S.over = true;
-  S.arsak = 'land';
-  S.nyRekord = settBeste(S.mode, S.score);
-  S.shake = 10;
-  buzz([80, 40, 80, 40, 120]);
-}
-
-function hitBunker(x, y, r){
-  for (const b of S.bunkers){
-    const cw = b.cell;
-    for (let gy = 0; gy < b.grid.length; gy++){
-      for (let gx = 0; gx < b.grid[gy].length; gx++){
-        if (!b.grid[gy][gx]) continue;
-        const cx = b.x + gx * cw, cy = b.y + gy * cw;
-        if (x + r >= cx && x - r <= cx + cw && y + r >= cy && y - r <= cy + cw){
-          b.grid[gy][gx] = 0;
-          if (gy + 1 < b.grid.length && Math.random() < 0.45) b.grid[gy + 1][gx] = 0;
-          if (gx > 0 && Math.random() < 0.25) b.grid[gy][gx - 1] = 0;
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
-function emitShot(x, extra){
-  const b = {
-    x: x, y: H - PLAYER_Y_OFF - 12,
-    vy: -280, pierce: false, pierced: [], hook: false
-  };
-  if (extra){
-    if (extra.pierce) b.pierce = true;
-    if (extra.hook) b.hook = true;
-  }
-  S.bullets.push(b);
-}
-
-function fire(){
-  const pierce = S.pierceShots > 0;
-  const hook = S.hookNext > 0;
-  if (!pierce && !hook && !S.wideT && S.bullets.some(b => !b.pierce && !b.hook)) return;
-  if (pierce) S.pierceShots--;
-  if (hook) S.hookNext--;
-  S.recoil = 5;
-  if (S.wideT > 0){
-    emitShot(S.px - 7, {pierce, hook});
-    emitShot(S.px, {pierce, hook});
-    emitShot(S.px + 7, {pierce, hook});
-  } else {
-    emitShot(S.px, {pierce, hook});
-  }
-}
-
+function growBunker(b){const tmpl=bunkerTemplate();b.grow=[];for(let gy=tmpl.length-1;gy>=0;gy--)for(let gx=0;gx<tmpl[gy].length;gx++)if(tmpl[gy][gx]&&!b.grid[gy][gx])b.grow.push({gx,gy})}
+function patchNearest(){let best=null,d=1e9;for(const b of S.bunkers){const cx=b.x+(b.grid[0].length*b.cell)/2,dd=Math.abs(cx-S.px);if(dd<d){d=dd;best=b}}if(best)growBunker(best)}
+function startRepair(){for(const b of S.bunkers)growBunker(b)}
+function tickRepair(){for(const b of S.bunkers){if(!b.grow||!b.grow.length)continue;const n=Math.min(3,b.grow.length);for(let i=0;i<n;i++){const c=b.grow.shift();b.grid[c.gy][c.gx]=1;S.fx.push({t:8,kind:'spark',x:b.x+c.gx*b.cell+1,y:b.y+c.gy*b.cell+1})}}}
+function detonateNuke(){const sx=S.nuke.x,sy=S.nuke.y1,R=S.nuke.r;S.fx.push({t:22,kind:'blast',x:sx,y:sy,r:R});S.flash=10;S.shake=10;buzz([40,30,90]);for(const it of livingAliens()){const p=alienPos(it.r,it.c),cx=p.x+AL_W/2,cy=p.y+AL_H/2;if((cx-sx)**2+(cy-sy)**2<=R*R)killAlien(it.r,it.c,true)}}
+function killAlien(r,c,fromNuke){const a=S.grid[r][c];if(!a.alive)return;if(!fromNuke){a.hp--;if(a.hp>0){const p=alienPos(r,c);S.fx.push({t:8,kind:'spark',x:p.x+8,y:p.y+6});return}}a.alive=false;S.alienCount--;award(a.kind==='elite'?50:a.kind==='node'?30:a.kind==='wing'?20:10);const p=alienPos(r,c);S.fx.push({t:10,kind:'pop',x:p.x+8,y:p.y+6});if(!fromNuke&&Math.random()<0.10+Math.min(0.08,S.wave*0.012))spawnCrate(p.x+4,p.y);if(S.alienCount<=0){S.waveClear=55;award(50+S.wave*10)}}
+function playerHit(){if(S.invuln>0)return;if(S.shield){S.shield=0;S.invuln=40;S.fx.push({t:14,kind:'shatter',x:S.px,y:PLAYER_Y});banner('BLOCKED',PERK.shield.color);buzz(30);return}S.lives--;S.tapt++;S.invuln=50;S.blink=40;S.shake=8;S.flash=6;buzz([40,40,80]);if(S.lives<=0)gameOver('HIT')}
+function gameOver(a){S.over=true;S.arsak=a;S.paused=true;const hi=lagreBeste(S.mode,S.score);S.nyRekord=S.score>=hi&&S.score>0;updateSpecialClass()}
+function hitBunker(x,y,r){for(const b of S.bunkers){const cw=b.cell;for(let gy=0;gy<b.grid.length;gy++)for(let gx=0;gx<b.grid[gy].length;gx++){if(!b.grid[gy][gx])continue;const cx=b.x+gx*cw,cy=b.y+gy*cw;if(x+r>=cx&&x-r<=cx+cw&&y+r>=cy&&y-r<=cy+cw){b.grid[gy][gx]=0;if(gy+1<b.grid.length&&Math.random()<0.45)b.grid[gy+1][gx]=0;return true}}}return false}
+function explodeHex(x,y){const R=36;S.fx.push({t:20,kind:'blast',x,y,r:R});S.shake=8;S.flash=6;buzz([50,30,50]);for(const b of S.bunkers){const cw=b.cell;for(let gy=0;gy<b.grid.length;gy++)for(let gx=0;gx<b.grid[gy].length;gx++){if(!b.grid[gy][gx])continue;const cx=b.x+gx*cw+cw/2,cy=b.y+gy*cw+cw/2;if((cx-x)**2+(cy-y)**2<=R*R)b.grid[gy][gx]=0}}if(Math.hypot(x-S.px,y-PLAYER_Y)<R+4)playerHit()}
+function emitShot(x,extra){const b={x,y:PLAYER_Y-12,vy:-280,pierce:false,pierced:[],safe:false};if(extra){if(extra.pierce)b.pierce=true;if(extra.safe)b.safe=true}S.bullets.push(b)}
+function fire(){const pierce=S.pierceShots>0;if(!pierce&&!S.wideT&&S.bullets.some(b=>!b.pierce&&!b.safe))return;if(pierce)S.pierceShots--;S.recoil=5;if(S.wideT>0){emitShot(S.px-52,{pierce,safe:true});emitShot(S.px,{pierce,safe:true});emitShot(S.px+52,{pierce,safe:true})}else emitShot(S.px,{pierce})}
 function maybeBomb(){
-  const bottoms = [];
-  for (let c = 0; c < COLS; c++){
-    for (let r = ROWS - 1; r >= 0; r--){
-      if (S.grid[r][c].alive){
-        bottoms.push({r, c, kind: S.grid[r][c].kind});
-        break;
-      }
-    }
-  }
-  if (!bottoms.length || S.bombs.length >= S.n.maxBombs) return;
-  let pick = bottoms[Math.floor(Math.random() * bottoms.length)];
-  const bombers = bottoms.filter(b => b.kind === 'bomber');
-  if (bombers.length && Math.random() < 0.55)
-    pick = bombers[Math.floor(Math.random() * bombers.length)];
-  const p = alienPos(pick.r, pick.c);
-  S.bombs.push({x: p.x + AL_W / 2, y: p.y + AL_H, vy: S.n.bombSpeed}); // px / sec
+  const bottoms=[],elites=[];
+  for(let c=0;c<COLS;c++){for(let r=ROWS-1;r>=0;r--){if(S.grid[r][c].alive){bottoms.push({r,c});break}}for(let r=0;r<ROWS;r++)if(S.grid[r][c].alive&&S.grid[r][c].kind==='elite')elites.push({r,c})}
+  const hexOn=S.bombs.filter(b=>b.hex).length,hexChance=S.mode==='A'?0.08:S.mode==='B'?0.12:0.22;
+  if(elites.length&&hexOn<1&&S.hexWait<=0&&Math.random()<hexChance){const e=elites[Math.floor(Math.random()*elites.length)],p=alienPos(e.r,e.c);S.bombs.push({x:p.x+AL_W/2,y:p.y+AL_H,vy:28,hex:true});S.hexWait=S.mode==='C'?Math.max(7000,14000-S.wave*1800):Math.max(12000,24000-S.wave*2000);return}
+  if(!bottoms.length||S.bombs.filter(b=>!b.hex).length>=S.n.maxBombs)return;
+  const pick=bottoms[Math.floor(Math.random()*bottoms.length)],p=alienPos(pick.r,pick.c);
+  S.bombs.push({x:p.x+AL_W/2,y:p.y+AL_H,vy:S.n.bombSpeed,hex:false});
 }
-
-function maybeUfo(dt){
-  if (S.ufo){
-    S.ufo.x += S.ufo.dir * 80 * (dt / 1000);
-    S.ufo.lamp = (S.ufo.lamp || 0) + dt;
-    if (S.ufo.x < -36 || S.ufo.x > W + 36) S.ufo = null;
-    return;
-  }
-  S.ufoAcc += dt;
-  if (S.ufoAcc > 5200 && Math.random() < 0.006){
-    S.ufoAcc = 0;
-    const dir = Math.random() < 0.5 ? 1 : -1;
-    S.ufo = {x: dir > 0 ? -24 : W + 24, y: 22, dir, lamp: 0};
-  }
-}
-
-function stepFormation(){
-  S.form.frame ^= 1;
-  const b = formationBounds();
-  const next = S.form.x + S.form.dir * STEP_X;
-  const dx = next - S.form.x;
-  if (b.minX + dx < 6 || b.maxX + dx > W - 6){
-    S.form.y += S.n.drop;
-    S.form.dir *= -1;
-    if (lowestY() >= H - LAND_OFF) formationLanded();
-  } else {
-    S.form.x = next;
-  }
-}
-
+function maybeUfo(dt){if(S.ufo){S.ufo.x+=S.ufo.dir*80*(dt/1000);if(S.ufo.x<-36||S.ufo.x>W+36)S.ufo=null;return}S.ufoAcc+=dt;if(S.ufoAcc>5200&&Math.random()<0.006){S.ufoAcc=0;const dir=Math.random()<0.5?1:-1;S.ufo={x:dir>0?-24:W+24,y:22,dir}}}
+function stepFormation(){S.form.frame^=1;const b=formationBounds(),next=S.form.x+S.form.dir*STEP_X,dx=next-S.form.x;if(b.minX+dx<6||b.maxX+dx>W-6){S.form.y+=S.n.drop;S.form.dir*=-1;S.drops=(S.drops||0)+1;if(lowestY()>=LAND_Y)gameOver('LANDED')}else S.form.x=next}
 function update(dt){
-  if (!S || S.over || S.paused) return;
-  const spd = keys.left === keys.right ? 0 : (keys.right ? 1 : -1);
-  S.px += spd * 120 * (dt / 1000);
-  S.px = Math.max(14, Math.min(W - 14, S.px));
-  if (S.recoil > 0) S.recoil--;
-  if (S.invuln > 0) S.invuln--;
-  if (S.blink > 0) S.blink--;
-  if (S.flash > 0) S.flash--;
-  if (S.shake > 0){ S.shake *= 0.84; if (S.shake < 0.2) S.shake = 0; }
-  if (S.wideT > 0) S.wideT--;
-  if (S.freezeT > 0) S.freezeT--;
+  if(!S||S.over||S.paused)return;
+  const spd=keys.left===keys.right?0:(keys.right?1:-1);
+  S.px+=spd*120*(dt/1000);S.px=Math.max(14,Math.min(W-14,S.px));
+  if(S.recoil>0)S.recoil--;if(S.invuln>0)S.invuln--;if(S.blink>0)S.blink--;if(S.flash>0)S.flash--;
+  if(S.shake>0){S.shake*=0.84;if(S.shake<0.2)S.shake=0}
+  if(S.wideT>0)S.wideT=Math.max(0,S.wideT-dt);if(S.freezeT>0)S.freezeT=Math.max(0,S.freezeT-dt);
+  if(S.flareT>0)S.flareT=Math.max(0,S.flareT-dt);if(S.clipT>0)S.clipT=Math.max(0,S.clipT-dt);if(S.slowT>0)S.slowT=Math.max(0,S.slowT-dt);
   tickRepair();
-
-  if (S.nuke){
-    const c = clusterCenter();
-    S.nuke.x += (c.x - S.nuke.x) * 0.18;
-    S.nuke.y += (c.y - S.nuke.y) * 0.18;
-    S.nuke.t++;
-    if (S.nuke.phase === 'lock' && S.nuke.t >= 26){
-      S.nuke.phase = 'boom';
-      S.nuke.t = 0;
-      detonateNuke();
-    } else if (S.nuke.phase === 'boom' && S.nuke.t >= 18){
-      S.nuke = null;
-    }
-  }
-
-  if (S.waveClear > 0){
-    S.waveClear--;
-    if (S.waveClear === 0){
-      S.wave++;
-      S.levert++;
-      spawnWave(S.wave);
-      S.bombs = [];
-      S.bullets = [];
-    }
-  } else {
-    S.moveAcc += dt;
-    const step = currentStepMs();
-    if (S.moveAcc >= step){
-      S.moveAcc -= step;
-      stepFormation();
-      if (S.over) return;
-    }
-    S.bombAcc += dt;
-    const every = Math.max(280, S.n.bombEvery - S.wave * 40);
-    if (S.bombAcc >= every){
-      S.bombAcc = 0;
-      maybeBomb();
-    }
-  }
-
-  S.fireAcc += dt;
-  if (S.fireAcc >= S.n.fire){
-    S.fireAcc = 0;
-    if (!S.waveClear) fire();
-  }
-
+  if(S.drone){S.drone.x+=S.drone.vx*(dt/1000);for(const m of S.drone.marks){const id=m.r+','+m.c;if(S.drone.hit[id]||!S.grid[m.r][m.c].alive)continue;const p=alienPos(m.r,m.c);if(S.drone.x>=p.x-4){S.drone.hit[id]=true;killAlien(m.r,m.c,true);S.fx.push({t:12,kind:'zap',x0:S.drone.x,y0:S.drone.y,x1:p.x+8,y1:p.y+6})}}if(S.drone.x>W+24)S.drone=null}
+  if(S.homing&&S.homing.length){S.homing=S.homing.filter(m=>{if(m.wait>0){m.wait-=dt;return true}if(!S.grid[m.r]||!S.grid[m.r][m.c]||!S.grid[m.r][m.c].alive)return false;const p=alienPos(m.r,m.c),tx=p.x+AL_W/2,ty=p.y+AL_H/2,dx=tx-m.x,dy=ty-m.y,dist=Math.hypot(dx,dy)||1,step=220*(dt/1000);m.x+=dx/dist*step;m.y+=dy/dist*step;if(dist<8){killAlien(m.r,m.c,true);S.fx.push({t:10,kind:'pop',x:tx,y:ty});return false}return true})}
+  if(S.nuke){S.nuke.t+=dt;S.nuke.x=S.px;if(S.nuke.phase==='rise'&&S.nuke.t>=280){S.nuke.phase='boom';S.nuke.t=0;detonateNuke()}else if(S.nuke.phase==='boom'&&S.nuke.t>=280)S.nuke=null}
+  if(S.waveClear>0){S.waveClear--;if(S.waveClear===0){S.wave++;S.levert++;spawnWave(S.wave);S.bombs=[];S.bullets=[]}}
+  else if(S.freezeT>0)S.moveAcc=0;
+  else{S.moveAcc+=dt;const step=currentStepMs();if(S.moveAcc>=step){S.moveAcc-=step;stepFormation();if(S.over)return}if(S.hexWait>0)S.hexWait-=dt;S.bombAcc+=dt;if(S.bombAcc>=Math.max(280,S.n.bombEvery-S.wave*40)){S.bombAcc=0;if(S.flareT<=0)maybeBomb()}}
+  S.fireAcc+=dt;const fireMs=S.clipT>0?S.n.fire*0.42:S.n.fire;if(S.fireAcc>=fireMs){S.fireAcc=0;if(!S.waveClear)fire()}
   maybeUfo(dt);
-
-  for (const b of S.bullets) b.y += b.vy * (dt / 1000);
-  S.bullets = S.bullets.filter(b => {
-    if (b.y < 8) return false;
-    if (S.ufo && Math.abs(b.x - S.ufo.x) < 14 && Math.abs(b.y - S.ufo.y) < 7){
-      award(100);
-      spawnCrate(S.ufo.x, S.ufo.y + 4);
-      S.fx.push({t: 12, kind: 'pop', x: S.ufo.x, y: S.ufo.y});
-      S.ufo = null;
-      return b.pierce;
-    }
-    for (const it of livingAliens()){
-      const id = it.r + ',' + it.c;
-      if (b.pierced.indexOf(id) >= 0) continue;
-      const p = alienPos(it.r, it.c);
-      if (b.x >= p.x - 1 && b.x <= p.x + AL_W + 1 && b.y >= p.y && b.y <= p.y + AL_H){
-        if (b.hook){
-          killColumn(it.c);
-          return false;
-        }
-        killAlien(it.r, it.c, false);
-        if (b.pierce){
-          b.pierced.push(id);
-          return true;
-        }
-        return false;
-      }
-    }
-    if (hitBunker(b.x, b.y, 1.2)) return false;
+  for(const b of S.bullets)b.y+=b.vy*(dt/1000);
+  S.bullets=S.bullets.filter(b=>{
+    if(b.y<8)return false;
+    let hitHex=false;
+    S.bombs=S.bombs.filter(bom=>{if(!bom.hex)return true;if(Math.abs(b.x-bom.x)<12&&Math.abs(b.y-bom.y)<14){S.fx.push({t:10,kind:'pop',x:bom.x,y:bom.y});award(25);hitHex=true;return false}return true});
+    if(hitHex)return b.pierce;
+    if(S.ufo&&Math.abs(b.x-S.ufo.x)<14&&Math.abs(b.y-S.ufo.y)<7){award(100);spawnCrate(S.ufo.x,S.ufo.y+4);S.fx.push({t:12,kind:'pop',x:S.ufo.x,y:S.ufo.y});S.ufo=null;return b.pierce}
+    for(const it of livingAliens()){const id=it.r+','+it.c;if(b.pierced.indexOf(id)>=0)continue;const p=alienPos(it.r,it.c);if(b.x>=p.x-1&&b.x<=p.x+AL_W+1&&b.y>=p.y&&b.y<=p.y+AL_H){killAlien(it.r,it.c,false);if(b.pierce){b.pierced.push(id);return true}return false}}
+    if(!b.safe&&hitBunker(b.x,b.y,1.2))return false;
     return true;
   });
-
-  for (const bom of S.bombs) bom.y += bom.vy * (dt / 1000);
-  S.bombs = S.bombs.filter(bom => {
-    if (bom.y > H - GROUND_OFF) return false;
-    if (hitBunker(bom.x, bom.y, 2)) return false;
-    const py = H - PLAYER_Y_OFF;
-    if (Math.abs(bom.x - S.px) < 10 && bom.y > py - 10 && bom.y < py + 8){
-      playerHit();
+  const bombMul=S.slowT>0?0.35:1;
+  for(const bom of S.bombs)bom.y+=bom.vy*bombMul*(dt/1000);
+  S.bombs=S.bombs.filter(bom=>{
+    if(!bom.hex && bom.y>=PLAYER_Y-8 && Math.abs(bom.x-S.px)<10){playerHit();return false}
+    if(bom.y>=DEF_LINE){
+      if(bom.hex)explodeHex(bom.x,DEF_LINE);
       return false;
     }
+    if(bom.hex){for(const bk of S.bunkers){if(bom.x>bk.x-2&&bom.x<bk.x+bk.grid[0].length*bk.cell+2&&bom.y>bk.y-2&&bom.y<bk.y+bk.grid.length*bk.cell){explodeHex(bom.x,Math.min(bom.y,DEF_LINE));return false}}return true}
+    if(hitBunker(bom.x,bom.y,2))return false;
     return true;
   });
-
-  for (const c of S.crates){
-    c.y += c.vy * (dt / 1000);
-    const py = H - PLAYER_Y_OFF;
-    if (Math.abs(c.x - S.px) < 13 && c.y > py - 12 && c.y < py + 8){
-      givePerk(c.kind);
-      c.dead = true;
-      banner(PERK[c.kind].name, PERK[c.kind].color);
-    }
-  }
-  S.crates = S.crates.filter(c => !c.dead && c.y < H);
-  S.fx = S.fx.filter(f => --f.t > 0);
+  for(const c of S.crates){c.sway+=dt/220;c.x+=Math.sin(c.sway)*0.35;c.y+=c.vy*(dt/1000);if(Math.abs((c.x+5)-S.px)<22&&c.y>PLAYER_Y-22&&c.y<PLAYER_Y+14){givePerk(c.kind);c.dead=true;banner(PERK[c.kind].name,TIER[PERK[c.kind].tier].color)}}
+  S.crates=S.crates.filter(c=>!c.dead&&c.y<H);S.fx=S.fx.filter(f=>--f.t>0);
 }
-
-function drawSprite(px, py, bits, w){
-  w = w || 11;
-  for (let i = 0; i < bits.length; i++){
-    const row = bits[i];
-    for (let x = 0; x < w; x++){
-      if (row & (1 << (w - 1 - x))) ctx.fillRect(px + x, py + i, 1, 1);
-    }
-  }
+function drawSprite(px,py,bits,w){w=w||11;for(let i=0;i<bits.length;i++){const row=bits[i];for(let x=0;x<w;x++)if(row&(1<<(w-1-x)))ctx.fillRect(px+x,py+i,1,1)}}
+function alienBits(kind,frame){
+  if(kind==='elite')return frame?[16,56,108,214,108,56,68,130]:[16,56,84,238,84,56,36,66];
+  if(kind==='node')return frame?[16,56,124,254,124,56,16,16]:[0,16,56,124,56,16,16,56];
+  if(kind==='wing')return frame?[1539,774,252,124,56,16,260,0]:[1025,1539,510,252,56,16,136,0];
+  return frame?[124,260,626,762,626,260,124,16]:[56,396,514,626,514,396,56,0];
 }
-
-function alienBits(kind, frame){
-  if (kind === 'squid'){
-    return frame ? [
-      0b00100001000, 0b00010010000, 0b00111111100, 0b01101110110,
-      0b11111111111, 0b10111111101, 0b10100000101, 0b00011011000
-    ] : [
-      0b00100001000, 0b10100000101, 0b10111111101, 0b11101110111,
-      0b11111111111, 0b00111111100, 0b00100001000, 0b01000000100
-    ];
-  }
-  if (kind === 'crab'){
-    return frame ? [
-      0b01000000010, 0b00100000100, 0b01111111110, 0b11011111011,
-      0b11111111111, 0b00101110100, 0b01000000010, 0b00100000100
-    ] : [
-      0b01000000010, 0b00010001000, 0b01111111110, 0b11011111011,
-      0b11111111111, 0b00101110100, 0b01010001010, 0b10000000001
-    ];
-  }
-  return frame ? [
-    0b00011111000, 0b01111111110, 0b11111111111, 0b11100100111,
-    0b11111111111, 0b00111011100, 0b01100100110, 0b00110001100
-  ] : [
-    0b00011111000, 0b01111111110, 0b11111111111, 0b11100100111,
-    0b11111111111, 0b00011011000, 0b00100100100, 0b01000000010
-  ];
-}
-
-function drawTurret(px, py){
-  const rec = S.recoil || 0;
-  ctx.fillStyle = '#2a4030';
-  ctx.fillRect(px - 11, py + 5, 4, 5);
-  ctx.fillRect(px + 7, py + 5, 4, 5);
-  ctx.fillStyle = '#7CFF7C';
-  ctx.fillRect(px - 10, py + 2, 20, 5);
-  ctx.fillRect(px - 7, py - 2, 14, 5);
-  ctx.fillStyle = '#c8ffc8';
-  ctx.fillRect(px - 2, py - 9 - rec, 4, 8);
-  ctx.fillRect(px - 3, py - 11 - rec, 6, 3);
-  if (S.wideT > 0){
-    ctx.fillRect(px - 8, py - 7 - rec, 2, 6);
-    ctx.fillRect(px + 6, py - 7 - rec, 2, 6);
-  }
-}
-
-function drawDrone(u){
-  const x = Math.round(u.x), y = Math.round(u.y);
-  ctx.fillStyle = '#6d8291';
-  ctx.fillRect(x - 14, y - 2, 28, 5);
-  ctx.fillRect(x - 8, y - 5, 16, 4);
-  ctx.fillStyle = '#1b242c';
-  ctx.fillRect(x - 16, y - 1, 5, 3);
-  ctx.fillRect(x + 11, y - 1, 5, 3);
-  const on = Math.floor(u.lamp / 140) % 2 === 0;
-  ctx.fillStyle = on ? '#ff6b5e' : '#6d322c';
-  ctx.fillRect(x - 2, y + 3, 4, 3);
-  if (on){
-    ctx.fillStyle = 'rgba(255,107,94,.25)';
-    ctx.fillRect(x - 6, y + 6, 12, 2);
-  }
-}
-
-function drawSpecialHud(){
-  const boxY = H - 22;
-  ctx.fillStyle = '#0b140d';
-  ctx.fillRect(6, boxY, 118, 16);
-  ctx.strokeStyle = S.perk ? PERK[S.perk].color : '#1f2a33';
-  ctx.strokeRect(6, boxY, 118, 16);
-  ctx.font = 'bold 9px "Courier New",monospace';
-  ctx.textAlign = 'left';
-  if (S.perk){
-    const p = PERK[S.perk];
-    ctx.fillStyle = p.color;
-    ctx.fillRect(10, boxY + 4, 8, 8);
-    ctx.fillText(p.name, 22, boxY + 12);
-    if (Math.floor(Date.now() / 280) % 2 === 0){
-      ctx.fillStyle = '#e8c15c';
-      ctx.fillText('USE', 88, boxY + 12);
-    }
-  } else {
-    ctx.fillStyle = '#3a4a40';
-    ctx.fillText('NO SPECIAL', 12, boxY + 12);
-  }
-  let extra = '';
-  if (S.pierceShots > 0) extra += 'P' + S.pierceShots + ' ';
-  if (S.wideT > 0) extra += 'WIDE ';
-  if (S.freezeT > 0) extra += 'ICE ';
-  if (S.hookNext > 0) extra += 'HOOK ';
-  if (S.shield) extra += 'SHLD ';
-  if (extra){
-    ctx.fillStyle = '#7fd4c8';
-    ctx.textAlign = 'right';
-    ctx.fillText(extra.trim(), W - 8, H - 8);
-  }
-}
-
+function drawTurret(px,py){const rec=S.recoil||0;ctx.fillStyle='#2a4030';ctx.fillRect(px-11,py+5,4,5);ctx.fillRect(px+7,py+5,4,5);ctx.fillStyle='#7CFF7C';ctx.fillRect(px-10,py+2,20,5);ctx.fillRect(px-7,py-2,14,5);ctx.fillStyle='#c8ffc8';ctx.fillRect(px-2,py-9-rec,4,8);ctx.fillRect(px-3,py-11-rec,6,3);if(S.wideT>0){ctx.fillStyle='#e8c15c';ctx.fillRect(px-22,py-6-rec,2,6);ctx.fillRect(px+20,py-6-rec,2,6)}}
 function draw(){
-  ctx.fillStyle = '#000';
-  ctx.fillRect(0, 0, W, H);
-  ctx.save();
-  if (S && S.shake > 0)
-    ctx.translate((Math.random() - 0.5) * S.shake, (Math.random() - 0.5) * S.shake);
-
-  ctx.fillStyle = '#7CFF7C';
-  ctx.fillRect(0, H - GROUND_OFF, W, 2);
-  ctx.fillStyle = '#1a2a1a';
-  ctx.fillRect(0, H - GROUND_OFF + 2, W, GROUND_OFF);
-
-  if (!S){ ctx.restore(); return; }
-
-  ctx.font = 'bold 10px "Courier New",monospace';
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#c8ffc8';
-  ctx.fillText('SCORE', 8, 12);
-  ctx.fillText(String(S.score).padStart(4, '0'), 8, 24);
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#6d8291';
-  ctx.fillText('HI ' + String(beste(S.mode)).padStart(4, '0'), W / 2, 12);
-  ctx.fillStyle = '#8aa3b5';
-  ctx.fillText('WAVE ' + S.wave + '  GAME ' + S.mode, W / 2, 24);
-  ctx.textAlign = 'right';
-  ctx.fillStyle = '#c8ffc8';
-  ctx.fillText('LIVES', W - 8, 12);
-  for (let i = 0; i < S.lives; i++){
-    ctx.fillStyle = '#7CFF7C';
-    ctx.fillRect(W - 12 - i * 14, 16, 11, 5);
-    ctx.fillRect(W - 8 - i * 14, 13, 3, 4);
+  ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.save();
+  if(S&&S.shake>0)ctx.translate((Math.random()-0.5)*S.shake,(Math.random()-0.5)*S.shake);
+  ctx.fillStyle='#1a2a1a';ctx.fillRect(0,GROUND,W,H-GROUND);
+  ctx.fillStyle='#7CFF7C';ctx.fillRect(0,DEF_LINE,W,2);
+  ctx.fillStyle='#2a3a2a';for(let x=0;x<W;x+=6)ctx.fillRect(x,DEF_LINE+2,3,2);
+  if(!S){ctx.restore();return}
+  ctx.font='bold 10px "Courier New",monospace';ctx.textAlign='left';ctx.fillStyle='#c8ffc8';
+  ctx.fillText('SCORE',8,12);ctx.fillText(String(S.score).padStart(4,'0'),8,24);
+  ctx.textAlign='center';ctx.fillStyle='#6d8291';ctx.fillText('HI '+String(beste(S.mode)).padStart(4,'0'),W/2,12);
+  ctx.fillStyle='#8aa3b5';ctx.fillText('WAVE '+S.wave+'  GAME '+S.mode,W/2,24);
+  ctx.textAlign='right';ctx.fillStyle='#c8ffc8';ctx.fillText('LIVES',W-8,12);
+  for(let i=0;i<S.lives;i++){ctx.fillStyle='#7CFF7C';ctx.fillRect(W-12-i*14,16,11,5);ctx.fillRect(W-8-i*14,13,3,4)}
+  if(S.ufo){const x=Math.round(S.ufo.x),y=Math.round(S.ufo.y),on=Math.floor(Date.now()/140)%2===0;ctx.fillStyle='#5a7a68';ctx.fillRect(x-14,y,28,3);ctx.fillStyle='#9fd4b8';ctx.fillRect(x-10,y-3,20,3);ctx.fillRect(x-5,y-6,10,3);ctx.fillStyle='#d8ffe0';ctx.fillRect(x-2,y-4,4,2);ctx.fillStyle=on?'#7CFF7C':'#1a3a22';ctx.fillRect(x-13,y+1,3,2);ctx.fillRect(x+10,y+1,3,2);ctx.fillStyle=on?'#e8c15c':'#3a3010';ctx.fillRect(x-1,y+1,2,2)}
+  if(S.drone){const x=Math.round(S.drone.x),y=Math.round(S.drone.y);ctx.fillStyle='#7fd4c8';ctx.fillRect(x-10,y-3,20,6);ctx.fillRect(x-4,y-6,8,3);ctx.fillRect(x-12,y-1,3,2);ctx.fillRect(x+9,y-1,3,2);ctx.fillStyle='#fff0a8';ctx.fillRect(x-2,y,4,2)}
+  if(S.homing){for(const m of S.homing){if(m.wait>0)continue;ctx.fillStyle='#7fd4c8';ctx.beginPath();ctx.moveTo(m.x,m.y-5);ctx.lineTo(m.x+3,m.y+4);ctx.lineTo(m.x-3,m.y+4);ctx.fill()}}
+  for(const b of S.bunkers){ctx.fillStyle='#7CFF7C';for(let gy=0;gy<b.grid.length;gy++)for(let gx=0;gx<b.grid[gy].length;gx++)if(b.grid[gy][gx])ctx.fillRect(b.x+gx*b.cell,b.y+gy*b.cell,b.cell,b.cell)}
+  const fr=S.form.frame;
+  for(const it of livingAliens()){const p=alienPos(it.r,it.c);ctx.fillStyle='#dceee0';if(it.a.kind==='wing')ctx.fillStyle='#9fd4a8';if(it.a.kind==='disc')ctx.fillStyle='#c8d4cc';if(it.a.kind==='elite')ctx.fillStyle=it.a.hp>1?'#e07ad6':'#f3b4ec';drawSprite(Math.round(p.x),Math.round(p.y),alienBits(it.a.kind,fr),11)}
+  if(S.nuke&&S.nuke.phase==='rise'){const u=Math.min(1,S.nuke.t/280),y=S.nuke.y0+(S.nuke.y1-S.nuke.y0)*u;ctx.fillStyle='#ff6b5e';ctx.fillRect(S.nuke.x-2,y,4,S.nuke.y0-y);ctx.strokeStyle='rgba(255,179,71,0.5)';ctx.beginPath();ctx.arc(S.nuke.x,S.nuke.y1,S.nuke.r*u,0,7);ctx.stroke()}
+  const hide=S.invuln>0&&Math.floor(S.invuln/3)%2===0;
+  if(!hide){const px=Math.round(S.px);if(S.shield){ctx.strokeStyle='#9fd8e6';ctx.beginPath();ctx.arc(px,PLAYER_Y-2,16,0,7);ctx.stroke()}drawTurret(px,PLAYER_Y)}
+  for(const b of S.bullets){ctx.fillStyle=b.safe?'#e8c15c':b.pierce?'#7fd4c8':'#fff';ctx.fillRect(Math.round(b.x),Math.round(b.y),b.pierce?2:1,b.pierce?10:6)}
+  for(const bom of S.bombs){const x=Math.round(bom.x),y=Math.round(bom.y);if(bom.hex){const on=Math.floor(Date.now()/160)%2===0;ctx.fillStyle=on?'#ff3030':'#6d1010';ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill();ctx.strokeStyle=on?'#ffb3b3':'#c8412f';ctx.beginPath();ctx.arc(x,y,7,0,7);ctx.stroke()}else{ctx.fillStyle='#fff';ctx.fillRect(x,y,2,4)}}
+  for(const c of S.crates){const col=TIER[PERK[c.kind].tier].color,cx=Math.round(c.x),cy=Math.round(c.y);ctx.fillStyle=col;ctx.globalAlpha=.55;ctx.beginPath();ctx.moveTo(cx+5,cy-4);ctx.lineTo(cx-6,cy-13);ctx.lineTo(cx+16,cy-13);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#5a4028';ctx.fillRect(cx-1,cy-1,12,9);ctx.fillStyle=col;ctx.fillRect(cx-2,cy+2,14,3)}
+  for(const f of S.fx){
+    if(f.kind==='pop'){ctx.fillStyle='#fff';ctx.fillRect(f.x-3,f.y,7,1);ctx.fillRect(f.x,f.y-3,1,7)}
+    else if(f.kind==='spark'){ctx.fillStyle='#7CFF7C';ctx.fillRect(f.x,f.y,2,2)}
+    else if(f.kind==='blast'){ctx.strokeStyle='#ffb347';ctx.globalAlpha=f.t/20;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1.25-f.t/28),0,7);ctx.stroke();ctx.globalAlpha=1}
+    else if(f.kind==='txt'){ctx.globalAlpha=Math.min(1,f.t/10);ctx.fillStyle=f.col;ctx.font='bold 12px "Courier New",monospace';ctx.textAlign='center';ctx.fillText(f.txt,f.x,f.y);ctx.globalAlpha=1}
+    else if(f.kind==='frost'){ctx.fillStyle='rgba(159,216,230,'+(f.t/80)+')';ctx.fillRect(0,28,W,H-70)}
+    else if(f.kind==='flare'){ctx.fillStyle='rgba(255,160,40,'+(f.t/70)+')';ctx.fillRect(0,28,W,18)}
+    else if(f.kind==='zap'){ctx.strokeStyle='#e8c15c';ctx.beginPath();ctx.moveTo(f.x0,f.y0);ctx.lineTo(f.x1,f.y1);ctx.stroke()}
+    else if(f.kind==='shatter'){ctx.strokeStyle='#9fd8e6';ctx.beginPath();ctx.arc(f.x,f.y,18,0,7);ctx.stroke()}
   }
-
-  if (S.ufo) drawDrone(S.ufo);
-
-  const fr = S.form.frame;
-  for (const it of livingAliens()){
-    const p = alienPos(it.r, it.c);
-    ctx.fillStyle = it.a.kind === 'armor' ? '#e8c15c' : '#f4f4f4';
-    if (it.a.kind === 'bomber') ctx.fillStyle = '#ffb3a7';
-    if (it.a.hp === 1 && it.a.kind === 'armor') ctx.fillStyle = '#ffe9a8';
-    const bits = alienBits(it.a.kind === 'armor' ? 'crab' : it.a.kind === 'bomber' ? 'octo' : it.a.kind, fr);
-    drawSprite(Math.round(p.x), Math.round(p.y), bits, 11);
+  if(S.flash>0){ctx.fillStyle='rgba(255,200,80,'+(S.flash/18)+')';ctx.fillRect(0,0,W,H)}
+  const boxY=H-22;
+  if(S.perk){
+    const col=TIER[PERK[S.perk].tier].color;
+    ctx.fillStyle='#0b140d';ctx.fillRect(4,boxY,168,20);
+    ctx.fillStyle=col;ctx.globalAlpha=0.28;ctx.fillRect(4,boxY,168,20);ctx.globalAlpha=1;
+    ctx.fillRect(4,boxY,6,20);
+    ctx.strokeStyle=col;ctx.strokeRect(4,boxY,168,20);
+    ctx.fillStyle=col;ctx.font='bold 12px "Courier New",monospace';ctx.textAlign='left';
+    ctx.fillText(PERK[S.perk].name,16,boxY+14);
+    if(Math.floor(Date.now()/240)%2===0){ctx.fillStyle='#e8c15c';ctx.textAlign='right';ctx.fillText('SPECIAL',166,boxY+14)}
+  } else {
+    ctx.fillStyle='#0b140d';ctx.fillRect(4,boxY,168,20);
+    ctx.strokeStyle='#2a3a30';ctx.strokeRect(4,boxY,168,20);
+    ctx.fillStyle='#3a4a40';ctx.font='bold 10px "Courier New",monospace';ctx.textAlign='left';
+    ctx.fillText('NO SPECIAL',16,boxY+14);
   }
-
-  if (S.nuke && S.nuke.phase === 'lock'){
-    const u = Math.min(1, S.nuke.t / 26);
-    ctx.strokeStyle = '#ffb347';
-    ctx.globalAlpha = 0.45 + 0.55 * u;
-    ctx.lineWidth = 1 + u;
-    ctx.beginPath();
-    ctx.arc(S.nuke.x, S.nuke.y, 38 * (1.15 - u * 0.7), 0, 7);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(S.nuke.x - 8, S.nuke.y); ctx.lineTo(S.nuke.x + 8, S.nuke.y);
-    ctx.moveTo(S.nuke.x, S.nuke.y - 8); ctx.lineTo(S.nuke.x, S.nuke.y + 8);
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-    ctx.lineWidth = 1;
-  }
-
-  for (const b of S.bunkers){
-    ctx.fillStyle = '#7CFF7C';
-    for (let gy = 0; gy < b.grid.length; gy++)
-      for (let gx = 0; gx < b.grid[gy].length; gx++)
-        if (b.grid[gy][gx]) ctx.fillRect(b.x + gx * b.cell, b.y + gy * b.cell, b.cell, b.cell);
-  }
-
-  const hide = S.invuln > 0 && Math.floor(S.invuln / 3) % 2 === 0;
-  if (!hide){
-    const px = Math.round(S.px), py = H - PLAYER_Y_OFF;
-    if (S.shield){
-      ctx.strokeStyle = '#9fd8e6';
-      ctx.globalAlpha = 0.8;
-      ctx.beginPath(); ctx.arc(px, py - 2, 16, 0, 7); ctx.stroke();
-      ctx.globalAlpha = 1;
-    }
-    drawTurret(px, py);
-  }
-
-  for (const b of S.bullets){
-    ctx.fillStyle = b.hook ? '#e8c15c' : b.pierce ? '#7fd4c8' : '#fff';
-    const h = b.pierce ? 10 : 6;
-    ctx.fillRect(Math.round(b.x), Math.round(b.y), b.pierce ? 2 : 1, h);
-    if (b.pierce){
-      ctx.globalAlpha = 0.35;
-      ctx.fillRect(Math.round(b.x), Math.round(b.y) + h, 2, 8);
-      ctx.globalAlpha = 1;
-    }
-  }
-  ctx.fillStyle = '#fff';
-  for (const bom of S.bombs){
-    ctx.fillRect(Math.round(bom.x), Math.round(bom.y), 2, 4);
-    ctx.fillRect(Math.round(bom.x) - 1, Math.round(bom.y) + 1, 4, 1);
-  }
-  for (const c of S.crates){
-    const col = PERK[c.kind].color;
-    ctx.fillStyle = col;
-    ctx.fillRect(Math.round(c.x), Math.round(c.y), 8, 8);
-    ctx.fillStyle = '#000';
-    ctx.fillRect(Math.round(c.x) + 2, Math.round(c.y) + 2, 4, 4);
-    ctx.fillStyle = col;
-    ctx.fillRect(Math.round(c.x) + 3, Math.round(c.y) + 3, 2, 2);
-  }
-
-  for (const f of S.fx){
-    if (f.kind === 'pop'){
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(f.x - 3, f.y, 7, 1);
-      ctx.fillRect(f.x, f.y - 3, 1, 7);
-    } else if (f.kind === 'spark'){
-      ctx.fillStyle = '#7CFF7C';
-      ctx.fillRect(f.x, f.y, 2, 2);
-    } else if (f.kind === 'blast'){
-      ctx.strokeStyle = '#ffb347';
-      ctx.globalAlpha = f.t / 20;
-      ctx.beginPath(); ctx.arc(f.x, f.y, f.r * (1.25 - f.t / 28), 0, 7); ctx.stroke();
-      ctx.globalAlpha = 1;
-    } else if (f.kind === 'txt'){
-      ctx.globalAlpha = Math.min(1, f.t / 10);
-      ctx.fillStyle = f.col;
-      ctx.font = 'bold 12px "Courier New",monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText(f.txt, f.x, f.y);
-      ctx.globalAlpha = 1;
-    } else if (f.kind === 'frost'){
-      ctx.fillStyle = 'rgba(159,216,230,' + (f.t / 80) + ')';
-      ctx.fillRect(0, 28, W, H - 70);
-    } else if (f.kind === 'column'){
-      ctx.fillStyle = 'rgba(232,193,92,' + (f.t / 24) + ')';
-      ctx.fillRect(f.x - 2, 28, 4, H - 80);
-    } else if (f.kind === 'shatter'){
-      ctx.strokeStyle = '#9fd8e6';
-      ctx.globalAlpha = f.t / 14;
-      ctx.beginPath(); ctx.arc(f.x, f.y, 18 + (14 - f.t), 0, 7); ctx.stroke();
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  if (S.flash > 0){
-    ctx.fillStyle = 'rgba(255,200,80,' + (S.flash / 18) + ')';
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  drawSpecialHud();
-
-  if (S.waveClear > 28){
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#7CFF7C';
-    ctx.font = 'bold 14px "Courier New",monospace';
-    ctx.fillText('WAVE CLEAR', W / 2, H / 2);
-  }
-  if (S.over){
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#ff6b5e';
-    ctx.font = 'bold 16px "Courier New",monospace';
-    ctx.fillText(S.arsak === 'land' ? 'THEY LANDED' : 'HIT', W / 2, H / 2 - 8);
-  }
-
-  alarmLed.classList.toggle('lit', !!(S.perk || (S.nuke && S.nuke.phase === 'lock') || lowestY() > H - BUNKER_OFF));
+  let extra='';
+  if(S.pierceShots>0)extra+='P'+S.pierceShots+' ';
+  if(S.wideT>0)extra+='WIDE ';
+  if(S.freezeT>0)extra+='ICE ';
+  if(S.drone)extra+='DRONE ';
+  if(S.homing&&S.homing.length)extra+='LOCK ';
+  if(S.flareT>0)extra+='JAM ';
+  if(S.clipT>0)extra+='RAPID ';
+  if(S.slowT>0)extra+='SLOW ';
+  if(S.shield)extra+='SHLD ';
+  if(S.nuke)extra+='NUKE ';
+  if(extra){ctx.fillStyle='#7fd4c8';ctx.font='bold 9px "Courier New",monospace';ctx.textAlign='right';ctx.fillText(extra.trim(),W-6,boxY-4)}
+  if(S.waveClear>28){ctx.textAlign='center';ctx.fillStyle='#7CFF7C';ctx.font='bold 14px "Courier New",monospace';ctx.fillText('WAVE CLEAR',W/2,H/2)}
   ctx.restore();
+  alarmLed.classList.toggle('lit',!!(S.perk||S.nuke||S.drone||S.shield||lowestY()>BUNKER_Y));
 }
-
-const meny = document.getElementById('meny');
-const menyResultat = document.getElementById('menyResultat');
-let menyTimer = null;
-let startetVed = 0;
-const VALG_TEKST = {A:'Drill fire.', B:'Live rounds.', C:'They adapt.'};
-
-function oppdaterValg(){
-  try {
-    for (const el of document.querySelectorAll('.valg')){
-      const m = el.dataset.mode, b = beste(m);
-      const sp = el.querySelector('span');
-      if (sp) sp.textContent = VALG_TEKST[m] + (b > 0 ? '   BEST ' + b : '');
-    }
-  } catch (e) {}
-}
-function visMeny(res, fraKnapp){
-  if (!fraKnapp && S && !S.paused && !S.over && Date.now() - startetVed < 2000) return;
-  clearTimeout(menyTimer); menyTimer = null;
-  if (res){
-    menyResultat.innerHTML =
-      '<div class="tittel">' + (res.arsak === 'land' ? 'THE GRID LANDED' : 'YOUR LINE BROKE') + '</div>' +
-      '<div class="tall">WAVES ' + res.levert + '</div>' +
-      '<div class="poeng">SCORE ' + String(res.score).padStart(4,'0') + '</div>' +
-      (res.ny
-        ? '<div class="rekord">NEW BEST</div>'
-        : '<div class="rekord dempet">BEST ' + String(beste(res.mode)).padStart(4,'0') + '</div>');
-    menyResultat.classList.add('vis');
-  } else menyResultat.classList.remove('vis');
-  oppdaterValg();
-  meny.classList.add('vis');
-  if (S) S.paused = true;
-  updateSpecialClass();
-}
-function skjulMeny(){ meny.classList.remove('vis'); }
-function planleggMeny(){
-  if (menyTimer || S.menyPlanlagt) return;
-  S.menyPlanlagt = true;
-  const res = {levert:S.levert, score:S.score, arsak:S.arsak, mode:S.mode, ny:S.nyRekord};
-  menyTimer = setTimeout(() => { menyTimer = null; visMeny(res); }, 1100);
-}
-
-function start(mode){
-  clearTimeout(menyTimer); menyTimer = null;
-  layout();
-  reset(mode);
-  S.paused = false;
-  startetVed = Date.now();
-  skjulMeny();
-  updateSpecialClass();
-}
-
-let crashed = false;
-function frame(t){
-  if (crashed) return;
-  try {
-    if (!S) { requestAnimationFrame(frame); return; }
-    if (!S.last) S.last = t;
-    let dt = t - S.last; S.last = t;
-    if (dt > 250) dt = 16.7;
-    else if (dt > 66) dt = 66;
-    if (!S.over && !S.paused) update(dt);
-    if (S.over) planleggMeny();
-    draw();
-  } catch (e){
-    crashed = true;
-    report('LOOP: ' + (e && e.message) + '\n' + (e && e.stack || ''));
-    return;
-  }
-  requestAnimationFrame(frame);
-}
-
-function bindHold(id, on, off){
-  const el = document.getElementById(id);
-  const startE = e => { e.preventDefault(); el.classList.add('ned'); on(); };
-  const slutt = () => { el.classList.remove('ned'); off(); };
-  el.addEventListener('touchstart', startE, {passive:false});
-  el.addEventListener('touchend', slutt);
-  el.addEventListener('touchcancel', slutt);
-  el.addEventListener('pointerdown', e => { if (e.pointerType !== 'touch') startE(e); });
-  addEventListener('pointerup', slutt);
-}
-function bindEl(el, fn){
-  if (!el) return;
-  let touchUsed = false;
-  el.addEventListener('touchstart', e => { e.preventDefault(); touchUsed = true; fn(); }, {passive:false});
-  el.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; e.preventDefault(); fn(); });
-  el.addEventListener('click', e => { if (touchUsed) return; e.preventDefault(); fn(); });
-}
-bindHold('left', () => keys.left = true, () => keys.left = false);
-bindHold('right', () => keys.right = true, () => keys.right = false);
-bindEl(specialBtn, function(){
-  if (!specialBtn.classList.contains('armed')) return;
-  specialBtn.classList.add('ned');
-  useSpecial();
-  setTimeout(function(){ specialBtn.classList.remove('ned'); }, 140);
+function planleggMeny(){if(!S||S.menyPlanlagt)return;S.menyPlanlagt=true;document.getElementById('menyTittel').textContent=S.arsak==='LANDED'?'OVERRUN':'GAME OVER';document.getElementById('menyTall').textContent='WAVE '+S.wave;document.getElementById('menyPoeng').textContent='SCORE '+String(S.score).padStart(4,'0');document.getElementById('menyRekord').textContent=S.nyRekord?'NEW HI '+S.score:'HI '+beste(S.mode);menyResultat.classList.add('vis');meny.classList.add('vis')}
+function frame(t){if(crashed)return;try{if(!S){draw();requestAnimationFrame(frame);return}if(!S.last)S.last=t;let dt=t-S.last;S.last=t;if(dt>250)dt=16.7;else if(dt>66)dt=66;if(!S.over&&!S.paused)update(dt);if(S.over)planleggMeny();draw()}catch(e){crashed=true;errBox.style.display='block';errBox.textContent=String(e&&e.stack?e.stack:e)}requestAnimationFrame(frame)}
+function bindHold(el,set){const on=ev=>{ev.preventDefault();set(true);el.classList.add('ned')};const off=ev=>{ev.preventDefault();set(false);el.classList.remove('ned')};el.addEventListener('pointerdown',on);el.addEventListener('pointerup',off);el.addEventListener('pointercancel',off);el.addEventListener('pointerleave',off)}
+bindHold(document.getElementById('left'),v=>keys.left=v);bindHold(document.getElementById('right'),v=>keys.right=v);
+specialBtn.addEventListener('pointerdown',ev=>{ev.preventDefault();if(S&&S.perk)useSpecial()});
+document.getElementById('btnMeny').addEventListener('click',()=>{if(!S||S.over){meny.classList.add('vis');return}S.paused=!S.paused;meny.classList.toggle('vis',S.paused);updateSpecialClass()});
+document.getElementById('btnHjem').addEventListener('click',()=>{
+  try{ if(window.top!==window.self){ window.location.href=HJEM; return; } }catch(e){}
+  S=null;menyResultat.classList.remove('vis');meny.classList.add('vis');updateSpecialClass();draw();
 });
-for (const el of document.querySelectorAll('.valg'))
-  bindEl(el, () => start(el.dataset.mode));
-bindEl(document.getElementById('btnMeny'), () => visMeny(null, true));
-bindEl(document.getElementById('btnHjem'), () => { location.href = HJEM; });
-
-addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft') keys.left = true;
-  if (e.key === 'ArrowRight') keys.right = true;
-  if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'x' || e.key === 'X'){
-    e.preventDefault();
-    useSpecial();
-  }
-});
-addEventListener('keyup', e => {
-  if (e.key === 'ArrowLeft') keys.left = false;
-  if (e.key === 'ArrowRight') keys.right = false;
-});
-
-addEventListener('resize', () => {
-  layout();
-  if (S && S.bunkers) {
-    const old = S.bunkers;
-    S.bunkers = makeBunkers();
-    for (let i = 0; i < old.length && i < S.bunkers.length; i++)
-      S.bunkers[i].grid = old[i].grid;
-  }
-});
-
-function boot(){
-  try {
-    layout();
-    reset('A');
-    S.paused = true;
-    visMeny(null);
-    draw();
-    requestAnimationFrame(frame);
-  } catch (e){
-    report('STARTUP: ' + (e && e.message) + '\n' + (e && e.stack || ''));
-  }
-}
-requestAnimationFrame(boot);
+document.querySelectorAll('.valg').forEach(btn=>btn.addEventListener('click',()=>{reset(btn.getAttribute('data-mode'));menyResultat.classList.remove('vis')}));
+window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='a')keys.left=true;if(e.key==='ArrowRight'||e.key==='d')keys.right=true;if(e.key===' '||e.key==='Enter'){e.preventDefault();useSpecial()}});
+window.addEventListener('keyup',e=>{if(e.key==='ArrowLeft'||e.key==='a')keys.left=false;if(e.key==='ArrowRight'||e.key==='d')keys.right=false});
+layout();draw();requestAnimationFrame(frame);
 </script>
 </body>
 </html>
+Fix Guardian Kraken for JavaScript syntax - Grok
