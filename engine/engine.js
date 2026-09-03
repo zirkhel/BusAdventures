@@ -81,8 +81,11 @@ function hasRoomChanged(effects) {
   if (!effects) return false;
   return !!(
     effects.revealItem || effects.removeItem || effects.moveItem ||
-    effects.openExit   || effects.setRoomState || effects.setRoomFlag ||
-    effects.goTo
+    effects.giveItem   || effects.openExit   || effects.setRoomState ||
+    effects.setRoomFlag || effects.goTo ||
+    effects.setFlag || effects.clearFlag ||
+    effects.setGlobalFlag || effects.setGlobalFlags || effects.clearFlags ||
+    effects.setCounter || effects.incCounter
   );
 }
 
@@ -240,13 +243,14 @@ function enterRoom(targetId, moveDir) {
   S.incVisit(targetId);
 
   const visits = S.visitCount(targetId);
-  const state  = S.getRoomState(targetId);
 
-  // enterRules — effects on enter (first visit, every visit, conditional)
+  // enterRules — effects + optional text on enter
+  let enterText = null;
   for (const rule of (target.enterRules || [])) {
     if (rule.onFirstEnter && visits > 1) continue;
     if (!S.check(rule.condition)) continue;
     applyEffects(rule.effects, targetId);
+    if (rule.text) enterText = rule.text;
   }
 
   // Hazard: instant death on enter (e.g. no mask in chemical room)
@@ -255,10 +259,16 @@ function enterRoom(targetId, moveDir) {
     return res(entryHazard.deathText || "You die.", "death");
   }
 
-  // Visit-count death
+  // Visit-count death + warning stages
   const visitHazard = (target.hazards || []).find(h => h.type === "visitCount");
   if (visitHazard && visits > (visitHazard.safeUnder ?? 999)) {
     return res(visitHazard.deathText || "You die.", "death");
+  }
+  let visitWarning = null;
+  if (visitHazard) {
+    for (const stage of (visitHazard.warningStages || []).slice().reverse()) {
+      if (visits >= stage.at) { visitWarning = stage.text; break; }
+    }
   }
 
   // Win
@@ -267,7 +277,9 @@ function enterRoom(targetId, moveDir) {
   }
 
   S.save();
-  return res(moveDir ? "You move " + moveDir + "." : "", "neutral", { roomChanged: true });
+  const moveLine = moveDir ? "You move " + moveDir + "." : "";
+  const text = [moveLine, enterText].filter(Boolean).join("\n\n");
+  return res(text, "neutral", { roomChanged: true, warning: visitWarning });
 }
 
 // ── Items ─────────────────────────────────────────────────────────────────────
@@ -661,7 +673,7 @@ function checkRequires(req) {
   if (req.hasItem   && !S.hasItem(req.hasItem))             return false;
   if (req.holdsItem && !S.holdsItem(req.holdsItem))         return false;
   if (req.wearsItem && !S.wearsItem(req.wearsItem))         return false;
-  if (req.heldTag   && !S.findCarriedByTag(req.heldTag))    return false;
+  if (req.heldTag   && !S.holdsTag(req.heldTag))            return false;
   if (req.carriedTag && !S.findCarriedByTag(req.carriedTag)) return false;
   if (req.flag      && !S.getFlag(req.flag))                return false;
   return true;
