@@ -60,6 +60,10 @@ function itemHasTag(id, tag) {
   return (_adv.items[id]?.tags || []).includes(tag);
 }
 
+function holdsTag(tag) {
+  return !!(_st.held && itemHasTag(_st.held, tag));
+}
+
 // Find carried item by name/alias
 function findCarriedItem(text) {
   text = (text || "").toLowerCase();
@@ -138,24 +142,6 @@ function clear() {
 //
 // Conditions are plain objects. All keys are optional.
 // All present keys must pass for condition to be true.
-//
-// Supported keys:
-//   hasItem       — player carries item id
-//   holdsItem     — player holds item id ready
-//   wearsItem     — player wears item id
-//   itemHere      — item is in current room
-//   itemNotHere   — item is NOT in current room (picked up or elsewhere)
-//   itemGone      — item has been removed from world (loc === null)
-//   itemInRoom    — { id, room } item is in specific room
-//   flag          — global flag is truthy
-//   flagFalse     — global flag is falsy
-//   roomFlag      — flag on current room
-//   roomState     — current room is in this state
-//   roomStateOf   — { room, state } named room is in state
-//   visitGte      — visited current room >= n times
-//   counterGte    — { id, n } counter >= n
-//   heldTag       — player holds an item with this tag
-//   carriedTag    — player carries any item with this tag
 
 function check(cond) {
   if (!cond) return true;
@@ -174,10 +160,9 @@ function check(cond) {
   if (cond.itemInRoom   && !itemIsInRoom(cond.itemInRoom.id, cond.itemInRoom.room)) return false;
   if (cond.roomStateOf  &&  getRoomState(cond.roomStateOf.room) !== cond.roomStateOf.state) return false;
   if (cond.counterGte   &&  getCounter(cond.counterGte.id) < cond.counterGte.n) return false;
-  if (cond.heldTag      && !findCarriedByTag(cond.heldTag))             return false;
+  if (cond.heldTag      && !holdsTag(cond.heldTag))                     return false;
   if (cond.carriedTag   && !findCarriedByTag(cond.carriedTag))          return false;
   if (cond.wearingTag) {
-    // Check if player wears any item with this tag
     const wearingMatch = _st.worn.some(id => (_adv.items[id]?.tags||[]).includes(cond.wearingTag));
     if (!wearingMatch) return false;
   }
@@ -187,7 +172,7 @@ function check(cond) {
 export {
   init, fresh, get, adv,
   roomDef, currentRoom, itemDef, allItemIds,
-  hasItem, wearsItem, holdsItem, itemIsInRoom, itemHasTag,
+  hasItem, wearsItem, holdsItem, itemIsInRoom, itemHasTag, holdsTag,
   findCarriedItem, findVisibleItem, findCarriedByTag,
   getRoomState, setRoomState,
   getFlag, setFlag, getRoomFlag, setRoomFlag,
