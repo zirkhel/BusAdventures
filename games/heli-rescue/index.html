@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v1</div>
+        <div class="under">Choose game · v2</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -165,6 +165,11 @@ function landOk(){
   return S.hy>=GROUND-18 && Math.abs(S.vy)<40 && Math.abs(S.vx)<50;
 }
 
+function heliHits(x, y, w, h){
+  const hx = S.hx - 16, hy = S.hy - 14, hw = 32, hh = 18;
+  return hx < x+w && hx+hw > x && hy < y+h && hy+hh > y;
+}
+
 function update(dt){
   const t=dt/1000;
   if(S.zoneMsg>0) S.zoneMsg-=dt;
@@ -192,7 +197,10 @@ function update(dt){
   if(S.hx<20) S.hx=20;
   if(S.hx>WORLD-20) S.hx=WORLD-20;
   if(S.hy<28){ S.hy=28; S.vy=0; }
-  if(S.hy>GROUND-10){ S.hy=GROUND-10; S.vy=0; S.vx=0; }
+  if(S.hy>GROUND-10){
+    if(S.invuln<=0 && S.vy>95) crash('IMPACT');
+    S.hy=GROUND-10; S.vy=0; S.vx=0;
+  }
   S.front = landed;
   S.rotor = (S.rotor||0) + (landed?0.6:1.2);
 
@@ -299,6 +307,16 @@ function update(dt){
   }
   S.tanks=S.tanks.filter(tk=>!tk.dead);
 
+  if(S.invuln<=0 && !S.dying){
+    for(const b of S.barracks){
+      if(b.open) continue;
+      if(heliHits(b.x-2, GROUND-32, 40, 32)) crash('BUILDING');
+    }
+    for(const tk of S.tanks){
+      if(heliHits(tk.x-10, GROUND-16, 22, 16)) crash('TANK');
+    }
+  }
+
   S.nextJet-=dt;
   if(NIVA[S.mode].jets && S.nextJet<=0){
     if(S.jets.length<(S.mode==='C'?2:1)){
@@ -330,22 +348,23 @@ function update(dt){
         j.fall=true; j.vy=20; g.dead=true; S.score+=30;
       }
     }
+    if(!j.fall && !j.dead && S.invuln<=0 && heliHits(j.x-12, j.y-6, 24, 12)) crash('JET');
   }
   S.jets=S.jets.filter(j=>!j.dead && j.x>S.cam-30);
 
   for(const m of S.missiles){
     m.x+=m.vx*t; m.y+=m.vy*t;
     if(!m.flat) m.vy+=30*t;
-    const atBase=S.hx<120;
-    if(S.invuln<=0 && !atBase && Math.abs(m.x-S.hx)<16 && Math.abs(m.y-S.hy)<14) crash('HIT');
+    const onPadSafe = S.hx>36 && S.hx<110 && S.hy>=GROUND-16;
+    if(S.invuln<=0 && !onPadSafe && Math.abs(m.x-S.hx)<18 && Math.abs(m.y-S.hy)<16) crash('HIT');
     if(m.y>GROUND){ burst(m.x,GROUND,5); m.dead=true; }
   }
   S.missiles=S.missiles.filter(m=>!m.dead && m.y>-10);
 
   const left=S.people.filter(p=>p.state==='free'||p.state==='run').length;
   const exiting=S.people.some(p=>p.state==='out');
-  if(left===0 && S.onboard===0 && !exiting && S.zoneSaved>=16 && S.barracks.every(b=>b.open)){
-    nextZone();
+  if(left===0 && S.onboard===0 && !exiting && S.barracks.every(b=>b.open)){
+    if(S.zoneSaved>=8) nextZone();
   }
 }
 
