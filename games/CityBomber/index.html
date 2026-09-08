@@ -718,9 +718,14 @@ function layout(){
 }
 window.addEventListener('resize', layout);
 
-document.getElementById('left').addEventListener('pointerdown', ev => { ev.preventDefault(); fireGun(); });
-document.getElementById('special').addEventListener('pointerdown', ev => { ev.preventDefault(); dropBomb(); });
-document.getElementById('right').addEventListener('pointerdown', ev => { ev.preventDefault(); fireFlare(); });
+function tap(el, fn){
+  if(!el) return;
+  el.addEventListener('touchstart', e=>{ e.preventDefault(); fn(); }, {passive:false});
+  el.addEventListener('pointerdown', e=>{ if(e.pointerType==='touch') return; e.preventDefault(); fn(); });
+}
+tap(document.getElementById('left'), fireGun);
+tap(document.getElementById('special'), dropBomb);
+tap(document.getElementById('right'), fireFlare);
 document.getElementById('btnMeny').addEventListener('click', () => {
   if (!S || S.over){ meny.classList.add('vis'); return; }
   S.paused = !S.paused;
