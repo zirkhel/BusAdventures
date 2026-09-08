@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v2.3</div>
+        <div class="under">Choose game · v2.4</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -182,12 +182,8 @@ function update(dt){
   if(S.invuln>0) S.invuln-=dt;
 
   const landed = S.hy>=GROUND-12 && Math.abs(S.vy)<25;
-  if(!landed){
-    if(keys.left){ S.vx-=340*t; S.face=-1; }
-    if(keys.right){ S.vx+=340*t; S.face=1; }
-  } else {
-    S.vx=0;
-  }
+  if(keys.left){ S.vx-=340*t; S.face=-1; }
+  if(keys.right){ S.vx+=340*t; S.face=1; }
   if(keys.up) S.vy-=360*t;
   else S.vy+=120*t;
   S.vx*=0.92; S.vy*=0.94;
@@ -631,9 +627,13 @@ function hold(el, set){
   el.addEventListener('touchstart', on, {passive:false});
   el.addEventListener('touchend', off);
   el.addEventListener('touchcancel', off);
-  el.addEventListener('pointerdown', e=>{ if(e.pointerType==='touch') return; on(e); });
-  addEventListener('pointerup', off);
-  addEventListener('blur', off);
+  el.addEventListener('pointerdown', e=>{
+    if(e.pointerType==='touch') return;
+    on(e);
+    try{ el.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  el.addEventListener('pointerup', e=>{ if(e.pointerType!=='touch') off(e); });
+  el.addEventListener('pointercancel', e=>{ if(e.pointerType!=='touch') off(e); });
 }
 function tap(el, fn){
   if(!el) return;
