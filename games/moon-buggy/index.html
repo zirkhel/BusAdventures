@@ -55,14 +55,14 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>MOON BUGGY</h1>
-        <div class="under">Choose game · v3</div>
+        <div class="under">Choose game · v4</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">WRECKED</div>
           <div class="tall" id="menyTall"></div>
           <div class="poeng" id="menyPoeng"></div>
           <div class="rekord" id="menyRekord"></div>
         </div>
-        <button class="valg" data-mode="A"><b>GAME A</b><span>Easy craters.</span></button>
+        <button class="valg" data-mode="A"><b>GAME A</b><span>Pits, rocks, mines.</span></button>
         <button class="valg" data-mode="B"><b>GAME B</b><span>Rocks + UFOs.</span></button>
         <button class="valg" data-mode="C"><b>GAME C</b><span>Bombing runs.</span></button>
         <p class="hint">Moon Patrol set: pits, rocks, mines, UFOs, crater bombs,<br>
@@ -85,9 +85,9 @@ const meny=document.getElementById('meny'), menyResultat=document.getElementById
 const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
 const W=320, H=260, GROUND=200;
 const NIVA={
-  A:{base:46, gap:420, ufo:0, bomb:false, ufoAfter:1800},
-  B:{base:56, gap:360, ufo:1, bomb:true, ufoAfter:900},
-  C:{base:66, gap:300, ufo:2, bomb:true, ufoAfter:500}
+  A:{base:58, gap:260, ufo:0, bomb:false, ufoAfter:700},
+  B:{base:62, gap:230, ufo:1, bomb:true, ufoAfter:500},
+  C:{base:70, gap:200, ufo:2, bomb:true, ufoAfter:280}
 };
 let S=null, crashed=false, keys={left:false, right:false};
 
@@ -161,12 +161,12 @@ function spawnAhead(){
   const n=NIVA[S.mode];
   const d=S.dist, x=S.scroll+W+24;
   const roll=Math.random();
-  if(d>160 && roll<0.28) S.mines.push({x});
-  else if(d>1400 && n.ufo>=1 && roll<0.28) S.plants.push({x, hit:false, ph:0});
-  else if(d>1100 && n.ufo>=2 && roll<0.22) S.boulders.push({x, hit:false});
-  else if(roll<0.30) S.pits.push({x, w:16+Math.random()*18});
-  else S.rocks.push({x, hit:false, hp: Math.random()<(d>200?0.45:0.22) ? 2:1, lock:0});
-  S.nextG = n.gap + Math.random()*160;
+  if(d>40 && roll<0.22) S.mines.push({x});
+  else if(d>900 && n.ufo>=1 && roll<0.22) S.plants.push({x, hit:false, ph:0});
+  else if(d>700 && n.ufo>=2 && roll<0.20) S.boulders.push({x, hit:false});
+  else if(roll<0.42) S.pits.push({x, w:18+Math.random()*22});
+  else S.rocks.push({x, hit:false, hp: Math.random()<(d>80?0.5:0.28) ? 2:1, lock:0});
+  S.nextG = n.gap + Math.random()*90;
 }
 
 function update(dt){
