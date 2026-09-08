@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v2.4</div>
+        <div class="under">Choose game · v2.5</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -166,7 +166,7 @@ function landOk(){
 }
 
 function heliHits(x, y, w, h){
-  const hx = S.hx - 16, hy = S.hy - 14, hw = 32, hh = 18;
+  const hx = S.hx - 8, hy = S.hy - 7, hw = 16, hh = 10;
   return hx < x+w && hx+hw > x && hy < y+h && hy+hh > y;
 }
 
@@ -289,8 +289,10 @@ function update(dt){
   S.tanks=S.tanks.filter(tk=>!tk.dead);
 
   if(S.invuln<=0 && !S.dying){
-    for(const b of S.barracks){
-      if(heliHits(b.x-2, GROUND-32, 40, 32)) crash('BUILDING');
+    if(S.hy < GROUND-22){
+      for(const b of S.barracks){
+        if(heliHits(b.x+6, GROUND-34, 24, 14)) crash('BUILDING');
+      }
     }
     for(const tk of S.tanks){
       if(heliHits(tk.x-10, GROUND-16, 22, 16)) crash('TANK');
