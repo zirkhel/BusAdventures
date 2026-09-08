@@ -55,7 +55,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>MOON BUGGY</h1>
-        <div class="under">Choose game · v4</div>
+        <div class="under">Choose game · v4.1</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">WRECKED</div>
           <div class="tall" id="menyTall"></div>
@@ -299,7 +299,7 @@ function update(dt){
 
   S.nextCar = (S.nextCar||0)-dt;
   if(S.dist>2000 && S.nextCar<=0 && n.ufo>=2){
-    S.cars.push({x:S.scroll+S.px-40, hit:false});
+    S.cars.push({x:S.scroll-28, hit:false});
     S.nextCar=7000;
   }
   for(const c of S.cars){
