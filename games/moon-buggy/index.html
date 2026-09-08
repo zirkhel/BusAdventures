@@ -556,16 +556,24 @@ function layout(){
 window.addEventListener('resize', layout);
 
 function hold(el, set){
-  const on=ev=>{ ev.preventDefault(); set(true); el.classList.add('ned'); };
-  const off=ev=>{ ev.preventDefault(); set(false); el.classList.remove('ned'); };
-  el.addEventListener('pointerdown', on);
-  el.addEventListener('pointerup', off);
-  el.addEventListener('pointercancel', off);
-  el.addEventListener('pointerleave', off);
+  if(!el) return;
+  const on=e=>{ e.preventDefault(); set(true); el.classList.add('ned'); };
+  const off=e=>{ e.preventDefault(); set(false); el.classList.remove('ned'); };
+  el.addEventListener('touchstart', on, {passive:false});
+  el.addEventListener('touchend', off);
+  el.addEventListener('touchcancel', off);
+  el.addEventListener('pointerdown', e=>{ if(e.pointerType==='touch') return; on(e); });
+  addEventListener('pointerup', off);
+  addEventListener('blur', off);
+}
+function tap(el, fn){
+  if(!el) return;
+  el.addEventListener('touchstart', e=>{ e.preventDefault(); fn(); }, {passive:false});
+  el.addEventListener('pointerdown', e=>{ if(e.pointerType==='touch') return; e.preventDefault(); fn(); });
 }
 hold(document.getElementById('left'), v=>keys.left=v);
 hold(document.getElementById('right'), v=>keys.right=v);
-document.getElementById('special').addEventListener('pointerdown', ev=>{ ev.preventDefault(); jump(); });
+tap(document.getElementById('special'), jump);
 document.getElementById('btnMeny').addEventListener('click', ()=>{
   if(!S||S.over){ meny.classList.add('vis'); return; }
   S.paused=!S.paused; meny.classList.toggle('vis', S.paused);
