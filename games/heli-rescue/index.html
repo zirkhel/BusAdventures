@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v2.5</div>
+        <div class="under">Choose game · v2.7</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -66,8 +66,8 @@
         <button class="valg" data-mode="A"><b>GAME A</b><span>Same rules. Easier.</span></button>
         <button class="valg" data-mode="B"><b>GAME B</b><span>Same rules. Harder.</span></button>
         <button class="valg" data-mode="C"><b>GAME C</b><span>Same rules. Toughest.</span></button>
-        <p class="hint">Land beside a house. People run out. Do not land on them.<br>
-        Full load: back to pad. Bomb tanks. Tap screen to fire.</p>
+        <p class="hint">The pad is safe. People wait beside every house.<br>
+        Land next to them — not on them. Jets only hurt you out in the field.</p>
         <button type="button" id="btnTilbake"><b>BACK</b><span>Bus Adventures</span></button>
       </div>
     </div>
@@ -83,15 +83,15 @@
   </div>
 </div>
 <script>
-const HJEM='../../index.html';
+const HJEM='/';
 const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
 const meny=document.getElementById('meny'), menyResultat=document.getElementById('menyResultat');
 const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
 const W=320, H=260, GROUND=188, WORLD=920, CAP=4;
 const NIVA={
-  A:{tanks:1, jets:1, jetMs:2800, tankMs:2000},
-  B:{tanks:2, jets:1, jetMs:2400, tankMs:1600},
-  C:{tanks:3, jets:2, jetMs:1500, tankMs:900}
+  A:{tanks:1, jets:1, jetMs:4200, tankMs:2400, jetSpd:70},
+  B:{tanks:2, jets:1, jetMs:3400, tankMs:2000, jetSpd:85},
+  C:{tanks:3, jets:2, jetMs:2600, tankMs:1600, jetSpd:100}
 };
 let S=null, crashed=false, keys={left:false,right:false,up:false};
 
@@ -100,23 +100,42 @@ function lagre(m,s){ try{const h=beste(m); if(s>h){localStorage.setItem('ba_heli
 function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms);}catch(e){} }
 function px(x,y,w,h,c){ ctx.fillStyle=c; ctx.fillRect(x|0,y|0,w,h); }
 
+function houseWidth(kind){
+  return kind===1?48:kind===2?28:36;
+}
+
+function spawnBarracks(){
+  return [
+    {x:260,released:true,kind:0},
+    {x:430,released:true,kind:1},
+    {x:620,released:true,kind:2},
+    {x:790,released:true,kind:0}
+  ];
+}
+
+function spawnPeople(barracks){
+  const people=[];
+  for(const b of barracks){
+    // Stand in the open to the LEFT of each house so they are visible and
+    // not hidden inside the building sprite (house 1 used to be the only one).
+    for(let i=0;i<4;i++){
+      people.push({x:b.x-14-i*11, y:GROUND, state:'free', wait:0, born:500});
+    }
+  }
+  return people;
+}
+
 function reset(mode){
   const n=NIVA[mode];
-  const barracks=[
-    {x:260,released:true,kind:0},
-    {x:430,released:false,kind:1},
-    {x:620,released:false,kind:2},
-    {x:790,released:false,kind:0}
-  ];
-  const people=[];
-  for(let i=0;i<4;i++) people.push({x:268+i*12, y:GROUND, state:'free', wait:0});
+  const barracks=spawnBarracks();
+  const people=spawnPeople(barracks);
   const tanks=[];
   for(let i=0;i<n.tanks;i++) tanks.push({x:500+i*90, dir:1, shot:800+i*400});
   S={
     mode, score:0, lives:3, saved:0, zoneSaved:0, zone:1, dead:0, onboard:0, zoneMsg:0,
     hx:70, hy:GROUND-20, vx:0, vy:0, face:1, cam:0, rotor:0, rpm:8, airWash:0,
     shots:[], nades:[], barracks, people, tanks, jets:[], missiles:[], fx:[], nadeT:0,
-    nextJet:n.jets?4000:99999,
+    nextJet:n.jets?4200:99999,
     over:false, paused:false, last:0, menyPlanlagt:false,
     flash:0, shake:0, dying:0, invuln:800, nyRekord:false, arsak:''
   };
@@ -165,8 +184,16 @@ function landOk(){
   return S.hy>=GROUND-18 && Math.abs(S.vy)<40 && Math.abs(S.vx)<50;
 }
 
+function onBase(){
+  // Home pad is sanctuary — landed or in a low hover over it.
+  return S.hx>26 && S.hx<128 && S.hy>=GROUND-56;
+}
+
 function heliHits(x, y, w, h){
-  const hx = S.hx - 8, hy = S.hy - 7, hw = 16, hh = 10;
+  // Hitbox matches the drawn sprite (side view ~36×16, nose-on ~24×16)
+  const hw = S.front ? 24 : 36;
+  const hh = 16;
+  const hx = S.hx - hw/2, hy = S.hy - 12;
   return hx < x+w && hx+hw > x && hy < y+h && hy+hh > y;
 }
 
@@ -181,7 +208,7 @@ function update(dt){
   if(S.over) return;
   if(S.invuln>0) S.invuln-=dt;
 
-  const landed = S.hy>=GROUND-12 && Math.abs(S.vy)<25;
+  const landed = S.hy>=GROUND-16 && Math.abs(S.vy)<40;
   if(keys.left){ S.vx-=340*t; S.face=-1; }
   if(keys.right){ S.vx+=340*t; S.face=1; }
   if(keys.up) S.vy-=360*t;
@@ -222,9 +249,11 @@ function update(dt){
   if(landed){
     for(const b of S.barracks){
       if(b.released) continue;
-      if(Math.abs(S.hx-(b.x+14))<46){
+      const w=houseWidth(b.kind);
+      const cx=b.x+w/2;
+      if(Math.abs(S.hx-cx)<w/2+56){
         b.released=true;
-        for(let i=0;i<4;i++) S.people.push({x:b.x+6+i*8, y:GROUND, state:'free', wait:0});
+        for(let i=0;i<4;i++) S.people.push({x:b.x-14-i*11, y:GROUND, state:'free', wait:0, born:500});
         buzz(10);
       }
     }
@@ -242,27 +271,29 @@ function update(dt){
   } else S.dropT=0;
 
   for(const p of S.people){
+    if(p.born>0) p.born-=dt;
     if(p.state==='dead'||p.state==='in'||p.state==='home') continue;
     if(p.state==='free'){
-      if(landed && S.onboard<CAP && Math.abs(p.x-S.hx)<80){
+      const near=Math.abs(p.x-S.hx);
+      if(landed && S.onboard<CAP && near<130){
         p.state='run';
-      } else if(S.invuln<=0 && landed && Math.abs(p.x-S.hx)<8){
+      } else if(p.born<=0 && S.invuln<=0 && landed && near<8){
         p.state='dead'; S.dead++; burst(p.x,GROUND-6,6);
       }
     }
     if(p.state==='run'){
       const dx=S.hx-p.x;
-      p.x += Math.sign(dx||1)*Math.min(Math.abs(dx), 18*t);
-      if(Math.abs(p.x-S.hx)<14 && landed && S.onboard<CAP){
+      p.x += Math.sign(dx||1)*Math.min(Math.abs(dx), 110*t);
+      if(Math.abs(p.x-S.hx)<16 && landed && S.onboard<CAP){
         p.wait=(p.wait||0)+dt;
-        if(p.wait>220){ p.state='in'; S.score+=10; p.wait=0; }
+        if(p.wait>160){ p.state='in'; S.score+=10; p.wait=0; }
       } else p.wait=0;
       if(!landed) p.state='free';
     }
     if(p.state==='out'){
       const tx=58;
       const dx=tx-p.x;
-      const step=Math.min(Math.abs(dx), 40*t);
+      const step=Math.min(Math.abs(dx), 90*t);
       p.x += Math.sign(dx||1)*step;
       if(Math.abs(p.x-tx)<3){
         p.state='home'; S.saved++; S.zoneSaved++; S.score+=50;
@@ -277,8 +308,8 @@ function update(dt){
     tk.shot-=dt;
     if(tk.shot<=0 && Math.abs(tk.x-S.hx)<200){
       const dir=S.hx>=tk.x?1:-1;
-      S.missiles.push({x:tk.x+dir*10, y:GROUND-14, vx:dir*140, vy:0, flat:true});
-      tk.shot=Math.max(700, NIVA[S.mode].tankMs - (S.zone-1)*120);
+      S.missiles.push({x:tk.x+dir*10, y:GROUND-14, vx:dir*90, vy:0, flat:true});
+      tk.shot=Math.max(1100, NIVA[S.mode].tankMs - (S.zone-1)*80);
     }
     for(const sh of S.shots){
       if(Math.abs(sh.x-tk.x)<12 && Math.abs(sh.y-(GROUND-10))<14){
@@ -301,10 +332,20 @@ function update(dt){
 
   S.nextJet-=dt;
   if(NIVA[S.mode].jets && S.nextJet<=0){
-    if(S.jets.length<(S.mode==='C'?2:1)){
-      S.jets.push({x:S.cam+W+30, y:46+Math.random()*50, vx:-48, gun:Math.random()<0.5, shot:0});
+    const cap=S.mode==='C'?2:1;
+    if(S.jets.length<cap){
+      const fromRight=Math.random()<0.75;
+      const spd=NIVA[S.mode].jetSpd;
+      S.jets.push({
+        x: fromRight ? S.cam+W+50 : S.cam-50,
+        y: 32+Math.random()*36,
+        vx: fromRight ? -spd : spd,
+        gun:Math.random()<0.55,
+        shot:900,
+        dive: false
+      });
     }
-    S.nextJet=Math.max(1400, NIVA[S.mode].jetMs - (S.zone-1)*150);
+    S.nextJet=Math.max(2200, NIVA[S.mode].jetMs - (S.zone-1)*120);
   }
   for(const j of S.jets){
     if(j.fall){ j.vy=(j.vy||20)+180*t; j.y+=j.vy*t; j.vx*=0.98; }
@@ -315,10 +356,15 @@ function update(dt){
       j.dead=true;
     }
     j.shot=(j.shot||0)-dt;
-    if(!j.fall && Math.abs(j.x-S.hx)<140 && j.shot<=0){
-      j.shot=1100;
-      if(j.gun) S.missiles.push({x:j.x-8, y:j.y, vx:j.vx-90, vy:0, flat:true, from:'jet'});
-      else S.missiles.push({x:j.x, y:j.y, vx:0, vy:80, from:'jetbomb'});
+    // Telegraph: fire only when roughly level and not while the heli is on base.
+    if(!j.fall && !onBase() && Math.abs(j.x-S.hx)<170 && Math.abs(j.y-S.hy)<42 && j.shot<=0){
+      j.shot=1600;
+      if(j.gun){
+        const dir=Math.sign(S.hx-j.x)|| (j.vx<0?-1:1);
+        S.missiles.push({x:j.x, y:j.y, vx:dir*95, vy:0, flat:true, from:'jet'});
+      } else {
+        S.missiles.push({x:j.x, y:j.y, vx:j.vx*0.2, vy:70, from:'jetbomb'});
+      }
     }
     for(const sh of S.shots){
       if(Math.abs(sh.x-j.x)<22 && Math.abs(sh.y-j.y)<18){
@@ -330,23 +376,23 @@ function update(dt){
         j.fall=true; j.vy=20; g.dead=true; S.score+=30;
       }
     }
-    if(!j.fall && !j.dead && S.invuln<=0 && heliHits(j.x-12, j.y-6, 24, 12)) crash('JET');
+    if(!j.dead && S.invuln<=0 && !onBase() && heliHits(j.x-16, j.y-8, 32, 16)) crash('JET');
   }
-  S.jets=S.jets.filter(j=>!j.dead && j.x>S.cam-30);
+  S.jets=S.jets.filter(j=>!j.dead && j.x>S.cam-50 && j.x<S.cam+W+50);
 
   for(const m of S.missiles){
     m.x+=m.vx*t; m.y+=m.vy*t;
-    if(!m.flat) m.vy+=30*t;
-    const onPadSafe = S.hx>36 && S.hx<110 && S.hy>=GROUND-16;
-    if(S.invuln<=0 && !onPadSafe && Math.abs(m.x-S.hx)<18 && Math.abs(m.y-S.hy)<16) crash('HIT');
+    if(!m.flat) m.vy+=22*t;
+    if(S.invuln<=0 && !onBase() && Math.abs(m.x-S.hx)<22 && Math.abs(m.y-S.hy)<18) crash('HIT');
     if(m.y>GROUND){ burst(m.x,GROUND,5); m.dead=true; }
+    if(onBase() && m.x>26 && m.x<128 && m.y>GROUND-60){ m.dead=true; }
   }
   S.missiles=S.missiles.filter(m=>!m.dead && m.y>-10);
 
   const left=S.people.filter(p=>p.state==='free'||p.state==='run').length;
   const exiting=S.people.some(p=>p.state==='out');
-  if(left===0 && S.onboard===0 && !exiting && S.barracks.every(b=>b.released)){
-    if(S.zoneSaved>=8) nextZone();
+  if(left===0 && S.onboard===0 && !exiting && S.people.length>0){
+    nextZone();
   }
 }
 
@@ -356,19 +402,13 @@ function nextZone(){
   S.zoneMsg=2200;
   S.score+=200;
   const n=NIVA[S.mode];
-  S.barracks=[
-    {x:260,released:true,kind:0},
-    {x:430,released:false,kind:1},
-    {x:620,released:false,kind:2},
-    {x:790,released:false,kind:0}
-  ];
-  S.people=[];
-  for(let i=0;i<4;i++) S.people.push({x:268+i*12, y:GROUND, state:'free', wait:0});
+  S.barracks=spawnBarracks();
+  S.people=spawnPeople(S.barracks);
   S.tanks=[];
   const nt=n.tanks+Math.min(2, S.zone-1);
   for(let i=0;i<nt;i++) S.tanks.push({x:480+i*80, dir:i%2?1:-1, shot:600+i*300});
   S.jets=[]; S.missiles=[]; S.shots=[]; S.nades=[];
-  S.nextJet=800;
+  S.nextJet=2800;
   S.hx=70; S.hy=GROUND-24; S.vx=0; S.vy=0;
   S.invuln=900;
   buzz(20);
@@ -494,6 +534,13 @@ function draw(){
   px(pad+6, GROUND-22, 20, 20, '#5a6a78');
   px(pad+10, GROUND-30, 12, 8, '#c8412f');
   px(pad+14, GROUND-36, 4, 6, '#e8c15c');
+  if(onBase()){
+    ctx.fillStyle='rgba(80,200,140,0.18)';
+    ctx.fillRect(pad-10, GROUND-58, 68, 58);
+    ctx.fillStyle='#7fd4c8';
+    ctx.font='9px monospace';
+    ctx.fillText('SAFE', pad+12, GROUND-42);
+  }
 
   for(const b of S.barracks){
     const x=b.x-cam, k=b.kind||0;
@@ -575,6 +622,10 @@ function draw(){
   ctx.fillText('IN '+S.onboard+'/'+CAP, 80, 12);
   ctx.fillText('OUT '+S.saved, 150, 12);
   ctx.fillText('Z'+S.zone, 220, 12);
+  if(onBase()){
+    ctx.fillStyle='#7fd4c8';
+    ctx.fillText('SAFE', 252, 12);
+  }
   if(S.zoneMsg>0){
     ctx.fillStyle='rgba(0,0,0,0.55)';
     ctx.fillRect(30, 70, 260, 36);
@@ -672,6 +723,34 @@ window.addEventListener('keyup', e=>{
 });
 
 layout(); draw(); requestAnimationFrame(frame);
+
+window.__controlsTest = {
+  getYaw: () => 0,
+  getSpeed: () => S ? Math.abs(S.vx)+Math.abs(S.vy) : 0,
+  getX: () => S ? S.hx : 0,
+  getY: () => S ? S.hy : 0,
+  peopleOut: () => S ? S.people.filter(p=>p.state==='free'||p.state==='run').length : 0,
+  peopleByHouse: () => {
+    if(!S) return [];
+    return S.barracks.map(b => S.people.filter(p =>
+      (p.state==='free'||p.state==='run') && p.x > b.x-80 && p.x < b.x+20
+    ).length);
+  },
+  jets: () => S ? S.jets.length : 0,
+  arsak: () => S ? S.arsak : '',
+  dying: () => S ? S.dying : 0,
+  onBase: () => !!(S && onBase()),
+  jetSpeed: () => (S && S.jets[0]) ? Math.abs(S.jets[0].vx) : 0,
+  start: (mode) => reset(mode),
+  tick: (ms) => { if (!S) return; update(ms); draw(); },
+  getState: () => S,
+  setKeys: (codes) => {
+    const list = codes || [];
+    keys.left = list.includes('KeyA') || list.includes('ArrowLeft');
+    keys.right = list.includes('KeyD') || list.includes('ArrowRight');
+    keys.up = list.includes('KeyW') || list.includes('ArrowUp') || list.includes('Space');
+  }
+};
 </script>
 </body>
 </html>
