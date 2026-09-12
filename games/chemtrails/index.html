@@ -92,7 +92,7 @@ const W=320, H=260, STREET=228;
 const NIVA={
   A:{px:78, spawn:980, foil:0.08, talker:0.06, escape:14, walk:14},
   B:{px:92, spawn:780, foil:0.14, talker:0.10, escape:11, walk:18},
-  C:{px:106, spawn:640, foil:0.22, talker:0.14, escape:9, walk:22}
+  C:{px:106, spawn:640, foil:0.22, talker:0.14, escape:16, walk:22}
 };
 let S=null, keys={left:false,right:false,spray:false};
 
@@ -185,7 +185,6 @@ function convert(p){
   p.vx = Math.sign(p.vx||1)*11;
   S.converted++;
   S.score += 10 + S.wave*2;
-  S.control = Math.min(100, S.control+2);
   burst(p.x, p.y-8, 5, 'mist');
 }
 function wakeSheep(p, why){
