@@ -57,7 +57,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>CHEMTRAILS</h1>
-        <div class="under">KEEP EM SHEEP · v15</div>
+        <div class="under">KEEP EM SHEEP · v17</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">NARRATIVE COLLAPSE</div>
           <div class="tall" id="menyTall"></div>
@@ -272,7 +272,7 @@ function update(dt){
     if(p.ifr>0){ p.ifr-=dt; continue; }
     let hits=0;
     for(const m of S.mist){
-      if(Math.abs(m.x-p.x)<12 && m.y>p.y-22 && m.y<p.y+4) hits++;
+      if(Math.abs(m.x-p.x)<12 && m.y>p.y-28 && m.y<p.y+4) hits++;
     }
     if(hits>0){
       p.dose += Math.min(4, hits) * t * 1.5;
@@ -295,10 +295,11 @@ function update(dt){
       if(p.bae<=0){
         p.bae=2800+Math.random()*5200;
         const sets=[
-          {txt:'BÆ', long:'BÆÆ', full:'BÆÆÆH'},
-          {txt:'BE', long:'BEEE', full:'BEEEEH'},
-          {txt:'BÆ', long:'BÆÆH', full:'BÆÆÆH'},
-          {txt:'ME', long:'MEEH', full:'MEEEEH'}
+          {txt:'BÆH', long:'BÆÆH', full:'BÆÆÆH'},
+          {txt:'MÆ', long:'MÆÆ', full:'MÆÆÆ'},
+          {txt:'BÆH?', long:'BÆH?', full:'BÆH??'},
+          {txt:'BÆ', long:'BÆ BÆ', full:'BÆ BÆ'},
+          {txt:'BÆ', long:'BÆÆÆH', full:'BÆ BÆÆÆH'}
         ];
         const w=sets[(Math.random()*sets.length)|0];
         S.signs.push({x:p.x, y:p.y-18, t:1400, max:1400, txt:w.txt, long:w.long, full:w.full, grow:1, pop:1});
@@ -389,23 +390,24 @@ function drawPerson(p){
     return;
   }
   const body = p.kind==='foil' ? '#c8d4de' : p.kind==='talk' ? '#c8412f' : '#8aa3b5';
-  px(x-1, y-12+bob, 3, 3, '#e8d5a8');
-  px(x-2, y-9+bob, 5, 6, body);
-  px(x-2, y-3, 2, 4, '#4a5d6a');
-  px(x+1, y-3, 2, 4, '#4a5d6a');
+  const step=((p.ph/110)|0)%2;
+  px(x-2, y-20+bob, 5, 4, '#e8d5a8');
+  px(x-3, y-16+bob, 7, 9, body);
+  px(x-3, y-7, 3, 6+step, '#4a5d6a');
+  px(x+1, y-7, 3, 6+(1-step), '#4a5d6a');
   if(p.kind==='foil'){
     const blink=((p.ph/120)|0)%2;
-    px(x-4, y-16+bob, 9, 5, blink?'#f4fbff':'#c5d8e4');
-    px(x-5, y-14+bob, 11, 2, '#e2f1fa');
-    px(x-2, y-18+bob, 5, 3, '#ffffff');
-    px(x+3, y-17+bob, 2, 6, '#9fd4ff');
-    px(x-1, y-15+bob, 3, 2, '#8aa3b5');
+    px(x-5, y-24+bob, 11, 5, blink?'#f4fbff':'#c5d8e4');
+    px(x-6, y-22+bob, 13, 2, '#e2f1fa');
+    px(x-2, y-27+bob, 5, 3, '#ffffff');
+    px(x+4, y-26+bob, 2, 7, '#9fd4ff');
+    px(x-1, y-23+bob, 3, 2, '#8aa3b5');
   }
-  if(p.kind==='talk') px(x+3, y-11+bob, 2, 2, '#fff3a0');
+  if(p.kind==='talk') px(x+4, y-18+bob, 2, 2, '#fff3a0');
   if(!p.sheep && p.dose>0){
     const w=Math.max(1, Math.min(9, (p.dose/p.need)*9));
-    px(x-5, y-17, 9, 2, '#1b242c');
-    px(x-5, y-17, w, 2, '#9fd4ff');
+    px(x-5, y-30, 9, 2, '#1b242c');
+    px(x-5, y-30, w, 2, '#9fd4ff');
   }
 }
 
