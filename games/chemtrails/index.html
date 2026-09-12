@@ -57,7 +57,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>CHEMTRAILS</h1>
-        <div class="under">KEEP EM SHEEP · v5</div>
+        <div class="under">KEEP EM SHEEP · v6</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">NARRATIVE COLLAPSE</div>
           <div class="tall" id="menyTall"></div>
@@ -193,7 +193,7 @@ function wakeSheep(p, why){
   p.kind=p.base||'norm';
   p.dose=0;
   p.hold=0;
-  const spd = Math.min(NIVA[S.mode].px*0.28, NIVA[S.mode].walk + S.wave*0.8);
+  const spd = Math.min(NIVA[S.mode].px*0.42, (NIVA[S.mode].walk + S.wave*0.8)*1.7);
   p.vx = (p.x < W/2) ? spd : -spd;
   S.signs.push({x:p.x, y:p.y-22, t:600, txt: why||'HUH?'});
 }
@@ -319,6 +319,11 @@ function update(dt){
     if(p.sheep && (p.x<-20 || p.x>W+20)) p.gone=true;
   }
   S.people=S.people.filter(p=>!p.gone);
+  if(S.mode==='C'){
+    const awake=S.people.filter(p=>!p.sheep).length;
+    if(awake>0) S.control=Math.max(0, S.control-3.2*t);
+    if(S.control<=0) loseControl('FLOCK BROKE');
+  }
   for(const s of S.signs) s.t-=dt;
   S.signs=S.signs.filter(s=>s.t>0);
 }
