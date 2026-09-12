@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>MEATWARE — Bus Adventures</title>
+<style>
+  :root{--case:#141a21;--case-hi:#26313d;--key:#1f2a33;--key-lip:#0b1015;--key-on:#2f4050;--alarm:#c8412f}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;overflow:hidden;background:#070b0f;font-family:"Helvetica Neue",Arial,sans-serif;touch-action:none;-webkit-user-select:none;user-select:none}
+  body{display:flex;align-items:stretch;justify-content:center;padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom)}
+  #device{width:100%;max-width:520px;background:var(--case);display:flex;flex-direction:column;border-radius:18px;padding:10px 10px 14px;margin:6px 0;border-top:1px solid var(--case-hi);box-shadow:0 18px 44px rgba(0,0,0,.7)}
+  #brand{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 8px;color:#5f7383;font-size:10px;letter-spacing:.2em}
+  #brand b{color:#b6cbd9;font-size:12px;letter-spacing:.18em;flex:1;text-align:left}
+  #btnHjem{padding:5px 9px;border-radius:7px;background:#1b242c;border:0;border-bottom:2px solid var(--key-lip);line-height:0;margin-right:2px}
+  #btnHjem svg{width:13px;height:13px;fill:#6d8291}
+  #alarm{width:8px;height:8px;border-radius:50%;background:#1f2a33;margin:0 6px}
+  #alarm.lit{background:var(--alarm);box-shadow:0 0 9px var(--alarm)}
+  #btnMeny{padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;border-radius:7px;background:#1b242c;color:#6d8291;border:0;border-bottom:2px solid var(--key-lip)}
+  #screen{position:relative;background:#060a0e;border-radius:6px;padding:5px;flex:1 1 auto;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 2px 12px rgba(0,0,0,.6);min-height:220px}
+  canvas{display:block;width:100%;height:auto;image-rendering:pixelated;border-radius:3px;background:#000;touch-action:none}
+  #screen,#pad,.stick{touch-action:none}
+  #pad{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+  .stick{position:relative;height:110px;border-radius:18px;background:var(--key);border-bottom:4px solid var(--key-lip);overflow:hidden}
+  .stick .lab{position:absolute;left:0;right:0;bottom:8px;text-align:center;color:#6d8291;font-size:9px;letter-spacing:.16em;font-weight:700;pointer-events:none}
+  .knob{position:absolute;width:36px;height:36px;border-radius:50%;background:#8aa3b5;border-bottom:3px solid #0b1015;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+  .stick.live .knob{background:#e2f1fa}
+  #fireStick.live .knob{background:#e8c15c}
+  #meny{position:absolute;inset:5px;display:none;align-items:center;justify-content:center;border-radius:4px;background:rgba(4,8,12,.92);z-index:5}
+  #meny.vis{display:flex}
+  #menyKort{width:min(300px,92%);text-align:center;padding:4px}
+  #menyKort h1{margin:0;font-size:15px;letter-spacing:.22em;color:#ff6a3a}
+  #menyKort .under{margin:4px 0 12px;font-size:11px;letter-spacing:.16em;color:#6d8291}
+  #menyResultat{margin:0 0 12px;display:none}
+  #menyResultat.vis{display:block}
+  #menyResultat .tittel{font-size:12px;color:#c8412f;letter-spacing:.14em;font-weight:700}
+  #menyResultat .tall,#menyResultat .poeng,#menyResultat .rekord{font-size:12px;color:#7fd4c8;margin-top:4px;font-family:"Courier New",monospace;font-weight:700}
+  .valg{display:flex;align-items:baseline;justify-content:space-between;width:100%;margin-bottom:8px;padding:13px 16px;border-radius:11px;background:#1f2a33;border:0;border-bottom:3px solid var(--key-lip)}
+  .valg b{font-size:13px;letter-spacing:.14em;color:#dceaf3}
+  .valg span{font-size:10px;color:#6d8291}
+  .hint{font-size:10px;color:#5f7383;line-height:1.55;margin-top:10px}
+  #err{display:none;position:absolute;left:6px;right:6px;top:6px;z-index:20;padding:8px;background:#3a1414;color:#ffb3a7;font:11px/1.4 monospace;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div id="device">
+  <div id="brand">
+    <button id="btnHjem" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path fill="#6d8291" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></button>
+    <b>MEATWARE</b>
+    <span id="alarm"></span>
+    <button id="btnMeny" type="button">MENU</button>
+  </div>
+  <div id="screen">
+    <canvas id="cv" width="640" height="520"></canvas>
+    <div id="meny" class="vis">
+      <div id="menyKort">
+        <h1>MEATWARE</h1>
+        <div class="under">DO NOT UNPLUG THE FAMILY · v8</div>
+        <div id="menyResultat">
+          <div class="tittel" id="menyTittel">WAVE BROKEN</div>
+          <div class="tall" id="menyTall"></div>
+          <div class="poeng" id="menyPoeng"></div>
+          <div class="rekord" id="menyRekord"></div>
+        </div>
+        <button class="valg" data-mode="A"><b>GAME A</b><span>Light restructure.</span></button>
+        <button class="valg" data-mode="B"><b>GAME B</b><span>Middle management.</span></button>
+        <button class="valg" data-mode="C"><b>GAME C</b><span>All-hands.</span></button>
+        <p class="hint">Left stick MOVE. Right stick FIRE.<br>
+        Grunts chase. Electrodes kill both.<br>
+        Wave ends when GRUNTS are gone.<br>
+        Hulks cannot die — they stay.<br>
+        Touch family to save them.</p>
+      </div>
+    </div>
+    <div id="err"></div>
+  </div>
+  <div id="pad">
+    <div class="stick" id="moveStick"><div class="knob" id="moveKnob"></div><div class="lab">MOVE</div></div>
+    <div class="stick" id="fireStick"><div class="knob" id="fireKnob"></div><div class="lab">FIRE</div></div>
+  </div>
+</div>
+<script>
+const HJEM='../../index.html';
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const meny=document.getElementById('meny'), menyResultat=document.getElementById('menyResultat');
+const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
+const W=320, H=260, M=8;
+const NIVA={
+  A:{spd:48, grunt:5, elec:4, hulk:0, fam:2, fire:240},
+  B:{spd:54, grunt:7, elec:5, hulk:1, fam:2, fire:220},
+  C:{spd:60, grunt:9, elec:6, hulk:2, fam:2, fire:200}
+};
+let S=null;
+const stick={mx:0,my:0,fx:0,fy:0,firing:false,touchMove:false,touchFire:false};
+
+function beste(m){ try{return +localStorage.getItem('ba_robo_'+m)||0;}catch(e){return 0;} }
+function lagre(m,s){ try{const h=beste(m); if(s>h){localStorage.setItem('ba_robo_'+m,String(s));return true;}}catch(e){} return false; }
+function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms);}catch(e){} }
+function px(x,y,w,h,c){ ctx.fillStyle=c; ctx.fillRect(x|0,y|0,w,h); }
+function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+function dist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
+function away(fromX,fromY){
+  let x,y,g=0;
+  do{ x=M+12+Math.random()*(W-2*M-24); y=M+12+Math.random()*(H-2*M-24); g++; }
+  while(Math.hypot(x-fromX,y-fromY)<70 && g<20);
+  return {x,y};
+}
+
+function reset(mode){
+  S={
+    mode, score:0, lives:3, wave:1, combo:0,
+    px:W/2, py:H/2, facing:0,
+    shots:[], grunts:[], elecs:[], hulks:[], fam:[], fx:[],
+    fireCd:0, inv:0, over:false, paused:false, last:0, t:0,
+    flash:0, shake:0, nyRekord:false, shown:false, clearT:0,
+    hold:null, holdT:0, holdMsg:''
+  };
+  waveFill();
+  meny.classList.remove('vis');
+}
+
+function waveFill(){
+  const n=NIVA[S.mode];
+  const w=S.wave;
+  S.grunts=[]; S.elecs=[]; S.hulks=[]; S.fam=[]; S.shots=[];
+  S.combo=0; S.clearT=0;
+  const gc=n.grunt + (w-1);
+  const ec=n.elec + (w>3?1:0);
+  const hc=n.hulk + (w>=3?1:0);
+  const fc=n.fam;
+  for(let i=0;i<gc;i++){ const p=away(S.px,S.py); S.grunts.push({x:p.x,y:p.y,dead:false}); }
+  for(let i=0;i<ec;i++){ const p=away(S.px,S.py); S.elecs.push({x:p.x,y:p.y,dead:false,ph:i*40}); }
+  for(let i=0;i<hc;i++){ const p=away(S.px,S.py); S.hulks.push({x:p.x,y:p.y,vx:0,vy:0}); }
+  for(let i=0;i<fc;i++){
+    const p=away(S.px,S.py);
+    S.fam.push({x:p.x,y:p.y,vx:(Math.random()-0.5)*18,vy:(Math.random()-0.5)*18,kind:i%3,dead:false});
+  }
+}
+
+function burst(x,y,n,kind){
+  if(S.fx.length>90) S.fx.splice(0,25);
+  for(let i=0;i<n;i++){
+    const a=Math.random()*Math.PI*2, sp=20+Math.random()*70;
+    S.fx.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,t:220+Math.random()*180,kind});
+  }
+}
+
+function die(){
+  if(S.inv>0||S.over||S.hold) return;
+  S.lives--;
+  burst(S.px,S.py,16,'boom');
+  S.flash=8; S.shake=7; buzz(40);
+  S.combo=0;
+  S.shots=[];
+  if(S.lives<=0){
+    S.hold='over'; S.holdT=900; S.holdMsg='DOWN';
+    return;
+  }
+  S.hold='dead'; S.holdT=1000; S.holdMsg='HIT  ·  P '+S.lives;
+}
+
+function update(dt){
+  const t=dt/1000, n=NIVA[S.mode];
+  S.t+=dt;
+  if(S.flash>0) S.flash--;
+  if(S.shake>0){ S.shake*=0.84; if(S.shake<0.2) S.shake=0; }
+  if(S.inv>0) S.inv-=dt;
+  for(const f of S.fx){ f.t-=dt; f.x+=f.vx*t; f.y+=f.vy*t; }
+  S.fx=S.fx.filter(f=>f.t>0);
+  if(S.over) return;
+  if(S.hold){
+    S.holdT-=dt;
+    if(S.holdT<=0){
+      if(S.hold==='over'){ S.over=true; S.nyRekord=lagre(S.mode,S.score); S.hold=null; return; }
+      if(S.hold==='dead'){ S.px=W/2; S.py=H/2; S.inv=1200; }
+      if(S.hold==='clear'){ S.wave++; S.px=W/2; S.py=H/2; S.inv=700; waveFill(); }
+      S.hold=null; S.holdMsg='';
+    }
+    return;
+  }
+  pollKeys();
+  S.px=clamp(S.px+stick.mx*n.spd*t, M+4, W-M-4);
+  S.py=clamp(S.py+stick.my*n.spd*t, M+4, H-M-4);
+  if(stick.firing){
+    S.facing=Math.atan2(stick.fy, stick.fx);
+    S.fireCd-=dt;
+    if(S.fireCd<=0){
+      S.fireCd=n.fire;
+      const a=S.facing, sp=210;
+      S.shots.push({x:S.px, y:S.py, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp});
+    }
+  } else S.fireCd=Math.min(S.fireCd, 20);
+
+  for(const s of S.shots){
+    s.x+=s.vx*t; s.y+=s.vy*t;
+    if(s.x<M||s.x>W-M||s.y<M||s.y>H-M) s.dead=true;
+    for(const g of S.grunts){
+      if(!g.dead && Math.hypot(s.x-g.x,s.y-g.y)<7){
+        g.dead=true; s.dead=true; S.score+=100;
+        burst(g.x,g.y,8,'boom'); buzz(8);
+      }
+    }
+    for(const e of S.elecs){
+      if(!e.dead && Math.hypot(s.x-e.x,s.y-e.y)<7){
+        e.dead=true; s.dead=true; burst(e.x,e.y,5,'spark');
+      }
+    }
+    for(const h of S.hulks){
+      if(Math.hypot(s.x-h.x,s.y-h.y)<10){
+        s.dead=true;
+        h.x+=Math.cos(Math.atan2(s.vy,s.vx))*10;
+        h.y+=Math.sin(Math.atan2(s.vy,s.vx))*10;
+        burst(s.x,s.y,3,'spark');
+      }
+    }
+  }
+  S.shots=S.shots.filter(s=>!s.dead);
+
+  const gspd=22+S.wave*3;
+  for(const g of S.grunts){
+    if(g.dead) continue;
+    const a=Math.atan2(S.py-g.y, S.px-g.x);
+    g.x+=Math.cos(a)*gspd*t;
+    g.y+=Math.sin(a)*gspd*t;
+    for(const e of S.elecs){
+      if(!e.dead && Math.hypot(g.x-e.x,g.y-e.y)<8){
+        g.dead=true; e.dead=true; burst(g.x,g.y,8,'boom');
+      }
+    }
+    if(S.inv<=0 && Math.hypot(g.x-S.px,g.y-S.py)<8) die();
+  }
+  S.grunts=S.grunts.filter(g=>!g.dead);
+  S.elecs=S.elecs.filter(e=>!e.dead);
+
+  for(const h of S.hulks){
+    let tx=S.px, ty=S.py, best=1e9;
+    for(const f of S.fam){
+      if(f.dead) continue;
+      const d=Math.hypot(f.x-h.x,f.y-h.y);
+      if(d<best){ best=d; tx=f.x; ty=f.y; }
+    }
+    const a=Math.atan2(ty-h.y, tx-h.x);
+    h.x=clamp(h.x+Math.cos(a)*18*t, M+6, W-M-6);
+    h.y=clamp(h.y+Math.sin(a)*18*t, M+6, H-M-6);
+    if(S.inv<=0 && Math.hypot(h.x-S.px,h.y-S.py)<10) die();
+    for(const f of S.fam){
+      if(!f.dead && Math.hypot(h.x-f.x,h.y-f.y)<8){
+        f.dead=true; burst(f.x,f.y,6,'boom'); S.combo=0;
+      }
+    }
+  }
+
+  for(const f of S.fam){
+    if(f.dead) continue;
+    f.x+=f.vx*t; f.y+=f.vy*t;
+    if(f.x<M+6||f.x>W-M-6) f.vx*=-1;
+    if(f.y<M+6||f.y>H-M-6) f.vy*=-1;
+    f.x=clamp(f.x,M+6,W-M-6); f.y=clamp(f.y,M+6,H-M-6);
+    if(Math.hypot(f.x-S.px,f.y-S.py)<10){
+      f.dead=true;
+      S.combo=Math.min(5,S.combo+1);
+      S.score+=1000*S.combo;
+      burst(f.x,f.y,8,'save'); buzz(16);
+    }
+  }
+  S.fam=S.fam.filter(f=>!f.dead);
+
+  for(const e of S.elecs){
+    e.ph+=dt;
+    if(S.inv<=0 && Math.hypot(e.x-S.px,e.y-S.py)<8) die();
+  }
+
+  if(S.grunts.length===0 && !S.hold){
+    S.clearT+=dt;
+    if(S.clearT>500){
+      S.hold='clear'; S.holdT=1100;
+      S.holdMsg=S.hulks.length?'GRUNTS DOWN':'WAVE '+S.wave+' CLEAR';
+    }
+  } else S.clearT=0;
+}
+
+function draw(){
+  ctx.setTransform(2,0,0,2,0,0);
+  if(S && S.shake) ctx.translate((Math.random()-0.5)*S.shake,(Math.random()-0.5)*S.shake);
+  px(0,0,W,H,'#08060a');
+  px(0,0,W,M,'#2a1020');
+  px(0,H-M,W,M,'#2a1020');
+  px(0,0,M,H,'#2a1020');
+  px(W-M,0,M,H,'#2a1020');
+  if(!S){ ctx.setTransform(1,0,0,1,0,0); return; }
+
+  for(const e of S.elecs){
+    const on=((e.ph/180)|0)%2;
+    const c=on?'#c8412f':'#6a2030';
+    const sh=(S.wave%3);
+    if(sh===0){ px(e.x-4,e.y-4,8,8,c); px(e.x-2,e.y-2,4,4,'#1b1014'); }
+    else if(sh===1){ px(e.x-5,e.y-2,10,4,c); px(e.x-2,e.y-5,4,10,c); }
+    else { px(e.x-3,e.y-5,6,10,c); }
+  }
+  for(const f of S.fam){
+    const col=f.kind===0?'#9fd4ff':f.kind===1?'#e8c15c':'#e2a0c0';
+    px(f.x-2,f.y-8,4,4,'#e8d5a8');
+    px(f.x-3,f.y-4,6,6,col);
+    px(f.x-3,f.y+2,2,3,'#4a5d6a');
+    px(f.x+1,f.y+2,2,3,'#4a5d6a');
+  }
+  for(const g of S.grunts){
+    px(g.x-4,g.y-4,8,8,'#c8412f');
+    px(g.x-3,g.y-2,6,3,'#7CFF7C');
+    px(g.x-2,g.y+3,2,2,'#e8c15c');
+    px(g.x+1,g.y+3,2,2,'#e8c15c');
+  }
+  for(const h of S.hulks){
+    px(h.x-7,h.y-7,14,14,'#4a5d3a');
+    px(h.x-5,h.y-9,10,5,'#6d8291');
+    px(h.x-3,h.y-8,2,2,'#c8412f');
+    px(h.x+1,h.y-8,2,2,'#c8412f');
+  }
+  for(const s of S.shots){
+    px(s.x-1,s.y-1,3,3,'#fff3a0');
+    px(s.x-s.vx*0.02,s.y-s.vy*0.02,2,2,'#e8c15c');
+  }
+  for(const f of S.fx){
+    px(f.x,f.y,2,2,f.kind==='save'?'#9fd4ff':f.kind==='spark'?'#e8c15c':'#ff6a3a');
+  }
+  if(S.inv<=0 || ((S.t/80)|0)%2){
+    px(S.px-3,S.py-5,6,10,'#dceaf3');
+    px(S.px-2,S.py-8,4,4,'#e8d5a8');
+    if(stick.firing){
+      const a=S.facing;
+      px(S.px+Math.cos(a)*5-1, S.py+Math.sin(a)*5-1, 3, 2, '#e8c15c');
+    }
+  }
+  ctx.fillStyle='#8aa3b5';
+  ctx.font='8px monospace';
+  ctx.textAlign='left';
+  ctx.fillText('WAVE '+S.wave+'  G '+S.grunts.length, 10, 18);
+  ctx.fillText(S.score, 10, 28);
+  ctx.textAlign='right';
+  ctx.fillText('P '+S.lives, W-10, 18);
+  ctx.globalAlpha=0.2;
+  ctx.textAlign='left'; ctx.fillText('MOVE', 12, H-12);
+  ctx.textAlign='right'; ctx.fillText('FIRE', W-12, H-12);
+  ctx.globalAlpha=1;
+  if(S.hold){
+    ctx.textAlign='center';
+    ctx.fillStyle=S.hold==='clear'?'#7CFF7C':'#ff6a3a';
+    ctx.font='10px monospace';
+    ctx.fillText(S.holdMsg||'', W/2, H/2);
+  }
+  if(S.flash){ ctx.fillStyle='rgba(255,80,40,0.14)'; ctx.fillRect(0,0,W,H); }
+  ctx.setTransform(1,0,0,1,0,0);
+}
+
+function loop(now){
+  if(!S){ draw(); requestAnimationFrame(loop); return; }
+  if(!S.last) S.last=now;
+  let dt=now-S.last; S.last=now;
+  if(dt>50) dt=50;
+  if(!S.paused) update(dt);
+  draw();
+  if(S.over && !S.shown){
+    S.shown=true;
+    menyResultat.classList.add('vis');
+    document.getElementById('menyTittel').textContent='WAVE BROKEN';
+    document.getElementById('menyTall').textContent='wave '+S.wave+' · lives 0';
+    document.getElementById('menyPoeng').textContent='SCORE '+S.score;
+    document.getElementById('menyRekord').textContent=S.nyRekord?'NEW BEST':'BEST '+beste(S.mode);
+    meny.classList.add('vis');
+  }
+  alarmLed.classList.toggle('lit', !!(S.over || S.lives<=1));
+  requestAnimationFrame(loop);
+}
+
+const moveEl=document.getElementById('moveStick');
+const fireEl=document.getElementById('fireStick');
+const moveKnob=document.getElementById('moveKnob');
+const fireKnob=document.getElementById('fireKnob');
+const ptrs=new Map();
+
+function oct(dx,dy){
+  const len=Math.hypot(dx,dy);
+  if(len<14) return {x:0,y:0,on:false,len};
+  const a=Math.atan2(dy,dx);
+  const snap=Math.round(a/(Math.PI/4))*(Math.PI/4);
+  return {x:Math.cos(snap), y:Math.sin(snap), on:true, len};
+}
+function applyKind(kind, v){
+  if(kind==='move'){
+    stick.mx=v.on?v.x:0; stick.my=v.on?v.y:0; stick.touchMove=v.on;
+    moveEl.classList.toggle('live', v.on);
+    const k=Math.min(28, v.len*0.35);
+    moveKnob.style.transform=v.on
+      ? 'translate(calc(-50% + '+(v.x*k)+'px), calc(-50% + '+(v.y*k)+'px))'
+      : 'translate(-50%,-50%)';
+  } else {
+    stick.fx=v.on?v.x:0; stick.fy=v.on?v.y:0; stick.firing=v.on; stick.touchFire=v.on;
+    fireEl.classList.toggle('live', v.on);
+    const k=Math.min(28, v.len*0.35);
+    fireKnob.style.transform=v.on
+      ? 'translate(calc(-50% + '+(v.x*k)+'px), calc(-50% + '+(v.y*k)+'px))'
+      : 'translate(-50%,-50%)';
+  }
+}
+function zoneAt(x,y){
+  const mr=moveEl.getBoundingClientRect(), fr=fireEl.getBoundingClientRect(), cr=cv.getBoundingClientRect();
+  if(x>=mr.left && x<=mr.right && y>=mr.top && y<=mr.bottom) return 'move';
+  if(x>=fr.left && x<=fr.right && y>=fr.top && y<=fr.bottom) return 'fire';
+  if(x>=cr.left && x<=cr.right && y>=cr.top && y<=cr.bottom)
+    return x < cr.left+cr.width*0.5 ? 'move' : 'fire';
+  if(y>cr.bottom) return x < (mr.right+fr.left)/2 ? 'move' : 'fire';
+  return null;
+}
+function onPtrDown(e){
+  if(meny.classList.contains('vis')) return;
+  if(e.target.closest && (e.target.closest('#meny') || e.target.closest('#btnMeny') || e.target.closest('#btnHjem'))) return;
+  const kind=zoneAt(e.clientX,e.clientY);
+  if(!kind) return;
+  for(const p of ptrs.values()){ if(p.kind===kind) return; }
+  ptrs.set(e.pointerId, {kind, x:e.clientX, y:e.clientY});
+  applyKind(kind, oct(0,0));
+  e.preventDefault();
+}
+function onPtrMove(e){
+  const p=ptrs.get(e.pointerId);
+  if(!p) return;
+  applyKind(p.kind, oct(e.clientX-p.x, e.clientY-p.y));
+  e.preventDefault();
+}
+function onPtrUp(e){
+  const p=ptrs.get(e.pointerId);
+  if(!p) return;
+  ptrs.delete(e.pointerId);
+  applyKind(p.kind, {x:0,y:0,on:false,len:0});
+}
+const opts={passive:false};
+window.addEventListener('pointerdown', onPtrDown, opts);
+window.addEventListener('pointermove', onPtrMove, opts);
+window.addEventListener('pointerup', onPtrUp, opts);
+window.addEventListener('pointercancel', onPtrUp, opts);
+window.addEventListener('touchstart', e=>{
+  if(meny.classList.contains('vis')) return;
+  for(const t of e.changedTouches){
+    const kind=zoneAt(t.clientX,t.clientY);
+    if(!kind) continue;
+    let taken=false;
+    for(const p of ptrs.values()) if(p.kind===kind) taken=true;
+    if(taken) continue;
+    ptrs.set('t'+t.identifier, {kind, x:t.clientX, y:t.clientY});
+    applyKind(kind, oct(0,0));
+  }
+  if(e.cancelable) e.preventDefault();
+}, opts);
+window.addEventListener('touchmove', e=>{
+  for(const t of e.changedTouches){
+    const p=ptrs.get('t'+t.identifier);
+    if(!p) continue;
+    applyKind(p.kind, oct(t.clientX-p.x, t.clientY-p.y));
+  }
+  if(e.cancelable) e.preventDefault();
+}, opts);
+function touchEnd(e){
+  for(const t of e.changedTouches){
+    const id='t'+t.identifier;
+    const p=ptrs.get(id);
+    if(!p) continue;
+    ptrs.delete(id);
+    applyKind(p.kind, {x:0,y:0,on:false,len:0});
+  }
+}
+window.addEventListener('touchend', touchEnd, opts);
+window.addEventListener('touchcancel', touchEnd, opts);
+
+const keys={};
+window.addEventListener('keydown', e=>{
+  keys[e.key]=true;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ','w','a','s','d','W','A','S','D'].includes(e.key)) e.preventDefault();
+});
+window.addEventListener('keyup', e=>{ keys[e.key]=false; });
+function pollKeys(){
+  if(stick.touchMove && stick.touchFire) return;
+  let mx=0,my=0,fx=0,fy=0;
+  if(keys.a||keys.A) mx-=1; if(keys.d||keys.D) mx+=1;
+  if(keys.w||keys.W) my-=1; if(keys.s||keys.S) my+=1;
+  if(keys.ArrowLeft) fx-=1; if(keys.ArrowRight) fx+=1;
+  if(keys.ArrowUp) fy-=1; if(keys.ArrowDown) fy+=1;
+  if(!stick.touchMove){
+    if(mx||my){ const l=Math.hypot(mx,my); stick.mx=mx/l; stick.my=my/l; }
+    else { stick.mx=0; stick.my=0; }
+  }
+  if(!stick.touchFire){
+    if(fx||fy){ const l=Math.hypot(fx,fy); stick.fx=fx/l; stick.fy=fy/l; stick.firing=true; }
+    else stick.firing=false;
+  }
+}
+
+document.querySelectorAll('.valg').forEach(b=>b.onclick=()=>reset(b.dataset.mode));
+document.getElementById('btnMeny').onclick=()=>{ if(S) S.paused=true; meny.classList.add('vis'); };
+document.getElementById('btnHjem').onclick=()=>{ location.href=HJEM; };
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
