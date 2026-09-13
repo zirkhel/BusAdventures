@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#07080b">
+<title>GRAB THE MONEY — Bus Adventures</title>
+<style>
+:root{
+  --case:#1a1a20; --case-hi:#31313d;
+  --key:#26262f; --key-lip:#0f0f14; --key-on:#3b3b4a;
+  --alarm:#ffd447;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;height:100%;overflow:hidden;background:#0a0a0d;
+  font-family:"Helvetica Neue",Arial,sans-serif;touch-action:none;
+  -webkit-user-select:none;user-select:none
+}
+body{
+  display:flex;align-items:stretch;justify-content:center;
+  padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom)
+}
+#device{
+  width:100%;max-width:520px;background:var(--case);
+  display:flex;flex-direction:column;border-radius:18px;
+  padding:10px 10px 14px;margin:6px 0;
+  border-top:1px solid var(--case-hi);
+  box-shadow:0 18px 44px rgba(0,0,0,.7)
+}
+#brand{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:2px 4px 8px;color:#76768a;font-size:10px;letter-spacing:.2em
+}
+#brand b{color:#d2d2e0;font-size:12px;letter-spacing:.22em;flex:1;text-align:left}
+#btnHome{
+  padding:5px 9px;border-radius:7px;background:#232330;border:0;
+  border-bottom:2px solid var(--key-lip);line-height:0;margin-right:6px
+}
+#btnHome svg{width:13px;height:13px;fill:#83839a}
+#btnHome:active{background:#3b3b4a}
+#alarm{
+  width:8px;height:8px;border-radius:50%;background:#26262f;margin-right:8px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.6)
+}
+#alarm.lit{background:var(--alarm);box-shadow:0 0 10px var(--alarm)}
+#btnMenu{
+  padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  border-radius:7px;background:#232330;color:#83839a;border:0;
+  border-bottom:2px solid var(--key-lip)
+}
+#btnMenu:active{background:#3b3b4a;color:#eaeaf5}
+#screen{
+  position:relative;background:#07070a;border-radius:6px;padding:5px;
+  flex:1 1 auto;display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 2px 12px rgba(0,0,0,.6);min-height:260px
+}
+canvas{
+  display:block;width:100%;height:auto;image-rendering:pixelated;
+  border-radius:3px;background:#0b0d13
+}
+#menu{
+  position:absolute;inset:5px;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;background:rgba(6,6,10,.94);z-index:5
+}
+#menu.hidden{display:none}
+#menuCard{width:min(320px,92%);text-align:center;padding:4px}
+#menuCard h1{
+  margin:0;font-size:16px;letter-spacing:.22em;color:#ffd447
+}
+#menuCard .under{
+  margin:5px 0 14px;font-size:11px;letter-spacing:.12em;color:#83839a
+}
+#result{display:none;margin:0 0 12px}
+#result.show{display:block}
+#result .big{
+  font:700 18px "Courier New",monospace;color:#ff6a62;margin:5px 0
+}
+#result .small{
+  font:11px/1.5 "Courier New",monospace;color:#aaaabc
+}
+.choice{
+  width:100%;margin-bottom:8px;padding:13px 16px;border-radius:11px;
+  background:#26262f;border:0;border-bottom:3px solid var(--key-lip);
+  color:#eaeaf5;font-weight:700;font-size:13px;letter-spacing:.12em;
+touch-action:manipulation
+}
+.choice:active{background:#3b3b4a;transform:translateY(1px)}
+.hint{font-size:10px;color:#76768a;line-height:1.55;margin-top:10px}
+#pad{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+#pad button{
+  background:var(--key);border:0;border-radius:16px;padding:0;height:76px;
+  border-bottom:4px solid var(--key-lip);display:flex;align-items:center;
+  justify-content:center;touch-action:manipulation
+}
+#pad svg{width:38px;height:38px;fill:#b5b5c8;pointer-events:none}
+#pad button:active,#pad button.down{
+  background:var(--key-on);border-bottom-width:2px;transform:translateY(2px)
+}
+#pad button:active svg,#pad button.down svg{fill:#f2f2ff}
+</style>
+</head>
+<body>
+<div id="device">
+  <div id="brand">
+    <button id="btnHome" aria-label="Back">
+      <svg viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20 Z"/></svg>
+    </button>
+    <b>GRAB THE MONEY</b>
+    <span id="alarm"></span>
+    <button id="btnMenu">MENU</button>
+  </div>
+
+  <div id="screen">
+    <canvas id="lcd" width="640" height="520"></canvas>
+<div id="err" style="display:none;position:absolute;left:8px;right:8px;top:8px;z-index:20;background:#3a1414;color:#ffb3a7;padding:8px;border-radius:6px;font:11px/1.4 ui-monospace,monospace;white-space:pre-wrap"></div>
+
+
+    <div id="menu">
+      <div id="menuCard">
+        <div id="result"></div>
+        <h1>GRAB THE MONEY</h1>
+        <p class="under">A Bus Adventures pocket game</p>
+        <button id="play" class="choice">START GAME</button>
+        <p class="hint">
+          You were promised $5,000.<br>
+          Move left and right. Grab the bills.<br>
+          All $5,000 will be distributed within one minute.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="pad">
+    <button id="left" aria-label="Move left">
+      <svg viewBox="0 0 40 40"><path d="M25 8 L11 20 L25 32 Z"/></svg>
+    </button>
+    <button id="right" aria-label="Move right">
+      <svg viewBox="0 0 40 40"><path d="M15 8 L29 20 L15 32 Z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const cv=document.getElementById('lcd');
+const ctx=cv.getContext('2d');
+ctx.imageSmoothingEnabled=false;
+
+const menu=document.getElementById('menu');
+const play=document.getElementById('play');
+const result=document.getElementById('result');
+const alarm=document.getElementById('alarm');
+
+const leftBtn=document.getElementById('left');
+const rightBtn=document.getElementById('right');
+const btnMenu=document.getElementById('btnMenu');
+const btnHome=document.getElementById('btnHome');
+const err=document.getElementById('err');
+addEventListener('error',e=>{
+  err.style.display='block';
+  err.textContent='ERROR: '+(e.message||'unknown')+'\n'+(e.filename||'')+':'+(e.lineno||0);
+});
+
+
+const W=320;
+let H=260;
+
+function layout(){
+  const screen=document.getElementById('screen');
+  let cssW=screen.clientWidth-10;
+  let cssH=screen.clientHeight-10;
+  if(!(cssW>40)) cssW=Math.min(500,(window.innerWidth||360)-40);
+  if(!(cssH>40)) cssH=Math.max(230,(window.innerHeight||640)-190);
+  H=Math.round(Math.min(360,Math.max(250,W*cssH/cssW)));
+  cv.width=W*2; cv.height=H*2;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(2,2);
+  ctx.imageSmoothingEnabled=false;
+}
+addEventListener('resize',layout);
+layout();
+
+const P={
+  sky:'#101522', sky2:'#192238', city:'#111722', city2:'#1d2533',
+  stage:'#272a31', stage2:'#15171d',
+  blue:'#263d67', red:'#8b2834', cream:'#f0dfb9', amber:'#ffd447',
+  money:'#7ab56a', money2:'#b8d9a6',
+  suit:'#172239', tie:'#b83238', skin:'#d99b68', hair:'#e1b247',
+  shirt:'#778891', pants:'#26303b', black:'#06070a',
+  white:'#eee8dc', danger:'#ff6059', muted:'#8f92a6'
+};
+
+let running=false, ended=false;
+let startTime=0,last=0,lastDrop=0;
+let thrown=0;
+let throwSide=1;
+const LIMIT=5000, BILL=100, MAX_TIME=60;
+let shake=0;
+const excuses=[
+  'UNEXPECTED MARKET FORCES',
+  'FUNDS SUBJECT TO ELIGIBILITY',
+  'CHECKS ARE STILL PROCESSING',
+  'PAYMENT DELAYED BY SUCCESS',
+  'FUNDS AVAILABLE IN THEORY',
+  'YOU MAY NOT MEET THE DEFINITION OF YOU',
+  'THE ECONOMY HAS ABSORBED YOUR PAYMENT',
+  'THIS DOLLAR HAS BEEN PRIVATIZED',
+  'PAYMENT CONVERTED TO FUTURE PROSPERITY',
+  'THE SYSTEM DETECTED EXCESSIVE EXPECTATIONS',
+  'THE MONEY IS COMING VERY SOON',
+  'YOUR SHARE WENT TO A SHAREHOLDER',
+  'PLEASE WAIT ONE MORE FISCAL YEAR',
+  'YOUR PAYMENT IS ON A HISTORIC JOURNEY',
+  'CATCHING FEES EXCEED BILL VALUE',
+  'YOUR HANDS ARE NOT APPROVED VENDORS',
+  'MONEY HAS CHOSEN A DIFFERENT AMERICAN',
+  'TRICKLE DOWN CURRENTLY TRICKLING UP',
+  'PAYMENT LOST IN RECORD GROWTH',
+  'YOU HAVE BEEN PAID IN OPPORTUNITY',
+  'DOLLAR TEMPORARILY UNAVAILABLE',
+  'PLEASE LOWER YOUR EXPECTATIONS',
+  'YOUR ZIP CODE IS UNDER REVIEW',
+  'THIS PAYMENT IDENTIFIES AS DELIVERED',
+  'BENEFITS RESERVED FOR FUTURE YOU',
+  'YOUR APPLICATION WAS TOO READABLE',
+  'PROSPERITY REQUIRES A PROCESSING FEE',
+  'THE BILL IS TAKING A TAX HOLIDAY',
+  'YOUR MONEY IS WORKING SOMEWHERE ELSE',
+  'FUNDS REDIRECTED TO IMPORTANT PEOPLE',
+  'DELIVERY CONFIRMED BY OUR OWN EXPERTS',
+  'YOUR RECEIPT IS THE REAL REWARD',
+  'PLEASE APPLY BEFORE YOU WERE BORN',
+  'PAYMENT PENDING BETTER OPTICS',
+  'YOU ARE SUCCESSFULLY STILL WAITING',
+  'THE INVISIBLE HAND TOOK IT',
+  'YOUR BALANCE IS PATRIOTICALLY ZERO',
+  'THIS IS A HISTORIC NONPAYMENT',
+  'BILL RETURNED TO CAMPAIGN ORBIT',
+  'ALL FUNDS DISTRIBUTED. SOMEWHERE.'
+];
+const floatingExcuses=[];
+let excuseQueue=[];
+let previousExcuse='';
+function showExcuse(){
+  if(!excuseQueue.length){
+    excuseQueue=[...excuses];
+    for(let i=excuseQueue.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [excuseQueue[i],excuseQueue[j]]=[excuseQueue[j],excuseQueue[i]];
+    }
+    if(excuseQueue[excuseQueue.length-1]===previousExcuse){
+      [excuseQueue[0],excuseQueue[excuseQueue.length-1]]=
+        [excuseQueue[excuseQueue.length-1],excuseQueue[0]];
+    }
+  }
+  previousExcuse=excuseQueue.pop();
+  // Wrap long excuses inside the narrow game screen.
+  const lines=[''];
+  for(const word of previousExcuse.split(' ')){
+    const i=lines.length-1;
+    if(lines[i] && (lines[i]+' '+word).length>34) lines.push(word);
+    else lines[i]+=(lines[i]?' ':'')+word;
+  }
+  const height=lines.length*10+12;
+  // Lift older messages to keep new ones readable.
+  for(let i=floatingExcuses.length-1,nextY=H-98;i>=0;i--){
+    const message=floatingExcuses[i];
+    message.y=Math.min(message.y,nextY-message.height-5);
+    nextY=message.y;
+  }
+  floatingExcuses.push({lines,height,y:H-98,life:2.8});
+}
+function updateExcuses(dt){
+  for(let i=floatingExcuses.length-1;i>=0;i--){
+    const message=floatingExcuses[i];
+    message.y-=22*dt;
+    message.life-=dt;
+    if(message.life<=0) floatingExcuses.splice(i,1);
+  }
+}
+const bills=[];
+const particles=[];
+const input={left:false,right:false};
+const player={x:142,y:0,w:32,h:43,vx:0};
+
+function r(a,b){return a+Math.random()*(b-a)}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function text(s,x,y,size,c,align='left'){
+  ctx.save();
+  ctx.font=`700 ${size}px "Courier New",monospace`;
+  ctx.textAlign=align;ctx.textBaseline='top';
+  ctx.fillStyle='#000';ctx.fillText(s,x+1,y+1);
+  ctx.fillStyle=c;ctx.fillText(s,x,y);ctx.restore();
+}
+function line(x1,y1,x2,y2,c,w=1){
+  ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1+.5,y1+.5);ctx.lineTo(x2+.5,y2+.5);ctx.stroke();
+}
+
+function floorY(){ return H-52; }
+function playerY(){ return floorY()-43; }
+
+function drawWorld(){
+  rect(0,0,W,H,P.sky);
+  rect(0,54,W,82,P.sky2);
+
+  // stars / distant lights
+  for(let i=0;i<22;i++){
+    const x=(i*47)%W, y=12+((i*31)%70);
+    rect(x,y,1,1,i%3? '#48516c':'#8b8fa0');
+  }
+
+  // skyline
+  for(let i=0;i<17;i++){
+    const x=i*21-5, bh=18+((i*13)%42);
+    rect(x,136-bh,17,bh,P.city);
+    if(i%2===0) rect(x+4,136-bh+8,2,3,'#a47f3d');
+    if(i%3===0) rect(x+11,136-bh+17,2,3,'#a47f3d');
+  }
+
+  // stage
+  rect(0,136,W,9,P.stage);
+  rect(0,145,W,floorY()-145,P.stage2);
+  for(let x=0;x<W;x+=32){
+    rect(x,145,2,floorY()-145,'#22242a');
+    line(x,145,x+32,floorY(),'#22242a',1);
+  }
+
+  // podium
+  rect(111,55,98,8,'#343741');
+  rect(118,63,84,45,'#1b202b');
+  rect(126,70,68,30,P.blue);
+  text('AMERICA',160,77,8,P.cream,'center');
+  text('FIRST',160,88,8,P.cream,'center');
+
+  // banners
+  rect(17,72,59,28,P.red); rect(244,72,59,28,P.red);
+  text('PROMISE',46,82,7,P.cream,'center');
+  text('$5,000',273,82,7,P.cream,'center');
+}
+
+function drawTrump(){
+  // Deliberately oversized stage character: about 1.5x the old sprite.
+  const x=137,y=10, z=1.45;
+  const q=(a)=>Math.round(a*z);
+  const rr=(dx,dy,w,h,c)=>rect(x+q(dx),y+q(dy),q(w),q(h),c);
+
+  rr(8,22,23,28,P.suit);
+  rr(4,25,8,23,P.suit);
+  rr(28,25,8,23,P.suit);
+  rr(16,25,5,21,P.tie);
+  rr(13,22,11,6,P.white);
+
+  rr(10,6,20,18,P.skin);
+  rr(7,10,4,13,'#c98858');
+  rr(30,10,4,12,'#c98858');
+  rr(7,3,23,6,P.hair);
+  rr(13,1,20,5,'#ebc35a');
+  rr(5,6,13,5,'#d5a43e');
+
+  rr(14,13,2,1,'#2a2019');
+  rr(25,13,2,1,'#2a2019');
+
+  // Big pixel smile.
+  rr(16,18,11,2,'#f7f1df');
+  rr(18,20,7,1,'#8a4037');
+
+  // Throwing arm swaps side with each bill.
+  if(throwSide>0){
+    rr(31,27,13,5,P.skin);
+    rr(42,24,6,4,P.skin);
+  }else{
+    rr(-8,27,13,5,P.skin);
+    rr(-12,24,6,4,P.skin);
+  }
+
+  rr(8,49,10,3,P.black);
+  rr(23,49,10,3,P.black);
+}
+function drawPlayer(){
+  const x=player.x,y=playerY();
+  rect(x+7,y+28,7,15,P.pants);
+  rect(x+21,y+28,7,15,P.pants);
+  rect(x+4,y+40,12,3,P.black);
+  rect(x+19,y+40,12,3,P.black);
+
+  rect(x+6,y+14,24,18,P.shirt);
+  rect(x+1,y+16,7,18,P.shirt);
+  rect(x+28,y+16,7,18,P.shirt);
+
+  rect(x+9,y+2,18,14,'#d0a071');
+  rect(x+8,y,19,5,'#4b382b');
+  rect(x+8,y+4,4,8,'#4b382b');
+  rect(x+12,y+8,2,2,'#17120f');
+  rect(x+22,y+8,2,2,'#17120f');
+
+  rect(x,y+12,6,6,'#d0a071');
+  rect(x+30,y+12,6,6,'#d0a071');
+}
+
+function drawBill(b){
+  ctx.save();
+  ctx.translate(b.x,b.y);
+  ctx.rotate(b.rot);
+  rect(-9,-4,18,8,P.money);
+  rect(-7,-3,14,6,P.money2);
+  rect(-1,-2,2,4,'#4d7f49');
+  ctx.restore();
+}
+
+function spawnBill(){
+  if(thrown>=LIMIT) return;
+  thrown+=BILL;
+
+  // Trump visibly alternates throwing left and right.
+  throwSide *= -1;
+  const sx = throwSide < 0 ? 139 : 203;
+  bills.push({
+    x:sx+r(-2,2),
+    y:61+r(-2,2),
+    vx:throwSide*r(38,58),
+    vy:r(18,27),
+    rot:r(-.18,.18),
+    vr:throwSide*r(2.2,4.0),
+    escaped:false
+  });
+  alarm.classList.add('lit');
+  setTimeout(()=>alarm.classList.remove('lit'),90);
+}
+function updateBill(b,dt){
+  b.vy += 54*dt;
+  b.x += b.vx*dt;
+  b.y += b.vy*dt;
+  b.rot += b.vr*dt;
+
+  const px=player.x+16;
+  const py=playerY()+9;
+  const dx=b.x-px;
+  const dy=b.y-py;
+  const dist=Math.hypot(dx,dy);
+
+  // Let the money fall MUCH lower than the prototype.
+  // It only cheats when it is basically at hand/head height.
+  const cheatY = playerY()-2;
+  if(!b.escaped && b.y>cheatY && dist<54){
+    b.escaped=true;
+    const away=(Math.abs(dx)<2 ? (Math.random()<.5?-1:1) : Math.sign(dx));
+    b.vx=away*r(135,195);
+    b.vy=r(-75,-45);
+    b.vr=r(-8,8);
+    showExcuse();
+    shake=2.2;
+
+    for(let i=0;i<4;i++){
+      particles.push({
+        x:b.x,y:b.y,
+        vx:r(-30,30),vy:r(-35,4),life:.28
+      });
+    }
+  }
+}
+
+function update(dt,now){
+  const elapsed=(now-startTime)/1000;
+  let dir=(input.right?1:0)-(input.left?1:0);
+
+  player.vx += dir*520*dt;
+  player.vx *= Math.pow(.008,dt);
+  player.vx=clamp(player.vx,-135,135);
+  player.x=clamp(player.x+player.vx*dt,5,W-player.w-5);
+
+  // 50 x $100. Typical finish around 48-55 sec, never over 60.
+  if(now-lastDrop>r(760,980) && thrown<LIMIT){
+    spawnBill(); lastDrop=now;
+  }
+
+  for(let i=bills.length-1;i>=0;i--){
+    updateBill(bills[i],dt);
+    const b=bills[i];
+    if(b.y>H+25 || b.x<-35 || b.x>W+35) bills.splice(i,1);
+  }
+
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=70*dt;
+    if(p.life<=0) particles.splice(i,1);
+  }
+
+  shake=Math.max(0,shake-dt*10);
+
+  if((thrown>=LIMIT && bills.length===0) || elapsed>=MAX_TIME) endGame();
+}
+
+function drawHUD(now){
+  const elapsed=running ? (now-startTime)/1000 : 0;
+  const remain=Math.max(0,MAX_TIME-elapsed);
+
+  rect(6,6,83,28,'rgba(0,0,0,.72)');
+  rect(231,6,83,28,'rgba(0,0,0,.72)');
+  text('PROMISED',10,9,6,P.muted);
+  text('$5,000',10,18,11,P.amber);
+  text('YOU GOT',235,9,6,P.muted);
+  text('$0',235,18,11,P.danger);
+
+  text('TIME '+remain.toFixed(1),160,7,7,P.cream,'center');
+  rect(116,20,88,6,'#242833');
+  rect(118,22,84*(thrown/LIMIT),2,P.red);
+  text('$'+thrown,160,29,6,P.muted,'center');
+}
+
+function draw(now){
+  ctx.save();
+  if(shake>0) ctx.translate(r(-shake,shake),r(-shake,shake));
+
+  drawWorld();
+  drawTrump();
+  bills.forEach(drawBill);
+  drawPlayer();
+  particles.forEach(p=>rect(p.x,p.y,2,2,'#d6e6cd'));
+  drawHUD(now);
+
+  for(const message of floatingExcuses){
+    ctx.save();
+    ctx.globalAlpha=Math.min(1,message.life/1.8);
+    const width=Math.max(...message.lines.map(s=>s.length))*4.2+20;
+    const age=clamp((2.8-message.life)/2.8,0,1);
+    const maxScale=Math.min(1.85,(W-16)/width);
+    const scale=1+(maxScale-1)*(1-Math.pow(1-age,2));
+    ctx.translate(W/2,message.y+message.height/2);
+    ctx.scale(scale,scale);
+    rect(-width/2,-message.height/2,width,message.height,'rgba(0,0,0,.82)');
+    message.lines.forEach((s,i)=>text(s,0,-message.height/2+6+i*10,7,P.amber,'center'));
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+function endGame(){
+  if(!running)return;
+  running=false;ended=true;
+  const absurd='9,999,999,999,999,999,999';
+  result.innerHTML=
+    '<div class="big">YOUR SCORE: 0</div>'+
+    '<div class="small">PROMISED: $5,000 &middot; YOU GOT: $0</div>'+
+    '<div class="small">HIGH SCORE<br><span id="absurdHigh">'+absurd+'</span></div>';
+  result.classList.add('show');
+  const hs=document.getElementById('absurdHigh');
+  let blink=false;
+  clearInterval(window.__moneyBlink);
+  window.__moneyBlink=setInterval(()=>{
+    if(!hs || !hs.isConnected){ clearInterval(window.__moneyBlink); return; }
+    blink=!blink;
+    hs.style.visibility=blink?'hidden':'visible';
+  },180);
+  play.textContent='PLAY AGAIN';
+  menu.classList.remove('hidden');
+}
+
+function startGame(){
+  clearInterval(window.__moneyBlink);
+  err.style.display='none';
+  bills.length=0;particles.length=0;
+  floatingExcuses.length=0;
+  thrown=0;player.x=142;player.vx=0;
+  result.classList.remove('show');
+  menu.classList.add('hidden');
+  running=true;ended=false;
+  startTime=performance.now();
+  last=startTime;
+  lastDrop=startTime-900;
+}
+
+function loop(now){
+  const dt=Math.min(.035,(now-last)/1000||0);
+  last=now;
+  if(running)update(dt,now);
+  updateExcuses(dt);
+  draw(now);
+  requestAnimationFrame(loop);
+}
+
+function press(side,on){
+  input[side]=on;
+  const b=side==='left'?leftBtn:rightBtn;
+  b.classList.toggle('down',on);
+}
+for(const [b,side] of [[leftBtn,'left'],[rightBtn,'right']]){
+  b.addEventListener('pointerdown',e=>{e.preventDefault();press(side,true)});
+  b.addEventListener('pointerup',()=>press(side,false));
+  b.addEventListener('pointercancel',()=>press(side,false));
+  b.addEventListener('pointerleave',()=>press(side,false));
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A'){press('left',true);e.preventDefault()}
+  if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){press('right',true);e.preventDefault()}
+});
+addEventListener('keyup',e=>{
+  if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A')press('left',false);
+  if(e.key==='ArrowRight'||e.key==='d'||e.key==='D')press('right',false);
+});
+
+// Same input-binding pattern as Seven Strikes, which is known to work on iPhone.
+function bindEl(el, fn){
+  let touchUsed=false;
+  if(!el) return;
+  el.addEventListener('touchstart', e=>{
+    e.preventDefault();
+    touchUsed=true;
+    fn();
+    setTimeout(()=>{touchUsed=false;},450);
+  }, {passive:false});
+  el.addEventListener('pointerdown', e=>{
+    if(e.pointerType==='touch') return;
+    e.preventDefault();
+    fn();
+  });
+  el.addEventListener('click', e=>{
+    if(touchUsed) return;
+    e.preventDefault();
+    fn();
+  });
+}
+
+bindEl(play,startGame);
+bindEl(btnMenu,()=>{
+  if(running) running=false;
+  menu.classList.remove('hidden');
+});
+bindEl(btnHome,()=>{
+  if(location.pathname.includes('/games/')) location.href='../../index.html';
+  else menu.classList.remove('hidden');
+});
+
+last=performance.now();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
