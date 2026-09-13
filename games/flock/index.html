@@ -104,7 +104,7 @@
         <p class="hint">Stand in their lane. That is the strike.<br>
           One body, one lane. Nothing covers two.<br>
           What slips past takes one from behind you.<br>
-          A shotgun fires automatically up the street.<br>Move into danger just in time: PERFECT +2.<br>Keep them out to build your combo.<br>← / → or A / D · hold to move · Esc pauses.</p>
+          Shotgun: close range. Auto rifle: full street.<br>Move into danger just in time: PERFECT +2.<br>Keep them out to build your combo.<br>← / → or A / D · hold to move · Esc pauses.</p>
       </div>
     </div>
     <pre id="err"></pre><div id="bootStatus" style="position:absolute;left:12px;right:12px;top:65px;z-index:19;padding:12px;background:#142131;color:#f6d49b;font:12px/1.5 monospace">FLOCK: venter på spillmotoren. Hvis denne teksten blir stående, startet ikke JavaScript.</div>
@@ -212,7 +212,7 @@ function reset(mode){
         elapsed:0, visual:0, combo:0, bestCombo:0, kills:0, perfects:0, movedAt:-9999, moveSerial:0, usedMove:-1, hitStop:0, shotFlash:0, killTimes:[], goreUntil:0, stains:[], notices:[], fragments:[], casings:[], nextLightning:32000+Math.random()*24000, lightning:0, score:0, meter:0, liv:3, maxLiv:3,
         tick:0, nesteZ:4, nesteDrop:40,
         hugg:0, huggSide:-1, slagg:0,
-        shells:0, shotCd:0, munn:0,
+        rifleAmmo:0, rifleCd:0, shotKind:"shotgun", tracer:null, shells:0, shotCd:0, munn:0,
         intro:4, flock:[],
         storm:0, pressure:0, roadPhase:0, interval:n.interval,
         shake:0, rød:0, skrikT:0, skrikTekst:'',
@@ -380,6 +380,8 @@ function mistLiv(){
 }
 
 function plukk(d){
+ if(d.type==='rifle'){S.rifleAmmo=Math.min(18,S.rifleAmmo+9);S.rifleCd=0;notice('AUTO RIFLE · '+S.rifleAmmo+' ROUNDS','#9edcd5');buzz([10,15,10]);return}
+
   if (d.type === 'liv'){
     if (S.liv < S.maxLiv){ S.liv++; S.slagg = 10; buzz(12); }
     return;
@@ -409,14 +411,7 @@ function step(){
 
   S.tick++;
   S.meter++;
-  if (S.intro > 0){
-    S.intro--;
-    for (const f of S.flokk){
-      f.y += 2.4;
-      f.fase++;
-    }
-    S.flokk = S.flokk.filter(f => f.y < H + 28);
-  }
+
 
   // Time-based pressure continues rising even at the score ceiling.
   S.pressure = S.elapsed / (S.elapsed + 90000);
@@ -440,8 +435,8 @@ function step(){
   collectDrops();
   if (S.tick >= S.nesteDrop && S.intro === 0){
     const r = Math.random();
-    const type = (r < .55 && S.liv < S.maxLiv) ? 'liv' : 'hagle';
-    if (type === 'hagle' || S.liv < S.maxLiv){
+    const type = (r < .55 && S.liv < S.maxLiv) ? 'liv' : (Math.random()<.38?'rifle':'hagle');
+    if (type !== 'liv' || S.liv < S.maxLiv){
       const tatt = new Set(S.z.filter(z => z.d < .3).map(z => z.kol));
       const ledige = [];
       for (let i=0; i<KOL; i++) if (!tatt.has(i)) ledige.push(i);
@@ -526,7 +521,14 @@ function collectDrops(){
 }
 function combat(){
  if(S.paused||S.over||S.intro>0||S.hitStop>0)return;
- if(S.shells>0 && S.shotCd===0){
+ if(S.rifleAmmo>0){
+  if(S.rifleCd===0){const target=S.z.filter(z=>!z.død&&z.kol===S.kol&&z.d>=0&&z.d<=SLASH_B).sort((a,b)=>b.d-a.d)[0];if(target){
+   S.rifleAmmo--;S.rifleCd=160;S.shotKind='rifle';S.visX=kolX[S.kol];
+   S.tracer={x:dybdeX(kolX[target.kol],target.d),y:dybdeY(target.d)-12*(.25+target.d),life:65};
+   target.hp--;if(target.hp<=0){target.død=true;slaktUt(target,true);S.score=Math.min(999,S.score+3);registerKill()}else{target.slått=1;}
+   S.z=S.z.filter(z=>!z.død);S.munn=2;S.shotFlash=45;S.shake=2;S.hitStop=0;buzz(8);return;
+  }}
+ }else if(S.shells>0 && S.shotCd===0){
   const target=S.z.filter(z=>!z.død&&z.kol===S.kol&&z.d>=SHOT_A&&z.d<=SHOT_B).sort((a,b)=>b.d-a.d)[0];
   if(target){
    S.shells--;S.shotCd=SHOT_COOLDOWN;shotgunFX();target.hp--;
@@ -770,7 +772,9 @@ function tegnDrop(d, t){
     ctx.bezierCurveTo(x+10*sk, y-2*sk, x+8*sk*puls, y-12*sk, x, y-2*sk);
     ctx.fill();
     glow(x, y-2, 12*sk, '#ff3a3a', .35);
-  } else {
+    } else if(d.type==='rifle'){
+ ctx.fillStyle='#1f4c50';ctx.fillRect(x-10*sk,y-9*sk,20*sk,10*sk);ctx.strokeStyle='#a1e4d7';ctx.lineWidth=sk;ctx.strokeRect(x-10*sk,y-9*sk,20*sk,10*sk);ctx.fillStyle='#d5f3d7';ctx.fillRect(x-7*sk,y-6*sk,14*sk,2*sk);ctx.fillRect(x-1*sk,y-4*sk,3*sk,3*sk);
+    } else {
     ctx.fillStyle = '#2a2a22';
     ctx.fillRect(x-7*sk, y-6*sk, 14*sk, 6*sk);
     ctx.fillStyle = '#4a4a38';
@@ -843,9 +847,9 @@ function tegnBlod(){
 function flokkBak(t){
   if (!S.flokk.length) return;
   for (const f of S.flokk){
-    const x = S.visX + f.dx;
+    const x = W/2 + f.dx;
     const y = f.y;
-    const sk = f.sk * 1.15;
+    const sk = FIGUR;
     const steg = Math.sin(f.fase / 3.2) * 3.2;
     const klipp = y > H-8 ? Math.max(0, 1 - (y-(H-8))/30) : 1;
     ctx.globalAlpha = klipp;
@@ -869,6 +873,9 @@ function flokkBak(t){
   }
 }
 
+function tegnRifle(x,y,recoil){
+ ctx.save();ctx.translate(x+6,y-14+recoil*.3);ctx.rotate(-1.08);ctx.fillStyle='#273d47';ctx.fillRect(-8,-2,8,4);ctx.fillRect(0,-2.4,12,4.8);ctx.fillStyle='#789798';ctx.fillRect(0,-2.4,12,.8);ctx.fillStyle='#101d27';ctx.fillRect(3,2,3,6);ctx.fillRect(7,2,4,7);ctx.fillStyle='#567577';ctx.fillRect(12,-1.4,10,2);ctx.fillRect(18,-3,1,2);ctx.restore();
+}
 function tegnHagle(x,y,rekyl){
   ctx.save();ctx.translate(x+6,y-14+rekyl*.35);ctx.rotate(-1.08);
   ctx.fillStyle='#61402d';ctx.fillRect(-7,-2,7,4);ctx.fillStyle='#a17b4e';ctx.fillRect(-6,-2,4,1);
@@ -884,7 +891,7 @@ function spilleren(t){
   const side = S.huggSide;
   const sving = slå ? (7-S.hugg)/7 : 0;
   const skritt = slå ? 0 : Math.sin(t/78)*3.6;
-  const hagle = S.shells > 0 || S.shotFlash > 0;
+  const hagle = S.rifleAmmo>0 || S.shells > 0 || S.shotFlash > 0;
   const rekyl = S.munn > 0 ? (5-S.munn)*1.1 : 0;
 
   ctx.save();
@@ -919,7 +926,7 @@ function spilleren(t){
   ctx.fillRect(x-1.6, y+2, 3.2, 2.6);
 
   if (hagle){
-    tegnHagle(x, y, rekyl);
+    if(S.rifleAmmo>0||(S.shotKind==='rifle'&&S.shotFlash>0))tegnRifle(x,y,rekyl);else tegnHagle(x, y, rekyl);
     ctx.fillStyle = '#604a3e';
     ctx.fillRect(x-11, y-14, 4, 8);
     ctx.fillRect(x+5, y-18 - rekyl, 4, 8);
@@ -945,8 +952,8 @@ function spilleren(t){
   ctx.beginPath(); ctx.arc(x, y-23, 5.2, 0, 7); ctx.fill();
   ctx.fillStyle = '#e0b892';
   ctx.beginPath(); ctx.arc(x-1.4, y-24.2, 2.2, 0, 7); ctx.fill();
-  ctx.fillStyle = '#6a4a38';
-  ctx.fillRect(x-3.4, y-22, 6.8, 1.5);
+  ctx.fillStyle = '#48382f';ctx.beginPath();ctx.ellipse(x,y-24,4.4,3.4,0,0,Math.PI);ctx.fill();
+  ctx.fillStyle = '#aa805e';ctx.beginPath();ctx.ellipse(x,y-19.6,2.1,1.4,0,0,7);ctx.fill();
   ctx.fillStyle = P.hatt;
   ctx.fillRect(x-9, y-26, 18, 2.6);
   ctx.beginPath(); ctx.ellipse(x, y-28.2, 5.4, 3.4, 0, 0, 7); ctx.fill();
@@ -973,9 +980,11 @@ function hud(){
  ctx.fillStyle='#769aab';ctx.fillText((S.elapsed/1000).toFixed(1)+'s',9,49);
  ctx.textAlign='right';ctx.fillStyle='#b5c5cd';ctx.fillText('FLOCK',W-10,12);
  for(let i=0;i<3;i++){let x=W-43+i*14;ctx.fillStyle=i<S.liv?'#f2d5a1':'#62363e';ctx.beginPath();ctx.arc(x,22,3,0,7);ctx.fill();ctx.fillRect(x-3,26,6,5);if(i>=S.liv){ctx.strokeStyle='#ee796d';ctx.beginPath();ctx.moveTo(x-4,18);ctx.lineTo(x+4,31);ctx.stroke()}}
+ if(S.rifleAmmo>0){ctx.font='bold 8px monospace';ctx.fillStyle='#9edcd5';ctx.fillText('AUTO '+S.rifleAmmo,W-10,44)}else{
  ctx.font='7px monospace';ctx.fillStyle='#b5c5cd';ctx.fillText(S.shells>0 && S.shotCd>0?'PUMP':'SHELLS',W-56,45);
  for(let i=0;i<6;i++){ctx.fillStyle=i<S.shells?'#dc9170':'#283745';ctx.fillRect(W-51+i*7,36,4,9);ctx.fillStyle=i<S.shells?'#f3d18a':'#3b4955';ctx.fillRect(W-51+i*7,43,4,2)}
  if(S.shells>0){ctx.fillStyle='#344553';ctx.fillRect(W-51,48,39,1);ctx.fillStyle='#f3d18a';ctx.fillRect(W-51,48,39*(1-S.shotCd/SHOT_COOLDOWN),1)}
+}
  ctx.textAlign='center';ctx.font='bold 10px monospace';ctx.fillStyle=S.combo>=5?'#ffcf7c':'#9aafba';ctx.fillText(S.combo ? S.combo+' COMBO':'HOLD',W/2,21);ctx.font='7px monospace';ctx.fillText(S.combo>=20?'FLOCK STANDS':S.combo>=10?'NO WAY THROUGH':S.combo>=5?'HOLDING':'THE STREET',W/2,32);
  ctx.fillStyle='rgba(8,15,26,.75)';ctx.fillRect(0,H-20,W,20);ctx.fillStyle='#9dabb7';ctx.font='7px monospace';ctx.fillText('←  MOVE  →     AUTO STRIKE · PROTECT THE FLOCK',W/2,H-8);
  ctx.restore();
@@ -1065,8 +1074,8 @@ function draw(t){
     ctx.fillStyle = g; ctx.fillRect(0, H-90, W, 90);
   }
 
-  if (S.intro > 12 && !S.paused){
-    const a = Math.min(1, (S.intro-12)/16);
+  if (S.intro > 0 && !S.paused){
+    const a = Math.min(1,Math.max(0,(2100-S.elapsed)/500));
     ctx.globalAlpha = a; ctx.textAlign = 'center';
     ctx.fillStyle = '#ff5a4a';
     ctx.font = 'bold 13px "Courier New",monospace';
@@ -1237,8 +1246,11 @@ addEventListener('orientationchange', () => setTimeout(() => {
 
 function notice(text,color){S.notices.push({text,color,life:1500});if(S.notices.length>3)S.notices.shift()}
 function registerKill(){S.kills++;S.combo++;S.bestCombo=Math.max(S.bestCombo,S.combo);if([5,10,20,30,50].includes(S.combo))notice(S.combo+' KILLS · '+(S.combo>=20?'FLOCK STANDS':S.combo>=10?'NO WAY THROUGH':'HOLDING'),P.gull)}
-function shotgunFX(){S.visX=kolX[S.kol];S.shotFlash=150;S.shake=9;S.munn=5;S.hitStop=45;S.casings.push({x:S.visX+12,y:BAKKE-25,vx:55,vy:-65,life:650});buzz([20,20,35])}
+function shotgunFX(){S.shotKind="shotgun";S.visX=kolX[S.kol];S.shotFlash=150;S.shake=9;S.munn=5;S.hitStop=45;S.casings.push({x:S.visX+12,y:BAKKE-25,vx:55,vy:-65,life:650});buzz([20,20,35])}
 function updateFX(dt){
+ S.rifleCd=Math.max(0,S.rifleCd-dt);if(S.tracer){S.tracer.life-=dt;if(S.tracer.life<=0)S.tracer=null}
+ if(S.intro>0){for(const f of S.flokk){f.y+=dt*.085;f.fase+=dt/65}S.flokk=S.flokk.filter(f=>f.y<H+55);if(S.elapsed>=2100){S.intro=0;S.flokk=[]}}
+
  S.stains=S.stains.filter(s=>(s.life-=dt)>0&&s.d<1.8);
  const seconds=dt/1000, ticks=dt/20;
  S.fragments=S.fragments.filter(f=>{f.life-=dt;f.x+=f.vx*seconds;f.y+=f.vy*seconds;f.vy+=650*seconds;f.angle+=f.spin*seconds;return f.life>0&&f.y<H+20});
@@ -1256,6 +1268,7 @@ function drawStains(){
  ctx.save();for(const stain of S.stains){const scale=.25+stain.d,x=dybdeX(stain.x0,stain.d),y=dybdeY(stain.d);ctx.globalAlpha=Math.min(.8,stain.life/2000);for(let i=0;i<stain.spots.length;i++){const p=stain.spots[i];ctx.fillStyle=i%3?'#68182b':'#a02b38';ctx.beginPath();ctx.ellipse(x+p.x*scale,y+p.y*scale,p.r*scale,p.r*.35*scale,0,0,7);ctx.fill()}}ctx.restore();
 }
 function renderFX(){
+ if(S.tracer){ctx.save();ctx.strokeStyle="rgba(218,242,175,.6)";ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(S.visX+24,BAKKE-39);ctx.lineTo(S.tracer.x,S.tracer.y);ctx.stroke();ctx.restore()}
  ctx.save();
  for(const f of S.fragments){
   ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.angle);ctx.scale(f.scale,f.scale);ctx.globalAlpha=Math.min(1,f.life/180);
