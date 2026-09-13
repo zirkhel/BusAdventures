@@ -209,9 +209,11 @@ function reset(mode){
         z:[], drop:[], kropp:[], blod:[], vinduSmear:[], gnist:[],
         elapsed:0, visual:0, combo:0, bestCombo:0, kills:0, perfects:0, movedAt:-9999, moveSerial:0, usedMove:-1, hitStop:0, shotFlash:0, notices:[], fragments:[], casings:[], nextLightning:32000+Math.random()*24000, lightning:0, score:0, meter:0, liv:3, maxLiv:3,
         tick:0, nesteZ:8, nesteDrop:40,
+        tick:0, nesteZ:4, nesteDrop:40,
         hugg:0, huggSide:-1, slagg:0,
         shells:0, shotCd:0, munn:0,
         intro:18, flock:[],
+        intro:4, flock:[],
         storm:0, pressure:0, interval:n.interval,
         shake:0, rød:0, skrikT:0, skrikTekst:'',
         mistet:0, over:false, nyRekord:false,
@@ -1252,6 +1254,11 @@ function bindRetning(id,d){
  for(const event of ['pointerup','pointercancel','lostpointercapture'])el.addEventListener(event,stop);
 }
 function bindEl(el,fn){if(el)el.addEventListener('click',fn)}
+function bindEl(el,fn){
+ if(!el)return;let last=-Infinity;
+ const activate=e=>{if(e.type==='pointerdown' && e.button!==0)return;const now=performance.now();if(now-last<400)return;last=now;e.preventDefault();fn(e)};
+ el.addEventListener('pointerdown',activate);el.addEventListener('click',activate);
+}
 bindRetning('left', -1);
 bindRetning('right', 1);
 for (const el of document.querySelectorAll('.valg[data-mode]'))
@@ -1262,6 +1269,7 @@ bindEl(document.getElementById('btnMeny'), () => {if(S.paused && startetVed && !
 bindEl(document.getElementById('btnHjem'), () => { if(location.protocol==='file:')visMeny(null,true);else location.href = HJEM; });
 cv.addEventListener('pointerdown',e=>{e.preventDefault();const r=cv.getBoundingClientRect();flytt(e.clientX-r.left<r.width/2?-1:1)});
 addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','a','A','d','D','Escape'].includes(e.key)){e.preventDefault();if(e.key==='Escape'){if(!e.repeat){if(S.paused&&startetVed&&!S.over)resume();else visMeny(null,true)}}else flytt(['ArrowLeft','a','A'].includes(e.key)?-1:1)}});
+addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.repeat&&S.paused&&!(document.activeElement instanceof HTMLButtonElement)){e.preventDefault();if(startetVed&&!S.over)resume();else start('B');return}if(['ArrowLeft','ArrowRight','a','A','d','D','Escape'].includes(e.key)){e.preventDefault();if(e.key==='Escape'){if(!e.repeat){if(S.paused&&startetVed&&!S.over)resume();else visMeny(null,true)}}else flytt(['ArrowLeft','a','A'].includes(e.key)?-1:1)}});
 function suspend(){releaseControls.forEach(fn=>fn());if(S&&!S.over&&!S.paused)visMeny(null,true);if(S)S.last=0}
 addEventListener('blur',suspend);document.addEventListener('visibilitychange',()=>{if(document.hidden)suspend()});
 
