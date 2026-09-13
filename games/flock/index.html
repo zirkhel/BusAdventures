@@ -107,7 +107,7 @@
           A shotgun fires automatically up the street.<br>Move into danger just in time: PERFECT +2.<br>Keep them out to build your combo.<br>← / → or A / D · hold to move · Esc pauses.</p>
       </div>
     </div>
-    <pre id="err"></pre>
+    <pre id="err"></pre><div id="bootStatus" style="position:absolute;left:12px;right:12px;top:65px;z-index:19;padding:12px;background:#142131;color:#f6d49b;font:12px/1.5 monospace">FLOCK: venter på spillmotoren. Hvis denne teksten blir stående, startet ikke JavaScript.</div>
   </div>
   <div id="pad">
     <button id="left" aria-label="Move left">
@@ -118,6 +118,9 @@
     </button>
   </div>
 </div>
+<script>
+window.addEventListener('error',function(e){var box=document.getElementById('bootStatus');if(box){box.style.display='block';box.textContent='FLOCK oppstartsfeil: '+e.message+' (linje '+e.lineno+')';}});
+</script>
 <script>
 const HJEM = '../../index.html';
 const NOKKEL = 'flock-best-';
@@ -169,7 +172,6 @@ const SMAL = .28;
 const dybdeX = (x, d) => W/2 + (x - W/2) * (SMAL + (1-SMAL) * d);
 const dybdeY = d => HORISONT + (KONTAKT - HORISONT) * d;
 const GRUNNFART = 0.034;
-const fram = (d, andel, fart) => d + GRUNNFART * andel * (fart || 1) * (.45 + .55 * d);
 const fram = (d, andel, fart) => (d + .45/.55) * Math.pow(1 + GRUNNFART * (fart || 1) * .55, andel) - .45/.55;
 let kolX = [];
 
@@ -208,11 +210,9 @@ function reset(mode){
   S = { mode, n, kol:2, visX:0, paused:false,
         z:[], drop:[], kropp:[], blod:[], vinduSmear:[], gnist:[],
         elapsed:0, visual:0, combo:0, bestCombo:0, kills:0, perfects:0, movedAt:-9999, moveSerial:0, usedMove:-1, hitStop:0, shotFlash:0, notices:[], fragments:[], casings:[], nextLightning:32000+Math.random()*24000, lightning:0, score:0, meter:0, liv:3, maxLiv:3,
-        tick:0, nesteZ:8, nesteDrop:40,
         tick:0, nesteZ:4, nesteDrop:40,
         hugg:0, huggSide:-1, slagg:0,
         shells:0, shotCd:0, munn:0,
-        intro:18, flock:[],
         intro:4, flock:[],
         storm:0, pressure:0, interval:n.interval,
         shake:0, rød:0, skrikT:0, skrikTekst:'',
@@ -425,34 +425,9 @@ function step(){
   
   if (S.meter % 6 === 0) S.score++;
 
-  // gata kommer mot deg. husene ruller forbi på sidene.
-  if (S.frys === 0){
-    const TY = ['butikk','kontor','mur','kafe'];
-    const FF = ['#182334','#1c1e28','#202737','#201d32','#182d32'];
-    for (const h of S.hus){
-      h.d = fram(h.d, 1, .80);
-      if (h.d > 1.26){
-        h.d = -0.06;
-        h.side = Math.random() < .5 ? -1 : 1;
-        h.type = TY[(h.skilt + S.tick) % TY.length];
-        h.f = FF[Math.floor(Math.random()*FF.length)];
-        h.skilt = (h.skilt+1)%4;
-      }
-    }
-    for (const l of S.lykt){
-      l.d = fram(l.d, 1, .80);
-      if (l.d > 1.24){ l.d = -0.04; l.side *= -1; }
-    }
-    for (const m of S.merker){
-      m.d = fram(m.d, 1, .80);
-      if (m.d > 1.12){ m.d = 0; m.x0 = 70 + Math.random()*(W-140); }
-    }
-  }
-
   S.vinduSmear = S.vinduSmear.filter(v => --v.t > 0);
 
   // drops
-  for (const d of S.drop) d.d = fram(d.d, 1, .9);
 
   collectDrops();
   if (S.tick >= S.nesteDrop && S.intro === 0){
@@ -468,26 +443,6 @@ function step(){
     }
     S.nesteDrop = S.tick + 55 + Math.floor(Math.random()*40) - S.storm*8;
   }
-
-  // zombier
-  for (const z of S.z){
-    if (z.slått > 0){ z.slått--; continue; }
-    z.d = fram(z.d, 1, z.fart);
-  }
-
-  combat();
-
-  // slapp gjennom
-  const beholdZ = [];
-  for (const z of S.z){
-    if (z.død) continue;
-    if (z.d >= FORBI){
-      mistLiv();
-      continue;
-    }
-    beholdZ.push(z);
-  }
-  S.z = beholdZ;
 
   // spawn: alltid et par, samme dybde, samme fart, to filer
   if (S.intro === 0 && S.tick >= S.nesteZ){
@@ -1062,7 +1017,6 @@ function cityDetails(t){
   const neon=i%2?'#7ddfc9':'#f5b987';
   if(i%4===1){ctx.fillStyle='#101827';ctx.fillRect(h.side<0?-30:2,-37,28,10);ctx.fillStyle=neon;ctx.font='bold 6px monospace';ctx.textAlign='center';if(Math.sin(t/2100+i*13)>.0||i%3)ctx.fillText(names[i%4],h.side<0?-16:16,-30);ctx.fillStyle=neon;ctx.globalAlpha*=.16;for(let j=0;j<8;j++)ctx.fillRect((h.side<0?-15:5)+Math.sin(t/550+j)*2,4+j*3,10-j*.8,1);ctx.globalAlpha=Math.min(1,d*3)}
   ctx.strokeStyle='#79939a';ctx.lineWidth=1;
-  if(i===6){for(let dx of [-9,7]){ctx.beginPath();ctx.arc(dx,-3,5,0,7);ctx.stroke()}ctx.beginPath();ctx.moveTo(-9,-3);ctx.lineTo(-3,-11);ctx.lineTo(7,-3);ctx.lineTo(-9,-3);ctx.lineTo(1,-10);ctx.stroke()}
   if(i===6){ctx.save();ctx.translate(h.side*5,0);ctx.scale(1.65,1.65);for(let dx of [-9,7]){ctx.beginPath();ctx.arc(dx,-3,5,0,7);ctx.stroke()}ctx.beginPath();ctx.moveTo(-9,-3);ctx.lineTo(-3,-11);ctx.lineTo(7,-3);ctx.lineTo(-9,-3);ctx.lineTo(1,-10);ctx.stroke();ctx.restore()}
   if(i===3){ctx.fillStyle='#152630';ctx.fillRect(-10,-10,17,11);ctx.fillStyle='#6b8491';ctx.fillRect(-9,-10,16,2);ctx.fillStyle='#99ad93';ctx.fillRect(-7,-7,3,2)}
   if(i===10){ctx.fillStyle='#344653';ctx.fillRect(-14,-11,27,9);ctx.fillRect(-9,-16,17,6);ctx.fillStyle='#79a0ab';ctx.fillRect(-7,-15,13,4);ctx.fillStyle=Math.sin(t/470)>0?'#efaa68':'#663d35';ctx.fillRect(-14,-8,3,2);ctx.fillRect(10,-8,3,2)}
@@ -1253,7 +1207,6 @@ function bindRetning(id,d){
  el.addEventListener('pointerdown',e=>{e.preventDefault();stop();el.setPointerCapture(e.pointerId);el.classList.add('ned');flytt(d);delay=setTimeout(()=>repeat=setInterval(()=>flytt(d),110),260)});
  for(const event of ['pointerup','pointercancel','lostpointercapture'])el.addEventListener(event,stop);
 }
-function bindEl(el,fn){if(el)el.addEventListener('click',fn)}
 function bindEl(el,fn){
  if(!el)return;let last=-Infinity;
  const activate=e=>{if(e.type==='pointerdown' && e.button!==0)return;const now=performance.now();if(now-last<400)return;last=now;e.preventDefault();fn(e)};
@@ -1268,7 +1221,6 @@ bindEl(document.getElementById('resume'),resume);
 bindEl(document.getElementById('btnMeny'), () => {if(S.paused && startetVed && !S.over)resume();else visMeny(null,true)});
 bindEl(document.getElementById('btnHjem'), () => { if(location.protocol==='file:')visMeny(null,true);else location.href = HJEM; });
 cv.addEventListener('pointerdown',e=>{e.preventDefault();const r=cv.getBoundingClientRect();flytt(e.clientX-r.left<r.width/2?-1:1)});
-addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','a','A','d','D','Escape'].includes(e.key)){e.preventDefault();if(e.key==='Escape'){if(!e.repeat){if(S.paused&&startetVed&&!S.over)resume();else visMeny(null,true)}}else flytt(['ArrowLeft','a','A'].includes(e.key)?-1:1)}});
 addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.repeat&&S.paused&&!(document.activeElement instanceof HTMLButtonElement)){e.preventDefault();if(startetVed&&!S.over)resume();else start('B');return}if(['ArrowLeft','ArrowRight','a','A','d','D','Escape'].includes(e.key)){e.preventDefault();if(e.key==='Escape'){if(!e.repeat){if(S.paused&&startetVed&&!S.over)resume();else visMeny(null,true)}}else flytt(['ArrowLeft','a','A'].includes(e.key)?-1:1)}});
 function suspend(){releaseControls.forEach(fn=>fn());if(S&&!S.over&&!S.paused)visMeny(null,true);if(S)S.last=0}
 addEventListener('blur',suspend);document.addEventListener('visibilitychange',()=>{if(document.hidden)suspend()});
@@ -1332,6 +1284,7 @@ function renderFX(){
 
 try {
   layout(); reset('A'); S.paused = true; visMeny(null);
+  document.getElementById('bootStatus').style.display='none';
   requestAnimationFrame(frame);
 } catch (e){ report('STARTUP: ' + (e && e.message) + '\n' + (e && e.stack || '')); }
 </script>
