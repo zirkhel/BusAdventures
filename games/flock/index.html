@@ -170,6 +170,7 @@ const dybdeX = (x, d) => W/2 + (x - W/2) * (SMAL + (1-SMAL) * d);
 const dybdeY = d => HORISONT + (KONTAKT - HORISONT) * d;
 const GRUNNFART = 0.034;
 const fram = (d, andel, fart) => d + GRUNNFART * andel * (fart || 1) * (.45 + .55 * d);
+const fram = (d, andel, fart) => (d + .45/.55) * Math.pow(1 + GRUNNFART * (fart || 1) * .55, andel) - .45/.55;
 let kolX = [];
 
 const SLASH_A = .86, SLASH_B = 1.10;
@@ -450,6 +451,7 @@ function step(){
 
   // drops
   for (const d of S.drop) d.d = fram(d.d, 1, .9);
+
   collectDrops();
   if (S.tick >= S.nesteDrop && S.intro === 0){
     const r = Math.random();
@@ -511,6 +513,46 @@ function step(){
   }
 
   if (S.score > 999) S.score = 999;
+}
+
+
+function advanceWorld(dt){
+ if(S.paused||S.over||S.hitStop>0)return;
+ // Small time slices keep collision checks reliable on slow displays too.
+ let remaining=Math.min(dt,250);
+ while(remaining>0&&!S.over&&S.hitStop===0){
+ const slice=Math.min(remaining,1000/120),fraction=slice/S.interval;remaining-=slice;
+   // gata kommer mot deg. husene ruller forbi på sidene.
+  if (S.frys === 0){
+    const TY = ['butikk','kontor','mur','kafe'];
+    const FF = ['#182334','#1c1e28','#202737','#201d32','#182d32'];
+    for (const h of S.hus){
+      h.d = fram(h.d, fraction, .80);
+      if (h.d > 1.26){
+        h.d = -0.06;
+        h.side = Math.random() < .5 ? -1 : 1;
+        h.type = TY[(h.skilt + S.tick) % TY.length];
+        h.f = FF[Math.floor(Math.random()*FF.length)];
+        h.skilt = (h.skilt+1)%4;
+      }
+    }
+    for (const l of S.lykt){
+      l.d = fram(l.d, fraction, .80);
+      if (l.d > 1.24){ l.d = -0.04; l.side *= -1; }
+    }
+    for (const m of S.merker){
+      m.d = fram(m.d, fraction, .80);
+      if (m.d > 1.12){ m.d = 0; m.x0 = 70 + Math.random()*(W-140); }
+    }
+  }
+
+
+ for(const d of S.drop)d.d=fram(d.d,fraction,.9);
+ collectDrops();
+ for(const z of S.z){if(z.slått>0){z.slått=Math.max(0,z.slått-fraction);continue}z.d=fram(z.d,fraction,z.fart)}
+ combat();
+ S.z=S.z.filter(z=>{if(z.død)return false;if(z.d>=FORBI){mistLiv();return false}return true});
+ }
 }
 
 function collectDrops(){
@@ -1019,6 +1061,7 @@ function cityDetails(t){
   if(i%4===1){ctx.fillStyle='#101827';ctx.fillRect(h.side<0?-30:2,-37,28,10);ctx.fillStyle=neon;ctx.font='bold 6px monospace';ctx.textAlign='center';if(Math.sin(t/2100+i*13)>.0||i%3)ctx.fillText(names[i%4],h.side<0?-16:16,-30);ctx.fillStyle=neon;ctx.globalAlpha*=.16;for(let j=0;j<8;j++)ctx.fillRect((h.side<0?-15:5)+Math.sin(t/550+j)*2,4+j*3,10-j*.8,1);ctx.globalAlpha=Math.min(1,d*3)}
   ctx.strokeStyle='#79939a';ctx.lineWidth=1;
   if(i===6){for(let dx of [-9,7]){ctx.beginPath();ctx.arc(dx,-3,5,0,7);ctx.stroke()}ctx.beginPath();ctx.moveTo(-9,-3);ctx.lineTo(-3,-11);ctx.lineTo(7,-3);ctx.lineTo(-9,-3);ctx.lineTo(1,-10);ctx.stroke()}
+  if(i===6){ctx.save();ctx.translate(h.side*5,0);ctx.scale(1.65,1.65);for(let dx of [-9,7]){ctx.beginPath();ctx.arc(dx,-3,5,0,7);ctx.stroke()}ctx.beginPath();ctx.moveTo(-9,-3);ctx.lineTo(-3,-11);ctx.lineTo(7,-3);ctx.lineTo(-9,-3);ctx.lineTo(1,-10);ctx.stroke();ctx.restore()}
   if(i===3){ctx.fillStyle='#152630';ctx.fillRect(-10,-10,17,11);ctx.fillStyle='#6b8491';ctx.fillRect(-9,-10,16,2);ctx.fillStyle='#99ad93';ctx.fillRect(-7,-7,3,2)}
   if(i===10){ctx.fillStyle='#344653';ctx.fillRect(-14,-11,27,9);ctx.fillRect(-9,-16,17,6);ctx.fillStyle='#79a0ab';ctx.fillRect(-7,-15,13,4);ctx.fillStyle=Math.sin(t/470)>0?'#efaa68':'#663d35';ctx.fillRect(-14,-8,3,2);ctx.fillRect(10,-8,3,2)}
   if(i===0){ctx.strokeRect(-14,-28,24,29);ctx.fillStyle='#476273';ctx.globalAlpha*=.45;ctx.fillRect(-12,-26,20,21);ctx.strokeStyle='#a7c2c3';ctx.beginPath();ctx.moveTo(-2,-25);ctx.lineTo(3,-15);ctx.lineTo(-5,-7);ctx.stroke();ctx.fillStyle='#b89c70';ctx.fillRect(-15,-30,27,3)}
@@ -1167,6 +1210,7 @@ function frame(t){
       const frozen=Math.min(dt,S.hitStop); S.hitStop=Math.max(0,S.hitStop-dt);
       S.acc += Math.min(1000,dt-frozen);
       while (S.acc >= S.interval && !S.over && S.hitStop===0){ S.acc -= S.interval; step(); }
+      advanceWorld(dt-frozen);
       updateFX(Math.min(dt,100));
       combat();
     }
