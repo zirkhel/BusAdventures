@@ -126,6 +126,8 @@ touch-action:manipulation
           You were promised $5,000.<br>
           Move left and right. Grab the bills.<br>
           All $5,000 will be distributed within one minute.
+          <br>Each bill costs you $50. Each excuse costs another $50.<br>
+          Perfect round: -$5,000.
         </p>
       </div>
     </div>
@@ -193,6 +195,8 @@ const P={
 let running=false, ended=false;
 let startTime=0,last=0,lastDrop=0;
 let thrown=0;
+let score=0;
+function scoreMoney(){return (score<0?'-$':'$')+Math.abs(score).toLocaleString('en-US');}
 let throwSide=1;
 const LIMIT=5000, BILL=100, MAX_TIME=60;
 let shake=0;
@@ -457,6 +461,7 @@ function drawBill(b){
 function spawnBill(){
   if(thrown>=LIMIT) return;
   thrown+=BILL;
+  score-=50;
 
   // Trump visibly alternates throwing left and right.
   throwSide *= -1;
@@ -495,6 +500,7 @@ function updateBill(b,dt){
     b.vy=r(-75,-45);
     b.vr=r(-8,8);
     showExcuse();
+    score-=50;
     shake=2.2;
 
     for(let i=0;i<4;i++){
@@ -546,7 +552,7 @@ function drawHUD(now){
   text('PROMISED',10,9,6,P.muted);
   text('$5,000',10,18,11,P.amber);
   text('YOU GOT',235,9,6,P.muted);
-  text('$0',235,18,11,P.danger);
+  text(scoreMoney(),235,18,11,P.danger);
 
   // Keep the status below PROMISED, clear of the central character.
   text('TIME '+remain.toFixed(1),48,40,7,P.cream,'center');
@@ -588,8 +594,8 @@ function endGame(){
   running=false;ended=true;
   const absurd='9,999,999,999,999,999,999';
   result.innerHTML=
-    '<div class="big">YOUR SCORE: 0</div>'+
-    '<div class="small">PROMISED: $5,000 &middot; YOU GOT: $0</div>'+
+    '<div class="big">YOUR SCORE: '+scoreMoney()+'</div>'+
+    '<div class="small">PROMISED: $5,000 &middot; YOU GOT: '+scoreMoney()+'</div>'+
     '<div class="small">HIGH SCORE<br><span id="absurdHigh">'+absurd+'</span></div>';
   result.classList.add('show');
   const hs=document.getElementById('absurdHigh');
@@ -609,7 +615,7 @@ function startGame(){
   err.style.display='none';
   bills.length=0;particles.length=0;
   floatingExcuses.length=0;
-  thrown=0;player.x=142;player.vx=0;
+  thrown=0;score=0;player.x=142;player.vx=0;
   result.classList.remove('show');
   menu.classList.add('hidden');
   running=true;ended=false;
