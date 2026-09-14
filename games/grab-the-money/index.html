@@ -258,7 +258,7 @@ function showExcuse(){
   const lines=[''];
   for(const word of previousExcuse.split(' ')){
     const i=lines.length-1;
-    if(lines[i] && (lines[i]+' '+word).length>34) lines.push(word);
+    if(lines[i] && (lines[i]+' '+word).length>22) lines.push(word);
     else lines[i]+=(lines[i]?' ':'')+word;
   }
   const height=lines.length*10+12;
@@ -268,12 +268,12 @@ function showExcuse(){
     message.y=Math.min(message.y,nextY-message.height-5);
     nextY=message.y;
   }
-  floatingExcuses.push({lines,height,y:H-98,life:2.8});
+  floatingExcuses.push({lines,height,y:H-98,life:4.2});
 }
 function updateExcuses(dt){
   for(let i=floatingExcuses.length-1;i>=0;i--){
     const message=floatingExcuses[i];
-    message.y-=22*dt;
+    message.y-=36*dt;
     message.life-=dt;
     if(message.life<=0) floatingExcuses.splice(i,1);
   }
@@ -300,30 +300,25 @@ function line(x1,y1,x2,y2,c,w=1){
 function floorY(){ return H-52; }
 function playerY(){ return floorY()-43; }
 
-function drawWorld(){
-  rect(0,0,W,H,P.sky);
-  rect(0,54,W,82,P.sky2);
-
-  // stars / distant lights
-  for(let i=0;i<22;i++){
-    const x=(i*47)%W, y=12+((i*31)%70);
-    rect(x,y,1,1,i%3? '#48516c':'#8b8fa0');
-  }
-
-  // skyline
-  for(let i=0;i<17;i++){
-    const x=i*21-5, bh=18+((i*13)%42);
-    rect(x,136-bh,17,bh,P.city);
-    if(i%2===0) rect(x+4,136-bh+8,2,3,'#a47f3d');
-    if(i%3===0) rect(x+11,136-bh+17,2,3,'#a47f3d');
-  }
-
-  // stage
-  rect(0,136,W,9,P.stage);
-  rect(0,145,W,floorY()-145,P.stage2);
-  for(let x=0;x<W;x+=32){
-    rect(x,145,2,floorY()-145,'#22242a');
-    line(x,145,x+32,floorY(),'#22242a',1);
+function drawWorld(now){
+  // A black indoor hall. The crowd is scenery, with no collisions.
+  rect(0,0,W,H,'#000');
+  const time=now/1000;
+  for(let row=0;row<3;row++){
+    for(let i=0;i<18;i++){
+      const x=i*19-8+(row%2)*9;
+      const phase=time*(3.8+(i%4)*.23)+i*1.7+row*2.3;
+      const hop=Math.max(0,Math.sin(phase))*(5+row*2);
+      const y=H-39+row*17-hop;
+      const shirt=['#242424','#303030','#1c1c1c'][(i+row)%3];
+      const skin=['#70665c','#89796a','#5b5149'][(i+row*2)%3];
+      rect(x+5,y,7,7,skin);
+      rect(x+4,y-1,9,3,'#171717');
+      rect(x+3,y+7,11,12,shirt);
+      // Raised hands bounce with each spectator.
+      rect(x,y+1,3,12,shirt); rect(x+14,y-2,3,14,shirt);
+      rect(x,y-2,3,4,skin); rect(x+14,y-5,3,4,skin);
+    }
   }
 
   // podium
@@ -512,7 +507,7 @@ function draw(now){
   ctx.save();
   if(shake>0) ctx.translate(r(-shake,shake),r(-shake,shake));
 
-  drawWorld();
+  drawWorld(now);
   drawTrump();
   bills.forEach(drawBill);
   drawPlayer();
@@ -521,10 +516,10 @@ function draw(now){
 
   for(const message of floatingExcuses){
     ctx.save();
-    ctx.globalAlpha=Math.min(1,message.life/1.8);
+    ctx.globalAlpha=Math.pow(Math.min(1,message.life/2.8),1.4);
     const width=Math.max(...message.lines.map(s=>s.length))*4.2+20;
-    const age=clamp((2.8-message.life)/2.8,0,1);
-    const maxScale=Math.min(1.85,(W-16)/width);
+    const age=clamp((4.2-message.life)/4.2,0,1);
+    const maxScale=Math.min(3.2,(W-12)/width);
     const scale=1+(maxScale-1)*(1-Math.pow(1-age,2));
     ctx.translate(W/2,message.y+message.height/2);
     ctx.scale(scale,scale);
