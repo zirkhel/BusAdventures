@@ -497,10 +497,11 @@ function drawHUD(now){
   text('YOU GOT',235,9,6,P.muted);
   text('$0',235,18,11,P.danger);
 
-  text('TIME '+remain.toFixed(1),160,7,7,P.cream,'center');
-  rect(116,20,88,6,'#242833');
-  rect(118,22,84*(thrown/LIMIT),2,P.red);
-  text('$'+thrown,160,29,6,P.muted,'center');
+  // Keep the status below PROMISED, clear of the central character.
+  text('TIME '+remain.toFixed(1),48,40,7,P.cream,'center');
+  rect(6,51,83,6,'#242833');
+  rect(8,53,79*(thrown/LIMIT),2,P.red);
+  text('$'+thrown,48,61,6,P.muted,'center');
 }
 
 function draw(now){
