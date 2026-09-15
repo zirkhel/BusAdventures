@@ -447,5 +447,17 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
         <div>bus-adventures · pocket games for the commute</div>
       </div>
     </main>
-  </body>
+  <script>
+// Same-browser personal record; game links and cards work without JavaScript.
+function updateAuthorityRecord(){
+ const card=document.querySelector('a[href="games/respect-my-authority/index.html"] .game-info');
+ if(!card)return;
+ let label=card.querySelector('.personal-best');
+ if(!label){label=document.createElement('div');label.className='game-meta personal-best';label.style.marginTop='8px';card.append(label)}
+ let score=0;try{score=Math.max(0,Math.floor(Number(localStorage.getItem('bus-adventures.respect-my-authority.best'))||0))}catch(e){}
+ label.textContent='Most people clubbed: '+score;
+}
+updateAuthorityRecord();window.addEventListener('pageshow',updateAuthorityRecord);window.addEventListener('storage',updateAuthorityRecord);
+</script>
+</body>
 </html>
