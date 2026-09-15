@@ -30,9 +30,13 @@ body{background:#070607;padding:14px 10px;color:#ddc5ca}
 .hit.pressed,.hit:active{transform:translateY(4px);box-shadow:0 2px #090709;background:#3b2d34}
 .hit:disabled{opacity:1;filter:none;cursor:default}.hit:disabled .arrow{opacity:.5}
 .arrow{display:block;width:18px;height:28px;background:currentColor;clip-path:polygon(100% 0,100% 100%,0 50%)}
-.arrow.right{transform:rotate(180deg)}.arrow.center{transform:rotate(90deg)}
+.arrow.right{transform:rotate(180deg)}.arrow.center{transform:rotate(-90deg)}
 #m{background:radial-gradient(ellipse at top,#302329f7,#151116fa 80%)}#m:before{color:#b99fa9;border-color:#55444c}
 @media(max-width:370px){.top b{font-size:12px;letter-spacing:1px}.top button{font-size:10px;padding:10px}.hit,.hit:nth-child(2){height:68px;border-radius:17px}.controls{gap:10px}.arrow{width:15px;height:24px}}
+/* One short defeat shake; respect reduced-motion preferences. */
+@keyframes overrun-shake{0%,100%{transform:translate(0,0)}12%{transform:translate(-6px,2px)}24%{transform:translate(6px,-2px)}36%{transform:translate(-5px,-1px)}48%{transform:translate(5px,2px)}62%{transform:translate(-3px,0)}76%{transform:translate(3px,-1px)}88%{transform:translate(-1px,0)}}
+#d.overrun{animation:overrun-shake .65s ease-out}
+@media(prefers-reduced-motion:reduce){#d.overrun{animation:none}}
 </style></head><body><div id="d"><div class="brand"><span><i></i>BUS ADVENTURES</span><span>POCKET ARCADE / 01</span></div><div class="top"><button id="home" aria-label="Back to intro"><span class="arrow" aria-hidden="true"></span></button><b>RESPECT MY<br>AUTHORITY!<small>BORDER PATROL EDITION</small></b><button id="menu">MENU</button></div>
 <div id="s"><canvas id="c" width="320" height="420"></canvas><div id="m"><h1 id="mh">TOTALLY ORIGINAL TELEVISION GAME</h1><p id="mp">EVERYTHING IS FICTIONAL.<br><br>Any resemblance to real events, real border agencies, famous cartoons, fictional towns, Canadians, Americans, authority figures, or unusually round police officers is PURE COINCIDENCE.<br><br>By continuing you confirm that you have read absolutely none of this.<br><br><span class="legal">NO SUING PASS THIS POINT</span></p><button id="consent" class="start">CONSENT TO ALL</button><button id="start" class="start" style="display:none">START GAME</button></div></div>
 <div class="deck"><div class="status"><span>THREE LANES. ONE BATON.</span><span id="ready">STANDBY</span></div><div class="controls"><button class="hit" data-l="0" aria-label="Left" title="Left"><span class="arrow left" aria-hidden="true"></span></button><button class="hit" data-l="1" aria-label="Center" title="Center"><span class="arrow center" aria-hidden="true"></span></button><button class="hit" data-l="2" aria-label="Right" title="Right"><span class="arrow right" aria-hidden="true"></span></button></div><div class="footer"><span class="speaker" aria-hidden="true"></span><span>INSERT ATTITUDE • FREE PLAY</span><span class="speaker" aria-hidden="true"></span></div></div></div>
@@ -270,6 +274,30 @@ function upd(dt,n){
 }
 const modal=document.querySelector('#m'),heading=document.querySelector('#mh'),copy=document.querySelector('#mp'),consent=document.querySelector('#consent'),startButton=document.querySelector('#start');
 const disclaimer=copy.innerHTML;
-function start(){auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;bubbles=[];rants=[];mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
-function showGameOver(){heading.textContent='SHIFT OVER';copy.innerHTML='AUTHORITY: 0%<br><br>PEOPLE CLUBBED: '+hits+'<br><br>YOU WILL RESPECT IT!';consent.style.display='none';startButton.textContent='PLAY AGAIN';startButton.style.display='block';modal.classList.remove('hide')}
-function menu(){run=0;over=0;heading.textContent='TO
+function start(){document.querySelector('#d').classList.remove('overrun');auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;bubbles=[];rants=[];mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
+function showGameOver(){const cabinet=document.querySelector('#d');cabinet.classList.remove('overrun');void cabinet.offsetWidth;cabinet.classList.add('overrun');heading.textContent='AMERICA IS OVERRUN BY ALIENS!';copy.innerHTML='AUTHORITY: 0%<br><br>PEOPLE CLUBBED: '+hits+'<br><br>YOU WILL RESPECT IT!';consent.style.display='none';startButton.textContent='PLAY AGAIN';startButton.style.display='block';modal.classList.remove('hide')}
+function menu(){document.querySelector('#d').classList.remove('overrun');run=0;over=0;heading.textContent='TOTALLY ORIGINAL TELEVISION GAME';copy.innerHTML=disclaimer;consent.style.display='block';startButton.style.display='none';startButton.textContent='START GAME';modal.classList.remove('hide')}
+function bind(el,fn){
+ // Handle touch/pointer activation even in previews that suppress synthetic clicks.
+ let lastPointer=-Infinity;
+ el.addEventListener('pointerup',e=>{
+  if(e.button!==0||el.disabled)return;
+  lastPointer=performance.now();e.preventDefault();fn();
+ });
+ el.addEventListener('click',e=>{
+  if(e.detail>0&&performance.now()-lastPointer<600)return;
+  fn();
+ });
+}
+bind(consent,()=>{heading.textContent='RESPECT MY AUTHORITY!';copy.innerHTML='THREE LANES. THREE BUTTONS.<br><br>Time the swing at the yellow line.<br>You cannot hit again until recovery finishes.<br><br>Use the three arrow buttons.<br><br>WELCOME TO THE BORDER.';consent.style.display='none';startButton.textContent='START GAME';startButton.style.display='block'});
+bind(startButton,start);
+document.querySelectorAll('.hit').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();hit(+b.dataset.l)});b.addEventListener('click',e=>{if(e.detail===0)hit(+b.dataset.l)})});
+bind(document.querySelector('#menu'),menu);bind(document.querySelector('#home'),menu);
+document.addEventListener('keydown',e=>{const keys={ArrowLeft:0,ArrowDown:1,ArrowRight:2,a:0,s:1,d:2};if(run&&keys[e.key]!==undefined){e.preventDefault();if(!e.repeat)hit(keys[e.key])}});
+document.addEventListener('visibilitychange',()=>{last=performance.now()});
+function loop(n){let dt=Math.min(.035,(n-last)/1000||0);last=n;if(run)upd(dt,n);else {gate=gate.map(v=>Math.max(0,v-dt));updateTalk(dt)}draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+</script></body></html>
+
+
+
+
