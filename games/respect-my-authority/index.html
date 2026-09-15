@@ -40,7 +40,24 @@ body{background:#070607;padding:14px 10px;color:#ddc5ca}
 const c=document.querySelector('#c'),g=c.getContext('2d'),L=[72,160,248];g.imageSmoothingEnabled=false;
 let run=0,last=performance.now(),next=0,t0=0,auth=100,hits=0,E=[],sw={on:0,l:1,t:0,done:0},msg='',msgT=0,over=0;
 let gameTime=0,tutorial=0,gate=[0,0,0],impacts=[],debris=[];
-let speech='',speechT=0,speechSide=1,mouthT=0,S=[];
+let mouthT=0,S=[],bubbles=[],rants=[];
+function say(text,side){
+ if(bubbles.some(b=>b.side===side))side=-side;
+ // Keep at most one readable bubble on each side; replace the older one when both are busy.
+ if(bubbles.length===2)side=bubbles.reduce((a,b)=>a.life<b.life?a:b).side;
+ bubbles=bubbles.filter(b=>b.side!==side);
+ bubbles.push({text,side,life:Math.max(3.4,text.length*.12)});mouthT=2.4;
+}
+function rant(){
+ const symbols=['#%¤!#$%!!','@#%&?!¤!','%#!!¤@%?!','#%¤"#%Q%¤/'];
+ rants.push({text:MISS_SPEECH[Math.floor(Math.random()*MISS_SPEECH.length)],symbols:symbols[Math.floor(Math.random()*symbols.length)],life:2.6,x:160+(Math.random()-.5)*20,drift:(Math.random()-.5)*18});
+ if(rants.length>4)rants.shift();mouthT=2;
+}
+function updateTalk(dt){
+ bubbles.forEach(b=>b.life-=dt);bubbles=bubbles.filter(b=>b.life>0);
+ rants.forEach(r=>r.life-=dt);rants=rants.filter(r=>r.life>0);
+ mouthT=Math.max(0,mouthT-dt);
+}
 const IMPACTS=['POW!','BASH!','SMASH!','KABOOM!','WHACK!','KAPOW!'];
 let impactIndex=0;
 const SPEECH=['RESPECT MY AUTHORITY!','BACK TO CANADA!','I AM BORDER PATROL!','NO BUDDIES, GUY!','AUTHORITY!','DECLARE YOUR SYRUP!','TOO MUCH POLITENESS!','NICE TRY, BUDDY!','YOUR MOOSE NEEDS A VISA!','THIS IS MY SERIOUS HAT!','MAPLE SYRUP IS NOT ID!','HAVE YOU TRIED THE MENU?','FREEDOM IS ON LUNCH!','STOP SAYING SORRY!','THAT COSTS EXTRA!','I READ HALF THE MANUAL!','NO EH ZONE!','PAPERS, NOT PANCAKES!','I AM THE WHOLE DEPARTMENT!','PLEASE HOLD FOR FREEDOM!'];
@@ -121,6 +138,7 @@ function bg(){
 }
 function cart(){
  const x=160,y=104;
+ g.save();g.translate(x,y);g.scale(.8,.8);g.translate(-x,-y);
  // Purple police body
  g.fillStyle='#51418d';g.beginPath();g.ellipse(x,y+29,36,27,0,0,7);g.fill();
  // yellow mittens
@@ -137,21 +155,10 @@ function cart(){
  if(mo>2) R(x-5,y+14,10,2,'#111');
  // badge/name
  T('★',x+13,y+31,10,'#e6d528');T('CARTMAN',x-9,y+29,4,'#e6d528');
- // speech bubble stays to left/right so it does not cover the lanes
- if(speechT>0){
-   let bx=speechSide<0?7:211, by=53, bw=102, bh=38;
-   R(bx,by,bw,bh,'#fff');R(bx+2,by+2,bw-4,bh-4,'#fff');
-   g.fillStyle='#fff';g.beginPath();
-   if(speechSide<0){g.moveTo(bx+bw,by+22);g.lineTo(132,by+29);g.lineTo(bx+bw,by+31)}
-   else{g.moveTo(bx,by+22);g.lineTo(188,by+29);g.lineTo(bx,by+31)}
-   g.fill();
-   let words=speech.split(' '),line='',lines=[];
-   for(const w of words){let q=line?line+' '+w:w;if(q.length>17){lines.push(line);line=w}else line=q}if(line)lines.push(line);
-   lines.slice(0,3).forEach((q,i)=>T(q,bx+bw/2,by+12+i*9,6,'#111'));
- }
+ g.restore();
  // baton: short downward strike toward selected lane, no spinning
  let lane=sw.on?sw.l:1, dx=lane-1, p=sw.on?Math.min(1,sw.t/.68):0;
- let handX=x+(dx<0?-32:32), handY=y+24;
+ let handX=x+(dx<0?-26:26), handY=y+19;
  let ex,ey;
  if(!sw.on){ex=handX+18;ey=handY-16}
  else{
@@ -170,9 +177,32 @@ function cart(){
  g.strokeStyle='#171e23';g.lineWidth=7;g.lineCap='round';g.beginPath();g.moveTo(handX-ux*7,handY-uy*7);g.lineTo(ex,ey);g.moveTo(gripX,gripY);g.lineTo(gripX-uy*18,gripY+ux*18);g.stroke();
  g.strokeStyle='#52616a';g.lineWidth=2;g.beginPath();g.moveTo(handX+ux*17-uy,handY+uy*17+ux);g.lineTo(ex-ux*3-uy,ey-uy*3+ux);g.stroke();g.lineCap='butt';
 }
+function drawSpeech(){
+ for(const bubble of bubbles){
+ const speech=bubble.text,speechSide=bubble.side;
+ const bw=117,bx=speechSide<0?5:198,by=67,fontSize=10;
+ g.font='bold '+fontSize+'px monospace';
+ const lines=[];let line='';
+ for(const word of speech.split(' ')){const candidate=line?line+' '+word:word;if(line&&g.measureText(candidate).width>bw-12){lines.push(line);line=word}else line=candidate}if(line)lines.push(line);
+ const bh=lines.length*13+16;
+ R(bx+2,by+3,bw,bh,'#17252b');R(bx,by,bw,bh,'#fffbed');
+ g.fillStyle='#fffbed';g.beginPath();const edge=speechSide<0?bx+bw:bx;g.moveTo(edge,by+bh-18);g.lineTo(speechSide<0?140:180,111);g.lineTo(edge,by+bh-6);g.fill();
+ lines.forEach((text,i)=>T(text,bx+bw/2,by+16+i*13,fontSize,'#17252b'));
+ }
+}
+function drawRants(){
+ for(const r of rants){
+  const age=2.6-r.life,y=105-age*29;
+  g.save();g.translate(r.x+r.drift*age,y);g.globalAlpha=Math.min(1,age/.09,r.life/.8);
+  const scale=.8+Math.min(1,age/.3)*.35;g.scale(scale,scale);g.textAlign='center';g.lineJoin='round';
+  g.font='900 17px monospace';g.lineWidth=3;g.strokeStyle='#fff3df';g.strokeText(r.symbols,0,0);g.fillStyle='#df2535';g.fillText(r.symbols,0,0);
+  g.font='bold 8px monospace';g.lineWidth=2.5;g.strokeText(r.text,0,14);g.fillText(r.text,0,14);
+  g.restore();
+ }
+}
 function draw(){
  bg();T('AUTHORITY '+auth+'%',60,18,8);R(9,24,102,8,'#222');R(11,26,Math.max(0,98*auth/100),4,auth>30?'#39a849':'#d43b32');T('CLUBBED '+hits,270,18,8);
- E.forEach(person);S.forEach(splat);cart();
+ E.forEach(person);S.forEach(splat);cart();drawSpeech();drawRants();
  debris.forEach(q=>{g.save();g.translate(q.x,q.y);g.rotate(q.rot);R(-8,-3,16,6,q.col);R(-4,-7,8,5,q.col);g.restore()});
  impacts.forEach(q=>{
    const age=.65-q.life,pop=Math.min(1,age/.07),fade=Math.min(1,q.life/.18);
@@ -218,9 +248,7 @@ function upd(dt,n){
      debris.push({x:L[q.l],y:q.y-12,col:q.hat,vx:-dir*140,vy:-180,rot:0,life:1.4});
      S.push({x:L[q.l],y:q.y,col:q.col,vx:dir*(330+Math.random()*80),vy:-120-Math.random()*90,rot:0,vr:dir*(8+Math.random()*7),life:1.15});
 
-     speech=SPEECH[Math.floor(Math.random()*SPEECH.length)];
-     speechSide=sw.l===0?1:sw.l===2?-1:(Math.random()<.5?-1:1);
-     speechT=2.2;mouthT=1.8;
+     say(SPEECH[Math.floor(Math.random()*SPEECH.length)],sw.l===0?1:sw.l===2?-1:(Math.random()<.5?-1:1));
    }
   }
   if(sw.t>=.68)sw.on=0;
@@ -229,7 +257,7 @@ function upd(dt,n){
    e.y-=e.v*dt;e.walk+=dt*10;
    if(!e.dead&&e.y<160){
      e.dead=1;gate[e.l]=1.2;auth=Math.max(0,auth-10);
-     speech=MISS_SPEECH[Math.floor(Math.random()*MISS_SPEECH.length)];speechSide=Math.random()<.5?-1:1;speechT=1.8;mouthT=1.4;
+     rant();
    }
  }
  E=E.filter(e=>!e.dead);
@@ -237,22 +265,11 @@ function upd(dt,n){
  S=S.filter(q=>q.life>0&&q.x>-45&&q.x<365&&q.y<455);
  for(const q of debris){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=330*dt;q.rot+=dt*9;q.life-=dt}debris=debris.filter(q=>q.life>0);
  impacts.forEach(q=>q.life-=dt);impacts=impacts.filter(q=>q.life>0);
- msgT=Math.max(0,msgT-dt);speechT=Math.max(0,speechT-dt);mouthT=Math.max(0,mouthT-dt);
+ updateTalk(dt);
  if(auth<=0){run=0;over=1;showGameOver()}
 }
 const modal=document.querySelector('#m'),heading=document.querySelector('#mh'),copy=document.querySelector('#mp'),consent=document.querySelector('#consent'),startButton=document.querySelector('#start');
 const disclaimer=copy.innerHTML;
-function start(){auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;speechT=0;mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
+function start(){auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;bubbles=[];rants=[];mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
 function showGameOver(){heading.textContent='SHIFT OVER';copy.innerHTML='AUTHORITY: 0%<br><br>PEOPLE CLUBBED: '+hits+'<br><br>YOU WILL RESPECT IT!';consent.style.display='none';startButton.textContent='PLAY AGAIN';startButton.style.display='block';modal.classList.remove('hide')}
-function menu(){run=0;over=0;heading.textContent='TOTALLY ORIGINAL TELEVISION GAME';copy.innerHTML=disclaimer;consent.style.display='block';startButton.style.display='none';startButton.textContent='START GAME';modal.classList.remove('hide')}
-function bind(el,fn){el.addEventListener('click',fn)}
-bind(consent,()=>{heading.textContent='RESPECT MY AUTHORITY!';copy.innerHTML='THREE LANES. THREE BUTTONS.<br><br>Time the swing at the yellow line.<br>You cannot hit again until recovery finishes.<br><br>Use the three arrow buttons.<br><br>WELCOME TO THE BORDER.';consent.style.display='none';startButton.textContent='START GAME';startButton.style.display='block'});
-bind(startButton,start);
-document.querySelectorAll('.hit').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();hit(+b.dataset.l)});b.addEventListener('click',e=>{if(e.detail===0)hit(+b.dataset.l)})});
-bind(document.querySelector('#menu'),menu);bind(document.querySelector('#home'),menu);
-document.addEventListener('keydown',e=>{const keys={ArrowLeft:0,ArrowDown:1,ArrowRight:2,a:0,s:1,d:2};if(run&&keys[e.key]!==undefined){e.preventDefault();if(!e.repeat)hit(keys[e.key])}});
-document.addEventListener('visibilitychange',()=>{last=performance.now()});
-function loop(n){let dt=Math.min(.035,(n-last)/1000||0);last=n;if(run)upd(dt,n);else gate=gate.map(v=>Math.max(0,v-dt));draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
-</script></body></html>
-
-
+function menu(){run=0;over=0;heading.textContent='TO
