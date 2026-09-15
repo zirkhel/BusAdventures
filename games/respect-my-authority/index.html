@@ -223,7 +223,7 @@ function draw(){
  document.querySelector('#ready').textContent=!run?'STANDBY':gameTime<3.5?'SHIFT START':sw.on?'RECOVERING':'READY';
 
  if(run&&gameTime<3.5){g.save();g.globalAlpha=Math.min(1,gameTime*3,(3.5-gameTime)*2);R(45,228,230,76,'#203441ef');T('SHIFT START',160,250,21,'#ffda62');T('Watch CENTER first',160,271,10,'#fff');T('Swing at the yellow line',160,289,8,'#fff');g.restore()}
- if(run){T(sw.on?'RECOVERING…':'READY',160,410,7,sw.on?'#7b3942':'#254d3a')}
+ if(run){T(sw.on?(queuedHit!==null?'NEXT HIT QUEUED':'RECOVERING…'):'READY',160,410,7,sw.on?'#7b3942':'#254d3a');if(sw.on){R(124,413,72,3,'#7b8584');R(124,413,72*Math.min(1,sw.t/.68),3,'#f8d862')}}
 
  if(over){R(25,185,270,120,'#090909ef');T('AUTHORITY: 0%',160,214,14,'#ffb000');T('PEOPLE CLUBBED: '+hits,160,241,10,'#fff');T('AUTHORITY EARNED: 0',160,262,10,'#fff');T('YOU WILL RESPECT IT!',160,286,9,'#e44')}
 }
@@ -237,7 +237,12 @@ function spawn(){
  next=gameTime+Math.max(.76,2.5-ramp*.045)*(.92+Math.random()*.16);
  addEnemy(Math.floor(Math.random()*3),55+Math.min(65,ramp*1.25)+Math.random()*8);
 }
-function hit(l){if(!run||gameTime<3.5||sw.on)return;sw={on:1,l,t:0,done:0}}
+let queuedHit=null;
+function hit(l){
+ if(!run||gameTime<3.5)return;
+ if(sw.on){if(sw.t>=.53)queuedHit=l;return}
+ sw={on:1,l,t:0,done:0};
+}
 function upd(dt,n){
  gameTime+=dt;gate=gate.map(v=>Math.max(0,v-dt));
  spawn();
@@ -246,7 +251,7 @@ function upd(dt,n){
   if(!sw.done&&sw.t/.68>=.43){
    sw.done=1;
    let q=E.filter(e=>e.l===sw.l&&e.y<205&&e.y>150).sort((a,b)=>a.y-b.y)[0];
-   if(q){q.dead=1;hits++;saveBest();
+   if(q){q.dead=1;hits++;auth=Math.min(100,auth+2);saveBest();
      let dir=sw.l===0?-1:sw.l===2?1:(Math.random()<.5?-1:1);
      impacts.push({x:L[q.l],y:q.y,life:.65,text:IMPACTS[impactIndex++%IMPACTS.length],tilt:(Math.random()-.5)*.5,color:['#ffcf42','#ff865e','#bca2ff','#73e1dc'][Math.floor(Math.random()*4)]});
      debris.push({x:L[q.l],y:q.y-12,col:q.hat,vx:-dir*140,vy:-180,rot:0,life:1.4});
@@ -255,7 +260,7 @@ function upd(dt,n){
      say(SPEECH[Math.floor(Math.random()*SPEECH.length)],sw.l===0?1:sw.l===2?-1:(Math.random()<.5?-1:1));
    }
   }
-  if(sw.t>=.68)sw.on=0;
+  if(sw.t>=.68){sw.on=0;if(queuedHit!==null){const lane=queuedHit;queuedHit=null;hit(lane)}}
  }
  for(const e of E){
    e.y-=e.v*dt;e.walk+=dt*10;
@@ -281,9 +286,9 @@ function displayBest(){document.querySelector('#best-score').textContent='Most p
 function saveBest(){if(hits<=bestScore)return;bestScore=hits;try{const stored=Math.max(0,Math.floor(Number(localStorage.getItem(SCORE_KEY))||0));bestScore=Math.max(bestScore,stored);localStorage.setItem(SCORE_KEY,String(bestScore))}catch(e){}displayBest()}
 displayBest();
 window.addEventListener('storage',e=>{if(e.key===SCORE_KEY){bestScore=Math.max(bestScore,Number(e.newValue)||0);displayBest()}});
-function start(){document.querySelector('#d').classList.remove('overrun');auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;bubbles=[];rants=[];mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
+function start(){queuedHit=null;document.querySelector('#d').classList.remove('overrun');auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;bubbles=[];rants=[];mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
 function showGameOver(){const cabinet=document.querySelector('#d');cabinet.classList.remove('overrun');void cabinet.offsetWidth;cabinet.classList.add('overrun');heading.textContent='AMERICA IS OVERRUN BY ALIENS!';copy.innerHTML='AUTHORITY: 0%<br><br>PEOPLE CLUBBED: '+hits+'<br><br>YOU WILL RESPECT IT!';consent.style.display='none';startButton.textContent='PLAY AGAIN';startButton.style.display='block';modal.classList.remove('hide')}
-function menu(){document.querySelector('#d').classList.remove('overrun');run=0;over=0;heading.textContent='TOTALLY ORIGINAL TELEVISION GAME';copy.innerHTML=disclaimer;consent.style.display='block';startButton.style.display='none';startButton.textContent='START GAME';modal.classList.remove('hide')}
+function menu(){queuedHit=null;document.querySelector('#d').classList.remove('overrun');run=0;over=0;heading.textContent='TOTALLY ORIGINAL TELEVISION GAME';copy.innerHTML=disclaimer;consent.style.display='block';startButton.style.display='none';startButton.textContent='START GAME';modal.classList.remove('hide')}
 function bind(el,fn){
  // Handle touch/pointer activation even in previews that suppress synthetic clicks.
  let lastPointer=-Infinity;
@@ -296,9 +301,9 @@ function bind(el,fn){
   fn();
  });
 }
-bind(consent,()=>{heading.textContent='RESPECT MY AUTHORITY!';copy.innerHTML='THREE LANES. THREE BUTTONS.<br><br>Time the swing at the yellow line.<br>You cannot hit again until recovery finishes.<br><br>Use the three arrow buttons.<br><br>WELCOME TO THE BORDER.';consent.style.display='none';startButton.textContent='START GAME';startButton.style.display='block'});
+bind(consent,()=>{heading.textContent='RESPECT MY AUTHORITY!';copy.innerHTML='THREE LANES. THREE BUTTONS.<br><br>Time the swing at the yellow line.<br>Each hit restores 2% authority.<br>Let the baton recover. A tap just before READY queues your next swing.<br><br>Use the three arrow buttons.<br><br>WELCOME TO THE BORDER.';consent.style.display='none';startButton.textContent='START GAME';startButton.style.display='block'});
 bind(startButton,start);
-document.querySelectorAll('.hit').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();hit(+b.dataset.l)});b.addEventListener('click',e=>{if(e.detail===0)hit(+b.dataset.l)})});
+document.querySelectorAll('.hit').forEach(b=>{b.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();hit(+b.dataset.l)});b.addEventListener('click',e=>{if(e.detail===0)hit(+b.dataset.l)})});
 bind(document.querySelector('#menu'),menu);bind(document.querySelector('#home'),()=>{const inGameFolder=/\/games\/respect-my-authority\//i.test(location.pathname);location.href=new URL(inGameFolder?'../../index.html':'./index.html',location.href).href});
 document.addEventListener('keydown',e=>{const keys={ArrowLeft:0,ArrowDown:1,ArrowRight:2,a:0,s:1,d:2};if(run&&keys[e.key]!==undefined){e.preventDefault();if(!e.repeat)hit(keys[e.key])}});
 document.addEventListener('visibilitychange',()=>{last=performance.now()});
