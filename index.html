@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<link rel="manifest" href="/manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Bus Adventures">
-<meta name="theme-color" content="#07080b">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bus Adventures</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
-<style>
+  <head>
+    <meta charset="utf-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Bus Adventures">
+    <meta name="theme-color" content="#07080b">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bus Adventures</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Space+Mono:ital@0;1&amp;display=swap" rel="stylesheet">
+    <style>
 :root{--bg:#0a0c08;--green:#39ff14;--green-dim:#1a7a08;--amber:#ffb000;--text:#c8e6b0;--muted:#5a7a48;--scanline:rgba(0,0,0,0.4)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;overflow-x:hidden}
@@ -45,97 +45,407 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .coming-soon{opacity:.4;pointer-events:none}
 .coming-soon .game-title::after{content:' [LOCKED]';font-size:13px;color:var(--muted)}
 .terminal-footer{border-top:1px solid var(--green-dim);padding-top:16px;color:var(--muted);font-size:11px;line-height:1.8}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="terminal-bar"><div class="dot"></div><span>bus-adventures v0.2.0 — terminal interface</span></div>
-  <div class="terminal-body">
-    <div class="ascii-title">BUS ADVENTURES</div>
-    <div class="ascii-sub">POCKET ADVENTURES</div>
-    <p class="tagline">Text adventures and handheld arcade. <em>Finished before your stop.</em><br>Pick a format. One hand, no sound needed.</p>
-    <div class="prompt-line">SELECT ADVENTURE_</div>
-  </div>
-  <div class="genre-section">
-    <div class="genre-header"><span class="genre-tag">// TEXT</span><span class="genre-count">2 available</span></div>
-    <div class="genre-note">Type commands. Take your time. Death is permanent.</div>
-    <div class="game-grid">
-      <a class="game-card" href="games/ward-b/index.html"><div class="game-card-inner"><div class="game-icon">🏥</div><div class="game-info"><div class="game-title">Death Trap: Ward B</div><div class="game-meta"><span>7 rooms</span> · ~10 min · keyboard</div><div class="game-desc">The asylum was sealed after the evacuation. Officially, everyone got out. You wake in the reception hall.</div><div class="game-tags"><span class="tag">horror</span><span class="tag">puzzle</span><span class="tag">permadeath</span></div></div></div></a>
-      <a class="game-card" href="games/shadow-pines/index.html"><div class="game-card-inner"><div class="game-icon">🥷</div><div class="game-info"><div class="game-title">Shadow Over Iron Pines</div><div class="game-meta"><span>9 rooms</span> · ~12 min · keyboard</div><div class="game-desc">The shogun keeps a sealed scroll in his private archive. You enter alone through the outer wall while thunder hides your footsteps.</div><div class="game-tags"><span class="tag">stealth</span><span class="tag">puzzle</span><span class="tag">permadeath</span></div></div></div></a>
-    </div>
-  </div>
-  <div class="genre-section">
-    <div class="genre-header"><span class="genre-tag">// GAME & WATCH</span><span class="genre-count">5 available</span></div>
-    <div class="genre-note">Two buttons, one screen. Play a round while the bus is at a light.</div>
-    <div class="game-grid">
-      <a class="game-card" href="games/lich-tower/index.html"><div class="game-card-inner"><div class="game-icon">🗶</div><div class="game-info"><div class="game-title">Lich Tower</div><div class="game-meta"><span>3 modes</span> · endless · two buttons</div><div class="game-desc">The tower is burning and the acolytes are jumping. Catch each one three times on the way down, or explain yourself to the archmage.</div><div class="game-tags"><span class="tag">catch</span><span class="tag">timing</span><span class="tag">endless</span></div></div></div></a>
-      <a class="game-card" href="games/kraken/index.html"><div class="game-card-inner"><div class="game-icon">🦑</div><div class="game-info"><div class="game-title">Guardian Kraken</div><div class="game-meta"><span>3 modes</span> · endless · two buttons</div><div class="game-desc">Gold on the seabed, arms in the dark, and only so much air. Three coins pay six times one — if you surface at all.</div><div class="game-tags"><span class="tag">timing</span><span class="tag">greed</span><span class="tag">endless</span></div></div></div></a>
-      <a class="game-card" href="games/flock/index.html">
-      <div class="game-card-inner">
-    <div class="game-icon">🧟</div>
-        <div class="game-info">
-          <div class="game-title">Flock</div>
-          <div class="game-meta"><span>3 modes</span> · five lanes · two buttons</div>
-          <div class="game-desc">Hold the street. Protect the flock behind you. Switch lanes, swing the spiked bat, and grab shells for the shotgun. Time your move for a Perfect Strike. Anything that slips past takes one from the back.</div>
-          <div class="game-tags">
-            <span class="tag">zombies</span>
-            <span class="tag">timing</span>
-            <span class="tag">endless</span>
+
+/* Category navigation and consistent cards. */
+ .category-nav{display:flex;flex-wrap:wrap;gap:8px;margin:-12px 0 28px}
+ .category-nav a{padding:8px 10px;border:1px solid var(--green-dim);color:var(--text);font-size:10px;text-decoration:none}
+ .category-nav a:hover,.category-nav a:focus-visible,.game-card:hover,.game-card:focus-visible{border-color:var(--green);background:rgba(57,255,20,.07)}
+ a:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+ .genre-section{scroll-margin-top:20px}.genre-header{flex-wrap:wrap}.genre-tag,.game-title,.ascii-title{font-weight:400}.game-info{min-width:0}
+ .game-icon{font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}.game-icon svg{display:block}
+ .genre-count,.genre-note,.game-meta,.tag,.tagline,.terminal-footer{color:#829a70}
+ @media(max-width:420px){.terminal-body{padding:22px 16px}.game-card{padding:12px}.game-card-inner{gap:10px}.game-icon{width:40px;height:40px}.category-nav{gap:6px}}
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="terminal-bar">
+        <div class="dot"></div>
+        <span>bus-adventures v0.2.0 — terminal interface</span>
+      </div>
+      <div class="terminal-body">
+        <h1 class="ascii-title">BUS ADVENTURES</h1>
+        <div class="ascii-sub">POCKET ADVENTURES</div>
+        <p class="tagline">
+          Text adventures and handheld arcade.
+          <em>Finished before your stop.</em>
+          <br>
+          Pick a format. One hand, no sound needed.
+        </p>
+        <div class="prompt-line">SELECT ADVENTURE_</div>
+      </div>
+      <nav class="category-nav" aria-label="Game categories">
+        <a href="#text">TEXT</a>
+        <a href="#game-watch">GAME &amp; WATCH</a>
+        <a href="#arcade">ARCADE</a>
+        <a href="#in-development">IN DEVELOPMENT</a>
+      </nav>
+      <div class="genre-section" id="text">
+        <div class="genre-header">
+          <h2 class="genre-tag">// TEXT</h2>
+          <span class="genre-count">2 available</span>
+        </div>
+        <div class="genre-note">Type commands. Take your time. Death is permanent.</div>
+        <div class="game-grid">
+          <a class="game-card" href="games/ward-b/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🏥</div>
+              <div class="game-info">
+                <h3 class="game-title">Death Trap: Ward B</h3>
+                <div class="game-meta">
+                  <span>7 rooms</span>
+                  · ~10 min · keyboard
+                </div>
+                <div class="game-desc">The asylum was sealed after the evacuation. Officially, everyone got out. You wake in the reception hall.</div>
+                <div class="game-tags">
+                  <span class="tag">horror</span>
+                  <span class="tag">puzzle</span>
+                  <span class="tag">permadeath</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/shadow-pines/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🥷</div>
+              <div class="game-info">
+                <h3 class="game-title">Shadow Over Iron Pines</h3>
+                <div class="game-meta">
+                  <span>9 rooms</span>
+                  · ~12 min · keyboard
+                </div>
+                <div class="game-desc">The shogun keeps a sealed scroll in his private archive. You enter alone through the outer wall while thunder hides your footsteps.</div>
+                <div class="game-tags">
+                  <span class="tag">stealth</span>
+                  <span class="tag">puzzle</span>
+                  <span class="tag">permadeath</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="genre-section" id="game-watch">
+        <div class="genre-header">
+          <h2 class="genre-tag">// GAME &amp; WATCH</h2>
+          <span class="genre-count">6 available</span>
+        </div>
+        <div class="genre-note">Two or three buttons, one screen. Play a round while the bus is at a light.</div>
+        <div class="game-grid">
+          <a class="game-card" href="games/lich-tower/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" width="32" height="32" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+                  <path fill="#9fa4ba" d="M10 9V3h5v6h3V3h5v6h3V3h5v12l-3 3v17H13V18l-3-3z"></path>
+                  <path fill="#696783" d="M23 15h5v20h-5z"></path>
+                  <path fill="#ffb000" d="M17 18h5v6h-5z"></path>
+                  <path fill="#15131c" d="M17 35v-6a4 4 0 0 1 8 0v6z"></path>
+                  <path stroke="#c8c3d4" stroke-width="2" d="M9 36h24"></path>
+                </svg>
+              </div>
+              <div class="game-info">
+                <h3 class="game-title">Lich Tower</h3>
+                <div class="game-meta">
+                  <span>3 modes</span>
+                  · endless · two buttons
+                </div>
+                <div class="game-desc">The tower is burning and the acolytes are jumping. Catch each one three times on the way down, or explain yourself to the archmage.</div>
+                <div class="game-tags">
+                  <span class="tag">catch</span>
+                  <span class="tag">timing</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/kraken/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🦑</div>
+              <div class="game-info">
+                <h3 class="game-title">Guardian Kraken</h3>
+                <div class="game-meta">
+                  <span>3 modes</span>
+                  · endless · two buttons
+                </div>
+                <div class="game-desc">Gold on the seabed, arms in the dark, and only so much air. Three coins pay six times one — if you surface at all.</div>
+                <div class="game-tags">
+                  <span class="tag">timing</span>
+                  <span class="tag">greed</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/flock/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🧟</div>
+              <div class="game-info">
+                <h3 class="game-title">Flock</h3>
+                <div class="game-meta">
+                  <span>3 modes</span>
+                  · five lanes · two buttons
+                </div>
+                <div class="game-desc">Hold the street. Protect the flock behind you. Switch lanes, swing the spiked bat, and grab shells for the shotgun. Time your move for a Perfect Strike. Anything that slips past takes one from the back.</div>
+                <div class="game-tags">
+                  <span class="tag">zombies</span>
+                  <span class="tag">timing</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/respect-my-authority/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🛂</div>
+              <div class="game-info">
+                <h3 class="game-title">Respect My Authority!</h3>
+                <div class="game-meta">endless · three buttons · questionable authority</div>
+                <div class="game-desc">Three lanes. One baton. Far too much authority. Hold the border, declare your syrup, and please stop saying sorry.</div>
+                <div class="game-tags">
+                  <span class="tag">timing</span>
+                  <span class="tag">satire</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/grab-the-money/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">💸</div>
+              <div class="game-info">
+                <h3 class="game-title">Grab the Money</h3>
+                <div class="game-meta">
+                  <span>$5,000 promised</span>
+                  · 60 seconds · two buttons
+                </div>
+                <div class="game-desc">You were promised $5,000. Chase the bills as Trump throws them. The money dodges your hands. The excuses get bigger. Your balance stays the same.</div>
+                <div class="game-tags">
+                  <span class="tag">satire</span>
+                  <span class="tag">dodge</span>
+                  <span class="tag">game &amp; watch</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/seven-strikes/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">⚡</div>
+              <div class="game-info">
+                <h3 class="game-title">Seven Strikes</h3>
+                <div class="game-meta">
+                  <span>3 modes</span>
+                  · endless · two buttons
+                </div>
+                <div class="game-desc">The ground lights up where the bolt will land, and the storm aims for you. A park ranger really survived seven.</div>
+                <div class="game-tags">
+                  <span class="tag">dodge</span>
+                  <span class="tag">reflex</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="genre-section" id="arcade">
+        <div class="genre-header">
+          <h2 class="genre-tag">// ARCADE</h2>
+          <span class="genre-count">8 available</span>
+        </div>
+        <div class="genre-note">Cabinet games. More going on, more to hit back at.</div>
+        <div class="game-grid">
+          <a class="game-card" href="games/space-watch/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">👾</div>
+              <div class="game-info">
+                <h3 class="game-title">Space Watch</h3>
+                <div class="game-meta">
+                  <span>arcade</span>
+                  · waves · shoot
+                </div>
+                <div class="game-desc">The formation comes down, and it does not come down politely. Hold the line for one more wave.</div>
+                <div class="game-tags">
+                  <span class="tag">shooter</span>
+                  <span class="tag">waves</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/CityBomber/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🛩️</div>
+              <div class="game-info">
+                <h3 class="game-title">City Bomber</h3>
+                <div class="game-meta">
+                  <span>arcade</span>
+                  · descending · one button
+                </div>
+                <div class="game-desc">You sink lower with every pass. Flatten the skyline before it flattens you.</div>
+                <div class="game-tags">
+                  <span class="tag">timing</span>
+                  <span class="tag">nerve</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/missile-command/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🚀</div>
+              <div class="game-info">
+                <h3 class="game-title">Missile Command</h3>
+                <div class="game-meta">
+                  <span>arcade</span>
+                  · waves · defence
+                </div>
+                <div class="game-desc">More is coming down than you have shots for. Decide early what you are willing to lose.</div>
+                <div class="game-tags">
+                  <span class="tag">defence</span>
+                  <span class="tag">waves</span>
+                  <span class="tag">triage</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/heli-rescue/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🚁</div>
+              <div class="game-info">
+                <h3 class="game-title">Heli Rescue</h3>
+                <div class="game-meta">
+                  <span>arcade</span>
+                  · zones · fly
+                </div>
+                <div class="game-desc">Land beside hostages — not on them. Fill the chopper, get back to the pad.</div>
+                <div class="game-tags">
+                  <span class="tag">rescue</span>
+                  <span class="tag">timing</span>
+                  <span class="tag">zones</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/periscope/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🔭</div>
+              <div class="game-info">
+                <h3 class="game-title">Periscope</h3>
+                <div class="game-meta">
+                  <span>3 modes</span>
+                  · sink shipping · 5 torpedoes
+                </div>
+                <div class="game-desc">Turn the scope. Lead the fast boat. Five shots, then RELOAD. Mines eat torpedoes. The clock is the enemy — bonus time if you keep sinking.</div>
+                <div class="game-tags">
+                  <span class="tag">aim</span>
+                  <span class="tag">timing</span>
+                  <span class="tag">arcade</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/moon-buggy/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🌙</div>
+              <div class="game-info">
+                <h3 class="game-title">Moon Buggy</h3>
+                <div class="game-meta">
+                  <span>arcade</span>
+                  · jump · shoot
+                </div>
+                <div class="game-desc">Craters, rocks, mines, UFOs. Jump the pits and keep the buggy in one piece.</div>
+                <div class="game-tags">
+                  <span class="tag">jump</span>
+                  <span class="tag">timing</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/chemtrails/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">✈️</div>
+              <div class="game-info">
+                <h3 class="game-title">Chemtrails</h3>
+                <div class="game-meta">
+                  <span>3 modes</span>
+                  · keep em sheep · five pumps
+                </div>
+                <div class="game-desc">You are the plane. Mist the street. Grey walkers fold, foil hats take two, red mouths shout WAKE. Let too many leave awake and the flock is gone.</div>
+                <div class="game-tags">
+                  <span class="tag">satire</span>
+                  <span class="tag">timing</span>
+                  <span class="tag">endless</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="game-card" href="games/meatware/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🧬</div>
+              <div class="game-info">
+                <h3 class="game-title">Meatware</h3>
+                <div class="game-meta">
+                  <span>3 modes</span>
+                  · twin-stick · waves
+                </div>
+                <div class="game-desc">Left to run. Right to fire. You are the wet part. Grunts close the headcount. Hulks do not die. Do not unplug the family.</div>
+                <div class="game-tags">
+                  <span class="tag">twin-stick</span>
+                  <span class="tag">irony</span>
+                  <span class="tag">arcade</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="genre-section" id="in-development">
+        <div class="genre-header">
+          <h2 class="genre-tag">// IN DEVELOPMENT</h2>
+          <span class="genre-count">3 in development</span>
+        </div>
+        <div class="game-grid">
+          <div class="game-card coming-soon">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🚀</div>
+              <div class="game-info">
+                <h3 class="game-title">Drift Station Kepler</h3>
+                <div class="game-meta">
+                  <span>text · sci-fi mystery</span>
+                </div>
+                <div class="game-desc">Coming soon.</div>
+              </div>
+            </div>
+          </div>
+          <div class="game-card coming-soon">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🐎</div>
+              <div class="game-info">
+                <h3 class="game-title">Night Road</h3>
+                <div class="game-meta">
+                  <span>game &amp; watch · night chase</span>
+                </div>
+                <div class="game-desc">Coming soon.</div>
+              </div>
+            </div>
+          </div>
+          <div class="game-card coming-soon">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">💀</div>
+              <div class="game-info">
+                <h3 class="game-title">Gravferd</h3>
+                <div class="game-meta">
+                  <span>arcade · wave defence</span>
+                </div>
+                <div class="game-desc">Coming soon.</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </a>
-      <a class="game-card" href="games/grab-the-money/index.html">
-        <div class="game-card-inner">
-          <div class="game-icon">💸</div>
-          <div class="game-info">
-            <div class="game-title">Grab the Money</div>
-            <div class="game-meta"><span>$5,000 promised</span> · 60 seconds · two buttons</div>
-            <div class="game-desc">You were promised $5,000. Chase the bills as Trump throws them. The money dodges your hands. The excuses get bigger. Your balance stays the same.</div>
-            <div class="game-tags"><span class="tag">satire</span><span class="tag">dodge</span><span class="tag">game &amp; watch</span></div>
-          </div>
-        </div>
-      </a>
-      <a class="game-card" href="games/seven-strikes/index.html"><div class="game-card-inner"><div class="game-icon">⚡</div><div class="game-info"><div class="game-title">Seven Strikes</div><div class="game-meta"><span>3 modes</span> · endless · two buttons</div><div class="game-desc">The ground lights up where the bolt will land, and the storm aims for you. A park ranger really survived seven.</div><div class="game-tags"><span class="tag">dodge</span><span class="tag">reflex</span><span class="tag">endless</span></div></div></div></a>
-    </div>
-  </div>
-  <div class="genre-section">
-    <div class="genre-header"><span class="genre-tag">// ARCADE</span><span class="genre-count">8 available</span></div>
-    <div class="genre-note">Cabinet games. More going on, more to hit back at.</div>
-    <div class="game-grid">
-      <a class="game-card" href="games/space-watch/index.html"><div class="game-card-inner"><div class="game-icon">👾</div><div class="game-info"><div class="game-title">Space Watch</div><div class="game-meta"><span>arcade</span> · waves · shoot</div><div class="game-desc">The formation comes down, and it does not come down politely. Hold the line for one more wave.</div><div class="game-tags"><span class="tag">shooter</span><span class="tag">waves</span><span class="tag">endless</span></div></div></div></a>
-      <a class="game-card" href="games/CityBomber/index.html"><div class="game-card-inner"><div class="game-icon">🛩️</div><div class="game-info"><div class="game-title">City Bomber</div><div class="game-meta"><span>arcade</span> · descending · one button</div><div class="game-desc">You sink lower with every pass. Flatten the skyline before it flattens you.</div><div class="game-tags"><span class="tag">timing</span><span class="tag">nerve</span></div></div></div></a>
-      <a class="game-card" href="games/missile-command/index.html"><div class="game-card-inner"><div class="game-icon">🚀</div><div class="game-info"><div class="game-title">Missile Command</div><div class="game-meta"><span>arcade</span> · waves · defence</div><div class="game-desc">More is coming down than you have shots for. Decide early what you are willing to lose.</div><div class="game-tags"><span class="tag">defence</span><span class="tag">waves</span><span class="tag">triage</span></div></div></div></a>
-      <a class="game-card" href="games/heli-rescue/index.html"><div class="game-card-inner"><div class="game-icon">🚁</div><div class="game-info"><div class="game-title">Heli Rescue</div><div class="game-meta"><span>arcade</span> · zones · fly</div><div class="game-desc">Land beside hostages — not on them. Fill the chopper, get back to the pad.</div><div class="game-tags"><span class="tag">rescue</span><span class="tag">timing</span><span class="tag">zones</span></div></div></div></a>
-      <a class="game-card" href="games/periscope/index.html"><div class="game-card-inner"><div class="game-icon">🔭</div><div class="game-info"><div class="game-title">Periscope</div><div class="game-meta"><span>3 modes</span> · sink shipping · 5 torpedoes</div><div class="game-desc">Turn the scope. Lead the fast boat. Five shots, then RELOAD. Mines eat torpedoes. The clock is the enemy — bonus time if you keep sinking.</div><div class="game-tags"><span class="tag">aim</span><span class="tag">timing</span><span class="tag">arcade</span></div></div></div></a>
-      <a class="game-card" href="games/moon-buggy/index.html"><div class="game-card-inner"><div class="game-icon">🌙</div><div class="game-info"><div class="game-title">Moon Buggy</div><div class="game-meta"><span>arcade</span> · jump · shoot</div><div class="game-desc">Craters, rocks, mines, UFOs. Jump the pits and keep the buggy in one piece.</div><div class="game-tags"><span class="tag">jump</span><span class="tag">timing</span><span class="tag">endless</span></div></div></div></a>
-      <a class="game-card" href="games/chemtrails/index.html"><div class="game-card-inner"><div class="game-icon">✈️</div><div class="game-info"><div class="game-title">Chemtrails</div><div class="game-meta"><span>3 modes</span> · keep em sheep · five pumps</div><div class="game-desc">You are the plane. Mist the street. Grey walkers fold, foil hats take two, red mouths shout WAKE. Let too many leave awake and the flock is gone.</div><div class="game-tags"><span class="tag">satire</span><span class="tag">timing</span><span class="tag">endless</span></div></div></div></a>
-      <a class="game-card" href="games/meatware/index.html">
-  <div class="game-card-inner">
-    <div class="game-icon">🧬</div>
-    <div class="game-info">
-      <div class="game-title">Meatware</div>
-      <div class="game-meta"><span>3 modes</span> · twin-stick · waves</div>
-      <div class="game-desc">Left to run. Right to fire. You are the wet part. Grunts close the headcount. Hulks do not die. Do not unplug the family.</div>
-      <div class="game-tags">
-        <span class="tag">twin-stick</span>
-        <span class="tag">irony</span>
-        <span class="tag">arcade</span>
+      <div class="terminal-footer">
+        <div>bus-adventures · pocket games for the commute</div>
       </div>
-    </div>
-  </div>
-</a>
-    </div>
-  </div>
-  <div class="genre-section">
-    <div class="genre-header"><span class="genre-tag">// IN DEVELOPMENT</span><span class="genre-count">not yet</span></div>
-    <div class="game-grid">
-      <div class="game-card coming-soon"><div class="game-card-inner"><div class="game-icon">🚀</div><div class="game-info"><div class="game-title">Drift Station Kepler</div><div class="game-meta"><span>text · sci-fi mystery</span></div><div class="game-desc">Coming soon.</div></div></div></div>
-      <div class="game-card coming-soon"><div class="game-card-inner"><div class="game-icon">🐎</div><div class="game-info"><div class="game-title">Night Road</div><div class="game-meta"><span>game & watch · night chase</span></div><div class="game-desc">Coming soon.</div></div></div></div>
-      <div class="game-card coming-soon"><div class="game-card-inner"><div class="game-icon">💀</div><div class="game-info"><div class="game-title">Gravferd</div><div class="game-meta"><span>arcade · wave defence</span></div><div class="game-desc">Coming soon.</div></div></div></div>
-    </div>
-  </div>
-  <div class="terminal-footer"><div>bus-adventures · pocket games for the commute</div></div>
-</div>
-</body>
+    </main>
+  </body>
 </html>
