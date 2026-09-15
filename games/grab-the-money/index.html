@@ -98,15 +98,8 @@ touch-action:manipulation
   background:var(--key-on);border-bottom-width:2px;transform:translateY(2px)
 }
 #pad button:active svg,#pad button.down svg{fill:#f2f2ff}
-#notice{flex:0 0 86px;margin-top:8px;padding:8px 10px;border:1px solid #393526;border-radius:6px;background:#121216;color:#ffd447;font:700 11px/1.35 "Courier New",monospace;overflow:hidden}
-#notice b{display:block;font-size:9px;letter-spacing:.12em;color:#8f92a6;margin-bottom:3px}
-#noticeText{display:flex;flex-direction:column;gap:4px}
-.notice-entry{animation:notice-in .22s ease-out;font-size:10px;line-height:1.2}
-.notice-entry:nth-child(2){opacity:.65}
-.notice-entry:nth-child(3){opacity:.4}
-@keyframes notice-in{from{transform:translateX(18px);opacity:0}to{transform:translateX(0);opacity:1}}
 #brand,#pad{flex-shrink:0}
-@media(max-height:500px){#pad{margin-top:6px}#pad button{height:44px}#notice{flex-basis:70px;padding:5px 8px;font-size:10px}#device{padding:6px}#brand{padding-bottom:4px}}
+@media(max-height:500px){#pad{margin-top:6px}#pad button{height:44px}#device{padding:6px}#brand{padding-bottom:4px}}
 </style>
 </head>
 <body>
@@ -142,7 +135,6 @@ touch-action:manipulation
     </div>
   </div>
 
-  <div id="notice" role="status"><b>PAYMENT NOTICE</b><span id="noticeText">YOUR PAYMENT IS ON ITS WAY. ALLEGEDLY.</span></div>
   <div id="pad">
     <button id="left" aria-label="Move left">
       <svg viewBox="0 0 40 40"><path d="M25 8 L11 20 L25 32 Z"/></svg>
@@ -320,26 +312,28 @@ function showExcuse(){
     }
   }
   previousExcuse=excuseQueue.pop();
-  const feed=document.getElementById('noticeText');
-  if(!feed.querySelector('.notice-entry')) feed.textContent='';
-  const entry=document.createElement('div');
-  entry.className='notice-entry';entry.textContent=previousExcuse;
-  feed.prepend(entry);
-  while(feed.children.length>3)feed.lastElementChild.remove();
+  // Wrap long excuses inside the narrow game screen.
   const lines=[''];
   for(const word of previousExcuse.split(' ')){
     const i=lines.length-1;
-    if(lines[i] && (lines[i]+' '+word).length>20)lines.push(word);
+    if(lines[i] && (lines[i]+' '+word).length>22) lines.push(word);
     else lines[i]+=(lines[i]?' ':'')+word;
   }
-  // Two compact side messages; never grow across the central character.
-  floatingExcuses.push({lines,life:3.8,side:floatingExcuses.length?1-floatingExcuses[floatingExcuses.length-1].side:(player.x<W/2?1:0)});
-  if(floatingExcuses.length>2)floatingExcuses.shift();
+  const height=lines.length*10+12;
+  // Lift older messages to keep new ones readable.
+  for(let i=floatingExcuses.length-1,nextY=H-98;i>=0;i--){
+    const message=floatingExcuses[i];
+    message.y=Math.min(message.y,nextY-message.height-5);
+    nextY=message.y;
+  }
+  floatingExcuses.push({lines,height,y:H-98,life:4.2});
 }
 function updateExcuses(dt){
   for(let i=floatingExcuses.length-1;i>=0;i--){
-    floatingExcuses[i].life-=dt;
-    if(floatingExcuses[i].life<=0)floatingExcuses.splice(i,1);
+    const message=floatingExcuses[i];
+    message.y-=36*dt;
+    message.life-=dt;
+    if(message.life<=0) floatingExcuses.splice(i,1);
   }
 }
 const bills=[];
@@ -601,16 +595,18 @@ function draw(now){
   }
   drawHUD(now);
   for(const message of floatingExcuses){
-    const x=message.side?218:6;
-    const age=3.8-message.life;
-    const y=110-Math.min(8,age*4);
-    ctx.save();ctx.globalAlpha=Math.min(1,age/.15,message.life/.6);
-    // Unboxed text stays in the side gutters above the player's entire lane.
-    text('PAYMENT NOTICE',x,y,6,P.muted);
-    message.lines.forEach((line,i)=>text(line,x,y+10+i*8,7,P.amber));
+    ctx.save();
+    ctx.globalAlpha=Math.pow(Math.min(1,message.life/2.8),1.4);
+    const width=Math.max(...message.lines.map(s=>s.length))*4.2+20;
+    const age=clamp((4.2-message.life)/4.2,0,1);
+    const maxScale=Math.min(3.2,(W-12)/width);
+    const scale=1+(maxScale-1)*(1-Math.pow(1-age,2));
+    ctx.translate(W/2,message.y+message.height/2);
+    ctx.scale(scale,scale);
+    rect(-width/2,-message.height/2,width,message.height,'rgba(0,0,0,.82)');
+    message.lines.forEach((s,i)=>text(s,0,-message.height/2+6+i*10,7,P.amber,'center'));
     ctx.restore();
   }
-
 
   ctx.restore();
 }
@@ -641,7 +637,6 @@ function startGame(){
   err.style.display='none';
   bills.length=0;particles.length=0;
   floatingExcuses.length=0;
-  document.getElementById("noticeText").textContent="YOUR PAYMENT IS ON ITS WAY. ALLEGEDLY.";
   thrown=0;score=0;player.x=142;player.vx=0;
   result.classList.remove('show');
   menu.classList.add('hidden');
