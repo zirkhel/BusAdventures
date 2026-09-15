@@ -53,10 +53,10 @@ body{
 #screen{
   position:relative;background:#07070a;border-radius:6px;padding:5px;
   flex:1 1 auto;display:flex;align-items:center;justify-content:center;
-  box-shadow:inset 0 2px 12px rgba(0,0,0,.6);min-height:260px
+  box-shadow:inset 0 2px 12px rgba(0,0,0,.6);min-height:0;overflow:hidden
 }
 canvas{
-  display:block;width:100%;height:auto;image-rendering:pixelated;
+  display:block;flex:none;image-rendering:pixelated;
   border-radius:3px;background:#0b0d13
 }
 #menu{
@@ -98,6 +98,10 @@ touch-action:manipulation
   background:var(--key-on);border-bottom-width:2px;transform:translateY(2px)
 }
 #pad button:active svg,#pad button.down svg{fill:#f2f2ff}
+#notice{flex:0 0 64px;margin-top:8px;padding:8px 10px;border:1px solid #393526;border-radius:6px;background:#121216;color:#ffd447;font:700 11px/1.35 "Courier New",monospace;overflow:hidden}
+#notice b{display:block;font-size:9px;letter-spacing:.12em;color:#8f92a6;margin-bottom:3px}
+#brand,#pad{flex-shrink:0}
+@media(max-height:500px){#pad{margin-top:6px}#pad button{height:44px}#notice{flex-basis:54px;padding:5px 8px;font-size:10px}#device{padding:6px}#brand{padding-bottom:4px}}
 </style>
 </head>
 <body>
@@ -133,6 +137,7 @@ touch-action:manipulation
     </div>
   </div>
 
+  <div id="notice" role="status"><b>PAYMENT NOTICE</b><span id="noticeText">YOUR PAYMENT IS ON ITS WAY. ALLEGEDLY.</span></div>
   <div id="pad">
     <button id="left" aria-label="Move left">
       <svg viewBox="0 0 40 40"><path d="M25 8 L11 20 L25 32 Z"/></svg>
@@ -174,6 +179,8 @@ function layout(){
   if(!(cssW>40)) cssW=Math.min(500,(window.innerWidth||360)-40);
   if(!(cssH>40)) cssH=Math.max(230,(window.innerHeight||640)-190);
   H=Math.round(Math.min(360,Math.max(250,W*cssH/cssW)));
+  const scale=Math.min(cssW/W,cssH/H);
+  cv.style.width=(W*scale)+'px'; cv.style.height=(H*scale)+'px';
   cv.width=W*2; cv.height=H*2;
   ctx.setTransform(1,0,0,1,0,0);
   ctx.scale(2,2);
@@ -308,30 +315,10 @@ function showExcuse(){
     }
   }
   previousExcuse=excuseQueue.pop();
-  // Wrap long excuses inside the narrow game screen.
-  const lines=[''];
-  for(const word of previousExcuse.split(' ')){
-    const i=lines.length-1;
-    if(lines[i] && (lines[i]+' '+word).length>22) lines.push(word);
-    else lines[i]+=(lines[i]?' ':'')+word;
-  }
-  const height=lines.length*10+12;
-  // Lift older messages to keep new ones readable.
-  for(let i=floatingExcuses.length-1,nextY=H-98;i>=0;i--){
-    const message=floatingExcuses[i];
-    message.y=Math.min(message.y,nextY-message.height-5);
-    nextY=message.y;
-  }
-  floatingExcuses.push({lines,height,y:H-98,life:4.2});
+  // A reserved HTML HUD never intersects characters or flying bills.
+  document.getElementById('noticeText').textContent=previousExcuse;
 }
-function updateExcuses(dt){
-  for(let i=floatingExcuses.length-1;i>=0;i--){
-    const message=floatingExcuses[i];
-    message.y-=36*dt;
-    message.life-=dt;
-    if(message.life<=0) floatingExcuses.splice(i,1);
-  }
-}
+function updateExcuses(dt){}
 const bills=[];
 const particles=[];
 const input={left:false,right:false};
@@ -376,11 +363,11 @@ function drawWorld(now){
   }
 
   // podium
-  rect(111,55,98,8,'#343741');
-  rect(118,63,84,45,'#1b202b');
-  rect(126,70,68,30,P.blue);
-  text('AMERICA',160,77,8,P.cream,'center');
-  text('FIRST',160,88,8,P.cream,'center');
+  rect(111,85,98,8,'#343741');
+  rect(118,93,84,45,'#1b202b');
+  rect(126,100,68,30,P.blue);
+  text('AMERICA',160,107,8,P.cream,'center');
+  text('FIRST',160,118,8,P.cream,'center');
 
   // banners
   rect(17,72,59,28,P.red); rect(244,72,59,28,P.red);
@@ -390,7 +377,7 @@ function drawWorld(now){
 
 function drawTrump(){
   // Deliberately oversized stage character: about 1.5x the old sprite.
-  const x=137,y=10, z=1.45;
+  const z=1.45, x=131, y=85-Math.round(49*z)-Math.round(3*z);
   const q=(a)=>Math.round(a*z);
   const rr=(dx,dy,w,h,c)=>rect(x+q(dx),y+q(dy),q(w),q(h),c);
 
@@ -465,10 +452,10 @@ function spawnBill(){
 
   // Trump visibly alternates throwing left and right.
   throwSide *= -1;
-  const sx = throwSide < 0 ? 139 : 203;
+  const sx = 131+Math.round((throwSide<0?-9:45)*1.45);
   bills.push({
     x:sx+r(-2,2),
-    y:61+r(-2,2),
+    y:10+Math.round(26*1.45)+r(-2,2),
     vx:throwSide*r(38,58),
     vy:r(18,27),
     rot:r(-.18,.18),
@@ -479,36 +466,33 @@ function spawnBill(){
   setTimeout(()=>alarm.classList.remove('lit'),90);
 }
 function updateBill(b,dt){
-  b.vy += 54*dt;
-  b.x += b.vx*dt;
-  b.y += b.vy*dt;
-  b.rot += b.vr*dt;
-
-  const px=player.x+16;
-  const py=playerY()+9;
-  const dx=b.x-px;
-  const dy=b.y-py;
-  const dist=Math.hypot(dx,dy);
-
-  // Let the money fall MUCH lower than the prototype.
-  // It only cheats when it is basically at hand/head height.
-  const cheatY = playerY()-2;
-  if(!b.escaped && b.y>cheatY && dist<54){
+  if(b.escaped){
+    b.escapeTime+=dt;
+    // Lift first, then accelerate sideways on an upward, floating arc.
+    const lift=Math.min(1,b.escapeTime/.3);
+    const glide=Math.max(0,b.escapeTime-.3);
+    b.x=b.escapeX+b.away*(6*lift+55*glide+105*glide*glide);
+    b.y=b.escapeY-27*(1-Math.pow(1-lift,2))-15*glide+3*Math.sin(glide*5);
+    b.rot=b.escapeRot+b.away*.22*Math.sin(b.escapeTime*7);
+    return;
+  }
+  b.vy+=54*dt;
+  b.x+=b.vx*dt;
+  b.y+=b.vy*dt;
+  b.rot+=b.vr*dt;
+  const dx=b.x-(player.x+18);
+  // Trigger above the head/hands, before the visible bill touches the sprite.
+  if(b.y>=playerY()-19 && b.y<playerY()+48 && Math.abs(dx)<53){
     b.escaped=true;
-    const away=(Math.abs(dx)<2 ? (Math.random()<.5?-1:1) : Math.sign(dx));
-    b.vx=away*r(135,195);
-    b.vy=r(-75,-45);
-    b.vr=r(-8,8);
+    b.escapeTime=0;
+    b.escapeX=b.x;
+    b.escapeY=Math.min(b.y,playerY()-19);
+    b.y=b.escapeY;
+    b.escapeRot=b.rot;
+    b.away=Math.abs(dx)<2 ? (b.vx<0?-1:1) : Math.sign(dx);
     showExcuse();
     score-=50;
     shake=2.2;
-
-    for(let i=0;i<4;i++){
-      particles.push({
-        x:b.x,y:b.y,
-        vx:r(-30,30),vy:r(-35,4),life:.28
-      });
-    }
   }
 }
 
@@ -572,19 +556,6 @@ function draw(now){
   particles.forEach(p=>rect(p.x,p.y,2,2,'#d6e6cd'));
   drawHUD(now);
 
-  for(const message of floatingExcuses){
-    ctx.save();
-    ctx.globalAlpha=Math.pow(Math.min(1,message.life/2.8),1.4);
-    const width=Math.max(...message.lines.map(s=>s.length))*4.2+20;
-    const age=clamp((4.2-message.life)/4.2,0,1);
-    const maxScale=Math.min(3.2,(W-12)/width);
-    const scale=1+(maxScale-1)*(1-Math.pow(1-age,2));
-    ctx.translate(W/2,message.y+message.height/2);
-    ctx.scale(scale,scale);
-    rect(-width/2,-message.height/2,width,message.height,'rgba(0,0,0,.82)');
-    message.lines.forEach((s,i)=>text(s,0,-message.height/2+6+i*10,7,P.amber,'center'));
-    ctx.restore();
-  }
 
   ctx.restore();
 }
@@ -615,6 +586,7 @@ function startGame(){
   err.style.display='none';
   bills.length=0;particles.length=0;
   floatingExcuses.length=0;
+  document.getElementById("noticeText").textContent="YOUR PAYMENT IS ON ITS WAY. ALLEGEDLY.";
   thrown=0;score=0;player.x=142;player.vx=0;
   result.classList.remove('show');
   menu.classList.add('hidden');
