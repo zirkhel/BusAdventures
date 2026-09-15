@@ -98,10 +98,15 @@ touch-action:manipulation
   background:var(--key-on);border-bottom-width:2px;transform:translateY(2px)
 }
 #pad button:active svg,#pad button.down svg{fill:#f2f2ff}
-#notice{flex:0 0 64px;margin-top:8px;padding:8px 10px;border:1px solid #393526;border-radius:6px;background:#121216;color:#ffd447;font:700 11px/1.35 "Courier New",monospace;overflow:hidden}
+#notice{flex:0 0 86px;margin-top:8px;padding:8px 10px;border:1px solid #393526;border-radius:6px;background:#121216;color:#ffd447;font:700 11px/1.35 "Courier New",monospace;overflow:hidden}
 #notice b{display:block;font-size:9px;letter-spacing:.12em;color:#8f92a6;margin-bottom:3px}
+#noticeText{display:flex;flex-direction:column;gap:4px}
+.notice-entry{animation:notice-in .22s ease-out;font-size:10px;line-height:1.2}
+.notice-entry:nth-child(2){opacity:.65}
+.notice-entry:nth-child(3){opacity:.4}
+@keyframes notice-in{from{transform:translateX(18px);opacity:0}to{transform:translateX(0);opacity:1}}
 #brand,#pad{flex-shrink:0}
-@media(max-height:500px){#pad{margin-top:6px}#pad button{height:44px}#notice{flex-basis:54px;padding:5px 8px;font-size:10px}#device{padding:6px}#brand{padding-bottom:4px}}
+@media(max-height:500px){#pad{margin-top:6px}#pad button{height:44px}#notice{flex-basis:70px;padding:5px 8px;font-size:10px}#device{padding:6px}#brand{padding-bottom:4px}}
 </style>
 </head>
 <body>
@@ -315,10 +320,28 @@ function showExcuse(){
     }
   }
   previousExcuse=excuseQueue.pop();
-  // A reserved HTML HUD never intersects characters or flying bills.
-  document.getElementById('noticeText').textContent=previousExcuse;
+  const feed=document.getElementById('noticeText');
+  if(!feed.querySelector('.notice-entry')) feed.textContent='';
+  const entry=document.createElement('div');
+  entry.className='notice-entry';entry.textContent=previousExcuse;
+  feed.prepend(entry);
+  while(feed.children.length>3)feed.lastElementChild.remove();
+  const lines=[''];
+  for(const word of previousExcuse.split(' ')){
+    const i=lines.length-1;
+    if(lines[i] && (lines[i]+' '+word).length>20)lines.push(word);
+    else lines[i]+=(lines[i]?' ':'')+word;
+  }
+  // Two compact side messages; never grow across the central character.
+  floatingExcuses.push({lines,life:3.8,side:floatingExcuses.length?1-floatingExcuses[floatingExcuses.length-1].side:(player.x<W/2?1:0)});
+  if(floatingExcuses.length>2)floatingExcuses.shift();
 }
-function updateExcuses(dt){}
+function updateExcuses(dt){
+  for(let i=floatingExcuses.length-1;i>=0;i--){
+    floatingExcuses[i].life-=dt;
+    if(floatingExcuses[i].life<=0)floatingExcuses.splice(i,1);
+  }
+}
 const bills=[];
 const particles=[];
 const input={left:false,right:false};
@@ -474,6 +497,11 @@ function updateBill(b,dt){
     b.x=b.escapeX+b.away*(6*lift+55*glide+105*glide*glide);
     b.y=b.escapeY-27*(1-Math.pow(1-lift,2))-15*glide+3*Math.sin(glide*5);
     b.rot=b.escapeRot+b.away*.22*Math.sin(b.escapeTime*7);
+    b.sparkClock=(b.sparkClock||0)+dt;
+    if(b.sparkClock>.045){
+      b.sparkClock=0;
+      particles.push({x:b.x,y:b.y,vx:r(-12,12),vy:r(-8,8),life:.28,maxLife:.28,size:2,color:P.money2});
+    }
     return;
   }
   b.vy+=54*dt;
@@ -493,6 +521,11 @@ function updateBill(b,dt){
     showExcuse();
     score-=50;
     shake=2.2;
+    b.puff={x:b.x,y:b.y};
+    for(let i=0;i<20;i++){
+      const angle=i*Math.PI*2/20, speed=r(24,76), life=r(.3,.6);
+      particles.push({x:b.x,y:b.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed-18,life,maxLife:life,size:i%3===0?3:2,color:[P.money2,P.amber,P.white][i%3]});
+    }
   }
 }
 
@@ -553,8 +586,30 @@ function draw(now){
   drawTrump();
   bills.forEach(drawBill);
   drawPlayer();
-  particles.forEach(p=>rect(p.x,p.y,2,2,'#d6e6cd'));
+  for(const p of particles){
+    ctx.save();ctx.globalAlpha=Math.max(0,p.life/p.maxLife);
+    rect(p.x,p.y,p.size,p.size,p.color);ctx.restore();
+  }
+  for(const b of bills){
+    if(!b.puff || b.escapeTime>.5)continue;
+    const age=b.escapeTime;
+    ctx.save();ctx.globalAlpha=1-age/.5;
+    ctx.strokeStyle=P.money2;ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(b.puff.x,b.puff.y,4+age*40,0,Math.PI*2);ctx.stroke();
+    text('POFF!',b.puff.x,b.puff.y-12-age*20,8,P.amber,'center');
+    ctx.restore();
+  }
   drawHUD(now);
+  for(const message of floatingExcuses){
+    const x=message.side?218:6;
+    const age=3.8-message.life;
+    const y=110-Math.min(8,age*4);
+    ctx.save();ctx.globalAlpha=Math.min(1,age/.15,message.life/.6);
+    // Unboxed text stays in the side gutters above the player's entire lane.
+    text('PAYMENT NOTICE',x,y,6,P.muted);
+    message.lines.forEach((line,i)=>text(line,x,y+10+i*8,7,P.amber));
+    ctx.restore();
+  }
 
 
   ctx.restore();
