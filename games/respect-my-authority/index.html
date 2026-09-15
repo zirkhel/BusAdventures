@@ -37,8 +37,8 @@ body{background:#070607;padding:14px 10px;color:#ddc5ca}
 @keyframes overrun-shake{0%,100%{transform:translate(0,0)}12%{transform:translate(-6px,2px)}24%{transform:translate(6px,-2px)}36%{transform:translate(-5px,-1px)}48%{transform:translate(5px,2px)}62%{transform:translate(-3px,0)}76%{transform:translate(3px,-1px)}88%{transform:translate(-1px,0)}}
 #d.overrun{animation:overrun-shake .65s ease-out}
 @media(prefers-reduced-motion:reduce){#d.overrun{animation:none}}
-</style></head><body><div id="d"><div class="brand"><span><i></i>BUS ADVENTURES</span><span>POCKET ARCADE / 01</span></div><div class="top"><button id="home" aria-label="Back to intro"><span class="arrow" aria-hidden="true"></span></button><b>RESPECT MY<br>AUTHORITY!<small>BORDER PATROL EDITION</small></b><button id="menu">MENU</button></div>
-<div id="s"><canvas id="c" width="320" height="420"></canvas><div id="m"><h1 id="mh">TOTALLY ORIGINAL TELEVISION GAME</h1><p id="mp">EVERYTHING IS FICTIONAL.<br><br>Any resemblance to real events, real border agencies, famous cartoons, fictional towns, Canadians, Americans, authority figures, or unusually round police officers is PURE COINCIDENCE.<br><br>By continuing you confirm that you have read absolutely none of this.<br><br><span class="legal">NO SUING PASS THIS POINT</span></p><button id="consent" class="start">CONSENT TO ALL</button><button id="start" class="start" style="display:none">START GAME</button></div></div>
+#m #best-score{color:var(--gold);font-size:11px;font-weight:bold;margin:0 0 12px} </style></head><body><div id="d"><div class="brand"><span><i></i>BUS ADVENTURES</span><span>POCKET ARCADE / 01</span></div><div class="top"><button id="home" aria-label="Home — Bus Adventures" title="Home — Bus Adventures"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9"/></svg></button><b>RESPECT MY<br>AUTHORITY!<small>BORDER PATROL EDITION</small></b><button id="menu">MENU</button></div>
+<div id="s"><canvas id="c" width="320" height="420"></canvas><div id="m"><h1 id="mh">TOTALLY ORIGINAL TELEVISION GAME</h1><p id="mp">EVERYTHING IS FICTIONAL.<br><br>Any resemblance to real events, real border agencies, famous cartoons, fictional towns, Canadians, Americans, authority figures, or unusually round police officers is PURE COINCIDENCE.<br><br>By continuing you confirm that you have read absolutely none of this.<br><br><span class="legal">NO SUING PASS THIS POINT</span></p><p id="best-score" aria-live="polite"></p><button id="consent" class="start">CONSENT TO ALL</button><button id="start" class="start" style="display:none">START GAME</button></div></div>
 <div class="deck"><div class="status"><span>THREE LANES. ONE BATON.</span><span id="ready">STANDBY</span></div><div class="controls"><button class="hit" data-l="0" aria-label="Left" title="Left"><span class="arrow left" aria-hidden="true"></span></button><button class="hit" data-l="1" aria-label="Center" title="Center"><span class="arrow center" aria-hidden="true"></span></button><button class="hit" data-l="2" aria-label="Right" title="Right"><span class="arrow right" aria-hidden="true"></span></button></div><div class="footer"><span class="speaker" aria-hidden="true"></span><span>INSERT ATTITUDE • FREE PLAY</span><span class="speaker" aria-hidden="true"></span></div></div></div>
 <script>
 const c=document.querySelector('#c'),g=c.getContext('2d'),L=[72,160,248];g.imageSmoothingEnabled=false;
@@ -246,7 +246,7 @@ function upd(dt,n){
   if(!sw.done&&sw.t/.68>=.43){
    sw.done=1;
    let q=E.filter(e=>e.l===sw.l&&e.y<205&&e.y>150).sort((a,b)=>a.y-b.y)[0];
-   if(q){q.dead=1;hits++;
+   if(q){q.dead=1;hits++;saveBest();
      let dir=sw.l===0?-1:sw.l===2?1:(Math.random()<.5?-1:1);
      impacts.push({x:L[q.l],y:q.y,life:.65,text:IMPACTS[impactIndex++%IMPACTS.length],tilt:(Math.random()-.5)*.5,color:['#ffcf42','#ff865e','#bca2ff','#73e1dc'][Math.floor(Math.random()*4)]});
      debris.push({x:L[q.l],y:q.y-12,col:q.hat,vx:-dir*140,vy:-180,rot:0,life:1.4});
@@ -274,6 +274,13 @@ function upd(dt,n){
 }
 const modal=document.querySelector('#m'),heading=document.querySelector('#mh'),copy=document.querySelector('#mp'),consent=document.querySelector('#consent'),startButton=document.querySelector('#start');
 const disclaimer=copy.innerHTML;
+const SCORE_KEY='bus-adventures.respect-my-authority.best';
+let bestScore=0;
+try{bestScore=Math.max(0,Math.floor(Number(localStorage.getItem(SCORE_KEY))||0))}catch(e){}
+function displayBest(){document.querySelector('#best-score').textContent='Most people clubbed: '+bestScore}
+function saveBest(){if(hits<=bestScore)return;bestScore=hits;try{const stored=Math.max(0,Math.floor(Number(localStorage.getItem(SCORE_KEY))||0));bestScore=Math.max(bestScore,stored);localStorage.setItem(SCORE_KEY,String(bestScore))}catch(e){}displayBest()}
+displayBest();
+window.addEventListener('storage',e=>{if(e.key===SCORE_KEY){bestScore=Math.max(bestScore,Number(e.newValue)||0);displayBest()}});
 function start(){document.querySelector('#d').classList.remove('overrun');auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;bubbles=[];rants=[];mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
 function showGameOver(){const cabinet=document.querySelector('#d');cabinet.classList.remove('overrun');void cabinet.offsetWidth;cabinet.classList.add('overrun');heading.textContent='AMERICA IS OVERRUN BY ALIENS!';copy.innerHTML='AUTHORITY: 0%<br><br>PEOPLE CLUBBED: '+hits+'<br><br>YOU WILL RESPECT IT!';consent.style.display='none';startButton.textContent='PLAY AGAIN';startButton.style.display='block';modal.classList.remove('hide')}
 function menu(){document.querySelector('#d').classList.remove('overrun');run=0;over=0;heading.textContent='TOTALLY ORIGINAL TELEVISION GAME';copy.innerHTML=disclaimer;consent.style.display='block';startButton.style.display='none';startButton.textContent='START GAME';modal.classList.remove('hide')}
@@ -292,11 +299,12 @@ function bind(el,fn){
 bind(consent,()=>{heading.textContent='RESPECT MY AUTHORITY!';copy.innerHTML='THREE LANES. THREE BUTTONS.<br><br>Time the swing at the yellow line.<br>You cannot hit again until recovery finishes.<br><br>Use the three arrow buttons.<br><br>WELCOME TO THE BORDER.';consent.style.display='none';startButton.textContent='START GAME';startButton.style.display='block'});
 bind(startButton,start);
 document.querySelectorAll('.hit').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();hit(+b.dataset.l)});b.addEventListener('click',e=>{if(e.detail===0)hit(+b.dataset.l)})});
-bind(document.querySelector('#menu'),menu);bind(document.querySelector('#home'),menu);
+bind(document.querySelector('#menu'),menu);bind(document.querySelector('#home'),()=>{const inGameFolder=/\/games\/respect-my-authority\//i.test(location.pathname);location.href=new URL(inGameFolder?'../../index.html':'./index.html',location.href).href});
 document.addEventListener('keydown',e=>{const keys={ArrowLeft:0,ArrowDown:1,ArrowRight:2,a:0,s:1,d:2};if(run&&keys[e.key]!==undefined){e.preventDefault();if(!e.repeat)hit(keys[e.key])}});
 document.addEventListener('visibilitychange',()=>{last=performance.now()});
 function loop(n){let dt=Math.min(.035,(n-last)/1000||0);last=n;if(run)upd(dt,n);else {gate=gate.map(v=>Math.max(0,v-dt));updateTalk(dt)}draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script></body></html>
+
 
 
 
