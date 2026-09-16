@@ -127,9 +127,9 @@ touch-action:manipulation
         <p class="hint">
           You were promised $5,000.<br>
           Hold arrows to move. Double-tap to sidestep.<br>Grab a bill: lose another $50. Watch it escape.<br>
-          All $5,000 will be distributed within one minute.
+          They promised all $5,000 within one minute.
           <br>Each bill costs you $50. Each excuse costs another $50.<br>
-          Perfect round: -$5,000.
+          Every catch makes your balance worse.
         </p>
       </div>
     </div>
@@ -197,7 +197,7 @@ const P={
 };
 
 let running=false, ended=false;
-let startTime=0,last=0,lastDrop=0;
+let startTime=0,last=0,lastDrop=0,nextDropDelay=2500;
 let thrown=0;
 let score=0;
 function scoreMoney(){return (score<0?'-$':'$')+Math.abs(score).toLocaleString('en-US');}
@@ -556,9 +556,9 @@ function update(dt,now){
     if(penalties[i].life<=0)penalties.splice(i,1);
   }
 
-  // 50 x $100. Typical finish around 48-55 sec, never over 60.
-  if(now-lastDrop>r(760,980) && thrown<LIMIT){
-    spawnBill(); lastDrop=now;
+  // Space out the slow bills; keep the screen readable even when none are hit.
+  if(now-lastDrop>=nextDropDelay && thrown<LIMIT && elapsed<MAX_TIME && bills.length<6){
+    spawnBill(); lastDrop=now; nextDropDelay=r(2200,2800);
   }
 
   for(let i=bills.length-1;i>=0;i--){
@@ -683,7 +683,8 @@ function startGame(){
   running=true;ended=false;
   startTime=performance.now();
   last=startTime;
-  lastDrop=startTime-900;
+  nextDropDelay=800;
+  lastDrop=startTime;
 }
 
 function loop(now){
