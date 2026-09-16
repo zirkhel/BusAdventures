@@ -481,9 +481,10 @@ function spawnBill(){
     // Only one in five drifts inward; the rest stay spread across both sides.
     targetX:centerDrift?r(125,195):(throwSide<0?r(28,95):r(225,292)),
     driftAge:0,
-    vy:slowFloat?r(5,8):r(8,12),
-    gravity:slowFloat?4:7,
-    fallLimit:slowFloat?23:34,
+    // Aim for about four seconds from the hand to player height at any layout.
+    vy:Math.max(12,(playerY()-19-48)/(slowFloat?r(3.8,4.3):r(3.4,3.8))),
+    gravity:0,
+    fallLimit:Infinity,
     rot:r(-.18,.18),
     vr:throwSide*r(.5,1.2),
     escaped:false
