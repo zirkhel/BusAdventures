@@ -481,9 +481,9 @@ function spawnBill(){
     // Only one in five drifts inward; the rest stay spread across both sides.
     targetX:centerDrift?r(125,195):(throwSide<0?r(28,95):r(225,292)),
     driftAge:0,
-    vy:slowFloat?r(10,16):r(18,24),
-    gravity:slowFloat?10:18,
-    fallLimit:slowFloat?42:65,
+    vy:slowFloat?r(5,8):r(8,12),
+    gravity:slowFloat?4:7,
+    fallLimit:slowFloat?23:34,
     rot:r(-.18,.18),
     vr:throwSide*r(.5,1.2),
     escaped:false
@@ -575,7 +575,8 @@ function update(dt,now){
 
   shake=Math.max(0,shake-dt*10);
 
-  if((thrown>=LIMIT && bills.length===0) || elapsed>=MAX_TIME) endGame();
+  // Let the final slow bills finish their flight before showing the results.
+  if((thrown>=LIMIT || elapsed>=MAX_TIME) && bills.length===0) endGame();
 }
 
 function drawHUD(now){
@@ -632,6 +633,10 @@ function draw(now){
     ctx.restore();
   }
 
+  // Keep both characters and the escaping money in front of the large notices.
+  drawTrump();
+  drawPlayer();
+  bills.forEach(drawBill);
   // Draw the fee above the oversized excuse so the scoring consequence is clear.
   for(const p of penalties){
     ctx.save();ctx.globalAlpha=Math.min(1,p.life*3);
