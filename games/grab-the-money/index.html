@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#07080b">
-<title>GRAB THE MONEY — Bus Adventures</title>
+<title>GRAB THE MONEY — R05 — Bus Adventures</title>
 <style>
 :root{
   --case:#1a1a20; --case-hi:#31313d;
@@ -99,6 +99,7 @@ touch-action:manipulation
 }
 #pad button:active svg,#pad button.down svg{fill:#f2f2ff}
 #brand,#pad{flex-shrink:0}
+#revision{font:700 10px "Courier New",monospace;color:#ffd447;letter-spacing:0;white-space:nowrap;margin-right:8px}
 @media(max-height:500px){#pad{margin-top:6px}#pad button{height:44px}#device{padding:6px}#brand{padding-bottom:4px}}
 </style>
 </head>
@@ -109,6 +110,7 @@ touch-action:manipulation
       <svg viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20 Z"/></svg>
     </button>
     <b>GRAB THE MONEY</b>
+    <span id="revision">R05</span>
     <span id="alarm"></span>
     <button id="btnMenu">MENU</button>
   </div>
@@ -126,7 +128,7 @@ touch-action:manipulation
         <button id="play" class="choice">START GAME</button>
         <p class="hint">
           You were promised $5,000.<br>
-          Hold arrows to move.<br>Grab a bill: lose another $50. Watch it escape.<br>
+          Hold arrows to move left and right.<br>Grab a bill: lose another $50. Watch it escape.<br>
           They promised all $5,000 within one minute.
           <br>Each bill costs you $50. Each excuse costs another $50.<br>
           Every catch makes your balance worse.
@@ -197,7 +199,7 @@ const P={
 };
 
 let running=false, ended=false;
-let startTime=0,last=0,lastDrop=0,nextDropDelay=2500;
+let startTime=0,last=0;
 let thrown=0;
 let score=0;
 function scoreMoney(){return (score<0?'-$':'$')+Math.abs(score).toLocaleString('en-US');}
@@ -471,23 +473,17 @@ function spawnBill(){
   // Trump visibly alternates throwing left and right.
   throwSide *= -1;
   const sx = 131+Math.round((throwSide<0?-9:45)*1.45);
+  const centerDrift=thrown/BILL%5===0;
   const slowFloat=thrown/BILL%5!==2;
-  // Spread landings evenly across the center and both outer edges.
-  const zone=Math.random();
-  const targetX=zone<.4?r(122,198):(zone<.7?r(18,95):r(225,302));
   bills.push({
     x:sx+r(-2,2),
-    // Launch from well above the frame for a longer, more visible descent.
-    y:-40+r(-4,4),
+    y:10+Math.round(26*1.45)+r(-2,2),
     vx:throwSide*r(6,12),
-    targetX,
+    // Only one in five drifts inward; the rest stay spread across both sides.
+    targetX:centerDrift?r(125,195):(throwSide<0?r(10,85):r(235,310)),
     driftAge:0,
-    // Strong, erratic sideways sway — hard to predict, hard to catch.
-    wobbleFreq:r(2.2,3.6),
-    wobbleAmp:r(60,110),
-    wobblePhase:r(0,Math.PI*2),
-    // Longer flight to cover the extra distance from the higher launch point.
-    vy:Math.max(12,(playerY()-19+40)/(slowFloat?r(1.25,1.45):r(1.05,1.25))),
+    // Most bills float down in roughly three seconds; one in five is faster.
+    vy:Math.max(12,(playerY()-19-48)/(slowFloat?r(3.0,3.4):r(1.9,2.3))),
     gravity:0,
     fallLimit:Infinity,
     rot:r(-.18,.18),
@@ -500,15 +496,14 @@ function spawnBill(){
 function updateBill(b,dt){
   if(b.escaped){
     b.escapeTime+=dt;
-    // Lift first, then flutter away slowly on a wobbling, floating arc —
-    // no hard launch acceleration, so the player can watch it flap off.
-    const lift=Math.min(1,b.escapeTime/.3);
-    const glide=Math.max(0,b.escapeTime-.3);
-    b.x=b.escapeX+b.away*(6*lift+240*glide)+Math.sin(glide*3.2)*11;
-    b.y=b.escapeY-27*(1-Math.pow(1-lift,2))-12*glide+Math.sin(glide*4.5)*7;
-    b.rot=b.escapeRot+b.away*.4*Math.sin(b.escapeTime*4.5);
+    // Lift first, then accelerate sideways on an upward, floating arc.
+    const lift=Math.min(1,b.escapeTime/.12);
+    const glide=Math.max(0,b.escapeTime-.12);
+    b.x=b.escapeX+b.away*(6*lift+230*glide+360*glide*glide);
+    b.y=b.escapeY-27*(1-Math.pow(1-lift,2))-15*glide+3*Math.sin(glide*5);
+    b.rot=b.escapeRot+b.away*.22*Math.sin(b.escapeTime*7);
     b.sparkClock=(b.sparkClock||0)+dt;
-    if(b.sparkClock>.06){
+    if(b.sparkClock>.045){
       b.sparkClock=0;
       particles.push({x:b.x,y:b.y,vx:r(-12,12),vy:r(-8,8),life:.28,maxLife:.28,size:2,color:P.money2});
     }
@@ -516,8 +511,7 @@ function updateBill(b,dt){
   }
   if(Number.isFinite(b.targetX)){
     b.driftAge+=dt;
-    const wobble=Math.sin(b.driftAge*b.wobbleFreq+b.wobblePhase)*b.wobbleAmp;
-    b.vx+=((b.targetX-b.x)*1.3-b.vx*2.2+wobble)*dt;
+    b.vx+=((b.targetX-b.x)*3.2-b.vx*3.6)*dt;
   }
   b.vy=Math.min(b.fallLimit??65,b.vy+(b.gravity??18)*dt);
   b.x+=b.vx*dt;
@@ -549,7 +543,7 @@ function update(dt,now){
   const elapsed=(now-startTime)/1000;
   let dir=(input.right?1:0)-(input.left?1:0);
 
-  player.vx+=(dir*340-player.vx)*(1-Math.exp(-16*dt));
+  player.vx+=(dir*145-player.vx)*(1-Math.exp(-16*dt));
   player.x+=player.vx*dt;
   player.x=clamp(player.x,0,W-player.w);
   for(let i=penalties.length-1;i>=0;i--){
@@ -557,15 +551,12 @@ function update(dt,now){
     if(penalties[i].life<=0)penalties.splice(i,1);
   }
 
-  // Ramp up from a slow trickle to a money rain by the end of the round —
-  // both the pace AND the number of bills thrown per burst accelerate.
-  const ramp=Math.min(1,elapsed/MAX_TIME)**2;
-  const minDelay=1600-ramp*1450, maxDelay=2100-ramp*1780;
-  if(now-lastDrop>=nextDropDelay && thrown<LIMIT && elapsed<MAX_TIME){
-    // Both hands are already in play from early on, not just late in the round.
-    const burst=2+Math.floor(ramp*3);
-    for(let i=0;i<burst && thrown<LIMIT && bills.length<28;i++) spawnBill();
-    lastDrop=now; nextDropDelay=r(minDelay,maxDelay);
+  // Steady opening cadence plus a steep late ramp, without a post-first-bill gap.
+  // Start around 2.5 seconds per bill and finish around 0.48 seconds.
+  const progress=clamp(elapsed/59,0,1);
+  const scheduledBills=elapsed<.8?0:1+Math.floor(24*progress+25*Math.pow(progress,4));
+  if(thrown/BILL<scheduledBills && thrown<LIMIT && elapsed<MAX_TIME){
+    spawnBill();
   }
 
   for(let i=bills.length-1;i>=0;i--){
@@ -689,14 +680,22 @@ function startGame(){
   running=true;ended=false;
   startTime=performance.now();
   last=startTime;
-  nextDropDelay=800;
-  lastDrop=startTime;
+
 }
 
 function loop(now){
-  const dt=Math.min(.035,(now-last)/1000||0);
+  // Account for actual elapsed time on slower phones, using small physics steps.
+  // The former 35 ms cap made a 4-second fall take nearly 10 seconds at 12 fps.
+  const dt=Math.min(.25,(now-last)/1000||0);
   last=now;
-  if(running)update(dt,now);
+  if(running){
+    let remaining=dt;
+    while(remaining>0 && running){
+      const step=Math.min(.035,remaining);
+      update(step,now-remaining*1000+step*1000);
+      remaining-=step;
+    }
+  }
   updateExcuses(dt);
   draw(now);
   requestAnimationFrame(loop);
