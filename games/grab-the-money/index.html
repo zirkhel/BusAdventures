@@ -126,7 +126,7 @@ touch-action:manipulation
         <button id="play" class="choice">START GAME</button>
         <p class="hint">
           You were promised $5,000.<br>
-          Move left and right. Grab the bills.<br>
+          Hold arrows to move. Double-tap to sidestep.<br>Grab a bill: lose another $50. Watch it escape.<br>
           All $5,000 will be distributed within one minute.
           <br>Each bill costs you $50. Each excuse costs another $50.<br>
           Perfect round: -$5,000.
@@ -339,7 +339,9 @@ function updateExcuses(dt){
 const bills=[];
 const particles=[];
 const input={left:false,right:false};
-const player={x:142,y:0,w:32,h:43,vx:0};
+const player={x:142,y:0,w:36,h:43,vx:0,dashTime:0,dashDir:0};
+const lastTap={left:-Infinity,right:-Infinity};
+const penalties=[];
 
 function r(a,b){return a+Math.random()*(b-a)}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
@@ -473,7 +475,10 @@ function spawnBill(){
   bills.push({
     x:sx+r(-2,2),
     y:10+Math.round(26*1.45)+r(-2,2),
-    vx:throwSide*r(38,58),
+    vx:throwSide*r(12,22),
+    // Three of every five bills drift through the reachable central lanes.
+    targetX:thrown/BILL%5<3?r(112,208):r(25,295),
+    driftAge:0,
     vy:r(18,27),
     rot:r(-.18,.18),
     vr:throwSide*r(2.2,4.0),
@@ -498,6 +503,10 @@ function updateBill(b,dt){
     }
     return;
   }
+  if(Number.isFinite(b.targetX)){
+    b.driftAge+=dt;
+    b.vx+=((b.targetX-b.x)*3.8-b.vx*3)*dt;
+  }
   b.vy+=54*dt;
   b.x+=b.vx*dt;
   b.y+=b.vy*dt;
@@ -514,6 +523,7 @@ function updateBill(b,dt){
     b.away=Math.abs(dx)<2 ? (b.vx<0?-1:1) : Math.sign(dx);
     showExcuse();
     score-=50;
+    penalties.push({x:clamp(player.x+18,34,W-34),y:playerY()+10,life:1.1});
     shake=2.2;
     b.puff={x:b.x,y:b.y};
     for(let i=0;i<20;i++){
@@ -527,10 +537,20 @@ function update(dt,now){
   const elapsed=(now-startTime)/1000;
   let dir=(input.right?1:0)-(input.left?1:0);
 
-  player.vx += dir*520*dt;
-  player.vx *= Math.pow(.008,dt);
-  player.vx=clamp(player.vx,-135,135);
-  player.x=clamp(player.x+player.vx*dt,5,W-player.w-5);
+  if(player.dashTime>0){
+    const step=Math.min(dt,player.dashTime);
+    player.x+=player.dashDir*520*step;
+    player.dashTime=Math.max(0,player.dashTime-dt);
+    player.vx=0;
+  }else{
+    player.vx+=(dir*180-player.vx)*(1-Math.exp(-16*dt));
+    player.x+=player.vx*dt;
+  }
+  player.x=clamp(player.x,0,W-player.w);
+  for(let i=penalties.length-1;i>=0;i--){
+    penalties[i].life-=dt;penalties[i].y-=16*dt;
+    if(penalties[i].life<=0)penalties.splice(i,1);
+  }
 
   // 50 x $100. Typical finish around 48-55 sec, never over 60.
   if(now-lastDrop>r(760,980) && thrown<LIMIT){
@@ -608,6 +628,14 @@ function draw(now){
     ctx.restore();
   }
 
+  // Draw the fee above the oversized excuse so the scoring consequence is clear.
+  for(const p of penalties){
+    ctx.save();ctx.globalAlpha=Math.min(1,p.life*3);
+    text('-$50',p.x,p.y,14,P.danger,'center');
+    text('CATCH FEE',p.x,p.y+15,6,P.cream,'center');
+    ctx.restore();
+  }
+
   ctx.restore();
 }
 
@@ -638,6 +666,9 @@ function startGame(){
   bills.length=0;particles.length=0;
   floatingExcuses.length=0;
   thrown=0;score=0;player.x=142;player.vx=0;
+  player.dashTime=0;penalties.length=0;
+  lastTap.left=lastTap.right=-Infinity;
+  press('left',false);press('right',false);
   result.classList.remove('show');
   menu.classList.add('hidden');
   running=true;ended=false;
@@ -656,17 +687,27 @@ function loop(now){
 }
 
 function press(side,on){
+  if(on && !input[side] && running){
+    const now=performance.now();
+    if(now-lastTap[side]<=300){
+      player.dashDir=side==='left'?-1:1;
+      player.dashTime=.18;
+      lastTap[side]=-Infinity;
+    }else lastTap[side]=now;
+  }
   input[side]=on;
   const b=side==='left'?leftBtn:rightBtn;
   b.classList.toggle('down',on);
 }
 for(const [b,side] of [[leftBtn,'left'],[rightBtn,'right']]){
-  b.addEventListener('pointerdown',e=>{e.preventDefault();press(side,true)});
+  b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);press(side,true)});
   b.addEventListener('pointerup',()=>press(side,false));
   b.addEventListener('pointercancel',()=>press(side,false));
   b.addEventListener('pointerleave',()=>press(side,false));
 }
+addEventListener('blur',()=>{press('left',false);press('right',false);});
 addEventListener('keydown',e=>{
+  if(e.repeat)return;
   if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A'){press('left',true);e.preventDefault()}
   if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){press('right',true);e.preventDefault()}
 });
