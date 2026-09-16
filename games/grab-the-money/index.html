@@ -472,16 +472,20 @@ function spawnBill(){
   // Trump visibly alternates throwing left and right.
   throwSide *= -1;
   const sx = 131+Math.round((throwSide<0?-9:45)*1.45);
+  const centerDrift=thrown/BILL%5===0;
+  const slowFloat=thrown/BILL%5!==2;
   bills.push({
     x:sx+r(-2,2),
     y:10+Math.round(26*1.45)+r(-2,2),
-    vx:throwSide*r(12,22),
-    // Three of every five bills drift through the reachable central lanes.
-    targetX:thrown/BILL%5<3?r(112,208):r(25,295),
+    vx:throwSide*r(6,12),
+    // Only one in five drifts inward; the rest stay spread across both sides.
+    targetX:centerDrift?r(125,195):(throwSide<0?r(28,95):r(225,292)),
     driftAge:0,
-    vy:r(18,27),
+    vy:slowFloat?r(10,16):r(18,24),
+    gravity:slowFloat?10:18,
+    fallLimit:slowFloat?42:65,
     rot:r(-.18,.18),
-    vr:throwSide*r(2.2,4.0),
+    vr:throwSide*r(.5,1.2),
     escaped:false
   });
   alarm.classList.add('lit');
@@ -505,9 +509,9 @@ function updateBill(b,dt){
   }
   if(Number.isFinite(b.targetX)){
     b.driftAge+=dt;
-    b.vx+=((b.targetX-b.x)*3.8-b.vx*3)*dt;
+    b.vx+=((b.targetX-b.x)*1.3-b.vx*2.2)*dt;
   }
-  b.vy+=54*dt;
+  b.vy=Math.min(b.fallLimit??65,b.vy+(b.gravity??18)*dt);
   b.x+=b.vx*dt;
   b.y+=b.vy*dt;
   b.rot+=b.vr*dt;
