@@ -471,15 +471,20 @@ function spawnBill(){
   // Trump visibly alternates throwing left and right.
   throwSide *= -1;
   const sx = 131+Math.round((throwSide<0?-9:45)*1.45);
-  const centerDrift=thrown/BILL%5===0;
   const slowFloat=thrown/BILL%5!==2;
+  // Spread landings evenly across the center and both outer edges.
+  const zone=Math.random();
+  const targetX=zone<.4?r(122,198):(zone<.7?r(18,95):r(225,302));
   bills.push({
     x:sx+r(-2,2),
     y:10+Math.round(26*1.45)+r(-2,2),
     vx:throwSide*r(6,12),
-    // Only one in five drifts inward; the rest stay spread across both sides.
-    targetX:centerDrift?r(125,195):(throwSide<0?r(28,95):r(225,292)),
+    targetX,
     driftAge:0,
+    // Gentle sideways sway so bills hover/drift instead of beelining down.
+    wobbleFreq:r(1.6,2.8),
+    wobbleAmp:r(35,70),
+    wobblePhase:r(0,Math.PI*2),
     // Aim for about one second from the hand to player height at any layout.
     vy:Math.max(12,(playerY()-19-48)/(slowFloat?r(1.0,1.15):r(0.85,1.0))),
     gravity:0,
@@ -498,7 +503,7 @@ function updateBill(b,dt){
     // no hard launch acceleration, so the player can watch it flap off.
     const lift=Math.min(1,b.escapeTime/.3);
     const glide=Math.max(0,b.escapeTime-.3);
-    b.x=b.escapeX+b.away*(6*lift+62*glide)+Math.sin(glide*3.2)*11;
+    b.x=b.escapeX+b.away*(6*lift+150*glide)+Math.sin(glide*3.2)*11;
     b.y=b.escapeY-27*(1-Math.pow(1-lift,2))-12*glide+Math.sin(glide*4.5)*7;
     b.rot=b.escapeRot+b.away*.4*Math.sin(b.escapeTime*4.5);
     b.sparkClock=(b.sparkClock||0)+dt;
@@ -510,7 +515,8 @@ function updateBill(b,dt){
   }
   if(Number.isFinite(b.targetX)){
     b.driftAge+=dt;
-    b.vx+=((b.targetX-b.x)*1.3-b.vx*2.2)*dt;
+    const wobble=Math.sin(b.driftAge*b.wobbleFreq+b.wobblePhase)*b.wobbleAmp;
+    b.vx+=((b.targetX-b.x)*1.3-b.vx*2.2+wobble)*dt;
   }
   b.vy=Math.min(b.fallLimit??65,b.vy+(b.gravity??18)*dt);
   b.x+=b.vx*dt;
