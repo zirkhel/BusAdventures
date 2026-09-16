@@ -477,16 +477,17 @@ function spawnBill(){
   const targetX=zone<.4?r(122,198):(zone<.7?r(18,95):r(225,302));
   bills.push({
     x:sx+r(-2,2),
-    y:10+Math.round(26*1.45)+r(-2,2),
+    // Launch from well above the frame for a longer, more visible descent.
+    y:-40+r(-4,4),
     vx:throwSide*r(6,12),
     targetX,
     driftAge:0,
-    // Gentle sideways sway so bills hover/drift instead of beelining down.
-    wobbleFreq:r(1.6,2.8),
-    wobbleAmp:r(35,70),
+    // Strong, erratic sideways sway — hard to predict, hard to catch.
+    wobbleFreq:r(2.2,3.6),
+    wobbleAmp:r(60,110),
     wobblePhase:r(0,Math.PI*2),
-    // Aim for about one second from the hand to player height at any layout.
-    vy:Math.max(12,(playerY()-19-48)/(slowFloat?r(1.0,1.15):r(0.85,1.0))),
+    // Longer flight to cover the extra distance from the higher launch point.
+    vy:Math.max(12,(playerY()-19+40)/(slowFloat?r(1.25,1.45):r(1.05,1.25))),
     gravity:0,
     fallLimit:Infinity,
     rot:r(-.18,.18),
@@ -561,7 +562,8 @@ function update(dt,now){
   const ramp=Math.min(1,elapsed/MAX_TIME)**2;
   const minDelay=1600-ramp*1450, maxDelay=2100-ramp*1780;
   if(now-lastDrop>=nextDropDelay && thrown<LIMIT && elapsed<MAX_TIME){
-    const burst=1+Math.floor(ramp*3);
+    // Both hands are already in play from early on, not just late in the round.
+    const burst=2+Math.floor(ramp*3);
     for(let i=0;i<burst && thrown<LIMIT && bills.length<28;i++) spawnBill();
     lastDrop=now; nextDropDelay=r(minDelay,maxDelay);
   }
