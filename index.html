@@ -55,6 +55,9 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
  .game-icon{font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}.game-icon svg{display:block}
  .genre-count,.genre-note,.game-meta,.tag,.tagline,.terminal-footer{color:#829a70}
  @media(max-width:420px){.terminal-body{padding:22px 16px}.game-card{padding:12px}.game-card-inner{gap:10px}.game-icon{width:40px;height:40px}.category-nav{gap:6px}}
+    .cursor{display:inline-block;animation:terminal-blink 1s steps(1,end) infinite}
+@keyframes terminal-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.cursor{animation:none}}
     </style>
   </head>
   <body>
@@ -72,12 +75,13 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
           <br>
           Pick a format. One hand, no sound needed.
         </p>
-        <div class="prompt-line">SELECT ADVENTURE_</div>
+        <div class="prompt-line">SELECT GAME<span class="cursor" aria-hidden="true">_</span></div>
       </div>
       <nav class="category-nav" aria-label="Game categories">
         <a href="#text">TEXT</a>
         <a href="#game-watch">GAME &amp; WATCH</a>
         <a href="#arcade">ARCADE</a>
+        <a href="#misc">MISC GAME</a>
         <a href="#in-development">IN DEVELOPMENT</a>
       </nav>
       <div class="genre-section" id="text">
@@ -250,10 +254,21 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
       <div class="genre-section" id="arcade">
         <div class="genre-header">
           <h2 class="genre-tag">// ARCADE</h2>
-          <span class="genre-count">8 available</span>
+          <span class="genre-count">9 available</span>
         </div>
         <div class="genre-note">Cabinet games. More going on, more to hit back at.</div>
         <div class="game-grid">
+          <a class="game-card" href="games/forest-pacification/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🌲</div>
+              <div class="game-info">
+                <h3 class="game-title">Forest Pacification</h3>
+                <div class="game-meta"><span>imperial patrol</span> · stop · aim · blast</div>
+                <div class="game-desc">One imperial walker. A forest full of Ewoks, rocks and suspicious logs. Hold STOP for traps, keep the blasters cool, and file all damage as acceptable.</div>
+                <div class="game-tags"><span class="tag">shooter</span> <span class="tag">satire</span> <span class="tag">blood</span></div>
+              </div>
+            </div>
+          </a>
           <a class="game-card" href="games/space-watch/index.html">
             <div class="game-card-inner">
               <div class="game-icon" aria-hidden="true">👾</div>
@@ -394,6 +409,26 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
                   <span class="tag">irony</span>
                   <span class="tag">arcade</span>
                 </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="genre-section" id="misc">
+        <div class="genre-header">
+          <h2 class="genre-tag">// MISC GAME</h2>
+          <span class="genre-count">1 available</span>
+        </div>
+        <div class="genre-note">Odd experiments, rescued relics, and games that refuse to fit the filing system.</div>
+        <div class="game-grid">
+          <a class="game-card" href="games/baloon-crazy/index.html">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">🎈</div>
+              <div class="game-info">
+                <h3 class="game-title">Baloon Crazy</h3>
+                <div class="game-meta"><span>1980s magazine revival</span> · retro nonsense</div>
+                <div class="game-desc">A gloriously daft game reconstructed from a 1980s computer magazine. Someone printed this. Someone typed it in. Now it is your problem.</div>
+                <div class="game-tags"><span class="tag">retro</span> <span class="tag">1980s</span> <span class="tag">misc</span></div>
               </div>
             </div>
           </a>
