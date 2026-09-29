@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Grizzly's Flute Drop</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+ margin:0;
+ background:#09080b;
+ color:#fff;
+ font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
+ overflow:hidden;
+ touch-action:none
+}
+
+body{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ height:100dvh
+}
+
+#cab{
+ width:min(100vw,520px);
+ height:100dvh;
+ max-height:850px;
+ background:linear-gradient(#17121d,#09080b);
+ position:relative;
+ overflow:hidden;
+ border-left:2px solid #2b2034;
+ border-right:2px solid #2b2034
+}
+
+#top{
+ height:72px;
+ text-align:center;
+ padding:8px;
+ background:linear-gradient(180deg,#25142e,#100d13);
+ border-bottom:3px solid #c49a3a
+}
+
+#title{
+ font-size:27px;
+ letter-spacing:2px;
+ line-height:28px;
+ text-shadow:0 2px #000,0 0 14px #a52727
+}
+
+.sub{
+ font-family:system-ui;
+ font-size:10px;
+ letter-spacing:4px;
+ color:#d8bd78
+}
+
+#wrap{
+ position:relative;
+ width:100%;
+ height:calc(100% - 196px);
+ background:#000
+}
+
+canvas{
+ display:block;
+ width:100%;
+ height:100%
+}
+
+#hud{
+ position:absolute;
+ top:8px;
+ left:10px;
+ right:10px;
+ display:flex;
+ justify-content:space-between;
+ font-family:system-ui;
+ font-weight:900;
+ font-size:12px;
+ pointer-events:none;
+ text-shadow:0 2px 3px #000
+}
+
+#cue{
+ position:absolute;
+ left:50%;
+ top:68%;
+ transform:translate(-50%,-50%) rotate(-2deg);
+ padding:7px 14px;
+ background:#f3d25b;
+ color:#111;
+ border:3px solid #111;
+ box-shadow:4px 4px #a52828;
+ font-size:19px;
+ letter-spacing:1px;
+ display:none;
+ white-space:nowrap
+}
+
+#controls{
+ height:124px;
+ background:linear-gradient(#1a151d,#0d0b0f);
+ border-top:3px solid #c49a3a;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:24px;
+ padding:10px
+}
+
+button{
+ font:900 18px Impact,system-ui;
+ letter-spacing:1px;
+ color:white;
+ border:0;
+ box-shadow:0 6px 0 #3b1010,0 8px 12px #0008;
+ user-select:none;
+ -webkit-user-select:none
+}
+
+#smash{
+ width:170px;
+ height:76px;
+ border-radius:18px;
+ background:radial-gradient(circle at 40% 30%,#f14b3e,#9d1111 68%);
+ font-size:24px
+}
+
+#smash:active{
+ transform:translateY(5px);
+ box-shadow:0 1px 0 #3b1010
+}
+
+#home{
+ position:absolute;
+ left:12px;
+ bottom:10px;
+ background:#25202a;
+ border:1px solid #5a4b60;
+ color:#aaa;
+ border-radius:8px;
+ padding:7px 9px;
+ font:11px system-ui;
+ box-shadow:none
+}
+
+#overlay{
+ position:absolute;
+ inset:72px 0 124px;
+ background:#09080bef;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ padding:24px;
+ z-index:10
+}
+
+.card{max-width:410px}
+
+.big{
+ font-size:39px;
+ line-height:.95;
+ letter-spacing:1px;
+ text-shadow:3px 3px #8e1717
+}
+
+.gold{color:#f0ce68}
+
+.copy{
+ font:15px/1.45 system-ui;
+ color:#ddd;
+ margin:18px 0
+}
+
+.start{
+ background:#b21f1f;
+ border:2px solid #f0ce68;
+ border-radius:10px;
+ padding:14px 28px;
+ box-shadow:0 5px 0 #541010;
+ font-size:20px
+}
+
+.small{
+ font:11px system-ui;
+ color:#8d8790;
+ margin-top:14px
+}
+</style>
+</head>
+
+<body>
+
+<div id="cab">
+
+<div id="top">
+ <div class="sub">BUS ADVENTURES PRESENTS</div>
+ <div id="title">GRIZZLY'S FLUTE DROP</div>
+</div>
+
+<div id="wrap">
+ <canvas id="g" width="480" height="560"></canvas>
+
+ <div id="hud">
+  <span id="phase">GENERAL REHEARSAL</span>
+  <span id="heat">CROWD 0%</span>
+ </div>
+
+ <div id="cue">CUE: FLUTE SLAM!</div>
+</div>
+
+<div id="controls">
+ <button id="smash">SMASH!</button>
+ <button id="home" onclick="location.href='../../index.html'">HOME</button>
+</div>
+
+<div id="overlay">
+ <div class="card">
+
+  <div class="big">
+   THE STORY OF<br>
+   <span class="gold">GRIZZLY</span>
+  </div>
+
+  <div class="copy">
+   Wrestler. Ring announcer. Flutist.
+   <br><br>
+   At rehearsal, one flute is supposed to hit the floor.
+   <br>
+   Learn the cue. Nail the show.
+  </div>
+
+  <button class="start" id="start">ENTER THE RING</button>
+
+  <div class="small">
+   Based on an actual Grizzly story.
+  </div>
+
+ </div>
+</div>
+
+</div>
+
+<script>
+
+const C=document.getElementById('g');
+const X=C.getContext('2d');
+const $=s=>document.querySelector(s);
+
+let W=480;
+let H=560;
+let t=0;
+
+let state='menu';
+let round=0;
+let heat=0;
+
+let fluteY=290;
+let fluteRot=-.12;
+
+let fall=false;
+let slow=1;
+let flash=0;
+let shake=0;
+
+let crowd=[];
+let parts=[];
+
+let signs=[
+ "GRIZZ-LY!",
+ "TID FOR DENG!",
+ "GRIZZLY!",
+ "SLAM IT!",
+ "NWF!"
+];
+
+for(let i=0;i<58;i++){
+ crowd.push({
+  x:8+Math.random()*464,
+  y:420+Math.random()*125,
+  r:5+Math.random()*5,
+  p:Math.random()*6.28,
+  shirt:[
+   "#b72a2a",
+   "#222",
+   "#d2b34b",
+   "#33435e",
+   "#ddd"
+  ][i%5]
+ });
+}
+
+function reset(){
+
+ state='rehearsal';
+
+ round=0;
+ heat=0;
+
+ fall=false;
+ slow=1;
+
+ flash=0;
+ shake=0;
+
+ $('#phase').textContent='GENERAL REHEARSAL';
+ $('#heat').textContent='CROWD 0%';
+
+ $('#cue').style.display='none';
+ $('#overlay').style.display='none';
+
+ setTimeoutCue();
+}
+
+function setTimeoutCue(){
+
+ setTimeout(()=>{
+
+  if(state==='rehearsal'||state==='live'){
+
+   fluteY=285;
+   fluteRot=-.12;
+
+   fall=false;
+
+   $('#cue').style.display='block';
+  }
+
+ },state==='live'?520:850);
+}
+
+function smash(){
+
+ if(
+  !['rehearsal','live'].includes(state) ||
+  fall ||
+  $('#cue').style.display==='none'
+ ){
+  return;
+ }
+
+ $('#cue').style.display='none';
+
+ fall=true;
+ shake=8;
+ flash=1;
+
+ for(let i=0;i<18;i++){
+
+  parts.push({
+   x:240,
+   y:315,
+   vx:(Math.random()-.5)*8,
+   vy:-Math.random()*6-2,
+   l:40
+  });
+
+ }
+}
+
+$('#smash').addEventListener('pointerdown',e=>{
+
+ e.preventDefault();
+ smash();
+
+});
+
+addEventListener('keydown',e=>{
+
+ if(e.code==='Space'||e.code==='Enter'){
+  smash();
+ }
+
+});
+
+$('#start').onclick=reset;
+
+function rect(x,y,w,h,c){
+
+ X.fillStyle=c;
+ X.fillRect(x,y,w,h);
+
+}
+
+function text(s,x,y,size,c='#fff',align='center'){
+
+ X.fillStyle=c;
+ X.font=`${size}px Impact,Arial`;
+ X.textAlign=align;
+
+ X.fillText(s,x,y);
+
+}
+
+function spotlight(cx){
+
+ let q=X.createRadialGradient(
+  cx,60,5,
+  cx,260,250
+ );
+
+ q.addColorStop(0,'#fff9b855');
+ q.addColorStop(1,'#0000');
+
+ X.fillStyle=q;
+
+ X.beginPath();
+
+ X.moveTo(cx-25,0);
+ X.lineTo(cx-180,400);
+ X.lineTo(cx+180,400);
+ X.lineTo(cx+25,0);
+
+ X.fill();
+
+}
+
+function audience(){
+
+ crowd.forEach((p,i)=>{
+
+  let bob=
+   Math.sin(t*.08+p.p)*
+   (state==='live'?5:2);
+
+  X.fillStyle=p.shirt;
+
+  X.beginPath();
+
+  X.arc(
+   p.x,
+   p.y+bob,
+   p.r,
+   0,
+   Math.PI*2
+  );
+
+  X.fill();
+
+  rect(
+   p.x-p.r,
+   p.y+p.r+bob,
+   p.r*2,
+   18,
+   p.shirt
+  );
+
+  if(
+   state==='live' &&
+   heat>25 &&
+   i%17===0
+  ){
+
+   X.save();
+
+   X.translate(
+    p.x,
+    p.y-18+bob
+   );
+
+   X.rotate(
+    i%2 ? -.08 : .08
+   );
+
+   rect(
+    -25,
+    -14,
+    50,
+    22,
+    '#eee'
+   );
+
+   text(
+    signs[(i/17|0)%signs.length],
+    0,
+    2,
+    8,
+    '#111'
+   );
+
+   X.restore();
+
+  }
+
+ });
+
+}
+
+function ring(){
+
+ rect(
+  38,
+  350,
+  404,
+  12,
+  '#d8d8d8'
+ );
+
+ rect(
+  38,
+  362,
+  404,
+  55,
+  '#343039'
+ );
+
+ for(let y of [325,343,361]){
+
+  X.strokeStyle=
+   y===343
+    ? '#eee'
+    : '#b51f25';
+
+  X.lineWidth=4;
+
+  X.beginPath();
+
+  X.moveTo(28,y);
+  X.lineTo(452,y);
+
+  X.stroke();
+
+ }
+
+ for(let x of [32,448]){
+
+  rect(
+   x-5,
+   295,
+   10,
+   126,
+   '#111'
+  );
+
+  rect(
+   x-8,
+   316,
+   16,
+   10,
+   '#d1b253'
+  );
+
+  rect(
+   x-8,
+   351,
+   16,
+   10,
+   '#d1b253'
+  );
+
+ }
+
+ text(
+  'NWF',
+  240,
+  397,
+  24,
+  '#777'
+ );
+
+}
+
+function grizzly(){
+
+ let x=125;
+
+ let y=
+  292+
+  (
+   state==='live'
+    ? Math.sin(t*.05)*2
+    : 0
+  );
+
+ rect(
+  x-24,
+  y+64,
+  20,
+  55,
+  '#111'
+ );
+
+ rect(
+  x+6,
+  y+64,
+  20,
+  55,
+  '#111'
+ );
+
+ rect(
+  x-27,
+  y+113,
+  25,
+  10,
+  '#5a3420'
+ );
+
+ rect(
+  x+5,
+  y+113,
+  25,
+  10,
+  '#5a3420'
+ );
+
+ X.fillStyle='#202127';
+
+ X.beginPath();
+
+ X.roundRect(
+  x-38,
+  y+12,
+  76,
+  72,
+  14
+ );
+
+ X.fill();
+
+ X.strokeStyle='#d7a37f';
+ X.lineWidth=13;
+ X.lineCap='round';
+
+ X.beginPath();
+
+ X.moveTo(
+  x-31,
+  y+28
+ );
+
+ X.lineTo(
+  x-62,
+  y-4
+ );
+
+ X.lineTo(
+  x-72,
+  y-30
+ );
+
+ X.moveTo(
+  x+31,
+  y+28
+ );
+
+ X.lineTo(
+  x+62,
+  y-1
+ );
+
+ X.lineTo(
+  x+72,
+  y-25
+ );
+
+ X.stroke();
+
+ X.fillStyle='#d8a783';
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-7,
+  27,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ X.fillStyle='#70452e';
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y+1,
+  25,
+  .15,
+  3
+ );
+
+ X.lineTo(
+  x,
+  y+27
+ );
+
+ X.fill();
+
+ X.fillStyle='#6d4024';
+
+ X.beginPath();
+
+ X.ellipse(
+  x,
+  y-31,
+  42,
+  8,
+  0,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ X.beginPath();
+
+ X.roundRect(
+  x-25,
+  y-56,
+  50,
+  29,
+  8
+ );
+
+ X.fill();
+
+ rect(
+  x-25,
+  y-34,
+  50,
+  5,
+  '#2d1a12'
+ );
+
+ X.strokeStyle='#aaa';
+ X.lineWidth=4;
+
+ X.beginPath();
+
+ X.moveTo(
+  x+63,
+  y-2
+ );
+
+ X.lineTo(
+  x+48,
+  y+21
+ );
+
+ X.stroke();
+
+ X.fillStyle='#222';
+
+ X.beginPath();
+
+ X.arc(
+  x+65,
+  y-5,
+  7,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+}
+
+function flute(){
+
+ let x=300;
+ let y=fluteY;
+
+ X.save();
+
+ X.translate(x,y);
+ X.rotate(fluteRot);
+
+ X.strokeStyle=
+  state==='reveal'
+   ? '#fff5bf'
+   : '#d9e0e3';
+
+ X.lineWidth=7;
+ X.lineCap='round';
+
+ X.beginPath();
+
+ X.moveTo(-58,0);
+ X.lineTo(58,0);
+
+ X.stroke();
+
+ X.fillStyle='#777';
+
+ for(let q=-35;q<=35;q+=18){
+
+  X.beginPath();
+
+  X.arc(
+   q,
+   -5,
+   4,
+   0,
+   Math.PI*2
+  );
+
+  X.fill();
+
+ }
+
+ X.restore();
+
+}
+
+function arena(){
+
+ let grad=
+  X.createLinearGradient(
+   0,
+   0,
+   0,
+   H
+  );
+
+ grad.addColorStop(
+  0,
+  state==='live' ||
+  state==='reveal' ||
+  state==='impact' ||
+  state==='final'
+   ? '#421018'
+   : '#15131a'
+ );
+
+ grad.addColorStop(
+  1,
+  '#030305'
+ );
+
+ X.fillStyle=grad;
+ X.fillRect(0,0,W,H);
+
+ if(
+  state==='live' ||
+  state==='reveal' ||
+  state==='impact' ||
+  state==='final'
+ ){
+
+  spotlight(130);
+  spotlight(350);
+
+ }
+
+ rect(
+  0,
+  0,
+  W,
+  44,
+  '#09080b'
+ );
+
+ text(
+  state==='rehearsal'
+   ? 'SOUND CHECK • GENERAL REHEARSAL'
+   : 'TONIGHT • LIVE',
+  240,
+  29,
+  17,
+  state==='rehearsal'
+   ? '#999'
+   : '#f0ce68'
+ );
+
+ audience();
+ ring();
+ grizzly();
+
+ if(state!=='final'){
+  flute();
+ }
+
+}
+
+function chant(){
+
+ if(state!=='live'){
+  return;
+ }
+
+ let c=
+  round<5
+   ? (
+      round%2
+       ? 'GRIZZ-LY!'
+       : 'TID FOR DENG!'
+     )
+   : 'TID FOR DENG!';
+
+ let pulse=
+  1+
+  Math.sin(t*.14)*.05;
+
+ X.save();
+
+ X.translate(
+  340,
+  105
+ );
+
+ X.scale(
+  pulse,
+  pulse
+ );
+
+ text(
+  c,
+  0,
+  0,
+  round>=4
+   ? 31
+   : 25,
+  '#f4d45f'
+ );
+
+ X.restore();
+
+}
+
+let revealAt=0;
+let impactAt=0;
+
+function overlayText(){
+
+ if(state==='reveal'){
+
+  let elapsed=
+   (
+    performance.now()-
+    revealAt
+   )/1000;
+
+  X.fillStyle='#0008';
+
+  X.fillRect(
+   0,
+   0,
+   W,
+   H
+  );
+
+  if(elapsed>.35){
+
+   text(
+    'WAIT.',
+    240,
+    105,
+    54,
+    '#fff'
+   );
+
+  }
+
+  if(elapsed>1.25){
+
+   text(
+    "THAT'S THE",
+    240,
+    158,
+    27,
+    '#f0ce68'
+   );
+
+  }
+
+  if(elapsed>1.65){
+
+   text(
+    'CONCERT FLUTE.',
+    240,
+    202,
+    39,
+    '#f04a3d'
+   );
+
+  }
+
+ }
+
+ if(state==='impact'){
+
+  X.fillStyle='#000b';
+
+  X.fillRect(
+   0,
+   0,
+   W,
+   H
+  );
+
+  text(
+   'KLONK.',
+   240,
+   250,
+   65,
+   '#fff'
+  );
+
+ }
+
+ if(state==='final'){
+
+  X.fillStyle='#0005';
+
+  X.fillRect(
+   0,
+   0,
+   W,
+   H
+  );
+
+  text(
+   'IT SURVIVED.',
+   240,
+   160,
+   53,
+   '#f0ce68'
+  );
+
+  text(
+   'GRIZZLY WINS.',
+   240,
+   215,
+   43,
+   '#fff'
+  );
+
+  text(
+   'THE FLUTE TAKES THE BUMP.',
+   240,
+   254,
+   19,
+   '#e7b7b7'
+  );
+
+  text(
+   'TID FOR DENG!',
+   240,
+   315,
+   42,
+   '#f04a3d'
+  );
+
+ }
+
+}
+
+function update(){
+
+ if(fall){
+
+  if(state==='reveal'){
+
+   fluteY+=3.2*slow;
+   fluteRot+=.035*slow;
+
+   slow=.28;
+
+  }else{
+
+   fluteY+=11;
+   fluteRot+=.14;
+
+  }
+
+  if(fluteY>348){
+
+   fall=false;
+   shake=14;
+
+   if(state==='rehearsal'){
+
+    round++;
+
+    heat=
+     Math.min(
+      25,
+      heat+8
+     );
+
+    setTimeoutCue();
+
+   }
+
+   else if(
+    state==='live' &&
+    round<6
+   ){
+
+    round++;
+
+    heat=
+     Math.min(
+      96,
+      heat+13
+     );
+
+    $('#heat').textContent=
+     `CROWD ${heat}%`;
+
+    setTimeoutCue();
+
+   }
+
+   else if(state==='live'){
+
+    state='reveal';
+
+    revealAt=
+     performance.now();
+
+    fall=true;
+    slow=.15;
+
+    fluteY=315;
+
+   }
+
+   else if(state==='reveal'){
+
+    state='impact';
+
+    impactAt=
+     performance.now();
+
+   }
+
+  }
+
+ }
+
+ if(
+  state==='rehearsal' &&
+  round>=3 &&
+  !fall
+ ){
+
+  state='live';
+
+  round=0;
+  heat=35;
+
+  $('#phase').textContent=
+   'LIVE SHOW';
+
+  $('#heat').textContent=
+   'CROWD 35%';
+
+  flash=2;
+
+  setTimeoutCue();
+
+ }
+
+ if(
+  state==='reveal' &&
+  performance.now()-revealAt>3600 &&
+  fluteY>346
+ ){
+
+  state='impact';
+
+  impactAt=
+   performance.now();
+
+  fall=false;
+
+ }
+
+ if(
+  state==='impact' &&
+  performance.now()-impactAt>1700
+ ){
+
+  state='final';
+
+  $('#phase').textContent=
+   'HISTORIC MOMENT';
+
+  $('#heat').textContent=
+   'CROWD 100%';
+
+  for(let i=0;i<120;i++){
+
+   parts.push({
+    x:240,
+    y:250,
+    vx:(Math.random()-.5)*14,
+    vy:-Math.random()*12,
+    l:100
+   });
+
+  }
+
+ }
+
+ parts.forEach(p=>{
+
+  p.x+=p.vx;
+  p.y+=p.vy;
+
+  p.vy+=.25;
+
+  p.l--;
+
+ });
+
+ parts=
+  parts.filter(
+   p=>p.l>0
+  );
+
+ flash*=.88;
+ shake*=.82;
+
+}
+
+function draw(){
+
+ X.save();
+
+ if(shake>1){
+
+  X.translate(
+   (Math.random()-.5)*shake,
+   (Math.random()-.5)*shake
+  );
+
+ }
+
+ arena();
+ chant();
+
+ parts.forEach((p,i)=>{
+
+  X.fillStyle=
+   i%3
+    ? '#f0ce68'
+    : '#b9232b';
+
+  X.fillRect(
+   p.x,
+   p.y,
+   5,
+   8
+  );
+
+ });
+
+ overlayText();
+
+ if(flash>.05){
+
+  X.fillStyle=
+   `rgba(255,255,255,${
+    Math.min(
+     .45,
+     flash*.15
+    )
+   })`;
+
+  X.fillRect(
+   0,
+   0,
+   W,
+   H
+  );
+
+ }
+
+ X.restore();
+
+}
+
+function loop(){
+
+ t++;
+
+ update();
+ draw();
+
+ requestAnimationFrame(loop);
+
+}
+
+loop();
+
+</script>
+
+</body>
+</html>
