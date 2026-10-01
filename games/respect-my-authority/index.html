@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Respect My Authority!</title><style>
+<title>Respect My Authoritah!</title><style>
 :root{color-scheme:dark;--gold:#ffce60;--ink:#13191e;--muted:#aebabb}*{box-sizing:border-box}
 body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 50% 0,#30424a,transparent 65%),#0b1115;color:#f8f2df;font-family:Arial,Helvetica,sans-serif;display:flex;justify-content:center;padding:24px 12px}
 button{font:800 12px Arial,sans-serif;letter-spacing:1px;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #fff;outline-offset:4px}
@@ -8,7 +8,7 @@ button{font:800 12px Arial,sans-serif;letter-spacing:1px;cursor:pointer;touch-ac
 .top{display:flex;gap:12px;align-items:center;background:#111b21;border:1px solid #52616b;border-radius:13px;padding:10px;margin-bottom:12px}.top b{flex:1;text-align:center;color:var(--gold);font-size:19px;line-height:1;letter-spacing:-.6px;font-weight:900;text-shadow:0 2px #6d491f}.top b small{display:block;font-size:8px;letter-spacing:2px;color:#aabbbf;margin-top:7px;font-weight:600}.top button{background:#29373f;color:#e3eae7;border:1px solid #52646e;border-radius:7px;padding:10px 7px;font-size:9px;box-shadow:0 3px #080f14}.top button:active{transform:translateY(2px);box-shadow:0 1px #080f14}
 #s{position:relative;border:8px solid #111a20;border-radius:13px;overflow:hidden;background:#000;box-shadow:0 0 0 1px #627079,inset 0 0 14px #000}canvas{display:block;width:100%;image-rendering:auto}
 #m{position:absolute;inset:0;background:radial-gradient(ellipse at top,#253c46f7,#101c24fa 80%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px 18px;overflow:auto}
-#m:before{content:'DEPARTMENT OF QUESTIONABLE AUTHORITY';font-size:8px;letter-spacing:2px;color:#9fbbb9;line-height:1.7;border-bottom:1px solid #637271;padding-bottom:12px;width:100%}#m.hide{display:none}#m h1{font-size:clamp(18px,5vw,29px);line-height:1.02;letter-spacing:-.7px;color:var(--gold);margin:18px 0 10px;font-weight:900}#m p{font-size:clamp(10px,2.8vw,13px);line-height:1.5;color:#d0dcdb;margin:8px 0 20px}.legal{display:inline-block;color:#ffce60;border:1px dashed #a88748;padding:8px 12px;transform:rotate(-3deg);font-weight:900;letter-spacing:1px}
+#m:before{content:'DEPARTMENT OF QUESTIONABLE AUTHORITAH';font-size:8px;letter-spacing:2px;color:#9fbbb9;line-height:1.7;border-bottom:1px solid #637271;padding-bottom:12px;width:100%}#m.hide{display:none}#m h1{font-size:clamp(18px,5vw,29px);line-height:1.02;letter-spacing:-.7px;color:var(--gold);margin:18px 0 10px;font-weight:900}#m p{font-size:clamp(10px,2.8vw,13px);line-height:1.5;color:#d0dcdb;margin:8px 0 20px}.legal{display:inline-block;color:#ffce60;border:1px dashed #a88748;padding:8px 12px;transform:rotate(-3deg);font-weight:900;letter-spacing:1px}
 .start{padding:15px 19px;background:var(--gold);color:#222b30;border:1px solid #ffe7a0;border-radius:7px;box-shadow:0 5px #91642e;font-size:12px;flex-shrink:0}.start:active{transform:translateY(3px);box-shadow:0 2px #91642e}
 .deck{padding:14px 5px 3px}.status{display:flex;justify-content:space-between;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#b7c9c9;margin-bottom:12px}.status #ready{color:#ade695}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.hit{position:relative;height:66px;border-radius:16px;background:linear-gradient(#ead297,#b39353);color:#263039;border:2px solid #f1dba4;box-shadow:0 6px #685431,0 9px 0 3px #111b22,inset 0 2px #fff5;font-size:12px}.hit:nth-child(2){background:linear-gradient(#b8d9d3,#76a6a4);border-color:#c5e2dc;box-shadow:0 6px #3b6469,0 9px 0 3px #111b22}.hit small{display:block;font-size:8px;letter-spacing:2px;margin-top:6px;opacity:.7}.hit.pressed,.hit:active{transform:translateY(5px);box-shadow:0 1px #3b494d,0 4px 0 3px #111b22}.hit:disabled{cursor:default;filter:saturate(.35);opacity:.55}
 .footer{display:flex;justify-content:space-between;align-items:center;margin-top:22px;color:#8faaa9;font-size:8px;letter-spacing:1px}.speaker{width:54px;height:13px;background:repeating-linear-gradient(90deg,#111b22 0 3px,transparent 3px 6px)}
@@ -37,8 +37,8 @@ body{background:#070607;padding:14px 10px;color:#ddc5ca}
 @keyframes overrun-shake{0%,100%{transform:translate(0,0)}12%{transform:translate(-6px,2px)}24%{transform:translate(6px,-2px)}36%{transform:translate(-5px,-1px)}48%{transform:translate(5px,2px)}62%{transform:translate(-3px,0)}76%{transform:translate(3px,-1px)}88%{transform:translate(-1px,0)}}
 #d.overrun{animation:overrun-shake .65s ease-out}
 @media(prefers-reduced-motion:reduce){#d.overrun{animation:none}}
-#m #best-score{color:var(--gold);font-size:11px;font-weight:bold;margin:0 0 12px} #m.scoreboard{inset:5%;padding:18px 16px;background:#100e12;border:1px solid #57434c;border-radius:12px;justify-content:center;box-shadow:0 10px 30px #0009}#m.scoreboard:before{content:"SHIFT OVER";flex-shrink:0;font-size:10px;padding-bottom:8px}#m.scoreboard h1{font-size:clamp(18px,5vw,25px);line-height:1.15;margin:12px 0;overflow-wrap:break-word;flex-shrink:0}#m.scoreboard p{margin:6px 0 12px;line-height:1.4;flex-shrink:0}#m.scoreboard #best-score{font-size:10px} @media(max-width:370px){#m.scoreboard{inset:3%;padding:12px}#m.scoreboard h1{font-size:18px;margin:8px 0}#m.scoreboard p{font-size:10px;margin:4px 0 8px}} </style></head><body><div id="d"><div class="brand"><span><i></i>BUS ADVENTURES</span><span>POCKET ARCADE / 01</span></div><div class="top"><button id="home" aria-label="Home — Bus Adventures" title="Home — Bus Adventures"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9"/></svg></button><b>RESPECT MY<br>AUTHORITY!<small>BORDER PATROL EDITION</small></b><button id="menu">MENU</button></div>
-<div id="s"><canvas id="c" width="320" height="420"></canvas><div id="m"><h1 id="mh">TOTALLY ORIGINAL TELEVISION GAME</h1><p id="mp">EVERYTHING IS FICTIONAL.<br><br>Any resemblance to real events, real border agencies, famous cartoons, fictional towns, Canadians, Americans, authority figures, or unusually round police officers is PURE COINCIDENCE.<br><br>By continuing you confirm that you have read absolutely none of this.<br><br><span class="legal">NO SUING PASS THIS POINT</span></p><p id="best-score" aria-live="polite"></p><button id="consent" class="start">CONSENT TO ALL</button><button id="start" class="start" style="display:none">START GAME</button></div></div>
+#m #best-score{color:var(--gold);font-size:11px;font-weight:bold;margin:0 0 12px} #m.scoreboard{inset:5%;padding:18px 16px;background:#100e12;border:1px solid #57434c;border-radius:12px;justify-content:center;box-shadow:0 10px 30px #0009}#m.scoreboard:before{content:"SHIFT OVER";flex-shrink:0;font-size:10px;padding-bottom:8px}#m.scoreboard h1{font-size:clamp(18px,5vw,25px);line-height:1.15;margin:12px 0;overflow-wrap:break-word;flex-shrink:0}#m.scoreboard p{margin:6px 0 12px;line-height:1.4;flex-shrink:0}#m.scoreboard #best-score{font-size:10px} @media(max-width:370px){#m.scoreboard{inset:3%;padding:12px}#m.scoreboard h1{font-size:18px;margin:8px 0}#m.scoreboard p{font-size:10px;margin:4px 0 8px}} </style></head><body><div id="d"><div class="brand"><span><i></i>BUS ADVENTURES</span><span>POCKET ARCADE / 01</span></div><div class="top"><button id="home" aria-label="Home — Bus Adventures" title="Home — Bus Adventures"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9"/></svg></button><b>RESPECT MY<br>AUTHORITAH!<small>BORDER PATROL EDITION</small></b><button id="menu">MENU</button></div>
+<div id="s"><canvas id="c" width="320" height="420"></canvas><div id="m"><h1 id="mh">TOTALLY ORIGINAL TELEVISION GAME</h1><p id="mp">EVERYTHING IS FICTIONAL.<br><br>Any resemblance to real events, real border agencies, famous cartoons, fictional towns, Canadians, Americans, authority figures, or unusually round police officers is PURE COINCIDENCE.<br><br>By continuing you confirm that you have read absolutely none of this.<br><br><span class="legal">NO SUING PAST THIS POINT</span></p><p id="best-score" aria-live="polite"></p><button id="consent" class="start">CONSENT TO ALL</button><button id="start" class="start" style="display:none">START GAME</button></div></div>
 <div class="deck"><div class="status"><span>THREE LANES. ONE BATON.</span><span id="ready">STANDBY</span></div><div class="controls"><button class="hit" data-l="0" aria-label="Left" title="Left"><span class="arrow left" aria-hidden="true"></span></button><button class="hit" data-l="1" aria-label="Center" title="Center"><span class="arrow center" aria-hidden="true"></span></button><button class="hit" data-l="2" aria-label="Right" title="Right"><span class="arrow right" aria-hidden="true"></span></button></div><div class="footer"><span class="speaker" aria-hidden="true"></span><span>INSERT ATTITUDE • FREE PLAY</span><span class="speaker" aria-hidden="true"></span></div></div></div>
 <script>
 const c=document.querySelector('#c'),g=c.getContext('2d'),L=[72,160,248];g.imageSmoothingEnabled=false;
@@ -53,7 +53,7 @@ function say(text,side){
  bubbles.push({text,side,life:Math.max(3.4,text.length*.12)});mouthT=2.4;
 }
 function rant(){
- const symbols=['#%¤!#$%!!','@#%&?!¤!','%#!!¤@%?!','#%¤"#%Q%¤/'];
+ const symbols=['#%¤!#$%!!','@#%&?!¤!','%#!!¤@%?!','#%¤"#%Q%¤/','#$%&@!!','¤%#?!#$','@#¤%!!?','%#@!!¤$?','#$¤!@%#','?!#%¤$!!','@%#!!¤?!','#$%¤@!?'];
  rants.push({text:MISS_SPEECH[Math.floor(Math.random()*MISS_SPEECH.length)],symbols:symbols[Math.floor(Math.random()*symbols.length)],life:2.6,x:160+(Math.random()-.5)*20,drift:(Math.random()-.5)*18});
  if(rants.length>4)rants.shift();mouthT=2;
 }
@@ -64,8 +64,9 @@ function updateTalk(dt){
 }
 const IMPACTS=['POW!','BASH!','SMASH!','KABOOM!','WHACK!','KAPOW!'];
 let impactIndex=0;
-const SPEECH=['RESPECT MY AUTHORITY!','BACK TO CANADA!','I AM BORDER PATROL!','NO BUDDIES, GUY!','AUTHORITY!','DECLARE YOUR SYRUP!','TOO MUCH POLITENESS!','NICE TRY, BUDDY!','YOUR MOOSE NEEDS A VISA!','THIS IS MY SERIOUS HAT!','MAPLE SYRUP IS NOT ID!','HAVE YOU TRIED THE MENU?','FREEDOM IS ON LUNCH!','STOP SAYING SORRY!','THAT COSTS EXTRA!','I READ HALF THE MANUAL!','NO EH ZONE!','PAPERS, NOT PANCAKES!','I AM THE WHOLE DEPARTMENT!','PLEASE HOLD FOR FREEDOM!'];
-const MISS_SPEECH=['THAT DOES NOT COUNT!','I WAS ON A BREAK!','WHO OPENED THE GATE?!','THAT WAS A TEST!','BLAME THE PAPERWORK!','COME BACK AND QUEUE!','MY HAT SAW NOTHING!','UNAUTHORIZED POLITENESS!','I MEANT TO DO THAT!','THE FENCE IS FIRED!'];
+const SPEECH=['RESPECT MY AUTHORITAH!','BACK TO CANADA!','I AM BORDER PATROL!','NO BUDDIES, GUY!','AUTHORITAH!','DECLARE YOUR SYRUP!','TOO MUCH POLITENESS!','NICE TRY, BUDDY!','YOUR MOOSE NEEDS A VISA!','THIS IS MY SERIOUS HAT!','MAPLE SYRUP IS NOT ID!','HAVE YOU TRIED THE MENU?','FREEDOM IS ON LUNCH!','STOP SAYING SORRY!','THAT COSTS EXTRA!','I READ HALF THE MANUAL!','NO EH ZONE!','PAPERS, NOT PANCAKES!','I AM THE WHOLE DEPARTMENT!','PLEASE HOLD FOR FREEDOM!','SORRY IS NOT A VISA!','QUIT APOLOGIZING!','#%¤ YOU, BUDDY!','AUTHORITAH, #$%!','I SAID AUTHORITAH!','NO MORE SORRY GUYS!','THAT EH WAS ILLEGAL!','SWEAR JAR IS FULL!','RESPECT IT, #$%¤!','MY HELMET HEARD THAT!'];
+const MISS_SPEECH=['THAT DOES NOT COUNT!','I WAS ON A BREAK!','WHO OPENED THE GATE?!','THAT WAS A TEST!','BLAME THE PAPERWORK!','COME BACK AND QUEUE!','MY HAT SAW NOTHING!','UNAUTHORIZED POLITENESS!','I MEANT TO DO THAT!','THE FENCE IS FIRED!','#$%¤ THE GATE!','WHO LET THE SORRY IN?!','THAT WAS A #@% DRILL!','AUTHORITAH DENIED!','THE LINE CUT ME OFF!'];
+const SORRY=['SORRY, GUYS!','SORRY EH!','OPE, SORRY!','SORRY ABOUT THAT, GUYS!','SO SORRY, BUDDY!','SORRY, WAS THAT YOUR LANE?','EH, SORRY!','SORRY, WE BROUGHT SYRUP!','TERRIBLY SORRY, OFFICER!','SORRY GUYS, COMING THROUGH!','OH SORRY, AFTER YOU!','SORRY, NICE HAT THOUGH!'];
 function R(x,y,w,h,z){g.fillStyle=z;g.fillRect(x,y,w,h)}
 function T(t,x,y,s,z='#111'){g.fillStyle=z;g.font='bold '+s+'px monospace';g.textAlign='center';g.fillText(t,x,y)}
 function bg(){
@@ -85,7 +86,7 @@ function bg(){
    for(let y=183;y<420;y+=22){R(x-2,y,4,22,'#667b80');g.beginPath();g.moveTo(x-11,y);g.lineTo(x+11,y+22);g.moveTo(x+11,y);g.lineTo(x-11,y+22);g.stroke()}
  }
  // fictional authority sign above officer
- R(32,33,256,31,'#384431');R(35,36,250,12,'#a62e31');T('MAKE AMERICA GREAT AGAIN',160,45,9,'#fff');T('U.S. ICE BORDER AUTHORITY',160,57,8,'#fbd665');
+ R(32,33,256,31,'#384431');R(35,36,250,12,'#a62e31');T('MAKE AMERICA GREAT AGAIN',160,45,9,'#fff');T('U.S. ICE BORDER AUTHORITAH',160,57,8,'#fbd665');
  // Oversized surveillance towers, cut-paper camouflage and patriotic excess.
  for(const x of [7,277]){
    R(x+7,94,4,48,'#414b36');R(x+25,94,4,48,'#414b36');
@@ -115,7 +116,6 @@ function bg(){
  for(const x of L){R(x-21,195,42,2,'#e9c859')}
  g.save();g.translate(66,389);g.rotate(-.17);R(-46,-12,92,25,'#f6e8c6');R(-48,-14,96,2,'#74573d');T('CANADA',7,4,11,'#b22626');
  g.fillStyle='#b22626';g.beginPath();g.moveTo(-33,7);for(const [x,y] of [[-34,0],[-42,-3],[-38,-5],[-39,-10],[-34,-7],[-31,-13],[-28,-7],[-23,-10],[-24,-4],[-20,-3],[-29,1],[-30,7]])g.lineTo(x,y);g.fill();g.restore();
-
 }function person(e){
  let x=L[e.l],y=e.y,step=Math.sin(e.walk)*5;
  // legs walking
@@ -149,8 +149,14 @@ function cart(){
  g.fillStyle='#e6d528';g.beginPath();g.arc(x-35,y+25,9,0,7);g.fill();g.beginPath();g.arc(x+35,y+25,9,0,7);g.fill();
  // head
  g.fillStyle='#f0c7a3';g.beginPath();g.ellipse(x,y,31,24,0,0,7);g.fill();
- // hat
- R(x-29,y-22,58,9,'#42a9bd');R(x-21,y-28,42,8,'#42a9bd');R(x-5,y-32,10,5,'#e2d327');R(x-29,y-14,58,4,'#e2d327');
+ // border helmet: rounded shell, yellow brim, small badge
+ g.fillStyle='#6a3a22';g.beginPath();g.ellipse(x-24,y-4,6,8,0,0,7);g.fill();g.beginPath();g.ellipse(x+24,y-4,6,8,0,0,7);g.fill();
+ g.fillStyle='#2f6f86';
+ g.beginPath();g.ellipse(x,y-24,32,20,0,0,7);g.fill();
+ R(x-32,y-28,64,16,'#42a9bd');
+ R(x-36,y-16,72,7,'#e2d327');
+ R(x-4,y-34,8,8,'#e2d327');
+ g.fillStyle='#d7eef3';g.beginPath();g.ellipse(x-10,y-26,6,3,-.4,0,7);g.fill();
  // sunglasses
  g.fillStyle='#202329';g.beginPath();g.ellipse(x-13,y-3,13,10,0,0,7);g.fill();g.beginPath();g.ellipse(x+13,y-3,13,10,0,0,7);g.fill();R(x-3,y-5,6,3,'#202329');
  // animated mouth while shouting
@@ -205,7 +211,7 @@ function drawRants(){
  }
 }
 function draw(){
- bg();T('AUTHORITY '+auth+'%',60,18,8);R(9,24,102,8,'#222');R(11,26,Math.max(0,98*auth/100),4,auth>30?'#39a849':'#d43b32');T('CLUBBED '+hits,270,18,8);
+ bg();T('AUTHORITAH '+auth+'%',60,18,8);R(9,24,102,8,'#222');R(11,26,Math.max(0,98*auth/100),4,auth>30?'#39a849':'#d43b32');T('CLUBBED '+hits,270,18,8);
  E.forEach(person);S.forEach(splat);cart();drawSpeech();drawRants();
  debris.forEach(q=>{g.save();g.translate(q.x,q.y);g.rotate(q.rot);R(-8,-3,16,6,q.col);R(-4,-7,8,5,q.col);g.restore()});
  impacts.forEach(q=>{
@@ -221,11 +227,8 @@ function draw(){
  const enabled=!!run&&gameTime>=3.5;
  document.querySelectorAll('.hit').forEach((b,i)=>{b.disabled=!enabled;b.classList.toggle('pressed',!!sw.on&&sw.l===i)});
  document.querySelector('#ready').textContent=!run?'STANDBY':gameTime<3.5?'SHIFT START':sw.on?'RECOVERING':'READY';
-
  if(run&&gameTime<3.5){g.save();g.globalAlpha=Math.min(1,gameTime*3,(3.5-gameTime)*2);R(45,228,230,76,'#203441ef');T('SHIFT START',160,250,21,'#ffda62');T('Watch CENTER first',160,271,10,'#fff');T('Swing at the yellow line',160,289,8,'#fff');g.restore()}
  if(run){T(sw.on?(queuedHit!==null?'NEXT HIT QUEUED':'RECOVERING…'):'READY',160,410,7,sw.on?'#7b3942':'#254d3a');if(sw.on){R(124,413,72,3,'#7b8584');R(124,413,72*Math.min(1,sw.t/.68),3,'#f8d862')}}
-
-
 }
 function addEnemy(l,v){E.push({l,y:405,v,col:['#e5b72e','#3e72b8','#814d91','#d65c44','#568c4c'][Math.floor(Math.random()*5)],hat:['#d12f2f','#333','#285b87'][Math.floor(Math.random()*3)],walk:Math.random()*6.28})}
 function spawn(){
@@ -256,7 +259,6 @@ function upd(dt,n){
      impacts.push({x:L[q.l],y:q.y,life:.65,text:IMPACTS[impactIndex++%IMPACTS.length],tilt:(Math.random()-.5)*.5,color:['#ffcf42','#ff865e','#bca2ff','#73e1dc'][Math.floor(Math.random()*4)]});
      debris.push({x:L[q.l],y:q.y-12,col:q.hat,vx:-dir*140,vy:-180,rot:0,life:1.4});
      S.push({x:L[q.l],y:q.y,col:q.col,vx:dir*(330+Math.random()*80),vy:-120-Math.random()*90,rot:0,vr:dir*(8+Math.random()*7),life:1.15});
-
      say(SPEECH[Math.floor(Math.random()*SPEECH.length)],sw.l===0?1:sw.l===2?-1:(Math.random()<.5?-1:1));
    }
   }
@@ -267,6 +269,7 @@ function upd(dt,n){
    if(!e.dead&&e.y<160){
      e.dead=1;gate[e.l]=1.2;auth=Math.max(0,auth-10);
      rant();
+     say(SORRY[Math.floor(Math.random()*SORRY.length)],e.l===0?1:e.l===2?-1:(Math.random()<.5?-1:1));
    }
  }
  E=E.filter(e=>!e.dead);
@@ -287,7 +290,7 @@ function saveBest(){if(hits<=bestScore)return;bestScore=hits;try{const stored=Ma
 displayBest();
 window.addEventListener('storage',e=>{if(e.key===SCORE_KEY){bestScore=Math.max(bestScore,Number(e.newValue)||0);displayBest()}});
 function start(){modal.classList.remove('scoreboard');queuedHit=null;document.querySelector('#d').classList.remove('overrun');auth=100;hits=0;E=[];S=[];impacts=[];debris=[];gate=[0,0,0];gameTime=0;tutorial=0;bubbles=[];rants=[];mouthT=0;sw={on:0,l:1,t:0,done:0};over=0;run=1;last=performance.now();next=3.5;modal.classList.add('hide')}
-function showGameOver(){modal.classList.add('scoreboard');const cabinet=document.querySelector('#d');cabinet.classList.remove('overrun');void cabinet.offsetWidth;cabinet.classList.add('overrun');heading.textContent='AMERICA IS OVERRUN BY ALIENS!';copy.innerHTML='AUTHORITY: 0%<br><br>PEOPLE CLUBBED: '+hits+'<br><br>YOU WILL RESPECT IT!';consent.style.display='none';startButton.textContent='PLAY AGAIN';startButton.style.display='block';modal.classList.remove('hide')}
+function showGameOver(){modal.classList.add('scoreboard');const cabinet=document.querySelector('#d');cabinet.classList.remove('overrun');void cabinet.offsetWidth;cabinet.classList.add('overrun');heading.textContent='AMERICA IS OVERRUN BY ALIENS!';copy.innerHTML='AUTHORITAH: 0%<br><br>PEOPLE CLUBBED: '+hits+'<br><br>YOU WILL RESPECT MY AUTHORITAH!';consent.style.display='none';startButton.textContent='PLAY AGAIN';startButton.style.display='block';modal.classList.remove('hide')}
 function menu(){modal.classList.remove('scoreboard');queuedHit=null;document.querySelector('#d').classList.remove('overrun');run=0;over=0;heading.textContent='TOTALLY ORIGINAL TELEVISION GAME';copy.innerHTML=disclaimer;consent.style.display='block';startButton.style.display='none';startButton.textContent='START GAME';modal.classList.remove('hide')}
 function bind(el,fn){
  // Handle touch/pointer activation even in previews that suppress synthetic clicks.
@@ -301,7 +304,7 @@ function bind(el,fn){
   fn();
  });
 }
-bind(consent,()=>{heading.textContent='RESPECT MY AUTHORITY!';copy.innerHTML='THREE LANES. THREE BUTTONS.<br><br>Time the swing at the yellow line.<br>Each hit restores 2% authority.<br>Let the baton recover. A tap just before READY queues your next swing.<br><br>Use the three arrow buttons.<br><br>WELCOME TO THE BORDER.';consent.style.display='none';startButton.textContent='START GAME';startButton.style.display='block'});
+bind(consent,()=>{heading.textContent='RESPECT MY AUTHORITAH!';copy.innerHTML='THREE LANES. THREE BUTTONS.<br><br>Time the swing at the yellow line.<br>Each hit restores 2% authoritah.<br>Let the baton recover. A tap just before READY queues your next swing.<br><br>Use the three arrow buttons.<br><br>WELCOME TO THE BORDER.';consent.style.display='none';startButton.textContent='START GAME';startButton.style.display='block'});
 bind(startButton,start);
 document.querySelectorAll('.hit').forEach(b=>{b.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();hit(+b.dataset.l)});b.addEventListener('click',e=>{if(e.detail===0)hit(+b.dataset.l)})});
 bind(document.querySelector('#menu'),menu);bind(document.querySelector('#home'),()=>{const inGameFolder=/\/games\/respect-my-authority\//i.test(location.pathname);location.href=new URL(inGameFolder?'../../index.html':'./index.html',location.href).href});
@@ -309,9 +312,3 @@ document.addEventListener('keydown',e=>{const keys={ArrowLeft:0,ArrowDown:1,Arro
 document.addEventListener('visibilitychange',()=>{last=performance.now()});
 function loop(n){let dt=Math.min(.035,(n-last)/1000||0);last=n;if(run)upd(dt,n);else {gate=gate.map(v=>Math.max(0,v-dt));updateTalk(dt)}draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script></body></html>
-
-
-
-
-
-
