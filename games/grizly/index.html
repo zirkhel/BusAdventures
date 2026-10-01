@@ -9,333 +9,276 @@
 *{box-sizing:border-box}
 
 html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  background:#070609;
-  color:#fff;
-  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
-  overflow:hidden;
-  touch-action:none;
-  overscroll-behavior:none;
+ margin:0;
+ width:100%;
+ height:100%;
+ background:#08070a;
+ color:#fff;
+ overflow:hidden;
+ touch-action:none;
+ font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
 }
 
 body{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100dvh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ height:100dvh;
 }
 
 #cab{
-  width:min(100vw,540px);
-  height:100dvh;
-  max-height:920px;
-  background:linear-gradient(#18121d,#09080b);
-  position:relative;
-  overflow:hidden;
-  border-left:2px solid #33253b;
-  border-right:2px solid #33253b;
+ width:min(100vw,540px);
+ height:100dvh;
+ max-height:920px;
+ position:relative;
+ overflow:hidden;
+ background:#09080b;
+ border-left:2px solid #302238;
+ border-right:2px solid #302238;
 }
 
 #top{
-  height:70px;
-  text-align:center;
-  padding:7px 4px 4px;
-  background:linear-gradient(180deg,#28142f,#100c13);
-  border-bottom:3px solid #c49a3a;
-  position:relative;
-  z-index:5;
-}
-
-#title{
-  font-size:27px;
-  letter-spacing:2px;
-  line-height:29px;
-  color:#fff;
-  text-shadow:
-    0 2px #000,
-    3px 3px #861b1b,
-    0 0 15px #a52727;
+ height:70px;
+ text-align:center;
+ padding-top:7px;
+ background:linear-gradient(#28142f,#100c13);
+ border-bottom:3px solid #c49a3a;
 }
 
 .sub{
-  font-family:system-ui;
-  font-size:9px;
-  letter-spacing:4px;
-  color:#d8bd78;
+ font:9px system-ui;
+ letter-spacing:4px;
+ color:#d8bd78;
 }
 
-#gameWrap{
-  position:relative;
-  width:100%;
-  height:calc(100% - 208px);
-  min-height:390px;
-  background:#000;
+#title{
+ font-size:27px;
+ letter-spacing:2px;
+ text-shadow:3px 3px #861b1b,0 2px #000;
+}
+
+#game{
+ position:relative;
+ height:calc(100% - 205px);
+ background:#000;
 }
 
 canvas{
-  display:block;
-  width:100%;
-  height:100%;
+ display:block;
+ width:100%;
+ height:100%;
 }
 
 #hud{
-  position:absolute;
-  top:7px;
-  left:8px;
-  right:8px;
-  pointer-events:none;
-  font-family:system-ui,sans-serif;
-  z-index:4;
+ position:absolute;
+ top:9px;
+ left:12px;
+ right:12px;
+ pointer-events:none;
 }
 
-.names{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-weight:1000;
-  font-size:11px;
-  text-shadow:0 2px 3px #000;
-  margin-bottom:3px;
+#hudTop{
+ display:flex;
+ justify-content:space-between;
+ font:900 11px system-ui;
+ text-shadow:0 2px 3px #000;
 }
 
-.healthRow{
-  display:flex;
-  justify-content:space-between;
-  gap:28px;
+.bar{
+ height:11px;
+ border:2px solid #d8bd78;
+ background:#160c0d;
+ overflow:hidden;
+ margin-top:3px;
 }
 
-.health{
-  width:45%;
-  height:13px;
-  background:#170c0c;
-  border:2px solid #e0c575;
-  box-shadow:0 2px 5px #000;
-  overflow:hidden;
-}
-
-.health.right{
-  transform:scaleX(-1);
-}
-
-.health > div{
-  width:100%;
-  height:100%;
-  background:linear-gradient(90deg,#d72d25,#f3c94c);
-  transform-origin:left center;
-}
-
-#crowdBox{
-  margin:5px auto 0;
-  width:58%;
-  text-align:center;
-}
-
-#crowdLabel{
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:2px;
-  text-shadow:0 2px #000;
-}
-
-#crowdBar{
-  height:8px;
-  border:1px solid #e0c575;
-  background:#130d15;
-  overflow:hidden;
+#healthFill{
+ width:100%;
+ height:100%;
+ background:linear-gradient(90deg,#d52c25,#f0c74d);
 }
 
 #crowdFill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#8e1717,#f0ce68);
+ width:0%;
+ height:100%;
+ background:linear-gradient(90deg,#a31d1d,#f0ce68);
 }
 
-#message{
-  position:absolute;
-  left:50%;
-  top:27%;
-  transform:translate(-50%,-50%) rotate(-2deg);
-  font-size:32px;
-  line-height:.95;
-  width:95%;
-  text-align:center;
-  color:#f4d45f;
-  text-shadow:
-    3px 3px #9a1818,
-    -2px -2px #000,
-    0 0 14px #000;
-  pointer-events:none;
-  opacity:0;
-  z-index:6;
+#instruction{
+ position:absolute;
+ top:24%;
+ left:50%;
+ transform:translateX(-50%);
+ width:92%;
+ text-align:center;
+ font-size:23px;
+ line-height:1;
+ color:#fff;
+ text-shadow:3px 3px #8e1717,0 0 12px #000;
+ pointer-events:none;
+}
+
+#timingBox{
+ position:absolute;
+ left:8%;
+ right:8%;
+ bottom:28px;
+ height:38px;
+ background:#141117dd;
+ border:3px solid #d8bd78;
+ display:none;
+}
+
+#zone{
+ position:absolute;
+ top:0;
+ bottom:0;
+ left:43%;
+ width:14%;
+ background:#e7bd42aa;
+ border-left:2px solid #fff;
+ border-right:2px solid #fff;
+}
+
+#perfect{
+ position:absolute;
+ top:0;
+ bottom:0;
+ left:47%;
+ width:6%;
+ background:#eee8;
+}
+
+#marker{
+ position:absolute;
+ top:-7px;
+ left:0%;
+ width:9px;
+ height:47px;
+ background:#f02d25;
+ box-shadow:0 0 8px #fff;
 }
 
 #controls{
-  height:138px;
-  background:linear-gradient(#1c1620,#0b090d);
-  border-top:3px solid #c49a3a;
-  position:relative;
-  display:grid;
-  grid-template-columns:112px 1fr;
-  gap:10px;
-  padding:10px 12px 10px;
-}
-
-#movePad{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
+ height:135px;
+ background:linear-gradient(#1b151f,#0b090d);
+ border-top:3px solid #c49a3a;
+ display:grid;
+ grid-template-columns:2fr 1fr;
+ gap:10px;
+ padding:11px;
 }
 
 button{
-  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
-  color:#fff;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  cursor:pointer;
+ font-family:Impact,system-ui;
+ color:#fff;
+ border:0;
+ user-select:none;
+ -webkit-user-select:none;
+ -webkit-tap-highlight-color:transparent;
 }
 
-.move{
-  width:50px;
-  height:78px;
-  border-radius:14px;
-  border:2px solid #69566f;
-  background:linear-gradient(#39303e,#1a161d);
-  font-size:27px;
-  box-shadow:0 5px 0 #0b090c;
+#deng{
+ border-radius:17px;
+ font-size:31px;
+ letter-spacing:2px;
+ background:radial-gradient(circle at 40% 25%,#ef493c,#9d1111 70%);
+ box-shadow:0 7px 0 #450a0a;
 }
 
-.move:active,
-.action:active{
-  transform:translateY(4px);
-  box-shadow:0 1px 0 #090609;
+#deng:active{
+ transform:translateY(5px);
+ box-shadow:0 2px 0 #450a0a;
 }
 
-#actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
+#sideButtons{
+ display:grid;
+ grid-template-rows:1fr 1fr;
+ gap:8px;
 }
 
-.action{
-  border-radius:11px;
-  border:2px solid #6b2424;
-  background:linear-gradient(#bd2a24,#74110f);
-  font-size:17px;
-  letter-spacing:.5px;
-  box-shadow:0 5px 0 #3a0c0c;
+.smallButton{
+ border-radius:11px;
+ font-size:17px;
+ background:#28232b;
+ border:2px solid #65576a;
+ box-shadow:0 4px 0 #080708;
 }
 
-#fluteBtn{
-  border-color:#9c813e;
-  background:linear-gradient(#9a792d,#5d4518);
+#flute{
+ background:linear-gradient(#a27e2c,#604617);
+ border-color:#d8bd78;
 }
 
-#specialBtn{
-  border-color:#777;
-  background:linear-gradient(#333,#171717);
-  color:#777;
+#finisher{
+ color:#666;
 }
 
-#specialBtn.ready{
-  border-color:#fff0a5;
-  background:linear-gradient(#f04332,#9d1111);
-  color:#fff8be;
-  animation:pulse .55s infinite alternate;
-  box-shadow:
-    0 5px 0 #4a0a08,
-    0 0 14px #f0ce68;
+#finisher.ready{
+ color:#fff7bb;
+ background:linear-gradient(#e83a2e,#98120e);
+ border-color:#f4db77;
+ animation:pulse .45s infinite alternate;
 }
 
 @keyframes pulse{
-  from{transform:scale(1)}
-  to{transform:scale(1.035)}
+ from{transform:scale(1)}
+ to{transform:scale(1.035)}
 }
 
 #home{
-  position:absolute;
-  left:8px;
-  top:8px;
-  z-index:20;
-  background:#25202a;
-  border:1px solid #5a4b60;
-  color:#aaa;
-  border-radius:7px;
-  padding:5px 8px;
-  font:10px system-ui;
-  box-shadow:none;
+ position:absolute;
+ left:8px;
+ top:8px;
+ z-index:30;
+ background:#25202a;
+ border:1px solid #5a4b60;
+ border-radius:7px;
+ padding:5px 8px;
+ color:#aaa;
+ font:10px system-ui;
 }
 
 #overlay{
-  position:absolute;
-  inset:70px 0 138px;
-  background:
-    radial-gradient(circle at 50% 35%,#421018cc,#08070a 68%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:22px;
-  z-index:10;
-}
-
-.card{
-  max-width:420px;
+ position:absolute;
+ inset:70px 0 135px;
+ z-index:20;
+ background:radial-gradient(circle at 50% 32%,#421018ee,#08070af8 70%);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ padding:25px;
 }
 
 .big{
-  font-size:46px;
-  line-height:.85;
-  letter-spacing:2px;
-  text-shadow:
-    4px 4px #8e1717,
-    0 0 20px #000;
+ font-size:46px;
+ line-height:.86;
+ text-shadow:4px 4px #8e1717;
 }
 
-.gold{
-  color:#f0ce68;
-}
+.gold{color:#f0ce68}
 
 .copy{
-  font:14px/1.4 system-ui;
-  color:#ddd;
-  margin:18px auto;
-  max-width:350px;
+ font:15px/1.45 system-ui;
+ max-width:360px;
+ margin:20px auto;
+ color:#ddd;
 }
 
 .start{
-  background:#b21f1f;
-  border:2px solid #f0ce68;
-  border-radius:10px;
-  padding:13px 25px;
-  box-shadow:0 5px 0 #541010;
-  font-size:21px;
+ padding:14px 27px;
+ background:#b21f1f;
+ border:2px solid #f0ce68;
+ border-radius:11px;
+ box-shadow:0 5px 0 #541010;
+ font-size:21px;
 }
 
 .small{
-  font:10px/1.4 system-ui;
-  color:#8d8790;
-  margin-top:13px;
-}
-
-#rotateWarning{
-  display:none;
-  position:absolute;
-  inset:0;
-  z-index:100;
-  background:#09080b;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:30px;
-  font:20px Impact;
-}
-
-@media (max-height:620px) and (orientation:landscape){
-  #rotateWarning{display:flex}
+ margin-top:14px;
+ font:10px system-ui;
+ color:#8d8790;
 }
 </style>
 </head>
@@ -344,1702 +287,1419 @@ button{
 
 <div id="cab">
 
-  <div id="top">
-    <div class="sub">BUS ADVENTURES PRESENTS</div>
-    <div id="title">GRIZZLY – TID FOR DENG!</div>
+<div id="top">
+ <div class="sub">BUS ADVENTURES PRESENTS</div>
+ <div id="title">GRIZZLY – TID FOR DENG!</div>
+</div>
+
+<div id="game">
+
+ <canvas id="c" width="480" height="560"></canvas>
+
+ <button id="home" onclick="location.href='../../index.html'">HOME</button>
+
+ <div id="hud">
+   <div id="hudTop">
+     <span>GRIZZLY</span>
+     <span id="crowdText">CROWD 0%</span>
+   </div>
+
+   <div class="bar">
+     <div id="healthFill"></div>
+   </div>
+
+   <div class="bar">
+     <div id="crowdFill"></div>
+   </div>
+ </div>
+
+ <div id="instruction"></div>
+
+ <div id="timingBox">
+   <div id="zone"></div>
+   <div id="perfect"></div>
+   <div id="marker"></div>
+ </div>
+
+</div>
+
+<div id="controls">
+
+ <button id="deng">DENG!</button>
+
+ <div id="sideButtons">
+   <button class="smallButton" id="flute">FLØYTA</button>
+   <button class="smallButton" id="finisher">SOLFORMØRKELSEN</button>
+ </div>
+
+</div>
+
+<div id="overlay">
+
+ <div>
+
+  <div class="big">
+   <span class="gold">GRIZZLY</span><br>
+   TID FOR DENG!
   </div>
 
-  <div id="gameWrap">
-
-    <canvas id="g" width="480" height="560"></canvas>
-
-    <button id="home" onclick="location.href='../../index.html'">HOME</button>
-
-    <div id="hud">
-
-      <div class="names">
-        <span>GRIZZLY</span>
-        <span>THE OPPONENT</span>
-      </div>
-
-      <div class="healthRow">
-        <div class="health">
-          <div id="playerHealth"></div>
-        </div>
-
-        <div class="health right">
-          <div id="enemyHealth"></div>
-        </div>
-      </div>
-
-      <div id="crowdBox">
-        <div id="crowdLabel">CROWD 0%</div>
-        <div id="crowdBar">
-          <div id="crowdFill"></div>
-        </div>
-      </div>
-
-    </div>
-
-    <div id="message"></div>
-
+  <div class="copy">
+   Motstanderen angriper.
+   <br><br>
+   Se på timing-linja og trykk
+   <strong>DENG!</strong> når markøren treffer gullfeltet.
+   <br><br>
+   Gode treff fyrer opp publikum.
+   Når CROWD når 100 %, er det tid for
+   <strong>Solformørkelsen.</strong>
   </div>
 
-  <div id="controls">
+  <button class="start" id="start">TID FOR DENG!</button>
 
-    <div id="movePad">
-      <button class="move" id="left">◀</button>
-      <button class="move" id="right">▶</button>
-    </div>
-
-    <div id="actions">
-      <button class="action" id="dengBtn">DENG!</button>
-      <button class="action" id="grappleBtn">GRAPPLE</button>
-      <button class="action" id="fluteBtn">FLUTE</button>
-      <button class="action" id="specialBtn">SOLFORMØRKELSEN</button>
-    </div>
-
+  <div class="small">
+   FLØYTA kan brukes mellom angrep for å fyre opp publikum.
   </div>
 
-  <div id="overlay">
+ </div>
 
-    <div class="card">
-
-      <div class="big">
-        <span class="gold">GRIZZLY</span><br>
-        TID FOR DENG!
-      </div>
-
-      <div class="copy">
-        150 kilos of Norwegian wrestling diplomacy.
-        <br><br>
-        Punch. Grapple. Work the crowd.
-        Use the flute to fire them up.
-        <br><br>
-        When the crowd hits 100%:
-        <strong>TID FOR DENG.</strong>
-      </div>
-
-      <button class="start" id="start">
-        ENTER THE RING
-      </button>
-
-      <div class="small">
-        Fill the crowd meter and unleash SOLFORMØRKELSEN.
-      </div>
-
-    </div>
-
-  </div>
-
-  <div id="rotateWarning">
-    GRIZZLY DOES NOT WRESTLE SIDEWAYS.<br><br>
-    TURN THE PHONE.
-  </div>
+</div>
 
 </div>
 
 <script>
-const C = document.getElementById('g');
-const X = C.getContext('2d');
+const C=document.getElementById("c");
+const X=C.getContext("2d");
 
-const $ = s => document.querySelector(s);
+const $=q=>document.querySelector(q);
 
-const W = 480;
-const H = 560;
+let frame=0;
 
-let running = false;
-let gameOver = false;
+let state="menu";
 
-let frame = 0;
-let shake = 0;
-let flash = 0;
+let health=100;
+let crowd=0;
+let score=0;
+let opponent=1;
 
-let crowd = 0;
-let crowdPeople = [];
-let particles = [];
+let marker=0;
+let markerSpeed=.011;
+let markerDir=1;
 
-let messageTimer = 0;
+let attackActive=false;
 
-let keys = {
-  left:false,
-  right:false
-};
+let attackTimer=0;
+let nextAttack=0;
 
-let player;
-let enemy;
+let messageTimer=0;
 
-let specialMode = false;
-let specialTimer = 0;
+let shake=0;
+let flash=0;
 
-function makeFighter(x, enemyFighter=false){
+let grizzlyHit=0;
+let enemyHit=0;
 
-  return {
-    x,
-    y:355,
+let enemyDown=0;
 
-    vx:0,
+let fluteTimer=0;
 
-    health:100,
+let special=0;
 
-    facing:enemyFighter ? -1 : 1,
+let particles=[];
 
-    attack:0,
-    attackType:null,
+let audience=[];
 
-    hurt:0,
+for(let i=0;i<70;i++){
 
-    cooldown:0,
+ audience.push({
+  x:Math.random()*480,
+  y:420+Math.random()*135,
+  p:Math.random()*6.28,
+  shirt:[
+   "#a92525",
+   "#24242a",
+   "#c3a63f",
+   "#34465e",
+   "#ddd",
+   "#57345f"
+  ][i%6]
+ });
 
-    flute:0,
-
-    down:0,
-
-    enemy:enemyFighter
-  };
 }
 
-function resetGame(){
-
-  player = makeFighter(125,false);
-  enemy = makeFighter(355,true);
-
-  crowd = 0;
-
-  running = true;
-  gameOver = false;
-
-  specialMode = false;
-  specialTimer = 0;
-
-  shake = 0;
-  flash = 0;
-
-  particles = [];
-
-  $('#overlay').style.display='none';
-
-  showMessage('RING THE BELL!',900);
-
-  updateHUD();
+function clamp(v,a,b){
+ return Math.max(a,Math.min(b,v));
 }
 
-for(let i=0;i<72;i++){
+function setMessage(t,ms=700){
 
-  crowdPeople.push({
-    x:Math.random()*W,
-    y:410+Math.random()*145,
-    r:4+Math.random()*5,
-    phase:Math.random()*Math.PI*2,
-    shirt:[
-      '#a82424',
-      '#22242a',
-      '#c2a43d',
-      '#31445d',
-      '#d6d6d6',
-      '#52335c'
-    ][i%6]
-  });
+ $("#instruction").textContent=t;
+
+ messageTimer=ms;
 }
 
-function clamp(v,min,max){
-  return Math.max(min,Math.min(max,v));
+function hud(){
+
+ $("#healthFill").style.width=health+"%";
+
+ $("#crowdFill").style.width=crowd+"%";
+
+ $("#crowdText").textContent=
+   "CROWD "+Math.round(crowd)+"%";
+
+ if(crowd>=100){
+
+  $("#finisher").classList.add("ready");
+
+ }else{
+
+  $("#finisher").classList.remove("ready");
+
+ }
+
 }
 
-function distance(){
-  return Math.abs(player.x-enemy.x);
+function start(){
+
+ health=100;
+ crowd=0;
+ score=0;
+ opponent=1;
+
+ markerSpeed=.010;
+
+ state="fight";
+
+ $("#overlay").style.display="none";
+
+ hud();
+
+ setMessage("GET READY!",900);
+
+ scheduleAttack(1200);
+
 }
 
-function showMessage(txt,time=700){
+function scheduleAttack(delay){
 
-  const el=$('#message');
+ attackActive=false;
 
-  el.textContent=txt;
-  el.style.opacity=1;
+ $("#timingBox").style.display="none";
 
-  messageTimer=time;
+ nextAttack=
+   performance.now()+delay;
+
 }
 
-function addCrowd(n){
+function beginAttack(){
 
-  crowd=clamp(crowd+n,0,100);
+ if(state!=="fight")return;
 
-  if(crowd>=100){
-    showMessage('TID FOR DENG!',1000);
-  }
+ attackActive=true;
 
-  updateHUD();
+ attackTimer=0;
+
+ marker=0;
+ markerDir=1;
+
+ $("#marker").style.left="0%";
+
+ $("#timingBox").style.display="block";
+
+ setMessage("HE'S COMING! DENG!",1200);
+
 }
 
-function updateHUD(){
+function deng(){
 
-  $('#playerHealth').style.width=
-    `${Math.max(0,player?.health ?? 100)}%`;
+ if(state!=="fight")return;
 
-  $('#enemyHealth').style.width=
-    `${Math.max(0,enemy?.health ?? 100)}%`;
+ if(!attackActive){
 
-  $('#crowdFill').style.width=
-    `${crowd}%`;
+  setMessage("VENT PÅ ANGREPET!",450);
 
-  $('#crowdLabel').textContent=
-    `CROWD ${Math.round(crowd)}%`;
+  return;
+ }
 
-  const b=$('#specialBtn');
+ attackActive=false;
 
-  if(crowd>=100 && running && !gameOver){
-    b.classList.add('ready');
-  }else{
-    b.classList.remove('ready');
-  }
-}
+ $("#timingBox").style.display="none";
 
-function punch(){
+ let d=Math.abs(marker-.5);
 
-  if(!running || gameOver || specialMode) return;
-  if(player.cooldown>0 || player.down>0) return;
+ if(d<.035){
 
-  player.attack=12;
-  player.attackType='punch';
-  player.cooldown=24;
+  score++;
 
-  if(distance()<78){
+  crowd=clamp(crowd+22,0,100);
 
-    enemy.health-=8;
-    enemy.hurt=15;
+  enemyHit=25;
 
-    enemy.x+=player.facing*13;
+  enemyDown=25;
 
-    addCrowd(7);
-
-    shake=5;
-
-    burst(
-      enemy.x,
-      enemy.y-85,
-      8,
-      '#f0ce68'
-    );
-
-    showMessage('DENG!',350);
-
-  }else{
-
-    crowd=Math.max(0,crowd-1);
-    updateHUD();
-  }
-
-  checkWin();
-}
-
-function grapple(){
-
-  if(!running || gameOver || specialMode) return;
-  if(player.cooldown>0 || player.down>0) return;
-
-  player.attack=22;
-  player.attackType='grapple';
-  player.cooldown=42;
-
-  if(distance()<60){
-
-    enemy.health-=15;
-    enemy.hurt=24;
-    enemy.down=35;
-
-    enemy.x+=player.facing*28;
-
-    addCrowd(13);
-
-    shake=10;
-    flash=.5;
-
-    burst(
-      enemy.x,
-      enemy.y-30,
-      16,
-      '#d72d25'
-    );
-
-    showMessage('SLAM!',500);
-
-  }else{
-
-    showMessage('TOO FAR!',350);
-  }
-
-  checkWin();
-}
-
-function flute(){
-
-  if(!running || gameOver || specialMode) return;
-  if(player.cooldown>0 || player.down>0) return;
-
-  player.flute=70;
-  player.cooldown=80;
-
-  showMessage('♫ GRIZZLY! ♫',650);
-
-  addCrowd(18);
-}
-
-function special(){
-
-  if(!running || gameOver) return;
-  if(crowd<100) return;
-  if(specialMode) return;
-
-  specialMode=true;
-  specialTimer=0;
-
-  player.cooldown=150;
-
-  showMessage('TID FOR DENG!',1200);
-
+  shake=13;
   flash=1;
-  shake=12;
+
+  burst(330,280,24);
+
+  setMessage("PERFEKT DENG!",700);
+
+ }
+
+ else if(d<.09){
+
+  score++;
+
+  crowd=clamp(crowd+13,0,100);
+
+  enemyHit=16;
+
+  shake=7;
+
+  burst(330,280,12);
+
+  setMessage("DENG!",550);
+
+ }
+
+ else if(d<.16){
+
+  crowd=clamp(crowd+5,0,100);
+
+  enemyHit=10;
+
+  setMessage("NESTEN!",500);
+
+ }
+
+ else{
+
+  health=clamp(health-18,0,100);
+
+  crowd=clamp(crowd-10,0,100);
+
+  grizzlyHit=25;
+
+  shake=10;
+
+  setMessage("AU!",600);
+
+ }
+
+ hud();
+
+ if(health<=0){
+
+  lose();
+
+  return;
+ }
+
+ markerSpeed=
+   Math.min(
+    .025,
+    .010+score*.0007
+   );
+
+ scheduleAttack(
+   Math.max(
+    650,
+    1250-score*20
+   )
+ );
+
 }
 
-function opponentAI(){
+function useFlute(){
 
-  if(!running || gameOver || specialMode) return;
-  if(enemy.down>0 || enemy.hurt>0) return;
+ if(state!=="fight")return;
 
-  if(enemy.cooldown>0) return;
+ if(attackActive){
 
-  let d=distance();
+  health=clamp(health-10,0,100);
 
-  enemy.facing =
-    player.x < enemy.x ? -1 : 1;
+  grizzlyHit=20;
 
-  if(d>68){
+  shake=8;
 
-    enemy.x +=
-      enemy.facing *
-      (0.65 + Math.min(1.0,frame/9000));
+  setMessage(
+   "DÅRLIG TID FOR FLØYTE!",
+   700
+  );
 
-  }else{
+  hud();
 
-    if(Math.random()<0.022){
+  if(health<=0)lose();
 
-      enemy.attack=14;
-      enemy.attackType='punch';
-      enemy.cooldown=42;
+  return;
+ }
 
-      if(player.flute>0){
+ if(fluteTimer>0){
 
-        player.health-=13;
-        player.hurt=20;
+  setMessage(
+   "FLØYTA TRENGER EN PAUSE!",
+   600
+  );
 
-        crowd=Math.max(0,crowd-12);
+  return;
+ }
 
-        showMessage('FLUTE INTERRUPTED!',550);
+ fluteTimer=180;
 
-      }else{
+ crowd=clamp(crowd+12,0,100);
 
-        player.health-=7;
-        player.hurt=14;
+ setMessage("♫ GRIZZLY! ♫",750);
 
-        showMessage('OOF!',300);
-      }
+ hud();
 
-      player.x+=enemy.facing*12;
-
-      shake=5;
-
-      updateHUD();
-      checkWin();
-    }
-  }
 }
 
-function checkWin(){
+function finisher(){
 
-  enemy.health=Math.max(0,enemy.health);
-  player.health=Math.max(0,player.health);
+ if(state!=="fight")return;
 
-  updateHUD();
+ if(crowd<100){
 
-  if(enemy.health<=0){
+  setMessage(
+   "PUBLIKUM ER IKKE KLARE!",
+   650
+  );
 
-    running=false;
-    gameOver=true;
+  return;
+ }
 
-    enemy.down=999;
+ attackActive=false;
 
-    setTimeout(()=>{
+ $("#timingBox").style.display="none";
 
-      endScreen(
-        'GRIZZLY WINS!',
-        'TID FOR DENG!'
-      );
+ state="special";
 
-    },700);
-  }
+ special=0;
 
-  if(player.health<=0){
+ setMessage(
+   "TID FOR DENG!",
+   2000
+ );
 
-    running=false;
-    gameOver=true;
-
-    player.down=999;
-
-    setTimeout(()=>{
-
-      endScreen(
-        'GRIZZLY IS DOWN.',
-        'REMATCH.'
-      );
-
-    },700);
-  }
 }
 
-function endScreen(title,sub){
+function burst(x,y,n){
 
-  $('#overlay').style.display='flex';
+ for(let i=0;i<n;i++){
 
-  $('#overlay').innerHTML=`
-    <div class="card">
+  particles.push({
+   x,
+   y,
 
-      <div class="big">
-        ${title}
-        <br>
-        <span class="gold">${sub}</span>
-      </div>
+   vx:(Math.random()-.5)*10,
+   vy:-Math.random()*8,
 
-      <div class="copy">
-        The crowd demands another one.
-      </div>
+   life:40+Math.random()*30,
 
-      <button class="start" id="again">
-        REMATCH
-      </button>
+   c:
+    i%2
+     ? "#f0ce68"
+     : "#b82228"
+  });
 
-      <div class="small">
-        GRIZZLY – TID FOR DENG!
-      </div>
+ }
 
-    </div>
-  `;
-
-  $('#again').onclick=resetGame;
-}
-
-function burst(x,y,n,color){
-
-  for(let i=0;i<n;i++){
-
-    particles.push({
-      x,
-      y,
-
-      vx:(Math.random()-.5)*8,
-      vy:-Math.random()*7,
-
-      life:30+Math.random()*25,
-
-      color
-    });
-  }
 }
 
 function update(){
 
-  frame++;
+ frame++;
 
-  if(messageTimer>0){
+ if(messageTimer>0){
 
-    messageTimer-=16;
+  messageTimer-=16;
 
-    if(messageTimer<=0){
-      $('#message').style.opacity=0;
-    }
+  if(messageTimer<=0){
+
+   $("#instruction").textContent="";
+
   }
 
-  if(!running){
+ }
 
-    updateParticles();
-    return;
+ if(fluteTimer>0)fluteTimer--;
+
+ if(grizzlyHit>0)grizzlyHit--;
+ if(enemyHit>0)enemyHit--;
+ if(enemyDown>0)enemyDown--;
+
+ if(state==="fight"){
+
+  if(
+   !attackActive &&
+   performance.now()>nextAttack
+  ){
+
+   beginAttack();
+
   }
 
-  if(player.cooldown>0) player.cooldown--;
-  if(enemy.cooldown>0) enemy.cooldown--;
+  if(attackActive){
 
-  if(player.attack>0) player.attack--;
-  if(enemy.attack>0) enemy.attack--;
+   marker+=markerSpeed*markerDir;
 
-  if(player.hurt>0) player.hurt--;
-  if(enemy.hurt>0) enemy.hurt--;
+   if(marker>=1){
 
-  if(player.flute>0) player.flute--;
+    marker=1;
+    markerDir=-1;
 
-  if(player.down>0) player.down--;
-  if(enemy.down>0) enemy.down--;
+   }
 
-  if(!specialMode){
+   if(marker<=0){
 
-    let speed=3.0;
+    marker=0;
+    markerDir=1;
 
-    if(keys.left && player.down<=0){
-      player.x-=speed;
-      player.facing=-1;
+   }
+
+   $("#marker").style.left=
+     `calc(${marker*100}% - 4px)`;
+
+   attackTimer++;
+
+   if(attackTimer>190){
+
+    attackActive=false;
+
+    $("#timingBox").style.display="none";
+
+    health=clamp(health-20,0,100);
+
+    grizzlyHit=25;
+
+    shake=10;
+
+    setMessage("FOR SENT!",600);
+
+    hud();
+
+    if(health<=0){
+
+     lose();
+
+    }else{
+
+     scheduleAttack(900);
+
     }
 
-    if(keys.right && player.down<=0){
-      player.x+=speed;
-      player.facing=1;
-    }
+   }
 
-    player.x=clamp(player.x,58,422);
-    enemy.x=clamp(enemy.x,58,422);
-
-    if(distance()<42){
-
-      let mid=(player.x+enemy.x)/2;
-
-      if(player.x<enemy.x){
-        player.x=mid-21;
-        enemy.x=mid+21;
-      }else{
-        player.x=mid+21;
-        enemy.x=mid-21;
-      }
-    }
-
-    opponentAI();
-
-    if(
-      crowd>0 &&
-      frame%100===0 &&
-      player.flute<=0
-    ){
-      crowd=Math.max(0,crowd-.5);
-      updateHUD();
-    }
-
-  }else{
-
-    updateSpecial();
   }
 
-  updateParticles();
+ }
 
-  shake*=.86;
-  flash*=.88;
+ if(state==="special"){
+
+  special++;
+
+  if(special===20){
+
+   setMessage(
+    "TID FOR DENG!",
+    1400
+   );
+
+  }
+
+  if(special===65){
+
+   flash=3;
+   shake=28;
+
+   enemyDown=1000;
+
+   burst(
+    300,
+    330,
+    80
+   );
+
+   setMessage(
+    "SOLFORMØRKELSEN!",
+    1600
+   );
+
+  }
+
+  if(special===135){
+
+   opponent++;
+
+   score+=3;
+
+   crowd=25;
+
+   enemyDown=0;
+
+   markerSpeed=
+     Math.min(
+      .028,
+      markerSpeed+.002
+     );
+
+   state="fight";
+
+   hud();
+
+   setMessage(
+    "NESTE MOTSTANDER!",
+    900
+   );
+
+   scheduleAttack(1300);
+
+  }
+
+ }
+
+ particles.forEach(p=>{
+
+  p.x+=p.vx;
+  p.y+=p.vy;
+
+  p.vy+=.28;
+
+  p.life--;
+
+ });
+
+ particles=
+   particles.filter(
+    p=>p.life>0
+   );
+
+ shake*=.84;
+ flash*=.87;
+
 }
 
-function updateSpecial(){
+function lose(){
 
-  specialTimer++;
+ state="dead";
 
-  if(specialTimer===20){
+ setTimeout(()=>{
 
-    enemy.x=260;
-    player.x=205;
+  $("#overlay").style.display="flex";
 
-    enemy.down=200;
+  $("#overlay").innerHTML=`
+   <div>
 
-    showMessage(
-      'SOLFORMØRKELSEN!',
-      1800
-    );
-  }
+    <div class="big">
+     GRIZZLY ER NEDE.
+    </div>
 
-  if(specialTimer===50){
+    <div class="copy">
+     ${score} vellykkede deng.
+     <br><br>
+     Publikum krever omkamp.
+    </div>
 
-    player.y-=55;
-    shake=8;
-  }
+    <button class="start" id="again">
+     REMATCH
+    </button>
 
-  if(specialTimer>50 && specialTimer<72){
+   </div>
+  `;
 
-    player.y-=1.7;
-  }
+  $("#again").onclick=start;
 
-  if(specialTimer===72){
+ },700);
 
-    player.y=355;
-
-    enemy.health-=42;
-
-    enemy.hurt=70;
-
-    flash=3;
-    shake=28;
-
-    burst(
-      enemy.x,
-      315,
-      60,
-      '#f0ce68'
-    );
-
-    showMessage(
-      'SOLFORMØRKELSEN!',
-      1200
-    );
-  }
-
-  if(specialTimer===110){
-
-    crowd=35;
-
-    specialMode=false;
-
-    updateHUD();
-
-    checkWin();
-  }
-}
-
-function updateParticles(){
-
-  particles.forEach(p=>{
-
-    p.x+=p.vx;
-    p.y+=p.vy;
-
-    p.vy+=.25;
-    p.life--;
-  });
-
-  particles=
-    particles.filter(p=>p.life>0);
 }
 
 function rect(x,y,w,h,c){
 
-  X.fillStyle=c;
-  X.fillRect(x,y,w,h);
+ X.fillStyle=c;
+ X.fillRect(x,y,w,h);
+
 }
 
-function txt(s,x,y,size,c='#fff',align='center'){
+function text(t,x,y,s,c="#fff"){
 
-  X.fillStyle=c;
+ X.font=s+"px Impact,Arial";
 
-  X.font=
-    `${size}px Impact,Arial`;
+ X.fillStyle=c;
+ X.textAlign="center";
 
-  X.textAlign=align;
+ X.fillText(t,x,y);
 
-  X.fillText(s,x,y);
 }
 
 function arena(){
 
-  let bg=X.createLinearGradient(0,0,0,H);
-
-  bg.addColorStop(0,'#471019');
-  bg.addColorStop(.42,'#170c15');
-  bg.addColorStop(1,'#020203');
-
-  X.fillStyle=bg;
-  X.fillRect(0,0,W,H);
-
-  drawLights();
-
-  rect(0,0,W,50,'#09070bcc');
-
-  txt(
-    'NORWEGIAN WRESTLING FEDERATION',
-    240,
-    38,
-    15,
-    '#d9bd68'
+ let g=
+  X.createLinearGradient(
+   0,0,0,560
   );
 
-  drawCrowd();
-  drawRing();
+ g.addColorStop(0,"#471019");
+ g.addColorStop(.55,"#150b13");
+ g.addColorStop(1,"#020203");
+
+ X.fillStyle=g;
+ X.fillRect(0,0,480,560);
+
+ spot(100);
+ spot(240);
+ spot(380);
+
+ drawAudience();
+
+ drawRing();
+
 }
 
-function drawLights(){
+function spot(cx){
 
-  for(let cx of [90,240,390]){
+ let g=
+  X.createRadialGradient(
+   cx,40,5,
+   cx,270,230
+  );
 
-    let q=X.createRadialGradient(
-      cx,40,4,
-      cx,270,240
-    );
+ g.addColorStop(
+  0,
+  "#fff4b944"
+ );
 
-    q.addColorStop(0,'#fff7b044');
-    q.addColorStop(1,'#0000');
+ g.addColorStop(
+  1,
+  "#0000"
+ );
 
-    X.fillStyle=q;
+ X.fillStyle=g;
 
-    X.beginPath();
-    X.moveTo(cx-20,0);
-    X.lineTo(cx-145,390);
-    X.lineTo(cx+145,390);
-    X.lineTo(cx+20,0);
-    X.closePath();
-    X.fill();
+ X.beginPath();
+
+ X.moveTo(cx-20,0);
+ X.lineTo(cx-130,390);
+ X.lineTo(cx+130,390);
+ X.lineTo(cx+20,0);
+
+ X.fill();
+
+}
+
+function drawAudience(){
+
+ audience.forEach((p,i)=>{
+
+  let energy=
+   2+crowd/16;
+
+  let bob=
+   Math.sin(
+    frame*.08+p.p
+   )*energy;
+
+  X.fillStyle=p.shirt;
+
+  X.beginPath();
+
+  X.arc(
+   p.x,
+   p.y+bob,
+   6,
+   0,
+   Math.PI*2
+  );
+
+  X.fill();
+
+  rect(
+   p.x-6,
+   p.y+6+bob,
+   12,
+   20,
+   p.shirt
+  );
+
+  if(
+   crowd>60 &&
+   i%18===0
+  ){
+
+   rect(
+    p.x-25,
+    p.y-24+bob,
+    50,
+    18,
+    "#eee"
+   );
+
+   text(
+    crowd>=100
+     ? "DENG!"
+     : "GRIZZLY!",
+    p.x,
+    p.y-11+bob,
+    8,
+    "#111"
+   );
+
   }
-}
 
-function drawCrowd(){
+ });
 
-  crowdPeople.forEach((p,i)=>{
-
-    let excitement=
-      1+crowd/35;
-
-    let bob=
-      Math.sin(frame*.08*excitement+p.phase)*
-      Math.min(8,2+crowd/18);
-
-    X.fillStyle=p.shirt;
-
-    X.beginPath();
-
-    X.arc(
-      p.x,
-      p.y+bob,
-      p.r,
-      0,
-      Math.PI*2
-    );
-
-    X.fill();
-
-    rect(
-      p.x-p.r,
-      p.y+p.r+bob,
-      p.r*2,
-      20,
-      p.shirt
-    );
-
-    if(crowd>55 && i%19===0){
-
-      X.save();
-
-      X.translate(
-        p.x,
-        p.y-21+bob
-      );
-
-      X.rotate(
-        Math.sin(frame*.04+p.phase)*.08
-      );
-
-      rect(
-        -29,
-        -12,
-        58,
-        21,
-        '#eee'
-      );
-
-      txt(
-        crowd>=100
-          ? 'TID FOR DENG!'
-          : 'GRIZZLY!',
-        0,
-        3,
-        8,
-        '#111'
-      );
-
-      X.restore();
-    }
-  });
 }
 
 function drawRing(){
 
-  rect(
-    34,
-    355,
-    412,
-    12,
-    '#e1e1e1'
-  );
+ rect(
+  25,
+  350,
+  430,
+  12,
+  "#eee"
+ );
 
-  rect(
-    34,
-    367,
-    412,
-    72,
-    '#312d35'
-  );
+ rect(
+  25,
+  362,
+  430,
+  77,
+  "#302c34"
+ );
 
-  for(let y of [316,338,360]){
+ for(let y of [313,335,357]){
 
-    X.strokeStyle=
-      y===338
-        ? '#e5e5e5'
-        : '#b31f25';
+  X.strokeStyle=
+   y===335
+    ? "#eee"
+    : "#b31f25";
 
-    X.lineWidth=4;
-
-    X.beginPath();
-
-    X.moveTo(25,y);
-    X.lineTo(455,y);
-
-    X.stroke();
-  }
-
-  for(let x of [30,450]){
-
-    rect(
-      x-5,
-      282,
-      10,
-      160,
-      '#111'
-    );
-
-    for(let y of [309,331,353]){
-
-      rect(
-        x-9,
-        y,
-        18,
-        11,
-        '#d1b253'
-      );
-    }
-  }
-
-  txt(
-    'NWF',
-    240,
-    414,
-    30,
-    '#777'
-  );
-}
-
-function drawGrizzly(f){
-
-  let x=f.x;
-  let y=f.y;
-
-  if(f.down>0){
-    drawDownGrizzly(f);
-    return;
-  }
-
-  let bob=
-    Math.sin(frame*.07)*1.5;
-
-  y+=bob;
-
-  X.save();
-
-  if(f.hurt>0){
-    X.rotate(
-      Math.sin(frame)*.015
-    );
-  }
-
-  // legs
-  rect(
-    x-27,
-    y-70,
-    22,
-    63,
-    '#111'
-  );
-
-  rect(
-    x+5,
-    y-70,
-    22,
-    63,
-    '#111'
-  );
-
-  // boots
-  rect(
-    x-31,
-    y-13,
-    29,
-    13,
-    '#3a2519'
-  );
-
-  rect(
-    x+3,
-    y-13,
-    29,
-    13,
-    '#3a2519'
-  );
-
-  // USA trousers
-  rect(
-    x-32,
-    y-112,
-    64,
-    48,
-    '#203b78'
-  );
-
-  // stripes
-  for(let sy=0;sy<4;sy++){
-
-    rect(
-      x,
-      y-110+sy*11,
-      31,
-      6,
-      '#eee'
-    );
-
-    rect(
-      x,
-      y-104+sy*11,
-      31,
-      5,
-      '#b21f25'
-    );
-  }
-
-  // stars-ish
-  X.fillStyle='#fff';
-
-  for(let sx=-24;sx<-2;sx+=9){
-    for(let sy=y-104;sy<y-74;sy+=10){
-
-      X.beginPath();
-
-      X.arc(
-        x+sx,
-        sy,
-        2,
-        0,
-        Math.PI*2
-      );
-
-      X.fill();
-    }
-  }
-
-  // huge torso
-  X.fillStyle='#d3a17d';
+  X.lineWidth=4;
 
   X.beginPath();
 
-  X.ellipse(
-    x,
-    y-155,
-    51,
-    61,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  X.fill();
-
-  // black singlet
-  X.fillStyle='#19191c';
-
-  X.beginPath();
-
-  X.roundRect(
-    x-37,
-    y-184,
-    74,
-    78,
-    17
-  );
-
-  X.fill();
-
-  txt(
-    'G',
-    x,
-    y-132,
-    35,
-    '#d4b650'
-  );
-
-  // head
-  X.fillStyle='#d5a27e';
-
-  X.beginPath();
-
-  X.arc(
-    x,
-    y-226,
-    29,
-    0,
-    Math.PI*2
-  );
-
-  X.fill();
-
-  // hair
-  X.fillStyle='#67402b';
-
-  X.beginPath();
-
-  X.arc(
-    x,
-    y-235,
-    30,
-    Math.PI,
-    Math.PI*2
-  );
-
-  X.fill();
-
-  // beard
-  X.fillStyle='#67402b';
-
-  X.beginPath();
-
-  X.arc(
-    x,
-    y-217,
-    25,
-    .05,
-    Math.PI-.05
-  );
-
-  X.lineTo(
-    x,
-    y-192
-  );
-
-  X.closePath();
-  X.fill();
-
-  // eyes
-  rect(
-    x-13,
-    y-230,
-    6,
-    4,
-    '#111'
-  );
-
-  rect(
-    x+7,
-    y-230,
-    6,
-    4,
-    '#111'
-  );
-
-  // arms
-  X.strokeStyle='#d3a17d';
-  X.lineWidth=18;
-  X.lineCap='round';
-
-  X.beginPath();
-
-  if(f.attack>0){
-
-    let dir=f.facing;
-
-    X.moveTo(
-      x+dir*30,
-      y-172
-    );
-
-    X.lineTo(
-      x+dir*72,
-      y-163
-    );
-
-    X.moveTo(
-      x-dir*28,
-      y-170
-    );
-
-    X.lineTo(
-      x-dir*46,
-      y-128
-    );
-
-  }else if(f.flute>0){
-
-    X.moveTo(
-      x-30,
-      y-171
-    );
-
-    X.lineTo(
-      x-4,
-      y-213
-    );
-
-    X.moveTo(
-      x+30,
-      y-171
-    );
-
-    X.lineTo(
-      x+18,
-      y-210
-    );
-
-  }else{
-
-    X.moveTo(
-      x-30,
-      y-172
-    );
-
-    X.lineTo(
-      x-49,
-      y-132
-    );
-
-    X.moveTo(
-      x+30,
-      y-172
-    );
-
-    X.lineTo(
-      x+49,
-      y-132
-    );
-  }
+  X.moveTo(20,y);
+  X.lineTo(460,y);
 
   X.stroke();
 
-  if(f.flute>0){
+ }
 
-    X.strokeStyle='#e1e4e6';
-    X.lineWidth=6;
+ for(let x of [25,455]){
 
-    X.beginPath();
+  rect(
+   x-5,
+   280,
+   10,
+   165,
+   "#111"
+  );
 
-    X.moveTo(
-      x-25,
-      y-214
-    );
+  for(let y of [305,327,349]){
 
-    X.lineTo(
-      x+45,
-      y-214
-    );
+   rect(
+    x-9,
+    y,
+    18,
+    10,
+    "#d1b253"
+   );
 
-    X.stroke();
-
-    for(let i=0;i<4;i++){
-
-      X.fillStyle='#888';
-
-      X.beginPath();
-
-      X.arc(
-        x-5+i*15,
-        y-218,
-        3,
-        0,
-        Math.PI*2
-      );
-
-      X.fill();
-    }
-
-    txt(
-      '♫',
-      x+57,
-      y-230-Math.sin(frame*.2)*7,
-      25,
-      '#f0ce68'
-    );
-
-    txt(
-      '♪',
-      x+78,
-      y-248-Math.cos(frame*.17)*9,
-      19,
-      '#fff'
-    );
   }
 
-  X.restore();
+ }
+
+ text(
+  "NWF",
+  240,
+  413,
+  30,
+  "#777"
+ );
+
 }
 
-function drawDownGrizzly(f){
+function grizzly(){
+
+ let x=145;
+ let y=350;
+
+ if(state==="special"){
+
+  if(special>35 && special<65){
+
+   y-=Math.sin(
+    (special-35)/30*Math.PI
+   )*100;
+
+   x+=
+    (special-35)*4;
+
+  }
+
+ }
+
+ if(grizzlyHit>0){
+
+  x+=Math.sin(frame)*7;
+
+ }
+
+ // legs
+ rect(
+  x-31,
+  y-69,
+  25,
+  69,
+  "#111"
+ );
+
+ rect(
+  x+6,
+  y-69,
+  25,
+  69,
+  "#111"
+ );
+
+ // USA BOLEBUKSE
+ rect(
+  x-38,
+  y-119,
+  76,
+  54,
+  "#173c81"
+ );
+
+ for(let q=0;q<4;q++){
+
+  rect(
+   x,
+   y-116+q*13,
+   38,
+   7,
+   "#eee"
+  );
+
+  rect(
+   x,
+   y-109+q*13,
+   38,
+   6,
+   "#c0262d"
+  );
+
+ }
+
+ X.fillStyle="#fff";
+
+ for(let xx=-29;xx<-2;xx+=10){
+
+  for(let yy=-109;yy<-78;yy+=11){
+
+   X.beginPath();
+
+   X.arc(
+    x+xx,
+    y+yy,
+    2,
+    0,
+    Math.PI*2
+   );
+
+   X.fill();
+
+  }
+
+ }
+
+ // torso
+ X.fillStyle="#d1a07b";
+
+ X.beginPath();
+
+ X.ellipse(
+  x,
+  y-166,
+  58,
+  67,
+  0,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ // singlet
+ X.fillStyle="#18191c";
+
+ X.beginPath();
+
+ X.roundRect(
+  x-43,
+  y-198,
+  86,
+  90,
+  18
+ );
+
+ X.fill();
+
+ text(
+  "G",
+  x,
+  y-137,
+  39,
+  "#d4b650"
+ );
+
+ // head
+ X.fillStyle="#d3a17d";
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-247,
+  32,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ // hair
+ X.fillStyle="#68402b";
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-257,
+  33,
+  Math.PI,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ // beard
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-238,
+  28,
+  .05,
+  Math.PI-.05
+ );
+
+ X.lineTo(
+  x,
+  y-207
+ );
+
+ X.fill();
+
+ // eyes
+ rect(
+  x-14,
+  y-250,
+  6,
+  5,
+  "#111"
+ );
+
+ rect(
+  x+8,
+  y-250,
+  6,
+  5,
+  "#111"
+ );
+
+ // arms
+ X.strokeStyle="#d1a07b";
+ X.lineWidth=20;
+ X.lineCap="round";
+
+ X.beginPath();
+
+ X.moveTo(
+  x-39,
+  y-182
+ );
+
+ X.lineTo(
+  x-63,
+  y-135
+ );
+
+ X.moveTo(
+  x+39,
+  y-182
+ );
+
+ X.lineTo(
+  x+63,
+  y-135
+ );
+
+ X.stroke();
+
+ if(fluteTimer>0){
+
+  X.strokeStyle="#e5e7e8";
+  X.lineWidth=6;
+
+  X.beginPath();
+
+  X.moveTo(
+   x-20,
+   y-230
+  );
+
+  X.lineTo(
+   x+58,
+   y-230
+  );
+
+  X.stroke();
+
+  text(
+   "♫",
+   x+70,
+   y-250,
+   25,
+   "#f0ce68"
+  );
+
+ }
+
+}
+
+function enemy(){
+
+ let x=335;
+ let y=350;
+
+ if(enemyDown>0){
 
   X.save();
 
   X.translate(
-    f.x,
-    f.y-28
+   x,
+   y-20
   );
 
   X.rotate(
-    Math.PI/2
+   Math.PI/2
   );
 
-  X.fillStyle='#19191c';
-
-  X.beginPath();
-
-  X.roundRect(
-    -42,
-    -33,
-    84,
-    66,
-    15
+  rect(
+   -45,
+   -30,
+   90,
+   60,
+   "#35445f"
   );
 
-  X.fill();
-
-  X.fillStyle='#d3a17d';
+  X.fillStyle="#c99671";
 
   X.beginPath();
 
   X.arc(
-    0,
-    -58,
-    28,
-    0,
-    Math.PI*2
+   0,
+   -54,
+   27,
+   0,
+   Math.PI*2
   );
 
   X.fill();
 
   X.restore();
-}
 
-function drawEnemy(f){
+  return;
 
-  let x=f.x;
-  let y=f.y;
+ }
 
-  if(f.down>0){
+ if(enemyHit>0){
 
-    X.save();
+  x+=Math.sin(frame)*8;
 
-    X.translate(x,y-28);
+ }
 
-    X.rotate(-Math.PI/2);
+ // legs
+ rect(
+  x-23,
+  y-65,
+  19,
+  65,
+  "#171719"
+ );
 
-    rect(
-      -39,
-      -26,
-      78,
-      52,
-      '#37435b'
-    );
+ rect(
+  x+4,
+  y-65,
+  19,
+  65,
+  "#171719"
+ );
 
-    X.fillStyle='#c99773';
+ // trunks
+ rect(
+  x-30,
+  y-107,
+  60,
+  46,
+  "#77262b"
+ );
 
-    X.beginPath();
+ // body
+ X.fillStyle="#c99671";
 
-    X.arc(
-      0,
-      -48,
-      24,
-      0,
-      Math.PI*2
-    );
+ X.beginPath();
 
-    X.fill();
+ X.ellipse(
+  x,
+  y-157,
+  44,
+  57,
+  0,
+  0,
+  Math.PI*2
+ );
 
-    X.restore();
+ X.fill();
 
-    return;
-  }
+ // singlet
+ X.fillStyle="#34445e";
 
-  // legs
-  rect(
-    x-22,
-    y-64,
-    18,
-    64,
-    '#171719'
-  );
+ X.beginPath();
 
-  rect(
-    x+4,
-    y-64,
-    18,
-    64,
-    '#171719'
-  );
+ X.roundRect(
+  x-34,
+  y-187,
+  68,
+  75,
+  15
+ );
 
-  // trunks
-  rect(
-    x-27,
-    y-103,
-    54,
-    43,
-    '#702329'
-  );
+ X.fill();
 
-  // torso
-  X.fillStyle='#c99773';
+ // head
+ X.fillStyle="#c99671";
 
-  X.beginPath();
+ X.beginPath();
 
-  X.ellipse(
-    x,
-    y-151,
-    40,
-    55,
-    0,
-    0,
-    Math.PI*2
-  );
+ X.arc(
+  x,
+  y-224,
+  27,
+  0,
+  Math.PI*2
+ );
 
-  X.fill();
+ X.fill();
 
-  // singlet
-  X.fillStyle='#303a51';
+ X.fillStyle="#171313";
 
-  X.beginPath();
+ X.beginPath();
 
-  X.roundRect(
-    x-31,
-    y-180,
-    62,
-    71,
-    14
-  );
+ X.arc(
+  x,
+  y-234,
+  28,
+  Math.PI,
+  Math.PI*2
+ );
 
-  X.fill();
+ X.fill();
 
-  // head
-  X.fillStyle='#c99773';
+ rect(
+  x-13,
+  y-226,
+  6,
+  4,
+  "#111"
+ );
 
-  X.beginPath();
+ rect(
+  x+7,
+  y-226,
+  6,
+  4,
+  "#111"
+ );
 
-  X.arc(
-    x,
-    y-215,
-    25,
-    0,
-    Math.PI*2
-  );
+ // arms
+ X.strokeStyle="#c99671";
+ X.lineWidth=17;
+ X.lineCap="round";
 
-  X.fill();
+ X.beginPath();
 
-  // hair
-  X.fillStyle='#211812';
+ X.moveTo(
+  x-31,
+  y-171
+ );
 
-  X.beginPath();
+ X.lineTo(
+  x-49,
+  y-130
+ );
 
-  X.arc(
-    x,
-    y-224,
-    26,
-    Math.PI,
-    Math.PI*2
-  );
+ X.moveTo(
+  x+31,
+  y-171
+ );
 
-  X.fill();
+ X.lineTo(
+  x+49,
+  y-130
+ );
 
-  // angry eyes
-  rect(
-    x-12,
-    y-217,
-    6,
-    3,
-    '#111'
-  );
+ X.stroke();
 
-  rect(
-    x+6,
-    y-217,
-    6,
-    3,
-    '#111'
-  );
-
-  // arms
-  X.strokeStyle='#c99773';
-  X.lineWidth=15;
-  X.lineCap='round';
-
-  X.beginPath();
-
-  if(f.attack>0){
-
-    X.moveTo(
-      x+f.facing*27,
-      y-164
-    );
-
-    X.lineTo(
-      x+f.facing*65,
-      y-157
-    );
-
-    X.moveTo(
-      x-f.facing*25,
-      y-163
-    );
-
-    X.lineTo(
-      x-f.facing*38,
-      y-127
-    );
-
-  }else{
-
-    X.moveTo(
-      x-27,
-      y-164
-    );
-
-    X.lineTo(
-      x-42,
-      y-127
-    );
-
-    X.moveTo(
-      x+27,
-      y-164
-    );
-
-    X.lineTo(
-      x+42,
-      y-127
-    );
-  }
-
-  X.stroke();
-}
-
-function drawSpecial(){
-
-  if(!specialMode) return;
-
-  if(specialTimer>15 && specialTimer<110){
-
-    X.fillStyle=
-      `rgba(0,0,0,${
-        specialTimer<35
-          ? .35
-          : .15
-      })`;
-
-    X.fillRect(
-      0,
-      0,
-      W,
-      H
-    );
-  }
-
-  if(specialTimer>35 && specialTimer<85){
-
-    let size=
-      34+
-      Math.sin(frame*.3)*3;
-
-    txt(
-      'TID FOR DENG!',
-      240,
-      135,
-      size,
-      '#f6d552'
-    );
-  }
 }
 
 function draw(){
 
-  X.save();
+ X.save();
 
-  if(shake>1){
+ if(shake>1){
 
-    X.translate(
-      (Math.random()-.5)*shake,
-      (Math.random()-.5)*shake
-    );
+  X.translate(
+   (Math.random()-.5)*shake,
+   (Math.random()-.5)*shake
+  );
+
+ }
+
+ arena();
+
+ grizzly();
+ enemy();
+
+ particles.forEach(p=>{
+
+  X.fillStyle=p.c;
+
+  X.fillRect(
+   p.x,
+   p.y,
+   5,
+   8
+  );
+
+ });
+
+ if(crowd>=100){
+
+  text(
+   "TID FOR DENG!",
+   240,
+   470,
+   35+Math.sin(frame*.2)*3,
+   "#f0ce68"
+  );
+
+ }
+
+ if(state==="special"){
+
+  if(special>15){
+
+   text(
+    "TID FOR DENG!",
+    240,
+    145,
+    43+Math.sin(frame*.3)*4,
+    "#f3d15d"
+   );
+
   }
 
-  arena();
+ }
 
-  if(player.x<enemy.x){
+ if(flash>.03){
 
-    drawGrizzly(player);
-    drawEnemy(enemy);
+  X.fillStyle=
+   `rgba(255,255,255,${
+    Math.min(.8,flash*.25)
+   })`;
 
-  }else{
+  X.fillRect(
+   0,
+   0,
+   480,
+   560
+  );
 
-    drawEnemy(enemy);
-    drawGrizzly(player);
-  }
+ }
 
-  drawSpecial();
+ X.restore();
 
-  particles.forEach(p=>{
-
-    X.fillStyle=p.color;
-
-    X.fillRect(
-      p.x,
-      p.y,
-      5,
-      7
-    );
-  });
-
-  if(crowd>=100 && running){
-
-    txt(
-      'TID FOR DENG!',
-      240,
-      490,
-      29+Math.sin(frame*.18)*3,
-      '#f0ce68'
-    );
-  }
-
-  if(flash>.03){
-
-    X.fillStyle=
-      `rgba(255,255,255,${
-        Math.min(.75,flash*.25)
-      })`;
-
-    X.fillRect(
-      0,
-      0,
-      W,
-      H
-    );
-  }
-
-  X.restore();
 }
 
 function loop(){
 
-  update();
-  draw();
+ update();
+ draw();
 
-  requestAnimationFrame(loop);
+ requestAnimationFrame(loop);
+
 }
 
-function bindHold(id,key){
+$("#start").onclick=start;
 
-  const el=$(id);
-
-  el.addEventListener(
-    'pointerdown',
-    e=>{
-      e.preventDefault();
-      keys[key]=true;
-    }
-  );
-
-  el.addEventListener(
-    'pointerup',
-    e=>{
-      e.preventDefault();
-      keys[key]=false;
-    }
-  );
-
-  el.addEventListener(
-    'pointercancel',
-    ()=>{
-      keys[key]=false;
-    }
-  );
-
-  el.addEventListener(
-    'pointerleave',
-    ()=>{
-      keys[key]=false;
-    }
-  );
-}
-
-bindHold('#left','left');
-bindHold('#right','right');
-
-$('#dengBtn').addEventListener(
-  'pointerdown',
-  e=>{
-    e.preventDefault();
-    punch();
-  }
+$("#deng").addEventListener(
+ "pointerdown",
+ e=>{
+  e.preventDefault();
+  deng();
+ }
 );
 
-$('#grappleBtn').addEventListener(
-  'pointerdown',
-  e=>{
-    e.preventDefault();
-    grapple();
-  }
+$("#flute").addEventListener(
+ "pointerdown",
+ e=>{
+  e.preventDefault();
+  useFlute();
+ }
 );
 
-$('#fluteBtn').addEventListener(
-  'pointerdown',
-  e=>{
-    e.preventDefault();
-    flute();
-  }
-);
-
-$('#specialBtn').addEventListener(
-  'pointerdown',
-  e=>{
-    e.preventDefault();
-    special();
-  }
-);
-
-$('#start').onclick=resetGame;
-
-addEventListener(
-  'keydown',
-  e=>{
-
-    if(e.code==='ArrowLeft' || e.code==='KeyA'){
-      keys.left=true;
-    }
-
-    if(e.code==='ArrowRight' || e.code==='KeyD'){
-      keys.right=true;
-    }
-
-    if(e.code==='Space'){
-      e.preventDefault();
-      punch();
-    }
-
-    if(e.code==='KeyG'){
-      grapple();
-    }
-
-    if(e.code==='KeyF'){
-      flute();
-    }
-
-    if(e.code==='KeyS'){
-      special();
-    }
-  }
+$("#finisher").addEventListener(
+ "pointerdown",
+ e=>{
+  e.preventDefault();
+  finisher();
+ }
 );
 
 addEventListener(
-  'keyup',
-  e=>{
+ "keydown",
+ e=>{
 
-    if(e.code==='ArrowLeft' || e.code==='KeyA'){
-      keys.left=false;
-    }
-
-    if(e.code==='ArrowRight' || e.code==='KeyD'){
-      keys.right=false;
-    }
+  if(e.code==="Space"){
+   e.preventDefault();
+   deng();
   }
+
+  if(e.code==="KeyF"){
+   useFlute();
+  }
+
+  if(e.code==="Enter"){
+   finisher();
+  }
+
+ }
 );
 
-player=makeFighter(125,false);
-enemy=makeFighter(355,true);
-
-updateHUD();
+hud();
 loop();
+
 </script>
 
 </body>
