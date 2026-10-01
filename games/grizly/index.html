@@ -3,192 +3,339 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Grizzly's Flute Drop</title>
+<title>Grizzly – Tid for Deng!</title>
 
 <style>
 *{box-sizing:border-box}
 
 html,body{
- margin:0;
- background:#09080b;
- color:#fff;
- font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
- overflow:hidden;
- touch-action:none
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#070609;
+  color:#fff;
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
+  overflow:hidden;
+  touch-action:none;
+  overscroll-behavior:none;
 }
 
 body{
- display:flex;
- align-items:center;
- justify-content:center;
- height:100dvh
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100dvh;
 }
 
 #cab{
- width:min(100vw,520px);
- height:100dvh;
- max-height:850px;
- background:linear-gradient(#17121d,#09080b);
- position:relative;
- overflow:hidden;
- border-left:2px solid #2b2034;
- border-right:2px solid #2b2034
+  width:min(100vw,540px);
+  height:100dvh;
+  max-height:920px;
+  background:linear-gradient(#18121d,#09080b);
+  position:relative;
+  overflow:hidden;
+  border-left:2px solid #33253b;
+  border-right:2px solid #33253b;
 }
 
 #top{
- height:72px;
- text-align:center;
- padding:8px;
- background:linear-gradient(180deg,#25142e,#100d13);
- border-bottom:3px solid #c49a3a
+  height:70px;
+  text-align:center;
+  padding:7px 4px 4px;
+  background:linear-gradient(180deg,#28142f,#100c13);
+  border-bottom:3px solid #c49a3a;
+  position:relative;
+  z-index:5;
 }
 
 #title{
- font-size:27px;
- letter-spacing:2px;
- line-height:28px;
- text-shadow:0 2px #000,0 0 14px #a52727
+  font-size:27px;
+  letter-spacing:2px;
+  line-height:29px;
+  color:#fff;
+  text-shadow:
+    0 2px #000,
+    3px 3px #861b1b,
+    0 0 15px #a52727;
 }
 
 .sub{
- font-family:system-ui;
- font-size:10px;
- letter-spacing:4px;
- color:#d8bd78
+  font-family:system-ui;
+  font-size:9px;
+  letter-spacing:4px;
+  color:#d8bd78;
 }
 
-#wrap{
- position:relative;
- width:100%;
- height:calc(100% - 196px);
- background:#000
+#gameWrap{
+  position:relative;
+  width:100%;
+  height:calc(100% - 208px);
+  min-height:390px;
+  background:#000;
 }
 
 canvas{
- display:block;
- width:100%;
- height:100%
+  display:block;
+  width:100%;
+  height:100%;
 }
 
 #hud{
- position:absolute;
- top:8px;
- left:10px;
- right:10px;
- display:flex;
- justify-content:space-between;
- font-family:system-ui;
- font-weight:900;
- font-size:12px;
- pointer-events:none;
- text-shadow:0 2px 3px #000
+  position:absolute;
+  top:7px;
+  left:8px;
+  right:8px;
+  pointer-events:none;
+  font-family:system-ui,sans-serif;
+  z-index:4;
 }
 
-#cue{
- position:absolute;
- left:50%;
- top:68%;
- transform:translate(-50%,-50%) rotate(-2deg);
- padding:7px 14px;
- background:#f3d25b;
- color:#111;
- border:3px solid #111;
- box-shadow:4px 4px #a52828;
- font-size:19px;
- letter-spacing:1px;
- display:none;
- white-space:nowrap
+.names{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:1000;
+  font-size:11px;
+  text-shadow:0 2px 3px #000;
+  margin-bottom:3px;
+}
+
+.healthRow{
+  display:flex;
+  justify-content:space-between;
+  gap:28px;
+}
+
+.health{
+  width:45%;
+  height:13px;
+  background:#170c0c;
+  border:2px solid #e0c575;
+  box-shadow:0 2px 5px #000;
+  overflow:hidden;
+}
+
+.health.right{
+  transform:scaleX(-1);
+}
+
+.health > div{
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,#d72d25,#f3c94c);
+  transform-origin:left center;
+}
+
+#crowdBox{
+  margin:5px auto 0;
+  width:58%;
+  text-align:center;
+}
+
+#crowdLabel{
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 2px #000;
+}
+
+#crowdBar{
+  height:8px;
+  border:1px solid #e0c575;
+  background:#130d15;
+  overflow:hidden;
+}
+
+#crowdFill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#8e1717,#f0ce68);
+}
+
+#message{
+  position:absolute;
+  left:50%;
+  top:27%;
+  transform:translate(-50%,-50%) rotate(-2deg);
+  font-size:32px;
+  line-height:.95;
+  width:95%;
+  text-align:center;
+  color:#f4d45f;
+  text-shadow:
+    3px 3px #9a1818,
+    -2px -2px #000,
+    0 0 14px #000;
+  pointer-events:none;
+  opacity:0;
+  z-index:6;
 }
 
 #controls{
- height:124px;
- background:linear-gradient(#1a151d,#0d0b0f);
- border-top:3px solid #c49a3a;
- display:flex;
- align-items:center;
- justify-content:center;
- gap:24px;
- padding:10px
+  height:138px;
+  background:linear-gradient(#1c1620,#0b090d);
+  border-top:3px solid #c49a3a;
+  position:relative;
+  display:grid;
+  grid-template-columns:112px 1fr;
+  gap:10px;
+  padding:10px 12px 10px;
+}
+
+#movePad{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
 }
 
 button{
- font:900 18px Impact,system-ui;
- letter-spacing:1px;
- color:white;
- border:0;
- box-shadow:0 6px 0 #3b1010,0 8px 12px #0008;
- user-select:none;
- -webkit-user-select:none
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
+  color:#fff;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
 }
 
-#smash{
- width:170px;
- height:76px;
- border-radius:18px;
- background:radial-gradient(circle at 40% 30%,#f14b3e,#9d1111 68%);
- font-size:24px
+.move{
+  width:50px;
+  height:78px;
+  border-radius:14px;
+  border:2px solid #69566f;
+  background:linear-gradient(#39303e,#1a161d);
+  font-size:27px;
+  box-shadow:0 5px 0 #0b090c;
 }
 
-#smash:active{
- transform:translateY(5px);
- box-shadow:0 1px 0 #3b1010
+.move:active,
+.action:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 #090609;
+}
+
+#actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.action{
+  border-radius:11px;
+  border:2px solid #6b2424;
+  background:linear-gradient(#bd2a24,#74110f);
+  font-size:17px;
+  letter-spacing:.5px;
+  box-shadow:0 5px 0 #3a0c0c;
+}
+
+#fluteBtn{
+  border-color:#9c813e;
+  background:linear-gradient(#9a792d,#5d4518);
+}
+
+#specialBtn{
+  border-color:#777;
+  background:linear-gradient(#333,#171717);
+  color:#777;
+}
+
+#specialBtn.ready{
+  border-color:#fff0a5;
+  background:linear-gradient(#f04332,#9d1111);
+  color:#fff8be;
+  animation:pulse .55s infinite alternate;
+  box-shadow:
+    0 5px 0 #4a0a08,
+    0 0 14px #f0ce68;
+}
+
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.035)}
 }
 
 #home{
- position:absolute;
- left:12px;
- bottom:10px;
- background:#25202a;
- border:1px solid #5a4b60;
- color:#aaa;
- border-radius:8px;
- padding:7px 9px;
- font:11px system-ui;
- box-shadow:none
+  position:absolute;
+  left:8px;
+  top:8px;
+  z-index:20;
+  background:#25202a;
+  border:1px solid #5a4b60;
+  color:#aaa;
+  border-radius:7px;
+  padding:5px 8px;
+  font:10px system-ui;
+  box-shadow:none;
 }
 
 #overlay{
- position:absolute;
- inset:72px 0 124px;
- background:#09080bef;
- display:flex;
- align-items:center;
- justify-content:center;
- text-align:center;
- padding:24px;
- z-index:10
+  position:absolute;
+  inset:70px 0 138px;
+  background:
+    radial-gradient(circle at 50% 35%,#421018cc,#08070a 68%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:22px;
+  z-index:10;
 }
 
-.card{max-width:410px}
+.card{
+  max-width:420px;
+}
 
 .big{
- font-size:39px;
- line-height:.95;
- letter-spacing:1px;
- text-shadow:3px 3px #8e1717
+  font-size:46px;
+  line-height:.85;
+  letter-spacing:2px;
+  text-shadow:
+    4px 4px #8e1717,
+    0 0 20px #000;
 }
 
-.gold{color:#f0ce68}
+.gold{
+  color:#f0ce68;
+}
 
 .copy{
- font:15px/1.45 system-ui;
- color:#ddd;
- margin:18px 0
+  font:14px/1.4 system-ui;
+  color:#ddd;
+  margin:18px auto;
+  max-width:350px;
 }
 
 .start{
- background:#b21f1f;
- border:2px solid #f0ce68;
- border-radius:10px;
- padding:14px 28px;
- box-shadow:0 5px 0 #541010;
- font-size:20px
+  background:#b21f1f;
+  border:2px solid #f0ce68;
+  border-radius:10px;
+  padding:13px 25px;
+  box-shadow:0 5px 0 #541010;
+  font-size:21px;
 }
 
 .small{
- font:11px system-ui;
- color:#8d8790;
- margin-top:14px
+  font:10px/1.4 system-ui;
+  color:#8d8790;
+  margin-top:13px;
+}
+
+#rotateWarning{
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:100;
+  background:#09080b;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+  font:20px Impact;
+}
+
+@media (max-height:620px) and (orientation:landscape){
+  #rotateWarning{display:flex}
 }
 </style>
 </head>
@@ -197,1101 +344,1702 @@ button{
 
 <div id="cab">
 
-<div id="top">
- <div class="sub">BUS ADVENTURES PRESENTS</div>
- <div id="title">GRIZZLY'S FLUTE DROP</div>
-</div>
-
-<div id="wrap">
- <canvas id="g" width="480" height="560"></canvas>
-
- <div id="hud">
-  <span id="phase">GENERAL REHEARSAL</span>
-  <span id="heat">CROWD 0%</span>
- </div>
-
- <div id="cue">CUE: FLUTE SLAM!</div>
-</div>
-
-<div id="controls">
- <button id="smash">SMASH!</button>
- <button id="home" onclick="location.href='../../index.html'">HOME</button>
-</div>
-
-<div id="overlay">
- <div class="card">
-
-  <div class="big">
-   THE STORY OF<br>
-   <span class="gold">GRIZZLY</span>
+  <div id="top">
+    <div class="sub">BUS ADVENTURES PRESENTS</div>
+    <div id="title">GRIZZLY – TID FOR DENG!</div>
   </div>
 
-  <div class="copy">
-   Wrestler. Ring announcer. Flutist.
-   <br><br>
-   At rehearsal, one flute is supposed to hit the floor.
-   <br>
-   Learn the cue. Nail the show.
+  <div id="gameWrap">
+
+    <canvas id="g" width="480" height="560"></canvas>
+
+    <button id="home" onclick="location.href='../../index.html'">HOME</button>
+
+    <div id="hud">
+
+      <div class="names">
+        <span>GRIZZLY</span>
+        <span>THE OPPONENT</span>
+      </div>
+
+      <div class="healthRow">
+        <div class="health">
+          <div id="playerHealth"></div>
+        </div>
+
+        <div class="health right">
+          <div id="enemyHealth"></div>
+        </div>
+      </div>
+
+      <div id="crowdBox">
+        <div id="crowdLabel">CROWD 0%</div>
+        <div id="crowdBar">
+          <div id="crowdFill"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="message"></div>
+
   </div>
 
-  <button class="start" id="start">ENTER THE RING</button>
+  <div id="controls">
 
-  <div class="small">
-   Based on an actual Grizzly story.
+    <div id="movePad">
+      <button class="move" id="left">◀</button>
+      <button class="move" id="right">▶</button>
+    </div>
+
+    <div id="actions">
+      <button class="action" id="dengBtn">DENG!</button>
+      <button class="action" id="grappleBtn">GRAPPLE</button>
+      <button class="action" id="fluteBtn">FLUTE</button>
+      <button class="action" id="specialBtn">SOLFORMØRKELSEN</button>
+    </div>
+
   </div>
 
- </div>
-</div>
+  <div id="overlay">
+
+    <div class="card">
+
+      <div class="big">
+        <span class="gold">GRIZZLY</span><br>
+        TID FOR DENG!
+      </div>
+
+      <div class="copy">
+        150 kilos of Norwegian wrestling diplomacy.
+        <br><br>
+        Punch. Grapple. Work the crowd.
+        Use the flute to fire them up.
+        <br><br>
+        When the crowd hits 100%:
+        <strong>TID FOR DENG.</strong>
+      </div>
+
+      <button class="start" id="start">
+        ENTER THE RING
+      </button>
+
+      <div class="small">
+        Fill the crowd meter and unleash SOLFORMØRKELSEN.
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="rotateWarning">
+    GRIZZLY DOES NOT WRESTLE SIDEWAYS.<br><br>
+    TURN THE PHONE.
+  </div>
 
 </div>
 
 <script>
+const C = document.getElementById('g');
+const X = C.getContext('2d');
 
-const C=document.getElementById('g');
-const X=C.getContext('2d');
-const $=s=>document.querySelector(s);
+const $ = s => document.querySelector(s);
 
-let W=480;
-let H=560;
-let t=0;
+const W = 480;
+const H = 560;
 
-let state='menu';
-let round=0;
-let heat=0;
+let running = false;
+let gameOver = false;
 
-let fluteY=290;
-let fluteRot=-.12;
+let frame = 0;
+let shake = 0;
+let flash = 0;
 
-let fall=false;
-let slow=1;
-let flash=0;
-let shake=0;
+let crowd = 0;
+let crowdPeople = [];
+let particles = [];
 
-let crowd=[];
-let parts=[];
+let messageTimer = 0;
 
-let signs=[
- "GRIZZ-LY!",
- "TID FOR DENG!",
- "GRIZZLY!",
- "SLAM IT!",
- "NWF!"
-];
+let keys = {
+  left:false,
+  right:false
+};
 
-for(let i=0;i<58;i++){
- crowd.push({
-  x:8+Math.random()*464,
-  y:420+Math.random()*125,
-  r:5+Math.random()*5,
-  p:Math.random()*6.28,
-  shirt:[
-   "#b72a2a",
-   "#222",
-   "#d2b34b",
-   "#33435e",
-   "#ddd"
-  ][i%5]
- });
+let player;
+let enemy;
+
+let specialMode = false;
+let specialTimer = 0;
+
+function makeFighter(x, enemyFighter=false){
+
+  return {
+    x,
+    y:355,
+
+    vx:0,
+
+    health:100,
+
+    facing:enemyFighter ? -1 : 1,
+
+    attack:0,
+    attackType:null,
+
+    hurt:0,
+
+    cooldown:0,
+
+    flute:0,
+
+    down:0,
+
+    enemy:enemyFighter
+  };
 }
 
-function reset(){
+function resetGame(){
 
- state='rehearsal';
+  player = makeFighter(125,false);
+  enemy = makeFighter(355,true);
 
- round=0;
- heat=0;
+  crowd = 0;
 
- fall=false;
- slow=1;
+  running = true;
+  gameOver = false;
 
- flash=0;
- shake=0;
+  specialMode = false;
+  specialTimer = 0;
 
- $('#phase').textContent='GENERAL REHEARSAL';
- $('#heat').textContent='CROWD 0%';
+  shake = 0;
+  flash = 0;
 
- $('#cue').style.display='none';
- $('#overlay').style.display='none';
+  particles = [];
 
- setTimeoutCue();
+  $('#overlay').style.display='none';
+
+  showMessage('RING THE BELL!',900);
+
+  updateHUD();
 }
 
-function setTimeoutCue(){
+for(let i=0;i<72;i++){
 
- setTimeout(()=>{
-
-  if(state==='rehearsal'||state==='live'){
-
-   fluteY=285;
-   fluteRot=-.12;
-
-   fall=false;
-
-   $('#cue').style.display='block';
-  }
-
- },state==='live'?520:850);
-}
-
-function smash(){
-
- if(
-  !['rehearsal','live'].includes(state) ||
-  fall ||
-  $('#cue').style.display==='none'
- ){
-  return;
- }
-
- $('#cue').style.display='none';
-
- fall=true;
- shake=8;
- flash=1;
-
- for(let i=0;i<18;i++){
-
-  parts.push({
-   x:240,
-   y:315,
-   vx:(Math.random()-.5)*8,
-   vy:-Math.random()*6-2,
-   l:40
+  crowdPeople.push({
+    x:Math.random()*W,
+    y:410+Math.random()*145,
+    r:4+Math.random()*5,
+    phase:Math.random()*Math.PI*2,
+    shirt:[
+      '#a82424',
+      '#22242a',
+      '#c2a43d',
+      '#31445d',
+      '#d6d6d6',
+      '#52335c'
+    ][i%6]
   });
-
- }
 }
 
-$('#smash').addEventListener('pointerdown',e=>{
-
- e.preventDefault();
- smash();
-
-});
-
-addEventListener('keydown',e=>{
-
- if(e.code==='Space'||e.code==='Enter'){
-  smash();
- }
-
-});
-
-$('#start').onclick=reset;
-
-function rect(x,y,w,h,c){
-
- X.fillStyle=c;
- X.fillRect(x,y,w,h);
-
+function clamp(v,min,max){
+  return Math.max(min,Math.min(max,v));
 }
 
-function text(s,x,y,size,c='#fff',align='center'){
-
- X.fillStyle=c;
- X.font=`${size}px Impact,Arial`;
- X.textAlign=align;
-
- X.fillText(s,x,y);
-
+function distance(){
+  return Math.abs(player.x-enemy.x);
 }
 
-function spotlight(cx){
+function showMessage(txt,time=700){
 
- let q=X.createRadialGradient(
-  cx,60,5,
-  cx,260,250
- );
+  const el=$('#message');
 
- q.addColorStop(0,'#fff9b855');
- q.addColorStop(1,'#0000');
+  el.textContent=txt;
+  el.style.opacity=1;
 
- X.fillStyle=q;
-
- X.beginPath();
-
- X.moveTo(cx-25,0);
- X.lineTo(cx-180,400);
- X.lineTo(cx+180,400);
- X.lineTo(cx+25,0);
-
- X.fill();
-
+  messageTimer=time;
 }
 
-function audience(){
+function addCrowd(n){
 
- crowd.forEach((p,i)=>{
+  crowd=clamp(crowd+n,0,100);
 
-  let bob=
-   Math.sin(t*.08+p.p)*
-   (state==='live'?5:2);
-
-  X.fillStyle=p.shirt;
-
-  X.beginPath();
-
-  X.arc(
-   p.x,
-   p.y+bob,
-   p.r,
-   0,
-   Math.PI*2
-  );
-
-  X.fill();
-
-  rect(
-   p.x-p.r,
-   p.y+p.r+bob,
-   p.r*2,
-   18,
-   p.shirt
-  );
-
-  if(
-   state==='live' &&
-   heat>25 &&
-   i%17===0
-  ){
-
-   X.save();
-
-   X.translate(
-    p.x,
-    p.y-18+bob
-   );
-
-   X.rotate(
-    i%2 ? -.08 : .08
-   );
-
-   rect(
-    -25,
-    -14,
-    50,
-    22,
-    '#eee'
-   );
-
-   text(
-    signs[(i/17|0)%signs.length],
-    0,
-    2,
-    8,
-    '#111'
-   );
-
-   X.restore();
-
+  if(crowd>=100){
+    showMessage('TID FOR DENG!',1000);
   }
 
- });
-
+  updateHUD();
 }
 
-function ring(){
+function updateHUD(){
 
- rect(
-  38,
-  350,
-  404,
-  12,
-  '#d8d8d8'
- );
+  $('#playerHealth').style.width=
+    `${Math.max(0,player?.health ?? 100)}%`;
 
- rect(
-  38,
-  362,
-  404,
-  55,
-  '#343039'
- );
+  $('#enemyHealth').style.width=
+    `${Math.max(0,enemy?.health ?? 100)}%`;
 
- for(let y of [325,343,361]){
+  $('#crowdFill').style.width=
+    `${crowd}%`;
 
-  X.strokeStyle=
-   y===343
-    ? '#eee'
-    : '#b51f25';
+  $('#crowdLabel').textContent=
+    `CROWD ${Math.round(crowd)}%`;
 
-  X.lineWidth=4;
+  const b=$('#specialBtn');
 
-  X.beginPath();
-
-  X.moveTo(28,y);
-  X.lineTo(452,y);
-
-  X.stroke();
-
- }
-
- for(let x of [32,448]){
-
-  rect(
-   x-5,
-   295,
-   10,
-   126,
-   '#111'
-  );
-
-  rect(
-   x-8,
-   316,
-   16,
-   10,
-   '#d1b253'
-  );
-
-  rect(
-   x-8,
-   351,
-   16,
-   10,
-   '#d1b253'
-  );
-
- }
-
- text(
-  'NWF',
-  240,
-  397,
-  24,
-  '#777'
- );
-
+  if(crowd>=100 && running && !gameOver){
+    b.classList.add('ready');
+  }else{
+    b.classList.remove('ready');
+  }
 }
 
-function grizzly(){
+function punch(){
 
- let x=125;
+  if(!running || gameOver || specialMode) return;
+  if(player.cooldown>0 || player.down>0) return;
 
- let y=
-  292+
-  (
-   state==='live'
-    ? Math.sin(t*.05)*2
-    : 0
-  );
+  player.attack=12;
+  player.attackType='punch';
+  player.cooldown=24;
 
- rect(
-  x-24,
-  y+64,
-  20,
-  55,
-  '#111'
- );
+  if(distance()<78){
 
- rect(
-  x+6,
-  y+64,
-  20,
-  55,
-  '#111'
- );
+    enemy.health-=8;
+    enemy.hurt=15;
 
- rect(
-  x-27,
-  y+113,
-  25,
-  10,
-  '#5a3420'
- );
+    enemy.x+=player.facing*13;
 
- rect(
-  x+5,
-  y+113,
-  25,
-  10,
-  '#5a3420'
- );
+    addCrowd(7);
 
- X.fillStyle='#202127';
+    shake=5;
 
- X.beginPath();
+    burst(
+      enemy.x,
+      enemy.y-85,
+      8,
+      '#f0ce68'
+    );
 
- X.roundRect(
-  x-38,
-  y+12,
-  76,
-  72,
-  14
- );
+    showMessage('DENG!',350);
 
- X.fill();
+  }else{
 
- X.strokeStyle='#d7a37f';
- X.lineWidth=13;
- X.lineCap='round';
+    crowd=Math.max(0,crowd-1);
+    updateHUD();
+  }
 
- X.beginPath();
+  checkWin();
+}
 
- X.moveTo(
-  x-31,
-  y+28
- );
+function grapple(){
 
- X.lineTo(
-  x-62,
-  y-4
- );
+  if(!running || gameOver || specialMode) return;
+  if(player.cooldown>0 || player.down>0) return;
 
- X.lineTo(
-  x-72,
-  y-30
- );
+  player.attack=22;
+  player.attackType='grapple';
+  player.cooldown=42;
 
- X.moveTo(
-  x+31,
-  y+28
- );
+  if(distance()<60){
 
- X.lineTo(
-  x+62,
-  y-1
- );
+    enemy.health-=15;
+    enemy.hurt=24;
+    enemy.down=35;
 
- X.lineTo(
-  x+72,
-  y-25
- );
+    enemy.x+=player.facing*28;
 
- X.stroke();
+    addCrowd(13);
 
- X.fillStyle='#d8a783';
+    shake=10;
+    flash=.5;
 
- X.beginPath();
+    burst(
+      enemy.x,
+      enemy.y-30,
+      16,
+      '#d72d25'
+    );
 
- X.arc(
-  x,
-  y-7,
-  27,
-  0,
-  Math.PI*2
- );
+    showMessage('SLAM!',500);
 
- X.fill();
+  }else{
 
- X.fillStyle='#70452e';
+    showMessage('TOO FAR!',350);
+  }
 
- X.beginPath();
-
- X.arc(
-  x,
-  y+1,
-  25,
-  .15,
-  3
- );
-
- X.lineTo(
-  x,
-  y+27
- );
-
- X.fill();
-
- X.fillStyle='#6d4024';
-
- X.beginPath();
-
- X.ellipse(
-  x,
-  y-31,
-  42,
-  8,
-  0,
-  0,
-  Math.PI*2
- );
-
- X.fill();
-
- X.beginPath();
-
- X.roundRect(
-  x-25,
-  y-56,
-  50,
-  29,
-  8
- );
-
- X.fill();
-
- rect(
-  x-25,
-  y-34,
-  50,
-  5,
-  '#2d1a12'
- );
-
- X.strokeStyle='#aaa';
- X.lineWidth=4;
-
- X.beginPath();
-
- X.moveTo(
-  x+63,
-  y-2
- );
-
- X.lineTo(
-  x+48,
-  y+21
- );
-
- X.stroke();
-
- X.fillStyle='#222';
-
- X.beginPath();
-
- X.arc(
-  x+65,
-  y-5,
-  7,
-  0,
-  Math.PI*2
- );
-
- X.fill();
-
+  checkWin();
 }
 
 function flute(){
 
- let x=300;
- let y=fluteY;
+  if(!running || gameOver || specialMode) return;
+  if(player.cooldown>0 || player.down>0) return;
 
- X.save();
+  player.flute=70;
+  player.cooldown=80;
 
- X.translate(x,y);
- X.rotate(fluteRot);
+  showMessage('♫ GRIZZLY! ♫',650);
 
- X.strokeStyle=
-  state==='reveal'
-   ? '#fff5bf'
-   : '#d9e0e3';
-
- X.lineWidth=7;
- X.lineCap='round';
-
- X.beginPath();
-
- X.moveTo(-58,0);
- X.lineTo(58,0);
-
- X.stroke();
-
- X.fillStyle='#777';
-
- for(let q=-35;q<=35;q+=18){
-
-  X.beginPath();
-
-  X.arc(
-   q,
-   -5,
-   4,
-   0,
-   Math.PI*2
-  );
-
-  X.fill();
-
- }
-
- X.restore();
-
+  addCrowd(18);
 }
 
-function arena(){
+function special(){
 
- let grad=
-  X.createLinearGradient(
-   0,
-   0,
-   0,
-   H
-  );
+  if(!running || gameOver) return;
+  if(crowd<100) return;
+  if(specialMode) return;
 
- grad.addColorStop(
-  0,
-  state==='live' ||
-  state==='reveal' ||
-  state==='impact' ||
-  state==='final'
-   ? '#421018'
-   : '#15131a'
- );
+  specialMode=true;
+  specialTimer=0;
 
- grad.addColorStop(
-  1,
-  '#030305'
- );
+  player.cooldown=150;
 
- X.fillStyle=grad;
- X.fillRect(0,0,W,H);
+  showMessage('TID FOR DENG!',1200);
 
- if(
-  state==='live' ||
-  state==='reveal' ||
-  state==='impact' ||
-  state==='final'
- ){
-
-  spotlight(130);
-  spotlight(350);
-
- }
-
- rect(
-  0,
-  0,
-  W,
-  44,
-  '#09080b'
- );
-
- text(
-  state==='rehearsal'
-   ? 'SOUND CHECK • GENERAL REHEARSAL'
-   : 'TONIGHT • LIVE',
-  240,
-  29,
-  17,
-  state==='rehearsal'
-   ? '#999'
-   : '#f0ce68'
- );
-
- audience();
- ring();
- grizzly();
-
- if(state!=='final'){
-  flute();
- }
-
+  flash=1;
+  shake=12;
 }
 
-function chant(){
+function opponentAI(){
 
- if(state!=='live'){
-  return;
- }
+  if(!running || gameOver || specialMode) return;
+  if(enemy.down>0 || enemy.hurt>0) return;
 
- let c=
-  round<5
-   ? (
-      round%2
-       ? 'GRIZZ-LY!'
-       : 'TID FOR DENG!'
-     )
-   : 'TID FOR DENG!';
+  if(enemy.cooldown>0) return;
 
- let pulse=
-  1+
-  Math.sin(t*.14)*.05;
+  let d=distance();
 
- X.save();
+  enemy.facing =
+    player.x < enemy.x ? -1 : 1;
 
- X.translate(
-  340,
-  105
- );
+  if(d>68){
 
- X.scale(
-  pulse,
-  pulse
- );
+    enemy.x +=
+      enemy.facing *
+      (0.65 + Math.min(1.0,frame/9000));
 
- text(
-  c,
-  0,
-  0,
-  round>=4
-   ? 31
-   : 25,
-  '#f4d45f'
- );
+  }else{
 
- X.restore();
+    if(Math.random()<0.022){
 
+      enemy.attack=14;
+      enemy.attackType='punch';
+      enemy.cooldown=42;
+
+      if(player.flute>0){
+
+        player.health-=13;
+        player.hurt=20;
+
+        crowd=Math.max(0,crowd-12);
+
+        showMessage('FLUTE INTERRUPTED!',550);
+
+      }else{
+
+        player.health-=7;
+        player.hurt=14;
+
+        showMessage('OOF!',300);
+      }
+
+      player.x+=enemy.facing*12;
+
+      shake=5;
+
+      updateHUD();
+      checkWin();
+    }
+  }
 }
 
-let revealAt=0;
-let impactAt=0;
+function checkWin(){
 
-function overlayText(){
+  enemy.health=Math.max(0,enemy.health);
+  player.health=Math.max(0,player.health);
 
- if(state==='reveal'){
+  updateHUD();
 
-  let elapsed=
-   (
-    performance.now()-
-    revealAt
-   )/1000;
+  if(enemy.health<=0){
 
-  X.fillStyle='#0008';
+    running=false;
+    gameOver=true;
 
-  X.fillRect(
-   0,
-   0,
-   W,
-   H
-  );
+    enemy.down=999;
 
-  if(elapsed>.35){
+    setTimeout(()=>{
 
-   text(
-    'WAIT.',
-    240,
-    105,
-    54,
-    '#fff'
-   );
+      endScreen(
+        'GRIZZLY WINS!',
+        'TID FOR DENG!'
+      );
 
+    },700);
   }
 
-  if(elapsed>1.25){
+  if(player.health<=0){
 
-   text(
-    "THAT'S THE",
-    240,
-    158,
-    27,
-    '#f0ce68'
-   );
+    running=false;
+    gameOver=true;
 
+    player.down=999;
+
+    setTimeout(()=>{
+
+      endScreen(
+        'GRIZZLY IS DOWN.',
+        'REMATCH.'
+      );
+
+    },700);
   }
+}
 
-  if(elapsed>1.65){
+function endScreen(title,sub){
 
-   text(
-    'CONCERT FLUTE.',
-    240,
-    202,
-    39,
-    '#f04a3d'
-   );
+  $('#overlay').style.display='flex';
 
+  $('#overlay').innerHTML=`
+    <div class="card">
+
+      <div class="big">
+        ${title}
+        <br>
+        <span class="gold">${sub}</span>
+      </div>
+
+      <div class="copy">
+        The crowd demands another one.
+      </div>
+
+      <button class="start" id="again">
+        REMATCH
+      </button>
+
+      <div class="small">
+        GRIZZLY – TID FOR DENG!
+      </div>
+
+    </div>
+  `;
+
+  $('#again').onclick=resetGame;
+}
+
+function burst(x,y,n,color){
+
+  for(let i=0;i<n;i++){
+
+    particles.push({
+      x,
+      y,
+
+      vx:(Math.random()-.5)*8,
+      vy:-Math.random()*7,
+
+      life:30+Math.random()*25,
+
+      color
+    });
   }
-
- }
-
- if(state==='impact'){
-
-  X.fillStyle='#000b';
-
-  X.fillRect(
-   0,
-   0,
-   W,
-   H
-  );
-
-  text(
-   'KLONK.',
-   240,
-   250,
-   65,
-   '#fff'
-  );
-
- }
-
- if(state==='final'){
-
-  X.fillStyle='#0005';
-
-  X.fillRect(
-   0,
-   0,
-   W,
-   H
-  );
-
-  text(
-   'IT SURVIVED.',
-   240,
-   160,
-   53,
-   '#f0ce68'
-  );
-
-  text(
-   'GRIZZLY WINS.',
-   240,
-   215,
-   43,
-   '#fff'
-  );
-
-  text(
-   'THE FLUTE TAKES THE BUMP.',
-   240,
-   254,
-   19,
-   '#e7b7b7'
-  );
-
-  text(
-   'TID FOR DENG!',
-   240,
-   315,
-   42,
-   '#f04a3d'
-  );
-
- }
-
 }
 
 function update(){
 
- if(fall){
+  frame++;
 
-  if(state==='reveal'){
+  if(messageTimer>0){
 
-   fluteY+=3.2*slow;
-   fluteRot+=.035*slow;
+    messageTimer-=16;
 
-   slow=.28;
+    if(messageTimer<=0){
+      $('#message').style.opacity=0;
+    }
+  }
+
+  if(!running){
+
+    updateParticles();
+    return;
+  }
+
+  if(player.cooldown>0) player.cooldown--;
+  if(enemy.cooldown>0) enemy.cooldown--;
+
+  if(player.attack>0) player.attack--;
+  if(enemy.attack>0) enemy.attack--;
+
+  if(player.hurt>0) player.hurt--;
+  if(enemy.hurt>0) enemy.hurt--;
+
+  if(player.flute>0) player.flute--;
+
+  if(player.down>0) player.down--;
+  if(enemy.down>0) enemy.down--;
+
+  if(!specialMode){
+
+    let speed=3.0;
+
+    if(keys.left && player.down<=0){
+      player.x-=speed;
+      player.facing=-1;
+    }
+
+    if(keys.right && player.down<=0){
+      player.x+=speed;
+      player.facing=1;
+    }
+
+    player.x=clamp(player.x,58,422);
+    enemy.x=clamp(enemy.x,58,422);
+
+    if(distance()<42){
+
+      let mid=(player.x+enemy.x)/2;
+
+      if(player.x<enemy.x){
+        player.x=mid-21;
+        enemy.x=mid+21;
+      }else{
+        player.x=mid+21;
+        enemy.x=mid-21;
+      }
+    }
+
+    opponentAI();
+
+    if(
+      crowd>0 &&
+      frame%100===0 &&
+      player.flute<=0
+    ){
+      crowd=Math.max(0,crowd-.5);
+      updateHUD();
+    }
 
   }else{
 
-   fluteY+=11;
-   fluteRot+=.14;
-
+    updateSpecial();
   }
 
-  if(fluteY>348){
+  updateParticles();
 
-   fall=false;
-   shake=14;
+  shake*=.86;
+  flash*=.88;
+}
 
-   if(state==='rehearsal'){
+function updateSpecial(){
 
-    round++;
+  specialTimer++;
 
-    heat=
-     Math.min(
-      25,
-      heat+8
-     );
+  if(specialTimer===20){
 
-    setTimeoutCue();
+    enemy.x=260;
+    player.x=205;
 
-   }
+    enemy.down=200;
 
-   else if(
-    state==='live' &&
-    round<6
-   ){
-
-    round++;
-
-    heat=
-     Math.min(
-      96,
-      heat+13
-     );
-
-    $('#heat').textContent=
-     `CROWD ${heat}%`;
-
-    setTimeoutCue();
-
-   }
-
-   else if(state==='live'){
-
-    state='reveal';
-
-    revealAt=
-     performance.now();
-
-    fall=true;
-    slow=.15;
-
-    fluteY=315;
-
-   }
-
-   else if(state==='reveal'){
-
-    state='impact';
-
-    impactAt=
-     performance.now();
-
-   }
-
+    showMessage(
+      'SOLFORMØRKELSEN!',
+      1800
+    );
   }
 
- }
+  if(specialTimer===50){
 
- if(
-  state==='rehearsal' &&
-  round>=3 &&
-  !fall
- ){
-
-  state='live';
-
-  round=0;
-  heat=35;
-
-  $('#phase').textContent=
-   'LIVE SHOW';
-
-  $('#heat').textContent=
-   'CROWD 35%';
-
-  flash=2;
-
-  setTimeoutCue();
-
- }
-
- if(
-  state==='reveal' &&
-  performance.now()-revealAt>3600 &&
-  fluteY>346
- ){
-
-  state='impact';
-
-  impactAt=
-   performance.now();
-
-  fall=false;
-
- }
-
- if(
-  state==='impact' &&
-  performance.now()-impactAt>1700
- ){
-
-  state='final';
-
-  $('#phase').textContent=
-   'HISTORIC MOMENT';
-
-  $('#heat').textContent=
-   'CROWD 100%';
-
-  for(let i=0;i<120;i++){
-
-   parts.push({
-    x:240,
-    y:250,
-    vx:(Math.random()-.5)*14,
-    vy:-Math.random()*12,
-    l:100
-   });
-
+    player.y-=55;
+    shake=8;
   }
 
- }
+  if(specialTimer>50 && specialTimer<72){
 
- parts.forEach(p=>{
+    player.y-=1.7;
+  }
 
-  p.x+=p.vx;
-  p.y+=p.vy;
+  if(specialTimer===72){
 
-  p.vy+=.25;
+    player.y=355;
 
-  p.l--;
+    enemy.health-=42;
 
- });
+    enemy.hurt=70;
 
- parts=
-  parts.filter(
-   p=>p.l>0
+    flash=3;
+    shake=28;
+
+    burst(
+      enemy.x,
+      315,
+      60,
+      '#f0ce68'
+    );
+
+    showMessage(
+      'SOLFORMØRKELSEN!',
+      1200
+    );
+  }
+
+  if(specialTimer===110){
+
+    crowd=35;
+
+    specialMode=false;
+
+    updateHUD();
+
+    checkWin();
+  }
+}
+
+function updateParticles(){
+
+  particles.forEach(p=>{
+
+    p.x+=p.vx;
+    p.y+=p.vy;
+
+    p.vy+=.25;
+    p.life--;
+  });
+
+  particles=
+    particles.filter(p=>p.life>0);
+}
+
+function rect(x,y,w,h,c){
+
+  X.fillStyle=c;
+  X.fillRect(x,y,w,h);
+}
+
+function txt(s,x,y,size,c='#fff',align='center'){
+
+  X.fillStyle=c;
+
+  X.font=
+    `${size}px Impact,Arial`;
+
+  X.textAlign=align;
+
+  X.fillText(s,x,y);
+}
+
+function arena(){
+
+  let bg=X.createLinearGradient(0,0,0,H);
+
+  bg.addColorStop(0,'#471019');
+  bg.addColorStop(.42,'#170c15');
+  bg.addColorStop(1,'#020203');
+
+  X.fillStyle=bg;
+  X.fillRect(0,0,W,H);
+
+  drawLights();
+
+  rect(0,0,W,50,'#09070bcc');
+
+  txt(
+    'NORWEGIAN WRESTLING FEDERATION',
+    240,
+    38,
+    15,
+    '#d9bd68'
   );
 
- flash*=.88;
- shake*=.82;
+  drawCrowd();
+  drawRing();
+}
 
+function drawLights(){
+
+  for(let cx of [90,240,390]){
+
+    let q=X.createRadialGradient(
+      cx,40,4,
+      cx,270,240
+    );
+
+    q.addColorStop(0,'#fff7b044');
+    q.addColorStop(1,'#0000');
+
+    X.fillStyle=q;
+
+    X.beginPath();
+    X.moveTo(cx-20,0);
+    X.lineTo(cx-145,390);
+    X.lineTo(cx+145,390);
+    X.lineTo(cx+20,0);
+    X.closePath();
+    X.fill();
+  }
+}
+
+function drawCrowd(){
+
+  crowdPeople.forEach((p,i)=>{
+
+    let excitement=
+      1+crowd/35;
+
+    let bob=
+      Math.sin(frame*.08*excitement+p.phase)*
+      Math.min(8,2+crowd/18);
+
+    X.fillStyle=p.shirt;
+
+    X.beginPath();
+
+    X.arc(
+      p.x,
+      p.y+bob,
+      p.r,
+      0,
+      Math.PI*2
+    );
+
+    X.fill();
+
+    rect(
+      p.x-p.r,
+      p.y+p.r+bob,
+      p.r*2,
+      20,
+      p.shirt
+    );
+
+    if(crowd>55 && i%19===0){
+
+      X.save();
+
+      X.translate(
+        p.x,
+        p.y-21+bob
+      );
+
+      X.rotate(
+        Math.sin(frame*.04+p.phase)*.08
+      );
+
+      rect(
+        -29,
+        -12,
+        58,
+        21,
+        '#eee'
+      );
+
+      txt(
+        crowd>=100
+          ? 'TID FOR DENG!'
+          : 'GRIZZLY!',
+        0,
+        3,
+        8,
+        '#111'
+      );
+
+      X.restore();
+    }
+  });
+}
+
+function drawRing(){
+
+  rect(
+    34,
+    355,
+    412,
+    12,
+    '#e1e1e1'
+  );
+
+  rect(
+    34,
+    367,
+    412,
+    72,
+    '#312d35'
+  );
+
+  for(let y of [316,338,360]){
+
+    X.strokeStyle=
+      y===338
+        ? '#e5e5e5'
+        : '#b31f25';
+
+    X.lineWidth=4;
+
+    X.beginPath();
+
+    X.moveTo(25,y);
+    X.lineTo(455,y);
+
+    X.stroke();
+  }
+
+  for(let x of [30,450]){
+
+    rect(
+      x-5,
+      282,
+      10,
+      160,
+      '#111'
+    );
+
+    for(let y of [309,331,353]){
+
+      rect(
+        x-9,
+        y,
+        18,
+        11,
+        '#d1b253'
+      );
+    }
+  }
+
+  txt(
+    'NWF',
+    240,
+    414,
+    30,
+    '#777'
+  );
+}
+
+function drawGrizzly(f){
+
+  let x=f.x;
+  let y=f.y;
+
+  if(f.down>0){
+    drawDownGrizzly(f);
+    return;
+  }
+
+  let bob=
+    Math.sin(frame*.07)*1.5;
+
+  y+=bob;
+
+  X.save();
+
+  if(f.hurt>0){
+    X.rotate(
+      Math.sin(frame)*.015
+    );
+  }
+
+  // legs
+  rect(
+    x-27,
+    y-70,
+    22,
+    63,
+    '#111'
+  );
+
+  rect(
+    x+5,
+    y-70,
+    22,
+    63,
+    '#111'
+  );
+
+  // boots
+  rect(
+    x-31,
+    y-13,
+    29,
+    13,
+    '#3a2519'
+  );
+
+  rect(
+    x+3,
+    y-13,
+    29,
+    13,
+    '#3a2519'
+  );
+
+  // USA trousers
+  rect(
+    x-32,
+    y-112,
+    64,
+    48,
+    '#203b78'
+  );
+
+  // stripes
+  for(let sy=0;sy<4;sy++){
+
+    rect(
+      x,
+      y-110+sy*11,
+      31,
+      6,
+      '#eee'
+    );
+
+    rect(
+      x,
+      y-104+sy*11,
+      31,
+      5,
+      '#b21f25'
+    );
+  }
+
+  // stars-ish
+  X.fillStyle='#fff';
+
+  for(let sx=-24;sx<-2;sx+=9){
+    for(let sy=y-104;sy<y-74;sy+=10){
+
+      X.beginPath();
+
+      X.arc(
+        x+sx,
+        sy,
+        2,
+        0,
+        Math.PI*2
+      );
+
+      X.fill();
+    }
+  }
+
+  // huge torso
+  X.fillStyle='#d3a17d';
+
+  X.beginPath();
+
+  X.ellipse(
+    x,
+    y-155,
+    51,
+    61,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  X.fill();
+
+  // black singlet
+  X.fillStyle='#19191c';
+
+  X.beginPath();
+
+  X.roundRect(
+    x-37,
+    y-184,
+    74,
+    78,
+    17
+  );
+
+  X.fill();
+
+  txt(
+    'G',
+    x,
+    y-132,
+    35,
+    '#d4b650'
+  );
+
+  // head
+  X.fillStyle='#d5a27e';
+
+  X.beginPath();
+
+  X.arc(
+    x,
+    y-226,
+    29,
+    0,
+    Math.PI*2
+  );
+
+  X.fill();
+
+  // hair
+  X.fillStyle='#67402b';
+
+  X.beginPath();
+
+  X.arc(
+    x,
+    y-235,
+    30,
+    Math.PI,
+    Math.PI*2
+  );
+
+  X.fill();
+
+  // beard
+  X.fillStyle='#67402b';
+
+  X.beginPath();
+
+  X.arc(
+    x,
+    y-217,
+    25,
+    .05,
+    Math.PI-.05
+  );
+
+  X.lineTo(
+    x,
+    y-192
+  );
+
+  X.closePath();
+  X.fill();
+
+  // eyes
+  rect(
+    x-13,
+    y-230,
+    6,
+    4,
+    '#111'
+  );
+
+  rect(
+    x+7,
+    y-230,
+    6,
+    4,
+    '#111'
+  );
+
+  // arms
+  X.strokeStyle='#d3a17d';
+  X.lineWidth=18;
+  X.lineCap='round';
+
+  X.beginPath();
+
+  if(f.attack>0){
+
+    let dir=f.facing;
+
+    X.moveTo(
+      x+dir*30,
+      y-172
+    );
+
+    X.lineTo(
+      x+dir*72,
+      y-163
+    );
+
+    X.moveTo(
+      x-dir*28,
+      y-170
+    );
+
+    X.lineTo(
+      x-dir*46,
+      y-128
+    );
+
+  }else if(f.flute>0){
+
+    X.moveTo(
+      x-30,
+      y-171
+    );
+
+    X.lineTo(
+      x-4,
+      y-213
+    );
+
+    X.moveTo(
+      x+30,
+      y-171
+    );
+
+    X.lineTo(
+      x+18,
+      y-210
+    );
+
+  }else{
+
+    X.moveTo(
+      x-30,
+      y-172
+    );
+
+    X.lineTo(
+      x-49,
+      y-132
+    );
+
+    X.moveTo(
+      x+30,
+      y-172
+    );
+
+    X.lineTo(
+      x+49,
+      y-132
+    );
+  }
+
+  X.stroke();
+
+  if(f.flute>0){
+
+    X.strokeStyle='#e1e4e6';
+    X.lineWidth=6;
+
+    X.beginPath();
+
+    X.moveTo(
+      x-25,
+      y-214
+    );
+
+    X.lineTo(
+      x+45,
+      y-214
+    );
+
+    X.stroke();
+
+    for(let i=0;i<4;i++){
+
+      X.fillStyle='#888';
+
+      X.beginPath();
+
+      X.arc(
+        x-5+i*15,
+        y-218,
+        3,
+        0,
+        Math.PI*2
+      );
+
+      X.fill();
+    }
+
+    txt(
+      '♫',
+      x+57,
+      y-230-Math.sin(frame*.2)*7,
+      25,
+      '#f0ce68'
+    );
+
+    txt(
+      '♪',
+      x+78,
+      y-248-Math.cos(frame*.17)*9,
+      19,
+      '#fff'
+    );
+  }
+
+  X.restore();
+}
+
+function drawDownGrizzly(f){
+
+  X.save();
+
+  X.translate(
+    f.x,
+    f.y-28
+  );
+
+  X.rotate(
+    Math.PI/2
+  );
+
+  X.fillStyle='#19191c';
+
+  X.beginPath();
+
+  X.roundRect(
+    -42,
+    -33,
+    84,
+    66,
+    15
+  );
+
+  X.fill();
+
+  X.fillStyle='#d3a17d';
+
+  X.beginPath();
+
+  X.arc(
+    0,
+    -58,
+    28,
+    0,
+    Math.PI*2
+  );
+
+  X.fill();
+
+  X.restore();
+}
+
+function drawEnemy(f){
+
+  let x=f.x;
+  let y=f.y;
+
+  if(f.down>0){
+
+    X.save();
+
+    X.translate(x,y-28);
+
+    X.rotate(-Math.PI/2);
+
+    rect(
+      -39,
+      -26,
+      78,
+      52,
+      '#37435b'
+    );
+
+    X.fillStyle='#c99773';
+
+    X.beginPath();
+
+    X.arc(
+      0,
+      -48,
+      24,
+      0,
+      Math.PI*2
+    );
+
+    X.fill();
+
+    X.restore();
+
+    return;
+  }
+
+  // legs
+  rect(
+    x-22,
+    y-64,
+    18,
+    64,
+    '#171719'
+  );
+
+  rect(
+    x+4,
+    y-64,
+    18,
+    64,
+    '#171719'
+  );
+
+  // trunks
+  rect(
+    x-27,
+    y-103,
+    54,
+    43,
+    '#702329'
+  );
+
+  // torso
+  X.fillStyle='#c99773';
+
+  X.beginPath();
+
+  X.ellipse(
+    x,
+    y-151,
+    40,
+    55,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  X.fill();
+
+  // singlet
+  X.fillStyle='#303a51';
+
+  X.beginPath();
+
+  X.roundRect(
+    x-31,
+    y-180,
+    62,
+    71,
+    14
+  );
+
+  X.fill();
+
+  // head
+  X.fillStyle='#c99773';
+
+  X.beginPath();
+
+  X.arc(
+    x,
+    y-215,
+    25,
+    0,
+    Math.PI*2
+  );
+
+  X.fill();
+
+  // hair
+  X.fillStyle='#211812';
+
+  X.beginPath();
+
+  X.arc(
+    x,
+    y-224,
+    26,
+    Math.PI,
+    Math.PI*2
+  );
+
+  X.fill();
+
+  // angry eyes
+  rect(
+    x-12,
+    y-217,
+    6,
+    3,
+    '#111'
+  );
+
+  rect(
+    x+6,
+    y-217,
+    6,
+    3,
+    '#111'
+  );
+
+  // arms
+  X.strokeStyle='#c99773';
+  X.lineWidth=15;
+  X.lineCap='round';
+
+  X.beginPath();
+
+  if(f.attack>0){
+
+    X.moveTo(
+      x+f.facing*27,
+      y-164
+    );
+
+    X.lineTo(
+      x+f.facing*65,
+      y-157
+    );
+
+    X.moveTo(
+      x-f.facing*25,
+      y-163
+    );
+
+    X.lineTo(
+      x-f.facing*38,
+      y-127
+    );
+
+  }else{
+
+    X.moveTo(
+      x-27,
+      y-164
+    );
+
+    X.lineTo(
+      x-42,
+      y-127
+    );
+
+    X.moveTo(
+      x+27,
+      y-164
+    );
+
+    X.lineTo(
+      x+42,
+      y-127
+    );
+  }
+
+  X.stroke();
+}
+
+function drawSpecial(){
+
+  if(!specialMode) return;
+
+  if(specialTimer>15 && specialTimer<110){
+
+    X.fillStyle=
+      `rgba(0,0,0,${
+        specialTimer<35
+          ? .35
+          : .15
+      })`;
+
+    X.fillRect(
+      0,
+      0,
+      W,
+      H
+    );
+  }
+
+  if(specialTimer>35 && specialTimer<85){
+
+    let size=
+      34+
+      Math.sin(frame*.3)*3;
+
+    txt(
+      'TID FOR DENG!',
+      240,
+      135,
+      size,
+      '#f6d552'
+    );
+  }
 }
 
 function draw(){
 
- X.save();
+  X.save();
 
- if(shake>1){
+  if(shake>1){
 
-  X.translate(
-   (Math.random()-.5)*shake,
-   (Math.random()-.5)*shake
-  );
+    X.translate(
+      (Math.random()-.5)*shake,
+      (Math.random()-.5)*shake
+    );
+  }
 
- }
+  arena();
 
- arena();
- chant();
+  if(player.x<enemy.x){
 
- parts.forEach((p,i)=>{
+    drawGrizzly(player);
+    drawEnemy(enemy);
 
-  X.fillStyle=
-   i%3
-    ? '#f0ce68'
-    : '#b9232b';
+  }else{
 
-  X.fillRect(
-   p.x,
-   p.y,
-   5,
-   8
-  );
+    drawEnemy(enemy);
+    drawGrizzly(player);
+  }
 
- });
+  drawSpecial();
 
- overlayText();
+  particles.forEach(p=>{
 
- if(flash>.05){
+    X.fillStyle=p.color;
 
-  X.fillStyle=
-   `rgba(255,255,255,${
-    Math.min(
-     .45,
-     flash*.15
-    )
-   })`;
+    X.fillRect(
+      p.x,
+      p.y,
+      5,
+      7
+    );
+  });
 
-  X.fillRect(
-   0,
-   0,
-   W,
-   H
-  );
+  if(crowd>=100 && running){
 
- }
+    txt(
+      'TID FOR DENG!',
+      240,
+      490,
+      29+Math.sin(frame*.18)*3,
+      '#f0ce68'
+    );
+  }
 
- X.restore();
+  if(flash>.03){
 
+    X.fillStyle=
+      `rgba(255,255,255,${
+        Math.min(.75,flash*.25)
+      })`;
+
+    X.fillRect(
+      0,
+      0,
+      W,
+      H
+    );
+  }
+
+  X.restore();
 }
 
 function loop(){
 
- t++;
+  update();
+  draw();
 
- update();
- draw();
-
- requestAnimationFrame(loop);
-
+  requestAnimationFrame(loop);
 }
 
-loop();
+function bindHold(id,key){
 
+  const el=$(id);
+
+  el.addEventListener(
+    'pointerdown',
+    e=>{
+      e.preventDefault();
+      keys[key]=true;
+    }
+  );
+
+  el.addEventListener(
+    'pointerup',
+    e=>{
+      e.preventDefault();
+      keys[key]=false;
+    }
+  );
+
+  el.addEventListener(
+    'pointercancel',
+    ()=>{
+      keys[key]=false;
+    }
+  );
+
+  el.addEventListener(
+    'pointerleave',
+    ()=>{
+      keys[key]=false;
+    }
+  );
+}
+
+bindHold('#left','left');
+bindHold('#right','right');
+
+$('#dengBtn').addEventListener(
+  'pointerdown',
+  e=>{
+    e.preventDefault();
+    punch();
+  }
+);
+
+$('#grappleBtn').addEventListener(
+  'pointerdown',
+  e=>{
+    e.preventDefault();
+    grapple();
+  }
+);
+
+$('#fluteBtn').addEventListener(
+  'pointerdown',
+  e=>{
+    e.preventDefault();
+    flute();
+  }
+);
+
+$('#specialBtn').addEventListener(
+  'pointerdown',
+  e=>{
+    e.preventDefault();
+    special();
+  }
+);
+
+$('#start').onclick=resetGame;
+
+addEventListener(
+  'keydown',
+  e=>{
+
+    if(e.code==='ArrowLeft' || e.code==='KeyA'){
+      keys.left=true;
+    }
+
+    if(e.code==='ArrowRight' || e.code==='KeyD'){
+      keys.right=true;
+    }
+
+    if(e.code==='Space'){
+      e.preventDefault();
+      punch();
+    }
+
+    if(e.code==='KeyG'){
+      grapple();
+    }
+
+    if(e.code==='KeyF'){
+      flute();
+    }
+
+    if(e.code==='KeyS'){
+      special();
+    }
+  }
+);
+
+addEventListener(
+  'keyup',
+  e=>{
+
+    if(e.code==='ArrowLeft' || e.code==='KeyA'){
+      keys.left=false;
+    }
+
+    if(e.code==='ArrowRight' || e.code==='KeyD'){
+      keys.right=false;
+    }
+  }
+);
+
+player=makeFighter(125,false);
+enemy=makeFighter(355,true);
+
+updateHUD();
+loop();
 </script>
 
 </body>
