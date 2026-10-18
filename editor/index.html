@@ -658,7 +658,7 @@ function showRoom(id) {
     };
   });
 
-  el("deleteRoom")?.onclick = () => {
+  (el("deleteRoom") ?? {}).onclick = () => {
     if (!confirm(`Delete room "${id}"?`)) return;
     delete STATE.rooms[id];
     STATE.currentRoom = null;
@@ -667,20 +667,20 @@ function showRoom(id) {
     toast("Room deleted", "warn");
   };
 
-  el("addMS")?.onclick = () => appendTo("msList", renderMSList([{media:"",condition:{}}]));
-  el("addExit")?.onclick = () => appendTo("exitsList", renderExits({"":""}, true));
-  el("addAction")?.onclick = () => appendTo("actionsList", renderActions([{verbs:[],targets:[],successText:"",failText:"",effects:{}}]));
-  el("addHazard")?.onclick = () => appendTo("hazardsList", renderHazards([{type:"onEnter",deathText:""}]));
-  el("addObj")?.onclick = () => appendTo("objList", renderObjs({_new:{id:"",aliases:[],examineText:"",useText:""}}, false));
-  el("addFlavour")?.onclick = () => appendTo("flavourList", renderObjs({_new:{id:"",aliases:[],examineText:"",useText:""}}, true));
+  (el("addMS") ?? {}).onclick = () => appendTo("msList", renderMSList([{media:"",condition:{}}]));
+  (el("addExit") ?? {}).onclick = () => appendTo("exitsList", renderExits({"":""}, true));
+  (el("addAction") ?? {}).onclick = () => appendTo("actionsList", renderActions([{verbs:[],targets:[],successText:"",failText:"",effects:{}}]));
+  (el("addHazard") ?? {}).onclick = () => appendTo("hazardsList", renderHazards([{type:"onEnter",deathText:""}]));
+  (el("addObj") ?? {}).onclick = () => appendTo("objList", renderObjs({_new:{id:"",aliases:[],examineText:"",useText:""}}, false));
+  (el("addFlavour") ?? {}).onclick = () => appendTo("flavourList", renderObjs({_new:{id:"",aliases:[],examineText:"",useText:""}}, true));
 
-  el("addStateBtn")?.onclick = () => {
+  (el("addStateBtn") ?? {}).onclick = () => {
     const name = prompt("State name (e.g. sedated, burned, open):"); if (!name) return;
     if (!r.states) r.states = {};
     r.states[name] = { description: "", fx: null };
     showRoom(id);
   };
-  el("addStateTab")?.onclick = () => {
+  (el("addStateTab") ?? {}).onclick = () => {
     const name = prompt("New state name:"); if (!name) return;
     if (!r.states) r.states = {};
     r.states[name] = { description: "", fx: null };
@@ -1006,7 +1006,7 @@ function showItem(id) {
   const tags = [...(it.tags||[])];
   el("itTagsWrap").appendChild(makeTagInput(tags, updated => it.tags = [...updated]));
 
-  el("addCA")?.onclick = () => appendTo("caList", renderContextActions([{room:"",verbs:[],effects:{}}]));
+  (el("addCA") ?? {}).onclick = () => appendTo("caList", renderContextActions([{room:"",verbs:[],effects:{}}]));
   el("deleteItem").onclick = () => {
     if (!confirm(`Delete item "${id}"?`)) return;
     delete STATE.items[id];
