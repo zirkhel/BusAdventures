@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#08070a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Grizzly">
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <title>Grizzly – Tid for Deng!</title>
 
 <style>
@@ -16,7 +24,7 @@ html,body{
  color:#fff;
  overflow:hidden;
  touch-action:none;
- font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
+ font-family:Anton,Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
 }
 
 body{
@@ -39,8 +47,12 @@ body{
 
 #top{
  height:70px;
+ display:grid;
+ grid-template-columns:44px 1fr 44px;
+ align-items:center;
+ padding:0 8px;
+ padding-top:env(safe-area-inset-top);
  text-align:center;
- padding-top:7px;
  background:linear-gradient(#28142f,#100c13);
  border-bottom:3px solid #c49a3a;
 }
@@ -52,8 +64,9 @@ body{
 }
 
 #title{
- font-size:27px;
- letter-spacing:2px;
+ font-size:clamp(18px,5.6vw,27px);
+ letter-spacing:1px;
+ white-space:nowrap;
  text-shadow:3px 3px #861b1b,0 2px #000;
 }
 
@@ -170,7 +183,7 @@ canvas{
 }
 
 button{
- font-family:Impact,system-ui;
+ font-family:Anton,Impact,system-ui;
  color:#fff;
  border:0;
  user-select:none;
@@ -227,16 +240,25 @@ button{
 }
 
 #home{
- position:absolute;
- left:8px;
- top:8px;
- z-index:30;
+ width:36px;
+ height:36px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
  background:#25202a;
  border:1px solid #5a4b60;
- border-radius:7px;
- padding:5px 8px;
- color:#aaa;
- font:10px system-ui;
+ border-radius:9px;
+ color:#d8bd78;
+ padding:0;
+}
+
+#hudSub{
+ display:flex;
+ justify-content:space-between;
+ margin-top:4px;
+ font:700 10px system-ui;
+ color:#d8bd78;
+ text-shadow:0 2px 3px #000;
 }
 
 #overlay{
@@ -288,20 +310,22 @@ button{
 <div id="cab">
 
 <div id="top">
- <div class="sub">BUS ADVENTURES PRESENTS</div>
- <div id="title">GRIZZLY – TID FOR DENG!</div>
+ <button id="home" aria-label="Hjem – Bus Adventures" title="Hjem – Bus Adventures"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9"/></svg></button>
+ <div>
+  <div class="sub">BUS ADVENTURES PRESENTS</div>
+  <div id="title">GRIZZLY – TID FOR DENG!</div>
+ </div>
+ <span></span>
 </div>
 
 <div id="game">
 
- <canvas id="c" width="480" height="560"></canvas>
-
- <button id="home" onclick="location.href='../../index.html'">HOME</button>
+ <canvas id="c"></canvas>
 
  <div id="hud">
    <div id="hudTop">
      <span>GRIZZLY</span>
-     <span id="crowdText">CROWD 0%</span>
+     <span id="crowdText">PUBLIKUM 0%</span>
    </div>
 
    <div class="bar">
@@ -310,6 +334,11 @@ button{
 
    <div class="bar">
      <div id="crowdFill"></div>
+   </div>
+
+   <div id="hudSub">
+     <span id="oppText">MOTSTANDER 1</span>
+     <span id="scoreText">DENG 0 · REKORD 0</span>
    </div>
  </div>
 
@@ -350,11 +379,13 @@ button{
    <strong>DENG!</strong> når markøren treffer gullfeltet.
    <br><br>
    Gode treff fyrer opp publikum.
-   Når CROWD når 100 %, er det tid for
+   Når PUBLIKUM når 100 %, er det tid for
    <strong>Solformørkelsen.</strong>
   </div>
 
   <button class="start" id="start">TID FOR DENG!</button>
+
+  <div class="small" id="bestMenu"></div>
 
   <div class="small">
    FLØYTA kan brukes mellom angrep for å fyre opp publikum.
@@ -371,6 +402,40 @@ const C=document.getElementById("c");
 const X=C.getContext("2d");
 
 const $=q=>document.querySelector(q);
+
+// Scene is authored at 480x560 and scaled to fit (no stretching).
+const W=480, H=560;
+let view={s:1,ox:0,oy:0,dpr:1,cw:W,ch:H};
+
+function resize(){
+ const r=C.getBoundingClientRect();
+ const dpr=Math.min(window.devicePixelRatio||1,3);
+ const cw=Math.max(1,Math.round(r.width*dpr));
+ const ch=Math.max(1,Math.round(r.height*dpr));
+ if(C.width!==cw)C.width=cw;
+ if(C.height!==ch)C.height=ch;
+ const s=Math.min(cw/W,ch/H);
+ // centre horizontally, anchor to the bottom so the ring and crowd stay put
+ view={s,ox:(cw-W*s)/2,oy:ch-H*s,dpr,cw,ch};
+}
+addEventListener("resize",resize);
+
+// Hit windows (distance from the centre of the bar, 0..0.5).
+const PERFECT=.035, GOOD=.09, NEAR=.16;
+
+// Fixed 60 Hz simulation so 120 Hz iPhones don't play at double speed.
+const STEP=1000/60;
+const msToTicks=ms=>Math.round(ms/STEP);
+
+const BEST_KEY="bus-adventures.grizzly.best";
+let best=0;
+try{best=Math.max(0,Math.floor(Number(localStorage.getItem(BEST_KEY))||0))}catch(e){}
+
+function saveBest(){
+ if(score<=best)return;
+ best=score;
+ try{localStorage.setItem(BEST_KEY,String(best))}catch(e){}
+}
 
 let frame=0;
 
@@ -444,7 +509,12 @@ function hud(){
  $("#crowdFill").style.width=crowd+"%";
 
  $("#crowdText").textContent=
-   "CROWD "+Math.round(crowd)+"%";
+   "PUBLIKUM "+Math.round(crowd)+"%";
+
+ $("#oppText").textContent="MOTSTANDER "+opponent;
+
+ $("#scoreText").textContent=
+   "DENG "+score+" · REKORD "+Math.max(best,score);
 
  if(crowd>=100){
 
@@ -467,13 +537,21 @@ function start(){
 
  markerSpeed=.010;
 
+ attackActive=false;
+ fluteTimer=0;
+ special=0;
+ grizzlyHit=0;
+ enemyHit=0;
+ enemyDown=0;
+ particles=[];
+
  state="fight";
 
  $("#overlay").style.display="none";
 
  hud();
 
- setMessage("GET READY!",900);
+ setMessage("GJØR DEG KLAR!",900);
 
  scheduleAttack(1200);
 
@@ -486,7 +564,7 @@ function scheduleAttack(delay){
  $("#timingBox").style.display="none";
 
  nextAttack=
-   performance.now()+delay;
+   frame+msToTicks(delay);
 
 }
 
@@ -505,7 +583,7 @@ function beginAttack(){
 
  $("#timingBox").style.display="block";
 
- setMessage("HE'S COMING! DENG!",1200);
+ setMessage("HAN KOMMER! DENG!",1200);
 
 }
 
@@ -526,7 +604,7 @@ function deng(){
 
  let d=Math.abs(marker-.5);
 
- if(d<.035){
+ if(d<PERFECT){
 
   score++;
 
@@ -545,7 +623,7 @@ function deng(){
 
  }
 
- else if(d<.09){
+ else if(d<GOOD){
 
   score++;
 
@@ -561,7 +639,7 @@ function deng(){
 
  }
 
- else if(d<.16){
+ else if(d<NEAR){
 
   crowd=clamp(crowd+5,0,100);
 
@@ -676,8 +754,8 @@ function finisher(){
  special=0;
 
  setMessage(
-   "TID FOR DENG!",
-   2000
+   "GRIZZLY GÅR TIL TOPPS…",
+   1000
  );
 
 }
@@ -711,7 +789,7 @@ function update(){
 
  if(messageTimer>0){
 
-  messageTimer-=16;
+  messageTimer-=STEP;
 
   if(messageTimer<=0){
 
@@ -731,7 +809,7 @@ function update(){
 
   if(
    !attackActive &&
-   performance.now()>nextAttack
+   frame>=nextAttack
   ){
 
    beginAttack();
@@ -796,15 +874,6 @@ function update(){
  if(state==="special"){
 
   special++;
-
-  if(special===20){
-
-   setMessage(
-    "TID FOR DENG!",
-    1400
-   );
-
-  }
 
   if(special===65){
 
@@ -882,6 +951,12 @@ function lose(){
 
  state="dead";
 
+ const newRecord=score>best;
+
+ saveBest();
+
+ hud();
+
  setTimeout(()=>{
 
   $("#overlay").style.display="flex";
@@ -894,7 +969,9 @@ function lose(){
     </div>
 
     <div class="copy">
-     ${score} vellykkede deng.
+     ${score} vellykkede deng · ${opponent-1} motstandere lagt i matta.
+     <br><br>
+     ${newRecord ? "<strong class='gold'>NY REKORD!</strong>" : "Rekord: "+best+" deng."}
      <br><br>
      Publikum krever omkamp.
     </div>
@@ -921,7 +998,7 @@ function rect(x,y,w,h,c){
 
 function text(t,x,y,s,c="#fff"){
 
- X.font=s+"px Impact,Arial";
+ X.font=s+"px Anton,Impact,Arial";
 
  X.fillStyle=c;
  X.textAlign="center";
@@ -958,8 +1035,8 @@ function spot(cx){
 
  let g=
   X.createRadialGradient(
-   cx,40,5,
-   cx,270,230
+   cx,-40,0,
+   cx,-40,440
   );
 
  g.addColorStop(
@@ -976,10 +1053,10 @@ function spot(cx){
 
  X.beginPath();
 
- X.moveTo(cx-20,0);
+ X.moveTo(cx+10,-300);
  X.lineTo(cx-130,390);
  X.lineTo(cx+130,390);
- X.lineTo(cx+20,0);
+ X.lineTo(cx-10,-300);
 
  X.fill();
 
@@ -1565,6 +1642,18 @@ function enemy(){
 
 function draw(){
 
+ // background fills the whole canvas, scene is drawn scaled on top
+ X.setTransform(1,0,0,1,0,0);
+ // same stops as arena(), mapped to screen space so the letterbox blends in
+ let bg=X.createLinearGradient(0,view.oy,0,view.oy+H*view.s);
+ bg.addColorStop(0,"#471019");
+ bg.addColorStop(.55,"#150b13");
+ bg.addColorStop(1,"#020203");
+ X.fillStyle=bg;
+ X.fillRect(0,0,view.cw,view.ch);
+
+ X.setTransform(view.s,0,0,view.s,view.ox,view.oy);
+
  X.save();
 
  if(shake>1){
@@ -1594,7 +1683,7 @@ function draw(){
 
  });
 
- if(crowd>=100){
+ if(crowd>=100 && state==="fight"){
 
   text(
    "TID FOR DENG!",
@@ -1642,16 +1731,50 @@ function draw(){
 
 }
 
-function loop(){
+let last=0, acc=0;
 
- update();
+function loop(t){
+
+ if(!last)last=t;
+
+ // cap the gap so returning from a background tab doesn't fast-forward
+ acc+=Math.min(t-last,250);
+ last=t;
+
+ let steps=0;
+
+ while(acc>=STEP && steps<6){
+  update();
+  acc-=STEP;
+  steps++;
+ }
+
+ if(steps===6)acc=0;
+
  draw();
 
  requestAnimationFrame(loop);
 
 }
 
+// Timing bar zones are drawn from the same constants the scoring uses.
+function layoutZones(){
+ $("#zone").style.left=((.5-GOOD)*100)+"%";
+ $("#zone").style.width=(GOOD*200)+"%";
+ $("#perfect").style.left=((.5-PERFECT)*100)+"%";
+ $("#perfect").style.width=(PERFECT*200)+"%";
+}
+
+function showMenuBest(){
+ $("#bestMenu").textContent=best>0?"REKORD: "+best+" DENG":"";
+}
+
 $("#start").onclick=start;
+
+$("#home").addEventListener("click",()=>{
+ const inGameFolder=/\/games\/grizly\//i.test(location.pathname);
+ location.href=new URL(inGameFolder?"../../index.html":"./index.html",location.href).href;
+});
 
 $("#deng").addEventListener(
  "pointerdown",
@@ -1697,8 +1820,16 @@ addEventListener(
  }
 );
 
+layoutZones();
+showMenuBest();
+resize();
 hud();
-loop();
+requestAnimationFrame(loop);
+
+// canvas text needs the web font loaded before it renders with it
+if(document.fonts&&document.fonts.load){
+ document.fonts.load("20px Anton").catch(()=>{});
+}
 
 </script>
 
