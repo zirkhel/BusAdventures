@@ -219,8 +219,45 @@ button{
 }
 
 #flute{
+ position:relative;
+ overflow:hidden;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ line-height:1;
  background:linear-gradient(#a27e2c,#604617);
  border-color:#d8bd78;
+ transition:opacity .15s,filter .15s;
+}
+
+#flute small{
+ display:block;
+ margin-top:3px;
+ font:700 10px system-ui;
+ letter-spacing:.5px;
+ color:#fff3c4;
+}
+
+#fluteCd{
+ position:absolute;
+ left:0;
+ bottom:0;
+ height:4px;
+ width:0;
+ background:#f0ce68;
+}
+
+#flute.wait{
+ filter:grayscale(1);
+ opacity:.65;
+}
+
+#flute.wait small{color:#ff8a80}
+
+#flute.cool{
+ filter:saturate(.4);
+ opacity:.7;
 }
 
 #finisher{
@@ -357,7 +394,7 @@ button{
  <button id="deng">DENG!</button>
 
  <div id="sideButtons">
-   <button class="smallButton" id="flute">FLØYTA</button>
+   <button class="smallButton" id="flute"><span>♫ FLØYTA</span><small id="fluteSub">+12% PUBLIKUM</small><i id="fluteCd"></i></button>
    <button class="smallButton" id="finisher">SOLFORMØRKELSEN</button>
  </div>
 
@@ -388,7 +425,8 @@ button{
   <div class="small" id="bestMenu"></div>
 
   <div class="small">
-   FLØYTA kan brukes mellom angrep for å fyre opp publikum.
+   ♫ FLØYTA: blås <em>mellom</em> angrepene for +12 % publikum.<br>
+   Blåser du mens han angriper, mister du helse.
   </div>
 
  </div>
@@ -492,7 +530,7 @@ function chant(n=1,line){
    size:10+Math.random()*4
   });
  }
- if(chants.length>40)chants.splice(0,chants.length-40);
+ if(chants.length>12)chants.splice(0,chants.length-12);
 }
 
 let audience=[];
@@ -646,7 +684,7 @@ function deng(){
 
   setMessage("PERFEKT DENG!",700);
 
-  chant(5);
+  chant(2);
 
  }
 
@@ -664,7 +702,7 @@ function deng(){
 
   setMessage("DENG!",550);
 
-  chant(2);
+  chant(1);
 
  }
 
@@ -690,7 +728,7 @@ function deng(){
 
   setMessage("AU!",600);
 
-  chant(2,"BUUU!");
+  chant(1,"BUUU!");
 
  }
 
@@ -742,6 +780,13 @@ function useFlute(){
   return;
  }
 
+ if(crowd>=100){
+
+  setMessage("FULLT HUS – TRYKK SOLFORMØRKELSEN!",800);
+
+  return;
+ }
+
  if(fluteTimer>0){
 
   setMessage(
@@ -752,13 +797,13 @@ function useFlute(){
   return;
  }
 
- fluteTimer=180;
+ fluteTimer=FLUTE_COOLDOWN;
 
  crowd=clamp(crowd+12,0,100);
 
- setMessage("♫ GRIZZLY! ♫",750);
+ setMessage("♫ +12% PUBLIKUM ♫",800);
 
- chant(4,"TID FOR DENG!");
+ chant(1,"♫ GRIZZLY! ♫");
 
  hud();
 
@@ -791,6 +836,27 @@ function finisher(){
    1000
  );
 
+}
+
+const FLUTE_COOLDOWN=180;
+let fluteUi="";
+
+function fluteHud(){
+ let mode="ready", sub="+12% PUBLIKUM";
+ if(state!=="fight"){mode="ready";}
+ else if(attackActive){mode="wait";sub="IKKE NÅ!";}
+ else if(crowd>=100){mode="cool";sub="FULLT HUS";}
+ else if(fluteTimer>0){mode="cool";sub="LADER…";}
+ const key=mode+sub;
+ if(key!==fluteUi){
+  fluteUi=key;
+  const b=$("#flute");
+  b.classList.toggle("wait",mode==="wait");
+  b.classList.toggle("cool",mode==="cool");
+  $("#fluteSub").textContent=sub;
+ }
+ $("#fluteCd").style.width=
+   (fluteTimer>0?(1-fluteTimer/FLUTE_COOLDOWN)*100:0)+"%";
 }
 
 function burst(x,y,n){
@@ -833,6 +899,8 @@ function update(){
  }
 
  if(fluteTimer>0)fluteTimer--;
+
+ fluteHud();
 
  if(grizzlyHit>0)grizzlyHit--;
  if(enemyHit>0)enemyHit--;
@@ -926,7 +994,7 @@ function update(){
     1600
    );
 
-   chant(14,"TID FOR DENG!");
+   chant(6,"TID FOR DENG!");
 
   }
 
@@ -964,8 +1032,8 @@ function update(){
  // The hotter the crowd, the more they shout. Full house = constant chant.
  if(state==="fight"||state==="special"){
   const heat=state==="special"?1:crowd/100;
-  if(Math.random()<.012+heat*.06)chant(1);
-  if(heat>=1 && frame%40===0)chant(4,"TID FOR DENG!");
+  if(Math.random()<.004+heat*.016)chant(1);
+  if(heat>=1 && frame%110===0)chant(2,"TID FOR DENG!");
  }
 
  chants.forEach(c=>c.life++);
@@ -1142,9 +1210,9 @@ function drawAudience(){
   );
 
   if(
-   (crowd>25 && i%14===0) ||
-   (crowd>60 && i%7===0) ||
-   (crowd>=100 && i%4===0)
+   (crowd>30 && i%18===0) ||
+   (crowd>65 && i%12===0) ||
+   (crowd>=100 && i%8===0)
   ){
 
    rect(
