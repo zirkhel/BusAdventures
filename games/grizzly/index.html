@@ -1,0 +1,1837 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#08070a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Grizzly">
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<title>Grizzly – Tid for Deng!</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+ margin:0;
+ width:100%;
+ height:100%;
+ background:#08070a;
+ color:#fff;
+ overflow:hidden;
+ touch-action:none;
+ font-family:Anton,Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;
+}
+
+body{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ height:100dvh;
+}
+
+#cab{
+ width:min(100vw,540px);
+ height:100dvh;
+ max-height:920px;
+ position:relative;
+ overflow:hidden;
+ background:#09080b;
+ border-left:2px solid #302238;
+ border-right:2px solid #302238;
+}
+
+#top{
+ height:70px;
+ display:grid;
+ grid-template-columns:44px 1fr 44px;
+ align-items:center;
+ padding:0 8px;
+ padding-top:env(safe-area-inset-top);
+ text-align:center;
+ background:linear-gradient(#28142f,#100c13);
+ border-bottom:3px solid #c49a3a;
+}
+
+.sub{
+ font:9px system-ui;
+ letter-spacing:4px;
+ color:#d8bd78;
+}
+
+#title{
+ font-size:clamp(18px,5.6vw,27px);
+ letter-spacing:1px;
+ white-space:nowrap;
+ text-shadow:3px 3px #861b1b,0 2px #000;
+}
+
+#game{
+ position:relative;
+ height:calc(100% - 205px);
+ background:#000;
+}
+
+canvas{
+ display:block;
+ width:100%;
+ height:100%;
+}
+
+#hud{
+ position:absolute;
+ top:9px;
+ left:12px;
+ right:12px;
+ pointer-events:none;
+}
+
+#hudTop{
+ display:flex;
+ justify-content:space-between;
+ font:900 11px system-ui;
+ text-shadow:0 2px 3px #000;
+}
+
+.bar{
+ height:11px;
+ border:2px solid #d8bd78;
+ background:#160c0d;
+ overflow:hidden;
+ margin-top:3px;
+}
+
+#healthFill{
+ width:100%;
+ height:100%;
+ background:linear-gradient(90deg,#d52c25,#f0c74d);
+}
+
+#crowdFill{
+ width:0%;
+ height:100%;
+ background:linear-gradient(90deg,#a31d1d,#f0ce68);
+}
+
+#instruction{
+ position:absolute;
+ top:24%;
+ left:50%;
+ transform:translateX(-50%);
+ width:92%;
+ text-align:center;
+ font-size:23px;
+ line-height:1;
+ color:#fff;
+ text-shadow:3px 3px #8e1717,0 0 12px #000;
+ pointer-events:none;
+}
+
+#timingBox{
+ position:absolute;
+ left:8%;
+ right:8%;
+ bottom:28px;
+ height:38px;
+ background:#141117dd;
+ border:3px solid #d8bd78;
+ display:none;
+}
+
+#zone{
+ position:absolute;
+ top:0;
+ bottom:0;
+ left:43%;
+ width:14%;
+ background:#e7bd42aa;
+ border-left:2px solid #fff;
+ border-right:2px solid #fff;
+}
+
+#perfect{
+ position:absolute;
+ top:0;
+ bottom:0;
+ left:47%;
+ width:6%;
+ background:#eee8;
+}
+
+#marker{
+ position:absolute;
+ top:-7px;
+ left:0%;
+ width:9px;
+ height:47px;
+ background:#f02d25;
+ box-shadow:0 0 8px #fff;
+}
+
+#controls{
+ height:135px;
+ background:linear-gradient(#1b151f,#0b090d);
+ border-top:3px solid #c49a3a;
+ display:grid;
+ grid-template-columns:2fr 1fr;
+ gap:10px;
+ padding:11px;
+}
+
+button{
+ font-family:Anton,Impact,system-ui;
+ color:#fff;
+ border:0;
+ user-select:none;
+ -webkit-user-select:none;
+ -webkit-tap-highlight-color:transparent;
+}
+
+#deng{
+ border-radius:17px;
+ font-size:31px;
+ letter-spacing:2px;
+ background:radial-gradient(circle at 40% 25%,#ef493c,#9d1111 70%);
+ box-shadow:0 7px 0 #450a0a;
+}
+
+#deng:active{
+ transform:translateY(5px);
+ box-shadow:0 2px 0 #450a0a;
+}
+
+#sideButtons{
+ display:grid;
+ grid-template-rows:1fr 1fr;
+ gap:8px;
+}
+
+.smallButton{
+ border-radius:11px;
+ font-size:17px;
+ background:#28232b;
+ border:2px solid #65576a;
+ box-shadow:0 4px 0 #080708;
+}
+
+#flute{
+ background:linear-gradient(#a27e2c,#604617);
+ border-color:#d8bd78;
+}
+
+#finisher{
+ color:#666;
+}
+
+#finisher.ready{
+ color:#fff7bb;
+ background:linear-gradient(#e83a2e,#98120e);
+ border-color:#f4db77;
+ animation:pulse .45s infinite alternate;
+}
+
+@keyframes pulse{
+ from{transform:scale(1)}
+ to{transform:scale(1.035)}
+}
+
+#home{
+ width:36px;
+ height:36px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#25202a;
+ border:1px solid #5a4b60;
+ border-radius:9px;
+ color:#d8bd78;
+ padding:0;
+}
+
+#hudSub{
+ display:flex;
+ justify-content:space-between;
+ margin-top:4px;
+ font:700 10px system-ui;
+ color:#d8bd78;
+ text-shadow:0 2px 3px #000;
+}
+
+#overlay{
+ position:absolute;
+ inset:70px 0 135px;
+ z-index:20;
+ background:radial-gradient(circle at 50% 32%,#421018ee,#08070af8 70%);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ padding:25px;
+}
+
+.big{
+ font-size:46px;
+ line-height:.86;
+ text-shadow:4px 4px #8e1717;
+}
+
+.gold{color:#f0ce68}
+
+.copy{
+ font:15px/1.45 system-ui;
+ max-width:360px;
+ margin:20px auto;
+ color:#ddd;
+}
+
+.start{
+ padding:14px 27px;
+ background:#b21f1f;
+ border:2px solid #f0ce68;
+ border-radius:11px;
+ box-shadow:0 5px 0 #541010;
+ font-size:21px;
+}
+
+.small{
+ margin-top:14px;
+ font:10px system-ui;
+ color:#8d8790;
+}
+</style>
+</head>
+
+<body>
+
+<div id="cab">
+
+<div id="top">
+ <button id="home" aria-label="Hjem – Bus Adventures" title="Hjem – Bus Adventures"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9"/></svg></button>
+ <div>
+  <div class="sub">BUS ADVENTURES PRESENTS</div>
+  <div id="title">GRIZZLY – TID FOR DENG!</div>
+ </div>
+ <span></span>
+</div>
+
+<div id="game">
+
+ <canvas id="c"></canvas>
+
+ <div id="hud">
+   <div id="hudTop">
+     <span>GRIZZLY</span>
+     <span id="crowdText">PUBLIKUM 0%</span>
+   </div>
+
+   <div class="bar">
+     <div id="healthFill"></div>
+   </div>
+
+   <div class="bar">
+     <div id="crowdFill"></div>
+   </div>
+
+   <div id="hudSub">
+     <span id="oppText">MOTSTANDER 1</span>
+     <span id="scoreText">DENG 0 · REKORD 0</span>
+   </div>
+ </div>
+
+ <div id="instruction"></div>
+
+ <div id="timingBox">
+   <div id="zone"></div>
+   <div id="perfect"></div>
+   <div id="marker"></div>
+ </div>
+
+</div>
+
+<div id="controls">
+
+ <button id="deng">DENG!</button>
+
+ <div id="sideButtons">
+   <button class="smallButton" id="flute">FLØYTA</button>
+   <button class="smallButton" id="finisher">SOLFORMØRKELSEN</button>
+ </div>
+
+</div>
+
+<div id="overlay">
+
+ <div>
+
+  <div class="big">
+   <span class="gold">GRIZZLY</span><br>
+   TID FOR DENG!
+  </div>
+
+  <div class="copy">
+   Motstanderen angriper.
+   <br><br>
+   Se på timing-linja og trykk
+   <strong>DENG!</strong> når markøren treffer gullfeltet.
+   <br><br>
+   Gode treff fyrer opp publikum.
+   Når PUBLIKUM når 100 %, er det tid for
+   <strong>Solformørkelsen.</strong>
+  </div>
+
+  <button class="start" id="start">TID FOR DENG!</button>
+
+  <div class="small" id="bestMenu"></div>
+
+  <div class="small">
+   FLØYTA kan brukes mellom angrep for å fyre opp publikum.
+  </div>
+
+ </div>
+
+</div>
+
+</div>
+
+<script>
+const C=document.getElementById("c");
+const X=C.getContext("2d");
+
+const $=q=>document.querySelector(q);
+
+// Scene is authored at 480x560 and scaled to fit (no stretching).
+const W=480, H=560;
+let view={s:1,ox:0,oy:0,dpr:1,cw:W,ch:H};
+
+function resize(){
+ const r=C.getBoundingClientRect();
+ const dpr=Math.min(window.devicePixelRatio||1,3);
+ const cw=Math.max(1,Math.round(r.width*dpr));
+ const ch=Math.max(1,Math.round(r.height*dpr));
+ if(C.width!==cw)C.width=cw;
+ if(C.height!==ch)C.height=ch;
+ const s=Math.min(cw/W,ch/H);
+ // centre horizontally, anchor to the bottom so the ring and crowd stay put
+ view={s,ox:(cw-W*s)/2,oy:ch-H*s,dpr,cw,ch};
+}
+addEventListener("resize",resize);
+
+// Hit windows (distance from the centre of the bar, 0..0.5).
+const PERFECT=.035, GOOD=.09, NEAR=.16;
+
+// Fixed 60 Hz simulation so 120 Hz iPhones don't play at double speed.
+const STEP=1000/60;
+const msToTicks=ms=>Math.round(ms/STEP);
+
+const BEST_KEY="bus-adventures.grizzly.best";
+let best=0;
+try{best=Math.max(0,Math.floor(Number(localStorage.getItem(BEST_KEY))||0))}catch(e){}
+
+function saveBest(){
+ if(score<=best)return;
+ best=score;
+ try{localStorage.setItem(BEST_KEY,String(best))}catch(e){}
+}
+
+let frame=0;
+
+let state="menu";
+
+let health=100;
+let crowd=0;
+let score=0;
+let opponent=1;
+
+let marker=0;
+let markerSpeed=.011;
+let markerDir=1;
+
+let attackActive=false;
+
+let attackTimer=0;
+let nextAttack=0;
+
+let messageTimer=0;
+
+let shake=0;
+let flash=0;
+
+let grizzlyHit=0;
+let enemyHit=0;
+
+let enemyDown=0;
+
+let fluteTimer=0;
+
+let special=0;
+
+let particles=[];
+
+let audience=[];
+
+for(let i=0;i<70;i++){
+
+ audience.push({
+  x:Math.random()*480,
+  y:420+Math.random()*135,
+  p:Math.random()*6.28,
+  shirt:[
+   "#a92525",
+   "#24242a",
+   "#c3a63f",
+   "#34465e",
+   "#ddd",
+   "#57345f"
+  ][i%6]
+ });
+
+}
+
+function clamp(v,a,b){
+ return Math.max(a,Math.min(b,v));
+}
+
+function setMessage(t,ms=700){
+
+ $("#instruction").textContent=t;
+
+ messageTimer=ms;
+}
+
+function hud(){
+
+ $("#healthFill").style.width=health+"%";
+
+ $("#crowdFill").style.width=crowd+"%";
+
+ $("#crowdText").textContent=
+   "PUBLIKUM "+Math.round(crowd)+"%";
+
+ $("#oppText").textContent="MOTSTANDER "+opponent;
+
+ $("#scoreText").textContent=
+   "DENG "+score+" · REKORD "+Math.max(best,score);
+
+ if(crowd>=100){
+
+  $("#finisher").classList.add("ready");
+
+ }else{
+
+  $("#finisher").classList.remove("ready");
+
+ }
+
+}
+
+function start(){
+
+ health=100;
+ crowd=0;
+ score=0;
+ opponent=1;
+
+ markerSpeed=.010;
+
+ attackActive=false;
+ fluteTimer=0;
+ special=0;
+ grizzlyHit=0;
+ enemyHit=0;
+ enemyDown=0;
+ particles=[];
+
+ state="fight";
+
+ $("#overlay").style.display="none";
+
+ hud();
+
+ setMessage("GJØR DEG KLAR!",900);
+
+ scheduleAttack(1200);
+
+}
+
+function scheduleAttack(delay){
+
+ attackActive=false;
+
+ $("#timingBox").style.display="none";
+
+ nextAttack=
+   frame+msToTicks(delay);
+
+}
+
+function beginAttack(){
+
+ if(state!=="fight")return;
+
+ attackActive=true;
+
+ attackTimer=0;
+
+ marker=0;
+ markerDir=1;
+
+ $("#marker").style.left="0%";
+
+ $("#timingBox").style.display="block";
+
+ setMessage("HAN KOMMER! DENG!",1200);
+
+}
+
+function deng(){
+
+ if(state!=="fight")return;
+
+ if(!attackActive){
+
+  setMessage("VENT PÅ ANGREPET!",450);
+
+  return;
+ }
+
+ attackActive=false;
+
+ $("#timingBox").style.display="none";
+
+ let d=Math.abs(marker-.5);
+
+ if(d<PERFECT){
+
+  score++;
+
+  crowd=clamp(crowd+22,0,100);
+
+  enemyHit=25;
+
+  enemyDown=25;
+
+  shake=13;
+  flash=1;
+
+  burst(330,280,24);
+
+  setMessage("PERFEKT DENG!",700);
+
+ }
+
+ else if(d<GOOD){
+
+  score++;
+
+  crowd=clamp(crowd+13,0,100);
+
+  enemyHit=16;
+
+  shake=7;
+
+  burst(330,280,12);
+
+  setMessage("DENG!",550);
+
+ }
+
+ else if(d<NEAR){
+
+  crowd=clamp(crowd+5,0,100);
+
+  enemyHit=10;
+
+  setMessage("NESTEN!",500);
+
+ }
+
+ else{
+
+  health=clamp(health-18,0,100);
+
+  crowd=clamp(crowd-10,0,100);
+
+  grizzlyHit=25;
+
+  shake=10;
+
+  setMessage("AU!",600);
+
+ }
+
+ hud();
+
+ if(health<=0){
+
+  lose();
+
+  return;
+ }
+
+ markerSpeed=
+   Math.min(
+    .025,
+    .010+score*.0007
+   );
+
+ scheduleAttack(
+   Math.max(
+    650,
+    1250-score*20
+   )
+ );
+
+}
+
+function useFlute(){
+
+ if(state!=="fight")return;
+
+ if(attackActive){
+
+  health=clamp(health-10,0,100);
+
+  grizzlyHit=20;
+
+  shake=8;
+
+  setMessage(
+   "DÅRLIG TID FOR FLØYTE!",
+   700
+  );
+
+  hud();
+
+  if(health<=0)lose();
+
+  return;
+ }
+
+ if(fluteTimer>0){
+
+  setMessage(
+   "FLØYTA TRENGER EN PAUSE!",
+   600
+  );
+
+  return;
+ }
+
+ fluteTimer=180;
+
+ crowd=clamp(crowd+12,0,100);
+
+ setMessage("♫ GRIZZLY! ♫",750);
+
+ hud();
+
+}
+
+function finisher(){
+
+ if(state!=="fight")return;
+
+ if(crowd<100){
+
+  setMessage(
+   "PUBLIKUM ER IKKE KLARE!",
+   650
+  );
+
+  return;
+ }
+
+ attackActive=false;
+
+ $("#timingBox").style.display="none";
+
+ state="special";
+
+ special=0;
+
+ setMessage(
+   "GRIZZLY GÅR TIL TOPPS…",
+   1000
+ );
+
+}
+
+function burst(x,y,n){
+
+ for(let i=0;i<n;i++){
+
+  particles.push({
+   x,
+   y,
+
+   vx:(Math.random()-.5)*10,
+   vy:-Math.random()*8,
+
+   life:40+Math.random()*30,
+
+   c:
+    i%2
+     ? "#f0ce68"
+     : "#b82228"
+  });
+
+ }
+
+}
+
+function update(){
+
+ frame++;
+
+ if(messageTimer>0){
+
+  messageTimer-=STEP;
+
+  if(messageTimer<=0){
+
+   $("#instruction").textContent="";
+
+  }
+
+ }
+
+ if(fluteTimer>0)fluteTimer--;
+
+ if(grizzlyHit>0)grizzlyHit--;
+ if(enemyHit>0)enemyHit--;
+ if(enemyDown>0)enemyDown--;
+
+ if(state==="fight"){
+
+  if(
+   !attackActive &&
+   frame>=nextAttack
+  ){
+
+   beginAttack();
+
+  }
+
+  if(attackActive){
+
+   marker+=markerSpeed*markerDir;
+
+   if(marker>=1){
+
+    marker=1;
+    markerDir=-1;
+
+   }
+
+   if(marker<=0){
+
+    marker=0;
+    markerDir=1;
+
+   }
+
+   $("#marker").style.left=
+     `calc(${marker*100}% - 4px)`;
+
+   attackTimer++;
+
+   if(attackTimer>190){
+
+    attackActive=false;
+
+    $("#timingBox").style.display="none";
+
+    health=clamp(health-20,0,100);
+
+    grizzlyHit=25;
+
+    shake=10;
+
+    setMessage("FOR SENT!",600);
+
+    hud();
+
+    if(health<=0){
+
+     lose();
+
+    }else{
+
+     scheduleAttack(900);
+
+    }
+
+   }
+
+  }
+
+ }
+
+ if(state==="special"){
+
+  special++;
+
+  if(special===65){
+
+   flash=3;
+   shake=28;
+
+   enemyDown=1000;
+
+   burst(
+    300,
+    330,
+    80
+   );
+
+   setMessage(
+    "SOLFORMØRKELSEN!",
+    1600
+   );
+
+  }
+
+  if(special===135){
+
+   opponent++;
+
+   score+=3;
+
+   crowd=25;
+
+   enemyDown=0;
+
+   markerSpeed=
+     Math.min(
+      .028,
+      markerSpeed+.002
+     );
+
+   state="fight";
+
+   hud();
+
+   setMessage(
+    "NESTE MOTSTANDER!",
+    900
+   );
+
+   scheduleAttack(1300);
+
+  }
+
+ }
+
+ particles.forEach(p=>{
+
+  p.x+=p.vx;
+  p.y+=p.vy;
+
+  p.vy+=.28;
+
+  p.life--;
+
+ });
+
+ particles=
+   particles.filter(
+    p=>p.life>0
+   );
+
+ shake*=.84;
+ flash*=.87;
+
+}
+
+function lose(){
+
+ state="dead";
+
+ const newRecord=score>best;
+
+ saveBest();
+
+ hud();
+
+ setTimeout(()=>{
+
+  $("#overlay").style.display="flex";
+
+  $("#overlay").innerHTML=`
+   <div>
+
+    <div class="big">
+     GRIZZLY ER NEDE.
+    </div>
+
+    <div class="copy">
+     ${score} vellykkede deng · ${opponent-1} motstandere lagt i matta.
+     <br><br>
+     ${newRecord ? "<strong class='gold'>NY REKORD!</strong>" : "Rekord: "+best+" deng."}
+     <br><br>
+     Publikum krever omkamp.
+    </div>
+
+    <button class="start" id="again">
+     REMATCH
+    </button>
+
+   </div>
+  `;
+
+  $("#again").onclick=start;
+
+ },700);
+
+}
+
+function rect(x,y,w,h,c){
+
+ X.fillStyle=c;
+ X.fillRect(x,y,w,h);
+
+}
+
+function text(t,x,y,s,c="#fff"){
+
+ X.font=s+"px Anton,Impact,Arial";
+
+ X.fillStyle=c;
+ X.textAlign="center";
+
+ X.fillText(t,x,y);
+
+}
+
+function arena(){
+
+ let g=
+  X.createLinearGradient(
+   0,0,0,560
+  );
+
+ g.addColorStop(0,"#471019");
+ g.addColorStop(.55,"#150b13");
+ g.addColorStop(1,"#020203");
+
+ X.fillStyle=g;
+ X.fillRect(0,0,480,560);
+
+ spot(100);
+ spot(240);
+ spot(380);
+
+ drawAudience();
+
+ drawRing();
+
+}
+
+function spot(cx){
+
+ let g=
+  X.createRadialGradient(
+   cx,-40,0,
+   cx,-40,440
+  );
+
+ g.addColorStop(
+  0,
+  "#fff4b944"
+ );
+
+ g.addColorStop(
+  1,
+  "#0000"
+ );
+
+ X.fillStyle=g;
+
+ X.beginPath();
+
+ X.moveTo(cx+10,-300);
+ X.lineTo(cx-130,390);
+ X.lineTo(cx+130,390);
+ X.lineTo(cx-10,-300);
+
+ X.fill();
+
+}
+
+function drawAudience(){
+
+ audience.forEach((p,i)=>{
+
+  let energy=
+   2+crowd/16;
+
+  let bob=
+   Math.sin(
+    frame*.08+p.p
+   )*energy;
+
+  X.fillStyle=p.shirt;
+
+  X.beginPath();
+
+  X.arc(
+   p.x,
+   p.y+bob,
+   6,
+   0,
+   Math.PI*2
+  );
+
+  X.fill();
+
+  rect(
+   p.x-6,
+   p.y+6+bob,
+   12,
+   20,
+   p.shirt
+  );
+
+  if(
+   crowd>60 &&
+   i%18===0
+  ){
+
+   rect(
+    p.x-25,
+    p.y-24+bob,
+    50,
+    18,
+    "#eee"
+   );
+
+   text(
+    crowd>=100
+     ? "DENG!"
+     : "GRIZZLY!",
+    p.x,
+    p.y-11+bob,
+    8,
+    "#111"
+   );
+
+  }
+
+ });
+
+}
+
+function drawRing(){
+
+ rect(
+  25,
+  350,
+  430,
+  12,
+  "#eee"
+ );
+
+ rect(
+  25,
+  362,
+  430,
+  77,
+  "#302c34"
+ );
+
+ for(let y of [313,335,357]){
+
+  X.strokeStyle=
+   y===335
+    ? "#eee"
+    : "#b31f25";
+
+  X.lineWidth=4;
+
+  X.beginPath();
+
+  X.moveTo(20,y);
+  X.lineTo(460,y);
+
+  X.stroke();
+
+ }
+
+ for(let x of [25,455]){
+
+  rect(
+   x-5,
+   280,
+   10,
+   165,
+   "#111"
+  );
+
+  for(let y of [305,327,349]){
+
+   rect(
+    x-9,
+    y,
+    18,
+    10,
+    "#d1b253"
+   );
+
+  }
+
+ }
+
+ text(
+  "NWF",
+  240,
+  413,
+  30,
+  "#777"
+ );
+
+}
+
+function grizzly(){
+
+ let x=145;
+ let y=350;
+
+ if(state==="special"){
+
+  if(special>35 && special<65){
+
+   y-=Math.sin(
+    (special-35)/30*Math.PI
+   )*100;
+
+   x+=
+    (special-35)*4;
+
+  }
+
+ }
+
+ if(grizzlyHit>0){
+
+  x+=Math.sin(frame)*7;
+
+ }
+
+ // legs
+ rect(
+  x-31,
+  y-69,
+  25,
+  69,
+  "#111"
+ );
+
+ rect(
+  x+6,
+  y-69,
+  25,
+  69,
+  "#111"
+ );
+
+ // USA BOLEBUKSE
+ rect(
+  x-38,
+  y-119,
+  76,
+  54,
+  "#173c81"
+ );
+
+ for(let q=0;q<4;q++){
+
+  rect(
+   x,
+   y-116+q*13,
+   38,
+   7,
+   "#eee"
+  );
+
+  rect(
+   x,
+   y-109+q*13,
+   38,
+   6,
+   "#c0262d"
+  );
+
+ }
+
+ X.fillStyle="#fff";
+
+ for(let xx=-29;xx<-2;xx+=10){
+
+  for(let yy=-109;yy<-78;yy+=11){
+
+   X.beginPath();
+
+   X.arc(
+    x+xx,
+    y+yy,
+    2,
+    0,
+    Math.PI*2
+   );
+
+   X.fill();
+
+  }
+
+ }
+
+ // torso
+ X.fillStyle="#d1a07b";
+
+ X.beginPath();
+
+ X.ellipse(
+  x,
+  y-166,
+  58,
+  67,
+  0,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ // singlet
+ X.fillStyle="#18191c";
+
+ X.beginPath();
+
+ X.roundRect(
+  x-43,
+  y-198,
+  86,
+  90,
+  18
+ );
+
+ X.fill();
+
+ text(
+  "G",
+  x,
+  y-137,
+  39,
+  "#d4b650"
+ );
+
+ // head
+ X.fillStyle="#d3a17d";
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-247,
+  32,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ // hair
+ X.fillStyle="#68402b";
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-257,
+  33,
+  Math.PI,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ // beard
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-238,
+  28,
+  .05,
+  Math.PI-.05
+ );
+
+ X.lineTo(
+  x,
+  y-207
+ );
+
+ X.fill();
+
+ // eyes
+ rect(
+  x-14,
+  y-250,
+  6,
+  5,
+  "#111"
+ );
+
+ rect(
+  x+8,
+  y-250,
+  6,
+  5,
+  "#111"
+ );
+
+ // arms
+ X.strokeStyle="#d1a07b";
+ X.lineWidth=20;
+ X.lineCap="round";
+
+ X.beginPath();
+
+ X.moveTo(
+  x-39,
+  y-182
+ );
+
+ X.lineTo(
+  x-63,
+  y-135
+ );
+
+ X.moveTo(
+  x+39,
+  y-182
+ );
+
+ X.lineTo(
+  x+63,
+  y-135
+ );
+
+ X.stroke();
+
+ if(fluteTimer>0){
+
+  X.strokeStyle="#e5e7e8";
+  X.lineWidth=6;
+
+  X.beginPath();
+
+  X.moveTo(
+   x-20,
+   y-230
+  );
+
+  X.lineTo(
+   x+58,
+   y-230
+  );
+
+  X.stroke();
+
+  text(
+   "♫",
+   x+70,
+   y-250,
+   25,
+   "#f0ce68"
+  );
+
+ }
+
+}
+
+function enemy(){
+
+ let x=335;
+ let y=350;
+
+ if(enemyDown>0){
+
+  X.save();
+
+  X.translate(
+   x,
+   y-20
+  );
+
+  X.rotate(
+   Math.PI/2
+  );
+
+  rect(
+   -45,
+   -30,
+   90,
+   60,
+   "#35445f"
+  );
+
+  X.fillStyle="#c99671";
+
+  X.beginPath();
+
+  X.arc(
+   0,
+   -54,
+   27,
+   0,
+   Math.PI*2
+  );
+
+  X.fill();
+
+  X.restore();
+
+  return;
+
+ }
+
+ if(enemyHit>0){
+
+  x+=Math.sin(frame)*8;
+
+ }
+
+ // legs
+ rect(
+  x-23,
+  y-65,
+  19,
+  65,
+  "#171719"
+ );
+
+ rect(
+  x+4,
+  y-65,
+  19,
+  65,
+  "#171719"
+ );
+
+ // trunks
+ rect(
+  x-30,
+  y-107,
+  60,
+  46,
+  "#77262b"
+ );
+
+ // body
+ X.fillStyle="#c99671";
+
+ X.beginPath();
+
+ X.ellipse(
+  x,
+  y-157,
+  44,
+  57,
+  0,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ // singlet
+ X.fillStyle="#34445e";
+
+ X.beginPath();
+
+ X.roundRect(
+  x-34,
+  y-187,
+  68,
+  75,
+  15
+ );
+
+ X.fill();
+
+ // head
+ X.fillStyle="#c99671";
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-224,
+  27,
+  0,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ X.fillStyle="#171313";
+
+ X.beginPath();
+
+ X.arc(
+  x,
+  y-234,
+  28,
+  Math.PI,
+  Math.PI*2
+ );
+
+ X.fill();
+
+ rect(
+  x-13,
+  y-226,
+  6,
+  4,
+  "#111"
+ );
+
+ rect(
+  x+7,
+  y-226,
+  6,
+  4,
+  "#111"
+ );
+
+ // arms
+ X.strokeStyle="#c99671";
+ X.lineWidth=17;
+ X.lineCap="round";
+
+ X.beginPath();
+
+ X.moveTo(
+  x-31,
+  y-171
+ );
+
+ X.lineTo(
+  x-49,
+  y-130
+ );
+
+ X.moveTo(
+  x+31,
+  y-171
+ );
+
+ X.lineTo(
+  x+49,
+  y-130
+ );
+
+ X.stroke();
+
+}
+
+function draw(){
+
+ // background fills the whole canvas, scene is drawn scaled on top
+ X.setTransform(1,0,0,1,0,0);
+ // same stops as arena(), mapped to screen space so the letterbox blends in
+ let bg=X.createLinearGradient(0,view.oy,0,view.oy+H*view.s);
+ bg.addColorStop(0,"#471019");
+ bg.addColorStop(.55,"#150b13");
+ bg.addColorStop(1,"#020203");
+ X.fillStyle=bg;
+ X.fillRect(0,0,view.cw,view.ch);
+
+ X.setTransform(view.s,0,0,view.s,view.ox,view.oy);
+
+ X.save();
+
+ if(shake>1){
+
+  X.translate(
+   (Math.random()-.5)*shake,
+   (Math.random()-.5)*shake
+  );
+
+ }
+
+ arena();
+
+ grizzly();
+ enemy();
+
+ particles.forEach(p=>{
+
+  X.fillStyle=p.c;
+
+  X.fillRect(
+   p.x,
+   p.y,
+   5,
+   8
+  );
+
+ });
+
+ if(crowd>=100 && state==="fight"){
+
+  text(
+   "TID FOR DENG!",
+   240,
+   470,
+   35+Math.sin(frame*.2)*3,
+   "#f0ce68"
+  );
+
+ }
+
+ if(state==="special"){
+
+  if(special>15){
+
+   text(
+    "TID FOR DENG!",
+    240,
+    145,
+    43+Math.sin(frame*.3)*4,
+    "#f3d15d"
+   );
+
+  }
+
+ }
+
+ if(flash>.03){
+
+  X.fillStyle=
+   `rgba(255,255,255,${
+    Math.min(.8,flash*.25)
+   })`;
+
+  X.fillRect(
+   0,
+   0,
+   480,
+   560
+  );
+
+ }
+
+ X.restore();
+
+}
+
+let last=0, acc=0;
+
+function loop(t){
+
+ if(!last)last=t;
+
+ // cap the gap so returning from a background tab doesn't fast-forward
+ acc+=Math.min(t-last,250);
+ last=t;
+
+ let steps=0;
+
+ while(acc>=STEP && steps<6){
+  update();
+  acc-=STEP;
+  steps++;
+ }
+
+ if(steps===6)acc=0;
+
+ draw();
+
+ requestAnimationFrame(loop);
+
+}
+
+// Timing bar zones are drawn from the same constants the scoring uses.
+function layoutZones(){
+ $("#zone").style.left=((.5-GOOD)*100)+"%";
+ $("#zone").style.width=(GOOD*200)+"%";
+ $("#perfect").style.left=((.5-PERFECT)*100)+"%";
+ $("#perfect").style.width=(PERFECT*200)+"%";
+}
+
+function showMenuBest(){
+ $("#bestMenu").textContent=best>0?"REKORD: "+best+" DENG":"";
+}
+
+$("#start").onclick=start;
+
+$("#home").addEventListener("click",()=>{
+ const inGameFolder=/\/games\/grizzly\//i.test(location.pathname);
+ location.href=new URL(inGameFolder?"../../index.html":"./index.html",location.href).href;
+});
+
+$("#deng").addEventListener(
+ "pointerdown",
+ e=>{
+  e.preventDefault();
+  deng();
+ }
+);
+
+$("#flute").addEventListener(
+ "pointerdown",
+ e=>{
+  e.preventDefault();
+  useFlute();
+ }
+);
+
+$("#finisher").addEventListener(
+ "pointerdown",
+ e=>{
+  e.preventDefault();
+  finisher();
+ }
+);
+
+addEventListener(
+ "keydown",
+ e=>{
+
+  if(e.code==="Space"){
+   e.preventDefault();
+   deng();
+  }
+
+  if(e.code==="KeyF"){
+   useFlute();
+  }
+
+  if(e.code==="Enter"){
+   finisher();
+  }
+
+ }
+);
+
+layoutZones();
+showMenuBest();
+resize();
+hud();
+requestAnimationFrame(loop);
+
+// canvas text needs the web font loaded before it renders with it
+if(document.fonts&&document.fonts.load){
+ document.fonts.load("20px Anton").catch(()=>{});
+}
+
+</script>
+
+</body>
+</html>
