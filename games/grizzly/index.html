@@ -471,6 +471,30 @@ let special=0;
 
 let particles=[];
 
+// Crowd chants: speech bubbles rising out of the audience.
+let chants=[];
+
+const CHANT_LINES=[
+ "TID FOR DENG!","TID FOR DENG!","TID FOR DENG!","TID FOR DENG!",
+ "TID FOR DENG!","TID FOR DENG!","DENG!","GRIZZLY!"
+];
+
+function chant(n=1,line){
+ for(let i=0;i<n;i++){
+  const a=audience[Math.floor(Math.random()*audience.length)];
+  chants.push({
+   x:clamp(a.x,46,434),
+   y:a.y-14,
+   t:line||CHANT_LINES[Math.floor(Math.random()*CHANT_LINES.length)],
+   life:0,
+   max:70+Math.random()*30,
+   rot:(Math.random()-.5)*.18,
+   size:10+Math.random()*4
+  });
+ }
+ if(chants.length>40)chants.splice(0,chants.length-40);
+}
+
 let audience=[];
 
 for(let i=0;i<70;i++){
@@ -544,6 +568,7 @@ function start(){
  enemyHit=0;
  enemyDown=0;
  particles=[];
+ chants=[];
 
  state="fight";
 
@@ -621,6 +646,8 @@ function deng(){
 
   setMessage("PERFEKT DENG!",700);
 
+  chant(5);
+
  }
 
  else if(d<GOOD){
@@ -636,6 +663,8 @@ function deng(){
   burst(330,280,12);
 
   setMessage("DENG!",550);
+
+  chant(2);
 
  }
 
@@ -660,6 +689,8 @@ function deng(){
   shake=10;
 
   setMessage("AU!",600);
+
+  chant(2,"BUUU!");
 
  }
 
@@ -726,6 +757,8 @@ function useFlute(){
  crowd=clamp(crowd+12,0,100);
 
  setMessage("♫ GRIZZLY! ♫",750);
+
+ chant(4,"TID FOR DENG!");
 
  hud();
 
@@ -893,6 +926,8 @@ function update(){
     1600
    );
 
+   chant(14,"TID FOR DENG!");
+
   }
 
   if(special===135){
@@ -925,6 +960,16 @@ function update(){
   }
 
  }
+
+ // The hotter the crowd, the more they shout. Full house = constant chant.
+ if(state==="fight"||state==="special"){
+  const heat=state==="special"?1:crowd/100;
+  if(Math.random()<.012+heat*.06)chant(1);
+  if(heat>=1 && frame%40===0)chant(4,"TID FOR DENG!");
+ }
+
+ chants.forEach(c=>c.life++);
+ chants=chants.filter(c=>c.life<c.max);
 
  particles.forEach(p=>{
 
@@ -1097,22 +1142,23 @@ function drawAudience(){
   );
 
   if(
-   crowd>60 &&
-   i%18===0
+   (crowd>25 && i%14===0) ||
+   (crowd>60 && i%7===0) ||
+   (crowd>=100 && i%4===0)
   ){
 
    rect(
-    p.x-25,
+    p.x-30,
     p.y-24+bob,
-    50,
+    60,
     18,
     "#eee"
    );
 
    text(
-    crowd>=100
-     ? "DENG!"
-     : "GRIZZLY!",
+    i%3===0
+     ? "GRIZZLY!"
+     : "TID FOR DENG!",
     p.x,
     p.y-11+bob,
     8,
@@ -1670,6 +1716,42 @@ function draw(){
  grizzly();
  enemy();
 
+ chants.forEach(c=>{
+
+  const k=c.life/c.max;
+  const a=k<.12?k/.12:(k>.75?(1-k)/.25:1);
+
+  X.save();
+  X.globalAlpha=a;
+  X.translate(c.x,c.y-c.life*.7);
+  X.rotate(c.rot);
+
+  X.font=c.size+"px Anton,Impact,Arial";
+  const w=X.measureText(c.t).width+12;
+  const h=c.size+8;
+
+  X.fillStyle=c.t==="BUUU!"?"#3a3340":"#fff6d8";
+  X.beginPath();
+  X.roundRect(-w/2,-h/2,w,h,6);
+  X.fill();
+
+  X.beginPath();
+  X.moveTo(-4,h/2);
+  X.lineTo(4,h/2);
+  X.lineTo(0,h/2+6);
+  X.fill();
+
+  X.fillStyle=c.t==="BUUU!"?"#ccc":"#8e1717";
+  X.textAlign="center";
+  X.textBaseline="middle";
+  X.fillText(c.t,0,1);
+
+  X.restore();
+
+ });
+
+ X.textBaseline="alphabetic";
+
  particles.forEach(p=>{
 
   X.fillStyle=p.c;
@@ -1718,11 +1800,12 @@ function draw(){
     Math.min(.8,flash*.25)
    })`;
 
+  // cover the letterbox too, not just the 480x560 scene
   X.fillRect(
-   0,
-   0,
-   480,
-   560
+   -1000,
+   -2000,
+   2480,
+   3000
   );
 
  }
