@@ -142,6 +142,15 @@ canvas{
  display:none;
 }
 
+#timingBox.boost{
+ border-color:#fff3c4;
+ box-shadow:0 0 14px #f0ce68;
+}
+
+#timingBox.boost #zone{
+ background:#ffd54acc;
+}
+
 #zone{
  position:absolute;
  top:0;
@@ -394,7 +403,7 @@ button{
  <button id="deng">DENG!</button>
 
  <div id="sideButtons">
-   <button class="smallButton" id="flute"><span>♫ FLØYTA</span><small id="fluteSub">+12% PUBLIKUM</small><i id="fluteCd"></i></button>
+   <button class="smallButton" id="flute"><span>♫ FLØYTA</span><small id="fluteSub">+20% · HELSE · GULL</small><i id="fluteCd"></i></button>
    <button class="smallButton" id="finisher">SOLFORMØRKELSEN</button>
  </div>
 
@@ -414,6 +423,7 @@ button{
    <br><br>
    Se på timing-linja og trykk
    <strong>DENG!</strong> når markøren treffer gullfeltet.
+   Feltet flytter seg hver gang – og trykker du før han angriper, buer publikum.
    <br><br>
    Gode treff fyrer opp publikum.
    Når PUBLIKUM når 100 %, er det tid for
@@ -425,7 +435,7 @@ button{
   <div class="small" id="bestMenu"></div>
 
   <div class="small">
-   ♫ FLØYTA: blås <em>mellom</em> angrepene for +12 % publikum.<br>
+   ♫ FLØYTA: blås <em>mellom</em> angrepene – +20 % publikum, litt helse tilbake og bredere gullfelt på neste angrep.<br>
    Blåser du mens han angriper, mister du helse.
   </div>
 
@@ -485,6 +495,14 @@ let score=0;
 let opponent=1;
 
 let marker=0;
+
+// Per-attack variation so the rhythm can't be learned by counting.
+let zoneCenter=.5;     // where the gold zone sits this attack
+let attackSpeed=.010;  // marker speed this attack
+let feintAt=-1;        // tick at which the marker reverses (later opponents)
+let graceUntil=0;      // forgive a double-tap right after a hit
+let fluteBoost=false;  // flute charges the next attack with a wider gold zone
+let curGood=GOOD, curPerfect=PERFECT;
 let markerSpeed=.011;
 let markerDir=1;
 
@@ -607,6 +625,9 @@ function start(){
  enemyDown=0;
  particles=[];
  chants=[];
+ fluteBoost=false;
+ curGood=GOOD;
+ curPerfect=PERFECT;
 
  state="fight";
 
@@ -626,8 +647,9 @@ function scheduleAttack(delay){
 
  $("#timingBox").style.display="none";
 
+ // irregular gaps: 60%–150% of the base delay
  nextAttack=
-   frame+msToTicks(delay);
+   frame+msToTicks(delay*(.6+Math.random()*.9));
 
 }
 
@@ -639,10 +661,28 @@ function beginAttack(){
 
  attackTimer=0;
 
- marker=0;
- markerDir=1;
+ // gold zone moves, marker starts from either side at a varied speed
+ // flute bonus: next attack gets a 60% wider gold zone
+ curGood=fluteBoost?GOOD*1.6:GOOD;
+ curPerfect=fluteBoost?PERFECT*1.6:PERFECT;
+ $("#timingBox").classList.toggle("boost",fluteBoost);
+ fluteBoost=false;
 
- $("#marker").style.left="0%";
+ zoneCenter=.2+Math.random()*.6;
+ layoutZones();
+
+ if(Math.random()<.5){marker=0;markerDir=1;}
+ else{marker=1;markerDir=-1;}
+
+ attackSpeed=markerSpeed*(.75+Math.random()*.6);
+
+ // from opponent 2 the marker sometimes doubles back mid-swing
+ feintAt=
+   opponent>=2 && Math.random()<.2+opponent*.05
+    ? 12+Math.floor(Math.random()*30)
+    : -1;
+
+ $("#marker").style.left=`calc(${marker*100}% - 4px)`;
 
  $("#timingBox").style.display="block";
 
@@ -656,7 +696,22 @@ function deng(){
 
  if(!attackActive){
 
-  setMessage("VENT PÅ ANGREPET!",450);
+  if(frame<graceUntil)return;
+
+  // pressing blindly costs: no more drumming the button on a rhythm
+  health=clamp(health-6,0,100);
+  crowd=clamp(crowd-8,0,100);
+  grizzlyHit=12;
+  shake=5;
+  graceUntil=frame+8;
+
+  setMessage("FOR TIDLIG!",500);
+
+  chant(1,"BUUU!");
+
+  hud();
+
+  if(health<=0)lose();
 
   return;
  }
@@ -665,9 +720,11 @@ function deng(){
 
  $("#timingBox").style.display="none";
 
- let d=Math.abs(marker-.5);
+ let d=Math.abs(marker-zoneCenter);
 
- if(d<PERFECT){
+ graceUntil=frame+15;
+
+ if(d<curPerfect){
 
   score++;
 
@@ -688,7 +745,7 @@ function deng(){
 
  }
 
- else if(d<GOOD){
+ else if(d<curGood){
 
   score++;
 
@@ -799,9 +856,13 @@ function useFlute(){
 
  fluteTimer=FLUTE_COOLDOWN;
 
- crowd=clamp(crowd+12,0,100);
+ crowd=clamp(crowd+20,0,100);
 
- setMessage("♫ +12% PUBLIKUM ♫",800);
+ health=clamp(health+8,0,100);
+
+ fluteBoost=true;
+
+ setMessage("♫ +20% PUBLIKUM · +HELSE · BREDT GULL ♫",1100);
 
  chant(1,"♫ GRIZZLY! ♫");
 
@@ -842,7 +903,7 @@ const FLUTE_COOLDOWN=180;
 let fluteUi="";
 
 function fluteHud(){
- let mode="ready", sub="+12% PUBLIKUM";
+ let mode="ready", sub=fluteBoost?"LADET ✓":"+20% · HELSE · GULL";
  if(state!=="fight"){mode="ready";}
  else if(attackActive){mode="wait";sub="IKKE NÅ!";}
  else if(crowd>=100){mode="cool";sub="FULLT HUS";}
@@ -919,7 +980,9 @@ function update(){
 
   if(attackActive){
 
-   marker+=markerSpeed*markerDir;
+   if(attackTimer===feintAt)markerDir*=-1;
+
+   marker+=attackSpeed*markerDir;
 
    if(marker>=1){
 
@@ -1910,10 +1973,10 @@ function loop(t){
 
 // Timing bar zones are drawn from the same constants the scoring uses.
 function layoutZones(){
- $("#zone").style.left=((.5-GOOD)*100)+"%";
- $("#zone").style.width=(GOOD*200)+"%";
- $("#perfect").style.left=((.5-PERFECT)*100)+"%";
- $("#perfect").style.width=(PERFECT*200)+"%";
+ $("#zone").style.left=((zoneCenter-curGood)*100)+"%";
+ $("#zone").style.width=(curGood*200)+"%";
+ $("#perfect").style.left=((zoneCenter-curPerfect)*100)+"%";
+ $("#perfect").style.width=(curPerfect*200)+"%";
 }
 
 function showMenuBest(){
