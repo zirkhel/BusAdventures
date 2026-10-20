@@ -423,7 +423,8 @@ button{
    <br><br>
    Se på timing-linja og trykk
    <strong>DENG!</strong> når markøren treffer gullfeltet.
-   Feltet flytter seg hver gang – og trykker du før han angriper, buer publikum.
+   Feltet flytter seg hver gang. Markøren går fram og tilbake én gang –
+   er den tilbake uten treff, mister du liv. Trykker du før han angriper, buer publikum.
    <br><br>
    Gode treff fyrer opp publikum.
    Når PUBLIKUM når 100 %, er det tid for
@@ -499,7 +500,6 @@ let marker=0;
 // Per-attack variation so the rhythm can't be learned by counting.
 let zoneCenter=.5;     // where the gold zone sits this attack
 let attackSpeed=.010;  // marker speed this attack
-let feintAt=-1;        // tick at which the marker reverses (later opponents)
 let graceUntil=0;      // forgive a double-tap right after a hit
 let fluteBoost=false;  // flute charges the next attack with a wider gold zone
 let curGood=GOOD, curPerfect=PERFECT;
@@ -661,7 +661,7 @@ function beginAttack(){
 
  attackTimer=0;
 
- // gold zone moves, marker starts from either side at a varied speed
+ // the gold zone moves; the marker itself never does anything surprising
  // flute bonus: next attack gets a 60% wider gold zone
  curGood=fluteBoost?GOOD*1.6:GOOD;
  curPerfect=fluteBoost?PERFECT*1.6:PERFECT;
@@ -671,16 +671,11 @@ function beginAttack(){
  zoneCenter=.2+Math.random()*.6;
  layoutZones();
 
- if(Math.random()<.5){marker=0;markerDir=1;}
- else{marker=1;markerDir=-1;}
-
- attackSpeed=markerSpeed*(.75+Math.random()*.6);
-
- // from opponent 2 the marker sometimes doubles back mid-swing
- feintAt=
-   opponent>=2 && Math.random()<.2+opponent*.05
-    ? 12+Math.floor(Math.random()*30)
-    : -1;
+ // Fixed rule: the marker always starts on the left, runs to the right
+ // and back at a steady speed. Back at the start without a hit = lost life.
+ marker=0;
+ markerDir=1;
+ attackSpeed=markerSpeed;
 
  $("#marker").style.left=`calc(${marker*100}% - 4px)`;
 
@@ -980,8 +975,6 @@ function update(){
 
   if(attackActive){
 
-   if(attackTimer===feintAt)markerDir*=-1;
-
    marker+=attackSpeed*markerDir;
 
    if(marker>=1){
@@ -991,10 +984,12 @@ function update(){
 
    }
 
-   if(marker<=0){
+   let roundTrip=false;
+
+   if(marker<=0 && markerDir===-1){
 
     marker=0;
-    markerDir=1;
+    roundTrip=true;
 
    }
 
@@ -1003,7 +998,7 @@ function update(){
 
    attackTimer++;
 
-   if(attackTimer>190){
+   if(roundTrip){
 
     attackActive=false;
 
