@@ -34,6 +34,7 @@ function fresh() {
     roomFlags:    {},          // roomId → { flagName: value }
     globalFlags:  {},          // flagName → value
     counters:     {},          // counterId → number (pressure, visits, custom)
+    openExits:    {},          // roomId → { dir: targetRoomId } opened by effects
     dead:         false,
     won:          false,
   };
@@ -99,6 +100,17 @@ function getRoomState(roomId) {
 
 function setRoomState(roomId, stateName) {
   _st.roomStates[roomId] = stateName;
+}
+
+// ── Exits opened at runtime (kept in state so restart/reload resets them) ────
+
+function openedExits(roomId) {
+  return (_st.openExits || {})[roomId ?? _st.room] || {};
+}
+function openExit(roomId, dir, to) {
+  if (!_st.openExits) _st.openExits = {};
+  if (!_st.openExits[roomId]) _st.openExits[roomId] = {};
+  _st.openExits[roomId][dir] = to;
 }
 
 // ── Flags ─────────────────────────────────────────────────────────────────────
@@ -174,7 +186,7 @@ export {
   roomDef, currentRoom, itemDef, allItemIds,
   hasItem, wearsItem, holdsItem, itemIsInRoom, itemHasTag, holdsTag,
   findCarriedItem, findVisibleItem, findCarriedByTag,
-  getRoomState, setRoomState,
+  getRoomState, setRoomState, openedExits, openExit,
   getFlag, setFlag, getRoomFlag, setRoomFlag,
   getCounter, incCounter, setCounter, visitCount, incVisit,
   save, load, clear,

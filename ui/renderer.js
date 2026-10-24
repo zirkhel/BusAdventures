@@ -174,14 +174,15 @@ function showFeedback(text, type = "neutral", command = null, warning = null) {
 
 // ── Death / Win ───────────────────────────────────────────────────────────────
 
-function renderDeath(text) {
+function renderDeath(text, hazardMedia = null) {
   if (CFG.hooks?.onDeath?.(text) === true) return;
   const roomId  = S.get().room;
   const roomDef = S.roomDef(roomId);
   S.clear();
   showScreen("deathScreen");
-  // Priority: room.deathMedia → __death__ → room image
+  // Priority: hazard/action deathMedia → room.deathMedia → __death__ → room image
   const deathMedia =
+    (hazardMedia && CFG.getMedia?.(hazardMedia, S.get(), "default")) ||
     (roomDef?.deathMedia && CFG.getMedia?.(roomDef.deathMedia, S.get(), "default")) ||
     CFG.getMedia?.("__death__", S.get(), "default") ||
     resolveMedia(roomId);
@@ -225,7 +226,7 @@ function handleCommand(input) {
 
   // "look" does NOT expand desc — result shows in feedback
 
-  if (result.type === "death") { renderDeath(result.text); return; }
+  if (result.type === "death") { renderDeath(result.text, result.deathMedia || null); return; }
   if (result.type === "win")   { renderWin(); return; }
 
   if (result.inventoryOnly) {

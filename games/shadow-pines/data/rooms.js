@@ -140,9 +140,11 @@ export const ROOMS = {
     },
   },
 
+  // Smoke first: when smoke has been used the room description is the
+  // smoke_covered state, so the image must match it even after the alarm.
   mediaStates: [
-    { condition: { flag: "castleAlerted" }, media: "courtyard_alerted" },
     { condition: { flag: "smokeCoverUsed" }, media: "courtyard_smoke" },
+    { condition: { flag: "castleAlerted" }, media: "courtyard_alerted" },
   ],
 
   enterRequires: null,

@@ -58,15 +58,33 @@ const STRIP_ARTICLES = /^(at|the|a|an|to|into|inside|under|using)\s+/;
 // Prepositions that split "use X on Y" / "use X with Y"
 const ON_PREPS = [" on the ", " on ", " with the ", " with ", " at the ", " at ", " into the ", " into ", " against "];
 
+// Canonical verb for a word or phrase ("press" → "push"), or the word itself
+// if it is not a known alias. Used to match room-defined verbs against input.
+function canonVerb(word) {
+  const w = (word || "").toLowerCase().trim();
+  for (const [verb, aliases] of Object.entries(Object.assign({}, VERBS, _extraVerbs))) {
+    if (verb === w || (aliases || []).includes(w)) return verb;
+  }
+  return w;
+}
+
+function stripLead(s) {
+  let prev;
+  do { prev = s; s = s.replace(STRIP_ARTICLES, ""); } while (s !== prev);
+  return s;
+}
+
+// Every result carries `word` — the verb as typed — so room actions can match
+// on either the canonical verb ("push") or the player's word ("press").
 function parse(rawInput) {
   const raw = (rawInput || "").trim().toLowerCase().replace(/\s+/g, " ");
   if (!raw) return { verb: "empty", target: "" };
 
   // Direction shorthand
-  if (DIRECTIONS[raw]) return { verb: "go", target: DIRECTIONS[raw] };
+  if (DIRECTIONS[raw]) return { verb: "go", target: DIRECTIONS[raw], word: raw };
 
   // Bare "look" = re-render room
-  if (raw === "look") return { verb: "look", target: "" };
+  if (raw === "look") return { verb: "look", target: "", word: "look" };
 
   // Inventory / help shortcuts
   if (["i", "inv", "inventory", "items", "bag"].includes(raw))
@@ -86,7 +104,7 @@ function parse(rawInput) {
     .sort((a, b) => b[1].length - a[1].length);
 
   for (const [verb, alias] of sorted) {
-    if (raw === alias) return { verb, target: "" };
+    if (raw === alias) return { verb, target: "", word: alias };
     if (raw.startsWith(alias + " ")) {
       let rest = raw.slice(alias.length).trim();
 
@@ -94,18 +112,23 @@ function parse(rawInput) {
       for (const prep of ON_PREPS) {
         const idx = rest.indexOf(prep);
         if (idx !== -1) {
-          const target = rest.slice(0, idx).trim().replace(STRIP_ARTICLES, "");
-          const on     = rest.slice(idx + prep.length).trim().replace(STRIP_ARTICLES, "");
-          return { verb, target, on };
+          const target = stripLead(rest.slice(0, idx).trim());
+          const on     = stripLead(rest.slice(idx + prep.length).trim());
+          return { verb, target, on, word: alias };
         }
       }
 
-      const target = rest.replace(STRIP_ARTICLES, "");
-      return { verb, target };
+      const target = stripLead(rest);
+      return { verb, target, word: alias };
     }
   }
 
-  return { verb: "unknown", target: raw };
+  // Unknown verb: keep the first word as the verb so rooms can define their
+  // own ("crawl through breach", "leap to tree").
+  const sp = raw.indexOf(" ");
+  const word = sp === -1 ? raw : raw.slice(0, sp);
+  const target = sp === -1 ? "" : stripLead(raw.slice(sp + 1).trim());
+  return { verb: "unknown", target, word, raw };
 }
 
-export { parse, VERBS, DIRECTIONS };
+export { parse, canonVerb, VERBS, DIRECTIONS };

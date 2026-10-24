@@ -9,6 +9,7 @@ const ROOM_MEDIA = {
   __death__:                   { type: "img", src: "assets/screens/death.png",        fx: null,   svgFallback: SVG_COURTYARD_ALERTED() },
   death_guard:                 { type: "img", src: "assets/screens/death_guard.png",  fx: null,   svgFallback: SVG_COURTYARD_ALERTED() },
   death_cellar:                { type: "img", src: "assets/screens/death_cellar.png", fx: null,   svgFallback: SVG_CELLAR() },
+  death_incense:               { type: "img", src: "assets/screens/death_incense.png", fx: "mist", svgFallback: SVG_MAIN_HALL() },
   __win__:                     { type: "img", src: "assets/screens/win.png",   fx: "mist",    svgFallback: SVG_ROOF() },
   outer_wall:                  img("outer_wall",                  "mist",    SVG_OUTER_WALL()),
   courtyard_default:           img("courtyard_default",           "mist",    SVG_COURTYARD()),

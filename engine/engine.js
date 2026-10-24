@@ -12,14 +12,14 @@
 "use strict";
 
 import * as S from "./state.js";
-import { parse } from "./parser.js";
+import { parse, canonVerb } from "./parser.js";
 
 // ── Result builder ────────────────────────────────────────────────────────────
 
 function res(text, type = "neutral", opts = {}) {
   return { text, type, ...opts };
   // type: neutral | ok | bad | death | win
-  // opts: roomChanged, warning, skipPressure
+  // opts: roomChanged, warning, skipPressure, deathMedia
 }
 
 // ── Effects ───────────────────────────────────────────────────────────────────
@@ -62,8 +62,9 @@ function applyEffects(effects, sourceRoomId) {
     st.itemLoc[effects.giveItem] = "inventory";
   }
   if (effects.openExit) {
-    const r = S.roomDef(effects.openExit.room || room);
-    if (r) r.exits[effects.openExit.dir] = effects.openExit.to;
+    // Stored in state, not written into the room data, so it is saved with the
+    // game and undone by restart.
+    S.openExit(effects.openExit.room || room, effects.openExit.dir, effects.openExit.to);
   }
   if (effects.setCounter) {
     S.setCounter(effects.setCounter.id, effects.setCounter.value);
@@ -71,10 +72,33 @@ function applyEffects(effects, sourceRoomId) {
   if (effects.incCounter) {
     S.incCounter(effects.incCounter.id, effects.incCounter.by ?? 1);
   }
+  // goTo is handled by runAction() via arrive(), so enter rules, hazards and
+  // win checks run. This fallback only covers direct applyEffects() callers.
   if (effects.goTo) {
     S.get().room = effects.goTo;
     S.incVisit(effects.goTo);
   }
+}
+
+// Run a matched action (room, object or item context): apply its effects,
+// then handle kill / win / goTo. goTo enters the room properly via arrive().
+function runAction(action, roomId) {
+  const eff = action.effects || {};
+  const { goTo, ...rest } = eff;
+  applyEffects(rest, roomId);
+  if (eff.kill) { S.save(); return res(eff.killText || "You die.", "death", { deathMedia: eff.deathMedia }); }
+  if (eff.win)  { S.save(); return res("", "win"); }
+  const text = action.successText || action.text || "Done.";
+  if (goTo) {
+    const arrived = arrive(goTo, null);
+    if (arrived.type === "death" || arrived.type === "win") return arrived;
+    arrived.text = [text, arrived.text].filter(Boolean).join("\n\n");
+    arrived.type = "ok";
+    arrived.sound = eff.playSound || null;
+    return arrived;
+  }
+  S.save();
+  return res(text, "ok", { roomChanged: hasRoomChanged(eff), sound: eff.playSound || null });
 }
 
 function hasRoomChanged(effects) {
@@ -91,8 +115,11 @@ function hasRoomChanged(effects) {
 
 // ── Media key resolver ───────────────────────────────────────────────────────
 //
-// Returns the media key for a room, checking mediaStates conditions first.
-// mediaStates is an ordered array — first matching condition wins.
+// Returns the media key for a room.
+// Priority: mediaStates (conditional, first match wins) → named room state's
+// media → room media. mediaStates must come first: rooms often give their
+// "default" state a media key, which would otherwise hide every mediaState
+// (e.g. an item-taken image).
 //
 // Example in rooms.js:
 //   reception: {
@@ -108,15 +135,15 @@ function resolveMediaKey(roomId) {
   const r = S.roomDef(rid);
   if (!r) return rid;
 
-  // Named room state may define its own media key
-  const stateName = S.getRoomState(rid);
-  const stateData = r.states?.[stateName];
-  if (stateData?.media) return stateData.media;
-
   // mediaStates: conditional overrides, first match wins
   for (const ms of (r.mediaStates || [])) {
     if (S.check(ms.condition)) return ms.media;
   }
+
+  // Named room state may define its own media key
+  const stateName = S.getRoomState(rid);
+  const stateData = r.states?.[stateName];
+  if (stateData?.media) return stateData.media;
 
   return r.media || rid;
 }
@@ -169,8 +196,8 @@ function buildExits(roomId) {
   const state = S.getRoomState(roomId || S.get().room);
   const exits = [];
 
-  // Room state may override exits
-  const exitSrc = r.states?.[state]?.exits || r.exits || {};
+  // Room state may override exits; exits opened at runtime override both
+  const exitSrc = { ...(r.states?.[state]?.exits || r.exits || {}), ...S.openedExits(roomId || S.get().room) };
 
   for (const [dir, def] of Object.entries(exitSrc)) {
     if (typeof def === "string") {
@@ -211,7 +238,7 @@ function go(dir) {
 
   const r = S.currentRoom();
   const state = S.getRoomState();
-  const exitSrc = r.states?.[state]?.exits || r.exits || {};
+  const exitSrc = { ...(r.states?.[state]?.exits || r.exits || {}), ...S.openedExits() };
   const exitDef = exitSrc[norm];
 
   if (!exitDef) return res("You cannot go that way.", "bad");
@@ -239,6 +266,16 @@ function enterRoom(targetId, moveDir) {
     }
   }
 
+  return arrive(targetId, moveDir);
+}
+
+// Put the player in a room and run everything that belongs to entering it:
+// enter rules, entry/visit hazards with warnings, win. Used by normal movement
+// and by action goTo effects, so both behave the same.
+function arrive(targetId, moveDir) {
+  const target = S.roomDef(targetId);
+  if (!target) return res("That way leads nowhere.", "bad");
+
   S.get().room = targetId;
   S.incVisit(targetId);
 
@@ -256,13 +293,14 @@ function enterRoom(targetId, moveDir) {
   // Hazard: instant death on enter (e.g. no mask in chemical room)
   const entryHazard = (target.hazards || []).find(h => h.type === "onEnter");
   if (entryHazard && !S.check(entryHazard.safeIf)) {
-    return res(entryHazard.deathText || "You die.", "death");
+    return res(entryHazard.deathText || "You die.", "death", { deathMedia: entryHazard.deathMedia });
   }
 
-  // Visit-count death + warning stages
-  const visitHazard = (target.hazards || []).find(h => h.type === "visitCount");
+  // Visit-count death + warning stages (disabledIf switches the hazard off)
+  const visitHazard = (target.hazards || []).find(h =>
+    h.type === "visitCount" && !(h.disabledIf && S.check(h.disabledIf)));
   if (visitHazard && visits > (visitHazard.safeUnder ?? 999)) {
-    return res(visitHazard.deathText || "You die.", "death");
+    return res(visitHazard.deathText || "You die.", "death", { deathMedia: visitHazard.deathMedia });
   }
   let visitWarning = null;
   if (visitHazard) {
@@ -325,13 +363,24 @@ function takeAll() {
 
   if (!ids.length) return res("There is nothing here to take.", "bad");
 
-  ids.forEach(id => {
+  // Items a room action guards (e.g. the archive scroll that sets off the
+  // alarm) are not swept up silently — the first one runs its room action.
+  const guarded = ids.filter(id => findRoomAction(takeIntent(id)));
+  const plain   = ids.filter(id => !guarded.includes(id));
+
+  plain.forEach(id => {
     st.inventory.push(id);
     st.itemLoc[id] = "inventory";
   });
   S.save();
-  const names = ids.map(id => S.itemDef(id).name).join(", ");
-  return res("Taken: " + names + ".", "ok", { roomChanged: true });
+  const lines = [];
+  if (plain.length) lines.push("Taken: " + plain.map(id => S.itemDef(id).name).join(", ") + ".");
+  if (guarded.length) {
+    const r = tryRoomActions(takeIntent(guarded[0]));
+    if (r.type === "death" || r.type === "win") return r;
+    lines.push(r.text);
+  }
+  return res(lines.join("\n\n"), "ok", { roomChanged: true });
 }
 
 function dropAll() {
@@ -425,42 +474,20 @@ function examine(target) {
 //   5. Flavour target response
 //   6. Generic fallback
 
-function use(verb, target, on) {
+function use(p) {
+  const { verb, target, on } = p;
   const r = S.currentRoom();
   const roomId = S.get().room;
 
-  // 1 ── Room actions ─────────────────────────────────────────────────────────
-  for (const action of (r.actions || [])) {
-    const verbOk   = action.verbs?.includes(verb);
-    const targetOk = matchesTarget(action.targets || action.target, target)
-                   || (on && matchesTarget(action.targets || action.target, on));
-    if (!verbOk || !targetOk) continue;
-    if (!S.check(action.condition)) continue;
-
-    // requires: item id OR tag
-    if (action.requires) {
-      const reqOk = checkRequires(action.requires);
-      if (!reqOk) return res(action.failText || "You do not have what you need for that.", "bad");
-    }
-
-    applyEffects(action.effects, roomId);
-    S.save();
-    if (action.effects?.kill) return res(action.effects.killText || "You die.", "death");
-    if (action.effects?.win)  return res("", "win");
-    return res(action.successText || action.text || "Done.", "ok",
-      { roomChanged: hasRoomChanged(action.effects), sound: action.effects?.playSound || null });
-  }
+  // 1 ── Room actions — already tried by runCommand() before any verb handler.
 
   // 2 ── Object actions ───────────────────────────────────────────────────────
   const obj = findObject(r, target);
   if (obj && obj.actions) {
     for (const action of obj.actions) {
-      if (!action.verbs?.includes(verb)) continue;
+      if (!verbMatches(action.verbs, p)) continue;
       if (!S.check(action.condition)) continue;
-      applyEffects(action.effects, roomId);
-      S.save();
-      return res(action.successText || action.text || "Done.", "ok",
-        { roomChanged: hasRoomChanged(action.effects) });
+      return runAction(action, roomId);
     }
     if (obj.useText) return res(obj.useText, "neutral");
   }
@@ -474,19 +501,14 @@ function use(verb, target, on) {
       const roomOk = !ca.room ||
         ca.room === roomId ||
         (Array.isArray(ca.room) && ca.room.includes(roomId));
-      const verbOk = !ca.verbs || ca.verbs.includes(verb);
+      const verbOk = !ca.verbs || verbMatches(ca.verbs, p);
       if (!roomOk || !verbOk) continue;
       if (!S.check(ca.condition)) continue;
 
       if (ca.requires && !checkRequires(ca.requires)) {
         return res(ca.requiresText || "You do not have what you need for that.", "bad");
       }
-      applyEffects(ca.effects, roomId);
-      S.save();
-      if (ca.effects?.kill) return res(ca.effects.killText || "You die.", "death");
-      if (ca.effects?.win)  return res("", "win");
-      return res(ca.successText || ca.text || "Done.", "ok",
-        { roomChanged: hasRoomChanged(ca.effects), sound: ca.effects?.playSound || null });
+      return runAction(ca, roomId);
     }
 
     // 4 ── Item defaultActions ───────────────────────────────────────────────
@@ -515,6 +537,7 @@ function tickPressure() {
   const roomId = S.get().room;
   let warning = null;
   let death = null;
+  let deathMedia = null;
 
   for (const hazard of (r.hazards || [])) {
     if (hazard.type !== "commandPressure") continue;
@@ -526,6 +549,7 @@ function tickPressure() {
     // Death threshold
     if (count >= hazard.threshold) {
       death = hazard.deathText || "Something in the room finally reaches you.";
+      deathMedia = hazard.deathMedia || null;
       break;
     }
 
@@ -538,7 +562,7 @@ function tickPressure() {
     }
   }
 
-  return { warning, death };
+  return { warning, death, deathMedia };
 }
 
 // ── Inventory list ────────────────────────────────────────────────────────────
@@ -572,60 +596,51 @@ Some exits are hidden. Some must be typed, not clicked.`;
 
 // ── Main command dispatcher ───────────────────────────────────────────────────
 
+// Room actions are tried first for every verb that takes a target (take, look,
+// go, drop, use, room-specific verbs...). That is what lets a room override the
+// generic handlers, e.g. "take scroll" triggering the archive alarm.
+function findRoomAction(p) {
+  if (["empty", "help", "inventory"].includes(p.verb)) return null;
+  if (p.verb === "look" && !p.target) return null;
+  const r = S.currentRoom();
+  for (const action of (r.actions || [])) {
+    if (!verbMatches(action.verbs, p)) continue;
+    const tl = action.targets || action.target;
+    const targetOk = matchesTarget(tl, p.target)
+      || (p.on && matchesTarget(tl, p.on))
+      // a room-specific verb typed on its own ("crawl", "leap") is enough
+      || (p.verb === "unknown" && !p.target);
+    if (!targetOk) continue;
+    if (!S.check(action.condition)) continue;
+    return action;
+  }
+  return null;
+}
+
+function tryRoomActions(p) {
+  const action = findRoomAction(p);
+  if (action) {
+    if (action.requires && !checkRequires(action.requires)) {
+      return res(action.requiresText || action.failText || "You do not have what you need for that.", "bad");
+    }
+    return runAction(action, S.get().room);
+  }
+  return null;
+}
+
+// "take" as the room would see it, for one item (used by take all)
+const takeIntent = id => ({ verb: "take", word: "take", target: id });
+
 function runCommand(rawInput) {
   const p = parse(rawInput);
-  let result;
+  let result = tryRoomActions(p);
 
-  switch (p.verb) {
+  if (!result) switch (p.verb) {
     case "empty":     result = res("You wait. Nothing changes.", "neutral"); break;
-    case "unknown": {
-      // Try room actions before giving up — rooms define their own verbs
-      const _ru = S.currentRoom();
-      let _foundU = false;
-      for (const _au of (_ru.actions || [])) {
-        const _vOk = _au.verbs?.includes(p.verb) || _au.verbs?.includes(p.target);
-        const _tOk = !_au.targets || matchesTarget(_au.targets || _au.target, p.target) || matchesTarget(_au.targets || _au.target, p.verb);
-        if (_vOk && _tOk && S.check(_au.condition)) {
-          if (_au.requires && !checkRequires(_au.requires)) {
-            result = res(_au.requiresText || _au.failText || "You do not have what you need.", "bad");
-          } else {
-            applyEffects(_au.effects, S.get().room);
-            S.save();
-            if (_au.effects?.win) result = res("", "win");
-            else result = res(_au.successText || "Done.", "ok", { roomChanged: hasRoomChanged(_au.effects) });
-          }
-          _foundU = true;
-          break;
-        }
-      }
-      if (!_foundU) result = res("Nothing answers that intention.", "bad");
-      break;
-    }
+    case "unknown":   result = res("Nothing answers that intention.", "bad"); break;
     case "help":      return res(helpText(), "neutral", { skipPressure: true });
     case "inventory": return res("", "neutral", { inventoryOnly: true, skipPressure: true });
-
-    case "go": {
-      const _r = S.currentRoom();
-      let _matched = false;
-      for (const _act of (_r.actions || [])) {
-        const _vOk = _act.verbs?.includes("go");
-        const _tOk = matchesTarget(_act.targets || _act.target, p.target);
-        if (_vOk && _tOk && S.check(_act.condition)) {
-          if (_act.requires && !checkRequires(_act.requires)) {
-            result = res(_act.requiresText || _act.failText || "You do not have what you need.", "bad");
-          } else {
-            applyEffects(_act.effects, S.get().room);
-            S.save();
-            if (_act.effects?.win) result = res("", "win");
-            else result = res(_act.successText || "Done.", "ok", { roomChanged: hasRoomChanged(_act.effects) });
-          }
-          _matched = true;
-          break;
-        }
-      }
-      if (!_matched) result = go(p.target);
-      break;
-    }
+    case "go":        result = go(p.target); break;
     case "look":      result = examine(p.target); break;
     case "take":      result = take(p.target); break;
     case "drop":      result = drop(p.target); break;
@@ -640,7 +655,7 @@ function runCommand(rawInput) {
     case "swing": case "attack": case "cut": case "inject":
     case "throw": case "listen": case "smell": case "touch":
     case "talk":
-      result = use(p.verb, p.target, p.on); break;
+      result = use(p); break;
 
     default:
       result = res("Nothing answers that intention.", "bad");
@@ -650,10 +665,11 @@ function runCommand(rawInput) {
   if (!result.skipPressure && result.type !== "death" && result.type !== "win") {
     const pressure = tickPressure();
     if (pressure.death) {
-      return res(pressure.death, "death");
+      return res(pressure.death, "death", { deathMedia: pressure.deathMedia });
     }
     if (pressure.warning) {
-      result.warning = pressure.warning;
+      // keep a visit warning from entering the room as well
+      result.warning = [result.warning, pressure.warning].filter(Boolean).join("\n");
     }
   }
 
@@ -662,10 +678,25 @@ function runCommand(rawInput) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+// Whole-word matching: "iv line" matches "iv", but "lantern" does not match
+// "lanterns" and "shuriken" does not match "smoke". Underscores count as spaces.
 function matchesTarget(targetList, input) {
   if (!targetList || targetList.length === 0) return true;
   if (!input) return false;
-  return targetList.some(t => input === t || input.includes(t) || t.includes(input));
+  const list = Array.isArray(targetList) ? targetList : [targetList];
+  const words = s => ` ${String(s).toLowerCase().replace(/_/g, " ").trim()} `;
+  const inp = words(input);
+  return list.some(t => {
+    const tw = words(t);
+    return inp === tw || inp.includes(tw) || tw.includes(inp);
+  });
+}
+
+// An action verb list matches the canonical verb ("push"), the typed word
+// ("press"), or an alias of it ("press" listed, "push" typed).
+function verbMatches(list, p) {
+  if (!list) return false;
+  return list.some(v => v === p.verb || v === p.word || canonVerb(v) === p.verb);
 }
 
 function checkRequires(req) {
@@ -700,5 +731,5 @@ function findFlavour(r, target) {
 export {
   runCommand, go, take, drop, takeAll, dropAll, wear, removeWorn, hold, examine, use,
   buildDescription, buildExits, resolveMediaKey, inventoryList, helpText,
-  enterRoom, applyEffects, tickPressure,
+  enterRoom, arrive, applyEffects, tickPressure,
 };
