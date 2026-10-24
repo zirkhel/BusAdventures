@@ -55,7 +55,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>MOON BUGGY</h1>
-        <div class="under">Choose game · v4.2</div>
+        <div class="under">Choose game · v4.3</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">WRECKED</div>
           <div class="tall" id="menyTall"></div>
@@ -85,9 +85,9 @@ const meny=document.getElementById('meny'), menyResultat=document.getElementById
 const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
 const W=320, H=260, GROUND=200;
 const NIVA={
-  A:{base:58, gap:260, ufo:0, bomb:false, ufoAfter:700},
-  B:{base:62, gap:230, ufo:1, bomb:true, ufoAfter:500},
-  C:{base:70, gap:200, ufo:2, bomb:true, ufoAfter:280}
+  A:{base:58, gap:260, pitMax:28, ufo:0, bomb:false, ufoAfter:700},
+  B:{base:62, gap:230, pitMax:32, ufo:1, bomb:true, ufoAfter:500},
+  C:{base:70, gap:200, pitMax:40, ufo:2, bomb:true, ufoAfter:280}
 };
 let S=null, crashed=false, keys={left:false, right:false};
 
@@ -130,11 +130,8 @@ function burst(x,y,n,kind){
 function jump(){
   if(!S||S.over||S.paused||S.dying) return;
   if(S.air) return;
-  // Airtime (= vy/200 with gravity 400) is sized so the widest pit (40 px plus
-  // the buggy's 12 px footprint) is clearable from a standing jump at every
-  // speed, with 0.12 s to spare. Slower modes get a higher, longer jump.
-  const air = 52/S.spd + 0.12;
-  S.vy = -200*air;
+  const extra = (S.spd-40)*0.6;
+  S.vy = -155 - extra;
   S.air=true;
 }
 
@@ -167,7 +164,8 @@ function spawnAhead(){
   if(d>40 && roll<0.22) S.mines.push({x});
   else if(d>900 && n.ufo>=1 && roll<0.22) S.plants.push({x, hit:false, ph:0});
   else if(d>700 && n.ufo>=2 && roll<0.20) S.boulders.push({x, hit:false});
-  else if(roll<0.42) S.pits.push({x, w:18+Math.random()*22});
+  // pitMax per mode keeps every pit clearable from a standing jump at that mode's speed.
+  else if(roll<0.42) S.pits.push({x, w:18+Math.random()*(n.pitMax-18)});
   else S.rocks.push({x, hit:false, hp: Math.random()<(d>80?0.5:0.28) ? 2:1, cracked:false});
   S.nextG = n.gap + Math.random()*90;
 }
