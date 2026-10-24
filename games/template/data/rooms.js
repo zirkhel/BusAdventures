@@ -4,6 +4,7 @@
 //   hallway   locked exit, room action with requires, room states
 //   storeroom commandPressure hazard with warnings, deathMedia
 //   outside   win room
+// Rules and every option: DESIGNER-GUIDE.md in the repo root.
 // Check your data with:  node tools/validate-adventure.mjs games/<your-game>
 // Play it in the terminal: node tools/play-adventure.mjs games/<your-game> "take torch" n
 "use strict";

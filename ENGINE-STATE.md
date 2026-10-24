@@ -1,6 +1,8 @@
 # Bus Adventures — Engine State
 _Last updated: 2026-10-24 (engine rework: room-action-first dispatch, media order, goTo via arrive, tools)_
 
+For writing adventures, start with **DESIGNER-GUIDE.md** (rules, room options, whole-game options). This file is the technical reference.
+
 ## Architecture
 
 ### File structure
