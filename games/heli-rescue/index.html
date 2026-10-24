@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v2.9</div>
+        <div class="under">Choose game · v3.0</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -89,9 +89,9 @@ const meny=document.getElementById('meny'), menyResultat=document.getElementById
 const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
 const W=320, H=260, GROUND=188, WORLD=920, CAP=4;
 const NIVA={
-  A:{tanks:1, jets:1, jetMs:4200, tankMs:2400, jetSpd:70, aim:95},
-  B:{tanks:2, jets:1, jetMs:3400, tankMs:2000, jetSpd:85, aim:110},
-  C:{tanks:3, jets:2, jetMs:2600, tankMs:1600, jetSpd:100, aim:125}
+  A:{tanks:1, jets:1, jetMs:4200, tankMs:2400, jetSpd:70, aim:90, lock:750},
+  B:{tanks:2, jets:1, jetMs:3400, tankMs:2000, jetSpd:85, aim:100, lock:650},
+  C:{tanks:3, jets:2, jetMs:2600, tankMs:1600, jetSpd:100, aim:110, lock:550}
 };
 let S=null, crashed=false, keys={left:false,right:false,up:false};
 
@@ -138,7 +138,7 @@ function reset(mode){
   S={
     mode, score:0, lives:3, saved:0, zoneSaved:0, zoneDead:0, zone:1, dead:0, onboard:0, zoneMsg:0, zoneText:'',
     hx:70, hy:GROUND-20, vx:0, vy:0, face:1, cam:0, rotor:0,
-    shots:[], nades:[], barracks, people, tanks, jets:[], missiles:[], fx:[], nadeT:0,
+    shots:[], nades:[], barracks, people, tanks, jets:[], missiles:[], fx:[], nadeT:0, fireGap:0,
     nextJet:n.jets?4200:99999,
     over:false, paused:false, last:0, menyPlanlagt:false,
     flash:0, shake:0, dying:0, invuln:800, nyRekord:false, arsak:''
@@ -182,6 +182,8 @@ function crash(why){
 function finishCrash(){
   if(S.lives<=0){ S.over=true; S.nyRekord=lagre(S.mode,S.score); return; }
   S.dying=0; S.hx=70; S.hy=GROUND-24; S.vx=0; S.vy=0; S.invuln=1000;
+  for(const j of S.jets) j.lock=0;
+  S.fireGap=600;
 }
 
 function onBase(){
@@ -224,7 +226,9 @@ function update(dt){
   if(S.hy<28){ S.hy=28; S.vy=0; }
   if(S.hy>GROUND-10){
     if(S.invuln<=0 && S.vy>95) crash('IMPACT');
-    S.hy=GROUND-10; S.vy=0; S.vx=0;
+    // Keep sideways speed on the ground so a landed heli can slide clear of
+    // a falling bomb (zeroing vx here made bombs on a landed heli unavoidable).
+    S.hy=GROUND-10; S.vy=0;
   }
   S.front = landed;
   S.rotor = (S.rotor||0) + (landed?0.6:1.2);
@@ -318,6 +322,7 @@ function update(dt){
     }
   }
 
+  if(S.fireGap>0 && S.fireGap<1e9) S.fireGap-=dt;
   S.nextJet-=dt;
   if(NIVA[S.mode].jets && S.nextJet<=0){
     const cap=NIVA[S.mode].jets;
@@ -343,14 +348,22 @@ function update(dt){
       j.dead=true;
     }
     j.shot=(j.shot||0)-dt;
-    // Gun jets fire one aimed shot at the heli while it is ahead of them, at any
-    // altitude. Bombers drop when passing over it. Never while the heli is on base.
-    if(!j.fall && !onBase() && j.shot<=0){
-      const dx=S.hx-j.x, dy=S.hy-j.y;
-      if(j.gun && dx*j.vx>0 && Math.abs(dx)<170){
-        const d=Math.hypot(dx,dy)||1, v=NIVA[S.mode].aim;
+    // Gun jets lock on first: a blinking crosshair marks where the heli is,
+    // then the shot goes to that spot. Moving during the lock dodges it.
+    // Only one jet locks at a time (S.fireGap), so shots never overlap.
+    if(j.lock>0){
+      j.lock-=dt;
+      if(j.fall){ j.lock=0; S.fireGap=0; }
+      else if(j.lock<=0){
+        const dx=j.aimX-j.x, dy=j.aimY-j.y, d=Math.hypot(dx,dy)||1, v=NIVA[S.mode].aim;
         S.missiles.push({x:j.x, y:j.y, vx:dx/d*v, vy:dy/d*v, flat:true, aimed:true, from:'jet'});
-        j.shot=1600;
+        j.shot=1600; S.fireGap=700;
+      }
+    } else if(!j.fall && !onBase() && j.shot<=0){
+      const dx=S.hx-j.x, dy=S.hy-j.y;
+      if(j.gun && S.fireGap<=0 && dx*j.vx>0 && Math.abs(dx)<170){
+        j.lock=NIVA[S.mode].lock; j.aimX=S.hx; j.aimY=S.hy;
+        S.fireGap=1e9;               // held until this jet fires
       } else if(!j.gun && Math.abs(dx)<24 && dy>0){
         S.missiles.push({x:j.x, y:j.y+4, vx:j.vx*0.2, vy:70, from:'jetbomb'});
         j.shot=1600;
@@ -368,7 +381,9 @@ function update(dt){
     }
     if(!j.dead && S.invuln<=0 && !onBase() && heliHits(j.x-16, j.y-8, 32, 16)) crash('JET');
   }
-  S.jets=S.jets.filter(j=>!j.dead && j.x>S.cam-50 && j.x<S.cam+W+50);
+  const kept=S.jets.filter(j=>!j.dead && j.x>S.cam-50 && j.x<S.cam+W+50);
+  if(S.jets.some(j=>j.lock>0 && !kept.includes(j))) S.fireGap=0;
+  S.jets=kept;
 
   for(const m of S.missiles){
     m.x+=m.vx*t; m.y+=m.vy*t;
@@ -399,7 +414,7 @@ function nextZone(){
   S.tanks=[];
   const nt=n.tanks+Math.min(2, S.zone-1);
   for(let i=0;i<nt;i++) S.tanks.push({x:480+i*80, dir:i%2?1:-1, shot:600+i*300});
-  S.jets=[]; S.missiles=[]; S.shots=[]; S.nades=[];
+  S.jets=[]; S.missiles=[]; S.shots=[]; S.nades=[]; S.fireGap=0;
   S.nextJet=2800;
   S.hx=70; S.hy=GROUND-24; S.vx=0; S.vy=0;
   S.invuln=900;
@@ -606,6 +621,18 @@ function draw(){
   for(const f of S.fx){ ctx.fillStyle='#ffe08a'; ctx.fillRect(f.x-cam,f.y,2,2); }
 
   drawHeli(S.hx-cam, S.hy);
+  // Lock-on: blinking corner brackets around the spot the jet will fire at,
+  // drawn over the heli so the player sees it is the target.
+  for(const j of S.jets){
+    if(!(j.lock>0)) continue;
+    const blink=((j.lock/90)|0)%2===0, cx=(j.aimX-cam)|0, cy=j.aimY|0, c=blink?'#ff4a3a':'#ffd08a';
+    const R=14, V=11, L=5;
+    px(cx-R, cy-V, L, 1, c); px(cx-R, cy-V, 1, L, c);
+    px(cx+R-L+1, cy-V, L, 1, c); px(cx+R, cy-V, 1, L, c);
+    px(cx-R, cy+V, L, 1, c); px(cx-R, cy+V-L+1, 1, L, c);
+    px(cx+R-L+1, cy+V, L, 1, c); px(cx+R, cy+V-L+1, 1, L, c);
+    px(j.x-cam-1, j.y-6, 3, 3, c);                 // the locking jet blinks too
+  }
   if(S.flash>0){ ctx.fillStyle='rgba(255,200,80,'+(S.flash/12)+')'; ctx.fillRect(0,0,W,H); }
   ctx.restore();
 
@@ -630,7 +657,7 @@ function draw(){
     ctx.textAlign='left';
   }
   for(let i=0;i<S.lives;i++) px(W-14-i*12, 6, 8, 4, '#c8d4de');
-  alarmLed.classList.toggle('lit', !!(S.over||S.lives===1));
+  alarmLed.classList.toggle('lit', !!(S.over||S.lives===1||S.jets.some(j=>j.lock>0)));
 }
 
 function planleggMeny(){
