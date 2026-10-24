@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v3.0</div>
+        <div class="under">Choose game · v3.1</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -87,11 +87,11 @@ const HJEM='/';
 const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
 const meny=document.getElementById('meny'), menyResultat=document.getElementById('menyResultat');
 const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
-const W=320, H=260, GROUND=188, WORLD=920, CAP=4;
+const W=320, H=260, GROUND=188, WORLD=920, CAP=4, RUN_RANGE=70;
 const NIVA={
   A:{tanks:1, jets:1, jetMs:4200, tankMs:2400, jetSpd:70, aim:90, lock:750},
-  B:{tanks:2, jets:1, jetMs:3400, tankMs:2000, jetSpd:85, aim:100, lock:650},
-  C:{tanks:3, jets:2, jetMs:2600, tankMs:1600, jetSpd:100, aim:110, lock:550}
+  B:{tanks:2, jets:1, jetMs:3400, tankMs:2000, jetSpd:85, aim:100, lock:700},
+  C:{tanks:3, jets:2, jetMs:2600, tankMs:1600, jetSpd:100, aim:110, lock:650}
 };
 let S=null, crashed=false, keys={left:false,right:false,up:false};
 
@@ -226,9 +226,7 @@ function update(dt){
   if(S.hy<28){ S.hy=28; S.vy=0; }
   if(S.hy>GROUND-10){
     if(S.invuln<=0 && S.vy>95) crash('IMPACT');
-    // Keep sideways speed on the ground so a landed heli can slide clear of
-    // a falling bomb (zeroing vx here made bombs on a landed heli unavoidable).
-    S.hy=GROUND-10; S.vy=0;
+    S.hy=GROUND-10; S.vy=0; S.vx=0;     // no taxiing: lift off to move
   }
   S.front = landed;
   S.rotor = (S.rotor||0) + (landed?0.6:1.2);
@@ -268,7 +266,9 @@ function update(dt){
     if(p.state==='dead'||p.state==='in'||p.state==='home') continue;
     if(p.state==='free'){
       const near=Math.abs(p.x-S.hx);
-      if(landed && S.onboard<CAP && near<130){
+      // People only run to a heli that lands close to them, never to one on
+      // the base pad (130 px let house 1 walk almost all the way home).
+      if(landed && S.onboard<CAP && near<RUN_RANGE && S.hx>140){
         p.state='run';
       } else if(p.born<=0 && S.invuln<=0 && landed && near<8){
         p.state='dead'; S.dead++; S.zoneDead++; burst(p.x,GROUND-6,6);
