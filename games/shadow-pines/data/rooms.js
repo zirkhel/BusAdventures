@@ -171,6 +171,10 @@ export const ROOMS = {
           at: 3,
           text: "The patrol pattern tightens. Staying in the courtyard much longer will get you killed.",
         },
+        {
+          at: 4,
+          text: "Lanterns swing toward you from both sides. One more pass through this courtyard and they will have you.",
+        },
       ],
 
       deathText:
@@ -682,7 +686,7 @@ export const ROOMS = {
         },
         {
           at: 6,
-          text: "Steel scrapes outside the archive. The elite guard has found the door.",
+          text: "Steel scrapes outside the archive. The elite guard has found the door. Go — now.",
         },
       ],
       deathText:
@@ -1030,6 +1034,10 @@ export const ROOMS = {
           at: 3,
           text: "Dust falls from the beams. This cellar will not tolerate much more movement.",
         },
+        {
+          at: 4,
+          text: "A beam cracks overhead and the shelves lean out over the floor. The cellar will not survive another visit.",
+        },
       ],
       deathText:
         "The shelves collapse in a roar of wood, jars, and stone. The cellar buries you before you can draw breath.",
@@ -1321,17 +1329,22 @@ roof_path: {
 
   mediaStates: [],
 
-  enterRequires: {
-    condition: { hasItem: "climbing_claws" },
-    failText:
-      "You step onto the rain-slick roof without climbing claws. Your foot slides, the tiles vanish beneath you, and the courtyard rushes upward through the storm.",
-  },
+  enterRequires: null,
 
   exits: {
     south: "archive",
   },
 
-  hazards: [],
+  // Without claws the roof kills you (onEnter hazard). enterRequires would
+  // only block the way and leave you standing in the archive.
+  hazards: [
+    {
+      type: "onEnter",
+      safeIf: { hasItem: "climbing_claws" },
+      deathText:
+        "You step onto the rain-slick roof without climbing claws. Your foot slides, the tiles vanish beneath you, and the courtyard rushes upward through the storm.",
+    },
+  ],
 
   actions: [
     {

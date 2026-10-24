@@ -304,7 +304,7 @@ export const ROOMS = {
         safeUnder: 2,
         deathText: "On your third visit, the footprints stop directly beside you. Something grabs your ankle from the step below.",
         warningStages: [
-          { at: 2, text: "The footprints on the steps are very fresh." },
+          { at: 2, text: "The footprints on the steps are very fresh, and they stop just below you. Do not come back down these stairs." },
         ],
       },
     ],
@@ -342,7 +342,7 @@ export const ROOMS = {
         warningStages: [
           { at: 2, text: "You hear water moving deeper below." },
           { at: 4, text: "The red emergency light flickers violently." },
-          { at: 5, text: "Something splashes in the darkness nearby." },
+          { at: 5, text: "Something splashes right beside you in the dark. Get out of the water — now." },
         ],
         deathText: "Something in the flooded dark finally reaches you.",
         deathMedia: "death-basement",

@@ -177,6 +177,8 @@ async function validate(gameDir) {
     }
 
     // entry
+    if (r.enterRequires && /\b(die|dies|dead|death|fall|falls|killed)\b/i.test(r.enterRequires.failText || ""))
+      warn(`${W}.enterRequires`, "failText sounds like death, but enterRequires only blocks entry — use a hazard { type: \"onEnter\", safeIf, deathText }");
     if (r.enterRequires) {
       if (r.enterRequires.condition === undefined && !Object.keys(r.enterRequires).some(k => CONDITION_KEYS.has(k)))
         warn(`${W}.enterRequires`, "no condition");
@@ -210,7 +212,7 @@ async function validate(gameDir) {
       for (let j = 1; j < stages.length; j++) if (stages[j].at <= stages[j - 1].at) warn(H, "warningStages not in ascending order");
       const limit = h.type === "visitCount" ? h.safeUnder : h.type === "commandPressure" ? h.threshold - 1 : null;
       if (limit != null && stages.length && stages[stages.length - 1].at < limit)
-        info(H, `last warning at ${stages[stages.length - 1].at}, death after ${limit} — the final safe step repeats the previous warning`);
+        warn(H, `no last warning: final safe step is ${limit} but the last warningStage is at ${stages[stages.length - 1].at} — add { at: ${limit}, text: "..." } so the player knows the next step kills`);
       if (limit != null && !stages.length) warn(H, "deadly hazard with no warningStages");
     }
 
