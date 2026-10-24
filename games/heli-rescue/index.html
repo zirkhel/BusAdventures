@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v2.8</div>
+        <div class="under">Choose game · v2.9</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -89,9 +89,9 @@ const meny=document.getElementById('meny'), menyResultat=document.getElementById
 const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
 const W=320, H=260, GROUND=188, WORLD=920, CAP=4;
 const NIVA={
-  A:{tanks:1, jets:1, jetMs:4200, tankMs:2400, jetSpd:70},
-  B:{tanks:2, jets:1, jetMs:3400, tankMs:2000, jetSpd:85},
-  C:{tanks:3, jets:2, jetMs:2600, tankMs:1600, jetSpd:100}
+  A:{tanks:1, jets:1, jetMs:4200, tankMs:2400, jetSpd:70, aim:95},
+  B:{tanks:2, jets:1, jetMs:3400, tankMs:2000, jetSpd:85, aim:110},
+  C:{tanks:3, jets:2, jetMs:2600, tankMs:1600, jetSpd:100, aim:125}
 };
 let S=null, crashed=false, keys={left:false,right:false,up:false};
 
@@ -326,7 +326,7 @@ function update(dt){
       const spd=NIVA[S.mode].jetSpd;
       S.jets.push({
         x: fromRight ? S.cam+W+50 : S.cam-50,
-        y: 32+Math.random()*36,
+        y: 36+Math.random()*80,   // 36–116: low enough to matter, above the houses
         vx: fromRight ? -spd : spd,
         gun:Math.random()<0.55,
         shot:900,
@@ -343,14 +343,17 @@ function update(dt){
       j.dead=true;
     }
     j.shot=(j.shot||0)-dt;
-    // Telegraph: fire only when roughly level and not while the heli is on base.
-    if(!j.fall && !onBase() && Math.abs(j.x-S.hx)<170 && Math.abs(j.y-S.hy)<42 && j.shot<=0){
-      j.shot=1600;
-      if(j.gun){
-        const dir=Math.sign(S.hx-j.x)|| (j.vx<0?-1:1);
-        S.missiles.push({x:j.x, y:j.y, vx:dir*95, vy:0, flat:true, from:'jet'});
-      } else {
-        S.missiles.push({x:j.x, y:j.y, vx:j.vx*0.2, vy:70, from:'jetbomb'});
+    // Gun jets fire one aimed shot at the heli while it is ahead of them, at any
+    // altitude. Bombers drop when passing over it. Never while the heli is on base.
+    if(!j.fall && !onBase() && j.shot<=0){
+      const dx=S.hx-j.x, dy=S.hy-j.y;
+      if(j.gun && dx*j.vx>0 && Math.abs(dx)<170){
+        const d=Math.hypot(dx,dy)||1, v=NIVA[S.mode].aim;
+        S.missiles.push({x:j.x, y:j.y, vx:dx/d*v, vy:dy/d*v, flat:true, aimed:true, from:'jet'});
+        j.shot=1600;
+      } else if(!j.gun && Math.abs(dx)<24 && dy>0){
+        S.missiles.push({x:j.x, y:j.y+4, vx:j.vx*0.2, vy:70, from:'jetbomb'});
+        j.shot=1600;
       }
     }
     for(const sh of S.shots){
@@ -370,7 +373,7 @@ function update(dt){
   for(const m of S.missiles){
     m.x+=m.vx*t; m.y+=m.vy*t;
     if(!m.flat) m.vy+=22*t;
-    if(S.invuln<=0 && !onBase() && (m.flat ? heliHits(m.x-4, m.y-1, 8, 3) : heliHits(m.x-1, m.y-6, 3, 10))) crash('HIT');
+    if(S.invuln<=0 && !onBase() && (m.aimed ? heliHits(m.x-2, m.y-2, 4, 4) : m.flat ? heliHits(m.x-4, m.y-1, 8, 3) : heliHits(m.x-1, m.y-6, 3, 10))) crash('HIT');
     if(m.y>GROUND){ burst(m.x,GROUND,5); m.dead=true; }
     if(onBase() && m.x>26 && m.x<128 && m.y>GROUND-60){ m.dead=true; }
   }
@@ -584,7 +587,10 @@ function draw(){
   }
   for(const m of S.missiles){
     const mx=m.x-cam;
-    if(m.flat){
+    if(m.aimed){
+      px(mx-2, m.y-2, 4, 4, '#ff6a3a');
+      px(mx-1, m.y-1, 2, 2, '#fff3a0');
+    } else if(m.flat){
       px(mx-4, m.y-1, 8, 3, '#ff6a3a');
       px(mx+(m.vx>0?3:-4), m.y, 3, 1, '#fff3a0');
     } else {
