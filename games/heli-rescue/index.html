@@ -56,7 +56,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>HELI RESCUE</h1>
-        <div class="under">Choose game · v2.7</div>
+        <div class="under">Choose game · v2.8</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">SORTIE OVER</div>
           <div class="tall" id="menyTall"></div>
@@ -100,16 +100,20 @@ function lagre(m,s){ try{const h=beste(m); if(s>h){localStorage.setItem('ba_heli
 function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms);}catch(e){} }
 function px(x,y,w,h,c){ ctx.fillStyle=c; ctx.fillRect(x|0,y|0,w,h); }
 
-function houseWidth(kind){
-  return kind===1?48:kind===2?28:36;
+// Collision box per house kind, matching what draw() paints.
+function houseBox(b){
+  const k=b.kind||0;
+  if(k===1) return {x:b.x-2, y:GROUND-22, w:52, h:22};
+  if(k===2) return {x:b.x+4, y:GROUND-34, w:28, h:34};
+  return {x:b.x, y:GROUND-32, w:36, h:32};
 }
 
 function spawnBarracks(){
   return [
-    {x:260,released:true,kind:0},
-    {x:430,released:true,kind:1},
-    {x:620,released:true,kind:2},
-    {x:790,released:true,kind:0}
+    {x:260,kind:0},
+    {x:430,kind:1},
+    {x:620,kind:2},
+    {x:790,kind:0}
   ];
 }
 
@@ -132,8 +136,8 @@ function reset(mode){
   const tanks=[];
   for(let i=0;i<n.tanks;i++) tanks.push({x:500+i*90, dir:1, shot:800+i*400});
   S={
-    mode, score:0, lives:3, saved:0, zoneSaved:0, zone:1, dead:0, onboard:0, zoneMsg:0,
-    hx:70, hy:GROUND-20, vx:0, vy:0, face:1, cam:0, rotor:0, rpm:8, airWash:0,
+    mode, score:0, lives:3, saved:0, zoneSaved:0, zoneDead:0, zone:1, dead:0, onboard:0, zoneMsg:0, zoneText:'',
+    hx:70, hy:GROUND-20, vx:0, vy:0, face:1, cam:0, rotor:0,
     shots:[], nades:[], barracks, people, tanks, jets:[], missiles:[], fx:[], nadeT:0,
     nextJet:n.jets?4200:99999,
     over:false, paused:false, last:0, menyPlanlagt:false,
@@ -180,20 +184,16 @@ function finishCrash(){
   S.dying=0; S.hx=70; S.hy=GROUND-24; S.vx=0; S.vy=0; S.invuln=1000;
 }
 
-function landOk(){
-  return S.hy>=GROUND-18 && Math.abs(S.vy)<40 && Math.abs(S.vx)<50;
-}
-
 function onBase(){
   // Home pad is sanctuary — landed or in a low hover over it.
   return S.hx>26 && S.hx<128 && S.hy>=GROUND-56;
 }
 
 function heliHits(x, y, w, h){
-  // Hitbox matches the drawn sprite (side view ~36×16, nose-on ~24×16)
-  const hw = S.front ? 24 : 36;
-  const hh = 16;
-  const hx = S.hx - hw/2, hy = S.hy - 12;
+  // Hitbox matches drawHeli(): side view 32×12, nose-on 28×14, skids at hy+6.
+  const hw = S.front ? 28 : 32;
+  const hh = S.front ? 14 : 12;
+  const hx = S.hx - hw/2, hy = S.hy + 6 - hh;
   return hx < x+w && hx+hw > x && hy < y+h && hy+hh > y;
 }
 
@@ -204,7 +204,7 @@ function update(dt){
   if(S.shake>0){ S.shake*=0.82; if(S.shake<0.2) S.shake=0; }
   for(const f of S.fx){ f.t-=dt; f.x+=f.vx*t; f.y+=f.vy*t; f.vy+=90*t; }
   S.fx=S.fx.filter(f=>f.t>0);
-  if(S.dying>0){ S.dying-=dt; S.hy+=40*t; if(S.dying<=0) finishCrash(); return; }
+  if(S.dying>0){ S.dying-=dt; S.hy=Math.min(S.hy+40*t, GROUND-10); if(S.dying<=0) finishCrash(); return; }
   if(S.over) return;
   if(S.invuln>0) S.invuln-=dt;
 
@@ -213,7 +213,9 @@ function update(dt){
   if(keys.right){ S.vx+=340*t; S.face=1; }
   if(keys.up) S.vy-=360*t;
   else S.vy+=120*t;
-  S.vx*=0.92; S.vy*=0.94;
+  // Drag scaled to elapsed time so speed is the same at 30, 60 and 120 Hz.
+  const f=dt/16.67;
+  S.vx*=Math.pow(0.92,f); S.vy*=Math.pow(0.94,f);
   if(S.vx>260) S.vx=260;
   if(S.vx<-260) S.vx=-260;
   S.hx+=S.vx*t; S.hy+=S.vy*t;
@@ -246,19 +248,6 @@ function update(dt){
   }
   S.nades=S.nades.filter(g=>!g.dead && g.y<H+10);
 
-  if(landed){
-    for(const b of S.barracks){
-      if(b.released) continue;
-      const w=houseWidth(b.kind);
-      const cx=b.x+w/2;
-      if(Math.abs(S.hx-cx)<w/2+56){
-        b.released=true;
-        for(let i=0;i<4;i++) S.people.push({x:b.x-14-i*11, y:GROUND, state:'free', wait:0, born:500});
-        buzz(10);
-      }
-    }
-  }
-
   const onPad=landed && S.hx>36 && S.hx<110;
 
   if(onPad && S.onboard>0){
@@ -278,7 +267,7 @@ function update(dt){
       if(landed && S.onboard<CAP && near<130){
         p.state='run';
       } else if(p.born<=0 && S.invuln<=0 && landed && near<8){
-        p.state='dead'; S.dead++; burst(p.x,GROUND-6,6);
+        p.state='dead'; S.dead++; S.zoneDead++; burst(p.x,GROUND-6,6);
       }
     }
     if(p.state==='run'){
@@ -286,7 +275,7 @@ function update(dt){
       p.x += Math.sign(dx||1)*Math.min(Math.abs(dx), 110*t);
       if(Math.abs(p.x-S.hx)<16 && landed && S.onboard<CAP){
         p.wait=(p.wait||0)+dt;
-        if(p.wait>160){ p.state='in'; S.score+=10; p.wait=0; }
+        if(p.wait>160){ p.state='in'; S.onboard++; S.score+=10; p.wait=0; }
       } else p.wait=0;
       if(!landed) p.state='free';
     }
@@ -320,10 +309,9 @@ function update(dt){
   S.tanks=S.tanks.filter(tk=>!tk.dead);
 
   if(S.invuln<=0 && !S.dying){
-    if(S.hy < GROUND-22){
-      for(const b of S.barracks){
-        if(heliHits(b.x+6, GROUND-34, 24, 14)) crash('BUILDING');
-      }
+    for(const b of S.barracks){
+      const hb=houseBox(b);
+      if(heliHits(hb.x, hb.y, hb.w, hb.h)) crash('BUILDING');
     }
     for(const tk of S.tanks){
       if(heliHits(tk.x-10, GROUND-16, 22, 16)) crash('TANK');
@@ -332,7 +320,7 @@ function update(dt){
 
   S.nextJet-=dt;
   if(NIVA[S.mode].jets && S.nextJet<=0){
-    const cap=S.mode==='C'?2:1;
+    const cap=NIVA[S.mode].jets;
     if(S.jets.length<cap){
       const fromRight=Math.random()<0.75;
       const spd=NIVA[S.mode].jetSpd;
@@ -342,8 +330,7 @@ function update(dt){
         vx: fromRight ? -spd : spd,
         gun:Math.random()<0.55,
         shot:900,
-        dive: false
-      });
+              });
     }
     S.nextJet=Math.max(2200, NIVA[S.mode].jetMs - (S.zone-1)*120);
   }
@@ -383,11 +370,11 @@ function update(dt){
   for(const m of S.missiles){
     m.x+=m.vx*t; m.y+=m.vy*t;
     if(!m.flat) m.vy+=22*t;
-    if(S.invuln<=0 && !onBase() && Math.abs(m.x-S.hx)<22 && Math.abs(m.y-S.hy)<18) crash('HIT');
+    if(S.invuln<=0 && !onBase() && (m.flat ? heliHits(m.x-4, m.y-1, 8, 3) : heliHits(m.x-1, m.y-6, 3, 10))) crash('HIT');
     if(m.y>GROUND){ burst(m.x,GROUND,5); m.dead=true; }
     if(onBase() && m.x>26 && m.x<128 && m.y>GROUND-60){ m.dead=true; }
   }
-  S.missiles=S.missiles.filter(m=>!m.dead && m.y>-10);
+  S.missiles=S.missiles.filter(m=>!m.dead && m.y>-10 && m.x>-40 && m.x<WORLD+40);
 
   const left=S.people.filter(p=>p.state==='free'||p.state==='run').length;
   const exiting=S.people.some(p=>p.state==='out');
@@ -398,9 +385,11 @@ function update(dt){
 
 function nextZone(){
   S.zone++;
-  S.zoneSaved=0;
+  // Bonus and "ALL RESCUED" only when nobody in the zone was lost.
+  if(S.zoneDead===0){ S.score+=200; S.zoneText='ALL RESCUED'; }
+  else S.zoneText=S.zoneSaved+' SAVED  '+S.zoneDead+' LOST';
+  S.zoneSaved=0; S.zoneDead=0;
   S.zoneMsg=2200;
-  S.score+=200;
   const n=NIVA[S.mode];
   S.barracks=spawnBarracks();
   S.people=spawnPeople(S.barracks);
@@ -431,38 +420,36 @@ function spr(x,y,rows,s){
 function drawHeli(sx,sy){
   if(S.invuln>0 && ((S.invuln/80)|0)%2===0) return;
   const spin=((S.rotor)|0)%2;
+  const w=S.onboard?'6':'4';
   if(S.front){
-    spr(sx-16, sy-20, [
-      spin?'..44444444..':'....4444....',
+    spr(sx-14, sy-8, [
+      spin?'.444444444444.':'.....4444.....',
       '....111111....',
       '..2233333322..',
-      '.233344443332.',
+      '.2333'+w+w+w+w+'3332.',
       '.233222222332.',
       '..2211111122..',
-      '..22......22..',
-      S.onboard?'....6666......':'..............'
-    ], 2);
+      '..22......22..'
+    ]);
     return;
   }
   if(S.face>0){
-    spr(sx-28, sy-22, [
+    spr(sx-16, sy-6, [
       spin?'4444444444444444':'......444444....',
       '.........3333...',
-      '111....2233344..',
+      '111....22333'+w+w+'..',
       '.12222233333445.',
       '.12233333322221.',
-      '...2222222.11...',
-      S.onboard?'......66........':'................'
+      '...2222222.11...'
     ]);
   } else {
-    spr(sx-28, sy-22, [
+    spr(sx-16, sy-6, [
       spin?'4444444444444444':'....444444......',
       '...3333.........',
-      '..4433322....111',
+      '..'+w+w+'33322....111',
       '.54433333222221.',
       '.12222333333221.',
-      '...11.2222222...',
-      S.onboard?'........66......':'................'
+      '...11.2222222...'
     ]);
   }
 }
@@ -631,8 +618,10 @@ function draw(){
     ctx.fillRect(30, 70, 260, 36);
     ctx.fillStyle='#e8d5a8';
     ctx.font='11px monospace';
-    ctx.fillText('ALL RESCUED', 110, 86);
-    ctx.fillText('NEXT ZONE '+S.zone, 108, 100);
+    ctx.textAlign='center';
+    ctx.fillText(S.zoneText, W/2, 86);
+    ctx.fillText('NEXT ZONE '+S.zone, W/2, 100);
+    ctx.textAlign='left';
   }
   for(let i=0;i<S.lives;i++) px(W-14-i*12, 6, 8, 4, '#c8d4de');
   alarmLed.classList.toggle('lit', !!(S.over||S.lives===1));
