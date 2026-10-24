@@ -38,7 +38,7 @@ export const ROOMS = {
     gridPosition: { col: 1, row: 1 },
     media: "corridor",
     fx: "flicker",
-    baseDescription: "A long corridor stretches under weak yellow light. Doors line both sides. Something has scratched numbers into the floor tiles.\n\nRecords is north. Pharmacy is west. Surgery Ward is east. A stairwell descends below.",
+    baseDescription: "A long corridor stretches under weak yellow light. Doors line both sides. Something has scratched numbers into the floor tiles.\n\nRecords is north. Pharmacy is west. Surgery Ward is east. A stairwell descends below. Reception is back south.",
     itemText: {},
     exits: {
       south: "reception",

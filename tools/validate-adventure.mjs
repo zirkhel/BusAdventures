@@ -150,6 +150,25 @@ async function validate(gameDir) {
       if (!texts.some(t => t.includes(`{${id}}`))) warn(`${W}.itemText.${id}`, `no {${id}} placeholder in any description (text never shown)`);
     }
 
+    // every visible exit should be named in every description the player can see
+    const DIR_WORDS = {
+      north: /\bnorth/i, south: /\bsouth/i, east: /\beast/i, west: /\bwest/i,
+      up: /\b(up|above|upstairs|climb)/i, down: /\b(down|below|downstairs|descend)/i,
+      northeast: /northeast/i, northwest: /northwest/i, southeast: /southeast/i, southwest: /southwest/i,
+    };
+    const variants = [["baseDescription", r.baseDescription],
+      ...Object.entries(r.states || {}).map(([sn, st]) => [`states.${sn}`, st.description])].filter(([, t]) => t);
+    if (r.states?.default?.description) variants.shift();   // base is never shown when default state has a description
+    for (const [vn, text] of variants) {
+      const st = vn.startsWith("states.") ? r.states[vn.slice(7)] : null;
+      const ex = st?.exits || r.exits || {};
+      const missing = Object.entries(ex)
+        .filter(([, d]) => typeof d === "string" || (!d.hidden && !d.special))
+        .map(([dir]) => dir)
+        .filter(dir => DIR_WORDS[dir] && !DIR_WORDS[dir].test(text));
+      if (missing.length) warn(`${W}.${vn}`, `description does not mention exit ${missing.join(", ")}`);
+    }
+
     // states
     for (const [sn, s] of Object.entries(r.states || {})) {
       useMedia(s.media, `${W}.states.${sn}.media`);

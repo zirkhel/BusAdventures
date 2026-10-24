@@ -113,28 +113,28 @@ export const ROOMS = {
   deathMedia: "death_guard",
 
   baseDescription:
-    "Rainwater glistens across the open courtyard stones. Guards patrol beneath swinging lanterns while ceremonial smoke drifts from the main hall to the east.\n\nA watch tower overlooks the grounds to the north. A narrow servant corridor disappears south between the wooden buildings. The broken outer wall lies west.",
+    "Rainwater glistens across the open courtyard stones. Guards patrol beneath swinging lanterns while ceremonial smoke drifts from the main hall to the east.\n\nThe watch tower is north. The main hall is east. The servant corridor runs south. The breach in the outer wall lies west, back outside the castle.",
 
   itemText: {},
 
   states: {
     default: {
       description:
-        "Rainwater glistens across the open courtyard stones. Guards patrol beneath swinging lanterns while ceremonial smoke drifts from the main hall to the east.",
+        "Rainwater glistens across the open courtyard stones. Guards patrol beneath swinging lanterns while ceremonial smoke drifts from the main hall to the east.\n\nThe watch tower is north. The main hall is east. The servant corridor runs south. The breach in the outer wall lies west, back outside the castle.",
       fx: "mist",
       media: "courtyard_default",
     },
 
     alerted: {
       description:
-        "The courtyard is alive with alarm. Guards sweep the rain with raised lanterns while bells echo through the castle.",
+        "The courtyard is alive with alarm. Guards sweep the rain with raised lanterns while bells echo through the castle.\n\nThe watch tower is north. The main hall is east. The servant corridor runs south. The breach in the outer wall lies west, back outside the castle.",
       fx: "flicker",
       media: "courtyard_alerted",
     },
 
     smoke_covered: {
       description:
-        "Pale smoke rolls low across the courtyard stones. Guards stumble through the haze with lanterns raised, shouting blindly into the storm.",
+        "Pale smoke rolls low across the courtyard stones. Guards stumble through the haze with lanterns raised, shouting blindly into the storm.\n\nThe watch tower is north. The main hall is east. The servant corridor runs south. The breach in the outer wall lies west, back outside the castle.",
       fx: "mist",
       media: "courtyard_smoke",
     },
@@ -626,7 +626,7 @@ export const ROOMS = {
   deathMedia: "death_guard",
 
   baseDescription:
-    "The shogun's private archive is silent and dry. Shelves of sealed records line the walls, and a heavy document chest rests beneath them. The hall beyond reeks of thick ceremonial incense. {sealed_scroll}",
+    "The shogun's private archive is silent and dry. Shelves of sealed records line the walls, and a heavy document chest rests beneath them. The hall beyond reeks of thick ceremonial incense. {sealed_scroll}\n\nThe main hall is west.",
 
   itemText: {
     sealed_scroll: {
@@ -640,14 +640,14 @@ export const ROOMS = {
   states: {
     default: {
       description:
-        "The shogun's private archive is silent and dry. Shelves of sealed records line the walls, and a heavy document chest rests beneath them. The hall beyond reeks of thick ceremonial incense. {sealed_scroll}",
+        "The shogun's private archive is silent and dry. Shelves of sealed records line the walls, and a heavy document chest rests beneath them. The hall beyond reeks of thick ceremonial incense. {sealed_scroll}\n\nThe main hall is west.",
       fx: "flicker",
       media: "archive_default",
     },
 
     alarm: {
       description:
-        "The archive is no longer silent. The stolen scroll is under your robe, mechanisms clatter inside the walls, and rain breathes through a newly opened ceiling gap. {sealed_scroll}",
+        "The archive is no longer silent. The stolen scroll is under your robe, mechanisms clatter inside the walls, and rain breathes through a newly opened ceiling gap. {sealed_scroll}\n\nThe main hall is west.",
       fx: "flicker",
       media: "archive_alarm",
     },
@@ -655,6 +655,10 @@ export const ROOMS = {
 
   mediaStates: [
     { condition: { flag: "scrollTaken" }, media: "archive_alarm" },
+  ],
+
+  descriptionStates: [
+    { condition: { flag: "roofPathRevealed" }, append: "An open ceiling panel leads up to the roof path to the south." },
   ],
 
   enterRequires: null,
@@ -829,7 +833,7 @@ export const ROOMS = {
   fx: null,
 
   baseDescription:
-    "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway, sharp enough to make your eyes water. Folded servant robes rest near the wall. {cloth_mask}",
+    "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway, sharp enough to make your eyes water. Folded servant robes rest near the wall. {cloth_mask}\n\nThe main hall is north. The servant corridor is west.",
 
   itemText: {
     cloth_mask: {
@@ -843,7 +847,7 @@ export const ROOMS = {
   states: {
     default: {
       description:
-        "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway, sharp enough to make your eyes water. Folded servant robes rest near the wall. {cloth_mask}",
+        "A quiet tea room sits beside the main hall. The incense smell is stronger near the northern doorway, sharp enough to make your eyes water. Folded servant robes rest near the wall. {cloth_mask}\n\nThe main hall is north. The servant corridor is west.",
       fx: null,
       media: "tea_room",
     },
@@ -922,11 +926,11 @@ export const ROOMS = {
     gridPosition: { col: 1, row: 2 },
     media: "servant_corridor",
     fx: "mist",
-    baseDescription: "A narrow servant corridor runs behind the formal rooms. It smells of wet straw, smoke, and old wood.",
+    baseDescription: "A narrow servant corridor runs behind the formal rooms. It smells of wet straw, smoke, and old wood.\n\nThe courtyard is north. The tea room is east. The storage cellar lies south.",
     itemText: {},
     states: {
       default: {
-        description: "A narrow servant corridor runs behind the formal rooms. It smells of wet straw, smoke, and old wood.",
+        description: "A narrow servant corridor runs behind the formal rooms. It smells of wet straw, smoke, and old wood.\n\nThe courtyard is north. The tea room is east. The storage cellar lies south.",
         fx: "mist",
         media: "servant_corridor",
       },
@@ -976,7 +980,7 @@ export const ROOMS = {
   deathMedia: "death_cellar",
 
   baseDescription:
-    "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally. An open crate sits behind stacked barrels beneath a hanging oil lantern.\n\n{climbing_claws}\n{smoke_bomb}\n{oil_lantern}",
+    "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally. An open crate sits behind stacked barrels beneath a hanging oil lantern.\n\n{climbing_claws}\n{smoke_bomb}\n{oil_lantern}\n\nThe servant corridor is north. An escape tunnel slopes away to the south.",
 
   itemText: {
     climbing_claws: {
@@ -1004,7 +1008,7 @@ export const ROOMS = {
   states: {
     default: {
       description:
-        "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally. An open crate sits behind stacked barrels beneath a hanging oil lantern.\n\n{climbing_claws}\n{smoke_bomb}\n{oil_lantern}",
+        "The cellar is packed with supplies, rope bundles, and hidden shinobi tools left by an unknown ally. An open crate sits behind stacked barrels beneath a hanging oil lantern.\n\n{climbing_claws}\n{smoke_bomb}\n{oil_lantern}\n\nThe servant corridor is north. An escape tunnel slopes away to the south.",
       fx: null,
       media: "storage_cellar",
     },
@@ -1153,21 +1157,21 @@ export const ROOMS = {
   fx: "mist",
 
   baseDescription:
-    "A cramped tunnel slopes beneath the castle into near-total darkness. Cold water trickles across the stone floor while tangled roots push through the ceiling somewhere ahead.",
+    "A cramped tunnel slopes beneath the castle into near-total darkness. Cold water trickles across the stone floor while tangled roots push through the ceiling somewhere ahead.\n\nThe storage cellar is north.",
 
   itemText: {},
 
   states: {
     default: {
       description:
-        "A cramped tunnel slopes beneath the castle into near-total darkness. Cold water trickles across the stone floor while tangled roots push through the ceiling somewhere ahead.",
+        "A cramped tunnel slopes beneath the castle into near-total darkness. Cold water trickles across the stone floor while tangled roots push through the ceiling somewhere ahead.\n\nThe storage cellar is north.",
       fx: "mist",
       media: "escape_tunnel",
     },
 
     hatch_revealed: {
       description:
-        "Lantern light reveals an old stone escape hatch set into the tunnel ceiling above you, half-hidden by roots and packed earth. Faint voices move somewhere beyond it.",
+        "Lantern light reveals an old stone escape hatch set into the tunnel ceiling above you, half-hidden by roots and packed earth. Faint voices move somewhere beyond it.\n\nThe storage cellar is north.",
       fx: "mist",
       media: "escape_tunnel",
     },
@@ -1314,14 +1318,14 @@ roof_path: {
   fx: "mist",
 
   baseDescription:
-    "The roof path is slick with rain. Black tiles drop away into the courtyard far below, and a storm-bent pine tree reaches toward the outer wall.",
+    "The roof path is slick with rain. Black tiles drop away into the courtyard far below, and a storm-bent pine tree reaches toward the outer wall.\n\nThe ceiling panel back down to the archive is south.",
 
   itemText: {},
 
   states: {
     default: {
       description:
-        "The roof path is slick with rain. Black tiles drop away into the courtyard far below, and a storm-bent pine tree reaches toward the outer wall.",
+        "The roof path is slick with rain. Black tiles drop away into the courtyard far below, and a storm-bent pine tree reaches toward the outer wall.\n\nThe ceiling panel back down to the archive is south.",
       fx: "mist",
       media: "roof_path",
     },
