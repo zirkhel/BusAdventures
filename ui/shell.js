@@ -126,6 +126,7 @@ export function initShell({ handleCommand, game = {} }) {
   if (intro.startLabel) el('startBtn').textContent      = intro.startLabel;
   if (win.title)        el('shellWinTitle').textContent = win.title;
   if (win.text)         el('shellWinText').textContent  = win.text;
+  if (win.playAgainLabel) el('playAgainBtn').textContent = win.playAgainLabel;
   if (intro.text) {
     el('shellIntroText').innerHTML = intro.text.split('\n\n')
       .map(p => `<p>${esc(p)}</p>`).join('');

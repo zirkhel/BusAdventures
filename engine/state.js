@@ -138,10 +138,21 @@ function save() {
   try { localStorage.setItem(_key, JSON.stringify(_st)); } catch {}
 }
 
+// Saves can outlive changes to the game data or the engine. Fill in anything
+// the save is missing (new state fields, items added to the game since) so an
+// old save keeps working instead of hiding new items.
 function load() {
   try {
     const raw = localStorage.getItem(_key);
-    if (raw) { _st = JSON.parse(raw); return true; }
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    if (!saved || !_adv.rooms[saved.room]) return false;
+    const base = fresh();
+    _st = { ...base, ...saved, itemLoc: { ...base.itemLoc, ...(saved.itemLoc || {}) } };
+    for (const id of Object.keys(_st.itemLoc)) if (!_adv.items[id]) delete _st.itemLoc[id];
+    _st.inventory = (_st.inventory || []).filter(id => _adv.items[id]);
+    _st.worn      = (_st.worn || []).filter(id => _adv.items[id]);
+    return true;
   } catch {}
   return false;
 }

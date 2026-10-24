@@ -1,5 +1,5 @@
 # Bus Adventures — Engine State
-_Last updated: v42_
+_Last updated: 2026-10-24 (engine rework: room-action-first dispatch, media order, goTo via arrive, tools)_
 
 ## Architecture
 
@@ -7,189 +7,152 @@ _Last updated: v42_
 ```
 BusAdventures/
   engine/
-    parser.js       ← verb synonyms, input → {verb, target}
-    state.js        ← mutable state, conditions, save/load
+    parser.js       ← verb synonyms, input → { verb, word, target, on }
+    state.js        ← mutable state, conditions, save/load (+ old-save migration)
     engine.js       ← action resolution, hazards, effects
   ui/
-    renderer.js     ← DOM, screen switching, inventory, feedback
+    renderer.js     ← DOM, screens, inventory, feedback, death/win media
+    shell.js        ← injects the game UI and wires input/menus
     fx.js           ← media rendering, SVG fallback
+    audio.js        ← background music / sfx
+    style.css       ← all layout and components
   games/
-    ward-b/
-      index.html    ← game entry, UI hooks, overlay command input
-      style.css     ← horror theme
-      assets.js     ← getMedia(), getItemIcon()
-      data/
-        game.js     ← title, intro, win settings
-        rooms.js    ← all room definitions
-        items.js    ← all item definitions
-      assets/
-        rooms/      ← PNG images keyed by media field
-        items/      ← PNG icons keyed by item id
-    template/       ← blank copy for new games
-  editor/
-    index.html      ← GitHub API editor
+    <game>/
+      index.html    ← imports data + assets + hooks, calls configure/initShell/startGame
+      style.css     ← CSS variables only
+      assets.js     ← getMedia(key), getItemIcon(id)
+      overrides/ui-hooks.js ← optional hooks (onScreenChange, onRoomRender, onDeath, onWin)
+      data/game.js · rooms.js · items.js   ← pure data (the editor reads/writes these)
+      assets/rooms · assets/items · assets/screens
+    template/       ← working example game — copy this to start a new one
+  tools/
+    validate-adventure.mjs ← checks a game's data against what the engine supports
+    play-adventure.mjs     ← runs commands through the engine in the terminal
+  editor/index.html ← GitHub API editor
   index.html        ← landing page
 ```
 
-### Screen flow
-- All screens are `<div id="Xscreen" class="screen">` — `.hidden` toggles `display:none`
-- `showScreen()` in renderer toggles `.hidden` on all SCREENS array entries
-- No `window._showScreen` hook — renderer handles screens directly
-- `startBtn` wired by renderer `wireControls()` only — not by index.html
+### New game
+1. Copy `games/template` to `games/<slug>`, set a new `id` in `data/game.js` (it is the save key).
+2. Write rooms/items, add media keys to `assets.js`.
+3. `node tools/validate-adventure.mjs games/<slug>` — fix every ERROR.
+4. `node tools/play-adventure.mjs games/<slug> "take x" n "use x on y"` — play the walkthrough and the phrasings a player might try.
+5. Add a card on the landing page.
 
-### Command input
-- Output box is tappable — opens `#cmdOverlay` (position:fixed, justify-content:flex-end)
-- `#commandForm` is inside overlay — renderer wires submit
-- Overlay closes on submit or ✕ button
-- No fixed input bar — overlay approach avoids iOS keyboard layout shift
-
-### UI hooks (window globals set by index.html, called by renderer)
-```js
-window._resetUI()        // called on restart/continue/play again
-window._onRoomEnter(id)  // called on every room change — resets history
-window._onCommand(cmd, text, type)  // called after each command response
-```
-
-### Output model
-- `#outputBox` is scrollable, flex:1, fills remaining height
-- `#outputInner` holds `.output-entry` divs (cmd + response)
-- No single feedback div — each command appends a new entry
-- Room desc collapses on first input event
+### UI
+- `renderer.wireControls` owns: startBtn, continueBtn, playAgainBtn, restartBtn, helpBtn.
+- `shell.js` owns: input bar/form, room title toggle, inventory toggle, settings menu, about, back buttons.
+- Window hooks set by shell, called by renderer: `_resetUI()`, `_onRoomEnter(id)` (clears output), `_onCommand(cmd, text, type)`.
+- Each command's response (and any hazard warning on a new line) is prepended to `#outputInner`.
 
 ---
 
-## Engine: Action Resolution (5-tier, stops at first match)
-1. Room actions (no item needed)
-2. Object actions (interactive room objects)
-3. Item contextActions (item + specific room)
-4. Item defaultActions (item alone, any room)
-5. Flavour target response
+## Parser
+- Returns `{ verb, word, target, on }`. `verb` is canonical ("push"), `word` is what was typed ("press").
+- Unknown verbs keep the first word: "crawl through breach" → `{ verb: "unknown", word: "crawl", target: "through breach" }`.
+- `"use X on/with/in/into/to/at Y"` → `target: X, on: Y`. Leading articles/prepositions are stripped.
+- "put mask on" → wear, "take mask off" → remove.
+
+## Action resolution (stops at first match)
+1. **Room actions** — tried first for every verb (take, go, look, use, room-specific verbs…).
+   - Verb matches if the action lists the canonical verb, the typed word, or a synonym of it.
+   - Target match is whole-word ("iv line" matches "iv"; "lantern" does not match "lanterns").
+   - An action matching the main target beats one matching only the `on` part.
+   - `look <thing>`: if the thing is an item, object or flavour target, its text is shown instead (hints come before solutions).
+   - A room-specific verb typed alone ("crawl", "jump") matches.
+   - `requires` fails → `requiresText || failText`. `failText` is only used for that.
+2. Object actions
+3. Item contextActions (item + room) — item may be named as target or `on`
+   - then the named object's `useText`
+4. Item defaultActions
+5. Flavour target text
 6. Generic fallback
 
+Built-in verb handlers (take, drop, wear, hold, go, look…) only run if no room action matched.
+`take all` does not sweep up items a room action guards (runs that action instead).
+
 ---
 
-## Engine: Conditions (all optional, all must pass)
+## Conditions (all optional, all must pass)
 ```js
-{ hasItem: "keycard" }          // in inventory
-{ holdsItem: "crowbar" }        // held (active hand)
-{ wearsItem: "mask" }           // worn
-{ wearingTag: "respirator" }    // wears any item with this tag
-{ heldTag: "pry_tool" }         // holds any item with this tag
-{ carriedTag: "medical" }       // carries any item with this tag
-{ itemHere: "sedative" }        // item is in current room
-{ itemNotHere: "keycard" }      // item is NOT in current room
-{ itemGone: "sedative" }        // item removed from world
-{ flag: "patientCalmed" }       // global flag is true
-{ flagFalse: "gateForcedOpen" } // global flag is false/missing
-{ roomFlag: "lever_pulled" }    // room-local flag
-{ roomState: "sedated" }        // current room in this state
-{ roomStateOf: { room: "surgery", state: "sedated" } }
-{ visitGte: 3 }                 // visited room N+ times
-{ counterGte: { id: "x", n: 4 } }
+{ hasItem: "keycard" }  { holdsItem: "crowbar" }  { wearsItem: "mask" }
+{ wearingTag: "respirator" }  { heldTag: "pry_tool" }  { carriedTag: "medical" }
+{ itemHere: "x" }  { itemNotHere: "x" }  { itemGone: "x" }
 { itemInRoom: { id: "crowbar", room: "basement" } }
+{ flag: "x" }  { flagFalse: "x" }  { roomFlag: "x" }
+{ roomState: "sedated" }  { roomStateOf: { room: "surgery", state: "sedated" } }
+{ visitGte: 3 }  { counterGte: { id: "x", n: 4 } }
 ```
+Unknown keys are ignored (= always true) — the validator flags them.
 
----
+`requires` (actions) supports only: `hasItem, holdsItem, wearsItem, heldTag, carriedTag, flag`.
 
-## Engine: Effects
+## Effects
 ```js
-setFlag / clearFlag / setGlobalFlag
-setRoomFlag: "flag_id"
+setFlag / setGlobalFlag / clearFlag / setGlobalFlags: [] / clearFlags: []  (flagValue: optional value)
+setRoomFlag: "x"
 setRoomState: { room: "surgery", state: "sedated" }
-revealItem: "item_id"
-removeItem: "item_id"
-moveItem: { id: "item_id", to: "room_id" }
-giveItem: "item_id"
-openExit: { dir: "east", to: "observation" }
-setCounter / incCounter
-goTo: "room_id"             // teleport player
-win: true                   // trigger win screen
+revealItem / removeItem / giveItem: "item_id"
+moveItem: { id, to }
+openExit: { room?, dir, to }     // stored in game state; Restart undoes it
+setCounter / incCounter: { id, value | by }
+goTo: "room_id"                  // enters the room properly: enter rules, hazards, warnings, win
+win: true
+kill: true, killText: "...", deathMedia: "key"
+playSound: "sfx_key"
 ```
 
----
-
-## Engine: Exit Types
+## Exits
 ```js
-// Open
-north: "room_id"
-
-// Locked (button shown, blocked until condition met)
-east: { to: "room_id", condition: { flag: "x" }, lockedText: "..." }
-
-// Hidden (no button until condition met)
-east: { to: "room_id", hidden: true, condition: { flag: "x" } }
-
-// Special (no button, must be typed — use action instead where possible)
-east: { to: "room_id", special: true, condition: { flag: "x" } }
+north: "room_id"                                                   // open
+east:  { to, condition, lockedText }                               // locked (button shown)
+east:  { to, hidden: true, condition }                             // hidden until condition
+east:  { to, special: true, condition }                            // no button, must be typed
 ```
 
----
-
-## Engine: Hazards
+## Hazards
 ```js
-// Soft block on entry
-enterRequires: {
-  condition: { wearingTag: "respirator" },
-  failText: "You pull back instinctively."
-}
-
-// Visit count escalation
-hazards: [{ type: "visitCount", safeUnder: 2, deathText: "...",
-  warningStages: [{ at: 2, text: "..." }] }]
-
-// Command pressure death
-hazards: [{ type: "commandPressure", counter: "id", threshold: 6,
-  warningStages: [{ at: 2, text: "..." }, { at: 4, text: "..." }],
-  deathText: "..." }]
-```
-
----
-
-## Engine: Room States
-```js
-states: {
-  default: { description: "...", fx: "flicker", media: "room_key" },
-  sedated: { description: "...", fx: null, media: "room_sedated" }
-}
-```
-
----
-
-## Engine: Media States (conditional image swap)
-```js
-mediaStates: [
-  { condition: { itemNotHere: "keycard" }, media: "reception_empty" },
+enterRequires: { condition: {...}, failText: "..." }               // blocks entry (not death)
+hazards: [
+  { type: "onEnter", safeIf: {...}, deathText, deathMedia? },
+  { type: "visitCount", safeUnder: 2, disabledIf?: {...}, warningStages: [{ at, text }], deathText, deathMedia? },
+  { type: "commandPressure", counter: "id", threshold: 6, condition?: {...},
+    warningStages: [{ at, text }], deathText, deathMedia? },
 ]
 ```
+- visitCount: death when visits > safeUnder. Warning = highest stage with `at <= visits`.
+- commandPressure: every command in the room (not help/inventory) adds 1; death at threshold. Counter persists after leaving.
+- Death screen image: hazard/action `deathMedia` → room `deathMedia` → `__death__` → room image.
+
+## Rooms
+Fields: `title, gridPosition, media, fx, music, baseDescription, firstVisitDescription, descriptionStates,
+itemText, states, mediaStates, enterRequires, enterRules, exits, hazards, actions, objects, flavourTargets,
+win, deathMedia, winMedia`.
+- `itemText: { id: { present, taken } }` replaces `{id}` in the description. An item's start room is the room whose itemText names it.
+- `states: { default: { description, media?, exits? }, other: {...} }` — set with `setRoomState`.
+- `enterRules: [{ onFirstEnter?, condition, effects, text }]`.
+- `descriptionStates: [{ condition, append | replace }]`.
+
+## Media
+Resolution for a room image: **mediaStates (first match) → room state's media → room media**.
+mediaStates come first so an item-taken image wins even when the default state names a media key.
+Scene `fx` comes from the entry in `assets.js`.
+
+## Items
+`name, icon, aliases, description, tags, canCarry, canHold, canWear, pickupText, dropText, heldText, wornText,
+defaultActions: { look, use, read, … }, contextActions: [{ room, verbs, condition, requires, requiresText, effects, successText }]`.
+A contextAction is skipped if a room action handles the same verbs first (validator reports these).
+
+## Saves
+`localStorage["busadv_" + game.id]`. On load, missing state fields and items added since the save are filled in;
+removed items are dropped. A save pointing at a room that no longer exists is ignored.
 
 ---
 
-## Engine: Item Schema
-```js
-{
-  name, icon, aliases, description, tags,
-  canCarry, canHold, canWear,
-  pickupText, dropText, heldText, wornText,
-  defaultActions: { look, hold, wear, use, read, inject, smell, touch, swing, attack, force, drop },
-  contextActions: [{
-    room, verbs, condition, requires, requiresText,
-    effects, successText, failText
-  }]
-}
-```
-
----
-
-## Known issues / decisions
-- `special` exits unreliable with parser — use room `actions` with wide verb/target lists instead
-- iOS Safari keyboard: overlay approach (position:fixed flex-end) works — do NOT use fixed input bar
-- `wireControls` in renderer wires: startBtn, continueBtn, playAgainBtn, restartBtn, helpBtn
-- index.html wires: invToggle, roomTitleEl, outputBox, cmdForm, settingsBtn, backBtn
-- No double-wiring — renderer and index.html own separate elements
-
----
+## Known decisions
+- iOS Safari keyboard: hidden input + input bar (no fixed overlay input).
+- Prefer room `actions` with wide verb/target lists over `special` exits.
 
 ## Deployed
-- GitHub: github.com/zirkhel/BusAdventures (private)
-- Vercel: bus-adventures.vercel.app
-- Deploy: push to main → auto-deploy
+- GitHub: github.com/zirkhel/BusAdventures
+- Vercel: bus-adventures.vercel.app — push to main → auto-deploy

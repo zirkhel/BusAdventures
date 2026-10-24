@@ -252,7 +252,8 @@ export const ROOMS = {
         id:      "force_chain",
         verbs:   ["use", "force", "pry", "break", "attack"],
         targets: ["chain", "gate", "padlock", "lock", "bars"],
-        requires:   { heldTag: "pry_tool" },
+        // carriedTag, not heldTag: "use crowbar on chain" should just work.
+        requires:   { carriedTag: "pry_tool" },
         failText:   "The chain is too strong. You need something to force it.",
         successText: "You wedge the crowbar into the chain and throw your weight against it. The rusted links snap apart. The gate swings open.",
         effects: {

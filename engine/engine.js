@@ -2,7 +2,7 @@
 // All game logic. Returns result objects — no DOM access.
 //
 // Action resolution order:
-//   1. Room actions       (contextual consequences, may require tags/items)
+//   1. Room actions       (tried first for every verb, incl. take/go/look)
 //   2. Object actions     (interactive room objects)
 //   3. Item contextActions (item + specific room)
 //   4. Item defaultActions (item alone, any room)
@@ -324,6 +324,7 @@ function arrive(targetId, moveDir) {
 
 function take(target) {
   const id = S.findVisibleItem(target);
+  if (id && S.hasItem(id)) return res("You already have that.", "neutral");
   if (!id || !S.itemIsInRoom(id)) return res("You do not see that here.", "bad");
   const def = S.itemDef(id);
   if (def.canCarry === false) return res("You cannot take that.", "bad");
@@ -467,9 +468,10 @@ function examine(target) {
 // ── Use / action dispatch ─────────────────────────────────────────────────────
 //
 // Resolution order:
-//   1. Room actions
+//   1. Room actions (runCommand → tryRoomActions, for every verb)
 //   2. Object actions
 //   3. Item contextActions (item + room)
+//      Object useText (if an object was named)
 //   4. Item defaultActions (item anywhere)
 //   5. Flavour target response
 //   6. Generic fallback
@@ -489,11 +491,11 @@ function use(p) {
       if (!S.check(action.condition)) continue;
       return runAction(action, roomId);
     }
-    if (obj.useText) return res(obj.useText, "neutral");
   }
 
   // 3 ── Item contextActions ──────────────────────────────────────────────────
-  const itemId = S.findCarriedItem(target);
+  // "use sedative on iv" and "inject iv with sedative" both find the item
+  const itemId = S.findCarriedItem(target) || (on && S.findCarriedItem(on));
   if (itemId) {
     const def = S.itemDef(itemId);
 
@@ -511,10 +513,15 @@ function use(p) {
       return runAction(ca, roomId);
     }
 
+    // An object's own response beats the item's generic one
+    if (obj?.useText) return res(obj.useText, "neutral");
+
     // 4 ── Item defaultActions ───────────────────────────────────────────────
     const fallback = def.defaultActions?.[verb] || def.defaultActions?.use;
     if (fallback) return res(fallback, "neutral");
   }
+
+  if (obj?.useText) return res(obj.useText, "neutral");
 
   // 5 ── Flavour target ───────────────────────────────────────────────────────
   const flavour = findFlavour(r, target);
@@ -601,20 +608,23 @@ Some exits are hidden. Some must be typed, not clicked.`;
 // generic handlers, e.g. "take scroll" triggering the archive alarm.
 function findRoomAction(p) {
   if (["empty", "help", "inventory"].includes(p.verb)) return null;
-  if (p.verb === "look" && !p.target) return null;
-  const r = S.currentRoom();
-  for (const action of (r.actions || [])) {
-    if (!verbMatches(action.verbs, p)) continue;
-    const tl = action.targets || action.target;
-    const targetOk = matchesTarget(tl, p.target)
-      || (p.on && matchesTarget(tl, p.on))
-      // a room-specific verb typed on its own ("crawl", "leap") is enough
-      || (p.verb === "unknown" && !p.target);
-    if (!targetOk) continue;
-    if (!S.check(action.condition)) continue;
-    return action;
+  if (p.verb === "look") {
+    // Looking at something the room describes shows its text (often a hint)
+    // instead of firing an action that also lists look/examine.
+    if (!p.target) return null;
+    const r = S.currentRoom();
+    if (S.findVisibleItem(p.target) || findObject(r, p.target) || findFlavour(r, p.target)) return null;
   }
-  return null;
+  const r = S.currentRoom();
+  const candidates = (r.actions || []).filter(a => verbMatches(a.verbs, p) && S.check(a.condition));
+  const tl = a => a.targets || a.target;
+  // Prefer an action matching the main target ("use claws on cord" → claws)
+  // over one matching only the "on" part (cord).
+  return candidates.find(a => matchesTarget(tl(a), p.target))
+      || (p.on ? candidates.find(a => matchesTarget(tl(a), p.on)) : null)
+      // a room-specific verb typed on its own ("crawl", "leap") is enough
+      || (p.verb === "unknown" && !p.target ? candidates[0] : null)
+      || null;
 }
 
 function tryRoomActions(p) {

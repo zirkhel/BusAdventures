@@ -19,10 +19,11 @@ import { GAME }  from "./data/game.js";
 import { ROOMS } from "./data/rooms.js";
 import { ITEMS } from "./data/items.js";
 import { getMedia, getItemIcon } from "./assets.js";
+import { hooks } from "./overrides/ui-hooks.js";
 import { configure, startGame, handleCommand } from "../../ui/renderer.js";
 import { initShell } from "../../ui/shell.js";
 
-configure({ getMedia, getItemIcon });
+configure({ getMedia, getItemIcon, hooks });
 initShell({ handleCommand, game: GAME });
 startGame({ game: GAME, rooms: ROOMS, items: ITEMS });
 </script>

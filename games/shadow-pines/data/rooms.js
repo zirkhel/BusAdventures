@@ -27,7 +27,7 @@ export const ROOMS = {
   actions: [
     {
       verbs: ["crawl", "squeeze", "sneak", "slip", "climb", "go", "enter", "move", "creep", "crouch"],
-      targets: ["opening", "gap", "crack", "hole", "breach", "wall", "stones", "courtyard", "inside", "through"],
+      targets: ["opening", "gap", "crack", "hole", "breach", "wall", "stones", "courtyard", "inside", "through", "in", "castle"],
       requires: null,
       requiresText: null,
       condition: null,
@@ -729,6 +729,10 @@ export const ROOMS = {
         "shelves",
         "airflow",
         "draft",
+        "support",
+        "shelf support",
+        "carving",
+        "carved support",
       ],
       requires: null,
       requiresText: null,
@@ -1331,7 +1335,7 @@ roof_path: {
 
   actions: [
     {
-      verbs: ["climb", "cross", "grip", "hook", "scale", "crawl"],
+      verbs: ["climb", "cross", "grip", "hook", "scale", "crawl", "use"],
       targets: [
         "roof",
         "tiles",
@@ -1376,6 +1380,17 @@ roof_path: {
       effects: {
         win: true,
       },
+    },
+
+    {
+      verbs: ["jump", "leap", "swing", "escape", "grab"],
+      targets: ["tree", "pine", "branch", "branches", "forest", "outer wall", "wall"],
+      requires: null,
+      requiresText: null,
+      condition: { flagFalse: "roofCrossed" },
+      successText:
+        "From here the pine is too far. You need to climb higher along the roofline first.",
+      effects: {},
     },
   ],
 

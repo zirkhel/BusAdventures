@@ -11,7 +11,7 @@ export function configureParser(gameVerbs = {}) {
 
 
 const VERBS = {
-  look:      ["look at", "examine", "inspect", "study", "check", "look"],
+  look:      ["look at", "examine", "inspect", "study", "check", "search", "look"],
   take:      ["pick up", "take", "get", "grab", "collect"],
   takeall:   ["take all", "get all", "grab all", "pick up all", "collect all"],
   drop:      ["put down", "drop", "leave"],
@@ -19,7 +19,7 @@ const VERBS = {
   wear:      ["put on", "equip", "wear"],
   remove:    ["take off", "unequip", "remove"],
   hold:      ["wield", "ready", "hold"],
-  use:       ["activate", "use", "try"],
+  use:       ["activate", "use", "try", "put", "place", "apply", "give"],
   swipe:     ["swipe", "scan", "insert", "tap", "slide"],
   read:      ["decipher", "translate", "read"],
   open:      ["unlock", "open"],
@@ -53,10 +53,11 @@ const DIRECTIONS = {
   southeast: "southeast", southwest: "southwest",
 };
 
-const STRIP_ARTICLES = /^(at|the|a|an|to|into|inside|under|using)\s+/;
+const STRIP_ARTICLES = /^(at|the|a|an|to|in|into|inside|under|using)\s+/;
 
 // Prepositions that split "use X on Y" / "use X with Y"
-const ON_PREPS = [" on the ", " on ", " with the ", " with ", " at the ", " at ", " into the ", " into ", " against "];
+const ON_PREPS = [" on the ", " on ", " with the ", " with ", " at the ", " at ", " into the ", " into ",
+                  " in the ", " in ", " to the ", " to ", " against "];
 
 // Canonical verb for a word or phrase ("press" → "push"), or the word itself
 // if it is not a known alias. Used to match room-defined verbs against input.
@@ -77,8 +78,11 @@ function stripLead(s) {
 // Every result carries `word` — the verb as typed — so room actions can match
 // on either the canonical verb ("push") or the player's word ("press").
 function parse(rawInput) {
-  const raw = (rawInput || "").trim().toLowerCase().replace(/\s+/g, " ");
+  let raw = (rawInput || "").trim().toLowerCase().replace(/\s+/g, " ");
   if (!raw) return { verb: "empty", target: "" };
+
+  // Trailing particles: "put mask on" → "put on mask", "take mask off" → "take off mask"
+  raw = raw.replace(/^put (.+) on$/, "put on $1").replace(/^take (.+) off$/, "take off $1");
 
   // Direction shorthand
   if (DIRECTIONS[raw]) return { verb: "go", target: DIRECTIONS[raw], word: raw };

@@ -1,6 +1,12 @@
 # Bus Adventures — Adventure Validation Checklist
 _Run against rooms.js and items.js before deploying_
 
+**Automated:** `node tools/validate-adventure.mjs games/<game>` checks the structural, logic and
+cross-reference items below (unknown keys, missing rooms/items/media, flags never set, unplaced
+items, reachability, shadowed contextActions). Then play the walkthrough and likely phrasings with
+`node tools/play-adventure.mjs games/<game> "cmd" "cmd" ...`. The manual list below is still useful
+for puzzle quality and parser friendliness.
+
 ---
 
 ## Structural checks
