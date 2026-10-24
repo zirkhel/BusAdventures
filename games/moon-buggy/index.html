@@ -55,7 +55,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>MOON BUGGY</h1>
-        <div class="under">Choose game · v4.1</div>
+        <div class="under">Choose game · v4.2</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">WRECKED</div>
           <div class="tall" id="menyTall"></div>
@@ -99,7 +99,7 @@ function px(x,y,w,h,c){ ctx.fillStyle=c; ctx.fillRect(x,y,w,h); }
 function reset(mode){
   S={
     mode, score:0, bonus:0, lives:3, dist:0, scroll:0,
-    px:70, py:GROUND, vy:0, air:false, jumps:0, spd:NIVA[mode].base, fireT:0,
+    px:70, py:GROUND, vy:0, air:false, spd:NIVA[mode].base, fireT:0,
     shots:[], rocks:[], pits:[], mines:[], boulders:[], tanks:[], plants:[], cars:[],
     ufos:[], bombs:[], fx:[], stars:[], streak:null, nextTank:0, nextCar:0,
     nextG:140, nextU:NIVA[mode].ufoAfter, invuln:0,
@@ -130,9 +130,12 @@ function burst(x,y,n,kind){
 function jump(){
   if(!S||S.over||S.paused||S.dying) return;
   if(S.air) return;
-  const extra = (S.spd-40)*0.6;
-  S.vy = -155 - extra;
-  S.air=true; S.jumps=1;
+  // Airtime (= vy/200 with gravity 400) is sized so the widest pit (40 px plus
+  // the buggy's 12 px footprint) is clearable from a standing jump at every
+  // speed, with 0.12 s to spare. Slower modes get a higher, longer jump.
+  const air = 52/S.spd + 0.12;
+  S.vy = -200*air;
+  S.air=true;
 }
 
 function autoFire(){
@@ -154,7 +157,7 @@ function crash(why){
 
 function finishCrash(){
   if(S.lives<=0){ S.over=true; S.nyRekord=lagre(S.mode,S.score); return; }
-  S.dying=0; S.py=GROUND; S.vy=0; S.air=false; S.jumps=0; S.invuln=1000;
+  S.dying=0; S.py=GROUND; S.vy=0; S.air=false; S.invuln=1000;
 }
 
 function spawnAhead(){
@@ -165,7 +168,7 @@ function spawnAhead(){
   else if(d>900 && n.ufo>=1 && roll<0.22) S.plants.push({x, hit:false, ph:0});
   else if(d>700 && n.ufo>=2 && roll<0.20) S.boulders.push({x, hit:false});
   else if(roll<0.42) S.pits.push({x, w:18+Math.random()*22});
-  else S.rocks.push({x, hit:false, hp: Math.random()<(d>80?0.5:0.28) ? 2:1, lock:0});
+  else S.rocks.push({x, hit:false, hp: Math.random()<(d>80?0.5:0.28) ? 2:1, cracked:false});
   S.nextG = n.gap + Math.random()*90;
 }
 
@@ -216,21 +219,23 @@ function update(dt){
   if(S.air){
     S.vy += 400*t;
     S.py += S.vy*t;
-    if(S.py>=GROUND){ S.py=GROUND; S.vy=0; S.air=false; S.jumps=0; }
+    if(S.py>=GROUND){ S.py=GROUND; S.vy=0; S.air=false; }
   }
 
   for(const sh of S.shots){ sh.x+=sh.vx*t; sh.y+=sh.vy*t; }
   S.shots=S.shots.filter(sh=>sh.x<W+8 && sh.y>-8);
 
   for(const r of S.rocks){
-    if(r.lock>0) r.lock-=dt;
     const rx=r.x-S.scroll;
     if(!r.hit){
+      // By design: a big rock (hp 2) is cracked down to a small rock by the
+      // first shot. A cracked rock can't be shot any more — it must be jumped.
       for(const sh of S.shots){
-        if(sh.vy===0 && !r.lock && Math.abs(sh.x-rx)<10 && Math.abs(sh.y-(GROUND-8))<12){
-          r.hp = (r.hp||1)-1; r.lock=260; sh.x=W+20;
+        if(sh.vy===0 && !r.cracked && Math.abs(sh.x-rx)<10 && Math.abs(sh.y-(GROUND-8))<12){
+          r.hp = (r.hp||1)-1; sh.x=W+20;
           if(r.hp<=0){ r.hit=true; S.bonus+=15; burst(rx,GROUND-8,8,'spark'); }
-          else burst(rx,GROUND-8,5,'spark');
+          else { r.cracked=true; burst(rx,GROUND-8,5,'spark'); }
+          break;
         }
       }
       if(S.invuln<=0 && rx>PX-4 && rx<PX+22 && S.py>GROUND-14)
@@ -257,7 +262,7 @@ function update(dt){
     const sx=b.x-S.scroll;
     for(const sh of S.shots){
       if(sh.vy===0 && Math.abs(sh.x-sx)<8 && Math.abs(sh.y-(GROUND-8))<10){
-        b.hit=true; S.bonus+=10; burst(sx,GROUND-8,6,'spark'); sh.x=W+20;
+        b.hit=true; S.bonus+=10; burst(sx,GROUND-8,6,'spark'); sh.x=W+20; break;
       }
     }
     if(!b.hit && S.invuln<=0 && sx>PX-4 && sx<PX+20 && S.py>GROUND-16) crash('ROCK');
@@ -269,7 +274,7 @@ function update(dt){
     const sx=p.x-S.scroll, py=GROUND-10-Math.abs(Math.sin(p.ph/200))*8;
     for(const sh of S.shots){
       if(Math.abs(sh.x-sx)<8 && Math.abs(sh.y-py)<10){
-        p.hit=true; S.bonus+=50; burst(sx,py,8,'spark');
+        p.hit=true; S.bonus+=50; burst(sx,py,8,'spark'); sh.x=W+20; break;
       }
     }
     if(!p.hit && S.invuln<=0 && sx>PX-2 && sx<PX+18 && S.py>GROUND-18) crash('PLANT');
@@ -290,7 +295,7 @@ function update(dt){
     }
     for(const sh of S.shots){
       if(sh.vy===0 && Math.abs(sh.x-sx)<10 && Math.abs(sh.y-(GROUND-10))<10){
-        tk.hit=true; S.bonus+=40; burst(sx,GROUND-10,10,'spark'); sh.x=W+20;
+        tk.hit=true; S.bonus+=40; burst(sx,GROUND-10,10,'spark'); sh.x=W+20; break;
       }
     }
     if(!tk.hit && S.invuln<=0 && sx>PX-4 && sx<PX+20 && S.py>GROUND-16) crash('TANK');
@@ -307,7 +312,7 @@ function update(dt){
     const sx=c.x-S.scroll;
     for(const sh of S.shots){
       if(sh.vy===0 && Math.abs(sh.x-sx)<10 && Math.abs(sh.y-(GROUND-10))<10){
-        c.hit=true; S.bonus+=80; burst(sx,GROUND-8,10,'spark');
+        c.hit=true; S.bonus+=80; burst(sx,GROUND-8,10,'spark'); sh.x=W+20; break;
       }
     }
     if(!c.hit && S.invuln<=0 && sx>PX-8 && sx<PX+18 && S.py>GROUND-16) crash('CAR');
@@ -315,18 +320,20 @@ function update(dt){
   S.cars=S.cars.filter(c=>!c.hit && c.x-S.scroll<W+40);
 
   S.nextU -= dt;
-  const ufoOn = S.dist > n.ufoAfter*0.5;
+  const ufoOn = n.ufo>0 && S.dist > n.ufoAfter*0.5;   // Game A: no UFOs
   if(ufoOn && S.nextU<=0){
     let kind='std';
     if(S.dist>n.ufoAfter && n.bomb) kind = Math.random()<0.45 ? 'crater' : 'std';
     if(S.dist>n.ufoAfter+400 && Math.random()<0.35) kind='weave';
     S.ufos.push({x:W+10, y:40+Math.random()*40, vx:-(22+S.spd*0.12), t:0, kind, y0:40+Math.random()*30});
-    S.nextU = n.ufo ? (3600 - n.ufo*350) : 5000;
+    S.nextU = 3600 - n.ufo*350;
   }
   for(const u of S.ufos){
     u.t+=dt; u.x += u.vx*t;
     if(u.kind==='weave') u.y = u.y0 + Math.sin(u.t/180)*16;
-    const dropOn = !u.did && u.x<PX+100 && u.x>PX+10;
+    // Plain bombs fall straight down, so drop them over the buggy (dodge by
+    // moving). Crater bombs still land ahead to leave a pit in your path.
+    const dropOn = !u.did && (u.kind==='crater' ? (u.x<PX+100 && u.x>PX+10) : (u.x<PX+12 && u.x>PX-20));
     if(dropOn){
       u.did=true;
       if(u.kind==='crater') S.bombs.push({x:u.x, y:u.y+6, vy:30, kind:'crater'});
@@ -334,7 +341,7 @@ function update(dt){
     }
     for(const sh of S.shots){
       if(sh.vy<0 && Math.abs(sh.x-u.x)<10 && Math.abs(sh.y-u.y)<8){
-        u.dead=true; S.bonus += u.kind==='crater'?50:25; burst(u.x,u.y,10,'spark');
+        u.dead=true; S.bonus += u.kind==='crater'?50:25; burst(u.x,u.y,10,'spark'); sh.x=W+20; break;
       }
     }
   }
@@ -343,7 +350,7 @@ function update(dt){
     if(b.vx) b.x+=b.vx*t;
     b.vy+=70*t; b.y+=b.vy*t;
     for(const sh of S.shots){
-      if(Math.abs(sh.x-b.x)<6 && Math.abs(sh.y-b.y)<8){ b.dead=true; S.bonus+=15; burst(b.x,b.y,5,'spark'); }
+      if(Math.abs(sh.x-b.x)<6 && Math.abs(sh.y-b.y)<8){ b.dead=true; S.bonus+=15; burst(b.x,b.y,5,'spark'); sh.x=W+20; break; }
     }
     if(b.dead) continue;
     if(S.invuln<=0 && Math.abs(b.x-PX-8)<14 && Math.abs(b.y-(S.py-8))<12) crash('BOMB');
@@ -378,7 +385,7 @@ function draw(){
 
   for(const st of S.stars){
     const tw = 0.35+0.65*Math.abs(Math.sin(st.ph));
-    const drift = (S.scroll * (st.layer?0.06:0.025) + st.x) % W;
+    const drift = ((st.x - S.scroll * (st.layer?0.06:0.025)) % W + W) % W;
     ctx.fillStyle = st.s>1 ? 'rgba(230,220,200,'+tw+')' : 'rgba(160,180,210,'+tw+')';
     ctx.fillRect(drift, st.y, st.s, st.s);
   }
