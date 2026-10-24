@@ -24,6 +24,8 @@
   #pad button:active,#pad button.ned{background:var(--key-on);border-bottom-width:2px;transform:translateY(2px);color:#e2f1fa}
   #sprayBtn{color:#7fd4c8}
   #sprayBtn.ned{color:#c8ffc8}
+  #sprayBtn.dry{color:#ff8a7a}
+  #sprayBtn.dry .cdbar{background:rgba(200,65,47,.45)}
   .cdbar{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(232,193,92,.34);pointer-events:none}
   #meny{position:absolute;inset:5px;display:none;align-items:center;justify-content:center;border-radius:4px;background:rgba(4,8,12,.92);z-index:5}
   #meny.vis{display:flex}
@@ -57,7 +59,7 @@
     <div id="meny" class="vis">
       <div id="menyKort">
         <h1>CHEMTRAILS</h1>
-        <div class="under">KEEP EM SHEEP · v17</div>
+        <div class="under">KEEP EM SHEEP · v18</div>
         <div id="menyResultat">
           <div class="tittel" id="menyTittel">NARRATIVE COLLAPSE</div>
           <div class="tall" id="menyTall"></div>
@@ -71,8 +73,10 @@
         Grey walker: one soak. Becomes sheep.<br>
         Red talker: shouts WAKE, frees one sheep.<br>
         Foil hat: two hits, short armor after the first.<br>
-        Awake leaving the street drains FLOCK.</p>
-        
+        Awake leaving the street drains FLOCK.<br>
+        Every new sheep feeds the narrative (+FLOCK).<br>
+        Game C: a crowd of truthers on the street erodes FLOCK too.</p>
+        <button type="button" id="btnTilbake"><b>BACK</b><span>Bus Adventures</span></button>
       </div>
     </div>
     <div id="err"></div>
@@ -90,9 +94,11 @@ const meny=document.getElementById('meny'), menyResultat=document.getElementById
 const alarmLed=document.getElementById('alarm'), errBox=document.getElementById('err');
 const W=320, H=260, STREET=228;
 const NIVA={
-  A:{px:78, spawn:980, foil:0.08, talker:0.06, escape:14, walk:14},
-  B:{px:92, spawn:780, foil:0.14, talker:0.10, escape:11, walk:18},
-  C:{px:106, spawn:640, foil:0.22, talker:0.14, escape:16, walk:22}
+  // gain: FLOCK per new sheep · exit: FLOCK when a sheep strolls off the street
+  // crowd/erode (C): FLOCK lost per second for each awake person above "crowd"
+  A:{px:78, spawn:980, foil:0.08, talker:0.06, escape:14, walk:14, gain:2,   exit:3, crowd:99, erode:0},
+  B:{px:92, spawn:780, foil:0.14, talker:0.10, escape:11, walk:18, gain:1.5, exit:3, crowd:99, erode:0},
+  C:{px:106, spawn:640, foil:0.22, talker:0.14, escape:16, walk:22, gain:1.5, exit:3, crowd:2,  erode:1.4}
 };
 let S=null, keys={left:false,right:false,spray:false};
 
@@ -103,10 +109,10 @@ function px(x,y,w,h,c){ ctx.fillStyle=c; ctx.fillRect(x|0,y|0,w,h); }
 
 function reset(mode){
   S={
-    mode, score:0, control:100, lives:3, wave:1,
+    mode, score:0, control:100, wave:1, dry:0,
     px:40, py:42, dir:1,
     people:[], mist:[], fx:[], signs:[], trails:[],
-    nextP:200, sprayCd:0, sprayOn:0, wind:0, pressure:5, pumpWas:false,
+    nextP:200, wind:0, pressure:5, pumpWas:false,
     over:false, paused:false, last:0, dying:0, flash:0, shake:0,
     nyRekord:false, arsak:'', converted:0, escaped:0, t:0
   };
@@ -142,9 +148,13 @@ function spawnPerson(){
 
 function spray(){
   if(!S||S.over||S.paused||S.dying) return;
-  if(S.pressure<1) return;
+  if(S.pressure<1){
+    // empty tank: say so instead of silently doing nothing
+    if(S.dry<=0) S.signs.push({x:S.px, y:S.py+16, t:700, txt: Math.random()<0.5?'TANK DRY':'REFILL FROM HQ'});
+    S.dry=700; buzz(12);
+    return;
+  }
   S.pressure--;
-  S.sprayOn=220;
   const n = 14;
   for(let i=0;i<n;i++){
     if(S.mist.length>160) S.mist.splice(0,30);
@@ -185,6 +195,7 @@ function convert(p){
   p.vx = Math.sign(p.vx||1)*11;
   S.converted++;
   S.score += 10 + S.wave*2;
+  S.control = Math.min(100, S.control + NIVA[S.mode].gain);   // every new sheep feeds the narrative
   burst(p.x, p.y-8, 5, 'mist');
 }
 function wakeSheep(p, why){
@@ -239,12 +250,13 @@ function update(dt){
   }
   S.trails=S.trails.filter(tr=>tr.life>0);
 
-  S.sprayOn = Math.max(0, S.sprayOn-dt);
   if(keys.spray && !S.pumpWas) spray();
   S.pumpWas = !!keys.spray;
-  if(!keys.spray) S.pressure = Math.min(5, S.pressure + dt/1000);
+  S.pressure = Math.min(5, S.pressure + dt/1000);      // refills even while SPRAY is held
+  if(S.dry>0) S.dry-=dt;
   const bar=document.getElementById('cdSpray');
   if(bar) bar.style.height = ((5-S.pressure)/5*100)+'%';
+  document.getElementById('sprayBtn').classList.toggle('dry', S.dry>0);
 
   S.nextP -= dt;
   const cap = 5 + Math.min(6, S.wave);
@@ -330,12 +342,17 @@ function update(dt){
       S.control = Math.max(0, S.control - n.escape);
       if(S.control<=0) loseControl('FLOCK BROKE');
     }
-    if(p.sheep && (p.x<-20 || p.x>W+20)) p.gone=true;
+    if(p.sheep && (p.x<-20 || p.x>W+20)){
+      p.gone=true;                                       // delivered: left the street still a sheep
+      S.control = Math.min(100, S.control + n.exit);
+    }
   }
   S.people=S.people.filter(p=>!p.gone);
-  if(S.mode==='C'){
-    const awake=S.people.filter(p=>!p.sheep).length;
-    if(awake>0) S.control=Math.max(0, S.control-3.2*t);
+  // A crowd of truthers erodes FLOCK (Game C): only above n.crowd, and more
+  // the bigger the crowd — so keeping the street sheepish actually helps.
+  if(n.erode){
+    const awake=S.people.filter(p=>!p.sheep && p.x>0 && p.x<W).length;
+    if(awake>n.crowd) S.control=Math.max(0, S.control - n.erode*(awake-n.crowd)*t);
     if(S.control<=0) loseControl('FLOCK BROKE');
   }
   for(const s of S.signs){
@@ -574,8 +591,9 @@ hold(document.getElementById('right'), ()=>keys.right=true, ()=>keys.right=false
 hold(document.getElementById('sprayBtn'), ()=>keys.spray=true, ()=>keys.spray=false);
 
 document.querySelectorAll('.valg').forEach(b=>{
-  b.addEventListener('click', ()=>{ reset(b.dataset.mode); menyResultat.classList.remove('vis'); });
+  b.addEventListener('click', ()=>{ b.blur(); reset(b.dataset.mode); menyResultat.classList.remove('vis'); });
 });
+document.getElementById('btnTilbake').onclick=()=>{ location.href=HJEM; };
 document.getElementById('btnMeny').onclick=()=>{
   if(!S){ meny.classList.add('vis'); return; }
   if(S.over){ meny.classList.add('vis'); return; }
@@ -583,15 +601,14 @@ document.getElementById('btnMeny').onclick=()=>{
   meny.classList.toggle('vis', S.paused);
 };
 document.getElementById('btnHjem').onclick=()=>{ location.href=HJEM; };
-window.addEventListener('keydown', e=>{
-  if(e.key==='ArrowLeft'||e.key==='a') keys.left=true;
-  if(e.key==='ArrowRight'||e.key==='d') keys.right=true;
-  if(e.key===' '||e.key==='z'||e.key==='x') keys.spray=true;
-});
-window.addEventListener('keyup', e=>{
-  if(e.key==='ArrowLeft'||e.key==='a') keys.left=false;
-  if(e.key==='ArrowRight'||e.key==='d') keys.right=false;
-  if(e.key===' '||e.key==='z'||e.key==='x') keys.spray=false;
+const KEY=e=>{ const k=(e.key||'').toLowerCase();
+  return k==='arrowleft'||k==='a'?'left':k==='arrowright'||k==='d'?'right':(k===' '||k==='z'||k==='x')?'spray':null; };
+window.addEventListener('keydown', e=>{ const k=KEY(e); if(!k) return; e.preventDefault(); keys[k]=true; });
+window.addEventListener('keyup',   e=>{ const k=KEY(e); if(!k) return; e.preventDefault(); keys[k]=false; });
+// Pause when the app is hidden, and drop held keys
+document.addEventListener('visibilitychange', ()=>{
+  keys.left=keys.right=keys.spray=false;
+  if(document.hidden && S && !S.over && !S.paused){ S.paused=true; meny.classList.add('vis'); }
 });
 window.onerror=(m,s,l)=> { errBox.style.display='block'; errBox.textContent=m+' @'+l; };
 </script>
