@@ -68,6 +68,7 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-layer { position: absolute; transform: translate(-50%, -100%); pointer-events: none; max-width: none; }
 .emp-layer.emp-flip { transform: translate(-50%, -100%) scaleX(-1); }
 .emp-sprite { background-repeat: no-repeat; aspect-ratio: 2 / 3; image-rendering: auto; }
+.emp-sprite-frame { position: absolute; inset: 0; background-repeat: no-repeat; background-position-x: 0%; }
 .emp-emoji { line-height: 1; display: flex; align-items: flex-end; justify-content: center; aspect-ratio: 1; }
 .emp-pop { animation: emp-pop .6s cubic-bezier(.2, 1.6, .4, 1); }
 @keyframes emp-pop { from { scale: .2; opacity: 0; } to { scale: 1; opacity: 1; } }
