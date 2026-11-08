@@ -142,6 +142,7 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-tile-meta { font-size: 12px; color: #dfe4ee; font-variant-numeric: tabular-nums; }
 .emp-tile-meta [data-bind="room-income"] { color: var(--emp-good); }
 .emp-tile-badge { font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #0008; color: #fff; border: 1px solid #ffffff40; white-space: nowrap; }
+.emp-tile-badge.event { background: var(--emp-accent); color: #fff; border-color: #ffffff60; animation: emp-pulse 1.6s ease-in-out infinite; }
 .emp-tile-badge.on { background: var(--emp-good); color: #06240f; border-color: #7dffb0; animation: emp-pulse 1.6s ease-in-out infinite; }
 /* room page */
 .emp-room-page .emp-room-head { flex-wrap: wrap; align-items: center; gap: 4px 10px; }

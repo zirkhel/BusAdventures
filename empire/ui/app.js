@@ -295,10 +295,13 @@ class EmpireApp {
   }
 
   /** Something in this room can be done right now (hire, level up, event). */
-  roomHasAction(roomId) {
+  /** What can be done in this room right now: 'upgrade' (hire/level up), 'event', or null. Upgrades win. */
+  roomAction(roomId) {
     const E = this.empire, room = E.rooms[roomId];
     const targets = [{ kind: 'room', id: roomId }, ...room.characters.map(c => ({ kind: 'character', id: c.id })), ...room.upgrades.map(u => ({ kind: 'upgrade', id: u.id }))];
-    return targets.some(t => E.quoteLevel(t).ok) || (room.events || []).some(ev => E.eventStatus(ev.id).ok);
+    if (targets.some(t => E.quoteLevel(t).ok)) return 'upgrade';
+    if ((room.events || []).some(ev => E.eventStatus(ev.id).ok)) return 'event';
+    return null;
   }
 
   renderRoom(roomId, card = this.roomsEl.querySelector(`.emp-room-page[data-room="${roomId}"]`)) {
@@ -464,9 +467,10 @@ class EmpireApp {
     set('[data-bind="room-income"]', el => el.textContent = '+' + this.sym + fmt(E.roomIncome(el.dataset.id), { decimals: true }) + '/s');
 
     set('[data-bind="room-badge"]', el => {
-      const on = this.roomHasAction(el.dataset.id);
-      el.textContent = on ? 'Upgrade ›' : '›';
-      el.classList.toggle('on', on);
+      const action = this.roomAction(el.dataset.id);
+      el.textContent = action === 'upgrade' ? 'Upgrade ›' : action === 'event' ? 'Event ready ›' : '›';
+      el.classList.toggle('on', action === 'upgrade');
+      el.classList.toggle('event', action === 'event');
     });
     set('[data-q="build"]', el => { el.disabled = !E.quoteBuild(el.dataset.id).ok; });
     set('[data-q="level"]', el => {
