@@ -104,12 +104,15 @@ class EmpireApp {
       </header>
       <main class="emp-rooms"></main>
       <div class="emp-toast" hidden></div>
-      <div class="emp-modal" hidden><div class="emp-modal-card"></div></div>`;
+      <div class="emp-modal" hidden><div class="emp-modal-card"></div></div>
+      <div class="emp-detail" hidden><div class="emp-detail-card"></div></div>`;
     this.roomsEl = this.root.querySelector('.emp-rooms');
     this.modal = this.root.querySelector('.emp-modal');
     this.modalCard = this.root.querySelector('.emp-modal-card');
     this.toastEl = this.root.querySelector('.emp-toast');
     this.coachEl = this.root.querySelector('.emp-coach');
+    this.detail = this.root.querySelector('.emp-detail');
+    this.detail.addEventListener('click', e => { if (e.target === this.detail) this.closeDetail(); });
     this.root.addEventListener('click', e => this.onClick(e));
     this.modal.addEventListener('click', e => { if (e.target === this.modal && !this.modal.dataset.locked) this.closeModal(); });
   }
@@ -139,10 +142,13 @@ class EmpireApp {
         if (E.fullSet(r.roomId)) setTimeout(() => this.toast(`Full crew in ${E.rooms[r.roomId].name}: +${Math.round(this.fullSetBonus(r.roomId) * 100)}% income`), 1400);
       }
       this.renderRoom(r.roomId); this.save();
+      if (this.detailTarget) this.showDetail(this.detailTarget);
       return;
     }
     if (act === 'event') return this.startEvent(id);
     if (act === 'open-room') return this.openRoom(id);
+    if (act === 'card') return this.showDetail({ kind, id });
+    if (act === 'detail-close') return this.closeDetail();
     if (act === 'close-room') return this.closeRoom();
     if (act === 'prestige') return this.showPrestige();
     if (act === 'prestige-confirm') return this.confirmPrestige();
@@ -311,27 +317,102 @@ class EmpireApp {
       <div class="emp-page-foot"><button class="emp-btn emp-wide" data-act="close-room">‹ All rooms</button></div>`;
 
     this.attachScene(room, card.querySelector('.emp-scene-slot'));
-    card.querySelectorAll('[data-portrait]').forEach(el => el.replaceWith(portrait(E.characters[el.dataset.portrait], this.asset)));
+    this.hydrate(card);
     this.refresh();
   }
 
   charTile(c) {
-    const lvl = this.empire.charLevel(c.id);
     return `
-      <div class="emp-char ${lvl ? '' : 'emp-char-locked'}" style="--rar: var(--emp-${c.rarity})">
-        <div class="emp-char-pic"><div data-portrait="${c.id}"></div></div>
-        <div class="emp-char-name">${esc(c.name)}</div>
-        <div class="emp-char-meta"><span class="emp-rar">${esc(this.theme.economy.rarities[c.rarity].label || c.rarity)}</span> · ${lvl ? `Lv ${lvl}` : 'Not hired'}</div>
-        <div class="emp-gain" data-bind="gain" data-kind="character" data-id="${c.id}"></div>
-        ${this.fragBar('character', c.id)}
+      <div class="emp-char">
+        ${this.cardFace('character', c.id)}
+        <div class="emp-gain emp-gain-short" data-bind="gain" data-short="1" data-kind="character" data-id="${c.id}"></div>
         <button class="emp-btn emp-small" data-act="level" data-kind="character" data-id="${c.id}" data-q="level"></button>
       </div>`;
   }
 
+  // ──────────────────────────────── cards ─────────────────────────────────
+  // One card design everywhere: index-card tab with the rarity, a big picture,
+  // the name, and the fragment bar at the very bottom. Tap for the big version.
+
+  cardInfo(kind, id) {
+    const E = this.empire, rar = this.theme.economy.rarities;
+    if (kind === 'character') {
+      const c = E.characters[id];
+      return { tab: rar[c.rarity].label || c.rarity, color: `var(--emp-${c.rarity})`, name: c.name, pic: `<div data-portrait="${id}"></div>`,
+        locked: !E.charLevel(id), sub: c.role, text: c.bio, rarity: c.rarity };
+    }
+    if (kind === 'upgrade') {
+      const u = E.upgrades[id], v = { ...u.visual, ...u.visual?.stages?.[0] };
+      return { tab: 'Gear', color: '#d9b45a', name: u.name, pic: v.src ? `<img src="${this.asset(v.src)}" alt="">` : `<span class="emp-face-emoji">${esc(v.char || '⬆')}</span>`,
+        locked: !E.upgradeLevel(id), sub: E.rooms[u.roomId].name, text: u.effect };
+    }
+    const room = E.rooms[id];
+    const bg = room.background?.src ? `background-image:url('${this.asset(room.background.src)}')` : `background:${room.background?.color || '#333'}`;
+    return { tab: 'Room', color: '#7fb2d9', name: room.name, pic: `<div class="emp-face-room" style="${esc(bg)}"></div>`,
+      locked: false, sub: 'Room level', text: room.blurb };
+  }
+
+  cardFace(kind, id, { tappable = true, bar = true } = {}) {
+    const i = this.cardInfo(kind, id);
+    return `
+      <div class="emp-face ${i.locked ? 'emp-face-locked' : ''} ${i.rarity ? 'emp-face-' + i.rarity : ''}" style="--rar:${i.color}" ${tappable ? `data-act="card" data-kind="${kind}" data-id="${id}"` : ''}>
+        <div class="emp-face-tab">${esc(i.tab)}</div>
+        <span class="emp-face-lv" data-bind="lv" data-kind="${kind}" data-id="${id}"></span>
+        <div class="emp-face-pic">${i.pic}</div>
+        <div class="emp-face-name">${esc(i.name)}</div>
+        ${bar ? this.fragBar(kind, id) : ''}
+      </div>`;
+  }
+
+  hydrate(container) {
+    container.querySelectorAll('[data-portrait]').forEach(el => el.replaceWith(portrait(this.empire.characters[el.dataset.portrait], this.asset)));
+  }
+
+  showDetail(target) {
+    const E = this.empire, { kind, id } = target;
+    const i = this.cardInfo(kind, id);
+    const q = E.quoteLevel(target);
+    const now = E.contribution(target);
+    const g = E.previewGain(target);
+    const lvl = q.from;
+    const levelText = kind === 'character' ? (lvl ? `Level ${lvl} of ${q.maxLevel}` : 'Not hired yet')
+      : kind === 'upgrade' ? (lvl ? `Level ${lvl} of ${q.maxLevel}` : 'Not built yet') : `Level ${lvl} of ${q.maxLevel}`;
+    const effect = kind === 'character'
+      ? `Earns on its own. Each level adds more. ${E.rooms[E.characters[id].roomId].name} gets +${Math.round(this.fullSetBonus(E.characters[id].roomId) * 100)}% when all three are hired.`
+      : kind === 'upgrade' ? `Multiplies everything ${esc(E.rooms[E.upgrades[id].roomId].name)} earns: +${Math.round((E.upgrades[id].incomePerLevel ?? this.theme.economy.upgrade.incomePerLevel) * 100)}% per level.`
+      : `Raises what the room earns on its own: +${Math.round((E.rooms[id].incomePerLevel ?? this.theme.economy.roomLevel.incomePerLevel) * 100)}% of base income per level.`;
+    const btnLabel = kind === 'character' && !lvl ? 'Hire' : kind === 'upgrade' && !lvl ? 'Build' : 'Level up';
+    this.detailTarget = target;
+    this.detail.querySelector('.emp-detail-card').innerHTML = `
+      <div class="emp-detail-face">${this.cardFace(kind, id, { tappable: false })}</div>
+      <div class="emp-detail-text">
+        <div class="emp-detail-sub" style="color:${i.color}">${esc(i.tab)} · ${esc(i.sub || '')}</div>
+        <h3>${esc(i.name)}</h3>
+        <div class="emp-muted">${levelText}</div>
+        ${i.text ? `<p class="emp-detail-bio">${esc(i.text)}</p>` : ''}
+        <h4>Effect</h4>
+        <p class="emp-detail-effect">${effect}</p>
+        <ul class="emp-detail-stats">
+          ${now > 0 ? `<li>Adds now <b>+${this.sym}${fmt(now, { decimals: true })}/s</b></li>` : ''}
+          <li>${g ? `${btnLabel} <b class="emp-gain-inline">+${this.sym}${fmt(g.income, { decimals: true })}/s</b>` : 'Max level reached'}</li>
+          ${g ? `<li>Costs <b>${q.fragmentCost} fragment${q.fragmentCost === 1 ? '' : 's'}</b>${q.coins ? ` + <b>${this.money(q.coins)}</b>` : ''} <span class="emp-muted">(you have ${q.have})</span></li>` : ''}
+        </ul>
+        <div class="emp-modal-actions">
+          <button class="emp-btn" data-act="detail-close">Close</button>
+          ${g ? `<button class="emp-btn emp-accent" data-act="level" data-kind="${kind}" data-id="${id}" data-q="level"></button>` : ''}
+        </div>
+      </div>`;
+    this.hydrate(this.detail);
+    this.detail.hidden = false;
+    this.refresh();
+  }
+
+  closeDetail() { this.detail.hidden = true; this.detailTarget = null; }
+
   levelRow(kind, id, label, icon = '', sub = '') {
     return `
       <div class="emp-row">
-        <div class="emp-row-label">${icon ? `<span class="emp-row-icon">${icon}</span>` : this.upgradeThumb(id)}
+        <div class="emp-row-label" data-act="card" data-kind="${kind}" data-id="${id}">${icon ? `<span class="emp-row-icon">${icon}</span>` : this.upgradeThumb(id)}
           <div><div>${esc(label)} <span class="emp-lv" data-bind="lv" data-kind="${kind}" data-id="${id}"></span></div>
           ${sub ? `<div class="emp-muted emp-sub">${esc(sub)}</div>` : ''}<div class="emp-gain" data-bind="gain" data-kind="${kind}" data-id="${id}"></div>${this.fragBar(kind, id)}</div></div>
         <button class="emp-btn emp-small" data-act="level" data-kind="${kind}" data-id="${id}" data-q="level"></button>
@@ -389,7 +470,8 @@ class EmpireApp {
     });
     set('[data-bind="lv"]', el => {
       const q = E.quoteLevel({ kind: el.dataset.kind, id: el.dataset.id });
-      el.textContent = q.from ? `Lv ${q.from}${q.maxed ? '' : ''}` : '—';
+      if (el.closest('.emp-face')) { el.textContent = q.from ? `Lv ${q.from}` : ''; el.hidden = !q.from; }
+      else el.textContent = q.from ? `Lv ${q.from}` : '—';
     });
     set('[data-bind="gain"]', el => {
       const tg = { kind: el.dataset.kind, id: el.dataset.id };
@@ -398,7 +480,8 @@ class EmpireApp {
       el.classList.remove('max');
       const pct = g.roomShare != null && g.roomShare > 0 ? ` (+${g.roomShare >= 0.995 ? fmt(g.roomShare * 100) : (g.roomShare * 100).toFixed(g.roomShare < 0.1 ? 1 : 0)}%)` : '';
       const verb = tg.kind === 'character' && !E.charLevel(tg.id) ? 'Hire' : tg.kind === 'upgrade' && !E.upgradeLevel(tg.id) ? 'Build' : 'Next level';
-      const text = `${verb}: +${this.sym}${fmt(g.income, { decimals: true })}/s${pct}${g.completesCrew ? ' with crew bonus' : ''}`;
+      const text = el.dataset.short ? `+${this.sym}${fmt(g.income, { decimals: true })}/s${g.completesCrew ? ' ★' : ''}`
+        : `${verb}: +${this.sym}${fmt(g.income, { decimals: true })}/s${pct}${g.completesCrew ? ' with crew bonus' : ''}`;
       if (el.textContent !== text) el.textContent = text;
     });
     set('[data-bind="frag"]', el => {
@@ -518,29 +601,18 @@ class EmpireApp {
   }
 
   rewardCard(r) {
-    const E = this.empire;
     const el = document.createElement('div');
     el.className = 'emp-card';
-    let pic, title, sub;
-    if (r.type === 'coins') { pic = document.createElement('div'); pic.className = 'emp-card-icon'; pic.textContent = '💰'; title = '+' + this.money(r.amount); sub = this.theme.currency?.name || 'Cash'; }
-    else if (r.kind === 'character') {
-      const c = E.characters[r.id]; pic = portrait(c, this.asset); title = c.name;
-      el.style.setProperty('--rar', `var(--emp-${c.rarity})`); el.classList.add('emp-card-' + c.rarity);
-      sub = `${this.theme.economy.rarities[c.rarity].label} fragment`;
-    } else if (r.kind === 'room') { pic = document.createElement('div'); pic.className = 'emp-card-icon'; pic.textContent = '🏠'; title = E.rooms[r.id].name; sub = 'Room fragment'; }
-    else {
-      const u = E.upgrades[r.id]; const v = { ...u.visual, ...u.visual?.stages?.[0] };
-      pic = document.createElement('div'); pic.className = 'emp-card-icon';
-      pic.innerHTML = v.src ? `<img src="${this.asset(v.src)}" alt="">` : esc(v.char || '⬆');
-      title = u.name; sub = 'Upgrade fragment';
+    let face;
+    if (r.type === 'coins') {
+      face = `<div class="emp-face" style="--rar:#f1c40f"><div class="emp-face-tab">${esc(this.theme.currency?.name || 'Cash')}</div>
+        <div class="emp-face-pic"><span class="emp-face-emoji">💰</span></div><div class="emp-face-name">+${this.money(r.amount)}</div><div class="emp-frag emp-frag-empty"></div></div>`;
+    } else {
+      face = this.cardFace(r.kind, r.id).replace('emp-face-locked', '');
+      if (r.rarity) el.classList.add('emp-card-' + r.rarity);
     }
-    if (r.type === 'fragment') {
-      const q = E.quoteLevel({ kind: r.kind, id: r.id });
-      const ready = q.ok ? ' · ready!' : '';
-      sub += `<br><b>${q.have}/${q.maxed ? '–' : q.fragmentCost}</b>${ready}`;
-    }
-    el.innerHTML = `<div class="emp-card-back"></div><div class="emp-card-front"><div class="emp-card-pic"></div><div class="emp-card-title">${esc(title)}</div><div class="emp-card-sub">${sub}</div></div>`;
-    el.querySelector('.emp-card-pic').appendChild(pic);
+    el.innerHTML = `<div class="emp-card-back"></div><div class="emp-card-front">${face}</div>`;
+    this.hydrate(el);
     return el;
   }
 
@@ -548,6 +620,7 @@ class EmpireApp {
     this.openModal(`
       <h3>${esc(title)}</h3>${extra}
       <div class="emp-cards"></div>
+      <p class="emp-muted emp-cards-hint">Tap a card to see what it does.</p>
       <div class="emp-modal-actions">
         ${again ? `<button class="emp-btn" data-act="pack">Another — <span data-bind="packPrice"></span></button>` : ''}
         <button class="emp-btn emp-accent" data-act="close">Done</button>
@@ -560,7 +633,10 @@ class EmpireApp {
     const flip = () => { if (i < cards.length) { cards[i++].classList.add('flipped'); this.flipTimer = setTimeout(flip, 260); } };
     clearTimeout(this.flipTimer);
     this.flipTimer = setTimeout(flip, 150);
-    wrap.addEventListener('click', () => { clearTimeout(this.flipTimer); cards.forEach(c => c.classList.add('flipped')); });
+    wrap.addEventListener('click', e => {
+      if (cards.every(c => c.classList.contains('flipped'))) return;   // revealed: taps open the card (data-act="card")
+      e.stopPropagation(); clearTimeout(this.flipTimer); cards.forEach(c => c.classList.add('flipped'));
+    }, true);
     this.refresh();
   }
 

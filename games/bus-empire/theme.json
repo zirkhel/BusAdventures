@@ -23,9 +23,9 @@
     { "id": "stop", "order": 1, "name": "The Bus Stop", "blurb": "A pole, a sign, a timetable that lies.", "price": 0, "baseIncome": 1,
       "background": { "color": "linear-gradient(#9bd1f5 0 62%, #6c757d 62% 70%, #3d4248 70%)" },
       "characters": [
-        { "id": "stop.commuter", "name": "Tired Commuter", "rarity": "common", "sprite": { "char": "🧍", "x": 30, "y": 70, "h": 30, "z": 3 } },
-        { "id": "stop.pensioner", "name": "Pensioner with Opinions", "rarity": "rare", "sprite": { "char": "🧓", "x": 48, "y": 70, "h": 26, "z": 3 } },
-        { "id": "stop.stranger", "name": "Man Who Is Always There", "rarity": "epic", "sprite": { "char": "🕴️", "x": 82, "y": 70, "h": 30, "z": 2 } }
+        { "id": "stop.commuter", "name": "Tired Commuter", "rarity": "common", "bio": "Has waited at this stop every weekday for eleven years. Has hope. Should not.", "sprite": { "char": "🧍", "x": 30, "y": 70, "h": 30, "z": 3 } },
+        { "id": "stop.pensioner", "name": "Pensioner with Opinions", "rarity": "rare", "bio": "Knows the timetable by heart and will tell you exactly how wrong it is.", "sprite": { "char": "🧓", "x": 48, "y": 70, "h": 26, "z": 3 } },
+        { "id": "stop.stranger", "name": "Man Who Is Always There", "rarity": "epic", "bio": "Always there. Never boards. Nobody remembers him arriving.", "sprite": { "char": "🕴️", "x": 82, "y": 70, "h": 30, "z": 2 } }
       ],
       "upgrades": [
         { "id": "stop.bench", "name": "Bench", "effect": "Sitting is a luxury.", "visual": { "char": "🪑", "x": 64, "y": 70, "h": 18, "z": 1 } },
@@ -43,9 +43,9 @@
     { "id": "depot", "order": 2, "name": "The Depot", "blurb": "Where buses go to think about what they did.", "price": 1500, "baseIncome": 10,
       "background": { "color": "linear-gradient(#2b2d42 0 60%, #8d99ae 60%)" },
       "characters": [
-        { "id": "depot.mechanic", "name": "Mechanic", "rarity": "common", "sprite": { "char": "🧑‍🔧", "x": 25, "y": 92, "h": 28, "z": 4 } },
-        { "id": "depot.driver", "name": "Veteran Driver", "rarity": "rare", "sprite": { "char": "🧑‍✈️", "x": 45, "y": 92, "h": 28, "z": 4 } },
-        { "id": "depot.inspector", "name": "Ticket Inspector", "rarity": "epic", "sprite": { "char": "👮", "x": 88, "y": 92, "h": 28, "z": 4 } }
+        { "id": "depot.mechanic", "name": "Mechanic", "rarity": "common", "bio": "Can fix any bus with a wrench and a stern look. Mostly the look.", "sprite": { "char": "🧑‍🔧", "x": 25, "y": 92, "h": 28, "z": 4 } },
+        { "id": "depot.driver", "name": "Veteran Driver", "rarity": "rare", "bio": "Thirty years on route 7. Waves at every other driver. They do not wave back.", "sprite": { "char": "🧑‍✈️", "x": 45, "y": 92, "h": 28, "z": 4 } },
+        { "id": "depot.inspector", "name": "Ticket Inspector", "rarity": "epic", "bio": "Checks tickets with the calm of a judge and the speed of a glacier.", "sprite": { "char": "👮", "x": 88, "y": 92, "h": 28, "z": 4 } }
       ],
       "upgrades": [
         { "id": "depot.bus", "name": "Another Bus", "effect": "Same route, more buses.", "visual": { "char": "🚌", "x": 66, "y": 90, "h": 38, "z": 2 } },
