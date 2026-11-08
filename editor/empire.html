@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Empire Editor</title>
+<link rel="stylesheet" href="../empire/ui/style.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { --bg:#0e0f12; --s1:#16181e; --s2:#1e2028; --s3:#272a34; --line:#2e3140; --text:#d8dae8; --muted:#7b80a0;
+  --accent:#5b7cf6; --green:#4caf7d; --red:#e05555; --amber:#e0a840; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+button, input, textarea, select { font: inherit; color: inherit; }
+.btn { padding: 7px 13px; border-radius: 8px; border: 1px solid #3a3e50; background: var(--s2); cursor: pointer; white-space: nowrap; }
+.btn:hover { border-color: var(--accent); }
+a.btn { text-decoration: none; color: var(--text); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.save { background: #1e4d35; border-color: var(--green); color: #b9f0cf; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn.on { background: #2a3566; border-color: var(--accent); }
+input[type=text], input[type=password], input[type=number], textarea, select {
+  width: 100%; background: var(--s2); border: 1px solid var(--line); border-radius: 7px; padding: 6px 8px; }
+textarea { resize: vertical; min-height: 60px; }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+label { display: block; font-size: 12px; color: var(--muted); margin: 8px 0 3px; }
+
+/* connect */
+.connect { max-width: 460px; margin: 60px auto; background: var(--s1); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.connect h1 { margin: 0 0 6px; font-size: 22px; }
+.connect p, .steps { color: var(--muted); font-size: 13px; }
+.steps { background: var(--s2); border-radius: 8px; padding: 10px 12px; line-height: 1.7; }
+.row { display: flex; gap: 8px; align-items: center; }
+.err { color: var(--red); font-size: 13px; margin-top: 8px; min-height: 1em; }
+
+/* app */
+.top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 14px; background: var(--s1); border-bottom: 1px solid var(--line); }
+.top .title { font-weight: 700; margin-right: 4px; }
+.top select { width: auto; }
+.spacer { flex: 1; }
+.dirty { color: var(--amber); font-size: 13px; }
+.rooms { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 14px 0; }
+.rooms button { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--s2); cursor: pointer; font-size: 13px; }
+.rooms button.cur { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rooms button.changed::after { content: ' •'; color: var(--amber); }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; padding: 14px; align-items: start; }
+@media (max-width: 960px) { .layout { grid-template-columns: 1fr; } }
+.stage { position: relative; --emp-aspect: 1.6; }
+.stage .emp-scene { border-radius: 10px; user-select: none; touch-action: none; }
+.stage .emp-layer { pointer-events: auto; cursor: grab; }
+.stage .emp-layer.sel { outline: 2px dashed #ffd54a; outline-offset: 2px; }
+.stage .emp-layer.dragging { cursor: grabbing; }
+.anchor { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #ffd54a; border: 2px solid #000; z-index: 999; pointer-events: none; }
+.strip { position: absolute; left: 0; right: 0; bottom: 0; height: 25%; background: linear-gradient(transparent, #000c 55%); z-index: 900; pointer-events: none;
+  display: flex; align-items: flex-end; padding: 0 0 10px 14px; color: #fff; font-weight: 700; font-size: 22px; }
+.strip[hidden] { display: none; }
+.hint { color: var(--muted); font-size: 12.5px; margin: 8px 2px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chips button { padding: 4px 9px; border-radius: 7px; border: 1px solid var(--line); background: var(--s2); cursor: pointer; font-size: 12.5px; }
+.chips button.cur { border-color: #ffd54a; color: #ffd54a; }
+.panel { background: var(--s1); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 16px; }
+.panel h2 { font-size: 15px; margin: 2px 0 4px; }
+.panel h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 16px 0 2px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.grid4 label { margin-top: 4px; }
+.tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--s3); color: var(--muted); margin-left: 6px; vertical-align: middle; }
+.toast { position: fixed; left: 50%; bottom: 20px; translate: -50% 0; background: var(--s3); border: 1px solid var(--line); padding: 10px 16px; border-radius: 10px; z-index: 999; max-width: 90vw; }
+.toast.ok { border-color: var(--green); } .toast.bad { border-color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="connect" id="connect">
+  <h1>Empire Editor</h1>
+  <p>Flytt figurer og ting, og endre tekstene på kortene. «Lagre» skriver <code>theme.json</code> rett til GitHub, og Vercel publiserer endringen etter omtrent ett minutt.</p>
+  <div class="steps">
+    Du trenger et GitHub-token med skrivetilgang:<br>
+    1. github.com → Settings → Developer settings → Fine-grained tokens<br>
+    2. Repository access: kun <b>BusAdventures</b><br>
+    3. Permissions: Contents → <b>Read and write</b>
+  </div>
+  <label>Repo</label>
+  <input type="text" id="repo" value="zirkhel/BusAdventures">
+  <label>Token</label>
+  <input type="password" id="token" placeholder="github_pat_…">
+  <label class="row" style="color:var(--text)"><input type="checkbox" id="remember" style="width:auto"> Husk token på denne enheten</label>
+  <div class="row" style="margin-top:12px"><button class="btn primary" id="go">Koble til</button></div>
+  <div class="err" id="cerr"></div>
+</div>
+
+<div id="app" hidden>
+  <div class="top">
+    <span class="title">Empire Editor</span>
+    <select id="game"></select>
+    <button class="btn" id="lvl" title="Vis tingene på nivå 1 eller på deluxe-nivå">Ting: vanlig</button>
+    <button class="btn" id="stripBtn" title="Vis feltet med romnavnet slik det ligger i romoversikten">Navnefelt</button>
+    <a class="btn" id="open" target="_blank" rel="noopener">Åpne spillet ↗</a>
+    <span class="spacer"></span>
+    <span class="dirty" id="dirty"></span>
+    <button class="btn" id="undo" disabled>Angre alt</button>
+    <button class="btn save" id="save" disabled>Lagre til GitHub</button>
+  </div>
+  <div class="rooms" id="rooms"></div>
+  <div class="layout">
+    <div>
+      <div class="stage" id="stage"></div>
+      <div class="hint">Dra figurer og ting dit du vil ha dem. Det gule punktet er foten (ankeret). Musehjul eller + / − endrer størrelsen, piltastene flytter litt (med Shift: mer). Klikk på bakgrunnen for å redigere tekstene til rommet.</div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="panel" id="panel"></div>
+  </div>
+</div>
+
+<script type="module">
+import { makeLayer, upgradeStage, releaseScene } from '../empire/ui/scene.js';
+import { validateTheme } from '../empire/engine/validate.js';
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const TOKEN_KEY = 'ba_empire_editor_token';
+
+// ── GitHub ────────────────────────────────────────────────────────────────
+const GH = {
+  repo: '', token: '',
+  url(p) { return `https://api.github.com/repos/${this.repo}/contents/${p}`; },
+  h() { return { Authorization: `Bearer ${this.token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }; },
+  async get(p) {
+    const r = await fetch(this.url(p) + `?t=${Date.now()}`, { headers: this.h(), cache: 'no-store' });
+    if (!r.ok) throw new Error(`${p}: ${r.status} ${r.statusText}`);
+    return r.json();
+  },
+  async put(p, text, sha, message) {
+    const r = await fetch(this.url(p), { method: 'PUT', headers: { ...this.h(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, content: b64encode(text), sha }) });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error(data.message || r.statusText); e.status = r.status; throw e; }
+    return data;
+  },
+};
+function b64decode(s) { const bin = atob(s.replace(/\n/g, '')); return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))); }
+function b64encode(s) { const b = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(bin); }
+
+// Same layout as the repo's theme files (short objects on one line, max 150 characters).
+function inline(o) {
+  if (Array.isArray(o)) return '[' + o.map(inline).join(', ') + ']';
+  if (o && typeof o === 'object') { const k = Object.keys(o); return k.length ? '{ ' + k.map(x => JSON.stringify(x) + ': ' + inline(o[x])).join(', ') + ' }' : '{}'; }
+  return JSON.stringify(o);
+}
+function fmt(o, ind = 0) {
+  const one = inline(o), pad = '  '.repeat(ind);
+  if (one.length + pad.length <= 150 || !o || typeof o !== 'object') return one;
+  if (Array.isArray(o)) return '[\n' + o.map(x => pad + '  ' + fmt(x, ind + 1)).join(',\n') + '\n' + pad + ']';
+  return '{\n' + Object.keys(o).map(k => pad + '  ' + JSON.stringify(k) + ': ' + fmt(o[k], ind + 1)).join(',\n') + '\n' + pad + '}';
+}
+
+// ── state ─────────────────────────────────────────────────────────────────
+const S = { game: '', path: '', sha: '', theme: null, orig: '', origRooms: {}, room: 0, sel: null, level: 1, strip: false };
+const asset = src => `../games/${S.game}/${src}`;
+const room = () => S.theme.rooms[S.room];
+const round = v => Math.round(v * 2) / 2;
+
+function toast(msg, kind = '') {
+  const t = document.createElement('div'); t.className = 'toast ' + kind; t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), kind === 'bad' ? 7000 : 3500);
+}
+
+// ── connect ───────────────────────────────────────────────────────────────
+try { const saved = localStorage.getItem(TOKEN_KEY); if (saved) { $('token').value = saved; $('remember').checked = true; } } catch {}
+$('go').onclick = connect;
+$('token').addEventListener('keydown', e => { if (e.key === 'Enter') connect(); });
+
+async function connect() {
+  $('cerr').textContent = '';
+  GH.repo = $('repo').value.trim(); GH.token = $('token').value.trim();
+  if (!GH.token) { $('cerr').textContent = 'Lim inn tokenet.'; return; }
+  try {
+    const list = await GH.get('games');
+    const games = list.filter(f => f.type === 'dir' && /-empire$/.test(f.name)).map(f => f.name);
+    if (!games.length) throw new Error('Fant ingen Empire-spill i games/.');
+    try { if ($('remember').checked) localStorage.setItem(TOKEN_KEY, GH.token); else localStorage.removeItem(TOKEN_KEY); } catch {}
+    $('game').innerHTML = games.map(g => `<option value="${g}">${g}</option>`).join('');
+    const last = localStorage.getItem('ba_empire_editor_game');
+    if (last && games.includes(last)) $('game').value = last;
+    $('connect').hidden = true; $('app').hidden = false;
+    await loadGame($('game').value);
+  } catch (e) { $('cerr').textContent = 'Kunne ikke koble til: ' + e.message; }
+}
+
+$('game').onchange = async e => {
+  if (isDirty() && !confirm('Du har endringer som ikke er lagret. Bytte spill likevel?')) { e.target.value = S.game; return; }
+  await loadGame(e.target.value);
+};
+
+async function loadGame(game) {
+  S.game = game; S.path = `games/${game}/theme.json`;
+  try { localStorage.setItem('ba_empire_editor_game', game); } catch {}
+  const f = await GH.get(S.path);
+  S.sha = f.sha;
+  S.theme = JSON.parse(b64decode(f.content));
+  S.orig = JSON.stringify(S.theme);
+  S.origRooms = Object.fromEntries(S.theme.rooms.map(r => [r.id, JSON.stringify(r)]));
+  S.room = Math.min(S.room, S.theme.rooms.length - 1); S.sel = null;
+  $('open').href = `../games/${game}/index.html`;
+  document.querySelector('.stage').style.setProperty('--emp-aspect', S.theme.presentation?.sceneAspect || 1.6);
+  renderAll();
+}
+
+// ── rendering ─────────────────────────────────────────────────────────────
+function renderAll() { renderRooms(); renderScene(); renderPanel(); renderDirty(); }
+
+function renderRooms() {
+  $('rooms').innerHTML = S.theme.rooms.map((r, i) =>
+    `<button data-i="${i}" class="${i === S.room ? 'cur' : ''} ${JSON.stringify(r) !== S.origRooms[r.id] ? 'changed' : ''}">${i + 1}. ${esc(r.name)}</button>`).join('');
+  $('rooms').querySelectorAll('button').forEach(b => b.onclick = () => { S.room = +b.dataset.i; S.sel = null; renderAll(); });
+}
+
+function items() {
+  const r = room();
+  return [
+    ...r.upgrades.map(u => ({ kind: 'upgrade', id: u.id, name: u.name, obj: u, pos: u.visual })),
+    ...r.characters.map(c => ({ kind: 'character', id: c.id, name: c.name, obj: c, pos: c.sprite })),
+  ].filter(i => i.pos);
+}
+
+function renderScene() {
+  const old = $('stage').querySelector('.emp-scene');
+  if (old) releaseScene(old);
+  const sc = document.createElement('div');
+  sc.className = 'emp-scene';
+  const bg = room().background || {};
+  if (bg.src) { const img = document.createElement('img'); img.className = 'emp-bg'; img.src = asset(bg.src); img.alt = ''; sc.appendChild(img); }
+  if (bg.color) sc.style.background = bg.color;
+  for (const it of items()) {
+    const m = it.kind === 'upgrade' ? upgradeStage(it.pos, S.level) || upgradeStage(it.pos, 99) : it.pos;
+    const el = makeLayer(m, asset, it.kind === 'character' ? 'emp-actor' : 'emp-upgrade');
+    el.dataset.id = it.id;
+    if (S.sel === it.id) el.classList.add('sel');
+    el.addEventListener('pointerdown', e => startDrag(e, it, el));
+    sc.appendChild(el);
+  }
+  const strip = document.createElement('div'); strip.className = 'strip'; strip.hidden = !S.strip; strip.textContent = room().name; sc.appendChild(strip);
+  const sel = items().find(i => i.id === S.sel);
+  if (sel) { const a = document.createElement('div'); a.className = 'anchor'; a.style.left = sel.pos.x + '%'; a.style.top = sel.pos.y + '%'; sc.appendChild(a); }
+  sc.addEventListener('pointerdown', e => { if (e.target === sc || e.target.classList.contains('emp-bg')) { select(null); } });
+  sc.addEventListener('wheel', e => { const it = items().find(i => i.id === S.sel); if (!it) return; e.preventDefault(); resize(it, e.deltaY < 0 ? 0.5 : -0.5); }, { passive: false });
+  $('stage').replaceChildren(sc);
+  $('chips').innerHTML = items().map(i => `<button data-id="${i.id}" class="${i.id === S.sel ? 'cur' : ''}">${i.kind === 'character' ? '🧍' : '📦'} ${esc(i.name)}</button>`).join('');
+  $('chips').querySelectorAll('button').forEach(b => b.onclick = () => select(b.dataset.id));
+}
+
+function select(id) { S.sel = id; renderScene(); renderPanel(); }
+
+// Live update of one layer without rebuilding the scene (keeps sprite animation running).
+function place(it) {
+  const el = $('stage').querySelector(`.emp-layer[data-id="${CSS.escape(it.id)}"]`);
+  const a = $('stage').querySelector('.anchor');
+  if (el) { el.style.left = it.pos.x + '%'; el.style.top = it.pos.y + '%'; el.style.height = it.pos.h + '%'; el.style.zIndex = 10 + (it.pos.z ?? 1);
+    if (el.textContent && !el.style.backgroundImage) el.style.fontSize = `${it.pos.h * 0.8}cqh`;
+    el.classList.toggle('emp-flip', !!it.pos.flip); }
+  if (a) { a.style.left = it.pos.x + '%'; a.style.top = it.pos.y + '%'; }
+  syncPosFields(it); renderDirty();
+}
+
+function startDrag(e, it, el) {
+  e.preventDefault(); e.stopPropagation();
+  if (S.sel !== it.id) { select(it.id); }
+  const sc = $('stage').querySelector('.emp-scene'); const box = sc.getBoundingClientRect();
+  const sx = e.clientX, sy = e.clientY, x0 = it.pos.x, y0 = it.pos.y;
+  const layer = $('stage').querySelector(`.emp-layer[data-id="${CSS.escape(it.id)}"]`);
+  layer?.classList.add('dragging');
+  const move = ev => {
+    it.pos.x = Math.max(0, Math.min(100, round(x0 + (ev.clientX - sx) / box.width * 100)));
+    it.pos.y = Math.max(0, Math.min(110, round(y0 + (ev.clientY - sy) / box.height * 100)));
+    place(it);
+  };
+  const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); layer?.classList.remove('dragging'); renderRooms(); };
+  window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+}
+
+function resize(it, d) { it.pos.h = Math.max(2, round(it.pos.h + d)); place(it); renderRooms(); }
+
+document.addEventListener('keydown', e => {
+  if (!S.theme || /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)) return;
+  const it = items().find(i => i.id === S.sel); if (!it) return;
+  const step = e.shiftKey ? 2 : 0.5;
+  const mv = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+  if (mv) { e.preventDefault(); it.pos.x = round(it.pos.x + mv[0]); it.pos.y = round(it.pos.y + mv[1]); place(it); renderRooms(); }
+  else if (e.key === '+' || e.key === '=') resize(it, 0.5);
+  else if (e.key === '-') resize(it, -0.5);
+  else if (e.key === 'Escape') select(null);
+});
+
+// ── side panel ────────────────────────────────────────────────────────────
+const field = (label, path, value, area = false) => `<label>${label}</label>` + (area
+  ? `<textarea data-path="${path}" rows="3">${esc(value)}</textarea>`
+  : `<input type="text" data-path="${path}" value="${esc(value)}">`);
+const num = (label, key, v, step = 0.5) => `<div><label>${label}</label><input type="number" step="${step}" data-pos="${key}" value="${v ?? ''}"></div>`;
+
+function renderPanel() {
+  const r = room(), ri = S.room;
+  const it = items().find(i => i.id === S.sel);
+  let html = '';
+  if (!it) {
+    html += `<h2>${esc(r.name)} <span class="tag">rom ${ri + 1}</span></h2>`;
+    html += field('Navn', `rooms.${ri}.name`, r.name) + field('Undertekst', `rooms.${ri}.blurb`, r.blurb, true);
+    r.events?.forEach((ev, ei) => {
+      html += `<h3>Hendelse</h3>` + field('Navn', `rooms.${ri}.events.${ei}.name`, ev.name) + field('Beskrivelse', `rooms.${ri}.events.${ei}.description`, ev.description, true);
+      ev.outcomes.forEach((o, oi) => { html += field(`Utfall ${oi + 1}`, `rooms.${ri}.events.${ei}.outcomes.${oi}.label`, o.label); });
+    });
+    html += `<h3>Spillet</h3>` + field('Navn på spillet', 'name', S.theme.name) + field('Slagord', 'tagline', S.theme.tagline, true);
+  } else {
+    const isC = it.kind === 'character';
+    const idx = (isC ? r.characters : r.upgrades).indexOf(it.obj), base = `rooms.${ri}.${isC ? 'characters' : 'upgrades'}.${idx}`;
+    html += `<h2>${esc(it.name)} <span class="tag">${isC ? 'figur' : 'ting'} · ${esc(it.obj.rarity || '')}</span></h2>`;
+    html += `<h3>Plassering</h3><div class="grid4">${num('x %', 'x', it.pos.x)}${num('y %', 'y', it.pos.y)}${num('høyde %', 'h', it.pos.h)}${num('lag (z)', 'z', it.pos.z ?? 1, 1)}</div>`;
+    html += `<label class="row" style="color:var(--text);margin-top:8px"><input type="checkbox" data-pos="flip" ${it.pos.flip ? 'checked' : ''} style="width:auto"> Speilvend</label>`;
+    html += `<h3>Kort</h3>` + field('Navn', `${base}.name`, it.obj.name);
+    if (isC) html += field('Rolle', `${base}.role`, it.obj.role) + field('Beskrivelse', `${base}.bio`, it.obj.bio, true);
+    else html += field('Effekt / beskrivelse', `${base}.effect`, it.obj.effect, true);
+    html += `<div class="row" style="margin-top:14px"><button class="btn" id="desel">Ferdig</button></div>`;
+  }
+  $('panel').innerHTML = html;
+  $('panel').querySelectorAll('[data-path]').forEach(inp => inp.addEventListener('input', () => {
+    setPath(S.theme, inp.dataset.path, inp.value);
+    if (/\.name$/.test(inp.dataset.path) || inp.dataset.path === 'name') { renderRooms(); renderChipsOnly(); const st = $('stage').querySelector('.strip'); if (st) st.textContent = room().name; }
+    renderDirty();
+  }));
+  $('panel').querySelectorAll('[data-pos]').forEach(inp => inp.addEventListener('input', () => {
+    if (!it) return;
+    const k = inp.dataset.pos;
+    if (k === 'flip') { if (inp.checked) it.pos.flip = true; else delete it.pos.flip; }
+    else if (inp.value !== '' && !isNaN(+inp.value)) it.pos[k] = +inp.value;
+    place(it); renderRooms();
+  }));
+  $('desel')?.addEventListener('click', () => select(null));
+}
+
+function renderChipsOnly() { $('chips').querySelectorAll('button').forEach(b => { const i = items().find(x => x.id === b.dataset.id); if (i) b.textContent = (i.kind === 'character' ? '🧍 ' : '📦 ') + i.name; }); }
+function syncPosFields(it) { $('panel').querySelectorAll('[data-pos]').forEach(inp => { const k = inp.dataset.pos; if (k !== 'flip' && document.activeElement !== inp) inp.value = it.pos[k] ?? ''; }); }
+function setPath(o, path, v) { const ks = path.split('.'); const last = ks.pop(); for (const k of ks) o = o[k]; o[last] = v; }
+
+// ── toolbar ───────────────────────────────────────────────────────────────
+$('lvl').onclick = () => { S.level = S.level === 1 ? 99 : 1; $('lvl').textContent = S.level === 1 ? 'Ting: vanlig' : 'Ting: deluxe'; $('lvl').classList.toggle('on', S.level !== 1); renderScene(); };
+$('stripBtn').onclick = () => { S.strip = !S.strip; $('stripBtn').classList.toggle('on', S.strip); const st = $('stage').querySelector('.strip'); if (st) st.hidden = !S.strip; };
+$('undo').onclick = () => { if (!confirm('Forkaste alle endringer siden siste lagring?')) return; S.theme = JSON.parse(S.orig); S.sel = null; renderAll(); };
+
+function isDirty() { return S.theme && JSON.stringify(S.theme) !== S.orig; }
+function changedRooms() { return S.theme.rooms.filter(r => JSON.stringify(r) !== S.origRooms[r.id]).map(r => r.name); }
+function renderDirty() {
+  const d = isDirty();
+  $('save').disabled = !d; $('undo').disabled = !d;
+  const n = changedRooms().length;
+  $('dirty').textContent = d ? (n ? `Endret: ${n} rom` : 'Endret') + ' (ikke lagret)' : '';
+}
+window.addEventListener('beforeunload', e => { if (isDirty()) { e.preventDefault(); e.returnValue = ''; } });
+
+$('save').onclick = async () => {
+  const v = validateTheme(S.theme);
+  if (v.errors.length) { toast('Kan ikke lagre, temaet har feil: ' + v.errors.slice(0, 3).join(' · '), 'bad'); return; }
+  const rooms = changedRooms();
+  const msg = `Empire Editor: ${S.theme.name}${rooms.length ? ' – ' + rooms.join(', ') : ''}`;
+  $('save').disabled = true; $('save').textContent = 'Lagrer…';
+  try {
+    const res = await GH.put(S.path, fmt(S.theme) + '\n', S.sha, msg);
+    S.sha = res.content.sha; S.orig = JSON.stringify(S.theme);
+    S.origRooms = Object.fromEntries(S.theme.rooms.map(r => [r.id, JSON.stringify(r)]));
+    toast('Lagret til GitHub. Vercel publiserer om ca. ett minutt.', 'ok');
+  } catch (e) {
+    if (e.status === 409 || /sha/i.test(e.message)) toast('Fila er endret på GitHub siden du lastet den. Kopier endringene dine, last inn spillet på nytt og prøv igjen.', 'bad');
+    else toast('Lagring feilet: ' + e.message, 'bad');
+  } finally { $('save').textContent = 'Lagre til GitHub'; renderAll(); }
+};
+</script>
+</body>
+</html>
