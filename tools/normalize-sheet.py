@@ -11,8 +11,10 @@ everything else, and builds equal frames with the feet midpoint centred and the 
 the same baseline. The result is scaled to the requested frame height and saved as WebP.
 
     python3 tools/normalize-sheet.py in.png out.webp --frames 8 [--height 640] [--quality 85]
+    python3 tools/normalize-sheet.py in.png out.webp --frames 24 --columns 6   # 6×4 grid in and out
 
-Prints the frame size to put in theme.json (frames, frameAspect).
+With --columns the input is read as a grid (left to right, top to bottom) and the output is
+written as the same grid. Prints the values to put in theme.json (frames, columns, rows, frameAspect).
 Requires: Pillow, numpy, scipy.
 """
 import argparse, os
@@ -23,6 +25,7 @@ from scipy import ndimage
 ap = argparse.ArgumentParser()
 ap.add_argument("src"); ap.add_argument("out")
 ap.add_argument("--frames", type=int, required=True, help="number of figures in the sheet")
+ap.add_argument("--columns", type=int, default=0, help="grid sheet: frames per row (input and output)")
 ap.add_argument("--height", type=int, default=640, help="output frame height in px")
 ap.add_argument("--quality", type=int, default=85)
 ap.add_argument("--pad", type=int, default=20, help="transparent margin above/below in source px")
@@ -30,6 +33,13 @@ ap.add_argument("--max-width", type=int, default=4096, help="warn when the sheet
 a = ap.parse_args()
 
 arr = np.array(Image.open(a.src).convert("RGBA"))
+GC = a.columns or a.frames                       # grid columns
+GR = -(-a.frames // GC)                          # grid rows
+if GR > 1:
+    # Lay the grid rows side by side, so the rest works on one long row of figures.
+    bh = arr.shape[0] // GR
+    arr = np.concatenate([arr[r * bh:(r + 1) * bh] for r in range(GR)], axis=1)
+SLOTS = GC * GR
 al = arr[:, :, 3]
 H, W = al.shape
 if al.min() == 255:
@@ -47,10 +57,11 @@ for x, v in enumerate(cols):
 if inside: segs.append((s, W - 1))
 segs = [g for g in segs if g[1] - g[0] >= 4]
 # Legs of one figure may be separate pieces: group them around the expected frame slots.
-slot = W / a.frames
-groups = [[] for _ in range(a.frames)]
+slot = W / SLOTS
+groups = [[] for _ in range(SLOTS)]
 for x0, x1 in segs:
-    groups[min(a.frames - 1, int(((x0 + x1) / 2) // slot))].append((x0, x1))
+    groups[min(SLOTS - 1, int(((x0 + x1) / 2) // slot))].append((x0, x1))
+groups = groups[:a.frames]
 if any(not g for g in groups):
     raise SystemExit(f"Could not find legs in every one of the {a.frames} frame slots. Is --frames right?")
 centers = [(min(x0 for x0, _ in g) + max(x1 for _, x1 in g)) / 2 for g in groups]   # feet midpoint
@@ -79,9 +90,13 @@ for i, c in enumerate(centers):
 
 scale = a.height / FH
 fw = max(1, round(FW * scale))
-out = sheet.resize((fw * a.frames, a.height), Image.LANCZOS)
+strip = sheet.resize((fw * a.frames, a.height), Image.LANCZOS)
+out = Image.new("RGBA", (fw * GC, a.height * GR), (0, 0, 0, 0))
+for i in range(a.frames):
+    out.alpha_composite(strip.crop((i * fw, 0, (i + 1) * fw, a.height)), ((i % GC) * fw, (i // GC) * a.height))
 out.save(a.out, "WEBP", quality=a.quality, alpha_quality=90, method=6)
-print(f"{a.frames} frames of {fw} x {a.height} (sheet {fw * a.frames} x {a.height}), {os.path.getsize(a.out) // 1000} kB")
-print(f'theme.json:  "frames": {a.frames}, "frameAspect": "{fw} / {a.height}"')
-if fw * a.frames > a.max_width:
-    print(f"WARNING: sheet is wider than {a.max_width} px. Use a lower --height.")
+print(f"{a.frames} frames of {fw} x {a.height} in {GC}×{GR} (sheet {out.width} x {out.height}), {os.path.getsize(a.out) // 1000} kB")
+grid = f', "columns": {GC}, "rows": {GR}' if GR > 1 else ''
+print(f'theme.json:  "frames": {a.frames}{grid}, "frameAspect": "{fw} / {a.height}"')
+if out.width > a.max_width or out.height > a.max_width:
+    print(f"WARNING: sheet is larger than {a.max_width} px. Use a lower --height or more rows.")

@@ -101,4 +101,9 @@ export function validateTheme(theme) {
 
 function checkPlacement(v, where, err) {
   for (const k of ['x', 'y', 'h']) if (typeof v[k] !== 'number') err(`${where}: plassering mangler «${k}» (prosent av scenen)`);
+  if (v.columns != null || v.rows != null) {
+    const n = v.frames || 1, c = v.columns || Math.ceil(n / (v.rows || 1)), r = v.rows || Math.ceil(n / c);
+    if (!(c >= 1 && r >= 1 && Number.isInteger(c) && Number.isInteger(r))) err(`${where}: «columns» og «rows» må være hele tall ≥ 1`);
+    else if (c * r < n) err(`${where}: ${n} bilder får ikke plass i ${c}×${r} rutenett`);
+  }
 }

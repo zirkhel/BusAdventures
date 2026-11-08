@@ -79,7 +79,7 @@ z           → z-index 10 + z
 
 | Type | Felter | Oppførsel |
 |---|---|---|
-| `sprite` | `src`, `frames`, `fps`, valgfri `frameAspect` (f.eks. `"1 / 1"`) og `blend` (0–1) | Én **horisontal rad** med like brede rammer. Vises med `background-size: frames×100% 100%`. Ramme *i* vises med `background-position-x = i/(frames−1) × 100 %`. |
+| `sprite` | `src`, `frames`, `fps`, valgfri `columns`, `rows`, `frameAspect` (f.eks. `"1 / 1"`) og `blend` (0–1) | Uten `columns`/`rows`: én **horisontal rad** med like brede rammer, som før. Med `columns`/`rows`: **rutenett**, lest fra venstre mot høyre og ovenfra og ned. Vises med `background-size: columns×100% rows×100%`. Ramme *i* ligger i kolonne `i % columns`, rad `floor(i / columns)`. Mangler ett av feltene, regnes det ut fra `frames`. |
 | `image` | `src` | `<img>`: stillbilde, SVG, animert WebP/GIF (spiller i egen løkke, uten kontroll) |
 | `video` | `src`, valgfri `loop: false` | `<video>` autoplay, **alltid muted**, playsinline, en kilde (ingen fallback) |
 | `emoji` | `char` | Tekst, størrelse `h × 0.8` cqh |
@@ -91,7 +91,8 @@ z           → z-index 10 + z
 - `blend` (valgfri): andelen av hver ramme som brukes til å tone over i neste. `0.5` = posen står stille halve tiden, og tones over resten. Passer for ark med separate poser (f.eks. Lola i XXX Empire: `fps` 2.5, `blend` 0.5). Uten `blend` byttes rammene brått, som før. Ekte mellombilder (16–24 rammer) gir fortsatt best bevegelse.
 - Hver figur starter på et tilfeldig tidspunkt (opptil 1 s forskjøvet), så like figurer ikke går i takt.
 - Animasjonen pauses når scenen er utenfor skjermen (IntersectionObserver) og når fanen er skjult (nettleseren stopper rAF).
-- Ikke støttet: flere rader eller rutenett, ulik tid per ramme, ping-pong, engangsanimasjoner, ulike animasjoner per tilstand (idle/angrep) og lyd.
+- Rutenett: `"frames": 24, "columns": 6, "rows": 4` (se §2.2). Validatoren melder feil hvis rammene ikke får plass i rutenettet.
+- Ikke støttet: ulik tid per ramme, ping-pong, engangsanimasjoner, ulike animasjoner per tilstand (idle/angrep) og lyd.
 - **I dag:** 6 rammer per figur, `fps` 3–8.
   - Fighter: rammer på 128 × 192 (ark 768 × 192).
   - Quest og Space: 160 × 160 (ark 960 × 160).
@@ -161,8 +162,8 @@ Målet er at en fil fra ComfyUI (eller en tegner) kan legges rett inn og vises r
 | Egenskap | Krav |
 |---|---|
 | Fil | WebP med alfa. Lossless, eller lossy med full alfakvalitet. PNG er tillatt mens man jobber |
-| Oppsett | **Én horisontal rad**, like store rammer, ingen luft mellom rammer |
-| Arkbredde | **nøyaktig** `frames × rammebredde` (heltall) |
+| Oppsett | **Én horisontal rad** (eldre ark, opptil ca. 12 rammer) eller **rutenett** med `columns`/`rows`. Like store rammer, ingen luft mellom rammer |
+| Arkstørrelse | **nøyaktig** `columns × rammebredde` bred og `rows × rammehøyde` høy (heltall). Én rad: `rows` = 1 |
 | Rammestørrelse | **384 × 384** som standard, **512 × 512** for store figurer (h ≥ 60) **[må testes]**. Høye figurer kan bruke 320 × 480 (2:3) |
 | Antall rammer | 6–12. Arkbredden skal være ≤ 4096 px (f.eks. 10 × 384, 8 × 512) **[må testes]** |
 | Bildefrekvens | 6–10 fps for tomgang. Rammene må gi en sømløs løkke (siste → første) |
@@ -173,12 +174,27 @@ Målet er at en fil fra ComfyUI (eller en tegner) kan legges rett inn og vises r
 | Lys | Fra oppe til venstre, likt for alle figurer i samme spill |
 | Perspektiv | Sidevisning eller lett tre-kvart, kamera i øyehøyde, ingen kamerabevegelse eller zoom |
 | Ramme 0 | Den beste «portrett-rammen». Den brukes på kortet, så hele figuren må synes |
-| Filstørrelse | ≤ 300 kB per ark **[må testes]** |
+| Filstørrelse | ≤ 300 kB per ark med én rad. Rutenett med 24 rammer: ≤ 600 kB **[må testes]** |
 | I `theme.json` | `frames`, `fps` og helst `frameAspect` (f.eks. `"1 / 1"`), så figuren ikke hopper når den lastes |
 
 **Hvorfor 384–512:** En figur med `h` 60 er ca. 140 CSS-px høy på telefon, altså ca. 415 fysiske piksler på 3×. Dagens rammer på 160–192 px blir derfor oppskalert 2–3 ganger, og det synes på retina-skjermer.
 
 **Minnebudsjett [må testes]:** Et ark bruker bredde × høyde × 4 byte i minnet når det er dekodet (3072 × 384 ≈ 4,7 MB). Lista kan vise alle rommene, så hold summen for alle figurarkene i ett spill under ca. 100 MB. 18 figurer × 8 rammer × 384 ≈ 85 MB.
+
+#### XXX Empire: standard for figurer (fra 8. nov)
+
+| Egenskap | Krav |
+|---|---|
+| Rammer | **24** per animasjon, ekte mellombilder (ikke separate poser) |
+| Rutenett | **6 kolonner × 4 rader** |
+| Avspilling | **8 fps**, altså 3 sekunder per løkke. Ramme 23 → 0 må være sømløs |
+| Rammehøyde | 448–512 px. 512 gir f.eks. rammer på ca. 270 × 512 og et ark på 1620 × 2048 |
+| I `theme.json` | `"frames": 24, "columns": 6, "rows": 4, "fps": 8, "frameAspect": "<b> / <h>"` |
+| Verktøy | `python3 tools/normalize-sheet.py inn.png ut.webp --frames 24 --columns 6 --height 512 --quality 80` leser et 6 × 4-ark, retter føtter og rammer og skriver et nytt 6 × 4-ark. Det skriver også ut verdiene til `theme.json` |
+
+Minne: et 1620 × 2048-ark er ca. 13 MB dekodet. Har alle 24 figurene i XXX Empire slike ark, blir summen over 100 MB-budsjettet over hvis alle vises samtidig. Følg med på mobil, og gå ned til 448 px rammehøyde om nødvendig.
+
+Eksisterende ark med én rad (Fighter, Quest, Space, Lola) virker som før og er ikke endret.
 
 ### 2.3 Gear (ting i rommet) **[standard]**
 

@@ -7,7 +7,9 @@
 //   flip  — mirror horizontally
 //
 // Media types (the "asset contract"):
-//   { type:'sprite', src, frames, fps }   horizontal strip spritesheet (default when frames is set)
+//   { type:'sprite', src, frames, fps }   spritesheet (default when frames is set). One horizontal row
+//                                         by default; add columns (and/or rows) for a grid, read left to
+//                                         right, top to bottom, e.g. frames 24, columns 6, rows 4
 //                                         optional blend: 0–1 = share of each frame spent cross-fading
 //                                         into the next (good for sheets of separate poses)
 //   { type:'image',  src }                still image or animated WebP/GIF/SVG
@@ -35,15 +37,15 @@ function startLoop() {
         const e = t * t * (3 - 2 * t);
         if (frame !== s.frame) {
           s.frame = frame;
-          s.a.style.backgroundPositionX = framePos(frame, s.frames);
-          s.b.style.backgroundPositionX = framePos((frame + 1) % s.frames, s.frames);
+          paintFrame(s.a, frame, s.g);
+          paintFrame(s.b, (frame + 1) % s.frames, s.g);
         }
         // Overlap the fades so the figure never turns see-through halfway.
         s.a.style.opacity = Math.min(1, 2 * (1 - e)).toFixed(3);
         s.b.style.opacity = Math.min(1, 2 * e).toFixed(3);
       } else if (frame !== s.frame) {
         s.frame = frame;
-        s.el.style.backgroundPositionX = framePos(frame, s.frames);
+        paintFrame(s.el, frame, s.g);
       }
     }
     requestAnimationFrame(tick);
@@ -51,7 +53,20 @@ function startLoop() {
   requestAnimationFrame(tick);
 }
 
-function framePos(frame, frames) { return frames > 1 ? `${(frame / (frames - 1)) * 100}%` : '0%'; }
+/** Sheet layout. Without columns/rows the sheet is one horizontal row (the original format). */
+export function sheetGrid(m) {
+  const frames = Math.max(1, m.frames || 1);
+  let cols = m.columns, rows = m.rows;
+  if (!cols && rows) cols = Math.ceil(frames / rows);
+  if (!cols) cols = frames;
+  if (!rows) rows = Math.ceil(frames / cols);
+  return { frames, cols, rows };
+}
+
+function paintFrame(node, frame, g) {
+  const c = frame % g.cols, r = Math.floor(frame / g.cols);
+  node.style.backgroundPosition = `${g.cols > 1 ? (c / (g.cols - 1)) * 100 : 0}% ${g.rows > 1 ? (r / (g.rows - 1)) * 100 : 0}%`;
+}
 
 const io = typeof IntersectionObserver !== 'undefined'
   ? new IntersectionObserver(entries => {
@@ -79,10 +94,12 @@ export function makeLayer(m, asset, extraClass = '') {
   if (type === 'sprite') {
     el = document.createElement('div');
     el.className = 'emp-layer emp-sprite ' + extraClass;
-    const blend = m.blend > 0 && m.frames > 1 ? Math.min(1, m.blend) : 0;
+    const g = sheetGrid(m);
+    const blend = m.blend > 0 && g.frames > 1 ? Math.min(1, m.blend) : 0;
     const paint = node => {
       node.style.backgroundImage = `url("${asset(m.src)}")`;
-      node.style.backgroundSize = `${(m.frames || 1) * 100}% 100%`;
+      node.style.backgroundSize = `${g.cols * 100}% ${g.rows * 100}%`;
+      paintFrame(node, 0, g);
     };
     let a = null, b = null;
     if (blend) {
@@ -93,10 +110,10 @@ export function makeLayer(m, asset, extraClass = '') {
     if (m.frameAspect) el.style.aspectRatio = m.frameAspect;
     else {
       const img = new Image();
-      img.onload = () => { el.style.aspectRatio = `${img.naturalWidth / (m.frames || 1)} / ${img.naturalHeight}`; };
+      img.onload = () => { el.style.aspectRatio = `${img.naturalWidth / g.cols} / ${img.naturalHeight / g.rows}`; };
       img.src = asset(m.src);
     }
-    const s = { el, a, b, blend, frames: m.frames || 1, fps: m.fps || 8, t0: performance.now() - Math.random() * 1000, frame: -1, visible: true };
+    const s = { el, a, b, g, blend, frames: g.frames, fps: m.fps || 8, t0: performance.now() - Math.random() * 1000, frame: -1, visible: true };
     sprites.add(s); io?.observe(el); startLoop();
   } else if (type === 'video') {
     el = document.createElement('video');
@@ -182,7 +199,8 @@ export function portrait(ch, asset) {
     canvas.className = 'emp-portrait-canvas';
     el.appendChild(canvas);
     if (m.flip) el.classList.add('emp-flip');
-    firstFrame(asset(m.src), m.frames || 1).then(f => {
+    const g = sheetGrid(m);
+    firstFrame(asset(m.src), g.cols, g.rows).then(f => {
       canvas.width = f.w; canvas.height = f.h;
       canvas.getContext('2d').drawImage(f.img, f.sx, f.sy, f.w, f.h, 0, 0, f.w, f.h);
     }).catch(() => {});
@@ -192,11 +210,11 @@ export function portrait(ch, asset) {
 
 const frameCache = new Map();
 /** Load a spritesheet once and find the box around the visible pixels of frame 0. */
-function firstFrame(src, frames) {
+function firstFrame(src, cols, rows) {
   if (!frameCache.has(src)) frameCache.set(src, new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      const fw = Math.floor(img.naturalWidth / frames), fh = img.naturalHeight;
+      const fw = Math.floor(img.naturalWidth / cols), fh = Math.floor(img.naturalHeight / rows);
       let box = { sx: 0, sy: 0, w: fw, h: fh };
       try {
         const c = document.createElement('canvas'); c.width = fw; c.height = fh;
