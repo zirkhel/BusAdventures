@@ -81,7 +81,7 @@
           "rarity": "common",
           "role": "Spectator",
           "bio": "Has watched every fight in this alley since 1987. Nobody knows what he says. Everybody agrees with him.",
-          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 8, "fps": 6, "x": 84, "y": 84, "h": 36, "z": 3, "frameAspect": "324 / 640" }
+          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 8, "fps": 6, "x": 78, "y": 84, "h": 36, "z": 3, "frameAspect": "324 / 640" }
         },
         {
           "id": "alley.knuckles",
@@ -106,39 +106,21 @@
           "name": "Boombox",
           "rarity": "common",
           "effect": "Every fight needs a soundtrack.",
-          "visual": {
-            "x": 11,
-            "y": 86,
-            "h": 12,
-            "z": 5,
-            "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-boombox.svg" }, { "minLevel": 5, "src": "assets/upgrades/alley-boombox-deluxe.svg" }]
-          }
+          "visual": { "x": 12, "y": 87, "h": 13, "z": 5, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-boombox.webp" }] }
         },
         {
           "id": "alley.bookie",
           "name": "Bookmaker Stall",
           "rarity": "rare",
           "effect": "Somebody has to take the bets.",
-          "visual": {
-            "x": 88,
-            "y": 81,
-            "h": 30,
-            "z": 2,
-            "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-bookie.svg" }, { "minLevel": 5, "src": "assets/upgrades/alley-bookie-deluxe.svg" }]
-          }
+          "visual": { "x": 91, "y": 82, "h": 33, "z": 2, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-bookie.webp" }] }
         },
         {
           "id": "alley.neon",
           "name": "Neon Sign",
           "rarity": "epic",
-          "effect": "FIGHTS TONIGHT. Every night, technically.",
-          "visual": {
-            "x": 50,
-            "y": 30,
-            "h": 18,
-            "z": 1,
-            "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-neon.svg" }, { "minLevel": 5, "src": "assets/upgrades/alley-neon-deluxe.svg" }]
-          }
+          "effect": "FIGHT NIGHT. Every night, technically.",
+          "visual": { "x": 50, "y": 34, "h": 24, "z": 1, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-neon.webp" }] }
         }
       ],
       "events": [
