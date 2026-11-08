@@ -530,25 +530,40 @@ class EmpireApp {
     const btn = (kind, id) => `[data-act="level"][data-kind="${kind}"][data-id="${id}"]`;
     if (!E.builtRooms().length) {
       const first = E.roomList[0];
-      return { text: `👉 Tap “Build” to open ${first.name}. It starts earning right away.`, target: `[data-act="build"][data-id="${first.id}"]` };
+      return { text: `👉 Build ${first.name}. It starts earning right away`, target: `[data-act="build"][data-id="${first.id}"]` };
     }
+    const gain = n => `+${this.sym}${fmt(n, { decimals: true })}/s`;
+    // Hiring first: a new face in the room is the most fun thing to point at.
     for (const room of E.builtRooms()) for (const c of room.characters) {
       const q = E.quoteLevel({ kind: 'character', id: c.id });
-      if (q.ok && q.action === 'unlock') return { text: `👉 ${c.name} can be hired in ${room.name}. Tap here.`, target: btn('character', c.id), roomId: room.id };
+      if (q.ok && q.action === 'unlock') return { text: `👉 Hire ${c.name} in ${room.name} · ${gain(E.previewGain(q).income)}`, target: btn('character', c.id), roomId: room.id };
     }
     const next = E.roomList.find(r => !E.isBuilt(r.id));
-    if (next && E.quoteBuild(next.id).ok) return { text: `👉 You can afford ${next.name}. Tap to go there and build it.`, target: `[data-act="build"][data-id="${next.id}"]` };
+    if (next && E.quoteBuild(next.id).ok) return { text: `👉 Build ${next.name} · ${next.price ? this.money(next.price) : 'free'}`, target: `[data-act="build"][data-id="${next.id}"]` };
+    // Otherwise the affordable level-up that gives the most income per coin.
+    let best = null;
     for (const room of E.builtRooms()) {
-      for (const tg of [...room.characters.map(c => ({ kind: 'character', id: c.id })), { kind: 'room', id: room.id }, ...room.upgrades.map(u => ({ kind: 'upgrade', id: u.id }))]) {
-        if (E.quoteLevel(tg).ok) return { text: `👉 ${room.name} can be upgraded. Tap here, then a green button.`, target: btn(tg.kind, tg.id), roomId: room.id };
+      for (const tg of [{ kind: 'room', id: room.id }, ...room.characters.map(c => ({ kind: 'character', id: c.id })), ...room.upgrades.map(u => ({ kind: 'upgrade', id: u.id }))]) {
+        const q = E.quoteLevel(tg);
+        if (!q.ok) continue;
+        const g = E.previewGain(tg).income;
+        const score = g / Math.max(q.coins, 1);
+        if (!best || score > best.score) best = { tg, q, g, score, room };
       }
     }
-    if (E.state.coins >= price) return { text: `👉 Tap “${pack}” (top right). Packs give fragments for hiring and upgrades.`, target: '[data-act="pack"]' };
-    for (const id of Object.keys(E.events)) if (E.eventStatus(id).ok) return { text: `👉 ${E.events[id].name} is open. Try your luck!`, target: `[data-act="event"][data-id="${id}"]`, roomId: E.events[id].roomId };
-    if (E.prestigeStatus().available) return { text: `👉 ${this.theme.prestige.name} is ready: start over with a permanent bonus.`, target: '[data-act="prestige"]' };
+    if (best) {
+      const { tg, q, g, room } = best;
+      const what = tg.kind === 'room' ? `Raise ${room.name} to level ${q.to}`
+        : tg.kind === 'character' ? `Level up ${E.characters[tg.id].name} in ${room.name}`
+        : `${q.action === 'unlock' ? 'Build' : 'Upgrade'} ${E.upgrades[tg.id].name} in ${room.name}`;
+      return { text: `👉 ${what} · ${gain(g)}`, target: btn(tg.kind, tg.id), roomId: room.id };
+    }
+    if (E.state.coins >= price) return { text: `👉 Open a ${pack} (top right) for new cards`, target: '[data-act="pack"]' };
+    for (const id of Object.keys(E.events)) if (E.eventStatus(id).ok) return { text: `👉 ${E.events[id].name} is ready in ${E.rooms[E.events[id].roomId].name}`, target: `[data-act="event"][data-id="${id}"]`, roomId: E.events[id].roomId };
+    if (E.prestigeStatus().available) return { text: `👉 ${this.theme.prestige.name} is ready: start over with a permanent bonus`, target: '[data-act="prestige"]' };
     const income = E.totalIncome();
     const wait = income > 0 ? (price - E.state.coins) / income : 0;
-    return { text: `⏳ Saving for the next ${pack} (${fmtTime(wait)}). Cash keeps coming, even with the game closed.`, target: null };
+    return { text: `⏳ Next ${pack} in ${fmtTime(wait)}. Cash keeps coming, even with the game closed`, target: null };
   }
 
   updateCoach(price) {
@@ -585,7 +600,7 @@ class EmpireApp {
         <li><b>Hire all three</b> in a room for a big bonus, then save up for the next room.</li>
         <li>Later: tournaments, and ${esc(t.prestige?.name || 'prestige')}: start over with a permanent bonus.</li>
       </ol>
-      <p class="emp-muted">Every upgrade shows what it adds, like <b class="emp-gain-inline">+$2.4/s</b>. A <span class="emp-help-green">green button</span> means you can do it now. Not sure? Tap the line under the ${cash} counter.</p>
+      <p class="emp-muted">Every upgrade shows what it adds, like <b class="emp-gain-inline">+$2.4/s</b>. A <span class="emp-help-green">green button</span> means you can do it now. Not sure? Tap the 👉 line at the top.</p>
       <div class="emp-modal-actions"><button class="emp-btn emp-accent" data-act="close">Let's go</button></div>`);
   }
 
