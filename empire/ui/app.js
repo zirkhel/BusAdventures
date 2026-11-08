@@ -31,6 +31,8 @@ class EmpireApp {
     this.asset = src => new URL(src, themeUrl).href;
     this.sym = theme.currency?.symbol ?? '$';
     this.sceneCache = {};
+    this.openRoomId = null;      // null = room list, otherwise the room's upgrade page
+    this.listScroll = 0;
     this.justUnlocked = new Set();
   }
 
@@ -41,6 +43,9 @@ class EmpireApp {
     this.empire = empire;
     this.applyPalette();
     this.buildShell();
+    const fromHash = decodeURIComponent(location.hash.slice(1));
+    if (fromHash && this.empire.isBuilt(fromHash)) { this.openRoomId = fromHash; history.replaceState({ room: fromHash }, ''); }
+    addEventListener('popstate', e => this.showView(e.state?.room || null));
     this.renderRooms();
     if (offline && offline.earned > 0 && offline.awaySeconds > AWAY_S) this.showWelcomeBack(offline);
     else if (isNew) this.showHelp();
@@ -108,6 +113,7 @@ class EmpireApp {
   }
 
   onClick(e) {
+    if (this.openRoomId && e.target.closest('.emp-back')) { e.preventDefault(); return this.closeRoom(); }
     const btn = e.target.closest('[data-act]');
     if (!btn || btn.disabled) return;
     const { act, kind, id } = btn.dataset;
@@ -134,6 +140,8 @@ class EmpireApp {
       return;
     }
     if (act === 'event') return this.startEvent(id);
+    if (act === 'open-room') return this.openRoom(id);
+    if (act === 'close-room') return this.closeRoom();
     if (act === 'prestige') return this.showPrestige();
     if (act === 'prestige-confirm') return this.confirmPrestige();
     if (act === 'prestige-do') return this.doPrestige();
@@ -155,16 +163,46 @@ class EmpireApp {
 
   // ──────────────────────────────── rooms ─────────────────────────────────
 
+  // ───────────────────────────── navigation ───────────────────────────────
+  // The list shows only the scenes, one under the other. Tapping a room opens its own page
+  // with all upgrades. The phone's back gesture closes the page (history entry).
+
+  openRoom(roomId) {
+    if (!this.empire.isBuilt(roomId)) return;
+    this.listScroll = scrollY;
+    history.pushState({ room: roomId }, '', '#' + encodeURIComponent(roomId));
+    this.showView(roomId);
+  }
+
+  closeRoom() {
+    if (history.state?.room) history.back();
+    else { history.replaceState(null, '', location.pathname + location.search); this.showView(null); }
+  }
+
+  showView(roomId) {
+    this.openRoomId = roomId && this.empire.isBuilt(roomId) ? roomId : null;
+    this.renderRooms();
+    if (this.openRoomId) scrollTo(0, 0);
+    else requestAnimationFrame(() => scrollTo(0, this.listScroll));
+  }
+
   renderRooms() {
     this.roomsEl.innerHTML = '';
     const E = this.empire;
+    if (this.openRoomId && !E.isBuilt(this.openRoomId)) this.openRoomId = null;
+    this.root.classList.toggle('emp-on-page', !!this.openRoomId);
+    this.root.querySelector('.emp-back')?.setAttribute('aria-label', this.openRoomId ? 'Back to all rooms' : 'Back to Bus Adventures');
+    if (this.openRoomId) {
+      const card = document.createElement('section');
+      card.className = 'emp-room emp-room-page'; card.dataset.room = this.openRoomId;
+      this.roomsEl.appendChild(card);
+      this.renderRoom(this.openRoomId, card);
+      return;
+    }
     let shownLocked = 0;
     for (const room of E.roomList) {
       if (E.isBuilt(room.id)) {
-        const card = document.createElement('section');
-        card.className = 'emp-room'; card.dataset.room = room.id;
-        this.roomsEl.appendChild(card);
-        this.renderRoom(room.id, card);
+        this.roomsEl.appendChild(this.roomTile(room));
       } else if (shownLocked < 2) {
         this.roomsEl.appendChild(this.lockedRoomCard(room));
         shownLocked++;
@@ -202,15 +240,49 @@ class EmpireApp {
     return '';
   }
 
-  renderRoom(roomId, card = this.roomsEl.querySelector(`.emp-room[data-room="${roomId}"]`)) {
-    if (!card) return;
+  /** List view: just the scene with a small label. The whole tile opens the room page. */
+  roomTile(room) {
+    const E = this.empire;
+    const tile = document.createElement('section');
+    tile.className = 'emp-room emp-room-tile';
+    tile.dataset.room = room.id; tile.dataset.act = 'open-room'; tile.dataset.id = room.id;
+    tile.innerHTML = `
+      <div class="emp-scene-slot"></div>
+      <div class="emp-tile-label">
+        <div><h2>${esc(room.name)}</h2>
+          <div class="emp-tile-meta">Lv ${E.roomLevel(room.id)} · crew ${room.characters.filter(c => E.charLevel(c.id)).length}/3 · <span data-bind="room-income" data-id="${room.id}"></span></div></div>
+        <span class="emp-tile-badge" data-bind="room-badge" data-id="${room.id}"></span>
+      </div>`;
+    this.attachScene(room, tile.querySelector('.emp-scene-slot'));
+    return tile;
+  }
+
+  attachScene(room, slot) {
+    const sig = sceneSignature(room, this.empire);
+    const cached = this.sceneCache[room.id];
+    if (cached && cached.sig === sig) { slot.replaceWith(cached.el); return; }
+    const sceneEl = document.createElement('div');
+    slot.replaceWith(sceneEl);
+    renderScene(sceneEl, room, this.empire, this.asset, { justUnlocked: this.justUnlocked });
+    this.sceneCache[room.id] = { el: sceneEl, sig };
+    this.justUnlocked.clear();
+  }
+
+  /** Something in this room can be done right now (hire, level up, event). */
+  roomHasAction(roomId) {
     const E = this.empire, room = E.rooms[roomId];
-    const sig = sceneSignature(room, E);
-    const cached = this.sceneCache[roomId];
+    const targets = [{ kind: 'room', id: roomId }, ...room.characters.map(c => ({ kind: 'character', id: c.id })), ...room.upgrades.map(u => ({ kind: 'upgrade', id: u.id }))];
+    return targets.some(t => E.quoteLevel(t).ok) || (room.events || []).some(ev => E.eventStatus(ev.id).ok);
+  }
+
+  renderRoom(roomId, card = this.roomsEl.querySelector(`.emp-room-page[data-room="${roomId}"]`)) {
+    if (!card) { if (!this.openRoomId) this.renderRooms(); return; }
+    const E = this.empire, room = E.rooms[roomId];
     const rar = this.theme.economy.rarities;
 
     card.innerHTML = `
       <header class="emp-room-head">
+        <button class="emp-page-back" data-act="close-room">‹ All rooms</button>
         <h2>${esc(room.name)}</h2>
         <span class="emp-room-income" data-bind="room-income" data-id="${roomId}"></span>
       </header>
@@ -221,15 +293,7 @@ class EmpireApp {
       <div class="emp-upgrades">${room.upgrades.map(u => this.levelRow('upgrade', u.id, u.name, '', u.effect)).join('')}</div>
       ${(room.events || []).map(ev => this.eventRow(ev)).join('')}`;
 
-    const slot = card.querySelector('.emp-scene-slot');
-    if (cached && cached.sig === sig) slot.replaceWith(cached.el);
-    else {
-      const sceneEl = document.createElement('div');
-      slot.replaceWith(sceneEl);
-      renderScene(sceneEl, room, E, this.asset, { justUnlocked: this.justUnlocked });
-      this.sceneCache[roomId] = { el: sceneEl, sig };
-      this.justUnlocked.clear();
-    }
+    this.attachScene(room, card.querySelector('.emp-scene-slot'));
     card.querySelectorAll('[data-portrait]').forEach(el => el.replaceWith(portrait(E.characters[el.dataset.portrait], this.asset)));
     this.refresh();
   }
@@ -291,6 +355,11 @@ class EmpireApp {
     this.updateCoach(price);
     set('[data-bind="room-income"]', el => el.textContent = '+' + this.sym + fmt(E.roomIncome(el.dataset.id), { decimals: true }) + '/s');
 
+    set('[data-bind="room-badge"]', el => {
+      const on = this.roomHasAction(el.dataset.id);
+      el.textContent = on ? 'Upgrade ›' : '›';
+      el.classList.toggle('on', on);
+    });
     set('[data-q="build"]', el => { el.disabled = !E.quoteBuild(el.dataset.id).ok; });
     set('[data-q="level"]', el => {
       const q = E.quoteLevel({ kind: el.dataset.kind, id: el.dataset.id });
@@ -341,17 +410,17 @@ class EmpireApp {
     }
     for (const room of E.builtRooms()) for (const c of room.characters) {
       const q = E.quoteLevel({ kind: 'character', id: c.id });
-      if (q.ok && q.action === 'unlock') return { text: `👉 ${c.name} has enough fragments. Tap “Hire”!`, target: btn('character', c.id) };
+      if (q.ok && q.action === 'unlock') return { text: `👉 ${c.name} can be hired in ${room.name}. Tap here.`, target: btn('character', c.id), roomId: room.id };
     }
     const next = E.roomList.find(r => !E.isBuilt(r.id));
     if (next && E.quoteBuild(next.id).ok) return { text: `👉 You can afford ${next.name}. Tap to go there and build it.`, target: `[data-act="build"][data-id="${next.id}"]` };
     for (const room of E.builtRooms()) {
       for (const tg of [...room.characters.map(c => ({ kind: 'character', id: c.id })), { kind: 'room', id: room.id }, ...room.upgrades.map(u => ({ kind: 'upgrade', id: u.id }))]) {
-        if (E.quoteLevel(tg).ok) return { text: `👉 Green buttons are ready. They spend cash + fragments and raise your income.`, target: btn(tg.kind, tg.id) };
+        if (E.quoteLevel(tg).ok) return { text: `👉 ${room.name} can be upgraded. Tap here, then a green button.`, target: btn(tg.kind, tg.id), roomId: room.id };
       }
     }
     if (E.state.coins >= price) return { text: `👉 Tap “${pack}” (top right). Packs give fragments for hiring and upgrades.`, target: '[data-act="pack"]' };
-    for (const id of Object.keys(E.events)) if (E.eventStatus(id).ok) return { text: `👉 ${E.events[id].name} is open. Try your luck!`, target: `[data-act="event"][data-id="${id}"]` };
+    for (const id of Object.keys(E.events)) if (E.eventStatus(id).ok) return { text: `👉 ${E.events[id].name} is open. Try your luck!`, target: `[data-act="event"][data-id="${id}"]`, roomId: E.events[id].roomId };
     if (E.prestigeStatus().available) return { text: `👉 ${this.theme.prestige.name} is ready: start over with a permanent bonus.`, target: '[data-act="prestige"]' };
     const income = E.totalIncome();
     const wait = income > 0 ? (price - E.state.coins) / income : 0;
@@ -361,12 +430,20 @@ class EmpireApp {
   updateCoach(price) {
     const step = this.coachStep(price);
     this.coachTarget = step.target;
+    this.coachRoom = step.roomId || null;
     if (this.coachEl.textContent !== step.text) this.coachEl.textContent = step.text;
     this.coachEl.classList.toggle('emp-coach-go', !!step.target);
   }
 
   followCoach() {
-    const el = this.coachTarget && this.root.querySelector(this.coachTarget);
+    if (!this.coachTarget) return this.showHelp();
+    const inHud = this.coachTarget === '[data-act="pack"]';
+    if (!inHud && (this.coachRoom || null) !== this.openRoomId) {
+      if (this.coachRoom) this.openRoom(this.coachRoom); else this.closeRoom();
+      setTimeout(() => this.followCoach(), 350);   // let the view switch (and scroll restore) settle
+      return;
+    }
+    const el = this.root.querySelector(this.coachTarget);
     if (!el) return this.showHelp();
     if (!el.closest('.emp-hud')) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.classList.remove('emp-flash'); void el.offsetWidth; el.classList.add('emp-flash');

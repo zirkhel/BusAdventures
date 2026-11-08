@@ -107,6 +107,22 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-event { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 12px 12px; border-top: 1px solid #ffffff0c; background: #f1c40f0d; }
 .emp-event-name { font-weight: 600; font-size: 14px; }
 
+/* list view: scenes only */
+.emp-room-tile { position: relative; cursor: pointer; }
+.emp-room-tile:active { transform: scale(.99); }
+.emp-tile-label {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px;
+  padding: 26px 12px 9px; background: linear-gradient(transparent, #000c); pointer-events: none; z-index: 30;
+}
+.emp-tile-label h2 { margin: 0; font-family: var(--emp-display); font-weight: 400; font-size: 21px; letter-spacing: .5px; text-shadow: 0 2px 0 #000; }
+.emp-tile-meta { font-size: 12px; color: #dfe4ee; font-variant-numeric: tabular-nums; }
+.emp-tile-meta [data-bind="room-income"] { color: var(--emp-good); }
+.emp-tile-badge { font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #0008; color: #fff; border: 1px solid #ffffff40; white-space: nowrap; }
+.emp-tile-badge.on { background: var(--emp-good); color: #06240f; border-color: #7dffb0; animation: emp-pulse 1.6s ease-in-out infinite; }
+/* room page */
+.emp-room-page .emp-room-head { flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.emp-room-page .emp-room-head h2 { flex: 1; }
+.emp-page-back { flex-basis: 100%; text-align: left; background: none; border: 0; color: var(--emp-muted); font: inherit; font-size: 14px; padding: 2px 0 4px; cursor: pointer; }
 .emp-room-locked { opacity: .92; }
 .emp-locked-scene { aspect-ratio: var(--emp-aspect); background-size: cover; background-position: center; filter: grayscale(.85) brightness(.45); }
 .emp-locked-body { padding: 12px; }

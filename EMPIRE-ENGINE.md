@@ -65,6 +65,11 @@ tools/
 - Alle ID-er er stabile strenger (`alley.knuckles`). Navn og filbaner kan endres fritt uten at lagringer brytes. Lagringen har `saveVersion` og en `migrateState()` som rydder bort ID-er som er fjernet fra temaet.
 - Tema-JSON er det samme formatet en framtidig Empire Editor vil lese og skrive. `validateTheme()` er allerede skrevet for det.
 
+### Skjermbilder i UI-et
+- **Romlista** viser bare scenene under hverandre, med navn, nivå, crew og inntekt. «Upgrade ›» lyser når noe i rommet kan gjøres nå.
+- **Romsiden** (trykk på et rom) har romnivå, de tre karakterene, de to oppgraderingene og eventuelle events. Adressen får `#<rom-id>`, så telefonens tilbake-gest og pila øverst til venstre går tilbake til lista.
+- **Hjelpelinja** under pengetelleren sier alltid hva neste lure trekk er, og hopper til riktig rom og knapp når man trykker på den.
+
 ## 4. Økonomimodellen
 
 Alle tall ligger i `theme.json → economy`. Kostnader uttrykkes i **sekunder av rommets grunninntekt**, så et nytt rom bare trenger `price` og `baseIncome`; resten skalerer automatisk.
