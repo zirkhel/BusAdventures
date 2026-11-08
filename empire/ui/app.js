@@ -37,12 +37,13 @@ class EmpireApp {
   money(n) { return this.sym + fmt(n); }
 
   start() {
-    const { empire, offline } = loadEmpire(this.theme);
+    const { empire, offline, isNew } = loadEmpire(this.theme);
     this.empire = empire;
     this.applyPalette();
     this.buildShell();
     this.renderRooms();
     if (offline && offline.earned > 0 && offline.awaySeconds > AWAY_S) this.showWelcomeBack(offline);
+    else if (isNew) this.showHelp();
     this.lastTick = Date.now();
     this.lastSave = Date.now();
     setInterval(() => this.tick(), TICK_MS);
@@ -92,6 +93,7 @@ class EmpireApp {
         </div>
         <button class="emp-btn emp-pack-btn" data-act="pack"><span>${esc(b.name || 'Booster')}</span><small data-bind="packPrice"></small></button>
         <button class="emp-icon-btn" data-act="menu" aria-label="Menu">≡</button>
+        <button class="emp-coach" data-act="coach"></button>
       </header>
       <main class="emp-rooms"></main>
       <div class="emp-toast" hidden></div>
@@ -100,6 +102,7 @@ class EmpireApp {
     this.modal = this.root.querySelector('.emp-modal');
     this.modalCard = this.root.querySelector('.emp-modal-card');
     this.toastEl = this.root.querySelector('.emp-toast');
+    this.coachEl = this.root.querySelector('.emp-coach');
     this.root.addEventListener('click', e => this.onClick(e));
     this.modal.addEventListener('click', e => { if (e.target === this.modal && !this.modal.dataset.locked) this.closeModal(); });
   }
@@ -111,6 +114,8 @@ class EmpireApp {
     const E = this.empire;
     if (act === 'pack') return this.openPack();
     if (act === 'menu') return this.showMenu();
+    if (act === 'help') return this.showHelp();
+    if (act === 'coach') return this.followCoach();
     if (act === 'close') return this.closeModal();
     if (act === 'build') {
       const r = E.buildRoom(id);
@@ -279,7 +284,11 @@ class EmpireApp {
     set('[data-bind="prestige"]', el => { const l = E.state.prestige.level; el.textContent = l ? ` · ×${E.prestigeMultiplier()}` : ''; });
     const price = E.boosterPrice();
     set('[data-bind="packPrice"]', el => el.textContent = this.money(price));
-    set('[data-act="pack"]', el => el.disabled = E.state.coins < price || !E.builtRooms().length);
+    set('[data-act="pack"]', el => {
+      el.disabled = E.state.coins < price || !E.builtRooms().length;
+      el.classList.toggle('emp-ready', !el.disabled);
+    });
+    this.updateCoach(price);
     set('[data-bind="room-income"]', el => el.textContent = '+' + this.sym + fmt(E.roomIncome(el.dataset.id), { decimals: true }) + '/s');
 
     set('[data-q="build"]', el => { el.disabled = !E.quoteBuild(el.dataset.id).ok; });
@@ -318,6 +327,65 @@ class EmpireApp {
       el.textContent = st.reason === 'final' ? '· all tiers done' : st.available ? '· ready!' : `· ${st.requirements.filter(r => r.met).length}/${st.requirements.length} goals`;
       el.closest('button').classList.toggle('emp-ready', !!st.available);
     });
+  }
+
+  // ──────────────────────────────── coach ─────────────────────────────────
+  // One line under the HUD that always says what the best next move is. Tap it to jump there.
+
+  coachStep(price) {
+    const E = this.empire, pack = this.theme.booster.name || 'Booster';
+    const btn = (kind, id) => `[data-act="level"][data-kind="${kind}"][data-id="${id}"]`;
+    if (!E.builtRooms().length) {
+      const first = E.roomList[0];
+      return { text: `👉 Tap “Build” to open ${first.name}. It starts earning right away.`, target: `[data-act="build"][data-id="${first.id}"]` };
+    }
+    for (const room of E.builtRooms()) for (const c of room.characters) {
+      const q = E.quoteLevel({ kind: 'character', id: c.id });
+      if (q.ok && q.action === 'unlock') return { text: `👉 ${c.name} has enough fragments. Tap “Hire”!`, target: btn('character', c.id) };
+    }
+    const next = E.roomList.find(r => !E.isBuilt(r.id));
+    if (next && E.quoteBuild(next.id).ok) return { text: `👉 You can afford ${next.name}. Tap to go there and build it.`, target: `[data-act="build"][data-id="${next.id}"]` };
+    for (const room of E.builtRooms()) {
+      for (const tg of [...room.characters.map(c => ({ kind: 'character', id: c.id })), { kind: 'room', id: room.id }, ...room.upgrades.map(u => ({ kind: 'upgrade', id: u.id }))]) {
+        if (E.quoteLevel(tg).ok) return { text: `👉 Green buttons are ready. They spend cash + fragments and raise your income.`, target: btn(tg.kind, tg.id) };
+      }
+    }
+    if (E.state.coins >= price) return { text: `👉 Tap “${pack}” (top right). Packs give fragments for hiring and upgrades.`, target: '[data-act="pack"]' };
+    for (const id of Object.keys(E.events)) if (E.eventStatus(id).ok) return { text: `👉 ${E.events[id].name} is open. Try your luck!`, target: `[data-act="event"][data-id="${id}"]` };
+    if (E.prestigeStatus().available) return { text: `👉 ${this.theme.prestige.name} is ready: start over with a permanent bonus.`, target: '[data-act="prestige"]' };
+    const income = E.totalIncome();
+    const wait = income > 0 ? (price - E.state.coins) / income : 0;
+    return { text: `⏳ Saving for the next ${pack} (${fmtTime(wait)}). Cash keeps coming, even with the game closed.`, target: null };
+  }
+
+  updateCoach(price) {
+    const step = this.coachStep(price);
+    this.coachTarget = step.target;
+    if (this.coachEl.textContent !== step.text) this.coachEl.textContent = step.text;
+    this.coachEl.classList.toggle('emp-coach-go', !!step.target);
+  }
+
+  followCoach() {
+    const el = this.coachTarget && this.root.querySelector(this.coachTarget);
+    if (!el) return this.showHelp();
+    if (!el.closest('.emp-hud')) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.remove('emp-flash'); void el.offsetWidth; el.classList.add('emp-flash');
+    el.addEventListener('animationend', () => el.classList.remove('emp-flash'), { once: true });
+  }
+
+  showHelp() {
+    const t = this.theme, pack = esc(t.booster.name || 'Booster'), cash = esc(t.currency?.name || 'cash');
+    this.openModal(`
+      <h3>How it works</h3>
+      <ol class="emp-help">
+        <li><b>Rooms earn ${cash} every second</b>, even when the game is closed.</li>
+        <li><b>Buy ${pack}s</b> (top right). Each pack gives fragments.</li>
+        <li><b>Fragments + ${cash}</b> hire characters and level up rooms, characters and gear. That means more income.</li>
+        <li><b>Hire all three</b> in a room for a big bonus, then save up for the next room.</li>
+        <li>Later: tournaments, and ${esc(t.prestige?.name || 'prestige')}: start over with a permanent bonus.</li>
+      </ol>
+      <p class="emp-muted">A <span class="emp-help-green">green button</span> means you can do it now. Not sure? Tap the line under the ${cash} counter.</p>
+      <div class="emp-modal-actions"><button class="emp-btn emp-accent" data-act="close">Let's go</button></div>`);
   }
 
   reqText(r) {
@@ -423,7 +491,7 @@ class EmpireApp {
       <h4>You keep forever</h4>
       <ul class="emp-reqs"><li>Income ×${st.effects.incomeMultiplier} on everything</li>${st.effects.roomLimit > E.roomLimit() ? `<li>${esc(nextRoom?.name || 'A new room')} can be built</li>` : ''}</ul>
       <h4>You start over with</h4>
-      <p class="emp-muted">No ${esc(this.theme.currency?.name || 'cash')}, no rooms, no characters, no upgrades, no fragments.</p>
+      <p class="emp-muted">Starting ${esc(this.theme.currency?.name || "cash")} only, no rooms, no characters, no upgrades, no fragments.</p>
       <div class="emp-modal-actions">
         <button class="emp-btn" data-act="close">Not yet</button>
         <button class="emp-btn emp-accent" data-act="prestige-confirm" ${st.available ? '' : 'disabled'}>${esc(p.name)}…</button>
@@ -459,6 +527,7 @@ class EmpireApp {
         <li>${esc(this.theme.prestige?.name || 'Prestige')} <b>${this.empire.state.prestige.level}</b></li>
         <li>Offline earnings <b>${this.theme.economy.offlineCapHours == null ? 'unlimited' : 'up to ' + this.theme.economy.offlineCapHours + 'h'}</b></li>
       </ul>
+      <div class="emp-modal-actions" style="justify-content:flex-start;margin-top:4px"><button class="emp-btn" data-act="help">How it works</button></div>
       <h4>Save</h4>
       <p class="emp-muted">Your progress lives in this browser. Export it to move it or keep a copy.</p>
       <textarea class="emp-savebox" rows="3" placeholder="Paste a save here to import"></textarea>

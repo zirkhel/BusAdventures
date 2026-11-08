@@ -28,6 +28,18 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-prestige-badge { color: #f1c40f; }
 .emp-pack-btn { display: flex; flex-direction: column; align-items: center; line-height: 1.1; padding: 7px 12px; background: linear-gradient(180deg, #ff7a3c, #e0432a); border-color: #ff9a6a; }
 .emp-pack-btn small { font-size: 11px; opacity: .9; }
+.emp-hud { flex-wrap: wrap; }
+.emp-coach {
+  flex-basis: 100%; font: inherit; font-size: 13px; line-height: 1.3; text-align: left; color: var(--emp-text);
+  background: #ffffff0d; border: 1px solid #ffffff1a; border-radius: 10px; padding: 7px 10px; cursor: pointer;
+}
+.emp-coach.emp-coach-go { border-color: var(--emp-good); background: #2ecc7114; }
+.emp-pack-btn.emp-ready { background: linear-gradient(180deg, #ff7a3c, #e0432a); color: #fff; border-color: #fff; animation: emp-pulse 1.6s ease-in-out infinite; }
+@keyframes emp-pulse { 50% { box-shadow: 0 0 0 5px #ff7a3c55; } }
+.emp-flash { animation: emp-flash .9s ease-out 2; }
+@keyframes emp-flash { 0% { box-shadow: 0 0 0 0 #2ecc71; } 100% { box-shadow: 0 0 0 14px #2ecc7100; } }
+.emp-help { margin: 6px 0 10px; padding-left: 20px; line-height: 1.45; } .emp-help li { margin-bottom: 6px; }
+.emp-help-green { background: var(--emp-good); color: #06240f; padding: 0 6px; border-radius: 5px; font-weight: 600; }
 .emp-icon-btn { background: none; border: 0; color: var(--emp-text); font-size: 26px; padding: 4px 6px; cursor: pointer; }
 
 /* ── Buttons ─────────────────────────────────────── */
@@ -150,6 +162,7 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-error { color: #ff8a80; padding: 20px; white-space: pre-wrap; }
 
 @media (prefers-reduced-motion: reduce) {
+  .emp-pack-btn.emp-ready, .emp-flash { animation: none; }
   .emp-pop, .emp-cine-text, .emp-cine.shake, .emp-toast.show { animation: none; }
   .emp-card { transition: none; }
 }

@@ -123,7 +123,7 @@ test('14 prestige: synlige krav, reset, permanente bonuser og ny romgrense', () 
   assert.ok(e.prestigeStatus().available);
   assert.ok(e.prestige().ok);
   const s = e.state;
-  assert.equal(s.coins, 0); assert.deepEqual(s.rooms, {}); assert.deepEqual(s.characters, {}); assert.deepEqual(s.fragments, {});
+  assert.equal(s.coins, fighter.economy.startCoins ?? 0); assert.deepEqual(s.rooms, {}); assert.deepEqual(s.characters, {}); assert.deepEqual(s.fragments, {});
   assert.equal(s.prestige.level, 1); assert.equal(e.prestigeMultiplier(), 2); assert.equal(e.roomLimit(), 4);
   e.buildRoom('alley'); assert.equal(e.totalIncome(), 2 * fighter.rooms[0].baseIncome);
 });
