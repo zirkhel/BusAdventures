@@ -163,21 +163,21 @@
           "name": "Red Lamp",
           "rarity": "common",
           "effect": "Ambience on a budget. Flickers in a way customers call 'mood lighting'.",
-          "visual": { "char": "🏮", "x": 12, "y": 56, "h": 12, "z": 1 }
+          "visual": { "src": "assets/upgrades/alley-lamp.webp", "x": 12, "y": 58, "h": 13, "z": 1 }
         },
         {
           "id": "alley.cashbox",
           "name": "Cash Box",
           "rarity": "rare",
           "effect": "Locks. Mostly.",
-          "visual": { "char": "💰", "x": 26, "y": 80, "h": 10, "z": 5 }
+          "visual": { "src": "assets/upgrades/alley-cashbox.webp", "x": 21, "y": 80, "h": 11, "z": 5 }
         },
         {
           "id": "alley.heart",
           "name": "Neon Heart",
           "rarity": "epic",
           "effect": "Visible from the main street, which is exactly the point.",
-          "visual": { "char": "💗", "x": 56, "y": 30, "h": 14, "z": 1 }
+          "visual": { "src": "assets/upgrades/alley-heart.webp", "x": 56, "y": 31, "h": 12, "z": 1 }
         }
       ],
       "events": [
