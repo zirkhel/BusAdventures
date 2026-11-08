@@ -1,0 +1,155 @@
+/* Empire UI — shared layout. Themes override colours through --emp-* variables
+   (set from theme.presentation.palette) or a small game-level stylesheet. */
+
+.emp {
+  --emp-bg: #0d0f14; --emp-panel: #171a22; --emp-panel2: #1f2330; --emp-text: #eef1f6; --emp-muted: #8a93a6;
+  --emp-accent: #ff5a3c; --emp-good: #2ecc71; --emp-common: #9aa4b2; --emp-rare: #4da3ff; --emp-epic: #c06bff;
+  --emp-display: Impact, 'Arial Black', sans-serif; --emp-aspect: 1.6; --emp-radius: 14px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--emp-text); background: var(--emp-bg);
+  min-height: 100dvh; max-width: 560px; margin: 0 auto;
+  -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+}
+html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
+.emp * { box-sizing: border-box; }
+.emp-muted { color: var(--emp-muted); }
+.emp-sub { font-size: 12px; line-height: 1.3; }
+
+/* ── HUD ─────────────────────────────────────────── */
+.emp-hud {
+  position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 10px;
+  padding: calc(8px + env(safe-area-inset-top)) 12px 8px; background: rgba(13, 15, 20, .92);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid #ffffff14;
+}
+.emp-back { color: var(--emp-muted); text-decoration: none; font-size: 28px; line-height: 1; padding: 0 4px; }
+.emp-hud-main { flex: 1; min-width: 0; }
+.emp-coins { font-family: var(--emp-display); font-size: 26px; letter-spacing: .5px; line-height: 1.05; }
+.emp-income { font-size: 13px; color: var(--emp-good); font-variant-numeric: tabular-nums; }
+.emp-prestige-badge { color: #f1c40f; }
+.emp-pack-btn { display: flex; flex-direction: column; align-items: center; line-height: 1.1; padding: 7px 12px; background: linear-gradient(180deg, #ff7a3c, #e0432a); border-color: #ff9a6a; }
+.emp-pack-btn small { font-size: 11px; opacity: .9; }
+.emp-icon-btn { background: none; border: 0; color: var(--emp-text); font-size: 26px; padding: 4px 6px; cursor: pointer; }
+
+/* ── Buttons ─────────────────────────────────────── */
+.emp-btn {
+  font: inherit; font-weight: 600; font-size: 14px; color: #fff; cursor: pointer;
+  background: var(--emp-panel2); border: 1px solid #ffffff22; border-radius: 10px; padding: 9px 14px;
+  transition: transform .08s, opacity .2s; touch-action: manipulation;
+}
+.emp-btn:active:not(:disabled) { transform: scale(.96); }
+.emp-btn:disabled { opacity: .38; cursor: default; }
+.emp-btn.emp-ready { background: var(--emp-good); border-color: #7dffb0; color: #06240f; }
+.emp-btn.emp-accent { background: var(--emp-accent); border-color: #ffffff40; }
+.emp-btn.emp-danger { background: #8e1b1b; }
+.emp-small { padding: 7px 10px; font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.emp-wide { width: 100%; padding: 13px; font-size: 15px; }
+
+/* ── Rooms ───────────────────────────────────────── */
+.emp-rooms { padding: 12px 10px calc(40px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 16px; }
+.emp-room { background: var(--emp-panel); border-radius: var(--emp-radius); overflow: hidden; border: 1px solid #ffffff10; }
+.emp-room-head { display: flex; align-items: baseline; justify-content: space-between; padding: 10px 12px 8px; }
+.emp-room-head h2 { margin: 0; font-family: var(--emp-display); font-weight: 400; font-size: 22px; letter-spacing: .5px; }
+.emp-room-income { color: var(--emp-good); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+.emp-scene { position: relative; width: 100%; aspect-ratio: var(--emp-aspect); overflow: hidden; background: #000; container-type: size; }
+.emp-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.emp-layer { position: absolute; transform: translate(-50%, -100%); pointer-events: none; max-width: none; }
+.emp-layer.emp-flip { transform: translate(-50%, -100%) scaleX(-1); }
+.emp-sprite { background-repeat: no-repeat; aspect-ratio: 2 / 3; image-rendering: auto; }
+.emp-emoji { line-height: 1; display: flex; align-items: flex-end; justify-content: center; aspect-ratio: 1; }
+.emp-pop { animation: emp-pop .6s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes emp-pop { from { scale: .2; opacity: 0; } to { scale: 1; opacity: 1; } }
+.emp-ghost {
+  position: absolute; transform: translate(-50%, -50%); width: 13%; aspect-ratio: 3 / 1; border-radius: 50%;
+  border: 2px dashed #ffffff55; color: #ffffffaa; font-weight: 700; font-size: 12px; display: grid; place-items: center; z-index: 5;
+}
+
+.emp-setbonus { font-size: 12px; padding: 6px 12px; color: var(--emp-muted); background: #00000030; }
+.emp-setbonus.on { color: #f1c40f; }
+
+.emp-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border-top: 1px solid #ffffff0c; }
+.emp-row-label { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; font-size: 14px; }
+.emp-row-label > div { min-width: 0; flex: 1; }
+.emp-row-icon { font-size: 22px; width: 34px; text-align: center; }
+.emp-thumb { width: 34px; height: 34px; object-fit: contain; }
+.emp-lv { color: var(--emp-muted); font-size: 12px; margin-left: 4px; }
+
+.emp-frag { position: relative; height: 14px; margin-top: 4px; background: #ffffff10; border-radius: 7px; overflow: hidden; max-width: 160px; }
+.emp-frag-fill { height: 100%; background: #5b6b8a; transition: width .3s; }
+.emp-frag.full .emp-frag-fill { background: var(--emp-good); }
+.emp-frag span { position: absolute; inset: 0; font-size: 10px; line-height: 14px; text-align: center; font-variant-numeric: tabular-nums; }
+
+.emp-chars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 10px 12px; border-top: 1px solid #ffffff0c; }
+.emp-char { background: var(--emp-panel2); border-radius: 10px; padding: 8px 6px; text-align: center; border: 2px solid var(--rar); display: flex; flex-direction: column; gap: 3px; align-items: center; }
+.emp-char-locked { border-style: dashed; }
+.emp-char-locked .emp-portrait { filter: brightness(0) opacity(.45); }
+.emp-char-pic { width: 52px; height: 64px; }
+.emp-portrait { width: 100%; height: 100%; background-repeat: no-repeat; background-position: 0 0; display: grid; place-items: center; font-size: 34px; }
+.emp-portrait.emp-flip { transform: scaleX(-1); }
+.emp-char-name { font-size: 12px; font-weight: 600; line-height: 1.15; min-height: 2.3em; display: flex; align-items: center; }
+.emp-char-meta { font-size: 10.5px; color: var(--emp-muted); }
+.emp-rar { color: var(--rar); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+.emp-char .emp-frag { width: 100%; }
+.emp-char .emp-btn { width: 100%; margin-top: 3px; }
+
+.emp-event { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 12px 12px; border-top: 1px solid #ffffff0c; background: #f1c40f0d; }
+.emp-event-name { font-weight: 600; font-size: 14px; }
+
+.emp-room-locked { opacity: .92; }
+.emp-locked-scene { aspect-ratio: var(--emp-aspect); background-size: cover; background-position: center; filter: grayscale(.85) brightness(.45); }
+.emp-locked-body { padding: 12px; }
+.emp-locked-body h2 { margin: 0 0 4px; font-family: var(--emp-display); font-weight: 400; font-size: 22px; }
+.emp-locked-body p { margin: 0 0 8px; font-size: 13px; }
+.emp-lock-note { padding: 12px; border-radius: 10px; background: #ffffff0a; text-align: center; color: var(--emp-muted); }
+.emp-prestige-card .emp-btn { background: #2b2440; border-color: #f1c40f55; }
+.emp-prestige-card .emp-btn.emp-ready { background: #f1c40f; color: #241a00; }
+
+/* ── Modal, cards ────────────────────────────────── */
+.emp-modal { position: fixed; inset: 0; z-index: 100; background: #000000b0; display: grid; place-items: center; padding: 16px; }
+.emp-modal[hidden] { display: none; }
+.emp-modal-card { width: 100%; max-width: 440px; max-height: 88dvh; overflow: auto; background: var(--emp-panel); border-radius: 18px; padding: 18px; border: 1px solid #ffffff18; }
+.emp-modal-card h3 { margin: 0 0 8px; font-family: var(--emp-display); font-weight: 400; font-size: 26px; letter-spacing: .5px; }
+.emp-modal-card h4 { margin: 14px 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: .6px; color: var(--emp-muted); }
+.emp-modal-card p { margin: 0 0 8px; }
+.emp-modal-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 14px; }
+.emp-big { font-family: var(--emp-display); font-size: 40px; color: var(--emp-good); margin: 6px 0 10px; }
+.emp-reqs { list-style: none; margin: 0; padding: 0; } .emp-reqs li { padding: 4px 0; } .emp-reqs li.met { color: var(--emp-good); }
+.emp-stats { list-style: none; padding: 0; margin: 8px 0; } .emp-stats li { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #ffffff0c; }
+.emp-savebox { width: 100%; background: #0007; color: var(--emp-text); border: 1px solid #ffffff22; border-radius: 8px; font: 11px ui-monospace, monospace; padding: 8px; user-select: text; -webkit-user-select: text; }
+
+.emp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; perspective: 800px; margin-top: 8px; }
+.emp-card { position: relative; aspect-ratio: 2 / 3; transform-style: preserve-3d; transition: transform .45s cubic-bezier(.3, 1.4, .5, 1); cursor: pointer; }
+.emp-card.flipped { transform: rotateY(180deg); }
+.emp-card-back, .emp-card-front { position: absolute; inset: 0; border-radius: 10px; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.emp-card-back { background: repeating-linear-gradient(45deg, #e0432a, #e0432a 8px, #b8321e 8px, #b8321e 16px); border: 3px solid #ffd2c4; }
+.emp-card-front { transform: rotateY(180deg); background: var(--emp-panel2); border: 3px solid var(--rar, #ffffff40); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; text-align: center; gap: 4px; }
+.emp-card-epic.flipped .emp-card-front { box-shadow: 0 0 22px var(--emp-epic); }
+.emp-card-pic { width: 60%; aspect-ratio: 2 / 3; display: grid; place-items: center; }
+.emp-card-icon { font-size: 36px; display: grid; place-items: center; width: 100%; height: 100%; }
+.emp-card-icon img { max-width: 100%; max-height: 100%; }
+.emp-card-title { font-size: 12px; font-weight: 700; line-height: 1.15; }
+.emp-card-sub { font-size: 10.5px; color: var(--emp-muted); line-height: 1.3; }
+
+/* ── Cinematic ───────────────────────────────────── */
+.emp-modal-card.emp-modal-cine { padding: 0; overflow: hidden; background: #000; }
+.emp-cine { position: relative; aspect-ratio: 3 / 4; max-height: 80dvh; display: grid; place-items: center; overflow: hidden; cursor: pointer; }
+.emp-cine-bg { position: absolute; inset: -10px; background-size: cover; background-position: center; filter: blur(3px) brightness(.4); }
+.emp-cine-stage { position: relative; z-index: 2; display: grid; place-items: center; width: 100%; height: 100%; }
+.emp-cine-media { max-width: 100%; max-height: 100%; }
+.emp-cine-text { font-family: var(--emp-display); font-size: clamp(34px, 12vw, 64px); text-align: center; padding: 0 16px; text-shadow: 0 4px 0 #000, 0 0 24px #000; animation: emp-slam .35s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes emp-slam { from { scale: 2.4; opacity: 0; } to { scale: 1; opacity: 1; } }
+.emp-cine-title { position: absolute; top: 12px; left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #ffffffa0; z-index: 3; }
+.emp-cine-skip { position: absolute; bottom: 10px; right: 12px; font-size: 11px; color: #ffffff70; z-index: 3; }
+.emp-cine.shake { animation: emp-shake .35s; }
+@keyframes emp-shake { 0%, 100% { translate: 0 0; } 20% { translate: -8px 4px; } 40% { translate: 7px -5px; } 60% { translate: -5px -3px; } 80% { translate: 4px 3px; } }
+
+/* ── Toast ───────────────────────────────────────── */
+.emp-toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); translate: -50% 0; z-index: 200; background: #000d; color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 14px; max-width: 90vw; text-align: center; border: 1px solid #ffffff22; }
+.emp-toast.show { animation: emp-toast .25s ease-out; }
+@keyframes emp-toast { from { opacity: 0; translate: -50% 12px; } }
+.emp-error { color: #ff8a80; padding: 20px; white-space: pre-wrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .emp-pop, .emp-cine-text, .emp-cine.shake, .emp-toast.show { animation: none; }
+  .emp-card { transition: none; }
+}

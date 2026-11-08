@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10161a">
+  <title>Bus Empire</title>
+  <link rel="stylesheet" href="../../empire/ui/style.css">
+</head>
+<body>
+  <div id="empire"></div>
+  <script type="module">
+    import { mountEmpire } from '../../empire/ui/app.js';
+    mountEmpire(document.getElementById('empire'), new URL('./theme.json', import.meta.url));
+  </script>
+</body>
+</html>
