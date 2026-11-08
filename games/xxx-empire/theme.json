@@ -189,7 +189,13 @@
           "name": "Neon Heart",
           "rarity": "epic",
           "effect": "Visible from the main street, which is exactly the point.",
-          "visual": { "src": "assets/upgrades/alley-heart.webp", "x": 56, "y": 31, "h": 12, "z": 1 }
+          "visual": {
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-heart.webp" }, { "minLevel": 5, "src": "assets/upgrades/alley-heart-deluxe.webp" }],
+            "x": 56,
+            "y": 34,
+            "h": 19,
+            "z": 1
+          }
         }
       ],
       "events": [
