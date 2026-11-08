@@ -7,12 +7,15 @@ Upgrades:  SVG objects, base + deluxe stage.
 This is programmer art to prove the pipeline. Swap any file for real art with the same
 frame size/frame count (or change frames/fps/x/y/h in theme.json).
 
-    python3 tools/make-placeholder-art.py games/fighter-empire/assets
+    python3 tools/make-placeholder-art.py games/fighter-empire/assets            # skips sprites that already exist
+    python3 tools/make-placeholder-art.py games/fighter-empire/assets --force    # overwrite all sprites
 """
 import math, os, sys
 from PIL import Image, ImageDraw
 
-OUT = sys.argv[1] if len(sys.argv) > 1 else "games/fighter-empire/assets"
+ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
+FORCE = "--force" in sys.argv  # overwrite sprites that already exist (e.g. real art)
+OUT = ARGS[0] if ARGS else "games/fighter-empire/assets"
 FW, FH, S = 128, 192, 3  # frame size, supersample
 os.makedirs(os.path.join(OUT, "sprites"), exist_ok=True)
 os.makedirs(os.path.join(OUT, "rooms"), exist_ok=True)
@@ -130,10 +133,13 @@ def draw_frame(look, kind, t):
 
 
 def sheet(name, look, kind, frames=6):
+    path = os.path.join(OUT, "sprites", name + ".webp")
+    if os.path.exists(path) and not FORCE:
+        return  # keep existing sprites, which may be real art
     strip = Image.new("RGBA", (FW * frames, FH), (0, 0, 0, 0))
     for i in range(frames):
         strip.paste(draw_frame(look, kind, i / frames), (i * FW, 0))
-    strip.save(os.path.join(OUT, "sprites", name + ".webp"), "WEBP", lossless=True, quality=100, method=6)
+    strip.save(path, "WEBP", lossless=True, quality=100, method=6)
 
 
 SPRITES = {
