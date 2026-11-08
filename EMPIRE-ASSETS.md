@@ -79,7 +79,7 @@ z           → z-index 10 + z
 
 | Type | Felter | Oppførsel |
 |---|---|---|
-| `sprite` | `src`, `frames`, `fps`, valgfri `frameAspect` (f.eks. `"1 / 1"`) | Én **horisontal rad** med like brede rammer. Vises med `background-size: frames×100% 100%`. Ramme *i* vises med `background-position-x = i/(frames−1) × 100 %`. |
+| `sprite` | `src`, `frames`, `fps`, valgfri `frameAspect` (f.eks. `"1 / 1"`) og `blend` (0–1) | Én **horisontal rad** med like brede rammer. Vises med `background-size: frames×100% 100%`. Ramme *i* vises med `background-position-x = i/(frames−1) × 100 %`. |
 | `image` | `src` | `<img>`: stillbilde, SVG, animert WebP/GIF (spiller i egen løkke, uten kontroll) |
 | `video` | `src`, valgfri `loop: false` | `<video>` autoplay, **alltid muted**, playsinline, en kilde (ingen fallback) |
 | `emoji` | `char` | Tekst, størrelse `h × 0.8` cqh |
@@ -88,6 +88,7 @@ z           → z-index 10 + z
 
 - Én felles `requestAnimationFrame`-løkke for alle figurer.
 - Rammen beregnes som `floor(tid × fps) % frames`. **Alle rammer varer like lenge**, og animasjonen går alltid i løkke.
+- `blend` (valgfri): andelen av hver ramme som brukes til å tone over i neste. `0.5` = posen står stille halve tiden, og tones over resten. Passer for ark med separate poser (f.eks. Lola i XXX Empire: `fps` 2.5, `blend` 0.5). Uten `blend` byttes rammene brått, som før. Ekte mellombilder (16–24 rammer) gir fortsatt best bevegelse.
 - Hver figur starter på et tilfeldig tidspunkt (opptil 1 s forskjøvet), så like figurer ikke går i takt.
 - Animasjonen pauses når scenen er utenfor skjermen (IntersectionObserver) og når fanen er skjult (nettleseren stopper rAF).
 - Ikke støttet: flere rader eller rutenett, ulik tid per ramme, ping-pong, engangsanimasjoner, ulike animasjoner per tilstand (idle/angrep) og lyd.

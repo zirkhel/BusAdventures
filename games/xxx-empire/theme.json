@@ -105,7 +105,17 @@
           "rarity": "common",
           "role": "Freelancer",
           "bio": "Has worked the same corner for twelve years and knows every pothole by name. Accepts cash, compliments and, in emergencies, sandwiches.",
-          "sprite": { "src": "assets/sprites/alley-lola.webp", "frames": 8, "fps": 6, "frameAspect": "338 / 640", "x": 32, "y": 84, "h": 50, "z": 4 }
+          "sprite": {
+            "src": "assets/sprites/alley-lola.webp",
+            "frames": 8,
+            "fps": 2.5,
+            "frameAspect": "338 / 640",
+            "x": 32,
+            "y": 84,
+            "h": 50,
+            "z": 4,
+            "blend": 0.5
+          }
         },
         {
           "id": "alley.rick",

@@ -8,6 +8,8 @@
 //
 // Media types (the "asset contract"):
 //   { type:'sprite', src, frames, fps }   horizontal strip spritesheet (default when frames is set)
+//                                         optional blend: 0–1 = share of each frame spent cross-fading
+//                                         into the next (good for sheets of separate poses)
 //   { type:'image',  src }                still image or animated WebP/GIF/SVG
 //   { type:'video',  src }                looping muted video (no alpha on iOS Safari — see doc)
 //   { type:'emoji',  char }               text/emoji placeholder, any style
@@ -25,16 +27,31 @@ function startLoop() {
       // again, so detached sprites are only skipped. They are removed by releaseScene().
       if (!s.el.isConnected) continue;
       if (!s.visible || s.paused) continue;
-      const frame = Math.floor(((now - s.t0) / 1000) * s.fps) % s.frames;
-      if (frame !== s.frame) {
+      const pos = ((now - s.t0) / 1000) * s.fps;
+      const frame = Math.floor(pos) % s.frames;
+      if (s.blend) {
+        // Hold the pose, then fade into the next one during the last `blend` share of the frame.
+        const t = Math.min(1, Math.max(0, (pos % 1 - (1 - s.blend)) / s.blend));
+        const e = t * t * (3 - 2 * t);
+        if (frame !== s.frame) {
+          s.frame = frame;
+          s.a.style.backgroundPositionX = framePos(frame, s.frames);
+          s.b.style.backgroundPositionX = framePos((frame + 1) % s.frames, s.frames);
+        }
+        // Overlap the fades so the figure never turns see-through halfway.
+        s.a.style.opacity = Math.min(1, 2 * (1 - e)).toFixed(3);
+        s.b.style.opacity = Math.min(1, 2 * e).toFixed(3);
+      } else if (frame !== s.frame) {
         s.frame = frame;
-        s.el.style.backgroundPositionX = s.frames > 1 ? `${(frame / (s.frames - 1)) * 100}%` : '0%';
+        s.el.style.backgroundPositionX = framePos(frame, s.frames);
       }
     }
     requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
 }
+
+function framePos(frame, frames) { return frames > 1 ? `${(frame / (frames - 1)) * 100}%` : '0%'; }
 
 const io = typeof IntersectionObserver !== 'undefined'
   ? new IntersectionObserver(entries => {
@@ -62,15 +79,24 @@ export function makeLayer(m, asset, extraClass = '') {
   if (type === 'sprite') {
     el = document.createElement('div');
     el.className = 'emp-layer emp-sprite ' + extraClass;
-    el.style.backgroundImage = `url("${asset(m.src)}")`;
-    el.style.backgroundSize = `${(m.frames || 1) * 100}% 100%`;
+    const blend = m.blend > 0 && m.frames > 1 ? Math.min(1, m.blend) : 0;
+    const paint = node => {
+      node.style.backgroundImage = `url("${asset(m.src)}")`;
+      node.style.backgroundSize = `${(m.frames || 1) * 100}% 100%`;
+    };
+    let a = null, b = null;
+    if (blend) {
+      a = document.createElement('div'); b = document.createElement('div');
+      for (const n of [a, b]) { n.className = 'emp-sprite-frame'; paint(n); el.appendChild(n); }
+      b.style.opacity = '0';
+    } else paint(el);
     if (m.frameAspect) el.style.aspectRatio = m.frameAspect;
     else {
       const img = new Image();
       img.onload = () => { el.style.aspectRatio = `${img.naturalWidth / (m.frames || 1)} / ${img.naturalHeight}`; };
       img.src = asset(m.src);
     }
-    const s = { el, frames: m.frames || 1, fps: m.fps || 8, t0: performance.now() - Math.random() * 1000, frame: -1, visible: true };
+    const s = { el, a, b, blend, frames: m.frames || 1, fps: m.fps || 8, t0: performance.now() - Math.random() * 1000, frame: -1, visible: true };
     sprites.add(s); io?.observe(el); startLoop();
   } else if (type === 'video') {
     el = document.createElement('video');
