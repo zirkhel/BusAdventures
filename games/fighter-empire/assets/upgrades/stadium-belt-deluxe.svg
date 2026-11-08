@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 200" width="220" height="200"><rect x="40" y="130" width="140" height="60" fill="#2c2c2c"/><rect x="30" y="122" width="160" height="12" fill="#444"/>
+<rect x="10" y="70" width="200" height="34" rx="12" fill="#7a1c1c"/><ellipse cx="110" cy="87" rx="48" ry="36" fill="#d4a52a"/><ellipse cx="110" cy="87" rx="34" ry="24" fill="#f1c40f"/>
+<text x="110" y="95" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="20" fill="#7a1c1c">WORLD</text><g fill="#fff"><path d="M60 40 l6 -16 l6 16 l16 6 l-16 6 l-6 16 l-6 -16 l-16 -6z"/><path d="M160 30 l4 -10 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4z"/></g></svg>

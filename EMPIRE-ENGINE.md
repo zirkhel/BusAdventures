@@ -26,7 +26,7 @@ python -m http.server 8000      # eller: npx serve
 
 | | Hva |
 |---|---|
-| **Besluttet (fra planen, implementert)** | Grunninntekt fra tomt rom · 3 faste karakterer og 3 oppgraderinger per rom (endret fra 2 etter spilltest 8. nov) · fast sjeldenhet per karakter · booster kun for spillvaluta, kun fra bygde rom · fragmentkost 1/3/5/10 for karakternivå 2–5 · alle nivåøkninger krever fragmenter **og** valuta, nytt rom krever bare valuta · full-crew-bonus · frivillig prestige med synlige krav, reset og permanent bonus/romgrense · valgfrie rom-events med tilfeldige utfall, cinematic og uten permanent straff · lokal lagring uten konto · ingen monetisering, anti-cheat, backend eller FOMO |
+| **Besluttet (fra planen, implementert)** | Grunninntekt fra tomt rom · 6 rom · 3 faste karakterer og 3 oppgraderinger (gear) per rom, gear også med Common/Rare/Epic · en event i hvert rom (endret etter spilltest 8. nov) · fast sjeldenhet per karakter · booster kun for spillvaluta, kun fra bygde rom · fragmentkost 1/3/5/10 for karakternivå 2–5 · alle nivåøkninger krever fragmenter **og** valuta, nytt rom krever bare valuta · full-crew-bonus · frivillig prestige med synlige krav, reset og permanent bonus/romgrense · valgfrie rom-events med tilfeldige utfall, cinematic og uten permanent straff · lokal lagring uten konto · ingen monetisering, anti-cheat, backend eller FOMO |
 | **Anbefalt (mitt forslag, lett å endre)** | Startverdier for alle tall i `theme.json` (se §4) · opplåsing av karakter koster bare fragmenter (Common 2, Rare 3, Epic 5) · boosterpris = 30 sek av nåværende inntekt · 3 trekk per pakke · pity: garantert Epic-fragment senest i pakke 12 · offline-inntekt 100 % opptil 24 t · egne fragmenttyper for romnivå og for hver oppgradering · plain JS + JSDoc, ikke TypeScript · spritesheet som animasjonsformat (§7) · engelsk UI som resten av siden |
 | **Åpent** | Alle balansetall · om offline skal være ubegrenset (`"offlineCapHours": null` gjør det) · pakketyper · events med kostnad · hvordan svært lang progresjon etter siste prestige-trinn skal fungere · endelig grafikkstil og AI-produksjonsløp · Empire Editor (ikke startet, som planen sier) |
 
@@ -91,7 +91,11 @@ fragmentkost     = liste, deretter +n per nivå
   karakter [1,3,5,10]+5 · romnivå [1,1,1,2,2,2,3,3,3]+1 · oppgradering [1,2,3,4,6]+2
 ```
 
-Rom: Back Alley gratis/1 per s · Boxing Gym 2K/8 · Thai Resort 90K/60 · Dojo 6M/500 · Arena 400M/4 000.
+Rom: Back Alley gratis/1 per s · Boxing Gym 2K/8 · Thai Resort 90K/60 · Dojo 6M/500 · Arena 400M/4 000 · World Championship Stadium 30B/32 000.
+
+**Gear-sjeldenhet:** bonus per nivå = 12 % × `gearIncome` (Common 0.8 → 9,6 %, Rare 1.0 → 12 %, Epic 1.5 → 18 %), og prisen ganges med samme `costFactor` som for figurene. Gear trekkes i pakker som figurene: først sjeldenhet (65/27/8), så en ting av den sjeldenheten.
+
+**Prestige-trinn (6 rom):** start 3 rom → trinn 1 åpner rom 4 (×2) → trinn 2 rom 5 (×3) → trinn 3 rom 6 (×4) → trinn 4 er siste bonus (×6, krever stadion nivå 25 og alle tre figurene). Simulatoren (aktiv spiller, events når de er klare): 1,3 t / 4,6 t / 11 t / ca. 19 t+.
 
 **Simulert tempo** (`tools/simulate-empire.mjs`, grådig bot):
 
@@ -113,7 +117,7 @@ De tre første rommene bygges på 39 min i første runde, 28 min etter første p
 
 **Prestige** (`theme.json → prestige`): `startRooms` gir romgrensen før første prestige. Hvert trinn har `requires` (liste med krav), `incomeMultiplier` og `roomLimit`. Kravtyper som deles med events: `roomBuilt`, `roomLevel`, `charactersUnlocked`, `characterLevelSum`, `upgradeLevel`, `runEarned`. Reset krever to bekreftelser i UI-et.
 
-**Events** (`rooms[].events[]`): `unlock` (krav), `costSeconds`, `cooldownSeconds`, `repeatable`, `outcomes[]`. Hvert utfall har `weight` + `skillWeight` × (sum av karakternivå i rommet), med `minWeight` som gulv. Belønningstyper: `coins` (sekunder av rominntekt), `fragments` (sjeldenhet, antall, rom eller alle), `booster`. Validatoren avviser negative belønninger. Cinematic per utfall: `sequence` (tekstrammer, ingen filer), `video` eller `image`.
+**Events** — ett per rom: Backyard Alley Brawl Tournament, Friday Sparring Night, Beach Muay Thai Cup, Tournament of the Hidden Masters, Title Fight, World Championship. Låses opp på romnivå 3 med to figurer; nedkjøling 10 min i bakgata, opp til 60 min på stadion. Format (`rooms[].events[]`): `unlock` (krav), `costSeconds`, `cooldownSeconds`, `repeatable`, `outcomes[]`. Hvert utfall har `weight` + `skillWeight` × (sum av karakternivå i rommet), med `minWeight` som gulv. Belønningstyper: `coins` (sekunder av rominntekt), `fragments` (sjeldenhet, antall, rom eller alle), `booster`. Validatoren avviser negative belønninger. Cinematic per utfall: `sequence` (tekstrammer, ingen filer), `video` eller `image`.
 
 ## 7. Animasjonsformat – anbefaling
 
