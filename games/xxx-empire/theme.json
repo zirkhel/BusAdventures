@@ -176,7 +176,13 @@
           "name": "Cash Box",
           "rarity": "rare",
           "effect": "Locks. Mostly.",
-          "visual": { "src": "assets/upgrades/alley-cashbox.webp", "x": 21, "y": 80, "h": 11, "z": 5 }
+          "visual": {
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-cashbox.webp" }, { "minLevel": 5, "src": "assets/upgrades/alley-cashbox-deluxe.webp" }],
+            "x": 21,
+            "y": 80,
+            "h": 13,
+            "z": 5
+          }
         },
         {
           "id": "alley.heart",
