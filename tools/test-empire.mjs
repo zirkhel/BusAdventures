@@ -148,6 +148,17 @@ test('15b høyere karakternivå gir bedre odds', () => {
   assert.ok(share(high, 'win') > share(low, 'win')); assert.ok(share(high, 'out') < share(low, 'out'));
 });
 
+test('previewGain stemmer med faktisk inntektsøkning og endrer ikke tilstand', () => {
+  const e = mk(); e.buildRoom('alley'); e.state.coins = 1e12; e.state.characters = { 'alley.mick': 1, 'alley.knuckles': 1 };
+  for (const tg of [{ kind: 'room', id: 'alley' }, { kind: 'upgrade', id: 'alley.bookie' }, { kind: 'character', id: 'alley.mick' }, { kind: 'character', id: 'alley.ana' }]) {
+    e.state.fragments[tg.id] = 99;
+    const snap = JSON.stringify(e.state), g = e.previewGain(tg);
+    assert.equal(JSON.stringify(e.state), snap);
+    const before = e.totalIncome(); e.levelUp(tg);
+    assert.ok(Math.abs(e.totalIncome() - before - g.income) < 1e-9, tg.id);
+  }
+});
+
 test('lagring fra eldre temaversjon tåler fjernede rom', () => {
   const st = createState(fighter); st.rooms.ghost = { level: 3, upgrades: {} }; st.rooms.alley = { level: 2 };
   const e = mk(fighter, st); assert.ok(!e.state.rooms.ghost); assert.equal(e.upgradeLevel('alley.bookie'), 0);

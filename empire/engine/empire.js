@@ -227,6 +227,29 @@ export class Empire {
     });
   }
 
+  /**
+   * What the next level would add, ignoring whether it is affordable.
+   * Returns { income: added income per second (incl. prestige), roomShare: fraction of the room's current income }
+   * or null when maxed. Used by the UI to show the benefit on every button.
+   */
+  previewGain(target) {
+    const q = this.quoteLevel(target);
+    if (q.maxed || !this.isBuilt(q.roomId)) return null;
+    const saved = JSON.stringify(this.state);
+    const before = this.totalIncome();
+    const roomBefore = this.roomIncome(q.roomId);
+    if (q.kind === 'room') this.state.rooms[q.id].level = q.to;
+    if (q.kind === 'character') this.state.characters[q.id] = q.to;
+    if (q.kind === 'upgrade') this.state.rooms[q.roomId].upgrades[q.id] = q.to;
+    const income = this.totalIncome() - before;
+    this.state = JSON.parse(saved);
+    return { income, roomShare: roomBefore > 0 ? income / roomBefore : null, completesCrew: q.kind === 'character' && q.action === 'unlock' && this._wouldCompleteCrew(q) };
+  }
+
+  _wouldCompleteCrew(q) {
+    return this.rooms[q.roomId].characters.every(c => c.id === q.id || this.charLevel(c.id) > 0);
+  }
+
   levelUp(target) {
     const q = this.quoteLevel(target);
     if (!q.ok) return q;

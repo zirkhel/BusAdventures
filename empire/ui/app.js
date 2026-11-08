@@ -288,7 +288,7 @@ class EmpireApp {
       </header>
       <div class="emp-scene-slot"></div>
       <div class="emp-setbonus ${E.fullSet(roomId) ? 'on' : ''}">Full crew bonus +${Math.round(this.fullSetBonus(roomId) * 100)}% ${E.fullSet(roomId) ? '✓' : `· ${room.characters.filter(c => E.charLevel(c.id)).length}/3`}</div>
-      ${this.levelRow('room', roomId, 'Room level', '🏠')}
+      ${this.levelRow('room', roomId, 'Room level', '🏠', 'Raises what the room earns on its own.')}
       <div class="emp-chars">${room.characters.map(c => this.charTile(c, rar)).join('')}</div>
       <div class="emp-upgrades">${room.upgrades.map(u => this.levelRow('upgrade', u.id, u.name, '', u.effect)).join('')}</div>
       ${(room.events || []).map(ev => this.eventRow(ev)).join('')}`;
@@ -305,6 +305,7 @@ class EmpireApp {
         <div class="emp-char-pic"><div data-portrait="${c.id}"></div></div>
         <div class="emp-char-name">${esc(c.name)}</div>
         <div class="emp-char-meta"><span class="emp-rar">${esc(this.theme.economy.rarities[c.rarity].label || c.rarity)}</span> · ${lvl ? `Lv ${lvl}` : 'Not hired'}</div>
+        <div class="emp-gain" data-bind="gain" data-kind="character" data-id="${c.id}"></div>
         ${this.fragBar('character', c.id)}
         <button class="emp-btn emp-small" data-act="level" data-kind="character" data-id="${c.id}" data-q="level"></button>
       </div>`;
@@ -315,7 +316,7 @@ class EmpireApp {
       <div class="emp-row">
         <div class="emp-row-label">${icon ? `<span class="emp-row-icon">${icon}</span>` : this.upgradeThumb(id)}
           <div><div>${esc(label)} <span class="emp-lv" data-bind="lv" data-kind="${kind}" data-id="${id}"></span></div>
-          ${sub ? `<div class="emp-muted emp-sub">${esc(sub)}</div>` : ''}${this.fragBar(kind, id)}</div></div>
+          ${sub ? `<div class="emp-muted emp-sub">${esc(sub)}</div>` : ''}<div class="emp-gain" data-bind="gain" data-kind="${kind}" data-id="${id}"></div>${this.fragBar(kind, id)}</div></div>
         <button class="emp-btn emp-small" data-act="level" data-kind="${kind}" data-id="${id}" data-q="level"></button>
       </div>`;
   }
@@ -372,6 +373,16 @@ class EmpireApp {
     set('[data-bind="lv"]', el => {
       const q = E.quoteLevel({ kind: el.dataset.kind, id: el.dataset.id });
       el.textContent = q.from ? `Lv ${q.from}${q.maxed ? '' : ''}` : '—';
+    });
+    set('[data-bind="gain"]', el => {
+      const tg = { kind: el.dataset.kind, id: el.dataset.id };
+      const g = E.previewGain(tg);
+      if (!g) { el.textContent = 'Max level'; el.classList.add('max'); return; }
+      el.classList.remove('max');
+      const pct = g.roomShare != null && g.roomShare > 0 ? ` (+${g.roomShare >= 0.995 ? fmt(g.roomShare * 100) : (g.roomShare * 100).toFixed(g.roomShare < 0.1 ? 1 : 0)}%)` : '';
+      const verb = tg.kind === 'character' && !E.charLevel(tg.id) ? 'Hire' : tg.kind === 'upgrade' && !E.upgradeLevel(tg.id) ? 'Build' : 'Next level';
+      const text = `${verb}: +${this.sym}${fmt(g.income, { decimals: true })}/s${pct}${g.completesCrew ? ' with crew bonus' : ''}`;
+      if (el.textContent !== text) el.textContent = text;
     });
     set('[data-bind="frag"]', el => {
       const q = E.quoteLevel({ kind: el.dataset.kind, id: el.dataset.id });
@@ -461,7 +472,7 @@ class EmpireApp {
         <li><b>Hire all three</b> in a room for a big bonus, then save up for the next room.</li>
         <li>Later: tournaments, and ${esc(t.prestige?.name || 'prestige')}: start over with a permanent bonus.</li>
       </ol>
-      <p class="emp-muted">A <span class="emp-help-green">green button</span> means you can do it now. Not sure? Tap the line under the ${cash} counter.</p>
+      <p class="emp-muted">Every upgrade shows what it adds, like <b class="emp-gain-inline">+$2.4/s</b>. A <span class="emp-help-green">green button</span> means you can do it now. Not sure? Tap the line under the ${cash} counter.</p>
       <div class="emp-modal-actions"><button class="emp-btn emp-accent" data-act="close">Let's go</button></div>`);
   }
 
