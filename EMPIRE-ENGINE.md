@@ -26,7 +26,7 @@ python -m http.server 8000      # eller: npx serve
 
 | | Hva |
 |---|---|
-| **Besluttet (fra planen, implementert)** | Grunninntekt fra tomt rom · 3 faste karakterer og 2 oppgraderinger per rom · fast sjeldenhet per karakter · booster kun for spillvaluta, kun fra bygde rom · fragmentkost 1/3/5/10 for karakternivå 2–5 · alle nivåøkninger krever fragmenter **og** valuta, nytt rom krever bare valuta · full-crew-bonus · frivillig prestige med synlige krav, reset og permanent bonus/romgrense · valgfrie rom-events med tilfeldige utfall, cinematic og uten permanent straff · lokal lagring uten konto · ingen monetisering, anti-cheat, backend eller FOMO |
+| **Besluttet (fra planen, implementert)** | Grunninntekt fra tomt rom · 3 faste karakterer og 3 oppgraderinger per rom (endret fra 2 etter spilltest 8. nov) · fast sjeldenhet per karakter · booster kun for spillvaluta, kun fra bygde rom · fragmentkost 1/3/5/10 for karakternivå 2–5 · alle nivåøkninger krever fragmenter **og** valuta, nytt rom krever bare valuta · full-crew-bonus · frivillig prestige med synlige krav, reset og permanent bonus/romgrense · valgfrie rom-events med tilfeldige utfall, cinematic og uten permanent straff · lokal lagring uten konto · ingen monetisering, anti-cheat, backend eller FOMO |
 | **Anbefalt (mitt forslag, lett å endre)** | Startverdier for alle tall i `theme.json` (se §4) · opplåsing av karakter koster bare fragmenter (Common 2, Rare 3, Epic 5) · boosterpris = 30 sek av nåværende inntekt · 3 trekk per pakke · pity: garantert Epic-fragment senest i pakke 12 · offline-inntekt 100 % opptil 24 t · egne fragmenttyper for romnivå og for hver oppgradering · plain JS + JSDoc, ikke TypeScript · spritesheet som animasjonsformat (§7) · engelsk UI som resten av siden |
 | **Åpent** | Alle balansetall · om offline skal være ubegrenset (`"offlineCapHours": null` gjør det) · pakketyper · events med kostnad · hvordan svært lang progresjon etter siste prestige-trinn skal fungere · endelig grafikkstil og AI-produksjonsløp · Empire Editor (ikke startet, som planen sier) |
 
@@ -67,7 +67,7 @@ tools/
 
 ### Skjermbilder i UI-et
 - **Romlista** viser bare scenene under hverandre, med navn, nivå, crew og inntekt. «Upgrade ›» lyser når noe i rommet kan gjøres nå.
-- **Romsiden** (trykk på et rom) har romnivå, de tre karakterene, de to oppgraderingene og eventuelle events. Adressen får `#<rom-id>`, så telefonens tilbake-gest og pila øverst til venstre går tilbake til lista.
+- **Romsiden** (trykk på et rom) har romnivå, de tre karakterene (Crew) og de tre oppgraderingene (Gear) som like kort, og eventuelle events. Trykk på et kort for stor versjon med beskrivelse og effekt. Adressen får `#<rom-id>`, så telefonens tilbake-gest og pila øverst til venstre går tilbake til lista.
 - **Gevinst:** hver oppgradering og karakter viser hva neste nivå gir, for eksempel «Next level: +$2.3/s (+14%)». Tallet regnes ut av motoren (`previewGain()`), så det stemmer alltid med økonomien i temaet.
 - **Hjelpelinja** under pengetelleren sier alltid hva neste lure trekk er, og hopper til riktig rom og knapp når man trykker på den.
 
@@ -81,7 +81,7 @@ rominntekt = (grunn + Σ karakterer) × Π oppgraderinger × full-crew × presti
   grunn       = baseIncome × (1 + 0.25 × (romnivå − 1))
   karakter    = baseIncome × rarity.incomeShare × (1 + 0.6 × (karakternivå − 1))
                   incomeShare: Common 0.6 · Rare 1.2 · Epic 2.5
-  oppgradering= 1 + 0.15 × oppgraderingsnivå       (hver av de to)
+  oppgradering= 1 + 0.12 × oppgraderingsnivå       (hver av de tre)
   full-crew   = 1.5 når alle tre er ansatt
   prestige    = ×2 / ×3 / ×4 etter trinn 1 / 2 / 3
 
@@ -136,7 +136,7 @@ Videogenerering gir **ikke** transparent bakgrunn. Generer på ensfarget/grønn 
 
 1. Legg en bakgrunn i `assets/rooms/` (aspect 1.6, for eksempel 800×500).
 2. Legg tre spritesheets i `assets/sprites/` (samme bildestørrelse per bilde, alle bilder på en rad).
-3. Legg til et objekt i `rooms[]` med `id`, `order`, `price`, `baseIncome`, `background`, 3 `characters` og 2 `upgrades`. Kopier et eksisterende rom.
+3. Legg til et objekt i `rooms[]` med `id`, `order`, `price`, `baseIncome`, `background`, 3 `characters` og 3 `upgrades`. Kopier et eksisterende rom.
 4. Plasser med `x`/`y` (føttenes posisjon i % av scenen), `h` (høyde i % av scenen) og `z` (lag). Juster i nettleseren.
 5. `node tools/validate-empire.mjs games/fighter-empire` og `node tools/simulate-empire.mjs games/fighter-empire`.
 6. Skal rommet bak et prestige-trinn: øk `roomLimit` i riktig trinn.
@@ -150,7 +150,7 @@ Kopier `games/bus-empire/` (minst) eller `games/fighter-empire/` (fullt). Bytt `
 | # | Status | Verifisert med |
 |---|---|---|
 | 1 Inntekt umiddelbart uten karakterer | ✅ | test 1, UI |
-| 2 Tre plasser, to oppgraderinger | ✅ | test 2, validator |
+| 2 Tre plasser, tre oppgraderinger (var to) | ✅ | test 2, validator |
 | 3 Låst til rom, fast sjeldenhet | ✅ | test 3 |
 | 4 Booster for valuta, kun bygde rom | ✅ | test 4, 4b |
 | 5 Fragmenter låser opp og oppgraderer | ✅ | test 5 |

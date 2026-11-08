@@ -33,7 +33,7 @@ export function validateTheme(theme) {
     if (typeof room.price !== 'number') err(`${w}: price mangler`);
     if (!(room.baseIncome > 0)) err(`${w}: baseIncome må være > 0`);
     if (room.characters?.length !== 3) err(`${w}: må ha nøyaktig 3 karakterer (har ${room.characters?.length ?? 0})`);
-    if (room.upgrades?.length !== 2) err(`${w}: må ha nøyaktig 2 oppgraderinger (har ${room.upgrades?.length ?? 0})`);
+    if (room.upgrades?.length !== 3) err(`${w}: må ha nøyaktig 3 oppgraderinger (har ${room.upgrades?.length ?? 0})`);
     for (const c of room.characters || []) {
       claim(c.id, `karakter i ${w}`);
       if (!RARITIES.includes(c.rarity)) err(`karakter «${c.id}»: ugyldig rarity «${c.rarity}»`);

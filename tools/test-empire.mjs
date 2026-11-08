@@ -23,8 +23,8 @@ test('1  et nytt rom tjener umiddelbart uten karakterer', () => {
   assert.ok(e.advance(10) > 0);
 });
 
-test('2  tre karakterplasser og to oppgraderingstyper per rom', () => {
-  for (const th of [fighter, bus]) for (const r of th.rooms) { assert.equal(r.characters.length, 3); assert.equal(r.upgrades.length, 2); }
+test('2  tre karakterplasser og tre oppgraderinger per rom', () => {
+  for (const th of [fighter, bus]) for (const r of th.rooms) { assert.equal(r.characters.length, 3); assert.equal(r.upgrades.length, 3); }
 });
 
 test('3  karakterer er låst til rommet og har fast sjeldenhet', () => {

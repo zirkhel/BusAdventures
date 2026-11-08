@@ -95,6 +95,9 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-frag span { position: absolute; inset: 0; font-size: 10px; line-height: 14px; text-align: center; font-variant-numeric: tabular-nums; }
 
 .emp-chars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 10px 12px; border-top: 1px solid #ffffff0c; }
+.emp-section { margin: 0; padding: 10px 12px 0; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--emp-muted); border-top: 1px solid #ffffff0c; }
+.emp-section + .emp-chars { border-top: 0; padding-top: 2px; }
+.emp-gear .emp-face-pic { aspect-ratio: 1; }
 .emp-char { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .emp-char .emp-btn { width: 100%; }
 .emp-gain-short { text-align: center; font-size: 12px; }
