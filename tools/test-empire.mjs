@@ -91,7 +91,7 @@ test('10 lagring kan eksporteres og gjenopptas, offline-inntekt beregnes', () =>
   const copy = importSave(fighter, exportSave(e), { now: () => t });
   assert.equal(copy.state.coins, 123); assert.ok(copy.isBuilt('alley'));
   const off = copy.catchUp(t + 3600 * 1000);
-  assert.ok(Math.abs(off.earned - copy.totalIncome() * 3600) < 1e-6);
+  assert.ok(Math.abs(off.earned - copy.totalIncome() * 3600 * (fighter.economy.offlineRate ?? 1)) < 1e-6);
   const capped = copy.catchUp(t + 3600e3 + 100 * 3600e3);
   assert.equal(capped.countedSeconds, fighter.economy.offlineCapHours * 3600);
 });

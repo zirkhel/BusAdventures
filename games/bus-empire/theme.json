@@ -6,8 +6,8 @@
   "currency": { "name": "Tickets", "symbol": "🎫" },
   "economy": {
     "startCoins": 20,
-    "offlineCapHours": 12,
-    "offlineRate": 1,
+    "offlineCapHours": 8,
+    "offlineRate": 0.25,
     "fullSetBonus": 1,
     "roomLevel": { "incomePerLevel": 0.3, "maxLevel": 15, "cost": { "seconds": 10, "growth": 1.3 }, "fragments": [1, 1, 2, 2, 3] },
     "characterLevel": { "incomePerLevel": 0.5, "maxLevel": 5, "cost": { "seconds": 20, "growth": 1.5 }, "fragments": [1, 3, 5, 10] },
