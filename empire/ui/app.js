@@ -32,6 +32,7 @@ class EmpireApp {
     this.sym = theme.currency?.symbol ?? '$';
     this.sceneCache = {};
     this.openRoomId = null;      // null = room list, otherwise the room's upgrade page
+    this.pushedRoom = false;     // true when the list sits right below us in browser history
     this.listScroll = 0;
     this.justUnlocked = new Set();
   }
@@ -45,7 +46,7 @@ class EmpireApp {
     this.buildShell();
     const fromHash = decodeURIComponent(location.hash.slice(1));
     if (fromHash && this.empire.isBuilt(fromHash)) { this.openRoomId = fromHash; history.replaceState({ room: fromHash }, ''); }
-    addEventListener('popstate', e => this.showView(e.state?.room || null));
+    addEventListener('popstate', e => { this.pushedRoom = !!e.state?.room; this.showView(e.state?.room || null); });
     this.renderRooms();
     if (offline && offline.earned > 0 && offline.awaySeconds > AWAY_S) this.showWelcomeBack(offline);
     else if (isNew) this.showHelp();
@@ -98,6 +99,7 @@ class EmpireApp {
         </div>
         <button class="emp-btn emp-pack-btn" data-act="pack"><span>${esc(b.name || 'Booster')}</span><small data-bind="packPrice"></small></button>
         <button class="emp-icon-btn" data-act="menu" aria-label="Menu">≡</button>
+        <button class="emp-hud-rooms" data-act="close-room">‹ All rooms</button>
         <button class="emp-coach" data-act="coach"></button>
       </header>
       <main class="emp-rooms"></main>
@@ -167,15 +169,24 @@ class EmpireApp {
   // The list shows only the scenes, one under the other. Tapping a room opens its own page
   // with all upgrades. The phone's back gesture closes the page (history entry).
 
+  // History holds at most one room page above the list. Going from one room straight to
+  // another (e.g. via the coach) replaces the entry, so "All rooms" and the back gesture
+  // always land on the list, never on the previous room.
   openRoom(roomId) {
     if (!this.empire.isBuilt(roomId)) return;
-    this.listScroll = scrollY;
-    history.pushState({ room: roomId }, '', '#' + encodeURIComponent(roomId));
+    const url = '#' + encodeURIComponent(roomId);
+    if (this.openRoomId) history.replaceState({ room: roomId }, '', url);
+    else {
+      this.listScroll = scrollY;
+      history.pushState({ room: roomId }, '', url);
+      this.pushedRoom = true;
+    }
     this.showView(roomId);
   }
 
   closeRoom() {
-    if (history.state?.room) history.back();
+    if (!this.openRoomId) return;
+    if (this.pushedRoom) { this.pushedRoom = false; history.back(); }   // popstate shows the list
     else { history.replaceState(null, '', location.pathname + location.search); this.showView(null); }
   }
 
@@ -195,6 +206,8 @@ class EmpireApp {
     }
     this.root.classList.toggle('emp-on-page', !!this.openRoomId);
     this.root.querySelector('.emp-back')?.setAttribute('aria-label', this.openRoomId ? 'Back to all rooms' : 'Back to Bus Adventures');
+    const roomsBtn = this.root.querySelector('.emp-hud-rooms');
+    if (roomsBtn) roomsBtn.innerHTML = this.openRoomId ? `‹ All rooms <span class="emp-muted">· ${esc(E.rooms[this.openRoomId].name)}</span>` : '‹ All rooms';
     if (this.openRoomId) {
       const card = document.createElement('section');
       card.className = 'emp-room emp-room-page'; card.dataset.room = this.openRoomId;
@@ -286,7 +299,6 @@ class EmpireApp {
 
     card.innerHTML = `
       <header class="emp-room-head">
-        <button class="emp-page-back" data-act="close-room">‹ All rooms</button>
         <h2>${esc(room.name)}</h2>
         <span class="emp-room-income" data-bind="room-income" data-id="${roomId}"></span>
       </header>
@@ -295,7 +307,8 @@ class EmpireApp {
       ${this.levelRow('room', roomId, 'Room level', '🏠', 'Raises what the room earns on its own.')}
       <div class="emp-chars">${room.characters.map(c => this.charTile(c, rar)).join('')}</div>
       <div class="emp-upgrades">${room.upgrades.map(u => this.levelRow('upgrade', u.id, u.name, '', u.effect)).join('')}</div>
-      ${(room.events || []).map(ev => this.eventRow(ev)).join('')}`;
+      ${(room.events || []).map(ev => this.eventRow(ev)).join('')}
+      <div class="emp-page-foot"><button class="emp-btn emp-wide" data-act="close-room">‹ All rooms</button></div>`;
 
     this.attachScene(room, card.querySelector('.emp-scene-slot'));
     card.querySelectorAll('[data-portrait]').forEach(el => el.replaceWith(portrait(E.characters[el.dataset.portrait], this.asset)));
