@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500"><rect width="800" height="500" fill="#2b2233"/>
+<rect x="120" y="40" width="560" height="295" fill="#e8daef"/><rect x="120" y="40" width="560" height="295" fill="url(#c)"/>
+<defs><linearGradient id="c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c39bd3"/><stop offset=".5" stop-color="#f5eef8"/><stop offset="1" stop-color="#c39bd3"/></linearGradient></defs>
+<g stroke="#a569bd" stroke-width="3" opacity=".5"><line x1="150" y1="40" x2="150" y2="335"/><line x1="190" y1="40" x2="190" y2="335"/><line x1="230" y1="40" x2="230" y2="335"/><line x1="270" y1="40" x2="270" y2="335"/><line x1="310" y1="40" x2="310" y2="335"/><line x1="350" y1="40" x2="350" y2="335"/><line x1="390" y1="40" x2="390" y2="335"/><line x1="430" y1="40" x2="430" y2="335"/><line x1="470" y1="40" x2="470" y2="335"/><line x1="510" y1="40" x2="510" y2="335"/><line x1="550" y1="40" x2="550" y2="335"/><line x1="590" y1="40" x2="590" y2="335"/><line x1="630" y1="40" x2="630" y2="335"/><line x1="670" y1="40" x2="670" y2="335"/></g>
+<circle cx="680" cy="150" r="60" fill="none" stroke="#fff" stroke-width="14"/><circle cx="680" cy="150" r="90" fill="#fff" opacity=".12"/><rect x="676" y="210" width="8" height="125" fill="#555"/>
+<rect x="30" y="60" width="70" height="40" rx="6" fill="#c0392b"/><text x="65" y="87" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="16" fill="#fff">● REC</text>
+<path d="M0 335 H800 V500 H0Z" fill="#5b4a6b"/></svg>

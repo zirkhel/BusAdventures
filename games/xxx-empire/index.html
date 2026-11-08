@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14070f">
+  <meta name="robots" content="noindex">
+  <title>XXX Empire (18+)</title>
+  <link rel="stylesheet" href="../../empire/ui/style.css">
+  <style>
+    /* Age gate: part of this game's page only, not the shared Empire UI. */
+    .age-gate { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; background: #14070f; color: #fbeff5;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; z-index: 1000; }
+    .age-gate[hidden] { display: none; }
+    .age-gate * { box-sizing: border-box; }
+    .age-card { max-width: 380px; text-align: center; background: #1f0f19; border: 1px solid #ffffff22; border-radius: 18px; padding: 24px; }
+    .age-card h1 { font-family: Impact, 'Arial Black', sans-serif; font-weight: 400; font-size: 34px; margin: 0 0 6px; letter-spacing: .5px; }
+    .age-card .badge { display: inline-block; background: #e0115f; color: #fff; font-weight: 800; border-radius: 999px; padding: 4px 12px; margin-bottom: 14px; }
+    .age-card p { color: #b291a6; line-height: 1.45; font-size: 14px; }
+    .age-card button, .age-card a { display: block; width: 100%; margin-top: 10px; padding: 13px; border-radius: 10px; font: inherit; font-weight: 700; font-size: 15px; text-decoration: none; cursor: pointer; }
+    .age-card button { background: #e0115f; color: #fff; border: 0; }
+    .age-card a { background: transparent; color: #fbeff5; border: 1px solid #ffffff33; }
+  </style>
+</head>
+<body>
+  <div class="age-gate" hidden>
+    <div class="age-card">
+      <div class="badge">18+</div>
+      <h1>XXX Empire</h1>
+      <p>A satirical idle game about the adult entertainment business. It contains adult themes and humour. All characters are adults, and everything in the game is voluntary.</p>
+      <p>You must be 18 or older to play.</p>
+      <button data-age="yes">I am 18 or older</button>
+      <a href="../../index.html">Take me back</a>
+    </div>
+  </div>
+  <div id="empire"></div>
+  <script type="module">
+    import { mountEmpire } from '../../empire/ui/app.js';
+    const KEY = 'ba_xxx_empire_age_ok';
+    const gate = document.querySelector('.age-gate');
+    const start = () => { gate.hidden = true; mountEmpire(document.getElementById('empire'), new URL('./theme.json', import.meta.url)); };
+    let ok = false;
+    try { ok = localStorage.getItem(KEY) === '1'; } catch { ok = false; }
+    if (ok) start();
+    else {
+      gate.hidden = false;
+      gate.querySelector('[data-age="yes"]').addEventListener('click', () => {
+        try { localStorage.setItem(KEY, '1'); } catch { /* private mode: ask again next time */ }
+        start();
+      });
+    }
+  </script>
+</body>
+</html>

@@ -9,7 +9,7 @@ import { validateTheme } from '../empire/engine/validate.js';
 import { exportSave, importSave } from '../empire/engine/save.js';
 
 const load = id => JSON.parse(readFileSync(`games/${id}/theme.json`, 'utf8'));
-const fighter = load('fighter-empire'), bus = load('bus-empire'), quest = load('quest-empire'), space = load('space-empire');
+const fighter = load('fighter-empire'), bus = load('bus-empire'), quest = load('quest-empire'), space = load('space-empire'), xxx = load('xxx-empire');
 let t = 0;
 const mk = (theme = fighter, state = null) => new Empire(theme, state, { rng: seededRng(42), now: () => t });
 const results = [];
@@ -24,7 +24,7 @@ test('1  et nytt rom tjener umiddelbart uten karakterer', () => {
 });
 
 test('2  tre karakterplasser og tre oppgraderinger per rom', () => {
-  for (const th of [fighter, bus, quest, space]) for (const r of th.rooms) { assert.equal(r.characters.length, 3); assert.equal(r.upgrades.length, 3); }
+  for (const th of [fighter, bus, quest, space, xxx]) for (const r of th.rooms) { assert.equal(r.characters.length, 3); assert.equal(r.upgrades.length, 3); }
 });
 
 test('3  karakterer er låst til rommet og har fast sjeldenhet', () => {
@@ -117,6 +117,29 @@ test('12c Space Empire: tredje tema, kun konfigurasjon', () => {
   const e = mk(space); e.buildRoom('moon'); e.state.coins = 1e6; assert.ok(e.openBooster().ok);
   e.state.fragments['moon.bot'] = 2; assert.ok(e.levelUp({ kind: 'character', id: 'moon.bot' }).ok);
   assert.equal(space.presentation.labels.hire, 'Deploy');
+});
+
+test('12d XXX Empire: 8 rom, kun konfigurasjon — start, inntekt, pakker, oppgradering, events, prestige', () => {
+  assert.equal(validateTheme(xxx).errors.length, 0);
+  assert.equal(xxx.rooms.length, 8);
+  for (const r of xxx.rooms) { assert.equal(r.events.length, 1); assert.deepEqual(r.upgrades.map(u => u.rarity).sort(), ['common', 'epic', 'rare']); }
+  t = 9_000_000;
+  const e = mk(xxx);
+  assert.ok(e.buildRoom('alley').ok);                                   // 1 start
+  assert.ok(e.advance(10) > 0);                                         // 2 inntekt
+  e.state.coins = 1e9; const b = e.openBooster(); assert.ok(b.ok && b.rewards.length === 3);   // 3 pakker
+  e.state.fragments['alley.lola'] = 9; assert.ok(e.levelUp({ kind: 'character', id: 'alley.lola' }).ok);
+  assert.ok(e.levelUp({ kind: 'character', id: 'alley.lola' }).ok);     // 4 oppgradering (karakter)
+  e.state.fragments['alley.cashbox'] = 9; assert.ok(e.levelUp({ kind: 'upgrade', id: 'alley.cashbox' }).ok);   // 4 objekt
+  e.state.fragments['alley'] = 9; assert.ok(e.levelUp({ kind: 'room', id: 'alley' }).ok);                  // romnivå
+  e.state.rooms.alley.level = 3; e.state.characters['alley.rick'] = 1;
+  const ev = e.runEvent('alley.rush', t); assert.ok(ev.ok && ev.outcome.cinematic);                     // 6 event
+  assert.ok(e.buildRoom('motel').ok && e.buildRoom('studio').ok);
+  assert.equal(e.quoteBuild('mansion').reason, 'prestige-locked');
+  e.state.rooms.studio.level = 10; e.state.characters['studio.rita'] = 1; e.state.characters['studio.dave'] = 1;
+  assert.ok(e.prestige().ok); assert.equal(e.roomLimit(), 4); assert.equal(e.prestigeMultiplier(), 2);   // 5 prestige
+  const p = e; p.state.prestige.level = xxx.prestige.tiers.length; assert.equal(p.roomLimit(), 8);
+  assert.equal(xxx.prestige.name, 'Rebrand');
 });
 
 test('13 ingen nivåøkning uten både fragmenter og valuta', () => {

@@ -182,6 +182,15 @@ Verktøyet finner hver figur ut fra beina og fjerner svakt slør i bakgrunnen. D
 
 Verktøyene som lager plassholdergrafikk hopper over figurer som allerede finnes (`--force` overskriver).
 
+## 9e. XXX Empire: fjerde tema, 8 rom, kun konfigurasjon (8. nov)
+
+`games/xxx-empire/` er et satirisk 18+-tema om voksenunderholdningsbransjen, laget uten endringer i `empire/`. Det har 8 rom (Back Alley → Cheap Motel → Amateur Studio → Creator Mansion → Escort Agency → Gentlemen's Club → Adult Film Studio → XXX Media Empire), 24 karakterer, 24 objekter (Common/Rare/Epic) og 8 events.
+- Prestige: Rebrand, 6 trinn som åpner rom 4–8 (×2 → ×12).
+- UI-ord: Talent, Props, Sign, Venue og All venues.
+- Grafikk: plassholdere fra `tools/make-xxx-art.py`. Figurene er påkledde og ikke eksplisitte, og objektene er emoji.
+- **Aldersgrense:** spillets egen `index.html` viser en 18+-bekreftelse før spillet starter (huskes i `localStorage`) og har `noindex`. Spillet er **ikke** lagt på landingssiden.
+- Motoren håndterer 8 rom uten endringer. Antall rom og prestige-trinn er bare data.
+
 ## 10. Akseptansekriterier
 
 | # | Status | Verifisert med |
