@@ -19,7 +19,7 @@
     "upgrade": { "incomePerLevel": 0.12, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.5 }, "fragments": { "list": [1, 2, 3, 4, 6], "thenAdd": 2 } },
     "rarities": {
       "common": { "label": "Common", "incomeShare": 0.6, "unlockFragments": 2, "costFactor": 1, "color": "#9aa4b2", "gearIncome": 0.8 },
-      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1.0 },
+      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1 },
       "epic": { "label": "Epic", "incomeShare": 2.5, "unlockFragments": 5, "costFactor": 2.5, "color": "#c06bff", "gearIncome": 1.5 }
     }
   },
@@ -112,8 +112,8 @@
             "rows": 4,
             "fps": 8,
             "frameAspect": "282 / 512",
-            "x": 32,
-            "y": 84,
+            "x": 85.5,
+            "y": 89,
             "h": 50,
             "z": 4
           }
@@ -131,8 +131,8 @@
             "rows": 4,
             "fps": 8,
             "frameAspect": "268 / 512",
-            "x": 56,
-            "y": 84,
+            "x": 62,
+            "y": 75.5,
             "h": 50,
             "z": 4
           }
@@ -150,8 +150,8 @@
             "rows": 4,
             "fps": 8,
             "frameAspect": "338 / 512",
-            "x": 76,
-            "y": 84,
+            "x": 29,
+            "y": 87.5,
             "h": 50,
             "z": 4
           }
@@ -165,8 +165,8 @@
           "effect": "Ambience on a budget. Flickers in a way customers call 'mood lighting'.",
           "visual": {
             "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-lamp.webp" }, { "minLevel": 5, "src": "assets/upgrades/alley-lamp-deluxe.webp" }],
-            "x": 13,
-            "y": 60,
+            "x": 16.5,
+            "y": 25,
             "h": 16,
             "z": 1
           }
@@ -178,8 +178,8 @@
           "effect": "Locks. Mostly.",
           "visual": {
             "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-cashbox.webp" }, { "minLevel": 5, "src": "assets/upgrades/alley-cashbox-deluxe.webp" }],
-            "x": 21,
-            "y": 80,
+            "x": 50.5,
+            "y": 76.5,
             "h": 13,
             "z": 5
           }
