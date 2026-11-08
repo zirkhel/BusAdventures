@@ -199,6 +199,18 @@ Verktøyene som lager plassholdergrafikk hopper over figurer som allerede finnes
 - Nye valgfrie ord i `presentation.labels` (felles UI): `event` («Event ready» → «Mission ready»), `enter` (knappen på hendelsen, «Enter» → «Go») og `fragments` («Not enough fragments»). Standardordene er uendret, så de andre temaene ser ut som før.
 - På landingssiden under IDLE.
 
+## 9g. Empire Editor, første versjon (8. nov)
+
+`editor/empire.html` (på nettstedet: `/editor/empire.html`, ikke lenket fra forsiden, `noindex`).
+
+- Kobler til GitHub med et fine-grained token (Contents: Read and write, kun BusAdventures). Tokenet lagres bare i nettleseren hvis «Husk token» er krysset av.
+- Velg spill (alle `games/*-empire`) og rom. Scenen tegnes med den ekte `scene.js`, så det du ser er det spillet viser.
+- Dra figurer og ting med musa. Musehjul eller + / − endrer høyden, piltastene flytter 0,5 % (Shift: 2 %). Feltene x, y, høyde, lag og speilvend kan også skrives inn.
+- Bryter for vanlig/deluxe-trinn på tingene, og for navnefeltet som dekker bunnen av scenen i romoversikten.
+- Tekster: romnavn, undertekst, hendelse (navn, beskrivelse, utfall), kortene (navn, rolle, beskrivelse/effekt) og spillets navn og slagord.
+- «Lagre til GitHub» validerer med `validateTheme()` og skriver `theme.json` rett til `main` med samme formatering som før, så diffen bare viser det som er endret. Vercel publiserer automatisk. Er fila endret på GitHub i mellomtiden, stopper lagringen med en melding.
+- Ikke med ennå: økonomi og tall, legge til eller fjerne rom/figurer, opplasting av grafikk.
+
 ## 10. Akseptansekriterier
 
 | # | Status | Verifisert med |
