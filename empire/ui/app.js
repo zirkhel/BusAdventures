@@ -11,6 +11,15 @@ import { fmt, fmtTime, esc } from './format.js';
 
 const TICK_MS = 250, SAVE_MS = 5000, AWAY_S = 30;
 
+// Words a theme may want to change (theme.presentation.labels). A fighter "hires" a crew;
+// an RPG "defeats" monsters. Everything else in the UI is theme-neutral.
+const LABELS = {
+  crewTitle: 'Crew', gearTitle: 'Gear', members: 'characters',
+  hire: 'Hire', hired: 'hired', notHired: 'Not hired yet', joined: '{name} joins the crew!',
+  fullSet: 'Full crew', crewCount: 'crew', withBonus: 'with crew bonus',
+  room: 'Room', allRooms: 'All rooms',
+};
+
 export async function mountEmpire(root, themeUrl) {
   const theme = await (await fetch(themeUrl)).json();
   const { errors, warnings } = validateTheme(theme);
@@ -30,6 +39,7 @@ class EmpireApp {
     this.theme = theme;
     this.asset = src => new URL(src, themeUrl).href;
     this.sym = theme.currency?.symbol ?? '$';
+    this.L = { ...LABELS, ...theme.presentation?.labels };
     this.sceneCache = {};
     this.openRoomId = null;      // null = room list, otherwise the room's upgrade page
     this.pushedRoom = false;     // true when the list sits right below us in browser history
@@ -102,7 +112,7 @@ class EmpireApp {
         </div>
         <button class="emp-btn emp-pack-btn" data-act="pack"><span>${esc(this.packName)}</span><small data-bind="packPrice"></small></button>
         <button class="emp-icon-btn" data-act="menu" aria-label="Menu">≡</button>
-        <button class="emp-hud-rooms" data-act="close-room">‹ All rooms</button>
+        <button class="emp-hud-rooms" data-act="close-room">‹ ${esc(this.L.allRooms)}</button>
         <button class="emp-coach" data-act="coach"></button>
       </header>
       <main class="emp-rooms"></main>
@@ -141,8 +151,8 @@ class EmpireApp {
       if (!r.ok) return this.toast(this.reasonText(r));
       if (kind === 'character' && r.action === 'unlock') {
         this.justUnlocked.add(id);
-        this.toast(`${E.characters[id].name} joins the crew!`);
-        if (E.fullSet(r.roomId)) setTimeout(() => this.toast(`Full crew in ${E.rooms[r.roomId].name}: +${Math.round(this.fullSetBonus(r.roomId) * 100)}% income`), 1400);
+        this.toast(this.L.joined.replace('{name}', E.characters[id].name));
+        if (E.fullSet(r.roomId)) setTimeout(() => this.toast(`${this.L.fullSet} in ${E.rooms[r.roomId].name}: +${Math.round(this.fullSetBonus(r.roomId) * 100)}% income`), 1400);
       }
       this.renderRoom(r.roomId); this.save();
       if (this.detailTarget) this.showDetail(this.detailTarget);
@@ -216,7 +226,7 @@ class EmpireApp {
     this.root.classList.toggle('emp-on-page', !!this.openRoomId);
     this.root.querySelector('.emp-back')?.setAttribute('aria-label', this.openRoomId ? 'Back to all rooms' : 'Back to Bus Adventures');
     const roomsBtn = this.root.querySelector('.emp-hud-rooms');
-    if (roomsBtn) roomsBtn.innerHTML = this.openRoomId ? `‹ All rooms <span class="emp-muted">· ${esc(E.rooms[this.openRoomId].name)}</span>` : '‹ All rooms';
+    if (roomsBtn) roomsBtn.innerHTML = this.openRoomId ? `‹ ${esc(this.L.allRooms)} <span class="emp-muted">· ${esc(E.rooms[this.openRoomId].name)}</span>` : `‹ ${esc(this.L.allRooms)}`;
     if (this.openRoomId) {
       const card = document.createElement('section');
       card.className = 'emp-room emp-room-page'; card.dataset.room = this.openRoomId;
@@ -251,7 +261,7 @@ class EmpireApp {
       <div class="emp-locked-body">
         <h2>${esc(room.name)}</h2>
         <p>${esc(room.blurb || '')}</p>
-        <p class="emp-muted">Base income ${this.money(room.baseIncome)}/s · 3 new characters · 2 new upgrades</p>
+        <p class="emp-muted">Base income ${this.money(room.baseIncome)}/s · 3 new ${esc(this.L.members)} · 3 new ${esc(this.L.gearTitle.toLowerCase())}</p>
         ${lockedByPrestige
           ? `<div class="emp-lock-note">🔒 Unlocks after ${esc(this.theme.prestige?.name || 'prestige')} ${this.prestigeTierFor(room)}</div>`
           : `<button class="emp-btn emp-wide emp-build" data-act="build" data-id="${room.id}" data-q="build">Build — ${room.price ? this.money(room.price) : 'free'}</button>`}
@@ -275,7 +285,7 @@ class EmpireApp {
       <div class="emp-scene-slot"></div>
       <div class="emp-tile-label">
         <div><h2>${esc(room.name)}</h2>
-          <div class="emp-tile-meta">Lv ${E.roomLevel(room.id)} · crew ${room.characters.filter(c => E.charLevel(c.id)).length}/3 · <span data-bind="room-income" data-id="${room.id}"></span></div></div>
+          <div class="emp-tile-meta">Lv ${E.roomLevel(room.id)} · ${esc(this.L.crewCount)} ${room.characters.filter(c => E.charLevel(c.id)).length}/3 · <span data-bind="room-income" data-id="${room.id}"></span></div></div>
         <span class="emp-tile-badge" data-bind="room-badge" data-id="${room.id}"></span>
       </div>`;
     this.attachScene(room, tile.querySelector('.emp-scene-slot'));
@@ -315,14 +325,14 @@ class EmpireApp {
         <span class="emp-room-income" data-bind="room-income" data-id="${roomId}"></span>
       </header>
       <div class="emp-scene-slot"></div>
-      <div class="emp-setbonus ${E.fullSet(roomId) ? 'on' : ''}">Full crew bonus +${Math.round(this.fullSetBonus(roomId) * 100)}% ${E.fullSet(roomId) ? '✓' : `· ${room.characters.filter(c => E.charLevel(c.id)).length}/3`}</div>
-      ${this.levelRow('room', roomId, 'Room level', '🏠', 'Raises what the room earns on its own.')}
-      <h4 class="emp-section">Crew</h4>
+      <div class="emp-setbonus ${E.fullSet(roomId) ? 'on' : ''}">${esc(this.L.fullSet)} bonus +${Math.round(this.fullSetBonus(roomId) * 100)}% ${E.fullSet(roomId) ? '✓' : `· ${room.characters.filter(c => E.charLevel(c.id)).length}/3`}</div>
+      ${this.levelRow('room', roomId, `${this.L.room} level`, '🏠', `Raises what the ${this.L.room.toLowerCase()} earns on its own.`)}
+      <h4 class="emp-section">${esc(this.L.crewTitle)}</h4>
       <div class="emp-chars">${room.characters.map(c => this.cardTile('character', c.id)).join('')}</div>
-      <h4 class="emp-section">Gear</h4>
+      <h4 class="emp-section">${esc(this.L.gearTitle)}</h4>
       <div class="emp-chars emp-gear">${room.upgrades.map(u => this.cardTile('upgrade', u.id)).join('')}</div>
       ${(room.events || []).map(ev => this.eventRow(ev)).join('')}
-      <div class="emp-page-foot"><button class="emp-btn emp-wide" data-act="close-room">‹ All rooms</button></div>`;
+      <div class="emp-page-foot"><button class="emp-btn emp-wide" data-act="close-room">‹ ${esc(this.L.allRooms)}</button></div>`;
 
     this.attachScene(room, card.querySelector('.emp-scene-slot'));
     this.hydrate(card);
@@ -353,13 +363,13 @@ class EmpireApp {
     if (kind === 'upgrade') {
       const u = E.upgrades[id], v = { ...u.visual, ...u.visual?.stages?.[0] };
       const gr = u.rarity ? rar[u.rarity] : null;
-      return { tab: gr ? (gr.label || u.rarity) : 'Gear', color: u.rarity ? `var(--emp-${u.rarity})` : '#d9b45a', rarity: u.rarity, name: u.name, pic: v.src ? `<img src="${this.asset(v.src)}" alt="">` : `<span class="emp-face-emoji">${esc(v.char || '⬆')}</span>`,
-        locked: !E.upgradeLevel(id), sub: `Gear · ${E.rooms[u.roomId].name}`, text: u.effect };
+      return { tab: gr ? (gr.label || u.rarity) : this.L.gearTitle, color: u.rarity ? `var(--emp-${u.rarity})` : '#d9b45a', rarity: u.rarity, name: u.name, pic: v.src ? `<img src="${this.asset(v.src)}" alt="">` : `<span class="emp-face-emoji">${esc(v.char || '⬆')}</span>`,
+        locked: !E.upgradeLevel(id), sub: `${this.L.gearTitle} · ${E.rooms[u.roomId].name}`, text: u.effect };
     }
     const room = E.rooms[id];
     const bg = room.background?.src ? `background-image:url('${this.asset(room.background.src)}')` : `background:${room.background?.color || '#333'}`;
-    return { tab: 'Room', color: '#7fb2d9', name: room.name, pic: `<div class="emp-face-room" style="${esc(bg)}"></div>`,
-      locked: false, sub: 'Room level', text: room.blurb };
+    return { tab: this.L.room, color: '#7fb2d9', name: room.name, pic: `<div class="emp-face-room" style="${esc(bg)}"></div>`,
+      locked: false, sub: `${this.L.room} level`, text: room.blurb };
   }
 
   cardFace(kind, id, { tappable = true, bar = true } = {}) {
@@ -385,13 +395,13 @@ class EmpireApp {
     const now = E.contribution(target);
     const g = E.previewGain(target);
     const lvl = q.from;
-    const levelText = kind === 'character' ? (lvl ? `Level ${lvl} of ${q.maxLevel}` : 'Not hired yet')
+    const levelText = kind === 'character' ? (lvl ? `Level ${lvl} of ${q.maxLevel}` : this.L.notHired)
       : kind === 'upgrade' ? (lvl ? `Level ${lvl} of ${q.maxLevel}` : 'Not built yet') : `Level ${lvl} of ${q.maxLevel}`;
     const effect = kind === 'character'
-      ? `Earns on its own. Each level adds more. ${E.rooms[E.characters[id].roomId].name} gets +${Math.round(this.fullSetBonus(E.characters[id].roomId) * 100)}% when all three are hired.`
+      ? `Earns on its own. Each level adds more. ${E.rooms[E.characters[id].roomId].name} gets +${Math.round(this.fullSetBonus(E.characters[id].roomId) * 100)}% when all three are ${esc(this.L.hired)}.`
       : kind === 'upgrade' ? `Multiplies everything ${esc(E.rooms[E.upgrades[id].roomId].name)} earns: +${+(E.upgradeIncomePerLevel(id) * 100).toFixed(1)}% per level.`
-      : `Raises what the room earns on its own: +${Math.round((E.rooms[id].incomePerLevel ?? this.theme.economy.roomLevel.incomePerLevel) * 100)}% of base income per level.`;
-    const btnLabel = kind === 'character' && !lvl ? 'Hire' : kind === 'upgrade' && !lvl ? 'Build' : 'Level up';
+      : `Raises what the ${esc(this.L.room.toLowerCase())} earns on its own: +${Math.round((E.rooms[id].incomePerLevel ?? this.theme.economy.roomLevel.incomePerLevel) * 100)}% of base income per level.`;
+    const btnLabel = kind === 'character' && !lvl ? this.L.hire : kind === 'upgrade' && !lvl ? 'Build' : 'Level up';
     this.detailTarget = target;
     this.detail.querySelector('.emp-detail-card').innerHTML = `
       <div class="emp-detail-face">${this.cardFace(kind, id, { tappable: false })}</div>
@@ -478,7 +488,7 @@ class EmpireApp {
       el.disabled = !q.ok;
       el.classList.toggle('emp-ready', q.ok);
       el.innerHTML = q.maxed ? 'MAX'
-        : q.action === 'unlock' && el.dataset.kind === 'character' ? (q.coins ? `Hire ${this.money(q.coins)}` : 'Hire')
+        : q.action === 'unlock' && el.dataset.kind === 'character' ? (q.coins ? `${this.L.hire} ${this.money(q.coins)}` : this.L.hire)
         : `${q.action === 'unlock' ? 'Build' : 'Up'} ${this.money(q.coins)}`;
     });
     set('[data-bind="lv"]', el => {
@@ -492,9 +502,9 @@ class EmpireApp {
       if (!g) { el.textContent = 'Max level'; el.classList.add('max'); return; }
       el.classList.remove('max');
       const pct = g.roomShare != null && g.roomShare > 0 ? ` (+${g.roomShare >= 0.995 ? fmt(g.roomShare * 100) : (g.roomShare * 100).toFixed(g.roomShare < 0.1 ? 1 : 0)}%)` : '';
-      const verb = tg.kind === 'character' && !E.charLevel(tg.id) ? 'Hire' : tg.kind === 'upgrade' && !E.upgradeLevel(tg.id) ? 'Build' : 'Next level';
+      const verb = tg.kind === 'character' && !E.charLevel(tg.id) ? this.L.hire : tg.kind === 'upgrade' && !E.upgradeLevel(tg.id) ? 'Build' : 'Next level';
       const text = el.dataset.short ? `+${this.sym}${fmt(g.income, { decimals: true })}/s${g.completesCrew ? ' ★' : ''}`
-        : `${verb}: +${this.sym}${fmt(g.income, { decimals: true })}/s${pct}${g.completesCrew ? ' with crew bonus' : ''}`;
+        : `${verb}: +${this.sym}${fmt(g.income, { decimals: true })}/s${pct}${g.completesCrew ? ' ' + this.L.withBonus : ''}`;
       if (el.textContent !== text) el.textContent = text;
     });
     set('[data-bind="frag"]', el => {
@@ -536,7 +546,7 @@ class EmpireApp {
     // Hiring first: a new face in the room is the most fun thing to point at.
     for (const room of E.builtRooms()) for (const c of room.characters) {
       const q = E.quoteLevel({ kind: 'character', id: c.id });
-      if (q.ok && q.action === 'unlock') return { text: `👉 Hire ${c.name} in ${room.name} · ${gain(E.previewGain(q).income)}`, target: btn('character', c.id), roomId: room.id };
+      if (q.ok && q.action === 'unlock') return { text: `👉 ${this.L.hire} ${c.name} in ${room.name} · ${gain(E.previewGain(q).income)}`, target: btn('character', c.id), roomId: room.id };
     }
     const next = E.roomList.find(r => !E.isBuilt(r.id));
     if (next && E.quoteBuild(next.id).ok) return { text: `👉 Build ${next.name} · ${next.price ? this.money(next.price) : 'free'}`, target: `[data-act="build"][data-id="${next.id}"]` };
@@ -596,8 +606,8 @@ class EmpireApp {
       <ol class="emp-help">
         <li><b>Rooms earn ${cash} every second</b>, even when the game is closed.</li>
         <li><b>Buy ${pack}s</b> (top right). Each pack gives fragments.</li>
-        <li><b>Fragments + ${cash}</b> hire characters and level up rooms, characters and gear. That means more income.</li>
-        <li><b>Hire all three</b> in a room for a big bonus, then save up for the next room.</li>
+        <li><b>Fragments + ${cash}</b> ${esc(this.L.hire.toLowerCase())} ${esc(this.L.members)} and level up rooms, ${esc(this.L.members)} and ${esc(this.L.gearTitle.toLowerCase())}. That means more income.</li>
+        <li><b>${esc(this.L.hire)} all three</b> in a room for a big bonus, then save up for the next room.</li>
         <li>Later: tournaments, and ${esc(t.prestige?.name || 'prestige')}: start over with a permanent bonus.</li>
       </ol>
       <p class="emp-muted">Every upgrade shows what it adds, like <b class="emp-gain-inline">+$2.4/s</b>. A <span class="emp-help-green">green button</span> means you can do it now. Not sure? Tap the 👉 line at the top.</p>

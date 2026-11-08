@@ -151,6 +151,15 @@ Videogenerering gir **ikke** transparent bakgrunn. Generer på ensfarget/grønn 
 
 Kopier `games/bus-empire/` (minst) eller `games/fighter-empire/` (fullt). Bytt `id` (det er lagringsnøkkelen), navn, valuta, palett, rom og grafikk. Ingen filer i `empire/` skal endres. Prestige og events er valgfrie. Grafikk kan være spritesheets, animert WebP, video eller emoji, også blandet.
 
+## 9b. Quest Empire (andre fulle tema, 8. nov)
+
+`games/quest-empire/` bruker samme motor og UI uten kodeendringer. Det eneste som er nytt, er data og grafikk:
+- Rommene er quests: Rats in the Cellar → Goblins in the Woods → The Haunted Crypt → The Troll Bridge → The Wizard's Tower → The Dragon's Lair.
+- «Crew» er monstre (3 per quest, Common/Rare/Epic) som animeres i scenen når de er beseiret. Gear er ting i rommet. Hver quest har en bosskamp som event.
+- Ordene i UI-et kommer fra `presentation.labels` (Monsters, Defeat, Quest, All quests, Quest complete, slain …). Fighter Empire bruker standardordene (Crew, Hire, Room …).
+- Grafikk: `tools/make-quest-art.py` (rotter, goblins, skjeletter, spøkelse, lich, ulv, troll, golem, imp, rustning, trollmann, kobold, wyvern, drage). Rammene er 160×160. Kortbildet beskjæres automatisk til figuren, så rammeformatet spiller ingen rolle.
+- Økonomi, pakker og prestige («New Game+») er kopiert fra Fighter Empire.
+
 ## 10. Akseptansekriterier
 
 | # | Status | Verifisert med |

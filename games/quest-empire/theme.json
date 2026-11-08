@@ -1,0 +1,1022 @@
+{
+  "schemaVersion": 1,
+  "id": "quest-empire",
+  "name": "Quest Empire",
+  "tagline": "From rats in the cellar to the dragon's hoard.",
+  "currency": { "name": "Gold", "symbol": "🪙" },
+  "economy": {
+    "startCoins": 30,
+    "offlineCapHours": 24,
+    "offlineRate": 1,
+    "fullSetBonus": 0.5,
+    "roomLevel": {
+      "incomePerLevel": 0.25,
+      "maxLevel": 25,
+      "cost": { "seconds": 15, "growth": 1.33 },
+      "fragments": { "list": [1, 1, 1, 2, 2, 2, 3, 3, 3], "thenAdd": 1 }
+    },
+    "characterLevel": { "incomePerLevel": 0.6, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.6 }, "fragments": { "list": [1, 3, 5, 10], "thenAdd": 5 } },
+    "upgrade": { "incomePerLevel": 0.12, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.5 }, "fragments": { "list": [1, 2, 3, 4, 6], "thenAdd": 2 } },
+    "rarities": {
+      "common": { "label": "Common", "incomeShare": 0.6, "unlockFragments": 2, "costFactor": 1, "color": "#9aa4b2", "gearIncome": 0.8 },
+      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1.0 },
+      "epic": { "label": "Epic", "incomeShare": 2.5, "unlockFragments": 5, "costFactor": 2.5, "color": "#c06bff", "gearIncome": 1.5 }
+    }
+  },
+  "booster": {
+    "draws": 3,
+    "priceSeconds": 30,
+    "minPrice": 10,
+    "slotWeights": { "character": 55, "room": 15, "upgrade": 20, "coins": 10 },
+    "rarityWeights": { "common": 65, "rare": 27, "epic": 8 },
+    "coinsSeconds": [15, 45],
+    "epicPity": 12,
+    "excludeMaxed": true
+  },
+  "prestige": {
+    "name": "New Game+",
+    "description": "Retire your hero, keep the legend. Everything earns more on the next adventure.",
+    "startRooms": 3,
+    "tiers": [
+      {
+        "requires": [{ "type": "roomLevel", "room": "crypt", "min": 10 }, { "type": "charactersUnlocked", "room": "crypt", "min": 2 }],
+        "incomeMultiplier": 2,
+        "roomLimit": 4
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "bridge", "min": 15 }, { "type": "charactersUnlocked", "room": "bridge", "min": 3 }],
+        "incomeMultiplier": 3,
+        "roomLimit": 5
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "tower", "min": 20 }, { "type": "charactersUnlocked", "room": "tower", "min": 3 }],
+        "incomeMultiplier": 4,
+        "roomLimit": 6
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "lair", "min": 25 }, { "type": "charactersUnlocked", "room": "lair", "min": 3 }],
+        "incomeMultiplier": 6,
+        "roomLimit": 6
+      }
+    ]
+  },
+  "presentation": {
+    "sceneAspect": 1.6,
+    "palette": { "bg": "#120e17", "panel": "#1c1624", "panel2": "#272033", "text": "#f1ece2", "muted": "#9a90a6", "accent": "#b03a2e", "good": "#2ecc71" },
+    "fontDisplay": "Georgia, 'Times New Roman', serif",
+    "labels": {
+      "crewTitle": "Monsters",
+      "gearTitle": "Gear",
+      "members": "monsters",
+      "hire": "Defeat",
+      "hired": "defeated",
+      "notHired": "Not defeated yet",
+      "joined": "{name} defeated!",
+      "fullSet": "Quest complete",
+      "crewCount": "slain",
+      "withBonus": "with quest bonus",
+      "room": "Quest",
+      "allRooms": "All quests"
+    }
+  },
+  "rooms": [
+    {
+      "id": "cellar",
+      "order": 1,
+      "name": "Rats in the Cellar",
+      "blurb": "The innkeeper says there are 'a few rats' in the cellar. There are more than a few.",
+      "price": 0,
+      "baseIncome": 1,
+      "background": { "src": "assets/rooms/cellar.svg" },
+      "characters": [
+        {
+          "id": "cellar.rat",
+          "name": "Giant Rat",
+          "rarity": "common",
+          "role": "Vermin",
+          "bio": "The size of a small dog and twice as rude. Eats cheese, rope and the occasional boot.",
+          "sprite": { "src": "assets/sprites/cellar-rat.webp", "frames": 6, "fps": 7, "x": 26, "y": 86, "h": 66, "z": 4 }
+        },
+        {
+          "id": "cellar.swarm",
+          "name": "Rat Swarm",
+          "rarity": "rare",
+          "role": "Vermin",
+          "bio": "Nobody has ever counted them. Nobody has ever wanted to.",
+          "sprite": { "src": "assets/sprites/cellar-swarm.webp", "frames": 6, "fps": 8, "x": 52, "y": 88, "h": 62, "z": 4 }
+        },
+        {
+          "id": "cellar.king",
+          "name": "The Rat King",
+          "rarity": "epic",
+          "role": "Boss",
+          "bio": "Wears a bottle cap crown and a cape made from the innkeeper's best napkin. Rules the cellar with a tiny iron paw.",
+          "sprite": { "src": "assets/sprites/cellar-king.webp", "frames": 6, "fps": 6, "x": 77, "y": 86, "h": 78, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "cellar.torch",
+          "name": "Torch",
+          "rarity": "common",
+          "effect": "Rats hate light. Heroes need it.",
+          "visual": {
+            "x": 9,
+            "y": 62,
+            "h": 32,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/cellar-torch.svg" }, { "minLevel": 5, "src": "assets/upgrades/cellar-torch-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "cellar.trap",
+          "name": "Cheese Trap",
+          "rarity": "rare",
+          "effect": "The oldest trick in the dungeon. Still works.",
+          "visual": {
+            "x": 42,
+            "y": 80,
+            "h": 11,
+            "z": 5,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/cellar-trap.svg" }, { "minLevel": 5, "src": "assets/upgrades/cellar-trap-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "cellar.cat",
+          "name": "Tavern Cat",
+          "rarity": "epic",
+          "effect": "Retired adventurer. Still very good at its job.",
+          "visual": {
+            "x": 8,
+            "y": 84,
+            "h": 20,
+            "z": 5,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/cellar-cat.svg" }, { "minLevel": 5, "src": "assets/upgrades/cellar-cat-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "cellar.clear",
+          "name": "Clear the Cellar",
+          "description": "Go down with a torch and a broom. Come back a hero, or at least come back.",
+          "unlock": [{ "type": "roomLevel", "room": "cellar", "min": 3 }, { "type": "charactersUnlocked", "room": "cellar", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flee",
+              "label": "Ran up the stairs",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CLEAR THE CELLAR", "ms": 800 },
+                  { "text": "Squeak!", "ms": 800, "shake": true },
+                  { "text": "Ran up the stairs.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "scrape",
+              "label": "Cleared half the cellar",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CLEAR THE CELLAR", "ms": 800 },
+                  { "text": "Thwack!", "ms": 700, "shake": true },
+                  { "text": "CLEARED HALF THE CELLAR", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "victory",
+              "label": "Cellar cleared",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CLEAR THE CELLAR", "ms": 800 },
+                  { "text": "Swing!", "ms": 600, "shake": true },
+                  { "text": "Critical hit!", "ms": 700, "shake": true },
+                  { "text": "CELLAR CLEARED", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "The Rat King bows",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CLEAR THE CELLAR", "ms": 800 },
+                  { "text": "Royal duel!", "ms": 600, "shake": true },
+                  { "text": "CRITICAL HIT!", "ms": 600, "shake": true },
+                  { "text": "Legendary loot drops…", "ms": 900 },
+                  { "text": "THE RAT KING BOWS", "ms": 1400, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "woods",
+      "order": 2,
+      "name": "Goblins in the Woods",
+      "blurb": "Travellers keep losing their purses on the forest road. The goblins keep finding them.",
+      "price": 2000,
+      "baseIncome": 8,
+      "background": { "src": "assets/rooms/woods.svg" },
+      "characters": [
+        {
+          "id": "woods.scout",
+          "name": "Goblin Scout",
+          "rarity": "common",
+          "role": "Goblin",
+          "bio": "Quick, sneaky and terrible at keeping secrets. Shouts 'I'm not here!' when found.",
+          "sprite": { "src": "assets/sprites/woods-scout.webp", "frames": 6, "fps": 7, "x": 28, "y": 88, "h": 48, "z": 4 }
+        },
+        {
+          "id": "woods.archer",
+          "name": "Goblin Archer",
+          "rarity": "rare",
+          "role": "Goblin",
+          "bio": "Has hit a target exactly once. Talks about it constantly.",
+          "sprite": { "src": "assets/sprites/woods-archer.webp", "frames": 6, "fps": 6, "x": 50, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "woods.chief",
+          "name": "Goblin Chief",
+          "rarity": "epic",
+          "role": "Boss",
+          "bio": "Wears a crown he stole from a scarecrow. Rules by being the loudest goblin in the woods.",
+          "sprite": { "src": "assets/sprites/woods-chief.webp", "frames": 6, "fps": 6, "x": 74, "y": 88, "h": 58, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "woods.fire",
+          "name": "Campfire",
+          "rarity": "common",
+          "effect": "Warm, smoky and visible for miles.",
+          "visual": {
+            "x": 40,
+            "y": 74,
+            "h": 18,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/woods-fire.svg" }, { "minLevel": 5, "src": "assets/upgrades/woods-fire-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "woods.loot",
+          "name": "Stolen Loot",
+          "rarity": "rare",
+          "effect": "Everybody's purse, all in one convenient pile.",
+          "visual": {
+            "x": 88,
+            "y": 78,
+            "h": 22,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/woods-loot.svg" }, { "minLevel": 5, "src": "assets/upgrades/woods-loot-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "woods.totem",
+          "name": "Goblin Totem",
+          "rarity": "epic",
+          "effect": "Nobody knows what it does. Goblins are very proud of it.",
+          "visual": {
+            "x": 9,
+            "y": 90,
+            "h": 46,
+            "z": 2,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/woods-totem.svg" }, { "minLevel": 5, "src": "assets/upgrades/woods-totem-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "woods.raid",
+          "name": "Raid the Goblin Camp",
+          "description": "Sneak in at night. Goblins sleep loudly, so it should be easy.",
+          "unlock": [{ "type": "roomLevel", "room": "woods", "min": 3 }, { "type": "charactersUnlocked", "room": "woods", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 900,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flee",
+              "label": "Chased out by goblins",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "RAID THE GOBLIN CAMP", "ms": 800 },
+                  { "text": "Arrows everywhere!", "ms": 800, "shake": true },
+                  { "text": "Chased out by goblins.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "scrape",
+              "label": "Grabbed some loot",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "RAID THE GOBLIN CAMP", "ms": 800 },
+                  { "text": "Snatch!", "ms": 700, "shake": true },
+                  { "text": "GRABBED SOME LOOT", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "victory",
+              "label": "Camp raided",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "RAID THE GOBLIN CAMP", "ms": 800 },
+                  { "text": "Bonk!", "ms": 600, "shake": true },
+                  { "text": "Critical hit!", "ms": 700, "shake": true },
+                  { "text": "CAMP RAIDED", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "The Chief surrenders",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "RAID THE GOBLIN CAMP", "ms": 800 },
+                  { "text": "Crown snatched!", "ms": 600, "shake": true },
+                  { "text": "CRITICAL HIT!", "ms": 600, "shake": true },
+                  { "text": "Legendary loot drops…", "ms": 900 },
+                  { "text": "THE CHIEF SURRENDERS", "ms": 1400, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crypt",
+      "order": 3,
+      "name": "The Haunted Crypt",
+      "blurb": "Something rattles in the old crypt every night. The priest has stopped going there.",
+      "price": 90000,
+      "baseIncome": 60,
+      "background": { "src": "assets/rooms/crypt.svg" },
+      "characters": [
+        {
+          "id": "crypt.skeleton",
+          "name": "Skeleton",
+          "rarity": "common",
+          "role": "Undead",
+          "bio": "Has been guarding this crypt for three hundred years. Has forgotten what he is guarding.",
+          "sprite": { "src": "assets/sprites/crypt-skeleton.webp", "frames": 6, "fps": 6, "x": 27, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "crypt.ghost",
+          "name": "Wailing Ghost",
+          "rarity": "rare",
+          "role": "Undead",
+          "bio": "Not evil, just very upset about something nobody can quite make out.",
+          "sprite": { "src": "assets/sprites/crypt-ghost.webp", "frames": 6, "fps": 5, "x": 52, "y": 86, "h": 46, "z": 4 }
+        },
+        {
+          "id": "crypt.lich",
+          "name": "The Lich",
+          "rarity": "epic",
+          "role": "Boss",
+          "bio": "Gave up life for eternal power and now mostly uses it to rearrange the coffins.",
+          "sprite": { "src": "assets/sprites/crypt-lich.webp", "frames": 6, "fps": 5, "x": 75, "y": 88, "h": 58, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "crypt.candles",
+          "name": "Candles",
+          "rarity": "common",
+          "effect": "Everything is less spooky with candles. Slightly.",
+          "visual": {
+            "x": 50,
+            "y": 68,
+            "h": 13,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/crypt-candles.svg" }, { "minLevel": 5, "src": "assets/upgrades/crypt-candles-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "crypt.coffin",
+          "name": "Golden Coffin",
+          "rarity": "rare",
+          "effect": "Empty. Probably.",
+          "visual": {
+            "x": 8,
+            "y": 90,
+            "h": 44,
+            "z": 2,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/crypt-coffin.svg" }, { "minLevel": 5, "src": "assets/upgrades/crypt-coffin-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "crypt.altar",
+          "name": "Cursed Altar",
+          "rarity": "epic",
+          "effect": "Glows green. Hums at night. Do not lick.",
+          "visual": {
+            "x": 89,
+            "y": 70,
+            "h": 30,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/crypt-altar.svg" }, { "minLevel": 5, "src": "assets/upgrades/crypt-altar-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "crypt.banish",
+          "name": "Banish the Lich",
+          "description": "Holy water, a stern voice and a very long night.",
+          "unlock": [{ "type": "roomLevel", "room": "crypt", "min": 3 }, { "type": "charactersUnlocked", "room": "crypt", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1200,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flee",
+              "label": "Fled screaming",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [{ "text": "BANISH THE LICH", "ms": 800 }, { "text": "BOO!", "ms": 800, "shake": true }, { "text": "Fled screaming.", "ms": 1100 }]
+              }
+            },
+            {
+              "id": "scrape",
+              "label": "Banished the ghosts",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BANISH THE LICH", "ms": 800 },
+                  { "text": "Begone!", "ms": 700, "shake": true },
+                  { "text": "BANISHED THE GHOSTS", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "victory",
+              "label": "Lich banished",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BANISH THE LICH", "ms": 800 },
+                  { "text": "Holy light!", "ms": 600, "shake": true },
+                  { "text": "Critical hit!", "ms": 700, "shake": true },
+                  { "text": "LICH BANISHED", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Lich's phylactery shattered",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BANISH THE LICH", "ms": 800 },
+                  { "text": "Smash!", "ms": 600, "shake": true },
+                  { "text": "CRITICAL HIT!", "ms": 600, "shake": true },
+                  { "text": "Legendary loot drops…", "ms": 900 },
+                  { "text": "LICH'S PHYLACTERY SHATTERED", "ms": 1400, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "order": 4,
+      "name": "The Troll Bridge",
+      "blurb": "The only way over the mountains. The toll is three gold, or your lunch, or you.",
+      "price": 6000000,
+      "baseIncome": 500,
+      "background": { "src": "assets/rooms/bridge.svg" },
+      "characters": [
+        {
+          "id": "bridge.wolf",
+          "name": "Mountain Wolf",
+          "rarity": "common",
+          "role": "Beast",
+          "bio": "Follows travellers for miles, just to see if they drop anything.",
+          "sprite": { "src": "assets/sprites/bridge-wolf.webp", "frames": 6, "fps": 7, "x": 24, "y": 88, "h": 46, "z": 4 }
+        },
+        {
+          "id": "bridge.troll",
+          "name": "Bridge Troll",
+          "rarity": "rare",
+          "role": "Troll",
+          "bio": "Has collected tolls for four hundred years and has never once paid tax.",
+          "sprite": { "src": "assets/sprites/bridge-troll.webp", "frames": 6, "fps": 5, "x": 50, "y": 88, "h": 62, "z": 4 }
+        },
+        {
+          "id": "bridge.golem",
+          "name": "Stone Golem",
+          "rarity": "epic",
+          "role": "Boss",
+          "bio": "Built by a wizard to guard the bridge. The wizard left. The golem did not get the memo.",
+          "sprite": { "src": "assets/sprites/bridge-golem.webp", "frames": 6, "fps": 4, "x": 77, "y": 88, "h": 64, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "bridge.sign",
+          "name": "Toll Sign",
+          "rarity": "common",
+          "effect": "Clear prices. No haggling. Some biting.",
+          "visual": {
+            "x": 8,
+            "y": 90,
+            "h": 40,
+            "z": 2,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/bridge-sign.svg" }, { "minLevel": 5, "src": "assets/upgrades/bridge-sign-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "bridge.chest",
+          "name": "Toll Chest",
+          "rarity": "rare",
+          "effect": "Four hundred years of tolls. It is heavy.",
+          "visual": {
+            "x": 92,
+            "y": 90,
+            "h": 20,
+            "z": 5,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/bridge-chest.svg" }, { "minLevel": 5, "src": "assets/upgrades/bridge-chest-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "bridge.rune",
+          "name": "Rune Stone",
+          "rarity": "epic",
+          "effect": "Old magic that keeps the bridge standing. Mostly.",
+          "visual": {
+            "x": 62,
+            "y": 66,
+            "h": 34,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/bridge-rune.svg" }, { "minLevel": 5, "src": "assets/upgrades/bridge-rune-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "bridge.cross",
+          "name": "Cross the Troll Bridge",
+          "description": "Pay the toll, or try not to.",
+          "unlock": [{ "type": "roomLevel", "room": "bridge", "min": 3 }, { "type": "charactersUnlocked", "room": "bridge", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1800,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flee",
+              "label": "Paid double toll",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CROSS THE TROLL BRIDGE", "ms": 800 },
+                  { "text": "Grrrr!", "ms": 800, "shake": true },
+                  { "text": "Paid double toll.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "scrape",
+              "label": "Snuck halfway across",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CROSS THE TROLL BRIDGE", "ms": 800 },
+                  { "text": "Tiptoe…", "ms": 700, "shake": true },
+                  { "text": "SNUCK HALFWAY ACROSS", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "victory",
+              "label": "Crossed the bridge",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CROSS THE TROLL BRIDGE", "ms": 800 },
+                  { "text": "Smash!", "ms": 600, "shake": true },
+                  { "text": "Critical hit!", "ms": 700, "shake": true },
+                  { "text": "CROSSED THE BRIDGE", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "The Golem steps aside",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "CROSS THE TROLL BRIDGE", "ms": 800 },
+                  { "text": "Rumble!", "ms": 600, "shake": true },
+                  { "text": "CRITICAL HIT!", "ms": 600, "shake": true },
+                  { "text": "Legendary loot drops…", "ms": 900 },
+                  { "text": "THE GOLEM STEPS ASIDE", "ms": 1400, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tower",
+      "order": 5,
+      "name": "The Wizard's Tower",
+      "blurb": "Lights flicker in the tower all night. The neighbours want to know who keeps turning their sheep blue.",
+      "price": 400000000,
+      "baseIncome": 4000,
+      "background": { "src": "assets/rooms/tower.svg" },
+      "characters": [
+        {
+          "id": "tower.imp",
+          "name": "Imp",
+          "rarity": "common",
+          "role": "Demon",
+          "bio": "Summoned by accident. Refuses to leave. Steals socks.",
+          "sprite": { "src": "assets/sprites/tower-imp.webp", "frames": 6, "fps": 8, "x": 24, "y": 80, "h": 42, "z": 4 }
+        },
+        {
+          "id": "tower.armor",
+          "name": "Animated Armor",
+          "rarity": "rare",
+          "role": "Construct",
+          "bio": "An empty suit of armour that takes its guard duty very seriously.",
+          "sprite": { "src": "assets/sprites/tower-armor.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 56, "z": 4 }
+        },
+        {
+          "id": "tower.wizard",
+          "name": "The Mad Wizard",
+          "rarity": "epic",
+          "role": "Boss",
+          "bio": "Turned his own beard into a squirrel once. It is still in there somewhere.",
+          "sprite": { "src": "assets/sprites/tower-wizard.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 58, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "tower.books",
+          "name": "Spell Library",
+          "rarity": "common",
+          "effect": "Ten thousand books. Three of them are useful.",
+          "visual": {
+            "x": 9,
+            "y": 72,
+            "h": 50,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/tower-books.svg" }, { "minLevel": 5, "src": "assets/upgrades/tower-books-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "tower.orb",
+          "name": "Crystal Ball",
+          "rarity": "rare",
+          "effect": "Shows the future. The future is usually foggy.",
+          "visual": {
+            "x": 91,
+            "y": 90,
+            "h": 28,
+            "z": 5,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/tower-orb.svg" }, { "minLevel": 5, "src": "assets/upgrades/tower-orb-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "tower.circle",
+          "name": "Magic Circle",
+          "rarity": "epic",
+          "effect": "Don't step in it. Seriously.",
+          "visual": {
+            "x": 50,
+            "y": 90,
+            "h": 22,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/tower-circle.svg" }, { "minLevel": 5, "src": "assets/upgrades/tower-circle-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "tower.duel",
+          "name": "Duel the Mad Wizard",
+          "description": "Spells at dawn. Bring a spare beard.",
+          "unlock": [{ "type": "roomLevel", "room": "tower", "min": 3 }, { "type": "charactersUnlocked", "room": "tower", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 2700,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flee",
+              "label": "Turned into a frog",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "DUEL THE MAD WIZARD", "ms": 800 },
+                  { "text": "Ribbit.", "ms": 800, "shake": true },
+                  { "text": "Turned into a frog.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "scrape",
+              "label": "Survived the duel",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "DUEL THE MAD WIZARD", "ms": 800 },
+                  { "text": "Zap!", "ms": 700, "shake": true },
+                  { "text": "SURVIVED THE DUEL", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "victory",
+              "label": "Out-magicked the wizard",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "DUEL THE MAD WIZARD", "ms": 800 },
+                  { "text": "Fireball!", "ms": 600, "shake": true },
+                  { "text": "Critical hit!", "ms": 700, "shake": true },
+                  { "text": "OUT-MAGICKED THE WIZARD", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "The wizard joins your party",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "DUEL THE MAD WIZARD", "ms": 800 },
+                  { "text": "Arcane storm!", "ms": 600, "shake": true },
+                  { "text": "CRITICAL HIT!", "ms": 600, "shake": true },
+                  { "text": "Legendary loot drops…", "ms": 900 },
+                  { "text": "THE WIZARD JOINS YOUR PARTY", "ms": 1400, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lair",
+      "order": 6,
+      "name": "The Dragon's Lair",
+      "blurb": "At the end of every road there is a dragon. This one is sitting on all the gold.",
+      "price": 30000000000,
+      "baseIncome": 32000,
+      "background": { "src": "assets/rooms/lair.svg" },
+      "characters": [
+        {
+          "id": "lair.kobold",
+          "name": "Kobold",
+          "rarity": "common",
+          "role": "Dragonkin",
+          "bio": "Polishes the dragon's gold. Counts it twice. Gets it wrong both times.",
+          "sprite": { "src": "assets/sprites/lair-kobold.webp", "frames": 6, "fps": 7, "x": 20, "y": 88, "h": 42, "z": 4 }
+        },
+        {
+          "id": "lair.wyvern",
+          "name": "Wyvern",
+          "rarity": "rare",
+          "role": "Dragonkin",
+          "bio": "The dragon's smaller cousin. Very sensitive about it.",
+          "sprite": { "src": "assets/sprites/lair-wyvern.webp", "frames": 6, "fps": 6, "x": 44, "y": 88, "h": 54, "z": 4 }
+        },
+        {
+          "id": "lair.dragon",
+          "name": "Ancient Dragon",
+          "rarity": "epic",
+          "role": "Final boss",
+          "bio": "Older than the mountains, richer than the kingdom, and not in the mood.",
+          "sprite": { "src": "assets/sprites/lair-dragon.webp", "frames": 6, "fps": 6, "x": 72, "y": 88, "h": 70, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "lair.gold",
+          "name": "Gold Hoard",
+          "rarity": "common",
+          "effect": "Every coin anyone ever lost ended up here.",
+          "visual": {
+            "x": 87,
+            "y": 80,
+            "h": 22,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/lair-gold.svg" }, { "minLevel": 5, "src": "assets/upgrades/lair-gold-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "lair.egg",
+          "name": "Dragon Egg",
+          "rarity": "rare",
+          "effect": "Warm, heavy and occasionally knocking from the inside.",
+          "visual": {
+            "x": 7,
+            "y": 90,
+            "h": 26,
+            "z": 5,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/lair-egg.svg" }, { "minLevel": 5, "src": "assets/upgrades/lair-egg-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "lair.sword",
+          "name": "Sword in the Stone",
+          "rarity": "epic",
+          "effect": "Whoever pulls it out gets the kingdom. Nobody has tried very hard.",
+          "visual": {
+            "x": 31,
+            "y": 72,
+            "h": 40,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/lair-sword.svg" }, { "minLevel": 5, "src": "assets/upgrades/lair-sword-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "lair.slay",
+          "name": "Slay the Ancient Dragon",
+          "description": "The final quest. Bring everything.",
+          "unlock": [{ "type": "roomLevel", "room": "lair", "min": 3 }, { "type": "charactersUnlocked", "room": "lair", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flee",
+              "label": "Singed and running",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SLAY THE ANCIENT DRAGON", "ms": 800 },
+                  { "text": "ROAR!", "ms": 800, "shake": true },
+                  { "text": "Singed and running.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "scrape",
+              "label": "Stole a handful of gold",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SLAY THE ANCIENT DRAGON", "ms": 800 },
+                  { "text": "Grab!", "ms": 700, "shake": true },
+                  { "text": "STOLE A HANDFUL OF GOLD", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "victory",
+              "label": "Dragon defeated",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SLAY THE ANCIENT DRAGON", "ms": 800 },
+                  { "text": "Sword strike!", "ms": 600, "shake": true },
+                  { "text": "Critical hit!", "ms": 700, "shake": true },
+                  { "text": "DRAGON DEFEATED", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Legend of the realm",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SLAY THE ANCIENT DRAGON", "ms": 800 },
+                  { "text": "Dragonslayer!", "ms": 600, "shake": true },
+                  { "text": "CRITICAL HIT!", "ms": 600, "shake": true },
+                  { "text": "Legendary loot drops…", "ms": 900 },
+                  { "text": "LEGEND OF THE REALM", "ms": 1400, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

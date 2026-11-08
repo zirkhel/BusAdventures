@@ -9,7 +9,7 @@ import { validateTheme } from '../empire/engine/validate.js';
 import { exportSave, importSave } from '../empire/engine/save.js';
 
 const load = id => JSON.parse(readFileSync(`games/${id}/theme.json`, 'utf8'));
-const fighter = load('fighter-empire'), bus = load('bus-empire');
+const fighter = load('fighter-empire'), bus = load('bus-empire'), quest = load('quest-empire');
 let t = 0;
 const mk = (theme = fighter, state = null) => new Empire(theme, state, { rng: seededRng(42), now: () => t });
 const results = [];
@@ -24,7 +24,7 @@ test('1  et nytt rom tjener umiddelbart uten karakterer', () => {
 });
 
 test('2  tre karakterplasser og tre oppgraderinger per rom', () => {
-  for (const th of [fighter, bus]) for (const r of th.rooms) { assert.equal(r.characters.length, 3); assert.equal(r.upgrades.length, 3); }
+  for (const th of [fighter, bus, quest]) for (const r of th.rooms) { assert.equal(r.characters.length, 3); assert.equal(r.upgrades.length, 3); }
 });
 
 test('3  karakterer er låst til rommet og har fast sjeldenhet', () => {
@@ -103,6 +103,13 @@ test('11 karakterer har plassering og animasjon i konfigurasjon', () => {
 test('12 samme motor kjører et annet tema uten endringer', () => {
   assert.equal(validateTheme(bus).errors.length, 0);
   const e = mk(bus); e.buildRoom('stop'); e.state.coins = 1e6; assert.ok(e.openBooster().ok); assert.ok(e.advance(1) > 0);
+});
+
+test('12b Quest Empire (RPG) kjører på samme motor med egne ord', () => {
+  assert.equal(validateTheme(quest).errors.length, 0);
+  const e = mk(quest); e.buildRoom('cellar'); e.state.coins = 1e6; assert.ok(e.openBooster().ok);
+  e.state.fragments['cellar.rat'] = 2; assert.ok(e.levelUp({ kind: 'character', id: 'cellar.rat' }).ok);
+  assert.equal(quest.presentation.labels.hire, 'Defeat');
 });
 
 test('13 ingen nivåøkning uten både fragmenter og valuta', () => {
