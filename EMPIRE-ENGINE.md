@@ -191,6 +191,14 @@ Verktøyene som lager plassholdergrafikk hopper over figurer som allerede finnes
 - **Aldersgrense:** spillets egen `index.html` viser en 18+-bekreftelse før spillet starter (huskes i `localStorage`) og har `noindex`. Spillet ligger på landingssiden under IDLE, merket 18+ (fra 8. nov).
 - Motoren håndterer 8 rom uten endringer. Antall rom og prestige-trinn er bare data.
 
+## 9f. Ninja Empire: femte tema, 8 rom (8. nov)
+
+- `games/ninja-empire/`: 8 territorier (Hidden Training Ground → Empire of Shadows), 24 shinobi, 24 objekter, 8 oppdrag med fire utfall hver. Innhold fra Anders' forslag.
+- Samme økonomi, booster og prestige-oppsett som XXX Empire (8 rom, balansert fra før). Prestige heter «Rebirth of the Clan», boosterpakken «Secret Scroll», valutaen Ryō (両).
+- Plassholdergrafikk: `tools/make-ninja-art.py` (figurer og SVG-bakgrunner, objekter som emoji).
+- Nye valgfrie ord i `presentation.labels` (felles UI): `event` («Event ready» → «Mission ready»), `enter` (knappen på hendelsen, «Enter» → «Go») og `fragments` («Not enough fragments»). Standardordene er uendret, så de andre temaene ser ut som før.
+- På landingssiden under IDLE.
+
 ## 10. Akseptansekriterier
 
 | # | Status | Verifisert med |
