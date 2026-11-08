@@ -17,7 +17,7 @@ const LABELS = {
   crewTitle: 'Crew', gearTitle: 'Gear', members: 'characters',
   hire: 'Hire', hired: 'hired', notHired: 'Not hired yet', joined: '{name} joins the crew!',
   fullSet: 'Full crew', crewCount: 'crew', withBonus: 'with crew bonus',
-  room: 'Room', allRooms: 'All rooms',
+  room: 'Room', allRooms: 'All rooms', event: 'Event', enter: 'Enter', fragments: 'fragments',
 };
 
 export async function mountEmpire(root, themeUrl) {
@@ -179,7 +179,7 @@ class EmpireApp {
   save() { saveEmpire(this.empire); this.lastSave = Date.now(); }
 
   reasonText(q) {
-    return ({ coins: 'Not enough ' + (this.theme.currency?.name || 'cash').toLowerCase(), fragments: 'Not enough fragments',
+    return ({ coins: 'Not enough ' + (this.theme.currency?.name || 'cash').toLowerCase(), fragments: `Not enough ${this.L.fragments}`,
       max: 'Already at max level', 'prestige-locked': `Unlocks after ${this.theme.prestige?.name || 'prestige'}`,
       'previous-room': 'Build the previous room first', cooldown: 'Still cooling down', locked: 'Not unlocked yet' })[q.reason] || q.reason;
   }
@@ -456,7 +456,7 @@ class EmpireApp {
     return `
       <div class="emp-event">
         <div><div class="emp-event-name">🏆 ${esc(ev.name)}</div><div class="emp-muted emp-sub" data-bind="event" data-id="${ev.id}"></div></div>
-        <button class="emp-btn emp-small emp-accent" data-act="event" data-id="${ev.id}" data-q="event">Enter</button>
+        <button class="emp-btn emp-small emp-accent" data-act="event" data-id="${ev.id}" data-q="event">${esc(this.L.enter)}</button>
       </div>`;
   }
 
@@ -480,7 +480,7 @@ class EmpireApp {
 
     set('[data-bind="room-badge"]', el => {
       const action = this.roomAction(el.dataset.id);
-      el.textContent = action === 'upgrade' ? 'Upgrade ›' : action === 'event' ? 'Event ready ›' : '›';
+      el.textContent = action === 'upgrade' ? 'Upgrade ›' : action === 'event' ? `${this.L.event} ready ›` : '›';
       el.classList.toggle('on', action === 'upgrade');
       el.classList.toggle('event', action === 'event');
     });
@@ -519,7 +519,7 @@ class EmpireApp {
     set('[data-q="event"]', el => {
       const st = E.eventStatus(el.dataset.id);
       el.disabled = !st.ok;
-      el.textContent = st.reason === 'cooldown' ? fmtTime(st.cooldownLeft) : st.coins ? `Enter ${this.money(st.coins)}` : 'Enter';
+      el.textContent = st.reason === 'cooldown' ? fmtTime(st.cooldownLeft) : st.coins ? `${this.L.enter} ${this.money(st.coins)}` : this.L.enter;
     });
     set('[data-bind="event"]', el => {
       const st = E.eventStatus(el.dataset.id);

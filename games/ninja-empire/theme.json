@@ -1,0 +1,1194 @@
+{
+  "schemaVersion": 1,
+  "id": "ninja-empire",
+  "name": "Ninja Empire",
+  "tagline": "From a poor shinobi apprentice to the leader of the most powerful shadow clan in Japan.",
+  "currency": { "name": "Ryō", "symbol": "両" },
+  "economy": {
+    "startCoins": 30,
+    "offlineCapHours": 8,
+    "offlineRate": 0.25,
+    "fullSetBonus": 0.5,
+    "roomLevel": {
+      "incomePerLevel": 0.25,
+      "maxLevel": 25,
+      "cost": { "seconds": 15, "growth": 1.33 },
+      "fragments": { "list": [1, 1, 1, 2, 2, 2, 3, 3, 3], "thenAdd": 1 }
+    },
+    "characterLevel": { "incomePerLevel": 0.6, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.6 }, "fragments": { "list": [1, 3, 5, 10], "thenAdd": 5 } },
+    "upgrade": { "incomePerLevel": 0.12, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.5 }, "fragments": { "list": [1, 2, 3, 4, 6], "thenAdd": 2 } },
+    "rarities": {
+      "common": { "label": "Common", "incomeShare": 0.6, "unlockFragments": 2, "costFactor": 1, "color": "#9aa4b2", "gearIncome": 0.8 },
+      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1.0 },
+      "epic": { "label": "Epic", "incomeShare": 2.5, "unlockFragments": 5, "costFactor": 2.5, "color": "#c06bff", "gearIncome": 1.5 }
+    }
+  },
+  "booster": {
+    "draws": 3,
+    "priceSeconds": 30,
+    "minPrice": 10,
+    "slotWeights": { "character": 55, "room": 15, "upgrade": 20, "coins": 10 },
+    "rarityWeights": { "common": 65, "rare": 27, "epic": 8 },
+    "coinsSeconds": [15, 45],
+    "epicPity": 12,
+    "excludeMaxed": true,
+    "name": "Secret Scroll"
+  },
+  "prestige": {
+    "name": "Rebirth of the Clan",
+    "description": "The clan vanishes into the night and rises again elsewhere. It starts over, but it remembers everything. Everything earns more next time.",
+    "startRooms": 3,
+    "tiers": [
+      {
+        "requires": [{ "type": "roomLevel", "room": "rooftops", "min": 10 }, { "type": "charactersUnlocked", "room": "rooftops", "min": 2 }],
+        "incomeMultiplier": 2,
+        "roomLimit": 4
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "temple", "min": 15 }, { "type": "charactersUnlocked", "room": "temple", "min": 3 }],
+        "incomeMultiplier": 3,
+        "roomLimit": 5
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "camp", "min": 20 }, { "type": "charactersUnlocked", "room": "camp", "min": 3 }],
+        "incomeMultiplier": 4,
+        "roomLimit": 6
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "network", "min": 20 }, { "type": "charactersUnlocked", "room": "network", "min": 3 }],
+        "incomeMultiplier": 6,
+        "roomLimit": 7
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "fortress", "min": 25 }, { "type": "charactersUnlocked", "room": "fortress", "min": 3 }],
+        "incomeMultiplier": 8,
+        "roomLimit": 8
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "empire", "min": 25 }, { "type": "charactersUnlocked", "room": "empire", "min": 3 }],
+        "incomeMultiplier": 12,
+        "roomLimit": 8
+      }
+    ]
+  },
+  "presentation": {
+    "sceneAspect": 1.6,
+    "palette": { "bg": "#0a0c14", "panel": "#131722", "panel2": "#1c2130", "text": "#ecebe4", "muted": "#8f95a8", "accent": "#c0392b", "good": "#2ecc71" },
+    "fontDisplay": "'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif",
+    "labels": {
+      "crewTitle": "Shinobi",
+      "gearTitle": "Equipment",
+      "members": "shinobi",
+      "hire": "Recruit",
+      "hired": "recruited",
+      "notHired": "Not recruited yet",
+      "joined": "{name} joins the clan!",
+      "fullSet": "Clan Synergy",
+      "crewCount": "clan",
+      "withBonus": "with clan synergy",
+      "room": "Territory",
+      "allRooms": "All territories",
+      "event": "Mission",
+      "enter": "Go",
+      "fragments": "training fragments"
+    }
+  },
+  "rooms": [
+    {
+      "id": "training",
+      "order": 1,
+      "name": "Hidden Training Ground",
+      "blurb": "The legend begins with a wooden sword and a stolen rice ball.",
+      "price": 0,
+      "baseIncome": 1,
+      "background": { "src": "assets/rooms/training.svg" },
+      "characters": [
+        {
+          "id": "training.taro",
+          "name": "Taro the Clumsy",
+          "rarity": "common",
+          "role": "Apprentice",
+          "bio": "Trips over his own throwing stars at least twice a day. Has never hit a target on purpose, but nobody sees him coming either, mostly because he is on the ground.",
+          "sprite": { "src": "assets/sprites/training-taro.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "training.yuki",
+          "name": "Silent Yuki",
+          "rarity": "rare",
+          "role": "Scout",
+          "bio": "A young scout who vanishes between the bamboo stalks. Nobody has ever heard her speak. Some doubt she exists at all.",
+          "sprite": { "src": "assets/sprites/training-yuki.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "training.kage",
+          "name": "Master Kage",
+          "rarity": "epic",
+          "role": "Ninja Master",
+          "bio": "An old ninja master who never tells the whole truth. Every lesson ends with \"you will understand later\". Nobody has understood yet.",
+          "sprite": { "src": "assets/sprites/training-kage.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "training.dummy",
+          "name": "Wooden Training Dummy",
+          "rarity": "common",
+          "effect": "Has been stabbed, kicked and apologised to by Taro more than a thousand times.",
+          "visual": { "char": "🪵", "x": 12, "y": 80, "h": 16, "z": 2 }
+        },
+        {
+          "id": "training.rack",
+          "name": "Shuriken Rack",
+          "rarity": "rare",
+          "effect": "Sharp, shiny and organised by size. Taro is not allowed within ten paces.",
+          "visual": { "char": "🌟", "x": 90, "y": 80, "h": 14, "z": 2 }
+        },
+        {
+          "id": "training.scroll",
+          "name": "Ancient Ninja Scroll",
+          "rarity": "epic",
+          "effect": "Contains the first secret technique. Half of it is a recipe for rice balls.",
+          "visual": { "char": "📜", "x": 60, "y": 30, "h": 12, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "training.trial",
+          "name": "First Trial",
+          "description": "The apprentices face their first night trial in the bamboo forest. Master Kage watches. Probably.",
+          "unlock": [{ "type": "roomLevel", "room": "training", "min": 3 }, { "type": "charactersUnlocked", "room": "training", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Total Disaster",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "FIRST TRIAL", "ms": 800 },
+                  { "text": "Taro trips over the starting line…", "ms": 1000 },
+                  { "text": "Total Disaster.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Barely Passed",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "FIRST TRIAL", "ms": 800 },
+                  { "text": "Three of five come back. Close enough.", "ms": 1000 },
+                  { "text": "BARELY PASSED", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Perfect Execution",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "FIRST TRIAL", "ms": 800 },
+                  { "text": "Not a single leaf disturbed.", "ms": 1000 },
+                  { "text": "PERFECT EXECUTION", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Born in Shadow",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "FIRST TRIAL", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "Even Kage did not see them.", "ms": 1000 },
+                  { "text": "BORN IN SHADOW", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "village",
+      "order": 2,
+      "name": "Village of Whispers",
+      "blurb": "Every merchant has a secret. Every secret has a price.",
+      "price": 2000,
+      "baseIncome": 8,
+      "background": { "src": "assets/rooms/village.svg" },
+      "characters": [
+        {
+          "id": "village.mochi",
+          "name": "Mochi Ken",
+          "rarity": "common",
+          "role": "Street Vendor",
+          "bio": "Sells sweet rice cakes on the corner and hears absolutely everything. Payment accepted in coins or gossip, preferably gossip.",
+          "sprite": { "src": "assets/sprites/village-mochi.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "village.hana",
+          "name": "Fox Mask Hana",
+          "rarity": "rare",
+          "role": "Informant",
+          "bio": "A master of disguise who has been a monk, a fisherman and the mayor, all in the same week. The fox mask is the only face she keeps.",
+          "sprite": { "src": "assets/sprites/village-hana.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "village.kitsune",
+          "name": "Lady Kitsune",
+          "rarity": "epic",
+          "role": "Legendary Spy",
+          "bio": "A legendary spy with contacts in every corner of society, from beggars to the imperial court. She knew you were coming before you did.",
+          "sprite": { "src": "assets/sprites/village-kitsune.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "village.stall",
+          "name": "Merchant Stall",
+          "rarity": "common",
+          "effect": "Sells rice cakes in front. Buys secrets in the back.",
+          "visual": { "char": "🏮", "x": 12, "y": 80, "h": 16, "z": 2 }
+        },
+        {
+          "id": "village.box",
+          "name": "Secret Message Box",
+          "rarity": "rare",
+          "effect": "Looks exactly like a box of pickles. Smells like one too, for safety.",
+          "visual": { "char": "📦", "x": 88, "y": 80, "h": 12, "z": 2 }
+        },
+        {
+          "id": "village.net",
+          "name": "Hidden Intelligence Network",
+          "rarity": "epic",
+          "effect": "Every gossip in the village now reports to the clan. They think it is a book club.",
+          "visual": { "char": "🕸️", "x": 60, "y": 28, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "village.letter",
+          "name": "The Stolen Letter",
+          "description": "A secret document must be in clan hands before sunrise. The courier is already on the road.",
+          "unlock": [{ "type": "roomLevel", "room": "village", "min": 3 }, { "type": "charactersUnlocked", "room": "village", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 900,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Wrong Letter",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE STOLEN LETTER", "ms": 800 },
+                  { "text": "It's a love letter. To a goat.", "ms": 1000 },
+                  { "text": "Wrong Letter.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Narrow Escape",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE STOLEN LETTER", "ms": 800 },
+                  { "text": "The dogs got close. Very close.", "ms": 1000 },
+                  { "text": "NARROW ESCAPE", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Valuable Intel",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE STOLEN LETTER", "ms": 800 },
+                  { "text": "Troop movements, in full detail.", "ms": 1000 },
+                  { "text": "VALUABLE INTEL", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Shogun's Secret",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE STOLEN LETTER", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "The seal of the shogun himself.", "ms": 1000 },
+                  { "text": "SHOGUN'S SECRET", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rooftops",
+      "order": 3,
+      "name": "Rooftops of Edo",
+      "blurb": "The guards watch the gates. Nobody watches the rooftops.",
+      "price": 90000,
+      "baseIncome": 60,
+      "background": { "src": "assets/rooms/rooftops.svg" },
+      "characters": [
+        {
+          "id": "rooftops.riku",
+          "name": "Roof Rat Riku",
+          "rarity": "common",
+          "role": "Roof Runner",
+          "bio": "The fastest runner on the rooftops of Edo, with the worst balance in Japan. Knows every loose tile by name, mostly from falling through them.",
+          "sprite": { "src": "assets/sprites/rooftops-riku.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "rooftops.akira",
+          "name": "Akira Nightstep",
+          "rarity": "rare",
+          "role": "Acrobat",
+          "bio": "An acrobat and burglary specialist who has never used a door in his life. Not even his own.",
+          "sprite": { "src": "assets/sprites/rooftops-akira.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "rooftops.sparrow",
+          "name": "Crimson Sparrow",
+          "rarity": "epic",
+          "role": "Assassin",
+          "bio": "A notorious assassin known only by her red scarf. By the time the guards see the scarf, it is far too late to see anything else.",
+          "sprite": { "src": "assets/sprites/rooftops-sparrow.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "rooftops.hook",
+          "name": "Grappling Hook",
+          "rarity": "common",
+          "effect": "Up the wall in three seconds. Down again in one, if Riku uses it.",
+          "visual": { "char": "🪝", "x": 12, "y": 70, "h": 14, "z": 1 }
+        },
+        {
+          "id": "rooftops.smoke",
+          "name": "Smoke Bomb Station",
+          "rarity": "rare",
+          "effect": "For dramatic exits, dramatic entrances and covering up the smell of the fish market.",
+          "visual": { "char": "💨", "x": 88, "y": 80, "h": 12, "z": 2 }
+        },
+        {
+          "id": "rooftops.moon",
+          "name": "Moonshadow Grapple",
+          "rarity": "epic",
+          "effect": "Silk rope, silent hook, blessed by the moon. Never misses.",
+          "visual": { "char": "🌙", "x": 36, "y": 30, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "rooftops.heist",
+          "name": "The Midnight Heist",
+          "description": "A rich daimyo keeps something precious behind guarded walls. The moon is hidden tonight.",
+          "unlock": [{ "type": "roomLevel", "room": "rooftops", "min": 3 }, { "type": "charactersUnlocked", "room": "rooftops", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1200,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Alarm Raised",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE MIDNIGHT HEIST", "ms": 800 },
+                  { "text": "A tile slips. Every dog in Edo wakes up.", "ms": 1000 },
+                  { "text": "Alarm Raised.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Escaped with Scraps",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE MIDNIGHT HEIST", "ms": 800 },
+                  { "text": "A vase, two coins and a very angry cat.", "ms": 1000 },
+                  { "text": "ESCAPED WITH SCRAPS", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Treasure Secured",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE MIDNIGHT HEIST", "ms": 800 },
+                  { "text": "The treasure chest, gone without a sound.", "ms": 1000 },
+                  { "text": "TREASURE SECURED", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Ghost of Edo",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE MIDNIGHT HEIST", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "The daimyo still believes in ghosts.", "ms": 1000 },
+                  { "text": "GHOST OF EDO", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "temple",
+      "order": 4,
+      "name": "Mountain Shadow Temple",
+      "blurb": "Wisdom is earned. Usually by climbing ten thousand stairs.",
+      "price": 6000000,
+      "baseIncome": 500,
+      "background": { "src": "assets/rooms/temple.svg" },
+      "characters": [
+        {
+          "id": "temple.sora",
+          "name": "Brother Sora",
+          "rarity": "common",
+          "role": "Monk",
+          "bio": "A monk with questionable self-discipline. Meditates for hours, mostly with his eyes closed and snoring.",
+          "sprite": { "src": "assets/sprites/temple-sora.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "temple.ren",
+          "name": "Mistwalker Ren",
+          "rarity": "rare",
+          "role": "Silent Mover",
+          "bio": "An expert in silent movement who walks through the mountain fog without leaving footprints. Nobody knows how. Nobody dares to ask.",
+          "sprite": { "src": "assets/sprites/temple-ren.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "temple.onryu",
+          "name": "Grandmaster Onryu",
+          "rarity": "epic",
+          "role": "Keeper of Forbidden Arts",
+          "bio": "Guardian of the clan's forbidden techniques. Has lived on the mountain longer than the temple has stood there.",
+          "sprite": { "src": "assets/sprites/temple-onryu.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "temple.bell",
+          "name": "Meditation Bell",
+          "rarity": "common",
+          "effect": "Rings once at dawn. Rings twice when Brother Sora falls asleep.",
+          "visual": { "char": "🔔", "x": 12, "y": 60, "h": 14, "z": 1 }
+        },
+        {
+          "id": "temple.library",
+          "name": "Sacred Scroll Library",
+          "rarity": "rare",
+          "effect": "Ten thousand scrolls. A ladder that wobbles. Read at your own risk.",
+          "visual": { "char": "📚", "x": 88, "y": 80, "h": 14, "z": 2 }
+        },
+        {
+          "id": "temple.altar",
+          "name": "Shadow Technique Altar",
+          "rarity": "epic",
+          "effect": "The shadows here move a little on their own. Students are told this is normal.",
+          "visual": { "char": "⛩️", "x": 62, "y": 30, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "temple.steps",
+          "name": "Trial of the Thousand Steps",
+          "description": "A hard trial through fog and mountain passes. The steps are counted. All of them.",
+          "unlock": [{ "type": "roomLevel", "room": "temple", "min": 3 }, { "type": "charactersUnlocked", "room": "temple", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1800,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Lost in Fog",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "TRIAL OF THE THOUSAND STEPS", "ms": 800 },
+                  { "text": "Three days later, back at the bottom.", "ms": 1000 },
+                  { "text": "Lost in Fog.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Reached the Summit",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "TRIAL OF THE THOUSAND STEPS", "ms": 800 },
+                  { "text": "Out of breath, but at the top.", "ms": 1000 },
+                  { "text": "REACHED THE SUMMIT", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Inner Awakening",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "TRIAL OF THE THOUSAND STEPS", "ms": 800 },
+                  { "text": "The fog parts. Everything is clear.", "ms": 1000 },
+                  { "text": "INNER AWAKENING", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "One with Shadow",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "TRIAL OF THE THOUSAND STEPS", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "The shadow and the student move as one.", "ms": 1000 },
+                  { "text": "ONE WITH SHADOW", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "camp",
+      "order": 5,
+      "name": "Samurai War Camp",
+      "blurb": "A thousand samurai. Three ninjas. Terrible odds for the samurai.",
+      "price": 400000000,
+      "baseIncome": 4000,
+      "background": { "src": "assets/rooms/camp.svg" },
+      "characters": [
+        {
+          "id": "camp.jin",
+          "name": "Ashigaru Jin",
+          "rarity": "common",
+          "role": "Deserter",
+          "bio": "A foot soldier who walked away from the war and knows every path around the camp. Changed sides twice. Swears this one is final.",
+          "sprite": { "src": "assets/sprites/camp-jin.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "camp.takeshi",
+          "name": "Iron Mask Takeshi",
+          "rarity": "rare",
+          "role": "Saboteur",
+          "bio": "A sabotage expert behind an iron mask. Bridges collapse, wheels fall off and arrows go missing wherever he passes.",
+          "sprite": { "src": "assets/sprites/camp-takeshi.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "camp.lotus",
+          "name": "Black Lotus",
+          "rarity": "epic",
+          "role": "Feared Operative",
+          "bio": "The clan's most feared operative. Warlords sleep with their swords. It does not help.",
+          "sprite": { "src": "assets/sprites/camp-lotus.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "camp.cache",
+          "name": "Weapon Cache",
+          "rarity": "common",
+          "effect": "Hidden under the latrine. Nobody ever looks there.",
+          "visual": { "char": "🗡️", "x": 12, "y": 80, "h": 14, "z": 5 }
+        },
+        {
+          "id": "camp.workshop",
+          "name": "Sabotage Workshop",
+          "rarity": "rare",
+          "effect": "Loosens wheels, cracks bowstrings and swaps the general’s tea for something much worse.",
+          "visual": { "char": "🔧", "x": 88, "y": 80, "h": 14, "z": 2 }
+        },
+        {
+          "id": "camp.map",
+          "name": "Warlord Intelligence Map",
+          "rarity": "epic",
+          "effect": "Every camp, every path, every guard rotation. Even the warlords do not have this map.",
+          "visual": { "char": "🗺️", "x": 72, "y": 30, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "camp.dawn",
+          "name": "Battle Before Dawn",
+          "description": "A single night mission can decide the whole battle. The armies march at sunrise.",
+          "unlock": [{ "type": "roomLevel", "room": "camp", "min": 3 }, { "type": "charactersUnlocked", "room": "camp", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 2700,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Mission Failed",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BATTLE BEFORE DAWN", "ms": 800 },
+                  { "text": "The sentries were awake after all.", "ms": 1000 },
+                  { "text": "Mission Failed.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Enemy Delayed",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BATTLE BEFORE DAWN", "ms": 800 },
+                  { "text": "Two hours of chaos. Enough.", "ms": 1000 },
+                  { "text": "ENEMY DELAYED", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Camp Neutralized",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BATTLE BEFORE DAWN", "ms": 800 },
+                  { "text": "No supplies, no horses, no battle.", "ms": 1000 },
+                  { "text": "CAMP NEUTRALIZED", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Victory Without Battle",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BATTLE BEFORE DAWN", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "The enemy army simply goes home.", "ms": 1000 },
+                  { "text": "VICTORY WITHOUT BATTLE", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "order": 6,
+      "name": "Underground Shinobi Network",
+      "blurb": "An army you cannot see is an army you cannot defeat.",
+      "price": 30000000000,
+      "baseIncome": 32000,
+      "background": { "src": "assets/rooms/network.svg" },
+      "characters": [
+        {
+          "id": "network.neko",
+          "name": "Courier Neko",
+          "rarity": "common",
+          "role": "Courier",
+          "bio": "A courier who always finds a shortcut, usually through someone else’s house. Delivers in half the time and leaves the door open.",
+          "sprite": { "src": "assets/sprites/network-neko.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "network.mei",
+          "name": "Cipher Mei",
+          "rarity": "rare",
+          "role": "Codebreaker",
+          "bio": "A master of codes and intelligence. Writes her shopping lists in three ciphers. Nobody has ever found out what she buys.",
+          "sprite": { "src": "assets/sprites/network-mei.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "network.faceless",
+          "name": "The Faceless One",
+          "rarity": "epic",
+          "role": "Spymaster",
+          "bio": "The mysterious leader of a spy network that reaches every province. Has a different face for every meeting, and none of them are real.",
+          "sprite": { "src": "assets/sprites/network-faceless.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "network.pigeons",
+          "name": "Messenger Pigeon Station",
+          "rarity": "common",
+          "effect": "Forty pigeons, forty provinces. One pigeon only ever flies to the bakery.",
+          "visual": { "char": "🕊️", "x": 12, "y": 80, "h": 14, "z": 5 }
+        },
+        {
+          "id": "network.desk",
+          "name": "Cipher Desk",
+          "rarity": "rare",
+          "effect": "Codes, counter-codes and a very good lamp.",
+          "visual": { "char": "🔐", "x": 88, "y": 80, "h": 12, "z": 2 }
+        },
+        {
+          "id": "network.table",
+          "name": "Underground Command Table",
+          "rarity": "epic",
+          "effect": "A map of Japan carved in stone. Every province has a little clan flag. Most are hidden.",
+          "visual": { "char": "🗾", "x": 50, "y": 46, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "network.double",
+          "name": "The Double Agent",
+          "description": "An infiltrator has been exposed. But who are they really working for?",
+          "unlock": [{ "type": "roomLevel", "room": "network", "min": 3 }, { "type": "charactersUnlocked", "room": "network", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Network Exposed",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE DOUBLE AGENT", "ms": 800 },
+                  { "text": "Three safe houses burned.", "ms": 1000 },
+                  { "text": "Network Exposed.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Traitor Escapes",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE DOUBLE AGENT", "ms": 800 },
+                  { "text": "Gone through a tunnel nobody knew about.", "ms": 1000 },
+                  { "text": "TRAITOR ESCAPES", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Double Agent Captured",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE DOUBLE AGENT", "ms": 800 },
+                  { "text": "Caught with the code book in hand.", "ms": 1000 },
+                  { "text": "DOUBLE AGENT CAPTURED", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Enemy Network Taken Over",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE DOUBLE AGENT", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "The enemy spies now report to the clan.", "ms": 1000 },
+                  { "text": "ENEMY NETWORK TAKEN OVER", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fortress",
+      "order": 7,
+      "name": "Shadow Clan Fortress",
+      "blurb": "The clan no longer hides from its enemies. Its enemies hide from the clan.",
+      "price": 2400000000000,
+      "baseIncome": 256000,
+      "background": { "src": "assets/rooms/fortress.svg" },
+      "characters": [
+        {
+          "id": "fortress.daichi",
+          "name": "Guard Captain Daichi",
+          "rarity": "common",
+          "role": "Guard Captain",
+          "bio": "Loyal and uncompromising. Has not left his post in eleven years. Lunch is delivered.",
+          "sprite": { "src": "assets/sprites/fortress-daichi.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "fortress.aya",
+          "name": "Stormblade Aya",
+          "rarity": "rare",
+          "role": "Elite Warrior",
+          "bio": "An elite warrior with two ninjatō and no patience. Trains with forty students at once, to make it fair for them.",
+          "sprite": { "src": "assets/sprites/fortress-aya.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "fortress.shirogane",
+          "name": "Lord Shirogane",
+          "rarity": "epic",
+          "role": "Clan Lord",
+          "bio": "A legendary clan leader and strategist. Has planned for every possible attack and several impossible ones.",
+          "sprite": { "src": "assets/sprites/fortress-shirogane.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "fortress.tower",
+          "name": "Fortress Watchtower",
+          "rarity": "common",
+          "effect": "Sees three valleys away. Daichi still prefers to check personally.",
+          "visual": { "char": "🏯", "x": 12, "y": 60, "h": 14, "z": 1 }
+        },
+        {
+          "id": "fortress.dojo",
+          "name": "Elite Dojo",
+          "rarity": "rare",
+          "effect": "The floors are polished by a thousand fallen students.",
+          "visual": { "char": "🥋", "x": 88, "y": 80, "h": 14, "z": 2 }
+        },
+        {
+          "id": "fortress.banner",
+          "name": "Clan War Banner",
+          "rarity": "epic",
+          "effect": "Black silk, silver crest. Raised once, enemies lower theirs.",
+          "visual": { "char": "🎌", "x": 50, "y": 24, "h": 12, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "fortress.siege",
+          "name": "Siege of Shadows",
+          "description": "A rival clan attacks the fortress under cover of darkness.",
+          "unlock": [{ "type": "roomLevel", "room": "fortress", "min": 3 }, { "type": "charactersUnlocked", "room": "fortress", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Walls Breached",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SIEGE OF SHADOWS", "ms": 800 },
+                  { "text": "The east gate falls. The clan pulls back.", "ms": 1000 },
+                  { "text": "Walls Breached.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Fortress Holds",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SIEGE OF SHADOWS", "ms": 800 },
+                  { "text": "The walls hold until dawn.", "ms": 1000 },
+                  { "text": "FORTRESS HOLDS", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Enemy Routed",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SIEGE OF SHADOWS", "ms": 800 },
+                  { "text": "The rival clan runs for the hills.", "ms": 1000 },
+                  { "text": "ENEMY ROUTED", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Legendary Counterattack",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "SIEGE OF SHADOWS", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "Aya ends the siege before breakfast.", "ms": 1000 },
+                  { "text": "LEGENDARY COUNTERATTACK", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "empire",
+      "order": 8,
+      "name": "Empire of Shadows",
+      "blurb": "The shogun rules Japan. The shadows rule the shogun.",
+      "price": 200000000000000,
+      "baseIncome": 2000000,
+      "background": { "src": "assets/rooms/empire.svg" },
+      "characters": [
+        {
+          "id": "empire.envoy",
+          "name": "Shadow Envoy",
+          "rarity": "common",
+          "role": "Diplomat",
+          "bio": "A diplomat who never reveals who he represents. Every court in Japan trusts him, which is exactly the problem.",
+          "sprite": { "src": "assets/sprites/empire-envoy.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "empire.blades",
+          "name": "Empress of Blades",
+          "rarity": "rare",
+          "role": "Elite Commander",
+          "bio": "Leader of the clan's elite operations. Her blades are named after the generals who doubted her.",
+          "sprite": { "src": "assets/sprites/empire-blades.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "empire.eternal",
+          "name": "The Eternal Shadow",
+          "rarity": "epic",
+          "role": "Supreme Leader",
+          "bio": "The mythical supreme leader of the ninja empire. Some say there has always been an Eternal Shadow. Some say there has always been the same one.",
+          "sprite": { "src": "assets/sprites/empire-eternal.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "empire.archive",
+          "name": "Imperial Intelligence Archive",
+          "rarity": "common",
+          "effect": "Every secret of every clan for three hundred years. Alphabetised.",
+          "visual": { "char": "🗄️", "x": 12, "y": 80, "h": 14, "z": 5 }
+        },
+        {
+          "id": "empire.shrine",
+          "name": "Legendary Weapon Shrine",
+          "rarity": "rare",
+          "effect": "Swords of fallen masters. They hum quietly at night.",
+          "visual": { "char": "⚔️", "x": 88, "y": 80, "h": 14, "z": 2 }
+        },
+        {
+          "id": "empire.throne",
+          "name": "Throne of Shadows",
+          "rarity": "epic",
+          "effect": "Nobody has seen anyone sit on it. Everybody bows to it anyway.",
+          "visual": { "char": "🪑", "x": 50, "y": 62, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "empire.secret",
+          "name": "The Shogun's Last Secret",
+          "description": "One final mission could give the clan full control over the nation's fate.",
+          "unlock": [{ "type": "roomLevel", "room": "empire", "min": 3 }, { "type": "charactersUnlocked", "room": "empire", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Betrayed",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE SHOGUN'S LAST SECRET", "ms": 800 },
+                  { "text": "Someone talked. The shogun knows.", "ms": 1000 },
+                  { "text": "Betrayed.", "ms": 900 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Secret Revealed",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE SHOGUN'S LAST SECRET", "ms": 800 },
+                  { "text": "The secret is out, and in clan hands.", "ms": 1000 },
+                  { "text": "SECRET REVEALED", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Shogun Submits",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE SHOGUN'S LAST SECRET", "ms": 800 },
+                  { "text": "The shogun bows to the shadows.", "ms": 1000 },
+                  { "text": "SHOGUN SUBMITS", "ms": 1100, "color": "#c0c0c0" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Eternal Shadow Empire",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "THE SHOGUN'S LAST SECRET", "ms": 800 },
+                  { "text": "…", "ms": 600, "shake": true },
+                  { "text": "All of Japan, ruled from the dark.", "ms": 1000 },
+                  { "text": "ETERNAL SHADOW EMPIRE", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
