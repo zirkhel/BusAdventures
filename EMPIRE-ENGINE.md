@@ -188,7 +188,7 @@ Verktøyene som lager plassholdergrafikk hopper over figurer som allerede finnes
 - Prestige: Rebrand, 6 trinn som åpner rom 4–8 (×2 → ×12).
 - UI-ord: Talent, Props, Sign, Venue og All venues.
 - Grafikk: plassholdere fra `tools/make-xxx-art.py`. Figurene er påkledde og ikke eksplisitte, og objektene er emoji.
-- **Aldersgrense:** spillets egen `index.html` viser en 18+-bekreftelse før spillet starter (huskes i `localStorage`) og har `noindex`. Spillet er **ikke** lagt på landingssiden.
+- **Aldersgrense:** spillets egen `index.html` viser en 18+-bekreftelse før spillet starter (huskes i `localStorage`) og har `noindex`. Spillet ligger på landingssiden under IDLE, merket 18+ (fra 8. nov).
 - Motoren håndterer 8 rom uten endringer. Antall rom og prestige-trinn er bare data.
 
 ## 10. Akseptansekriterier
