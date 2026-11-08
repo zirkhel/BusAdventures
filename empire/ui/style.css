@@ -113,7 +113,12 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
   background: var(--rar); color: #12141a; font-size: 9.5px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase; line-height: 15px; white-space: nowrap;
 }
 .emp-face-pic { aspect-ratio: 2 / 3; display: grid; place-items: center; overflow: hidden; }
-.emp-face-pic .emp-portrait { width: 100%; height: 100%; }
+.emp-face-pic { position: relative; }
+.emp-face-pic .emp-portrait { position: absolute; inset: 4% 4% 0; width: auto; height: auto; }
+.emp-portrait { display: grid; place-items: center; font-size: 2.6em; }
+.emp-portrait.emp-flip { transform: scaleX(-1); }
+.emp-portrait-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center 70%; display: block; }
+.emp-portrait { position: relative; }
 .emp-face-pic img { width: 88%; height: 88%; object-fit: contain; }
 .emp-face-emoji { font-size: 3em; }
 .emp-face-room { width: 100%; height: 100%; background-size: cover; background-position: center; }

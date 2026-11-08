@@ -136,7 +136,7 @@ export function renderScene(container, room, empire, asset, { justUnlocked = new
       ghost.className = 'emp-ghost';
       ghost.style.left = `${m.x}%`; ghost.style.top = `${m.y}%`;
       ghost.textContent = '?';
-      ghost.title = `${ch.name} — not hired yet`;
+      ghost.title = ch.name;
       container.appendChild(ghost);
     }
   }
@@ -151,9 +151,45 @@ export function portrait(ch, asset) {
   const t = mediaType(m);
   if (t === 'emoji') { el.textContent = m.char; el.classList.add('emp-portrait-emoji'); }
   else if (t === 'sprite') {
-    el.style.backgroundImage = `url("${asset(m.src)}")`;
-    el.style.backgroundSize = `${(m.frames || 1) * 100}% 100%`;
+    // First frame, cropped to the figure itself, so any frame size or shape fills the card.
+    const canvas = document.createElement('canvas');
+    canvas.className = 'emp-portrait-canvas';
+    el.appendChild(canvas);
     if (m.flip) el.classList.add('emp-flip');
+    firstFrame(asset(m.src), m.frames || 1).then(f => {
+      canvas.width = f.w; canvas.height = f.h;
+      canvas.getContext('2d').drawImage(f.img, f.sx, f.sy, f.w, f.h, 0, 0, f.w, f.h);
+    }).catch(() => {});
   } else el.style.backgroundImage = `url("${asset(m.src)}")`;
   return el;
+}
+
+const frameCache = new Map();
+/** Load a spritesheet once and find the box around the visible pixels of frame 0. */
+function firstFrame(src, frames) {
+  if (!frameCache.has(src)) frameCache.set(src, new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const fw = Math.floor(img.naturalWidth / frames), fh = img.naturalHeight;
+      let box = { sx: 0, sy: 0, w: fw, h: fh };
+      try {
+        const c = document.createElement('canvas'); c.width = fw; c.height = fh;
+        const g = c.getContext('2d'); g.drawImage(img, 0, 0, fw, fh, 0, 0, fw, fh);
+        const d = g.getImageData(0, 0, fw, fh).data;
+        let x0 = fw, y0 = fh, x1 = -1, y1 = -1;
+        for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) {
+          if (d[(y * fw + x) * 4 + 3] > 90) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        }
+        if (x1 >= 0) {
+          const pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.08);
+          x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(fw - 1, x1 + pad); y1 = Math.min(fh - 1, y1 + pad);
+          box = { sx: x0, sy: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+        }
+      } catch { /* cross-origin image: use the whole frame */ }
+      resolve({ img, ...box });
+    };
+    img.onerror = reject;
+    img.src = src;
+  }));
+  return frameCache.get(src);
 }
