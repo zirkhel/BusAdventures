@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "id": "fighter-empire",
+  "name": "Fighter Empire",
+  "tagline": "From a back alley to the big lights.",
+  "currency": { "name": "Cash", "symbol": "$" },
+
+  "economy": {
+    "startCoins": 0,
+    "offlineCapHours": 24,
+    "offlineRate": 1,
+    "fullSetBonus": 0.5,
+    "roomLevel":      { "incomePerLevel": 0.25, "maxLevel": 25, "cost": { "seconds": 15, "growth": 1.33 }, "fragments": { "list": [1, 1, 1, 2, 2, 2, 3, 3, 3], "thenAdd": 1 } },
+    "characterLevel": { "incomePerLevel": 0.6,  "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.6 }, "fragments": { "list": [1, 3, 5, 10], "thenAdd": 5 } },
+    "upgrade":        { "incomePerLevel": 0.15, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.5 }, "fragments": { "list": [1, 2, 3, 4, 6], "thenAdd": 2 } },
+    "rarities": {
+      "common": { "label": "Common", "incomeShare": 0.6, "unlockFragments": 2, "costFactor": 1,   "color": "#9aa4b2" },
+      "rare":   { "label": "Rare",   "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff" },
+      "epic":   { "label": "Epic",   "incomeShare": 2.5, "unlockFragments": 5, "costFactor": 2.5, "color": "#c06bff" }
+    }
+  },
+
+  "booster": {
+    "name": "Fight Pack",
+    "draws": 3,
+    "priceSeconds": 30,
+    "minPrice": 10,
+    "slotWeights": { "character": 55, "room": 15, "upgrade": 20, "coins": 10 },
+    "rarityWeights": { "common": 65, "rare": 27, "epic": 8 },
+    "coinsSeconds": [15, 45],
+    "epicPity": 12,
+    "excludeMaxed": true
+  },
+
+  "prestige": {
+    "name": "Rebrand",
+    "description": "Sell the empire, keep the reputation. Everything earns more next time.",
+    "startRooms": 3,
+    "tiers": [
+      { "requires": [ { "type": "roomLevel", "room": "thai", "min": 10 }, { "type": "charactersUnlocked", "room": "thai", "min": 2 } ], "incomeMultiplier": 2, "roomLimit": 4 },
+      { "requires": [ { "type": "roomLevel", "room": "dojo", "min": 15 }, { "type": "charactersUnlocked", "room": "dojo", "min": 3 } ], "incomeMultiplier": 3, "roomLimit": 5 },
+      { "requires": [ { "type": "roomLevel", "room": "arena", "min": 20 }, { "type": "charactersUnlocked", "room": "arena", "min": 3 } ], "incomeMultiplier": 4, "roomLimit": 5 }
+    ]
+  },
+
+  "presentation": {
+    "sceneAspect": 1.6,
+    "palette": { "bg": "#0d0f14", "panel": "#171a22", "panel2": "#1f2330", "text": "#eef1f6", "muted": "#8a93a6", "accent": "#ff5a3c", "good": "#2ecc71" },
+    "fontDisplay": "Impact, 'Arial Black', sans-serif"
+  },
+
+  "rooms": [
+    {
+      "id": "alley", "order": 1, "name": "Back Alley",
+      "blurb": "Two fighters, one guy watching, and a dumpster that has seen things.",
+      "price": 0, "baseIncome": 1,
+      "background": { "src": "assets/rooms/alley.svg" },
+      "characters": [
+        { "id": "alley.mick", "name": "Mumbling Mick", "rarity": "common", "role": "Spectator",
+          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 6, "fps": 6, "x": 82, "y": 88, "h": 40, "z": 3, "flip": true } },
+        { "id": "alley.knuckles", "name": "Knuckles Kowalski", "rarity": "rare", "role": "Fighter",
+          "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 6, "fps": 7, "x": 36, "y": 93, "h": 42, "z": 4 } },
+        { "id": "alley.ana", "name": "Alley Cat Ana", "rarity": "epic", "role": "Fighter",
+          "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 6, "fps": 7, "x": 58, "y": 93, "h": 42, "z": 4, "flip": true } }
+      ],
+      "upgrades": [
+        { "id": "alley.bookie", "name": "Bookmaker Stall", "effect": "Somebody has to take the bets.",
+          "visual": { "x": 86, "y": 70, "h": 34, "z": 1, "stages": [ { "minLevel": 1, "src": "assets/upgrades/alley-bookie.svg" }, { "minLevel": 5, "src": "assets/upgrades/alley-bookie-deluxe.svg" } ] } },
+        { "id": "alley.boombox", "name": "Boombox", "effect": "Every fight needs a soundtrack.",
+          "visual": { "x": 12, "y": 92, "h": 14, "z": 5, "stages": [ { "minLevel": 1, "src": "assets/upgrades/alley-boombox.svg" }, { "minLevel": 5, "src": "assets/upgrades/alley-boombox-deluxe.svg" } ] } }
+      ],
+      "events": [
+        {
+          "id": "alley.tournament", "name": "Backyard Alley Brawl Tournament",
+          "description": "Eight fighters, one alley, no rules worth mentioning. Higher character levels improve the odds.",
+          "unlock": [ { "type": "roomLevel", "room": "alley", "min": 3 }, { "type": "charactersUnlocked", "room": "alley", "min": 2 } ],
+          "costSeconds": 0, "cooldownSeconds": 600, "repeatable": true,
+          "outcomes": [
+            { "id": "out", "label": "Knocked out in round one", "weight": 40, "skillWeight": -3, "minWeight": 5,
+              "rewards": [ { "type": "coins", "seconds": 30 } ],
+              "cinematic": { "type": "sequence", "frames": [ { "text": "DING DING", "ms": 700 }, { "text": "…", "ms": 600 }, { "text": "THUD.", "ms": 900, "shake": true }, { "text": "Out in round one.", "ms": 1200 } ] } },
+            { "id": "third", "label": "Third place", "weight": 30, "skillWeight": 0,
+              "rewards": [ { "type": "coins", "seconds": 120 } ],
+              "cinematic": { "type": "sequence", "frames": [ { "text": "DING DING", "ms": 700 }, { "text": "POW!", "ms": 500, "shake": true }, { "text": "Semi-final loss.", "ms": 900 }, { "text": "BRONZE", "ms": 1200, "color": "#cd7f32" } ] } },
+            { "id": "second", "label": "Runner-up", "weight": 20, "skillWeight": 1,
+              "rewards": [ { "type": "coins", "seconds": 300 }, { "type": "fragments", "rarity": "common", "count": 1, "scope": "room" } ],
+              "cinematic": { "type": "sequence", "frames": [ { "text": "DING DING", "ms": 700 }, { "text": "POW! POW!", "ms": 600, "shake": true }, { "text": "The final…", "ms": 900 }, { "text": "SO CLOSE.", "ms": 800 }, { "text": "SILVER", "ms": 1200, "color": "#c0c7d0" } ] } },
+            { "id": "win", "label": "Champion of the alley", "weight": 10, "skillWeight": 2,
+              "rewards": [ { "type": "coins", "seconds": 600 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }, { "type": "booster", "count": 1 } ],
+              "cinematic": { "type": "sequence", "frames": [ { "text": "DING DING", "ms": 700 }, { "text": "POW!", "ms": 450, "shake": true }, { "text": "BAM!", "ms": 450, "shake": true }, { "text": "KNOCKOUT!", "ms": 900, "shake": true }, { "text": "CHAMPION", "ms": 1500, "color": "#f1c40f" } ] } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gym", "order": 2, "name": "Boxing Gym",
+      "blurb": "Sweat, leather and a coach who has never once smiled.",
+      "price": 2000, "baseIncome": 8,
+      "background": { "src": "assets/rooms/gym.svg" },
+      "characters": [
+        { "id": "gym.ray", "name": "Rookie Ray", "rarity": "common", "role": "Boxer",
+          "sprite": { "src": "assets/sprites/gym-ray.webp", "frames": 6, "fps": 7, "x": 34, "y": 92, "h": 40, "z": 4 } },
+        { "id": "gym.dolores", "name": "Coach Dolores", "rarity": "rare", "role": "Coach",
+          "sprite": { "src": "assets/sprites/gym-dolores.webp", "frames": 6, "fps": 3, "x": 14, "y": 90, "h": 40, "z": 3 } },
+        { "id": "gym.jackson", "name": "Iron Jaw Jackson", "rarity": "epic", "role": "Boxer",
+          "sprite": { "src": "assets/sprites/gym-jackson.webp", "frames": 6, "fps": 7, "x": 58, "y": 92, "h": 43, "z": 4, "flip": true } }
+      ],
+      "upgrades": [
+        { "id": "gym.bag", "name": "Heavy Bag", "effect": "Hit it until it apologises.",
+          "visual": { "x": 86, "y": 76, "h": 48, "z": 2, "stages": [ { "minLevel": 1, "src": "assets/upgrades/gym-bag.svg" }, { "minLevel": 5, "src": "assets/upgrades/gym-bag-deluxe.svg" } ] } },
+        { "id": "gym.ring", "name": "Boxing Ring", "effect": "A proper ring. With ropes.",
+          "visual": { "x": 47, "y": 97, "h": 46, "z": 1, "stages": [ { "minLevel": 1, "src": "assets/upgrades/gym-ring.svg" }, { "minLevel": 5, "src": "assets/upgrades/gym-ring-deluxe.svg" } ] } }
+      ]
+    },
+    {
+      "id": "thai", "order": 3, "name": "Thai Boxing Resort",
+      "blurb": "Beach, sunset, and elbows you will feel tomorrow.",
+      "price": 90000, "baseIncome": 60,
+      "background": { "src": "assets/rooms/thai.svg" },
+      "characters": [
+        { "id": "thai.bob", "name": "Beach Tourist Bob", "rarity": "common", "role": "Tourist",
+          "sprite": { "src": "assets/sprites/thai-bob.webp", "frames": 6, "fps": 4, "x": 84, "y": 90, "h": 40, "z": 3, "flip": true } },
+        { "id": "thai.elbow", "name": "Somchai the Elbow", "rarity": "rare", "role": "Fighter",
+          "sprite": { "src": "assets/sprites/thai-elbow.webp", "frames": 6, "fps": 7, "x": 38, "y": 93, "h": 42, "z": 4 } },
+        { "id": "thai.nong", "name": "Lightning Nong", "rarity": "epic", "role": "Fighter",
+          "sprite": { "src": "assets/sprites/thai-nong.webp", "frames": 6, "fps": 8, "x": 60, "y": 93, "h": 42, "z": 4, "flip": true } }
+      ],
+      "upgrades": [
+        { "id": "thai.bar", "name": "Tiki Bar", "effect": "Coconut-based morale.",
+          "visual": { "x": 14, "y": 80, "h": 40, "z": 2, "stages": [ { "minLevel": 1, "src": "assets/upgrades/thai-bar.svg" }, { "minLevel": 5, "src": "assets/upgrades/thai-bar-deluxe.svg" } ] } },
+        { "id": "thai.pier", "name": "Training Pier", "effect": "Sparring above the waves.",
+          "visual": { "x": 72, "y": 68, "h": 16, "z": 1, "stages": [ { "minLevel": 1, "src": "assets/upgrades/thai-pier.svg" }, { "minLevel": 5, "src": "assets/upgrades/thai-pier-deluxe.svg" } ] } }
+      ]
+    },
+    {
+      "id": "dojo", "order": 4, "name": "Kung Fu Dojo",
+      "blurb": "Wax on, sweep floor, ask no questions.",
+      "price": 6000000, "baseIncome": 500,
+      "background": { "src": "assets/rooms/dojo.svg" },
+      "characters": [
+        { "id": "dojo.student", "name": "Sweeping Student", "rarity": "common", "role": "Student",
+          "sprite": { "src": "assets/sprites/dojo-student.webp", "frames": 6, "fps": 4, "x": 18, "y": 92, "h": 40, "z": 4 } },
+        { "id": "dojo.lin", "name": "Old Master Lin", "rarity": "rare", "role": "Master",
+          "sprite": { "src": "assets/sprites/dojo-lin.webp", "frames": 6, "fps": 3, "x": 50, "y": 86, "h": 37, "z": 3 } },
+        { "id": "dojo.mei", "name": "Crane Style Mei", "rarity": "epic", "role": "Fighter",
+          "sprite": { "src": "assets/sprites/dojo-mei.webp", "frames": 6, "fps": 5, "x": 72, "y": 93, "h": 42, "z": 4, "flip": true } }
+      ],
+      "upgrades": [
+        { "id": "dojo.dummy", "name": "Wooden Dummy", "effect": "It never blocks back. Probably.",
+          "visual": { "x": 90, "y": 88, "h": 44, "z": 2, "stages": [ { "minLevel": 1, "src": "assets/upgrades/dojo-dummy.svg" }, { "minLevel": 5, "src": "assets/upgrades/dojo-dummy-deluxe.svg" } ] } },
+        { "id": "dojo.lanterns", "name": "Lantern Garden", "effect": "Ambience is a martial art.",
+          "visual": { "x": 50, "y": 26, "h": 22, "z": 1, "stages": [ { "minLevel": 1, "src": "assets/upgrades/dojo-lanterns.svg" }, { "minLevel": 5, "src": "assets/upgrades/dojo-lanterns-deluxe.svg" } ] } }
+      ]
+    },
+    {
+      "id": "arena", "order": 5, "name": "Steel Cage Arena",
+      "blurb": "Twenty thousand seats and a smoke machine. The empire has arrived.",
+      "price": 400000000, "baseIncome": 4000,
+      "background": { "src": "assets/rooms/arena.svg" },
+      "characters": [
+        { "id": "arena.announcer", "name": "The Announcer", "rarity": "common", "role": "Announcer",
+          "sprite": { "src": "assets/sprites/arena-announcer.webp", "frames": 6, "fps": 4, "x": 14, "y": 90, "h": 40, "z": 3 } },
+        { "id": "arena.gus", "name": "Ground Game Gus", "rarity": "rare", "role": "Fighter",
+          "sprite": { "src": "assets/sprites/arena-gus.webp", "frames": 6, "fps": 7, "x": 40, "y": 92, "h": 42, "z": 4 } },
+        { "id": "arena.champ", "name": "The Champion", "rarity": "epic", "role": "Fighter",
+          "sprite": { "src": "assets/sprites/arena-champ.webp", "frames": 6, "fps": 7, "x": 64, "y": 92, "h": 45, "z": 4, "flip": true } }
+      ],
+      "upgrades": [
+        { "id": "arena.pyro", "name": "Pyro Show", "effect": "Fire. Indoors. Legally.",
+          "visual": { "x": 50, "y": 72, "h": 40, "z": 1, "stages": [ { "minLevel": 1, "src": "assets/upgrades/arena-pyro.svg" }, { "minLevel": 5, "src": "assets/upgrades/arena-pyro-deluxe.svg" } ] } },
+        { "id": "arena.screen", "name": "Jumbo Screen", "effect": "Every punch, ten metres tall.",
+          "visual": { "x": 50, "y": 34, "h": 30, "z": 1, "stages": [ { "minLevel": 1, "src": "assets/upgrades/arena-screen.svg" }, { "minLevel": 5, "src": "assets/upgrades/arena-screen-deluxe.svg" } ] } }
+      ]
+    }
+  ]
+}
