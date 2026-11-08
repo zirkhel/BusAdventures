@@ -21,13 +21,9 @@ function startLoop() {
   if (rafStarted) return; rafStarted = true;
   const tick = now => {
     for (const s of sprites) {
-      if (!s.el.isConnected) {
-        // Detached scenes may be re-attached when a room card re-renders; forget them after a while.
-        s.gone ??= now;
-        if (now - s.gone > 10000) sprites.delete(s);
-        continue;
-      }
-      s.gone = null;
+      // A scene can be detached for a long time (e.g. while a room page is open) and then shown
+      // again, so detached sprites are only skipped. They are removed by releaseScene().
+      if (!s.el.isConnected) continue;
       if (!s.visible || s.paused) continue;
       const frame = Math.floor(((now - s.t0) / 1000) * s.fps) % s.frames;
       if (frame !== s.frame) {
@@ -45,6 +41,11 @@ const io = typeof IntersectionObserver !== 'undefined'
       for (const e of entries) for (const s of sprites) if (s.el === e.target) s.visible = e.isIntersecting;
     })
   : null;
+
+/** Stop animating every sprite inside a scene element that is being thrown away. */
+export function releaseScene(sceneEl) {
+  for (const s of sprites) if (sceneEl.contains(s.el)) { sprites.delete(s); io?.unobserve(s.el); }
+}
 
 export function mediaType(m) {
   if (m.type) return m.type;
