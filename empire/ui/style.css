@@ -28,6 +28,18 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-prestige-badge { color: #f1c40f; }
 .emp-pack-btn { display: flex; flex-direction: column; align-items: center; line-height: 1.1; padding: 7px 12px; background: linear-gradient(180deg, #ff7a3c, #e0432a); border-color: #ff9a6a; }
 .emp-pack-btn small { font-size: 11px; opacity: .9; }
+.emp-hud { flex-wrap: wrap; }
+.emp-coach {
+  flex-basis: 100%; font: inherit; font-size: 13px; line-height: 1.3; text-align: left; color: var(--emp-text);
+  background: #ffffff0d; border: 1px solid #ffffff1a; border-radius: 10px; padding: 7px 10px; cursor: pointer;
+}
+.emp-coach.emp-coach-go { border-color: var(--emp-good); background: #2ecc7114; }
+.emp-pack-btn.emp-ready { background: linear-gradient(180deg, #ff7a3c, #e0432a); color: #fff; border-color: #fff; animation: emp-pulse 1.6s ease-in-out infinite; }
+@keyframes emp-pulse { 50% { box-shadow: 0 0 0 5px #ff7a3c55; } }
+.emp-flash { animation: emp-flash .9s ease-out 2; }
+@keyframes emp-flash { 0% { box-shadow: 0 0 0 0 #2ecc71; } 100% { box-shadow: 0 0 0 14px #2ecc7100; } }
+.emp-help { margin: 6px 0 10px; padding-left: 20px; line-height: 1.45; } .emp-help li { margin-bottom: 6px; }
+.emp-help-green { background: var(--emp-good); color: #06240f; padding: 0 6px; border-radius: 5px; font-weight: 600; }
 .emp-icon-btn { background: none; border: 0; color: var(--emp-text); font-size: 26px; padding: 4px 6px; cursor: pointer; }
 
 /* ── Buttons ─────────────────────────────────────── */
@@ -74,6 +86,9 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-thumb { width: 34px; height: 34px; object-fit: contain; }
 .emp-lv { color: var(--emp-muted); font-size: 12px; margin-left: 4px; }
 
+.emp-gain, .emp-gain-inline { color: var(--emp-good); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.3; }
+.emp-gain.max { color: var(--emp-muted); font-weight: 400; }
+.emp-char .emp-gain { font-size: 11px; min-height: 2.6em; display: flex; align-items: center; justify-content: center; }
 .emp-frag { position: relative; height: 14px; margin-top: 4px; background: #ffffff10; border-radius: 7px; overflow: hidden; max-width: 160px; }
 .emp-frag-fill { height: 100%; background: #5b6b8a; transition: width .3s; }
 .emp-frag.full .emp-frag-fill { background: var(--emp-good); }
@@ -95,6 +110,22 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-event { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 12px 12px; border-top: 1px solid #ffffff0c; background: #f1c40f0d; }
 .emp-event-name { font-weight: 600; font-size: 14px; }
 
+/* list view: scenes only */
+.emp-room-tile { position: relative; cursor: pointer; }
+.emp-room-tile:active { transform: scale(.99); }
+.emp-tile-label {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px;
+  padding: 26px 12px 9px; background: linear-gradient(transparent, #000c); pointer-events: none; z-index: 30;
+}
+.emp-tile-label h2 { margin: 0; font-family: var(--emp-display); font-weight: 400; font-size: 21px; letter-spacing: .5px; text-shadow: 0 2px 0 #000; }
+.emp-tile-meta { font-size: 12px; color: #dfe4ee; font-variant-numeric: tabular-nums; }
+.emp-tile-meta [data-bind="room-income"] { color: var(--emp-good); }
+.emp-tile-badge { font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #0008; color: #fff; border: 1px solid #ffffff40; white-space: nowrap; }
+.emp-tile-badge.on { background: var(--emp-good); color: #06240f; border-color: #7dffb0; animation: emp-pulse 1.6s ease-in-out infinite; }
+/* room page */
+.emp-room-page .emp-room-head { flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.emp-room-page .emp-room-head h2 { flex: 1; }
+.emp-page-back { flex-basis: 100%; text-align: left; background: none; border: 0; color: var(--emp-muted); font: inherit; font-size: 14px; padding: 2px 0 4px; cursor: pointer; }
 .emp-room-locked { opacity: .92; }
 .emp-locked-scene { aspect-ratio: var(--emp-aspect); background-size: cover; background-position: center; filter: grayscale(.85) brightness(.45); }
 .emp-locked-body { padding: 12px; }
@@ -150,6 +181,7 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-error { color: #ff8a80; padding: 20px; white-space: pre-wrap; }
 
 @media (prefers-reduced-motion: reduce) {
+  .emp-pack-btn.emp-ready, .emp-flash { animation: none; }
   .emp-pop, .emp-cine-text, .emp-cine.shake, .emp-toast.show { animation: none; }
   .emp-card { transition: none; }
 }

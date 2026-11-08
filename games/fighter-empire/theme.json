@@ -6,7 +6,7 @@
   "currency": { "name": "Cash", "symbol": "$" },
 
   "economy": {
-    "startCoins": 0,
+    "startCoins": 30,
     "offlineCapHours": 24,
     "offlineRate": 1,
     "fullSetBonus": 0.5,

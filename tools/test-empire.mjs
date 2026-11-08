@@ -123,7 +123,7 @@ test('14 prestige: synlige krav, reset, permanente bonuser og ny romgrense', () 
   assert.ok(e.prestigeStatus().available);
   assert.ok(e.prestige().ok);
   const s = e.state;
-  assert.equal(s.coins, 0); assert.deepEqual(s.rooms, {}); assert.deepEqual(s.characters, {}); assert.deepEqual(s.fragments, {});
+  assert.equal(s.coins, fighter.economy.startCoins ?? 0); assert.deepEqual(s.rooms, {}); assert.deepEqual(s.characters, {}); assert.deepEqual(s.fragments, {});
   assert.equal(s.prestige.level, 1); assert.equal(e.prestigeMultiplier(), 2); assert.equal(e.roomLimit(), 4);
   e.buildRoom('alley'); assert.equal(e.totalIncome(), 2 * fighter.rooms[0].baseIncome);
 });
@@ -146,6 +146,17 @@ test('15b høyere karakternivå gir bedre odds', () => {
   const high = e.eventWeights('alley.tournament');
   const share = (w, id) => w.find(x => x.id === id).weight / w.reduce((s, x) => s + x.weight, 0);
   assert.ok(share(high, 'win') > share(low, 'win')); assert.ok(share(high, 'out') < share(low, 'out'));
+});
+
+test('previewGain stemmer med faktisk inntektsøkning og endrer ikke tilstand', () => {
+  const e = mk(); e.buildRoom('alley'); e.state.coins = 1e12; e.state.characters = { 'alley.mick': 1, 'alley.knuckles': 1 };
+  for (const tg of [{ kind: 'room', id: 'alley' }, { kind: 'upgrade', id: 'alley.bookie' }, { kind: 'character', id: 'alley.mick' }, { kind: 'character', id: 'alley.ana' }]) {
+    e.state.fragments[tg.id] = 99;
+    const snap = JSON.stringify(e.state), g = e.previewGain(tg);
+    assert.equal(JSON.stringify(e.state), snap);
+    const before = e.totalIncome(); e.levelUp(tg);
+    assert.ok(Math.abs(e.totalIncome() - before - g.income) < 1e-9, tg.id);
+  }
 });
 
 test('lagring fra eldre temaversjon tåler fjernede rom', () => {
