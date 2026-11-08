@@ -19,7 +19,7 @@
     "upgrade": { "incomePerLevel": 0.12, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.5 }, "fragments": { "list": [1, 2, 3, 4, 6], "thenAdd": 2 } },
     "rarities": {
       "common": { "label": "Common", "incomeShare": 0.6, "unlockFragments": 2, "costFactor": 1, "color": "#9aa4b2", "gearIncome": 0.8 },
-      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1.0 },
+      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1 },
       "epic": { "label": "Epic", "incomeShare": 2.5, "unlockFragments": 5, "costFactor": 2.5, "color": "#c06bff", "gearIncome": 1.5 }
     }
   },
@@ -81,7 +81,7 @@
           "rarity": "common",
           "role": "Spectator",
           "bio": "Has watched every fight in this alley since 1987. Nobody knows what he says. Everybody agrees with him.",
-          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 8, "fps": 6, "x": 83, "y": 84, "h": 36, "z": 3, "frameAspect": "324 / 640" }
+          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 8, "fps": 6, "x": 86, "y": 91, "h": 36, "z": 3, "frameAspect": "324 / 640" }
         },
         {
           "id": "alley.knuckles",
@@ -89,7 +89,7 @@
           "rarity": "rare",
           "role": "Fighter",
           "bio": "Former dock worker. Hands like bags of gravel. Fights for rent money and the occasional sandwich.",
-          "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 8, "fps": 8, "x": 34, "y": 87, "h": 44, "z": 4, "frameAspect": "448 / 640" }
+          "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 8, "fps": 8, "x": 43, "y": 93, "h": 44, "z": 4, "frameAspect": "448 / 640" }
         },
         {
           "id": "alley.ana",
@@ -97,7 +97,7 @@
           "rarity": "epic",
           "role": "Fighter",
           "bio": "Nobody has ever landed a clean hit on her. She claims she learned it from the alley cats. She might not be joking.",
-          "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 8, "fps": 8, "x": 58, "y": 87, "h": 42, "z": 4, "frameAspect": "1 / 1" }
+          "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 8, "fps": 8, "x": 60, "y": 95, "h": 42, "z": 4, "frameAspect": "1 / 1" }
         }
       ],
       "upgrades": [
@@ -113,14 +113,14 @@
           "name": "Bookmaker Stall",
           "rarity": "rare",
           "effect": "Somebody has to take the bets.",
-          "visual": { "x": 88, "y": 83, "h": 48, "z": 2, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-bookie.webp" }] }
+          "visual": { "x": 83, "y": 83, "h": 48, "z": 2, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-bookie.webp" }] }
         },
         {
           "id": "alley.neon",
           "name": "Neon Sign",
           "rarity": "epic",
           "effect": "FIGHT NIGHT. Every night, technically.",
-          "visual": { "x": 50, "y": 34, "h": 24, "z": 1, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-neon.webp" }] }
+          "visual": { "x": 50, "y": 36.5, "h": 24, "z": 1, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-neon.webp" }] }
         }
       ],
       "events": [
