@@ -101,7 +101,7 @@
       "blurb": "The legend begins with a wooden sword and a stolen rice ball.",
       "price": 0,
       "baseIncome": 1,
-      "background": { "src": "assets/rooms/training.svg" },
+      "background": { "src": "assets/rooms/training.webp" },
       "characters": [
         {
           "id": "training.taro",
@@ -238,7 +238,7 @@
       "blurb": "Every merchant has a secret. Every secret has a price.",
       "price": 2000,
       "baseIncome": 8,
-      "background": { "src": "assets/rooms/village.svg" },
+      "background": { "src": "assets/rooms/village.webp" },
       "characters": [
         {
           "id": "village.mochi",
@@ -375,7 +375,7 @@
       "blurb": "The guards watch the gates. Nobody watches the rooftops.",
       "price": 90000,
       "baseIncome": 60,
-      "background": { "src": "assets/rooms/rooftops.svg" },
+      "background": { "src": "assets/rooms/rooftops.webp" },
       "characters": [
         {
           "id": "rooftops.riku",
@@ -512,7 +512,7 @@
       "blurb": "Wisdom is earned. Usually by climbing ten thousand stairs.",
       "price": 6000000,
       "baseIncome": 500,
-      "background": { "src": "assets/rooms/temple.svg" },
+      "background": { "src": "assets/rooms/temple.webp" },
       "characters": [
         {
           "id": "temple.sora",
@@ -649,7 +649,7 @@
       "blurb": "A thousand samurai. Three ninjas. Terrible odds for the samurai.",
       "price": 400000000,
       "baseIncome": 4000,
-      "background": { "src": "assets/rooms/camp.svg" },
+      "background": { "src": "assets/rooms/camp.webp" },
       "characters": [
         {
           "id": "camp.jin",
@@ -786,7 +786,7 @@
       "blurb": "An army you cannot see is an army you cannot defeat.",
       "price": 30000000000,
       "baseIncome": 32000,
-      "background": { "src": "assets/rooms/network.svg" },
+      "background": { "src": "assets/rooms/network.webp" },
       "characters": [
         {
           "id": "network.neko",
@@ -923,7 +923,7 @@
       "blurb": "The clan no longer hides from its enemies. Its enemies hide from the clan.",
       "price": 2400000000000,
       "baseIncome": 256000,
-      "background": { "src": "assets/rooms/fortress.svg" },
+      "background": { "src": "assets/rooms/fortress.webp" },
       "characters": [
         {
           "id": "fortress.daichi",
@@ -1060,7 +1060,7 @@
       "blurb": "The shogun rules Japan. The shadows rule the shogun.",
       "price": 200000000000000,
       "baseIncome": 2000000,
-      "background": { "src": "assets/rooms/empire.svg" },
+      "background": { "src": "assets/rooms/empire.webp" },
       "characters": [
         {
           "id": "empire.envoy",
