@@ -125,6 +125,7 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 .emp-face .emp-frag { margin: 0; max-width: none; height: 16px; border-radius: 0 0 7px 7px; }
 .emp-face .emp-frag span { line-height: 16px; font-size: 10.5px; font-weight: 700; }
 .emp-frag-empty { background: transparent; }
+.emp-face-count { position: absolute; top: 5px; left: 5px; z-index: 3; background: var(--emp-good); color: #06240f; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 999px; }
 .emp-face-epic { box-shadow: 0 0 14px color-mix(in srgb, var(--emp-epic) 45%, transparent); }
 
 .emp-event { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 12px 12px; border-top: 1px solid #ffffff0c; background: #f1c40f0d; }
@@ -222,4 +223,10 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
   .emp-pack-btn.emp-ready, .emp-flash { animation: none; }
   .emp-pop, .emp-cine-text, .emp-cine.shake, .emp-toast.show { animation: none; }
   .emp-card { transition: none; }
+}
+
+/* Keep modal buttons reachable when a big pack fills the sheet */
+.emp-modal-card > .emp-modal-actions:last-child {
+  position: sticky; bottom: -18px; margin: 14px -18px -18px; padding: 12px 18px calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(transparent, var(--emp-panel) 30%); z-index: 5;
 }

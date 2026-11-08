@@ -19,7 +19,6 @@
     }
   },
   "booster": {
-    "name": "Day Pass",
     "draws": 3,
     "priceSeconds": 20,
     "minPrice": 5,

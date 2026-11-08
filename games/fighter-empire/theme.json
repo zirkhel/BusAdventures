@@ -24,7 +24,6 @@
     }
   },
   "booster": {
-    "name": "Fight Pack",
     "draws": 3,
     "priceSeconds": 30,
     "minPrice": 10,
