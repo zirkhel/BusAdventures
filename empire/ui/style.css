@@ -125,7 +125,12 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
 /* room page */
 .emp-room-page .emp-room-head { flex-wrap: wrap; align-items: center; gap: 4px 10px; }
 .emp-room-page .emp-room-head h2 { flex: 1; }
-.emp-page-back { flex-basis: 100%; text-align: left; background: none; border: 0; color: var(--emp-muted); font: inherit; font-size: 14px; padding: 2px 0 4px; cursor: pointer; }
+.emp-hud-rooms {
+  display: none; flex-basis: 100%; font: inherit; font-weight: 700; font-size: 15px; color: var(--emp-text); cursor: pointer;
+  background: var(--emp-panel2); border: 1px solid #ffffff30; border-radius: 10px; padding: 10px 12px; text-align: left;
+}
+.emp-on-page .emp-hud-rooms { display: block; }
+.emp-page-foot { padding: 12px; border-top: 1px solid #ffffff0c; }
 .emp-room-locked { opacity: .92; }
 .emp-locked-scene { aspect-ratio: var(--emp-aspect); background-size: cover; background-position: center; filter: grayscale(.85) brightness(.45); }
 .emp-locked-body { padding: 12px; }
