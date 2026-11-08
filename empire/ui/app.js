@@ -132,6 +132,7 @@ class EmpireApp {
 
   onClick(e) {
     if (this.openRoomId && e.target.closest('.emp-back')) { e.preventDefault(); return this.closeRoom(); }
+    if (e.target.closest('.emp-coins')) return this.testTap();
     const btn = e.target.closest('[data-act]');
     if (!btn || btn.disabled) return;
     const { act, kind, id } = btn.dataset;
@@ -170,6 +171,7 @@ class EmpireApp {
     if (act === 'import') return this.doImport();
     if (act === 'reset') return this.confirmReset();
     if (act === 'reset-do') { clearSave(this.theme); location.reload(); }
+    if (act === 'test-unlock') return this.testUnlockAll();
   }
 
   fullSetBonus(roomId) { return this.empire.rooms[roomId].fullSetBonus ?? this.theme.economy.fullSetBonus; }
@@ -790,6 +792,28 @@ class EmpireApp {
     } catch (e) { this.toast('Import failed: ' + e.message); }
   }
 
+  // Hidden test feature: tap the cash counter 7 times within 3 s to build every room.
+  testTap() {
+    const now = Date.now();
+    this.testTaps = (this.testTaps || []).filter(t => now - t < 3000).concat(now);
+    if (this.testTaps.length < 7) return;
+    this.testTaps = [];
+    this.openModal(`<h3>Test mode</h3><p>Unlock and build all ${this.empire.roomList.length} rooms? Meant for testing; ignores ${esc(this.theme.prestige?.name || 'prestige')} limits.</p>
+      <div class="emp-modal-actions"><button class="emp-btn" data-act="close">Cancel</button><button class="emp-btn emp-accent" data-act="test-unlock">Unlock all</button></div>`);
+  }
+
+  testUnlockAll() {
+    const E = this.empire;
+    for (const room of E.roomList) {
+      if (E.isBuilt(room.id)) continue;
+      const upgrades = {};
+      for (const u of room.upgrades) upgrades[u.id] = 0;
+      E.state.rooms[room.id] = { level: 1, upgrades };
+    }
+    this.save();
+    location.reload();
+  }
+
   confirmReset() {
     this.openModal(`<h3>Delete save?</h3><p>This removes all progress for ${esc(this.theme.name)} in this browser, including ${esc(this.theme.prestige?.name || 'prestige')} bonuses.</p>
       <div class="emp-modal-actions"><button class="emp-btn" data-act="close">Cancel</button><button class="emp-btn emp-danger" data-act="reset-do">Delete everything</button></div>`);
@@ -799,10 +823,11 @@ class EmpireApp {
 
   showWelcomeBack(off) {
     const capped = off.countedSeconds < off.awaySeconds;
+    const rate = this.theme.economy.offlineRate ?? 1;
     this.openModal(`<h3>Welcome back</h3>
       <p>You were away ${fmtTime(off.awaySeconds)}. Your empire earned</p>
       <div class="emp-big">${this.money(off.earned)}</div>
-      ${capped ? `<p class="emp-muted">Offline earnings count up to ${fmtTime(off.countedSeconds)}.</p>` : ''}
+      <p class="emp-muted">${rate < 1 ? `Away, the empire runs at ${Math.round(rate * 100)} % speed` : 'Away, the empire keeps full speed'}${capped ? `, for up to ${fmtTime(off.countedSeconds)}` : ''}.</p>
       <div class="emp-modal-actions"><button class="emp-btn emp-accent" data-act="close">Collect</button></div>`);
   }
 

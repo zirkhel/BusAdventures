@@ -27,7 +27,7 @@ python -m http.server 8000      # eller: npx serve
 | | Hva |
 |---|---|
 | **Besluttet (fra planen, implementert)** | Grunninntekt fra tomt rom · 6 rom · 3 faste karakterer og 3 oppgraderinger (gear) per rom, gear også med Common/Rare/Epic · en event i hvert rom (endret etter spilltest 8. nov) · fast sjeldenhet per karakter · booster kun for spillvaluta, kun fra bygde rom · fragmentkost 1/3/5/10 for karakternivå 2–5 · alle nivåøkninger krever fragmenter **og** valuta, nytt rom krever bare valuta · full-crew-bonus · frivillig prestige med synlige krav, reset og permanent bonus/romgrense · valgfrie rom-events med tilfeldige utfall, cinematic og uten permanent straff · lokal lagring uten konto · ingen monetisering, anti-cheat, backend eller FOMO |
-| **Anbefalt (mitt forslag, lett å endre)** | Startverdier for alle tall i `theme.json` (se §4) · opplåsing av karakter koster bare fragmenter (Common 2, Rare 3, Epic 5) · boosterpris = 30 sek av nåværende inntekt · 3 trekk per pakke · pity: garantert Epic-fragment senest i pakke 12 · offline-inntekt 100 % opptil 24 t · egne fragmenttyper for romnivå og for hver oppgradering · plain JS + JSDoc, ikke TypeScript · spritesheet som animasjonsformat (§7) · engelsk UI som resten av siden |
+| **Anbefalt (mitt forslag, lett å endre)** | Startverdier for alle tall i `theme.json` (se §4) · opplåsing av karakter koster bare fragmenter (Common 2, Rare 3, Epic 5) · boosterpris = 30 sek av nåværende inntekt · 3 trekk per pakke · pity: garantert Epic-fragment senest i pakke 12 · offline-inntekt 25 % opptil 8 t (justert etter testing, var 100 % / 24 t) · egne fragmenttyper for romnivå og for hver oppgradering · plain JS + JSDoc, ikke TypeScript · spritesheet som animasjonsformat (§7) · engelsk UI som resten av siden |
 | **Åpent** | Alle balansetall · om offline skal være ubegrenset (`"offlineCapHours": null` gjør det) · pakketyper · events med kostnad · hvordan svært lang progresjon etter siste prestige-trinn skal fungere · endelig grafikkstil og AI-produksjonsløp · Empire Editor (ikke startet, som planen sier) |
 
 **Avvik fra planen å merke seg:** Prestige-illustrasjonen i planen krever «minst 4 karakterer» i rom 5, men et rom har bare 3. Jeg brukte 3. Kravtypen `charactersUnlocked` uten `room` teller på tvers av alle rom, hvis det var meningen.
@@ -224,5 +224,5 @@ Verktøyene som lager plassholdergrafikk hopper over figurer som allerede finnes
 ## 12. Forslag til neste steg
 
 1. Spill prototypen et par dager og juster tall i `theme.json`. Simulatoren viser konsekvensen før du spiller.
-2. Ta et lite valg om offline-tak (24 t eller ubegrenset).
+2. Offline er satt til 25 % i maks 8 t (`offlineRate`, `offlineCapHours`). Juster per tema ved behov.
 3. Lag ett ekte rom i den endelige kunststilen (bakgrunn + en animert figur via ComfyUI/Wan) for å teste produksjonsløpet fra §7.

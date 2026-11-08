@@ -6,8 +6,8 @@
   "currency": { "name": "Credits", "symbol": "₵" },
   "economy": {
     "startCoins": 30,
-    "offlineCapHours": 24,
-    "offlineRate": 1,
+    "offlineCapHours": 8,
+    "offlineRate": 0.25,
     "fullSetBonus": 0.5,
     "roomLevel": {
       "incomePerLevel": 0.25,
