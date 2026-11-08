@@ -246,6 +246,18 @@ export class Empire {
     return { income, roomShare: roomBefore > 0 ? income / roomBefore : null, completesCrew: q.kind === 'character' && q.action === 'unlock' && this._wouldCompleteCrew(q) };
   }
 
+  /** Income this thing adds right now: total income minus total income without it (level 0, or level 1 for rooms). */
+  contribution({ kind, id }) {
+    const saved = JSON.stringify(this.state);
+    const before = this.totalIncome();
+    if (kind === 'character') delete this.state.characters[id];
+    else if (kind === 'upgrade') { const u = this.upgrades[id]; if (this.state.rooms[u.roomId]) this.state.rooms[u.roomId].upgrades[id] = 0; }
+    else if (kind === 'room' && this.state.rooms[id]) this.state.rooms[id].level = 1;
+    const income = before - this.totalIncome();
+    this.state = JSON.parse(saved);
+    return income;
+  }
+
   _wouldCompleteCrew(q) {
     return this.rooms[q.roomId].characters.every(c => c.id === q.id || this.charLevel(c.id) > 0);
   }

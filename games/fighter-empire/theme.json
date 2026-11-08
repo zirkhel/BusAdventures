@@ -57,10 +57,13 @@
       "background": { "src": "assets/rooms/alley.svg" },
       "characters": [
         { "id": "alley.mick", "name": "Mumbling Mick", "rarity": "common", "role": "Spectator",
+          "bio": "Has watched every fight in this alley since 1987. Nobody knows what he says. Everybody agrees with him.",
           "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 6, "fps": 6, "x": 82, "y": 88, "h": 40, "z": 3, "flip": true } },
         { "id": "alley.knuckles", "name": "Knuckles Kowalski", "rarity": "rare", "role": "Fighter",
+          "bio": "Former dock worker. Hands like bags of gravel. Fights for rent money and the occasional sandwich.",
           "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 6, "fps": 7, "x": 36, "y": 93, "h": 42, "z": 4 } },
         { "id": "alley.ana", "name": "Alley Cat Ana", "rarity": "epic", "role": "Fighter",
+          "bio": "Nobody has ever landed a clean hit on her. She claims she learned it from the alley cats. She might not be joking.",
           "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 6, "fps": 7, "x": 58, "y": 93, "h": 42, "z": 4, "flip": true } }
       ],
       "upgrades": [
@@ -99,10 +102,13 @@
       "background": { "src": "assets/rooms/gym.svg" },
       "characters": [
         { "id": "gym.ray", "name": "Rookie Ray", "rarity": "common", "role": "Boxer",
+          "bio": "First week in a real gym. Enthusiastic, polite, and mostly punching air. Give him time.",
           "sprite": { "src": "assets/sprites/gym-ray.webp", "frames": 6, "fps": 7, "x": 34, "y": 92, "h": 40, "z": 4 } },
         { "id": "gym.dolores", "name": "Coach Dolores", "rarity": "rare", "role": "Coach",
+          "bio": "Forty years in the corner. Has never smiled, never sat down, and never lost a clipboard.",
           "sprite": { "src": "assets/sprites/gym-dolores.webp", "frames": 6, "fps": 3, "x": 14, "y": 90, "h": 40, "z": 3 } },
         { "id": "gym.jackson", "name": "Iron Jaw Jackson", "rarity": "epic", "role": "Boxer",
+          "bio": "Took a hook from a heavyweight in '09 and asked if that was the warm-up. The jaw is mostly metaphorical.",
           "sprite": { "src": "assets/sprites/gym-jackson.webp", "frames": 6, "fps": 7, "x": 58, "y": 92, "h": 43, "z": 4, "flip": true } }
       ],
       "upgrades": [
@@ -119,10 +125,13 @@
       "background": { "src": "assets/rooms/thai.svg" },
       "characters": [
         { "id": "thai.bob", "name": "Beach Tourist Bob", "rarity": "common", "role": "Tourist",
+          "bio": "Came for the beach, stayed for the fights. Still has not figured out which fighter is which.",
           "sprite": { "src": "assets/sprites/thai-bob.webp", "frames": 6, "fps": 4, "x": 84, "y": 90, "h": 40, "z": 3, "flip": true } },
         { "id": "thai.elbow", "name": "Somchai the Elbow", "rarity": "rare", "role": "Fighter",
+          "bio": "Elbows sharp enough to slice mango. The resort's most polite and most terrifying employee.",
           "sprite": { "src": "assets/sprites/thai-elbow.webp", "frames": 6, "fps": 7, "x": 38, "y": 93, "h": 42, "z": 4 } },
         { "id": "thai.nong", "name": "Lightning Nong", "rarity": "epic", "role": "Fighter",
+          "bio": "So fast the spectators argue about whether the kick happened at all. The replay says it did.",
           "sprite": { "src": "assets/sprites/thai-nong.webp", "frames": 6, "fps": 8, "x": 60, "y": 93, "h": 42, "z": 4, "flip": true } }
       ],
       "upgrades": [
@@ -139,10 +148,13 @@
       "background": { "src": "assets/rooms/dojo.svg" },
       "characters": [
         { "id": "dojo.student", "name": "Sweeping Student", "rarity": "common", "role": "Student",
+          "bio": "Has been sweeping the same floor for three years. Claims he is learning. The floor is very clean.",
           "sprite": { "src": "assets/sprites/dojo-student.webp", "frames": 6, "fps": 4, "x": 18, "y": 92, "h": 40, "z": 4 } },
         { "id": "dojo.lin", "name": "Old Master Lin", "rarity": "rare", "role": "Master",
+          "bio": "Nobody knows how old he is. He does not either. Teaches by sighing at the right moments.",
           "sprite": { "src": "assets/sprites/dojo-lin.webp", "frames": 6, "fps": 3, "x": 50, "y": 86, "h": 37, "z": 3 } },
         { "id": "dojo.mei", "name": "Crane Style Mei", "rarity": "epic", "role": "Fighter",
+          "bio": "Stands on one leg for hours. Kicks with the other one. Has never once lost her balance or her patience.",
           "sprite": { "src": "assets/sprites/dojo-mei.webp", "frames": 6, "fps": 5, "x": 72, "y": 93, "h": 42, "z": 4, "flip": true } }
       ],
       "upgrades": [
@@ -159,10 +171,13 @@
       "background": { "src": "assets/rooms/arena.svg" },
       "characters": [
         { "id": "arena.announcer", "name": "The Announcer", "rarity": "common", "role": "Announcer",
+          "bio": "The voice that makes twenty thousand people scream a name. Practises in the shower. Neighbours have complained.",
           "sprite": { "src": "assets/sprites/arena-announcer.webp", "frames": 6, "fps": 4, "x": 14, "y": 90, "h": 40, "z": 3 } },
         { "id": "arena.gus", "name": "Ground Game Gus", "rarity": "rare", "role": "Fighter",
+          "bio": "If the fight goes to the floor, it is already over. Gus likes the floor. The floor likes Gus.",
           "sprite": { "src": "assets/sprites/arena-gus.webp", "frames": 6, "fps": 7, "x": 40, "y": 92, "h": 42, "z": 4 } },
         { "id": "arena.champ", "name": "The Champion", "rarity": "epic", "role": "Fighter",
+          "bio": "Undefeated. Unbothered. Has a belt for every day of the week and a tailor just for the belts.",
           "sprite": { "src": "assets/sprites/arena-champ.webp", "frames": 6, "fps": 7, "x": 64, "y": 92, "h": 45, "z": 4, "flip": true } }
       ],
       "upgrades": [
