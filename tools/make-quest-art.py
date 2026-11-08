@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from artkit import FW, FH, S, C, shade, Pen, limb, biped, sheet as _sheet, svg
 
-OUT = sys.argv[1] if len(sys.argv) > 1 else "games/quest-empire/assets"
+OUT = next((a for a in sys.argv[1:] if not a.startswith("--")), None) or "games/quest-empire/assets"
 for d in ("sprites", "rooms", "upgrades"):
     os.makedirs(os.path.join(OUT, d), exist_ok=True)
 

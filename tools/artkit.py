@@ -143,10 +143,13 @@ def biped(t, skin="#6aa84f", top="#5b3a29", legs="#3d2b1f", size=1.0, kind="idle
 
 
 def sheet(out, name, fn):
+    path = os.path.join(out, "sprites", name + ".webp")
+    if os.path.exists(path) and "--force" not in __import__("sys").argv:
+        return  # keep existing sprites, which may be real art
     strip = Image.new("RGBA", (FW * 6, FH), (0, 0, 0, 0))
     for i in range(6):
         strip.paste(fn(i / 6), (i * FW, 0))
-    strip.save(os.path.join(out, "sprites", name + ".webp"), "WEBP", lossless=True, quality=100, method=6)
+    strip.save(path, "WEBP", lossless=True, quality=100, method=6)
 
 
 

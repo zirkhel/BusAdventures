@@ -89,7 +89,7 @@
           "rarity": "rare",
           "role": "Fighter",
           "bio": "Former dock worker. Hands like bags of gravel. Fights for rent money and the occasional sandwich.",
-          "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 6, "fps": 7, "x": 36, "y": 93, "h": 42, "z": 4 }
+          "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 8, "fps": 8, "x": 36, "y": 93, "h": 44, "z": 4, "frameAspect": "448 / 640" }
         },
         {
           "id": "alley.ana",
