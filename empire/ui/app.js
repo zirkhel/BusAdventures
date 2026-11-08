@@ -5,7 +5,7 @@
 
 import { loadEmpire, saveEmpire, exportSave, importSave, clearSave } from '../engine/save.js';
 import { validateTheme } from '../engine/validate.js';
-import { renderScene, sceneSignature, portrait, upgradeStage, makeLayer } from './scene.js';
+import { renderScene, releaseScene, sceneSignature, portrait, upgradeStage, makeLayer } from './scene.js';
 import { playCinematic } from './cinematic.js';
 import { fmt, fmtTime, esc } from './format.js';
 
@@ -190,6 +190,9 @@ class EmpireApp {
     this.roomsEl.innerHTML = '';
     const E = this.empire;
     if (this.openRoomId && !E.isBuilt(this.openRoomId)) this.openRoomId = null;
+    for (const [id, c] of Object.entries(this.sceneCache)) {
+      if (!E.isBuilt(id)) { releaseScene(c.el); delete this.sceneCache[id]; }
+    }
     this.root.classList.toggle('emp-on-page', !!this.openRoomId);
     this.root.querySelector('.emp-back')?.setAttribute('aria-label', this.openRoomId ? 'Back to all rooms' : 'Back to Bus Adventures');
     if (this.openRoomId) {
@@ -261,6 +264,7 @@ class EmpireApp {
     const sig = sceneSignature(room, this.empire);
     const cached = this.sceneCache[room.id];
     if (cached && cached.sig === sig) { slot.replaceWith(cached.el); return; }
+    if (cached) releaseScene(cached.el);
     const sceneEl = document.createElement('div');
     slot.replaceWith(sceneEl);
     renderScene(sceneEl, room, this.empire, this.asset, { justUnlocked: this.justUnlocked });
