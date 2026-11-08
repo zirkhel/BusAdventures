@@ -81,7 +81,7 @@
           "rarity": "common",
           "role": "Spectator",
           "bio": "Has watched every fight in this alley since 1987. Nobody knows what he says. Everybody agrees with him.",
-          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 8, "fps": 6, "x": 86, "y": 91, "h": 36, "z": 3, "frameAspect": "324 / 640" }
+          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 8, "fps": 6, "x": 74.5, "y": 86.5, "h": 39, "z": 3, "frameAspect": "324 / 640" }
         },
         {
           "id": "alley.knuckles",
@@ -113,7 +113,7 @@
           "name": "Bookmaker Stall",
           "rarity": "rare",
           "effect": "Somebody has to take the bets.",
-          "visual": { "x": 83, "y": 83, "h": 48, "z": 2, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-bookie.webp" }] }
+          "visual": { "x": 88, "y": 81.5, "h": 48, "z": 2, "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-bookie.webp" }] }
         },
         {
           "id": "alley.neon",
