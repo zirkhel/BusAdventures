@@ -1,0 +1,1213 @@
+{
+  "schemaVersion": 1,
+  "id": "xxx-empire",
+  "name": "XXX Empire",
+  "tagline": "18+ satire. From one lamp in a back alley to a listed media company.",
+  "currency": { "name": "Cash", "symbol": "$" },
+  "economy": {
+    "startCoins": 30,
+    "offlineCapHours": 24,
+    "offlineRate": 1,
+    "fullSetBonus": 0.5,
+    "roomLevel": {
+      "incomePerLevel": 0.25,
+      "maxLevel": 25,
+      "cost": { "seconds": 15, "growth": 1.33 },
+      "fragments": { "list": [1, 1, 1, 2, 2, 2, 3, 3, 3], "thenAdd": 1 }
+    },
+    "characterLevel": { "incomePerLevel": 0.6, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.6 }, "fragments": { "list": [1, 3, 5, 10], "thenAdd": 5 } },
+    "upgrade": { "incomePerLevel": 0.12, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.5 }, "fragments": { "list": [1, 2, 3, 4, 6], "thenAdd": 2 } },
+    "rarities": {
+      "common": { "label": "Common", "incomeShare": 0.6, "unlockFragments": 2, "costFactor": 1, "color": "#9aa4b2", "gearIncome": 0.8 },
+      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1.0 },
+      "epic": { "label": "Epic", "incomeShare": 2.5, "unlockFragments": 5, "costFactor": 2.5, "color": "#c06bff", "gearIncome": 1.5 }
+    }
+  },
+  "booster": {
+    "draws": 3,
+    "priceSeconds": 30,
+    "minPrice": 10,
+    "slotWeights": { "character": 55, "room": 15, "upgrade": 20, "coins": 10 },
+    "rarityWeights": { "common": 65, "rare": 27, "epic": 8 },
+    "coinsSeconds": [15, 45],
+    "epicPity": 12,
+    "excludeMaxed": true
+  },
+  "prestige": {
+    "name": "Rebrand",
+    "description": "Sell the brand, keep the reputation (whatever that is worth). New name, new logo, same talent. Everything earns more next time.",
+    "startRooms": 3,
+    "tiers": [
+      {
+        "requires": [{ "type": "roomLevel", "room": "studio", "min": 10 }, { "type": "charactersUnlocked", "room": "studio", "min": 2 }],
+        "incomeMultiplier": 2,
+        "roomLimit": 4
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "mansion", "min": 15 }, { "type": "charactersUnlocked", "room": "mansion", "min": 3 }],
+        "incomeMultiplier": 3,
+        "roomLimit": 5
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "agency", "min": 20 }, { "type": "charactersUnlocked", "room": "agency", "min": 3 }],
+        "incomeMultiplier": 4,
+        "roomLimit": 6
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "club", "min": 20 }, { "type": "charactersUnlocked", "room": "club", "min": 3 }],
+        "incomeMultiplier": 6,
+        "roomLimit": 7
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "film", "min": 25 }, { "type": "charactersUnlocked", "room": "film", "min": 3 }],
+        "incomeMultiplier": 8,
+        "roomLimit": 8
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "media", "min": 25 }, { "type": "charactersUnlocked", "room": "media", "min": 3 }],
+        "incomeMultiplier": 12,
+        "roomLimit": 8
+      }
+    ]
+  },
+  "presentation": {
+    "sceneAspect": 1.6,
+    "palette": { "bg": "#14070f", "panel": "#1f0f19", "panel2": "#2b1624", "text": "#fbeff5", "muted": "#b291a6", "accent": "#e0115f", "good": "#2ecc71" },
+    "fontDisplay": "Impact, 'Arial Black', sans-serif",
+    "labels": {
+      "crewTitle": "Talent",
+      "gearTitle": "Props",
+      "members": "talent",
+      "hire": "Sign",
+      "hired": "signed",
+      "notHired": "Not signed yet",
+      "joined": "{name} signed!",
+      "fullSet": "Full roster",
+      "crewCount": "roster",
+      "withBonus": "with roster bonus",
+      "room": "Venue",
+      "allRooms": "All venues"
+    }
+  },
+  "rooms": [
+    {
+      "id": "alley",
+      "order": 1,
+      "name": "Back Alley",
+      "blurb": "Improvised business in a tired back alley. One lamp, one folding chair, a lot of ambition.",
+      "price": 0,
+      "baseIncome": 1,
+      "background": { "src": "assets/rooms/alley.svg" },
+      "characters": [
+        {
+          "id": "alley.lola",
+          "name": "Lola Lamppost",
+          "rarity": "common",
+          "role": "Freelancer",
+          "bio": "Has worked the same corner for twelve years and knows every pothole by name. Accepts cash, compliments and, in emergencies, sandwiches.",
+          "sprite": { "src": "assets/sprites/alley-lola.webp", "frames": 6, "fps": 5, "x": 28, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "alley.rick",
+          "name": "Slick Rick",
+          "rarity": "rare",
+          "role": "Self-appointed Manager",
+          "bio": "Wears sunglasses at night and calls it strategy. His business card just says 'Rick'. Nobody hired him. He showed up anyway.",
+          "sprite": { "src": "assets/sprites/alley-rick.webp", "frames": 6, "fps": 5, "x": 50, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "alley.velvet",
+          "name": "Madame Velvet",
+          "rarity": "epic",
+          "role": "Fixer",
+          "bio": "Knows everybody, owes nobody, remembers everything. Her alley has three rules: everybody is an adult, everybody gets paid, nobody is a jerk.",
+          "sprite": { "src": "assets/sprites/alley-velvet.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "alley.lamp",
+          "name": "Red Lamp",
+          "rarity": "common",
+          "effect": "Ambience on a budget. Flickers in a way customers call 'mood lighting'.",
+          "visual": { "char": "🏮", "x": 88, "y": 58, "h": 14, "z": 1 }
+        },
+        {
+          "id": "alley.cashbox",
+          "name": "Cash Box",
+          "rarity": "rare",
+          "effect": "Locks. Mostly.",
+          "visual": { "char": "💰", "x": 10, "y": 90, "h": 12, "z": 5 }
+        },
+        {
+          "id": "alley.heart",
+          "name": "Neon Heart",
+          "rarity": "epic",
+          "effect": "Visible from the main street, which is exactly the point.",
+          "visual": { "char": "💗", "x": 50, "y": 30, "h": 16, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "alley.rush",
+          "name": "Midnight Rush",
+          "description": "Every bar closes at the same time. Suddenly everybody wants company and somebody to talk to.",
+          "unlock": [{ "type": "roomLevel", "room": "alley", "min": 3 }, { "type": "charactersUnlocked", "room": "alley", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Quiet night",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "MIDNIGHT RUSH", "ms": 800 },
+                  { "text": "…", "ms": 850 },
+                  { "text": "Two drunks and a pigeon.", "ms": 850 },
+                  { "text": "Quiet night.", "ms": 850 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Steady business",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "MIDNIGHT RUSH", "ms": 800 },
+                  { "text": "The doors swing open", "ms": 850 },
+                  { "text": "Steady business", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Lines around the block",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "MIDNIGHT RUSH", "ms": 800 },
+                  { "text": "Here they come!", "ms": 700, "shake": true },
+                  { "text": "Rick tries to sell tickets", "ms": 700, "shake": false },
+                  { "text": "LINES AROUND THE BLOCK", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Legendary night",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "MIDNIGHT RUSH", "ms": 800 },
+                  { "text": "Here they come!", "ms": 700, "shake": true },
+                  { "text": "A tour bus parks in the alley", "ms": 700, "shake": false },
+                  { "text": "Madame Velvet smiles", "ms": 700, "shake": false },
+                  { "text": "LEGENDARY NIGHT", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "motel",
+      "order": 2,
+      "name": "Cheap Motel",
+      "blurb": "Rooms by the hour, towels by request, questions never.",
+      "price": 2000,
+      "baseIncome": 8,
+      "background": { "src": "assets/rooms/motel.svg" },
+      "characters": [
+        {
+          "id": "motel.doris",
+          "name": "Doris at the Desk",
+          "rarity": "common",
+          "role": "Night Receptionist",
+          "bio": "Hands out keys, towels and zero judgement. Has seen everything twice and wrote none of it down.",
+          "sprite": { "src": "assets/sprites/motel-doris.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "motel.dwayne",
+          "name": "Dwayne 'Discreet' Daniels",
+          "rarity": "rare",
+          "role": "Room Service",
+          "bio": "Knocks three times, looks at the ceiling, says nothing. Tips gratefully received.",
+          "sprite": { "src": "assets/sprites/motel-dwayne.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "motel.candy",
+          "name": "Candy Cadillac",
+          "rarity": "epic",
+          "role": "Motel Legend",
+          "bio": "Has a room named after her. Room 14. The neon sign misspells her name and she likes it better that way.",
+          "sprite": { "src": "assets/sprites/motel-candy.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "motel.bed",
+          "name": "Coin-Op Bed",
+          "rarity": "common",
+          "effect": "25 cents for five minutes of vibration. Retro. Questionable. Popular.",
+          "visual": { "char": "🛏️", "x": 12, "y": 88, "h": 16, "z": 2 }
+        },
+        {
+          "id": "motel.ice",
+          "name": "Ice Machine",
+          "rarity": "rare",
+          "effect": "Makes a terrible noise all night. Nobody complains.",
+          "visual": { "char": "🧊", "x": 90, "y": 86, "h": 14, "z": 2 }
+        },
+        {
+          "id": "motel.tub",
+          "name": "Heart-Shaped Tub",
+          "rarity": "epic",
+          "effect": "Room 14 only. Booked until 2031.",
+          "visual": { "char": "🛁", "x": 62, "y": 88, "h": 16, "z": 2 }
+        }
+      ],
+      "events": [
+        {
+          "id": "motel.vacancy",
+          "name": "No Vacancy Weekend",
+          "description": "A dental convention is in town. Every room is booked. Nobody is sleeping.",
+          "unlock": [{ "type": "roomLevel", "room": "motel", "min": 3 }, { "type": "charactersUnlocked", "room": "motel", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 900,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Half empty",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [{ "text": "NO VACANCY WEEKEND", "ms": 800 }, { "text": "Doris checks the book…", "ms": 850 }, { "text": "Half empty.", "ms": 850 }]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Fully booked",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "NO VACANCY WEEKEND", "ms": 800 },
+                  { "text": "Ding! Ding! Ding!", "ms": 850 },
+                  { "text": "FULLY BOOKED", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Waiting list",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "NO VACANCY WEEKEND", "ms": 800 },
+                  { "text": "Ding!", "ms": 700, "shake": true },
+                  { "text": "The dentists brought friends", "ms": 700, "shake": false },
+                  { "text": "WAITING LIST", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Convention of the year",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "NO VACANCY WEEKEND", "ms": 800 },
+                  { "text": "Ding!", "ms": 700, "shake": true },
+                  { "text": "The keynote speaker checks in", "ms": 700, "shake": false },
+                  { "text": "Room 14 is requested by name", "ms": 700, "shake": false },
+                  { "text": "CONVENTION OF THE YEAR", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "studio",
+      "order": 3,
+      "name": "Amateur Studio",
+      "blurb": "A rented flat, a ring light and a dream. Mostly the ring light.",
+      "price": 90000,
+      "baseIncome": 60,
+      "background": { "src": "assets/rooms/studio.svg" },
+      "characters": [
+        {
+          "id": "studio.rita",
+          "name": "Ring Light Rita",
+          "rarity": "common",
+          "role": "Content Creator",
+          "bio": "Started filming 'for fun'. Now has an accountant, three lighting setups and a very specific posting schedule.",
+          "sprite": { "src": "assets/sprites/studio-rita.webp", "frames": 6, "fps": 5, "x": 26, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "studio.dave",
+          "name": "Dave the Camera Guy",
+          "rarity": "rare",
+          "role": "Cameraman & Editor",
+          "bio": "Has edited four thousand hours of footage and still says 'wow' at the blooper reel.",
+          "sprite": { "src": "assets/sprites/studio-dave.webp", "frames": 6, "fps": 5, "x": 50, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "studio.algo",
+          "name": "Mistress Algorithm",
+          "rarity": "epic",
+          "role": "Top Creator",
+          "bio": "Understands the algorithm better than the people who wrote it. Posts at 19:03 sharp. Never 19:04.",
+          "sprite": { "src": "assets/sprites/studio-algo.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "studio.ring",
+          "name": "Ring Light",
+          "rarity": "common",
+          "effect": "Flattering from every angle except the electricity bill.",
+          "visual": { "char": "🔆", "x": 86, "y": 46, "h": 16, "z": 1 }
+        },
+        {
+          "id": "studio.cam",
+          "name": "Camcorder",
+          "rarity": "rare",
+          "effect": "Second hand, first rate.",
+          "visual": { "char": "📹", "x": 12, "y": 88, "h": 12, "z": 5 }
+        },
+        {
+          "id": "studio.subs",
+          "name": "Subscriber Wall",
+          "rarity": "epic",
+          "effect": "A screen that shows the subscriber count. Rita watches it more than the content.",
+          "visual": { "char": "📈", "x": 50, "y": 22, "h": 16, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "studio.viral",
+          "name": "Viral Sensation",
+          "description": "A clip escapes the paywall. The internet has opinions.",
+          "unlock": [{ "type": "roomLevel", "room": "studio", "min": 3 }, { "type": "charactersUnlocked", "room": "studio", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1200,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Nobody noticed",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIRAL SENSATION", "ms": 800 },
+                  { "text": "Upload…", "ms": 850 },
+                  { "text": "3 views.", "ms": 850 },
+                  { "text": "Two of them were Dave.", "ms": 850 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Trending locally",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIRAL SENSATION", "ms": 800 },
+                  { "text": "Upload…", "ms": 850 },
+                  { "text": "It's trending!", "ms": 850 },
+                  { "text": "TRENDING LOCALLY", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Talk of the internet",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIRAL SENSATION", "ms": 800 },
+                  { "text": "Upload…", "ms": 700, "shake": true },
+                  { "text": "Servers struggling", "ms": 700, "shake": false },
+                  { "text": "Memes everywhere", "ms": 700, "shake": false },
+                  { "text": "TALK OF THE INTERNET", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Broke the platform",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIRAL SENSATION", "ms": 800 },
+                  { "text": "Upload…", "ms": 700, "shake": true },
+                  { "text": "The site goes down", "ms": 700, "shake": false },
+                  { "text": "Journalists call", "ms": 700, "shake": false },
+                  { "text": "BROKE THE PLATFORM", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mansion",
+      "order": 4,
+      "name": "Creator Mansion",
+      "blurb": "Twelve creators, one pool, forty cameras and a very complicated shared calendar.",
+      "price": 6000000,
+      "baseIncome": 500,
+      "background": { "src": "assets/rooms/mansion.svg" },
+      "characters": [
+        {
+          "id": "mansion.brandon",
+          "name": "Brandon Bikini",
+          "rarity": "common",
+          "role": "Pool Boy & Influencer",
+          "bio": "Got famous for cleaning the pool without a shirt. Still cleans the pool. Still no shirt.",
+          "sprite": { "src": "assets/sprites/mansion-brandon.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "mansion.sasha",
+          "name": "Sasha Spreadsheet",
+          "rarity": "rare",
+          "role": "House Manager",
+          "bio": "Runs the house with one shared calendar and zero patience. Knows who is filming where, always.",
+          "sprite": { "src": "assets/sprites/mansion-sasha.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "mansion.valentina",
+          "name": "Valentina Villa",
+          "rarity": "epic",
+          "role": "Mansion Owner",
+          "bio": "Bought the mansion in cash, renamed it after herself and charges rent in followers.",
+          "sprite": { "src": "assets/sprites/mansion-valentina.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "mansion.hottub",
+          "name": "Hot Tub",
+          "rarity": "common",
+          "effect": "Always warm, never empty.",
+          "visual": { "char": "♨️", "x": 12, "y": 90, "h": 14, "z": 5 }
+        },
+        {
+          "id": "mansion.champagne",
+          "name": "Champagne Tower",
+          "rarity": "rare",
+          "effect": "Built for the camera, knocked over by the camera.",
+          "visual": { "char": "🍾", "x": 90, "y": 88, "h": 16, "z": 2 }
+        },
+        {
+          "id": "mansion.pool",
+          "name": "Infinity Pool",
+          "rarity": "epic",
+          "effect": "The water goes on forever. So does the content.",
+          "visual": { "char": "🏝️", "x": 60, "y": 62, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "mansion.party",
+          "name": "Collab House Party",
+          "description": "Every creator in the house films at once. Everybody tags everybody.",
+          "unlock": [{ "type": "roomLevel", "room": "mansion", "min": 3 }, { "type": "charactersUnlocked", "room": "mansion", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1800,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Neighbours called",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "COLLAB HOUSE PARTY", "ms": 800 },
+                  { "text": "Music up!", "ms": 850 },
+                  { "text": "Police at the gate", "ms": 850 },
+                  { "text": "Neighbours called.", "ms": 850 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Good content",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "COLLAB HOUSE PARTY", "ms": 800 },
+                  { "text": "Music up!", "ms": 850 },
+                  { "text": "Cameras everywhere", "ms": 850 },
+                  { "text": "GOOD CONTENT", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Party of the season",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "COLLAB HOUSE PARTY", "ms": 800 },
+                  { "text": "Music up!", "ms": 700, "shake": true },
+                  { "text": "A celebrity shows up", "ms": 700, "shake": false },
+                  { "text": "PARTY OF THE SEASON", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Mansion goes global",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "COLLAB HOUSE PARTY", "ms": 800 },
+                  { "text": "Music up!", "ms": 700, "shake": true },
+                  { "text": "Everybody posts at once", "ms": 700, "shake": false },
+                  { "text": "Every feed, everywhere", "ms": 700, "shake": false },
+                  { "text": "MANSION GOES GLOBAL", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agency",
+      "order": 5,
+      "name": "Escort Agency",
+      "blurb": "Discreet, exclusive and run like a Swiss bank. Rules for clients, freedom for the staff.",
+      "price": 400000000,
+      "baseIncome": 4000,
+      "background": { "src": "assets/rooms/agency.svg" },
+      "characters": [
+        {
+          "id": "agency.chad",
+          "name": "Chad Charming",
+          "rarity": "common",
+          "role": "Companion",
+          "bio": "Laughs at every joke, remembers every name and bills by the hour. Excellent listener. Terrible at karaoke.",
+          "sprite": { "src": "assets/sprites/agency-chad.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "agency.ledger",
+          "name": "Ms. Ledger",
+          "rarity": "rare",
+          "role": "Booking Manager",
+          "bio": "Runs the calendar, the contracts and the safety checks. Clients who misbehave get one warning and a lifetime ban.",
+          "sprite": { "src": "assets/sprites/agency-ledger.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "agency.contessa",
+          "name": "Contessa Diamonds",
+          "rarity": "epic",
+          "role": "Agency Founder",
+          "bio": "Former opera singer, current CEO. Every client signs her rules. Every employee sets their own.",
+          "sprite": { "src": "assets/sprites/agency-contessa.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "agency.cards",
+          "name": "Business Cards",
+          "rarity": "common",
+          "effect": "Embossed, scented and completely vague about what the business is.",
+          "visual": { "char": "📇", "x": 12, "y": 88, "h": 12, "z": 5 }
+        },
+        {
+          "id": "agency.limo",
+          "name": "Limousine",
+          "rarity": "rare",
+          "effect": "Tinted windows, a driver who never looks back.",
+          "visual": { "char": "🚘", "x": 88, "y": 88, "h": 16, "z": 2 }
+        },
+        {
+          "id": "agency.blackcard",
+          "name": "Black Card",
+          "rarity": "epic",
+          "effect": "Only accepted in places that don't have prices.",
+          "visual": { "char": "💳", "x": 50, "y": 26, "h": 12, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "agency.vip",
+          "name": "VIP Arrival",
+          "description": "A very famous, very married actor books under the name 'Mr. Smith'.",
+          "unlock": [{ "type": "roomLevel", "room": "agency", "min": 3 }, { "type": "charactersUnlocked", "room": "agency", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 2700,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Mr. Smith cancels",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIP ARRIVAL", "ms": 800 },
+                  { "text": "The phone rings…", "ms": 850 },
+                  { "text": "His wife is in town.", "ms": 850 },
+                  { "text": "Mr. Smith cancels.", "ms": 850 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Discreet evening",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIP ARRIVAL", "ms": 800 },
+                  { "text": "The limo arrives", "ms": 850 },
+                  { "text": "DISCREET EVENING", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Generous tipper",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIP ARRIVAL", "ms": 800 },
+                  { "text": "The limo arrives", "ms": 700, "shake": true },
+                  { "text": "He signs every rule", "ms": 700, "shake": false },
+                  { "text": "GENEROUS TIPPER", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Lifetime membership",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "VIP ARRIVAL", "ms": 800 },
+                  { "text": "The limo arrives", "ms": 700, "shake": true },
+                  { "text": "Three friends with him", "ms": 700, "shake": false },
+                  { "text": "All very famous", "ms": 700, "shake": false },
+                  { "text": "LIFETIME MEMBERSHIP", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "club",
+      "order": 6,
+      "name": "Gentlemen's Club",
+      "blurb": "Velvet seats, loud music, one golden rule: look, don't touch.",
+      "price": 30000000000,
+      "baseIncome": 32000,
+      "background": { "src": "assets/rooms/club.svg" },
+      "characters": [
+        {
+          "id": "club.bubbles",
+          "name": "Bubbles",
+          "rarity": "common",
+          "role": "Dancer",
+          "bio": "Paying for nursing school one song at a time. Has better upper-body strength than the bouncers.",
+          "sprite": { "src": "assets/sprites/club-bubbles.webp", "frames": 6, "fps": 5, "x": 28, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "club.tony",
+          "name": "Big Tony",
+          "rarity": "rare",
+          "role": "Bouncer",
+          "bio": "Two rules: no touching, no exceptions. There is a third rule. Nobody has needed to learn it.",
+          "sprite": { "src": "assets/sprites/club-tony.webp", "frames": 6, "fps": 5, "x": 14, "y": 88, "h": 58, "z": 4 }
+        },
+        {
+          "id": "club.desiree",
+          "name": "Diamond Desiree",
+          "rarity": "epic",
+          "role": "Headliner",
+          "bio": "Three-time pole fitness champion. The club changes its schedule around her, not the other way round.",
+          "sprite": { "src": "assets/sprites/club-desiree.webp", "frames": 6, "fps": 5, "x": 62, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "club.disco",
+          "name": "Disco Ball",
+          "rarity": "common",
+          "effect": "Seventies technology. Timeless results.",
+          "visual": { "char": "🪩", "x": 50, "y": 14, "h": 12, "z": 1 }
+        },
+        {
+          "id": "club.moneygun",
+          "name": "Money Gun",
+          "rarity": "rare",
+          "effect": "Fires notes at the stage. Mostly used by people who should not have one.",
+          "visual": { "char": "💸", "x": 86, "y": 86, "h": 14, "z": 5 }
+        },
+        {
+          "id": "club.vip",
+          "name": "VIP Booth",
+          "rarity": "epic",
+          "effect": "Velvet, gold and a two-bottle minimum.",
+          "visual": { "char": "🛋️", "x": 88, "y": 70, "h": 16, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "club.stampede",
+          "name": "Bachelor Party Stampede",
+          "description": "Forty groomsmen arrive in matching T-shirts. Big Tony cracks his knuckles.",
+          "unlock": [{ "type": "roomLevel", "room": "club", "min": 3 }, { "type": "charactersUnlocked", "room": "club", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Thrown out",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BACHELOR PARTY STAMPEDE", "ms": 800 },
+                  { "text": "They rush the door", "ms": 850 },
+                  { "text": "Big Tony says no.", "ms": 850 },
+                  { "text": "Thrown out.", "ms": 850 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Good tips",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BACHELOR PARTY STAMPEDE", "ms": 800 },
+                  { "text": "They rush the door", "ms": 850 },
+                  { "text": "Tony checks IDs", "ms": 850 },
+                  { "text": "GOOD TIPS", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Best man pays",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BACHELOR PARTY STAMPEDE", "ms": 800 },
+                  { "text": "They rush the door", "ms": 700, "shake": true },
+                  { "text": "The best man has a credit card", "ms": 700, "shake": false },
+                  { "text": "BEST MAN PAYS", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Groom pays for everyone",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "BACHELOR PARTY STAMPEDE", "ms": 800 },
+                  { "text": "They rush the door", "ms": 700, "shake": true },
+                  { "text": "The groom is a billionaire", "ms": 700, "shake": false },
+                  { "text": "Desiree takes the stage", "ms": 700, "shake": false },
+                  { "text": "GROOM PAYS FOR EVERYONE", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "film",
+      "order": 7,
+      "name": "Adult Film Studio",
+      "blurb": "Professional sets, professional crews, professionally bad dialogue.",
+      "price": 2400000000000,
+      "baseIncome": 256000,
+      "background": { "src": "assets/rooms/film.svg" },
+      "characters": [
+        {
+          "id": "film.rod",
+          "name": "Rod Steel",
+          "rarity": "common",
+          "role": "Leading Man",
+          "bio": "Has starred in three hundred films and memorised none of the lines. Has never needed to.",
+          "sprite": { "src": "assets/sprites/film-rod.webp", "frames": 6, "fps": 5, "x": 26, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "film.penny",
+          "name": "Penny Profit",
+          "rarity": "rare",
+          "role": "Producer",
+          "bio": "Makes a film for forty thousand and makes it look like forty-one. Pays everyone on time, which makes her a legend in this business.",
+          "sprite": { "src": "assets/sprites/film-penny.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "film.luc",
+          "name": "Luc Lenscap",
+          "rarity": "epic",
+          "role": "Auteur Director",
+          "bio": "Calls every scene 'a meditation on longing'. Wears a beret indoors. Has an award nobody else has heard of.",
+          "sprite": { "src": "assets/sprites/film-luc.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "film.clapper",
+          "name": "Clapperboard",
+          "rarity": "common",
+          "effect": "Scene 1, take 47. Rod forgot his line again.",
+          "visual": { "char": "🎬", "x": 12, "y": 88, "h": 12, "z": 5 }
+        },
+        {
+          "id": "film.camera",
+          "name": "Cinema Camera",
+          "rarity": "rare",
+          "effect": "Rented by the hour, insured by the minute.",
+          "visual": { "char": "🎥", "x": 88, "y": 74, "h": 16, "z": 2 }
+        },
+        {
+          "id": "film.award",
+          "name": "Golden Statue",
+          "rarity": "epic",
+          "effect": "Best Lighting in a Supporting Role, 2019.",
+          "visual": { "char": "🏆", "x": 50, "y": 22, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "film.awards",
+          "name": "Award Season",
+          "description": "The industry's biggest awards night. Gold statues, long speeches, worse jokes.",
+          "unlock": [{ "type": "roomLevel", "room": "film", "min": 3 }, { "type": "charactersUnlocked", "room": "film", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Lost to a parody",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "AWARD SEASON", "ms": 800 },
+                  { "text": "And the winner is…", "ms": 850 },
+                  { "text": "Not us.", "ms": 850 },
+                  { "text": "Lost to a parody.", "ms": 850 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Nominated",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "AWARD SEASON", "ms": 800 },
+                  { "text": "And the winner is…", "ms": 850 },
+                  { "text": "NOMINATED", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Best Picture",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "AWARD SEASON", "ms": 800 },
+                  { "text": "And the winner is…", "ms": 700, "shake": true },
+                  { "text": "Luc cries", "ms": 700, "shake": false },
+                  { "text": "BEST PICTURE", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Clean sweep",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "AWARD SEASON", "ms": 800 },
+                  { "text": "And the winner is…", "ms": 700, "shake": true },
+                  { "text": "Us.", "ms": 700, "shake": false },
+                  { "text": "And us. And us again.", "ms": 700, "shake": false },
+                  { "text": "CLEAN SWEEP", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "media",
+      "order": 8,
+      "name": "XXX Media Empire",
+      "blurb": "A listed company, a streaming platform and a board meeting full of very serious pie charts.",
+      "price": 200000000000000,
+      "baseIncome": 2000000,
+      "background": { "src": "assets/rooms/media.svg" },
+      "characters": [
+        {
+          "id": "media.kevin",
+          "name": "Intern Kevin",
+          "rarity": "common",
+          "role": "Social Media Intern",
+          "bio": "Runs forty accounts from one phone. Has seen things. Is fine. Probably.",
+          "sprite": { "src": "assets/sprites/media-kevin.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "media.sheila",
+          "name": "Sheila Shareholder",
+          "rarity": "rare",
+          "role": "CFO",
+          "bio": "Explains the business to investors with pie charts and a perfectly straight face.",
+          "sprite": { "src": "assets/sprites/media-sheila.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+        },
+        {
+          "id": "media.baroness",
+          "name": "The Baroness",
+          "rarity": "epic",
+          "role": "Founder & CEO",
+          "bio": "Started in the alley with a lamp and a folding chair. Now owns the alley, the block and a streaming platform.",
+          "sprite": { "src": "assets/sprites/media-baroness.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "media.servers",
+          "name": "Server Farm",
+          "rarity": "common",
+          "effect": "Ten thousand servers, all running hot.",
+          "visual": { "char": "🖥️", "x": 12, "y": 88, "h": 14, "z": 5 }
+        },
+        {
+          "id": "media.ticker",
+          "name": "Stock Ticker",
+          "rarity": "rare",
+          "effect": "Goes up. Mostly.",
+          "visual": { "char": "📈", "x": 88, "y": 60, "h": 14, "z": 1 }
+        },
+        {
+          "id": "media.jet",
+          "name": "Private Jet",
+          "rarity": "epic",
+          "effect": "For board meetings at 40,000 feet.",
+          "visual": { "char": "🛩️", "x": 62, "y": 20, "h": 14, "z": 1 }
+        }
+      ],
+      "events": [
+        {
+          "id": "media.launch",
+          "name": "Global Launch",
+          "description": "The streaming platform goes live in forty countries at once. The servers sweat.",
+          "unlock": [{ "type": "roomLevel", "room": "media", "min": 3 }, { "type": "charactersUnlocked", "room": "media", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "flop",
+              "label": "Servers melt",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "GLOBAL LAUNCH", "ms": 800 },
+                  { "text": "3… 2… 1…", "ms": 850 },
+                  { "text": "Error 503.", "ms": 850 },
+                  { "text": "Servers melt.", "ms": 850 }
+                ]
+              }
+            },
+            {
+              "id": "ok",
+              "label": "Smooth launch",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "GLOBAL LAUNCH", "ms": 800 },
+                  { "text": "3… 2… 1…", "ms": 850 },
+                  { "text": "SMOOTH LAUNCH", "ms": 1100, "color": "#cd7f32" }
+                ]
+              }
+            },
+            {
+              "id": "hit",
+              "label": "Record sign-ups",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "GLOBAL LAUNCH", "ms": 800 },
+                  { "text": "3… 2… 1…", "ms": 700, "shake": true },
+                  { "text": "Kevin can't keep up", "ms": 700, "shake": false },
+                  { "text": "RECORD SIGN-UPS", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Biggest launch ever",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "GLOBAL LAUNCH", "ms": 800 },
+                  { "text": "3… 2… 1…", "ms": 700, "shake": true },
+                  { "text": "Stock price triples", "ms": 700, "shake": false },
+                  { "text": "The Baroness buys the stock exchange", "ms": 700, "shake": false },
+                  { "text": "BIGGEST LAUNCH EVER", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

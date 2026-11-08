@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500"><rect width="800" height="500" fill="#1b1b1b"/>
+<rect x="160" y="40" width="480" height="295" fill="#2e4053"/><rect x="160" y="40" width="480" height="295" fill="#5dade2" opacity=".15"/>
+<g fill="#7f8c8d"><rect x="40" y="60" width="12" height="275"/><rect x="748" y="60" width="12" height="275"/></g>
+<g fill="#f9e79f"><rect x="22" y="40" width="48" height="34" rx="6"/><rect x="730" y="40" width="48" height="34" rx="6"/></g>
+<polygon points="70,57 300,335 160,335" fill="#f9e79f" opacity=".08"/><polygon points="730,57 500,335 640,335" fill="#f9e79f" opacity=".08"/>
+<rect x="300" y="8" width="200" height="34" rx="6" fill="#c0392b"/><text x="400" y="32" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="18" fill="#fff">QUIET ON SET</text>
+<path d="M0 335 H800 V500 H0Z" fill="#3b3b3b"/><g stroke="#2b2b2b" stroke-width="3"><line x1="0" y1="335" x2="-40" y2="500"/><line x1="80" y1="335" x2="40" y2="500"/><line x1="160" y1="335" x2="120" y2="500"/><line x1="240" y1="335" x2="200" y2="500"/><line x1="320" y1="335" x2="280" y2="500"/><line x1="400" y1="335" x2="360" y2="500"/><line x1="480" y1="335" x2="440" y2="500"/><line x1="560" y1="335" x2="520" y2="500"/><line x1="640" y1="335" x2="600" y2="500"/><line x1="720" y1="335" x2="680" y2="500"/><line x1="800" y1="335" x2="760" y2="500"/><line x1="880" y1="335" x2="840" y2="500"/></g></svg>
