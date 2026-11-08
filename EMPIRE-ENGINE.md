@@ -160,6 +160,16 @@ Kopier `games/bus-empire/` (minst) eller `games/fighter-empire/` (fullt). Bytt `
 - Grafikk: `tools/make-quest-art.py` (rotter, goblins, skjeletter, spøkelse, lich, ulv, troll, golem, imp, rustning, trollmann, kobold, wyvern, drage). Rammene er 160×160. Kortbildet beskjæres automatisk til figuren, så rammeformatet spiller ingen rolle.
 - Økonomi, pakker og prestige («New Game+») er kopiert fra Fighter Empire.
 
+## 9c. Space Empire: bevis på at motoren er generisk (8. nov)
+
+`games/space-empire/` ble laget **uten én endret linje i `empire/`** (sjekket med `git diff origin/main -- empire/` før merge). Alt nytt er data og grafikk:
+- Rom → planeter: Lunar Outpost → Mars Colony → Asteroid Belt Mine → Europa Ice Station → Gas Giant Refinery → Dyson Ring.
+- Crew → kolonister og maskiner (roboter, droner, mecher, en AI-kjerne, en romblekksprut og en romvesen-ambassadør). Gear → moduler.
+- Hire → Deploy, Room → Planet, valuta → Credits (₵), events → ekspedisjoner, prestige → Warp Jump.
+- Grafikk: `tools/make-space-art.py`. Felles tegnefunksjoner ligger i `tools/artkit.py` (brukes også av `make-quest-art.py`).
+
+**Slik lager du et nytt tema:** kopier `games/space-empire/`, bytt `id`, tekster, `presentation.labels` og grafikk. Ingen kode i `empire/` skal røres.
+
 ## 10. Akseptansekriterier
 
 | # | Status | Verifisert med |

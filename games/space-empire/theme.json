@@ -1,0 +1,1012 @@
+{
+  "schemaVersion": 1,
+  "id": "space-empire",
+  "name": "Space Empire",
+  "tagline": "From one dome on the Moon to a ring around a star.",
+  "currency": { "name": "Credits", "symbol": "₵" },
+  "economy": {
+    "startCoins": 30,
+    "offlineCapHours": 24,
+    "offlineRate": 1,
+    "fullSetBonus": 0.5,
+    "roomLevel": {
+      "incomePerLevel": 0.25,
+      "maxLevel": 25,
+      "cost": { "seconds": 15, "growth": 1.33 },
+      "fragments": { "list": [1, 1, 1, 2, 2, 2, 3, 3, 3], "thenAdd": 1 }
+    },
+    "characterLevel": { "incomePerLevel": 0.6, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.6 }, "fragments": { "list": [1, 3, 5, 10], "thenAdd": 5 } },
+    "upgrade": { "incomePerLevel": 0.12, "maxLevel": 10, "cost": { "seconds": 30, "growth": 1.5 }, "fragments": { "list": [1, 2, 3, 4, 6], "thenAdd": 2 } },
+    "rarities": {
+      "common": { "label": "Common", "incomeShare": 0.6, "unlockFragments": 2, "costFactor": 1, "color": "#9aa4b2", "gearIncome": 0.8 },
+      "rare": { "label": "Rare", "incomeShare": 1.2, "unlockFragments": 3, "costFactor": 1.5, "color": "#4da3ff", "gearIncome": 1.0 },
+      "epic": { "label": "Epic", "incomeShare": 2.5, "unlockFragments": 5, "costFactor": 2.5, "color": "#c06bff", "gearIncome": 1.5 }
+    }
+  },
+  "booster": {
+    "draws": 3,
+    "priceSeconds": 30,
+    "minPrice": 10,
+    "slotWeights": { "character": 55, "room": 15, "upgrade": 20, "coins": 10 },
+    "rarityWeights": { "common": 65, "rare": 27, "epic": 8 },
+    "coinsSeconds": [15, 45],
+    "epicPity": 12,
+    "excludeMaxed": true
+  },
+  "prestige": {
+    "name": "Warp Jump",
+    "description": "Fold space and start a colony in a new galaxy. Your technology comes with you.",
+    "startRooms": 3,
+    "tiers": [
+      {
+        "requires": [{ "type": "roomLevel", "room": "belt", "min": 10 }, { "type": "charactersUnlocked", "room": "belt", "min": 2 }],
+        "incomeMultiplier": 2,
+        "roomLimit": 4
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "ice", "min": 15 }, { "type": "charactersUnlocked", "room": "ice", "min": 3 }],
+        "incomeMultiplier": 3,
+        "roomLimit": 5
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "gas", "min": 20 }, { "type": "charactersUnlocked", "room": "gas", "min": 3 }],
+        "incomeMultiplier": 4,
+        "roomLimit": 6
+      },
+      {
+        "requires": [{ "type": "roomLevel", "room": "ring", "min": 25 }, { "type": "charactersUnlocked", "room": "ring", "min": 3 }],
+        "incomeMultiplier": 6,
+        "roomLimit": 6
+      }
+    ]
+  },
+  "presentation": {
+    "sceneAspect": 1.6,
+    "palette": { "bg": "#070a14", "panel": "#10162a", "panel2": "#18203a", "text": "#e8eefc", "muted": "#8a96b8", "accent": "#2e86de", "good": "#2ecc71" },
+    "fontDisplay": "'Trebuchet MS', 'Segoe UI', sans-serif",
+    "labels": {
+      "crewTitle": "Colony",
+      "gearTitle": "Modules",
+      "members": "colonists",
+      "hire": "Deploy",
+      "hired": "deployed",
+      "notHired": "Not deployed yet",
+      "joined": "{name} deployed!",
+      "fullSet": "Full colony",
+      "crewCount": "deployed",
+      "withBonus": "with colony bonus",
+      "room": "Planet",
+      "allRooms": "All planets"
+    }
+  },
+  "rooms": [
+    {
+      "id": "moon",
+      "order": 1,
+      "name": "Lunar Outpost",
+      "blurb": "One dome, one flag and a view of home. Every empire starts somewhere.",
+      "price": 0,
+      "baseIncome": 1,
+      "background": { "src": "assets/rooms/moon.svg" },
+      "characters": [
+        {
+          "id": "moon.bot",
+          "name": "Maintenance Bot",
+          "rarity": "common",
+          "role": "Robot",
+          "bio": "Fixes everything with tape. Has never been told that tape does not work in a vacuum.",
+          "sprite": { "src": "assets/sprites/moon-bot.webp", "frames": 6, "fps": 6, "x": 26, "y": 88, "h": 46, "z": 4 }
+        },
+        {
+          "id": "moon.astronaut",
+          "name": "Rookie Astronaut",
+          "rarity": "rare",
+          "role": "Colonist",
+          "bio": "First day on the Moon. Has taken four hundred photos of Earth already.",
+          "sprite": { "src": "assets/sprites/moon-astronaut.webp", "frames": 6, "fps": 5, "x": 50, "y": 88, "h": 52, "z": 4 }
+        },
+        {
+          "id": "moon.commander",
+          "name": "Commander Okoye",
+          "rarity": "epic",
+          "role": "Commander",
+          "bio": "Has walked on three moons and still gets excited about every single one.",
+          "sprite": { "src": "assets/sprites/moon-commander.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 54, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "moon.solar",
+          "name": "Solar Array",
+          "rarity": "common",
+          "effect": "Free power, as long as the Sun keeps showing up.",
+          "visual": {
+            "x": 12,
+            "y": 66,
+            "h": 24,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/moon-solar.svg" }, { "minLevel": 5, "src": "assets/upgrades/moon-solar-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "moon.dish",
+          "name": "Comms Dish",
+          "rarity": "rare",
+          "effect": "Calls home. Mostly to complain about the food.",
+          "visual": {
+            "x": 92,
+            "y": 66,
+            "h": 26,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/moon-dish.svg" }, { "minLevel": 5, "src": "assets/upgrades/moon-dish-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "moon.rocket",
+          "name": "Launch Pad",
+          "rarity": "epic",
+          "effect": "Fuelled, polished and very eager to go somewhere.",
+          "visual": {
+            "x": 62,
+            "y": 66,
+            "h": 48,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/moon-rocket.svg" }, { "minLevel": 5, "src": "assets/upgrades/moon-rocket-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "moon.survey",
+          "name": "Survey the Far Side",
+          "description": "Nobody has looked properly. Somebody should.",
+          "unlock": [{ "type": "roomLevel", "room": "moon", "min": 3 }, { "type": "charactersUnlocked", "room": "moon", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "abort",
+              "label": "Aborted at the ridge",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Dust in the visor!", "ms": 800, "shake": true },
+                  { "text": "Aborted at the ridge.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "minor",
+              "label": "Found ice",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Scanning…", "ms": 800 },
+                  { "text": "FOUND ICE", "ms": 1100, "color": "#85c1e9" }
+                ]
+              }
+            },
+            {
+              "id": "rich",
+              "label": "Found a rare crystal",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Ping!", "ms": 700, "shake": true },
+                  { "text": "Scanners going wild…", "ms": 800 },
+                  { "text": "FOUND A RARE CRYSTAL", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Found an ancient beacon",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Something is blinking…", "ms": 700, "shake": true },
+                  { "text": "Incoming transmission…", "ms": 900 },
+                  { "text": "FOUND AN ANCIENT BEACON", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mars",
+      "order": 2,
+      "name": "Mars Colony",
+      "blurb": "Red dust, blue sunsets and a greenhouse full of very determined potatoes.",
+      "price": 2000,
+      "baseIncome": 8,
+      "background": { "src": "assets/rooms/mars.svg" },
+      "characters": [
+        {
+          "id": "mars.rover",
+          "name": "Survey Rover",
+          "rarity": "common",
+          "role": "Robot",
+          "bio": "Drives one centimetre per second. Very proud of it.",
+          "sprite": { "src": "assets/sprites/mars-rover.webp", "frames": 6, "fps": 6, "x": 24, "y": 88, "h": 46, "z": 4 }
+        },
+        {
+          "id": "mars.botanist",
+          "name": "Botanist",
+          "rarity": "rare",
+          "role": "Colonist",
+          "bio": "Talks to the potatoes. The potatoes are doing great.",
+          "sprite": { "src": "assets/sprites/mars-botanist.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 52, "z": 4 }
+        },
+        {
+          "id": "mars.terraformer",
+          "name": "Terraformer Mech",
+          "rarity": "epic",
+          "role": "Mech",
+          "bio": "Built to reshape a planet. Currently reshaping the parking lot.",
+          "sprite": { "src": "assets/sprites/mars-terraformer.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 62, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "mars.dome",
+          "name": "Greenhouse Dome",
+          "rarity": "common",
+          "effect": "Grows food, oxygen and a little hope.",
+          "visual": {
+            "x": 12,
+            "y": 68,
+            "h": 22,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/mars-dome.svg" }, { "minLevel": 5, "src": "assets/upgrades/mars-dome-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "mars.pump",
+          "name": "Water Extractor",
+          "rarity": "rare",
+          "effect": "Finds water under the sand. Sounds like a kettle.",
+          "visual": {
+            "x": 90,
+            "y": 68,
+            "h": 32,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/mars-pump.svg" }, { "minLevel": 5, "src": "assets/upgrades/mars-pump-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "mars.tower",
+          "name": "Atmosphere Tower",
+          "rarity": "epic",
+          "effect": "Making Mars a bit more breathable, one puff at a time.",
+          "visual": {
+            "x": 60,
+            "y": 68,
+            "h": 54,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/mars-tower.svg" }, { "minLevel": 5, "src": "assets/upgrades/mars-tower-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "mars.storm",
+          "name": "Dust Storm Expedition",
+          "description": "Drive straight into the storm. Find what the wind uncovers.",
+          "unlock": [{ "type": "roomLevel", "room": "mars", "min": 3 }, { "type": "charactersUnlocked", "room": "mars", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 900,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "abort",
+              "label": "Turned back",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Visibility zero!", "ms": 800, "shake": true },
+                  { "text": "Turned back.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "minor",
+              "label": "Found frozen water",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Drilling…", "ms": 800 },
+                  { "text": "FOUND FROZEN WATER", "ms": 1100, "color": "#85c1e9" }
+                ]
+              }
+            },
+            {
+              "id": "rich",
+              "label": "Found a lost probe",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Signal found!", "ms": 700, "shake": true },
+                  { "text": "Scanners going wild…", "ms": 800 },
+                  { "text": "FOUND A LOST PROBE", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Found an underground cave city",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Echoes below…", "ms": 700, "shake": true },
+                  { "text": "Incoming transmission…", "ms": 900 },
+                  { "text": "FOUND AN UNDERGROUND CAVE CITY", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "belt",
+      "order": 3,
+      "name": "Asteroid Belt Mine",
+      "blurb": "Every rock out here is worth something. Some are worth everything.",
+      "price": 90000,
+      "baseIncome": 60,
+      "background": { "src": "assets/rooms/belt.svg" },
+      "characters": [
+        {
+          "id": "belt.drone",
+          "name": "Mining Drone",
+          "rarity": "common",
+          "role": "Drone",
+          "bio": "Picks up rocks, puts them in a box, picks up the next rock. Loves its job.",
+          "sprite": { "src": "assets/sprites/belt-drone.webp", "frames": 6, "fps": 8, "x": 26, "y": 80, "h": 42, "z": 4 }
+        },
+        {
+          "id": "belt.miner",
+          "name": "Belt Miner",
+          "rarity": "rare",
+          "role": "Colonist",
+          "bio": "Has punched an asteroid. Twice. Won both times.",
+          "sprite": { "src": "assets/sprites/belt-miner.webp", "frames": 6, "fps": 6, "x": 50, "y": 88, "h": 52, "z": 4 }
+        },
+        {
+          "id": "belt.hauler",
+          "name": "Hauler Mech",
+          "rarity": "epic",
+          "role": "Mech",
+          "bio": "Carries cargo the size of a house and does not like to be rushed.",
+          "sprite": { "src": "assets/sprites/belt-hauler.webp", "frames": 6, "fps": 5, "x": 75, "y": 88, "h": 64, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "belt.crusher",
+          "name": "Ore Crusher",
+          "rarity": "common",
+          "effect": "Big rocks in, small rocks out.",
+          "visual": {
+            "x": 12,
+            "y": 68,
+            "h": 24,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/belt-crusher.svg" }, { "minLevel": 5, "src": "assets/upgrades/belt-crusher-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "belt.depot",
+          "name": "Cargo Depot",
+          "rarity": "rare",
+          "effect": "Neatly stacked containers full of shiny things.",
+          "visual": {
+            "x": 86,
+            "y": 70,
+            "h": 20,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/belt-depot.svg" }, { "minLevel": 5, "src": "assets/upgrades/belt-depot-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "belt.tractor",
+          "name": "Tractor Beam",
+          "rarity": "epic",
+          "effect": "Pulls asteroids gently closer. Mostly gently.",
+          "visual": {
+            "x": 62,
+            "y": 68,
+            "h": 40,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/belt-tractor.svg" }, { "minLevel": 5, "src": "assets/upgrades/belt-tractor-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "belt.prospect",
+          "name": "Deep Belt Prospecting",
+          "description": "Fly further out than the maps go.",
+          "unlock": [{ "type": "roomLevel", "room": "belt", "min": 3 }, { "type": "charactersUnlocked", "room": "belt", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1200,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "abort",
+              "label": "Dodged back home",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Asteroid incoming!", "ms": 800, "shake": true },
+                  { "text": "Dodged back home.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "minor",
+              "label": "Found iron",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [{ "text": "T-MINUS 3… 2… 1…", "ms": 900 }, { "text": "Clang!", "ms": 800 }, { "text": "FOUND IRON", "ms": 1100, "color": "#85c1e9" }]
+              }
+            },
+            {
+              "id": "rich",
+              "label": "Found platinum",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Jackpot signal!", "ms": 700, "shake": true },
+                  { "text": "Scanners going wild…", "ms": 800 },
+                  { "text": "FOUND PLATINUM", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Found a hollow asteroid ship",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "It's… hollow?", "ms": 700, "shake": true },
+                  { "text": "Incoming transmission…", "ms": 900 },
+                  { "text": "FOUND A HOLLOW ASTEROID SHIP", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ice",
+      "order": 4,
+      "name": "Europa Ice Station",
+      "blurb": "Under the ice there is an ocean. In the ocean there is… something.",
+      "price": 6000000,
+      "baseIncome": 500,
+      "background": { "src": "assets/rooms/ice.svg" },
+      "characters": [
+        {
+          "id": "ice.driller",
+          "name": "Ice Drill Bot",
+          "rarity": "common",
+          "role": "Robot",
+          "bio": "Drills through kilometres of ice and never complains about the cold.",
+          "sprite": { "src": "assets/sprites/ice-driller.webp", "frames": 6, "fps": 6, "x": 24, "y": 88, "h": 46, "z": 4 }
+        },
+        {
+          "id": "ice.biologist",
+          "name": "Marine Biologist",
+          "rarity": "rare",
+          "role": "Colonist",
+          "bio": "Came to study the ocean. Brought a very long fishing line, just in case.",
+          "sprite": { "src": "assets/sprites/ice-biologist.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 52, "z": 4 }
+        },
+        {
+          "id": "ice.squid",
+          "name": "Friendly Space Squid",
+          "rarity": "epic",
+          "role": "Local",
+          "bio": "Lives under the ice. Waves at everyone. Nobody knows how it got a hat-shaped head.",
+          "sprite": { "src": "assets/sprites/ice-squid.webp", "frames": 6, "fps": 6, "x": 74, "y": 90, "h": 52, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "ice.drill",
+          "name": "Deep Drill",
+          "rarity": "common",
+          "effect": "Straight down. Keep going.",
+          "visual": {
+            "x": 10,
+            "y": 68,
+            "h": 40,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/ice-drill.svg" }, { "minLevel": 5, "src": "assets/upgrades/ice-drill-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "ice.sub",
+          "name": "Mini Submarine",
+          "rarity": "rare",
+          "effect": "Yellow, obviously.",
+          "visual": {
+            "x": 88,
+            "y": 80,
+            "h": 18,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/ice-sub.svg" }, { "minLevel": 5, "src": "assets/upgrades/ice-sub-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "ice.lab",
+          "name": "Research Lab",
+          "rarity": "epic",
+          "effect": "Where every strange sample ends up.",
+          "visual": {
+            "x": 60,
+            "y": 68,
+            "h": 26,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/ice-lab.svg" }, { "minLevel": 5, "src": "assets/upgrades/ice-lab-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "ice.dive",
+          "name": "Dive Under the Ice",
+          "description": "Take the submarine deeper than anyone has gone.",
+          "unlock": [{ "type": "roomLevel", "room": "ice", "min": 3 }, { "type": "charactersUnlocked", "room": "ice", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 1800,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "abort",
+              "label": "Surfaced early",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Pressure warning!", "ms": 800, "shake": true },
+                  { "text": "Surfaced early.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "minor",
+              "label": "Found glowing plankton",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Pretty…", "ms": 800 },
+                  { "text": "FOUND GLOWING PLANKTON", "ms": 1100, "color": "#85c1e9" }
+                ]
+              }
+            },
+            {
+              "id": "rich",
+              "label": "Found a squid city",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Lights below!", "ms": 700, "shake": true },
+                  { "text": "Scanners going wild…", "ms": 800 },
+                  { "text": "FOUND A SQUID CITY", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Made first friendly contact",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Squid waves back!", "ms": 700, "shake": true },
+                  { "text": "Incoming transmission…", "ms": 900 },
+                  { "text": "MADE FIRST FRIENDLY CONTACT", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gas",
+      "order": 5,
+      "name": "Gas Giant Refinery",
+      "blurb": "A platform floating in the clouds of a storm the size of Earth.",
+      "price": 400000000,
+      "baseIncome": 4000,
+      "background": { "src": "assets/rooms/gas.svg" },
+      "characters": [
+        {
+          "id": "gas.skimmer",
+          "name": "Cloud Skimmer",
+          "rarity": "common",
+          "role": "Drone",
+          "bio": "Surfs the storms collecting gas. Thinks it is a bird.",
+          "sprite": { "src": "assets/sprites/gas-skimmer.webp", "frames": 6, "fps": 8, "x": 26, "y": 78, "h": 42, "z": 4 }
+        },
+        {
+          "id": "gas.chief",
+          "name": "Refinery Chief",
+          "rarity": "rare",
+          "role": "Colonist",
+          "bio": "Runs the refinery with a clipboard, a wrench and a very loud voice.",
+          "sprite": { "src": "assets/sprites/gas-chief.webp", "frames": 6, "fps": 5, "x": 50, "y": 88, "h": 54, "z": 4 }
+        },
+        {
+          "id": "gas.core",
+          "name": "AI Core",
+          "rarity": "epic",
+          "role": "Intelligence",
+          "bio": "Runs everything, sees everything, and is very polite about it.",
+          "sprite": { "src": "assets/sprites/gas-core.webp", "frames": 6, "fps": 5, "x": 70, "y": 76, "h": 52, "z": 4 }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "gas.scoop",
+          "name": "Gas Scoop",
+          "rarity": "common",
+          "effect": "Swoops through the clouds and comes back full.",
+          "visual": {
+            "x": 14,
+            "y": 60,
+            "h": 16,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/gas-scoop.svg" }, { "minLevel": 5, "src": "assets/upgrades/gas-scoop-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "gas.tank",
+          "name": "Fuel Tanks",
+          "rarity": "rare",
+          "effect": "Full of hydrogen. No smoking, please.",
+          "visual": {
+            "x": 92,
+            "y": 68,
+            "h": 28,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/gas-tank.svg" }, { "minLevel": 5, "src": "assets/upgrades/gas-tank-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "gas.reactor",
+          "name": "Fusion Reactor",
+          "rarity": "epic",
+          "effect": "A small sun in a box. Handle with care.",
+          "visual": {
+            "x": 60,
+            "y": 68,
+            "h": 36,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/gas-reactor.svg" }, { "minLevel": 5, "src": "assets/upgrades/gas-reactor-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "gas.storm",
+          "name": "Storm Diving",
+          "description": "Ride the great storm down to where the good gas is.",
+          "unlock": [{ "type": "roomLevel", "room": "gas", "min": 3 }, { "type": "charactersUnlocked", "room": "gas", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 2700,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "abort",
+              "label": "Pulled out early",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Turbulence!", "ms": 800, "shake": true },
+                  { "text": "Pulled out early.", "ms": 1100 }
+                ]
+              }
+            },
+            {
+              "id": "minor",
+              "label": "Topped up the tanks",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Whoosh!", "ms": 800 },
+                  { "text": "TOPPED UP THE TANKS", "ms": 1100, "color": "#85c1e9" }
+                ]
+              }
+            },
+            {
+              "id": "rich",
+              "label": "Found metallic hydrogen",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Rare readings!", "ms": 700, "shake": true },
+                  { "text": "Scanners going wild…", "ms": 800 },
+                  { "text": "FOUND METALLIC HYDROGEN", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Found the eye of the storm",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Calm… and treasure", "ms": 700, "shake": true },
+                  { "text": "Incoming transmission…", "ms": 900 },
+                  { "text": "FOUND THE EYE OF THE STORM", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ring",
+      "order": 6,
+      "name": "Dyson Ring",
+      "blurb": "A ring around a star, built by somebody long ago. Now it is yours.",
+      "price": 30000000000,
+      "baseIncome": 32000,
+      "background": { "src": "assets/rooms/ring.svg" },
+      "characters": [
+        {
+          "id": "ring.bot",
+          "name": "Solar Bot",
+          "rarity": "common",
+          "role": "Robot",
+          "bio": "Polishes the solar panels. There are four billion of them. It is on number six.",
+          "sprite": { "src": "assets/sprites/ring-bot.webp", "frames": 6, "fps": 6, "x": 24, "y": 88, "h": 46, "z": 4 }
+        },
+        {
+          "id": "ring.engineer",
+          "name": "Star Engineer",
+          "rarity": "rare",
+          "role": "Colonist",
+          "bio": "Understands how the ring works. Mostly.",
+          "sprite": { "src": "assets/sprites/ring-engineer.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 54, "z": 4 }
+        },
+        {
+          "id": "ring.ambassador",
+          "name": "Alien Ambassador",
+          "rarity": "epic",
+          "role": "Ambassador",
+          "bio": "Built the ring a million years ago and came back to see who moved in. Approves.",
+          "sprite": { "src": "assets/sprites/ring-ambassador.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 58, "z": 4, "flip": true }
+        }
+      ],
+      "upgrades": [
+        {
+          "id": "ring.panels",
+          "name": "Solar Panels",
+          "rarity": "common",
+          "effect": "Four billion of them. Every one counts.",
+          "visual": {
+            "x": 50,
+            "y": 30,
+            "h": 14,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/ring-panels.svg" }, { "minLevel": 5, "src": "assets/upgrades/ring-panels-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "ring.gate",
+          "name": "Warp Gate",
+          "rarity": "rare",
+          "effect": "Leads somewhere. Nobody is quite sure where yet.",
+          "visual": {
+            "x": 86,
+            "y": 70,
+            "h": 34,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/ring-gate.svg" }, { "minLevel": 5, "src": "assets/upgrades/ring-gate-deluxe.svg" }]
+          }
+        },
+        {
+          "id": "ring.statue",
+          "name": "Founders' Statue",
+          "rarity": "epic",
+          "effect": "A statue of the ring builders. They look friendly.",
+          "visual": {
+            "x": 12,
+            "y": 70,
+            "h": 40,
+            "z": 1,
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/ring-statue.svg" }, { "minLevel": 5, "src": "assets/upgrades/ring-statue-deluxe.svg" }]
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "ring.contact",
+          "name": "First Contact",
+          "description": "Answer the signal coming from the other side of the star.",
+          "unlock": [{ "type": "roomLevel", "room": "ring", "min": 3 }, { "type": "charactersUnlocked", "room": "ring", "min": 2 }],
+          "costSeconds": 0,
+          "cooldownSeconds": 3600,
+          "repeatable": true,
+          "outcomes": [
+            {
+              "id": "abort",
+              "label": "Signal lost",
+              "weight": 40,
+              "skillWeight": -3,
+              "minWeight": 5,
+              "rewards": [{ "type": "coins", "seconds": 30 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [{ "text": "T-MINUS 3… 2… 1…", "ms": 900 }, { "text": "Static…", "ms": 800, "shake": true }, { "text": "Signal lost.", "ms": 1100 }]
+              }
+            },
+            {
+              "id": "minor",
+              "label": "Exchanged greetings",
+              "weight": 30,
+              "skillWeight": 0,
+              "rewards": [{ "type": "coins", "seconds": 150 }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Hello?", "ms": 800 },
+                  { "text": "EXCHANGED GREETINGS", "ms": 1100, "color": "#85c1e9" }
+                ]
+              }
+            },
+            {
+              "id": "rich",
+              "label": "Traded star maps",
+              "weight": 20,
+              "skillWeight": 1,
+              "rewards": [{ "type": "coins", "seconds": 400 }, { "type": "fragments", "rarity": "rare", "count": 1, "scope": "room" }],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "Data received!", "ms": 700, "shake": true },
+                  { "text": "Scanners going wild…", "ms": 800 },
+                  { "text": "TRADED STAR MAPS", "ms": 1200, "color": "#4da3ff" }
+                ]
+              }
+            },
+            {
+              "id": "legend",
+              "label": "Joined the galactic council",
+              "weight": 10,
+              "skillWeight": 2,
+              "rewards": [
+                { "type": "coins", "seconds": 900 },
+                { "type": "fragments", "rarity": "epic", "count": 1, "scope": "room" },
+                { "type": "booster", "count": 1 }
+              ],
+              "cinematic": {
+                "type": "sequence",
+                "frames": [
+                  { "text": "T-MINUS 3… 2… 1…", "ms": 900 },
+                  { "text": "WELCOME, NEIGHBOUR", "ms": 700, "shake": true },
+                  { "text": "Incoming transmission…", "ms": 900 },
+                  { "text": "JOINED THE GALACTIC COUNCIL", "ms": 1500, "color": "#f1c40f" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
