@@ -39,6 +39,9 @@ class EmpireApp {
 
   money(n) { return this.sym + fmt(n); }
 
+  /** Generic on purpose so every theme works without renaming it; a theme may still set booster.name. */
+  get packName() { return this.theme.booster.name || 'Booster Pack'; }
+
   start() {
     const { empire, offline, isNew } = loadEmpire(this.theme);
     this.empire = empire;
@@ -97,7 +100,7 @@ class EmpireApp {
           <div class="emp-coins" data-bind="coins"></div>
           <div class="emp-income"><span data-bind="income"></span>/s<span class="emp-prestige-badge" data-bind="prestige"></span></div>
         </div>
-        <button class="emp-btn emp-pack-btn" data-act="pack"><span>${esc(b.name || 'Booster')}</span><small data-bind="packPrice"></small></button>
+        <button class="emp-btn emp-pack-btn" data-act="pack"><span>${esc(this.packName)}</span><small data-bind="packPrice"></small></button>
         <button class="emp-icon-btn" data-act="menu" aria-label="Menu">≡</button>
         <button class="emp-hud-rooms" data-act="close-room">‹ All rooms</button>
         <button class="emp-coach" data-act="coach"></button>
@@ -123,7 +126,7 @@ class EmpireApp {
     if (!btn || btn.disabled) return;
     const { act, kind, id } = btn.dataset;
     const E = this.empire;
-    if (act === 'pack') return this.openPack();
+    if (act === 'pack') return this.openPack(+(btn.dataset.n || 1));
     if (act === 'menu') return this.showMenu();
     if (act === 'help') return this.showHelp();
     if (act === 'coach') return this.followCoach();
@@ -451,10 +454,12 @@ class EmpireApp {
     set('[data-bind="prestige"]', el => { const l = E.state.prestige.level; el.textContent = l ? ` · ×${E.prestigeMultiplier()}` : ''; });
     const price = E.boosterPrice();
     set('[data-bind="packPrice"]', el => el.textContent = this.money(price));
+    set('[data-bind="packPrice10"]', el => el.textContent = this.money(price * 10));
     set('[data-act="pack"]', el => {
       el.disabled = E.state.coins < price || !E.builtRooms().length;
       el.classList.toggle('emp-ready', !el.disabled);
     });
+    set('[data-act="pack"][data-n="10"]', el => { el.disabled = E.state.coins < price * 10; el.classList.toggle('emp-ready', !el.disabled); });
     this.updateCoach(price);
     set('[data-bind="room-income"]', el => el.textContent = '+' + this.sym + fmt(E.roomIncome(el.dataset.id), { decimals: true }) + '/s');
 
@@ -517,7 +522,7 @@ class EmpireApp {
   // One line under the HUD that always says what the best next move is. Tap it to jump there.
 
   coachStep(price) {
-    const E = this.empire, pack = this.theme.booster.name || 'Booster';
+    const E = this.empire, pack = this.packName;
     const btn = (kind, id) => `[data-act="level"][data-kind="${kind}"][data-id="${id}"]`;
     if (!E.builtRooms().length) {
       const first = E.roomList[0];
@@ -566,7 +571,7 @@ class EmpireApp {
   }
 
   showHelp() {
-    const t = this.theme, pack = esc(t.booster.name || 'Booster'), cash = esc(t.currency?.name || 'cash');
+    const t = this.theme, pack = esc(this.packName), cash = esc(t.currency?.name || 'cash');
     this.openModal(`
       <h3>How it works</h3>
       <ol class="emp-help">
@@ -595,13 +600,26 @@ class EmpireApp {
 
   // ─────────────────────────────── booster ────────────────────────────────
 
-  openPack() {
+  openPack(n = 1) {
     const E = this.empire;
-    const res = E.openBooster();
+    const res = E.openBoosters(n);
     if (!res.ok) return this.toast(this.reasonText(res));
     this.save();
-    this.showRewards(`${this.theme.booster.name || 'Booster'}`, res.rewards, { again: true });
+    const title = res.opened > 1 ? `${res.opened} × ${this.packName}` : this.packName;
+    this.showRewards(title, res.rewards, { again: true });
     this.renderRooms();
+  }
+
+  /** Same item drawn several times becomes one card with a count; cash is summed. Best first. */
+  groupRewards(rewards) {
+    const map = new Map();
+    for (const r of rewards) {
+      const key = r.type === 'coins' ? 'coins' : `${r.kind}:${r.id}`;
+      const g = map.get(key);
+      if (g) g.amount += r.amount; else map.set(key, { ...r });
+    }
+    const rank = r => r.type === 'coins' ? 9 : { epic: 0, rare: 1, common: 2 }[r.rarity] ?? (r.kind === 'room' ? 3 : 4);
+    return [...map.values()].sort((a, b) => rank(a) - rank(b));
   }
 
   rewardCard(r) {
@@ -614,6 +632,7 @@ class EmpireApp {
     } else {
       face = this.cardFace(r.kind, r.id).replace('emp-face-locked', '');
       if (r.rarity) el.classList.add('emp-card-' + r.rarity);
+      if (r.amount > 1) face = face.replace('<div class="emp-face-tab">', `<span class="emp-face-count">+${r.amount}</span><div class="emp-face-tab">`);
     }
     el.innerHTML = `<div class="emp-card-back"></div><div class="emp-card-front">${face}</div>`;
     this.hydrate(el);
@@ -626,15 +645,17 @@ class EmpireApp {
       <div class="emp-cards"></div>
       <p class="emp-muted emp-cards-hint">Tap a card to see what it does.</p>
       <div class="emp-modal-actions">
-        ${again ? `<button class="emp-btn" data-act="pack">Another — <span data-bind="packPrice"></span></button>` : ''}
+        ${again ? `<button class="emp-btn" data-act="pack" data-n="1">Open 1 · <span data-bind="packPrice"></span></button>
+        <button class="emp-btn" data-act="pack" data-n="10">Open 10 · <span data-bind="packPrice10"></span></button>` : ''}
         <button class="emp-btn emp-accent" data-act="close">Done</button>
       </div>`);
     const wrap = this.modalCard.querySelector('.emp-cards');
-    const cards = rewards.map(r => this.rewardCard(r));
+    const cards = this.groupRewards(rewards).map(r => this.rewardCard(r));
     cards.forEach(c => wrap.appendChild(c));
-    // Reveal one by one; a tap reveals all at once.
+    // Reveal one by one (fast when there are many); a tap reveals all at once.
+    const step = cards.length > 4 ? 90 : 260;
     let i = 0;
-    const flip = () => { if (i < cards.length) { cards[i++].classList.add('flipped'); this.flipTimer = setTimeout(flip, 260); } };
+    const flip = () => { if (i < cards.length) { cards[i++].classList.add('flipped'); this.flipTimer = setTimeout(flip, step); } };
     clearTimeout(this.flipTimer);
     this.flipTimer = setTimeout(flip, 150);
     wrap.addEventListener('click', e => {

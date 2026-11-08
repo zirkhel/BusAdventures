@@ -359,6 +359,17 @@ export class Empire {
     return { ok: true, price, rewards, pity: forceEpicUsed(rewards, pityDue) };
   }
 
+  /** Open up to `count` packs in a row (stops when the cash runs out). */
+  openBoosters(count = 1) {
+    const all = []; let opened = 0, spent = 0;
+    for (let i = 0; i < count; i++) {
+      const r = this.openBooster();
+      if (!r.ok) { if (!opened) return r; break; }
+      opened++; spent += r.price; all.push(...r.rewards);
+    }
+    return { ok: true, opened, spent, rewards: all };
+  }
+
   // ──────────────────────────── requirements ──────────────────────────────
   // Shared by prestige and events. Each returns { met, current, target }.
 

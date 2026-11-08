@@ -113,6 +113,8 @@ De tre første rommene bygges på 39 min i første runde, 28 min etter første p
 
 `theme.json → booster`. Hvert av de 3 trekkene velger først type (karakter 55 · romfragment 15 · oppgraderingsfragment 20 · valuta 10), så sjeldenhet (65/27/8) og så tilfeldig blant det som finnes i **bygde** rom. Typer uten gyldige mål faller bort, og maksede mål trekkes ikke (`excludeMaxed`), så duplikater aldri er bortkastet. Hvis 11 pakker på rad er uten Epic, gir siste trekk i pakke 12 et Epic-fragment (`epicPity`, `null` slår det av).
 
+**Navn og flere pakker:** Knappen heter «Booster Pack» i alle temaer (et tema *kan* sette `booster.name`, men trenger ikke). Etter en pakke kan man åpne 1 eller 10 til (`openBoosters(n)`, stopper når pengene tar slutt). Like kort slås sammen til ett kort med «+3», sortert Epic → Rare → Common → rom → penger, og snus raskt.
+
 ## 6. Prestige og events
 
 **Prestige** (`theme.json → prestige`): `startRooms` gir romgrensen før første prestige. Hvert trinn har `requires` (liste med krav), `incomeMultiplier` og `roomLimit`. Kravtyper som deles med events: `roomBuilt`, `roomLevel`, `charactersUnlocked`, `characterLevelSum`, `upgradeLevel`, `runEarned`. Reset krever to bekreftelser i UI-et.

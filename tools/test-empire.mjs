@@ -177,6 +177,14 @@ test('alle rom har en event, og alle seks rom kan nås via prestige', () => {
   const e = mk(); e.state.prestige.level = fighter.prestige.tiers.length; assert.equal(e.roomLimit(), 6);
 });
 
+test('åpne flere pakker: stopper når pengene er brukt opp', () => {
+  const e = mk(); e.buildRoom('alley');
+  const price = e.boosterPrice(); e.state.coins = price * 4 + 1;
+  const r = e.openBoosters(10);
+  assert.ok(r.ok); assert.ok(r.opened >= 4, String(r.opened)); assert.equal(r.rewards.length, r.opened * fighter.booster.draws);
+  e.state.coins = 0; assert.equal(e.openBoosters(10).reason, 'coins');
+});
+
 test('lagring fra eldre temaversjon tåler fjernede rom', () => {
   const st = createState(fighter); st.rooms.ghost = { level: 3, upgrades: {} }; st.rooms.alley = { level: 2 };
   const e = mk(fighter, st); assert.ok(!e.state.rooms.ghost); assert.equal(e.upgradeLevel('alley.bookie'), 0);
