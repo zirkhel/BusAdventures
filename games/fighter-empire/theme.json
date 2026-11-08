@@ -73,7 +73,7 @@
       "blurb": "Two fighters, one guy watching, and a dumpster that has seen things.",
       "price": 0,
       "baseIncome": 1,
-      "background": { "src": "assets/rooms/alley.svg" },
+      "background": { "src": "assets/rooms/alley.webp" },
       "characters": [
         {
           "id": "alley.mick",
@@ -81,7 +81,7 @@
           "rarity": "common",
           "role": "Spectator",
           "bio": "Has watched every fight in this alley since 1987. Nobody knows what he says. Everybody agrees with him.",
-          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 6, "fps": 6, "x": 82, "y": 88, "h": 40, "z": 3, "flip": true }
+          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 6, "fps": 6, "x": 84, "y": 83, "h": 36, "z": 3, "flip": true }
         },
         {
           "id": "alley.knuckles",
@@ -89,7 +89,7 @@
           "rarity": "rare",
           "role": "Fighter",
           "bio": "Former dock worker. Hands like bags of gravel. Fights for rent money and the occasional sandwich.",
-          "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 8, "fps": 8, "x": 36, "y": 93, "h": 44, "z": 4, "frameAspect": "448 / 640" }
+          "sprite": { "src": "assets/sprites/alley-knuckles.webp", "frames": 8, "fps": 8, "x": 34, "y": 87, "h": 44, "z": 4, "frameAspect": "448 / 640" }
         },
         {
           "id": "alley.ana",
@@ -97,7 +97,7 @@
           "rarity": "epic",
           "role": "Fighter",
           "bio": "Nobody has ever landed a clean hit on her. She claims she learned it from the alley cats. She might not be joking.",
-          "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 6, "fps": 7, "x": 58, "y": 93, "h": 42, "z": 4, "flip": true }
+          "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 6, "fps": 7, "x": 57, "y": 87, "h": 40, "z": 4, "flip": true }
         }
       ],
       "upgrades": [
@@ -107,9 +107,9 @@
           "rarity": "common",
           "effect": "Every fight needs a soundtrack.",
           "visual": {
-            "x": 12,
-            "y": 92,
-            "h": 14,
+            "x": 11,
+            "y": 86,
+            "h": 12,
             "z": 5,
             "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-boombox.svg" }, { "minLevel": 5, "src": "assets/upgrades/alley-boombox-deluxe.svg" }]
           }
@@ -120,10 +120,10 @@
           "rarity": "rare",
           "effect": "Somebody has to take the bets.",
           "visual": {
-            "x": 86,
-            "y": 70,
-            "h": 34,
-            "z": 1,
+            "x": 88,
+            "y": 81,
+            "h": 30,
+            "z": 2,
             "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-bookie.svg" }, { "minLevel": 5, "src": "assets/upgrades/alley-bookie-deluxe.svg" }]
           }
         },
