@@ -143,7 +143,18 @@
           "rarity": "epic",
           "role": "Fixer",
           "bio": "Knows everybody, owes nobody, remembers everything. Her alley has three rules: everybody is an adult, everybody gets paid, nobody is a jerk.",
-          "sprite": { "src": "assets/sprites/alley-velvet.webp", "frames": 6, "fps": 5, "x": 73, "y": 82, "h": 40, "z": 4, "flip": true }
+          "sprite": {
+            "src": "assets/sprites/alley-velvet.webp",
+            "frames": 24,
+            "columns": 6,
+            "rows": 4,
+            "fps": 8,
+            "frameAspect": "338 / 512",
+            "x": 76,
+            "y": 84,
+            "h": 50,
+            "z": 4
+          }
         }
       ],
       "upgrades": [
