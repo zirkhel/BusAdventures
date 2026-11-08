@@ -97,7 +97,7 @@
           "rarity": "epic",
           "role": "Fighter",
           "bio": "Nobody has ever landed a clean hit on her. She claims she learned it from the alley cats. She might not be joking.",
-          "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 6, "fps": 7, "x": 57, "y": 87, "h": 40, "z": 4, "flip": true }
+          "sprite": { "src": "assets/sprites/alley-ana.webp", "frames": 8, "fps": 8, "x": 58, "y": 87, "h": 42, "z": 4, "frameAspect": "1 / 1" }
         }
       ],
       "upgrades": [
