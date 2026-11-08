@@ -107,14 +107,15 @@
           "bio": "Has worked the same corner for twelve years and knows every pothole by name. Accepts cash, compliments and, in emergencies, sandwiches.",
           "sprite": {
             "src": "assets/sprites/alley-lola.webp",
-            "frames": 8,
-            "fps": 2.5,
-            "frameAspect": "338 / 640",
+            "frames": 24,
+            "columns": 6,
+            "rows": 4,
+            "fps": 8,
+            "frameAspect": "193 / 352",
             "x": 32,
             "y": 84,
             "h": 50,
-            "z": 4,
-            "blend": 0.5
+            "z": 4
           }
         },
         {
