@@ -7,6 +7,7 @@ import { Empire, createState } from '../empire/engine/empire.js';
 import { seededRng } from '../empire/engine/curves.js';
 import { validateTheme } from '../empire/engine/validate.js';
 import { exportSave, importSave } from '../empire/engine/save.js';
+import { sheetGrid } from '../empire/ui/scene.js';
 
 const load = id => JSON.parse(readFileSync(`games/${id}/theme.json`, 'utf8'));
 const fighter = load('fighter-empire'), bus = load('bus-empire'), quest = load('quest-empire'), space = load('space-empire'), xxx = load('xxx-empire');
@@ -225,6 +226,16 @@ test('åpne flere pakker: stopper når pengene er brukt opp', () => {
 test('lagring fra eldre temaversjon tåler fjernede rom', () => {
   const st = createState(fighter); st.rooms.ghost = { level: 3, upgrades: {} }; st.rooms.alley = { level: 2 };
   const e = mk(fighter, st); assert.ok(!e.state.rooms.ghost); assert.equal(e.upgradeLevel('alley.bookie'), 0);
+});
+
+test('spritesheet: én rad som før, og rutenett med kolonner og rader', () => {
+  assert.deepEqual(sheetGrid({ frames: 8 }), { frames: 8, cols: 8, rows: 1 });
+  assert.deepEqual(sheetGrid({ frames: 24, columns: 6, rows: 4 }), { frames: 24, cols: 6, rows: 4 });
+  assert.deepEqual(sheetGrid({ frames: 24, columns: 6 }), { frames: 24, cols: 6, rows: 4 });
+  assert.deepEqual(sheetGrid({ frames: 22, rows: 4 }), { frames: 22, cols: 6, rows: 4 });
+  const th = structuredClone(xxx), sp = th.rooms[0].characters[0].sprite;
+  Object.assign(sp, { frames: 24, columns: 6, rows: 4 }); assert.equal(validateTheme(th).errors.length, 0);
+  sp.rows = 3; assert.ok(validateTheme(th).errors.some(e => e.includes('rutenett')));
 });
 
 for (const [s, n] of results) console.log(s, n);
