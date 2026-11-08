@@ -81,7 +81,7 @@
           "rarity": "common",
           "role": "Spectator",
           "bio": "Has watched every fight in this alley since 1987. Nobody knows what he says. Everybody agrees with him.",
-          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 6, "fps": 6, "x": 84, "y": 83, "h": 36, "z": 3, "flip": true }
+          "sprite": { "src": "assets/sprites/alley-mick.webp", "frames": 8, "fps": 6, "x": 84, "y": 84, "h": 36, "z": 3, "frameAspect": "324 / 640" }
         },
         {
           "id": "alley.knuckles",

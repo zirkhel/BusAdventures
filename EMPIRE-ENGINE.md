@@ -170,6 +170,18 @@ Kopier `games/bus-empire/` (minst) eller `games/fighter-empire/` (fullt). Bytt `
 
 **Slik lager du et nytt tema:** kopier `games/space-empire/`, bytt `id`, tekster, `presentation.labels` og grafikk. Ingen kode i `empire/` skal røres.
 
+## 9d. Ekte grafikk (8. nov)
+
+Back Alley i Fighter Empire har ekte grafikk: bakgrunn (`alley.webp`), Knuckles Kowalski, Alley Cat Ana og Mumbling Mick (spritesheets med 8 rammer).
+
+**Slik legges en levert figur inn:**
+```
+python3 tools/normalize-sheet.py levert.png games/fighter-empire/assets/sprites/<rom>-<figur>.webp --frames 8
+```
+Verktøyet finner hver figur ut fra beina og fjerner svakt slør i bakgrunnen. Deretter lager det like store rammer med føttene på samme sted, skalerer til 640 px høyde og lagrer som WebP. Det skriver ut `frames` og `frameAspect` til `theme.json`, og stopper med en tydelig melding hvis fila mangler transparens. Etterpå justeres `x`, `y`, `h` og `flip` i `theme.json`. Grafikk som ser mot venstre, trenger ikke `flip`.
+
+Verktøyene som lager plassholdergrafikk hopper over figurer som allerede finnes (`--force` overskriver).
+
 ## 10. Akseptansekriterier
 
 | # | Status | Verifisert med |
