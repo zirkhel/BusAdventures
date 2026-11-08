@@ -163,7 +163,13 @@
           "name": "Red Lamp",
           "rarity": "common",
           "effect": "Ambience on a budget. Flickers in a way customers call 'mood lighting'.",
-          "visual": { "src": "assets/upgrades/alley-lamp.webp", "x": 12, "y": 58, "h": 13, "z": 1 }
+          "visual": {
+            "stages": [{ "minLevel": 1, "src": "assets/upgrades/alley-lamp.webp" }, { "minLevel": 5, "src": "assets/upgrades/alley-lamp-deluxe.webp" }],
+            "x": 13,
+            "y": 60,
+            "h": 16,
+            "z": 1
+          }
         },
         {
           "id": "alley.cashbox",
