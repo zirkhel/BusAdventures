@@ -29,7 +29,8 @@
       ],
       "upgrades": [
         { "id": "stop.bench", "name": "Bench", "effect": "Sitting is a luxury.", "visual": { "char": "🪑", "x": 64, "y": 70, "h": 18, "z": 1 } },
-        { "id": "stop.shelter", "name": "Rain Shelter", "effect": "Mostly keeps the rain off.", "visual": { "x": 15, "y": 70, "h": 45, "z": 1, "stages": [ { "minLevel": 1, "char": "🚏" }, { "minLevel": 3, "char": "🏛️" } ] } }
+        { "id": "stop.shelter", "name": "Rain Shelter", "effect": "Mostly keeps the rain off.", "visual": { "x": 15, "y": 70, "h": 45, "z": 1, "stages": [ { "minLevel": 1, "char": "🚏" }, { "minLevel": 3, "char": "🏛️" } ] } },
+        { "id": "stop.timetable", "name": "Timetable", "effect": "Optimistic fiction, printed in two languages.", "visual": { "char": "🗓️", "x": 92, "y": 52, "h": 14, "z": 1}}
       ],
       "events": [
         { "id": "stop.wait", "name": "Wait for the 7:42", "description": "Will it come? Nobody knows.", "unlock": [ { "type": "roomLevel", "room": "stop", "min": 2 } ],
@@ -49,7 +50,8 @@
       ],
       "upgrades": [
         { "id": "depot.bus", "name": "Another Bus", "effect": "Same route, more buses.", "visual": { "char": "🚌", "x": 66, "y": 90, "h": 38, "z": 2 } },
-        { "id": "depot.fuel", "name": "Fuel Pump", "effect": "Diesel, sadly.", "visual": { "char": "⛽", "x": 8, "y": 90, "h": 26, "z": 2 } }
+        { "id": "depot.fuel", "name": "Fuel Pump", "effect": "Diesel, sadly.", "visual": { "char": "⛽", "x": 8, "y": 90, "h": 26, "z": 2 } },
+        { "id": "depot.coffee", "name": "Coffee Machine", "effect": "Fuel for the drivers. Also diesel, sadly.", "visual": { "char": "☕", "x": 55, "y": 62, "h": 12, "z": 1}}
       ] }
   ]
 }

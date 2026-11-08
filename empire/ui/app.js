@@ -311,8 +311,10 @@ class EmpireApp {
       <div class="emp-scene-slot"></div>
       <div class="emp-setbonus ${E.fullSet(roomId) ? 'on' : ''}">Full crew bonus +${Math.round(this.fullSetBonus(roomId) * 100)}% ${E.fullSet(roomId) ? '✓' : `· ${room.characters.filter(c => E.charLevel(c.id)).length}/3`}</div>
       ${this.levelRow('room', roomId, 'Room level', '🏠', 'Raises what the room earns on its own.')}
-      <div class="emp-chars">${room.characters.map(c => this.charTile(c, rar)).join('')}</div>
-      <div class="emp-upgrades">${room.upgrades.map(u => this.levelRow('upgrade', u.id, u.name, '', u.effect)).join('')}</div>
+      <h4 class="emp-section">Crew</h4>
+      <div class="emp-chars">${room.characters.map(c => this.cardTile('character', c.id)).join('')}</div>
+      <h4 class="emp-section">Gear</h4>
+      <div class="emp-chars emp-gear">${room.upgrades.map(u => this.cardTile('upgrade', u.id)).join('')}</div>
       ${(room.events || []).map(ev => this.eventRow(ev)).join('')}
       <div class="emp-page-foot"><button class="emp-btn emp-wide" data-act="close-room">‹ All rooms</button></div>`;
 
@@ -321,12 +323,13 @@ class EmpireApp {
     this.refresh();
   }
 
-  charTile(c) {
+  /** A card with its gain and action button below it (crew and gear look the same). */
+  cardTile(kind, id) {
     return `
       <div class="emp-char">
-        ${this.cardFace('character', c.id)}
-        <div class="emp-gain emp-gain-short" data-bind="gain" data-short="1" data-kind="character" data-id="${c.id}"></div>
-        <button class="emp-btn emp-small" data-act="level" data-kind="character" data-id="${c.id}" data-q="level"></button>
+        ${this.cardFace(kind, id)}
+        <div class="emp-gain emp-gain-short" data-bind="gain" data-short="1" data-kind="${kind}" data-id="${id}"></div>
+        <button class="emp-btn emp-small" data-act="level" data-kind="${kind}" data-id="${id}" data-q="level"></button>
       </div>`;
   }
 
