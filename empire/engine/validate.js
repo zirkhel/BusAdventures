@@ -42,8 +42,11 @@ export function validateTheme(theme) {
     }
     for (const u of room.upgrades || []) {
       claim(u.id, `oppgradering i ${w}`); upgradeIds.add(u.id);
+      if (u.rarity && !RARITIES.includes(u.rarity)) err(`oppgradering «${u.id}»: ugyldig rarity «${u.rarity}»`);
       if (u.visual) checkPlacement(u.visual, `oppgradering «${u.id}»`, err);
     }
+    const gearR = (room.upgrades || []).map(u => u.rarity).filter(Boolean);
+    if (gearR.length && gearR.length !== (room.upgrades || []).length) warn(`${w}: bare noen oppgraderinger har rarity`);
     for (const e of room.events || []) {
       const ew = `event «${e.id}»`;
       claim(e.id, ew);

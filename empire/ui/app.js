@@ -346,8 +346,9 @@ class EmpireApp {
     }
     if (kind === 'upgrade') {
       const u = E.upgrades[id], v = { ...u.visual, ...u.visual?.stages?.[0] };
-      return { tab: 'Gear', color: '#d9b45a', name: u.name, pic: v.src ? `<img src="${this.asset(v.src)}" alt="">` : `<span class="emp-face-emoji">${esc(v.char || '⬆')}</span>`,
-        locked: !E.upgradeLevel(id), sub: E.rooms[u.roomId].name, text: u.effect };
+      const gr = u.rarity ? rar[u.rarity] : null;
+      return { tab: gr ? (gr.label || u.rarity) : 'Gear', color: u.rarity ? `var(--emp-${u.rarity})` : '#d9b45a', rarity: u.rarity, name: u.name, pic: v.src ? `<img src="${this.asset(v.src)}" alt="">` : `<span class="emp-face-emoji">${esc(v.char || '⬆')}</span>`,
+        locked: !E.upgradeLevel(id), sub: `Gear · ${E.rooms[u.roomId].name}`, text: u.effect };
     }
     const room = E.rooms[id];
     const bg = room.background?.src ? `background-image:url('${this.asset(room.background.src)}')` : `background:${room.background?.color || '#333'}`;
@@ -382,7 +383,7 @@ class EmpireApp {
       : kind === 'upgrade' ? (lvl ? `Level ${lvl} of ${q.maxLevel}` : 'Not built yet') : `Level ${lvl} of ${q.maxLevel}`;
     const effect = kind === 'character'
       ? `Earns on its own. Each level adds more. ${E.rooms[E.characters[id].roomId].name} gets +${Math.round(this.fullSetBonus(E.characters[id].roomId) * 100)}% when all three are hired.`
-      : kind === 'upgrade' ? `Multiplies everything ${esc(E.rooms[E.upgrades[id].roomId].name)} earns: +${Math.round((E.upgrades[id].incomePerLevel ?? this.theme.economy.upgrade.incomePerLevel) * 100)}% per level.`
+      : kind === 'upgrade' ? `Multiplies everything ${esc(E.rooms[E.upgrades[id].roomId].name)} earns: +${+(E.upgradeIncomePerLevel(id) * 100).toFixed(1)}% per level.`
       : `Raises what the room earns on its own: +${Math.round((E.rooms[id].incomePerLevel ?? this.theme.economy.roomLevel.incomePerLevel) * 100)}% of base income per level.`;
     const btnLabel = kind === 'character' && !lvl ? 'Hire' : kind === 'upgrade' && !lvl ? 'Build' : 'Level up';
     this.detailTarget = target;

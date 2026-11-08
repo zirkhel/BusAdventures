@@ -159,6 +159,24 @@ test('previewGain stemmer med faktisk inntektsøkning og endrer ikke tilstand', 
   }
 });
 
+test('gear har Common/Rare/Epic: sjeldnere trekkes sjeldnere og gir mer per nivå', () => {
+  for (const r of fighter.rooms) assert.deepEqual(r.upgrades.map(u => u.rarity).sort(), ['common', 'epic', 'rare']);
+  const e = mk(); e.buildRoom('alley'); const n = { common: 0, rare: 0, epic: 0 };
+  for (let i = 0; i < 3000; i++) { e.state.coins = 1e12; for (const r of e.openBooster().rewards) if (r.kind === 'upgrade') n[r.rarity]++; e.state.fragments = {}; }
+  assert.ok(n.common > n.rare && n.rare > n.epic, JSON.stringify(n));
+  const by = r => fighter.rooms[0].upgrades.find(u => u.rarity === r).id;
+  assert.ok(e.upgradeIncomePerLevel(by('epic')) > e.upgradeIncomePerLevel(by('rare')));
+  assert.ok(e.upgradeIncomePerLevel(by('rare')) > e.upgradeIncomePerLevel(by('common')));
+  e.state.coins = 0;
+  assert.ok(e.quoteLevel({ kind: 'upgrade', id: by('epic') }).coins > e.quoteLevel({ kind: 'upgrade', id: by('common') }).coins);
+});
+
+test('alle rom har en event, og alle seks rom kan nås via prestige', () => {
+  assert.equal(fighter.rooms.length, 6);
+  for (const r of fighter.rooms) assert.ok(r.events?.length >= 1, r.id);
+  const e = mk(); e.state.prestige.level = fighter.prestige.tiers.length; assert.equal(e.roomLimit(), 6);
+});
+
 test('lagring fra eldre temaversjon tåler fjernede rom', () => {
   const st = createState(fighter); st.rooms.ghost = { level: 3, upgrades: {} }; st.rooms.alley = { level: 2 };
   const e = mk(fighter, st); assert.ok(!e.state.rooms.ghost); assert.equal(e.upgradeLevel('alley.bookie'), 0);

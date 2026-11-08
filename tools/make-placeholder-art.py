@@ -156,6 +156,10 @@ SPRITES = {
     # arena
     "arena-announcer": ("announcer", dict(skin="#e0ac69", shirt="#111111", pants="#111111", hair="#555555", mic=True)),
     "arena-gus":     ("fighter", dict(skin="#d1a17a", shirt="#d1a17a", pants="#16a085", hair="#3d2b1f", glove="#111111")),
+    # stadium
+    "stadium-carlos":  ("coach", dict(skin="#c68a5e", shirt="#2c3e50", pants="#2c3e50", hair="#111111", clipboard=True)),
+    "stadium-contender": ("kicker", dict(skin="#e0b090", shirt="#e0b090", pants="#2980b9", hair="#7a4a2a", band="#ffffff", glove="#2980b9", scale=1.05)),
+    "stadium-legend":  ("fighter", dict(skin="#6d4c2f", shirt="#6d4c2f", pants="#f1c40f", hair="#eeeeee", glove="#ffffff", belt="#f1c40f", scale=1.12)),
     "arena-champ":   ("fighter", dict(skin="#8d5524", shirt="#8d5524", pants="#c0392b", hair="#111111", glove="#f1c40f", belt="#f1c40f", scale=1.1)),
 }
 for name, (kind, look) in SPRITES.items():
@@ -215,6 +219,18 @@ svg(os.path.join(R, "arena.svg"), 800, 500, '''
 <path d="M60 340 H740 L790 500 H10Z" fill="#2c3e50"/><path d="M110 350 H690 L720 470 H80Z" fill="#ecf0f1" opacity=".9"/>
 <g stroke="#7f8c8d" stroke-width="3" opacity=".8">''' + "".join(f'<line x1="{x}" y1="350" x2="{x + (x - 400) * 0.1}" y2="470"/>' for x in range(130, 700, 40)) + '''</g>''')
 
+svg(os.path.join(R, "stadium.svg"), 800, 500, '''
+<defs><linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050816"/><stop offset="1" stop-color="#1b2550"/></linearGradient>
+<radialGradient id="flood" cx=".5" cy="0" r=".9"><stop offset="0" stop-color="#ffffff" stop-opacity=".5"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient></defs>
+<rect width="800" height="500" fill="url(#night)"/>
+<g fill="#ffffff">''' + "".join(f'<circle cx="{(i * 97) % 800}" cy="{(i * 41) % 90}" r="1.2" opacity=".6"/>' for i in range(30)) + '''</g>
+''' + "".join(f'<g><rect x="{x - 3}" y="20" width="6" height="110" fill="#2b3350"/><rect x="{x - 26}" y="10" width="52" height="22" rx="3" fill="#dfe6f5"/><ellipse cx="{x}" cy="40" rx="150" ry="120" fill="url(#flood)" opacity=".5"/></g>' for x in (90, 710)) + '''
+<path d="M0 150 Q400 100 800 150 V330 H0Z" fill="#141a33"/>
+<g>''' + "".join(f'<circle cx="{(i * 23) % 800}" cy="{160 + (i * 37) % 160}" r="{6 + i % 3}" fill="{["#2a3463", "#3a2a63", "#24305a", "#c0392b", "#f1c40f", "#3498db"][i % 6]}" opacity=".75"/>' for i in range(220)) + '''</g>
+<path d="M0 330 H800 V500 H0Z" fill="#2e7d32"/><path d="M0 330 H800" stroke="#ffffff" stroke-width="3" opacity=".6"/>
+<path d="M120 345 H680 L740 480 H60Z" fill="#ecf0f1"/><path d="M150 360 H650 L690 465 H110Z" fill="#c0392b" opacity=".25"/>
+<text x="400" y="430" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="46" fill="#c0392b" opacity=".35">WORLD TITLE</text>''')
+
 U = os.path.join(OUT, "upgrades")
 GOLD = '<rect x="2" y="2" width="{w}" height="{h}" fill="none" stroke="#f1c40f" stroke-width="4" rx="6"/>'
 UPG = {
@@ -247,6 +263,11 @@ UPG = {
 <circle cx="90" cy="115" r="62" fill="#b8860b"/><circle cx="90" cy="115" r="46" fill="#d4a52a"/><circle cx="90" cy="115" r="14" fill="#b8860b"/>''', '''<circle cx="90" cy="115" r="74" fill="none" stroke="#f1c40f" stroke-width="4" opacity=".6"/><circle cx="90" cy="115" r="86" fill="none" stroke="#f1c40f" stroke-width="2" opacity=".35"/>'''),
     "arena-cage": (800, 230, '''<g stroke="#9aa4b2" stroke-width="2" opacity=".75">''' + "".join(f'<line x1="{x}" y1="20" x2="{x + 40}" y2="230"/><line x1="{x + 40}" y1="20" x2="{x}" y2="230"/>' for x in range(30, 760, 40)) + '''</g>
 <g fill="#4a5568"><rect x="20" y="10" width="14" height="220"/><rect x="393" y="10" width="14" height="220"/><rect x="766" y="10" width="14" height="220"/><rect x="20" y="10" width="760" height="10"/></g>''', '''<g fill="#e74c3c"><rect x="20" y="10" width="760" height="10"/></g><g fill="#f1c40f"><circle cx="27" cy="10" r="9"/><circle cx="400" cy="10" r="9"/><circle cx="773" cy="10" r="9"/></g>'''),
+    "stadium-banners": (800, 120, "".join(f'<g><rect x="{x}" y="10" width="110" height="70" fill="{c}"/><text x="{x + 55}" y="56" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="26" fill="#fff">{t}</text></g>' for x, c, t in [(20, "#c0392b", "GO!"), (200, "#2980b9", "#1"), (380, "#f39c12", "WOW"), (560, "#8e44ad", "KO!")]), "".join(f'<rect x="{x}" y="86" width="110" height="20" fill="#f1c40f"/>' for x in (20, 200, 380, 560))),
+    "stadium-fireworks": (800, 260, "".join(f'<g stroke="{c}" stroke-width="4" stroke-linecap="round">' + "".join(f'<line x1="{cx}" y1="{cy}" x2="{cx + 60 * math.cos(a / 8 * 2 * math.pi):.0f}" y2="{cy + 60 * math.sin(a / 8 * 2 * math.pi):.0f}"/>' for a in range(8)) + '</g>' for cx, cy, c in [(140, 90, "#f1c40f"), (660, 110, "#e74c3c")]), "".join(f'<g stroke="{c}" stroke-width="3" stroke-linecap="round">' + "".join(f'<line x1="{cx}" y1="{cy}" x2="{cx + 45 * math.cos(a / 10 * 2 * math.pi):.0f}" y2="{cy + 45 * math.sin(a / 10 * 2 * math.pi):.0f}"/>' for a in range(10)) + '</g>' for cx, cy, c in [(400, 70, "#3dd6ff"), (260, 180, "#ff3d7f"), (540, 190, "#2ecc71")])),
+    "stadium-belt": (220, 200, '''<rect x="40" y="130" width="140" height="60" fill="#2c2c2c"/><rect x="30" y="122" width="160" height="12" fill="#444"/>
+<rect x="10" y="70" width="200" height="34" rx="12" fill="#7a1c1c"/><ellipse cx="110" cy="87" rx="48" ry="36" fill="#d4a52a"/><ellipse cx="110" cy="87" rx="34" ry="24" fill="#f1c40f"/>
+<text x="110" y="95" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="20" fill="#7a1c1c">WORLD</text>''', '''<g fill="#fff"><path d="M60 40 l6 -16 l6 16 l16 6 l-16 6 l-6 16 l-6 -16 l-16 -6z"/><path d="M160 30 l4 -10 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4z"/></g>'''),
 }
 for name, (w, h, base, deluxe) in UPG.items():
     svg(os.path.join(U, name + ".svg"), w, h, base)

@@ -64,6 +64,14 @@ export class Empire {
     return room.baseIncome * share * (1 + perLevel * (lvl - 1));
   }
 
+  /** Gear rarity scales the bonus per level (rarities.X.gearIncome, default 1). */
+  upgradeIncomePerLevel(upgId) {
+    const u = this.upgrades[upgId];
+    if (u.incomePerLevel != null) return u.incomePerLevel;
+    const factor = u.rarity ? pick(this.rarity(u.rarity)?.gearIncome, 1) : 1;
+    return this.eco.upgrade.incomePerLevel * factor;
+  }
+
   fullSet(roomId) {
     return this.rooms[roomId].characters.every(c => this.charLevel(c.id) > 0);
   }
@@ -78,7 +86,7 @@ export class Empire {
     const characters = room.characters.reduce((s, c) => s + this.characterIncome(c.id), 0);
     let upgradeMult = 1;
     for (const u of room.upgrades) {
-      const p = pick(u.incomePerLevel, this.eco.upgrade.incomePerLevel);
+      const p = this.upgradeIncomePerLevel(u.id);
       upgradeMult *= 1 + p * this.upgradeLevel(u.id);
     }
     const setMult = this.fullSet(roomId) ? 1 + pick(room.fullSetBonus, this.eco.fullSetBonus) : 1;
@@ -218,12 +226,13 @@ export class Empire {
     const lvl = this.upgradeLevel(upgId);
     const max = pick(u.maxLevel, cfg.maxLevel);
     const cost = pick(u.levelCost, cfg.cost);
+    const factor = pick(u.costFactor, u.rarity ? this.rarity(u.rarity)?.costFactor : null, 1);
     return this._finishQuote({
       kind: 'upgrade', id: upgId, roomId: u.roomId, action: lvl === 0 ? 'unlock' : 'level', from: lvl, to: lvl + 1,
       maxLevel: max, maxed: lvl >= max,
       fragmentKey: upgId,
       fragmentCost: curveAt(pick(u.levelFragments, cfg.fragments), lvl + 1),
-      coins: Math.round(room.baseIncome * cost.seconds * cost.growth ** lvl),
+      coins: Math.round(room.baseIncome * cost.seconds * factor * cost.growth ** lvl),
     });
   }
 
@@ -327,8 +336,11 @@ export class Empire {
         const room = weightedPick(pool.room, () => 1, this.rng);
         reward = { type: 'fragment', kind: 'room', id: room.id, roomId: room.id, amount: 1 };
       } else if (slot === 'upgrade') {
-        const u = weightedPick(pool.upgrade, () => 1, this.rng);
-        reward = { type: 'fragment', kind: 'upgrade', id: u.id, roomId: u.roomId, amount: 1 };
+        // Gear with a rarity is drawn like characters: rarity first, then an item of that rarity.
+        const rar = RARITIES.filter(r => pool.upgrade.some(x => (x.rarity || 'common') === r));
+        const rarity = weightedPick(rar, r => b.rarityWeights[r], this.rng);
+        const u = weightedPick(pool.upgrade.filter(x => (x.rarity || 'common') === rarity), () => 1, this.rng);
+        reward = { type: 'fragment', kind: 'upgrade', id: u.id, roomId: u.roomId, rarity: u.rarity, amount: 1 };
       } else {
         const [lo, hi] = b.coinsSeconds;
         const amount = Math.round(incomeAtOpen * (lo + (hi - lo) * this.rng()));
