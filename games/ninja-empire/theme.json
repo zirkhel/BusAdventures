@@ -449,7 +449,18 @@
           "rarity": "common",
           "role": "Roof Runner",
           "bio": "The fastest runner on the rooftops of Edo, with the worst balance in Japan. Knows every loose tile by name, mostly from falling through them.",
-          "sprite": { "src": "assets/sprites/rooftops-riku.webp", "frames": 6, "fps": 5, "x": 24, "y": 88, "h": 50, "z": 4 }
+          "sprite": {
+            "src": "assets/sprites/rooftops-riku.webp",
+            "frames": 24,
+            "columns": 6,
+            "rows": 4,
+            "fps": 8,
+            "frameAspect": "208 / 512",
+            "x": 24,
+            "y": 88,
+            "h": 50,
+            "z": 4
+          }
         },
         {
           "id": "rooftops.akira",
@@ -457,7 +468,18 @@
           "rarity": "rare",
           "role": "Acrobat",
           "bio": "An acrobat and burglary specialist who has never used a door in his life. Not even his own.",
-          "sprite": { "src": "assets/sprites/rooftops-akira.webp", "frames": 6, "fps": 5, "x": 48, "y": 88, "h": 50, "z": 4 }
+          "sprite": {
+            "src": "assets/sprites/rooftops-akira.webp",
+            "frames": 24,
+            "columns": 6,
+            "rows": 4,
+            "fps": 8,
+            "frameAspect": "222 / 512",
+            "x": 48,
+            "y": 88,
+            "h": 50,
+            "z": 4
+          }
         },
         {
           "id": "rooftops.sparrow",
@@ -465,7 +487,18 @@
           "rarity": "epic",
           "role": "Assassin",
           "bio": "A notorious assassin known only by her red scarf. By the time the guards see the scarf, it is far too late to see anything else.",
-          "sprite": { "src": "assets/sprites/rooftops-sparrow.webp", "frames": 6, "fps": 5, "x": 74, "y": 88, "h": 50, "z": 4, "flip": true }
+          "sprite": {
+            "src": "assets/sprites/rooftops-sparrow.webp",
+            "frames": 24,
+            "columns": 6,
+            "rows": 4,
+            "fps": 8,
+            "frameAspect": "453 / 512",
+            "x": 74,
+            "y": 88,
+            "h": 55,
+            "z": 4
+          }
         }
       ],
       "upgrades": [
@@ -474,21 +507,21 @@
           "name": "Riku's Climbing Gear",
           "rarity": "common",
           "effect": "A coil of rough rope, a grappling hook and a worn leather pouch. Riku swears it is all he needs. It is not.",
-          "visual": { "char": "🪢", "x": 12, "y": 70, "h": 14, "z": 1 }
+          "visual": { "src": "assets/upgrades/rooftops-riku-climbing-gear.webp", "x": 10, "y": 80, "h": 18, "z": 5 }
         },
         {
           "id": "rooftops.smoke",
           "name": "Akira's Rooftop Stash",
           "rarity": "rare",
           "effect": "A small wooden box tied in purple cloth, hidden under a loose tile. Nobody knows what is inside. Akira does not remember either.",
-          "visual": { "char": "🎁", "x": 88, "y": 80, "h": 12, "z": 2 }
+          "visual": { "src": "assets/upgrades/rooftops-akira-rooftop-cache.webp", "x": 90, "y": 80, "h": 13, "z": 5 }
         },
         {
           "id": "rooftops.moon",
           "name": "Crimson Sparrow's Banner",
           "rarity": "epic",
           "effect": "A short red banner with a black sparrow. When it flies over a rooftop, the guards below suddenly remember urgent business elsewhere.",
-          "visual": { "char": "🚩", "x": 36, "y": 30, "h": 14, "z": 1 }
+          "visual": { "src": "assets/upgrades/rooftops-crimson-sparrow-banner.webp", "x": 62, "y": 56, "h": 24, "z": 1 }
         }
       ],
       "events": [
