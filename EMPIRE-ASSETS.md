@@ -181,6 +181,10 @@ Målet er at en fil fra ComfyUI (eller en tegner) kan legges rett inn og vises r
 
 **Minnebudsjett [må testes]:** Et ark bruker bredde × høyde × 4 byte i minnet når det er dekodet (3072 × 384 ≈ 4,7 MB). Lista kan vise alle rommene, så hold summen for alle figurarkene i ett spill under ca. 100 MB. 18 figurer × 8 rammer × 384 ≈ 85 MB.
 
+#### Rester av bakgrunn i figurer
+
+Når bakgrunnen fjernes fra en video, blir det ofte liggende grå flekker igjen i lukkede hull, for eksempel mellom arm og kropp eller bak hestehalen. `python3 tools/clean-holes.py ark.webp --columns 6 --rows 4` finner flate, lyse og grå flekker bilde for bilde og gjør dem gjennomsiktige. Tynne lyse detaljer, ekte hvite flater med tekstur og metall med blått skjær blir stående. Kjør først med `--dry --debug kart.png` for å se hva som blir fjernet (markert i rødt).
+
 #### XXX Empire: standard for figurer (fra 8. nov)
 
 | Egenskap | Krav |
