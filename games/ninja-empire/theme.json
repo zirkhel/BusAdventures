@@ -324,8 +324,8 @@
             "rows": 4,
             "fps": 8,
             "frameAspect": "361 / 448",
-            "x": 74,
-            "y": 88,
+            "x": 77,
+            "y": 91.5,
             "h": 55,
             "z": 4
           }
@@ -337,21 +337,21 @@
           "name": "Lantern",
           "rarity": "common",
           "effect": "A paper lantern by the road. When it burns, the clan knows it is safe to meet.",
-          "visual": { "src": "assets/upgrades/village-lantern.webp", "x": 9, "y": 78, "h": 30, "z": 2 }
+          "visual": { "src": "assets/upgrades/village-lantern.webp", "x": 8, "y": 89.5, "h": 30, "z": 2 }
         },
         {
           "id": "village.box",
           "name": "Secret Message Box",
           "rarity": "rare",
           "effect": "Looks like an ordinary offering box. Nobody puts coins in it. Everybody puts secrets in it.",
-          "visual": { "src": "assets/upgrades/village-box.webp", "x": 89, "y": 82, "h": 13, "z": 5 }
+          "visual": { "src": "assets/upgrades/village-box.webp", "x": 60, "y": 87, "h": 13, "z": 5 }
         },
         {
           "id": "village.net",
           "name": "Fox Village Sign",
           "rarity": "epic",
           "effect": "The village sign with the fox. Those who can read it know who really runs the village.",
-          "visual": { "src": "assets/upgrades/village-sign.webp", "x": 61, "y": 66, "h": 22, "z": 1 }
+          "visual": { "src": "assets/upgrades/village-sign.webp", "x": 95, "y": 61, "h": 22, "z": 1 }
         }
       ],
       "events": [
