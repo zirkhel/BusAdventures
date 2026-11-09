@@ -334,24 +334,24 @@
       "upgrades": [
         {
           "id": "village.stall",
-          "name": "Merchant Stall",
+          "name": "Lantern",
           "rarity": "common",
-          "effect": "Sells rice cakes in front. Buys secrets in the back.",
-          "visual": { "char": "🏮", "x": 12, "y": 80, "h": 16, "z": 2 }
+          "effect": "A paper lantern by the road. When it burns, the clan knows it is safe to meet.",
+          "visual": { "src": "assets/upgrades/village-lantern.webp", "x": 9, "y": 78, "h": 30, "z": 2 }
         },
         {
           "id": "village.box",
           "name": "Secret Message Box",
           "rarity": "rare",
-          "effect": "Looks exactly like a box of pickles. Smells like one too, for safety.",
-          "visual": { "char": "📦", "x": 88, "y": 80, "h": 12, "z": 2 }
+          "effect": "Looks like an ordinary offering box. Nobody puts coins in it. Everybody puts secrets in it.",
+          "visual": { "src": "assets/upgrades/village-box.webp", "x": 89, "y": 82, "h": 13, "z": 5 }
         },
         {
           "id": "village.net",
-          "name": "Hidden Intelligence Network",
+          "name": "Fox Village Sign",
           "rarity": "epic",
-          "effect": "Every gossip in the village now reports to the clan. They think it is a book club.",
-          "visual": { "char": "🕸️", "x": 60, "y": 28, "h": 14, "z": 1 }
+          "effect": "The village sign with the fox. Those who can read it know who really runs the village.",
+          "visual": { "src": "assets/upgrades/village-sign.webp", "x": 61, "y": 66, "h": 22, "z": 1 }
         }
       ],
       "events": [
