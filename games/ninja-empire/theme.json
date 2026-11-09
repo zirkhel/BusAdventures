@@ -167,21 +167,21 @@
           "name": "Wooden Training Dummy",
           "rarity": "common",
           "effect": "Has been stabbed, kicked and apologised to by Taro more than a thousand times.",
-          "visual": { "char": "🪵", "x": 12, "y": 80, "h": 16, "z": 2 }
+          "visual": { "src": "assets/upgrades/training-dummy.webp", "x": 9, "y": 76, "h": 30, "z": 2 }
         },
         {
           "id": "training.rack",
           "name": "Shuriken Rack",
           "rarity": "rare",
           "effect": "Sharp, shiny and organised by size. Taro is not allowed within ten paces.",
-          "visual": { "char": "🌟", "x": 90, "y": 80, "h": 14, "z": 2 }
+          "visual": { "src": "assets/upgrades/training-rack.webp", "x": 92, "y": 82, "h": 24, "z": 2 }
         },
         {
           "id": "training.scroll",
           "name": "Ancient Ninja Scroll",
           "rarity": "epic",
           "effect": "Contains the first secret technique. Half of it is a recipe for rice balls.",
-          "visual": { "char": "📜", "x": 60, "y": 30, "h": 12, "z": 1 }
+          "visual": { "src": "assets/upgrades/training-scroll.webp", "x": 62, "y": 60, "h": 10, "z": 1 }
         }
       ],
       "events": [
