@@ -471,24 +471,24 @@
       "upgrades": [
         {
           "id": "rooftops.hook",
-          "name": "Grappling Hook",
+          "name": "Riku's Climbing Gear",
           "rarity": "common",
-          "effect": "Up the wall in three seconds. Down again in one, if Riku uses it.",
-          "visual": { "char": "🪝", "x": 12, "y": 70, "h": 14, "z": 1 }
+          "effect": "A coil of rough rope, a grappling hook and a worn leather pouch. Riku swears it is all he needs. It is not.",
+          "visual": { "char": "🪢", "x": 12, "y": 70, "h": 14, "z": 1 }
         },
         {
           "id": "rooftops.smoke",
-          "name": "Smoke Bomb Station",
+          "name": "Akira's Rooftop Stash",
           "rarity": "rare",
-          "effect": "For dramatic exits, dramatic entrances and covering up the smell of the fish market.",
-          "visual": { "char": "💨", "x": 88, "y": 80, "h": 12, "z": 2 }
+          "effect": "A small wooden box tied in purple cloth, hidden under a loose tile. Nobody knows what is inside. Akira does not remember either.",
+          "visual": { "char": "🎁", "x": 88, "y": 80, "h": 12, "z": 2 }
         },
         {
           "id": "rooftops.moon",
-          "name": "Moonshadow Grapple",
+          "name": "Crimson Sparrow's Banner",
           "rarity": "epic",
-          "effect": "Silk rope, silent hook, blessed by the moon. Never misses.",
-          "visual": { "char": "🌙", "x": 36, "y": 30, "h": 14, "z": 1 }
+          "effect": "A short red banner with a black sparrow. When it flies over a rooftop, the guards below suddenly remember urgent business elsewhere.",
+          "visual": { "char": "🚩", "x": 36, "y": 30, "h": 14, "z": 1 }
         }
       ],
       "events": [
