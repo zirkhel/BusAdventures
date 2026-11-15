@@ -10,7 +10,8 @@
  *   2. Menu nav     When buttons/links appear (menus, game over, text-adventure
  *                   choices, empire screens) a yellow focus ring shows up.
  *                   D-pad/stick moves it, A presses, B leaves menu mode.
- *                   SELECT / LB / RB enter menu mode at any time.
+ *                   LB / RB enter menu mode at any time.
+ *                   VIEW/SELECT goes back to the Bus Adventures start page.
  *   3. Pointer      The right stick moves an on-screen pointer, RT taps/holds.
  *                   Works in every touch-only game.
  *
@@ -349,6 +350,11 @@
     void pd;
     setTimeout(() => refresh(true), 60);
   }
+  // VIEW/SELECT = back to the Bus Adventures start page (some games' own
+  // home buttons only reset to the game's title screen, so go there directly)
+  function goHome() {
+    if (/\/games\//.test(location.pathname)) location.href = new URL('../../index.html', location.href).href;
+  }
   function startButton() {
     if (bind.start) { press('start'); return; }
     refresh(true);
@@ -430,7 +436,7 @@
     cur.style.left = C.x + 'px'; cur.style.top = C.y + 'px';
 
     // menu-mode toggles (only where the game has not claimed the button)
-    if (edge('select')) { if (nav.on) navOff(); else navCycle(0); }
+    if (edge('select')) goHome();
     if (edge('lb') && !bind.lb) navCycle(-1);
     if (edge('rb') && !bind.rb) navCycle(1);
 
