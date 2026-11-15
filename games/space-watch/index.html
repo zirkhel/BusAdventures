@@ -315,8 +315,7 @@ bindHold(document.getElementById('left'),v=>keys.left=v);bindHold(document.getEl
 specialBtn.addEventListener('pointerdown',ev=>{ev.preventDefault();if(S&&S.perk)useSpecial()});
 document.getElementById('btnMeny').addEventListener('click',()=>{if(!S||S.over){meny.classList.add('vis');return}S.paused=!S.paused;meny.classList.toggle('vis',S.paused);updateSpecialClass()});
 document.getElementById('btnHjem').addEventListener('click',()=>{
-  try{ if(window.top!==window.self){ window.location.href=HJEM; return; } }catch(e){}
-  S=null;menyResultat.classList.remove('vis');meny.classList.add('vis');updateSpecialClass();draw();
+  window.location.href=HJEM;
 });
 document.querySelectorAll('.valg').forEach(btn=>btn.addEventListener('click',()=>{reset(btn.getAttribute('data-mode'));menyResultat.classList.remove('vis')}));
 window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='a')keys.left=true;if(e.key==='ArrowRight'||e.key==='d')keys.right=true;if(e.key===' '||e.key==='Enter'){e.preventDefault();useSpecial()}});

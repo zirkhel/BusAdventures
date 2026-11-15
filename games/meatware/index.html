@@ -440,6 +440,8 @@ window.addEventListener('pointerup', onPtrUp, opts);
 window.addEventListener('pointercancel', onPtrUp, opts);
 window.addEventListener('touchstart', e=>{
   if(meny.classList.contains('vis')) return;
+  // let real buttons (home, MENU) receive their tap
+  if(e.target.closest && e.target.closest('button,a,#meny')) return;
   for(const t of e.changedTouches){
     const kind=zoneAt(t.clientX,t.clientY);
     if(!kind) continue;
