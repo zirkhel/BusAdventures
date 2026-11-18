@@ -136,7 +136,7 @@ export function initShell({ handleCommand, game = {} }) {
   }
 
   // ── Audio ──────────────────────────────────────────────────────────
-  initAudio("assets/audio/");
+  initAudio("assets/audio/", { mood: game.music || null, ambient: game.ambient || null });
 
   // ── Viewport height lock ─────────────────────────────────────────
   const gameLayout = document.querySelector('.game-layout');

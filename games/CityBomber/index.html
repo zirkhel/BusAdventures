@@ -746,6 +746,13 @@ window.addEventListener('keydown', e => {
 
 layout(); draw(); requestAnimationFrame(frame);
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'arcade', playing: s => s && !s.paused && !s.over,
+    rate: s => 1 + Math.min(0.3, (s.wave - 1) * 0.05),
+    on: { 'bomb!': 'whoosh', 'score+': 'explode', 'flak#+': ['shoot', { pitch: 0.6, vol: 0.5 }],
+          'lives-': 'boom', 'wave+': 'levelup', 'over!': 'gameover' } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-a="Space" data-b="f" data-x="z"></script>
 </body>
 </html>

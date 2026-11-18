@@ -8,6 +8,10 @@
 // In shell.js: call initAudio() once.
 // In rooms.js: add optional { music: "filename" } field (no path, no extension).
 // In effects:  add optional { playSound: "filename" } field.
+//
+// No audio files yet? Sound falls back to the shared synth in ui/sound.js:
+//   initAudio(path, { mood: "asylum", ambient: "thunder" }) picks a synth music mood,
+//   and playSfx("pickup") plays a synth effect when the name exists in BASound.SFX.
 
 "use strict";
 
@@ -17,11 +21,50 @@ let _enabled = true;
 let _bgAudio  = null;
 let _bgSrc    = null;
 let _basePath  = "";
+let _mood = null, _ambient = null, _ambientTimer = null, _moodOn = false;
+
+// Load the shared synth (ui/sound.js) once; its button is hidden here because
+// the shell already has a Sound: On/Off menu item.
+function _loadSynth() {
+  if (window.BASound || document.getElementById("baSoundJs")) return;
+  const s = document.createElement("script");
+  s.id = "baSoundJs";
+  s.src = new URL("./sound.js", import.meta.url).href;
+  s.dataset.button = "none";
+  s.onload = () => { if (_moodOn) startMood(); };
+  document.head.appendChild(s);
+}
+const _bas = () => window.BASound || null;
+
+// Synth music for the whole adventure (starts on the first tap/click; browsers need a gesture)
+export function startMood() {
+  _moodOn = true;
+  const B = _bas(); if (!B || !_mood) return;
+  B.music.play(_mood);
+  if (_ambient === "thunder" && !_ambientTimer) {
+    const next = () => { _ambientTimer = setTimeout(() => { if (_moodOn) _bas()?.play("thunder", { vol: 0.7 }); next(); }, 22000 + Math.random() * 30000); };
+    next();
+  }
+}
+export function stopMood() {
+  _moodOn = false;
+  clearTimeout(_ambientTimer); _ambientTimer = null;
+  _bas()?.music.stop();
+}
+// Synth effect by name (see BASound.SFX)
+export function sfx(name, opts) { _bas()?.play(name, opts); }
 
 // ── Init ──────────────────────────────────────────────────────────
 
-export function initAudio(basePath = "assets/audio/") {
+export function initAudio(basePath = "assets/audio/", opts = {}) {
   _basePath = basePath;
+  _mood = opts.mood || null;
+  _ambient = opts.ambient || null;
+  _loadSynth();
+  const kick = () => { if (_mood && !_bas()?.music.playing && document.getElementById("gameScreen") && !document.getElementById("gameScreen").classList.contains("hidden")) startMood(); };
+  document.addEventListener("pointerdown", kick, { capture: true });
+  document.addEventListener("keydown", kick, { capture: true });
+  document.addEventListener("click", () => setTimeout(kick, 50), { capture: true });
 
   // Load preference from localStorage
   try {
@@ -37,6 +80,7 @@ export function isEnabled() { return _enabled; }
 export function setEnabled(val) {
   _enabled = !!val;
   try { localStorage.setItem(STORAGE_KEY, String(_enabled)); } catch {}
+  _bas()?.setEnabled(_enabled);
 
   if (!_enabled) {
     _fadeOut(_bgAudio);
@@ -89,6 +133,8 @@ function _startBg(src) {
 
 export function playSfx(filename) {
   if (!filename || !_enabled) return;
+  const B = _bas();
+  if (B && B.SFX[filename]) { B.play(filename); return; }
   try {
     const audio = new Audio(_basePath + filename + ".mp3");
     audio.volume = 0.7;

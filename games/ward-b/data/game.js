@@ -6,6 +6,7 @@ export const GAME = {
   id:        "ward-b",
   title:     "Death Trap: Ward B",
   startRoom: "reception",
+  music:     "asylum",
 
   intro: {
     title:      "Death Trap",

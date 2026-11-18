@@ -20,7 +20,17 @@ const LABELS = {
   room: 'Room', allRooms: 'All rooms', event: 'Event', enter: 'Enter', fragments: 'fragments',
 };
 
+// Shared synth sound (ui/sound.js). Music mood comes from theme.presentation.music.
+function loadSound() {
+  if (window.BASound || document.getElementById('baSoundJs')) return;
+  const s = document.createElement('script');
+  s.id = 'baSoundJs'; s.src = new URL('../../ui/sound.js', import.meta.url).href; s.dataset.button = 'none';
+  document.head.appendChild(s);
+}
+const snd = (name, o) => window.BASound?.play(name, o);
+
 export async function mountEmpire(root, themeUrl) {
+  loadSound();
   const theme = await (await fetch(themeUrl)).json();
   const { errors, warnings } = validateTheme(theme);
   warnings.forEach(w => console.warn('[empire]', w));
@@ -57,6 +67,9 @@ class EmpireApp {
     this.empire = empire;
     this.applyPalette();
     this.buildShell();
+    this.paintSound();
+    const waitSound = () => { if (window.BASound) { this.paintSound(); window.BASound.onChange(() => this.paintSound()); } else setTimeout(waitSound, 200); };
+    waitSound();
     const fromHash = decodeURIComponent(location.hash.slice(1));
     if (fromHash && this.empire.isBuilt(fromHash)) { this.openRoomId = fromHash; history.replaceState({ room: fromHash }, ''); }
     addEventListener('popstate', e => { this.pushedRoom = !!e.state?.room; this.showView(e.state?.room || null); });
@@ -111,6 +124,7 @@ class EmpireApp {
           <div class="emp-income"><span data-bind="income"></span>/s<span class="emp-prestige-badge" data-bind="prestige"></span></div>
         </div>
         <button class="emp-btn emp-pack-btn" data-act="pack"><span>${esc(this.packName)}</span><small data-bind="packPrice"></small></button>
+        <button class="emp-icon-btn emp-snd" data-act="sound" aria-label="Sound on/off"></button>
         <button class="emp-icon-btn" data-act="menu" aria-label="Menu">≡</button>
         <button class="emp-hud-rooms" data-act="close-room">‹ ${esc(this.L.allRooms)}</button>
         <button class="emp-coach" data-act="coach"></button>
@@ -130,13 +144,27 @@ class EmpireApp {
     this.modal.addEventListener('click', e => { if (e.target === this.modal && !this.modal.dataset.locked) this.closeModal(); });
   }
 
+  paintSound() {
+    const b = this.root.querySelector('.emp-snd'); if (!b) return;
+    const on = window.BASound ? window.BASound.enabled() : true;
+    b.textContent = on ? '🔊' : '🔇'; b.style.fontSize = '18px'; b.style.opacity = on ? '1' : '.6';
+  }
+  startMusic() {
+    const B = window.BASound; if (!B) return;
+    B.music.play(this.theme.presentation?.music || 'idle');
+  }
+
   onClick(e) {
+    this.startMusic();
     if (this.openRoomId && e.target.closest('.emp-back')) { e.preventDefault(); return this.closeRoom(); }
     if (e.target.closest('.emp-coins')) return this.testTap();
     const btn = e.target.closest('[data-act]');
     if (!btn || btn.disabled) return;
     const { act, kind, id } = btn.dataset;
     const E = this.empire;
+    if (act === 'sound') { window.BASound?.toggle(); this.paintSound(); if (window.BASound?.enabled()) { snd('click'); this.startMusic(); } return; }
+    if (['menu', 'help', 'open-room', 'card', 'close-room', 'prestige'].includes(act)) snd('select', { vol: 0.6 });
+    if (['close', 'detail-close'].includes(act)) snd('back', { vol: 0.6 });
     if (act === 'pack') return this.openPack(+(btn.dataset.n || 1));
     if (act === 'menu') return this.showMenu();
     if (act === 'help') return this.showHelp();
@@ -144,16 +172,18 @@ class EmpireApp {
     if (act === 'close') return this.closeModal();
     if (act === 'build') {
       const r = E.buildRoom(id);
-      if (r.ok) { this.toast(`${E.rooms[id].name} is open for business`); this.renderRooms(); this.save(); }
+      if (r.ok) { snd('levelup'); this.toast(`${E.rooms[id].name} is open for business`); this.renderRooms(); this.save(); }
+      else snd('error', { vol: 0.6 });
       return;
     }
     if (act === 'level') {
       const r = E.levelUp({ kind, id });
-      if (!r.ok) return this.toast(this.reasonText(r));
+      if (!r.ok) { snd('error', { vol: 0.6 }); return this.toast(this.reasonText(r)); }
+      snd(r.action === 'unlock' ? 'powerup' : 'cash');
       if (kind === 'character' && r.action === 'unlock') {
         this.justUnlocked.add(id);
         this.toast(this.L.joined.replace('{name}', E.characters[id].name));
-        if (E.fullSet(r.roomId)) setTimeout(() => this.toast(`${this.L.fullSet} in ${E.rooms[r.roomId].name}: +${Math.round(this.fullSetBonus(r.roomId) * 100)}% income`), 1400);
+        if (E.fullSet(r.roomId)) setTimeout(() => { snd('win'); this.toast(`${this.L.fullSet} in ${E.rooms[r.roomId].name}: +${Math.round(this.fullSetBonus(r.roomId) * 100)}% income`); }, 1400);
       }
       this.renderRoom(r.roomId); this.save();
       if (this.detailTarget) this.showDetail(this.detailTarget);
@@ -634,7 +664,8 @@ class EmpireApp {
   openPack(n = 1) {
     const E = this.empire;
     const res = E.openBoosters(n);
-    if (!res.ok) return this.toast(this.reasonText(res));
+    if (!res.ok) { snd('error', { vol: 0.6 }); return this.toast(this.reasonText(res)); }
+    snd('whoosh');
     this.save();
     const title = res.opened > 1 ? `${res.opened} × ${this.packName}` : this.packName;
     this.showRewards(title, res.rewards, { again: true });
@@ -686,7 +717,9 @@ class EmpireApp {
     // Reveal one by one (fast when there are many); a tap reveals all at once.
     const step = cards.length > 4 ? 90 : 260;
     let i = 0;
-    const flip = () => { if (i < cards.length) { cards[i++].classList.add('flipped'); this.flipTimer = setTimeout(flip, step); } };
+    const sorted = this.groupRewards(rewards);
+    const flipSound = r => r && r.rarity === 'epic' ? snd('perfect') : r && r.rarity === 'rare' ? snd('powerup', { vol: 0.8 }) : snd('tick', { pitch: 0.8 + i * 0.05 });
+    const flip = () => { if (i < cards.length) { flipSound(sorted[i]); cards[i++].classList.add('flipped'); this.flipTimer = setTimeout(flip, step); } };
     clearTimeout(this.flipTimer);
     this.flipTimer = setTimeout(flip, 150);
     wrap.addEventListener('click', e => {
@@ -701,7 +734,8 @@ class EmpireApp {
   async startEvent(eventId) {
     const E = this.empire;
     const res = E.runEvent(eventId);
-    if (!res.ok) return this.toast(this.reasonText(res));
+    if (!res.ok) { snd('error', { vol: 0.6 }); return this.toast(this.reasonText(res)); }
+    snd('drum'); setTimeout(() => snd('drum', { pitch: 1.2 }), 220);
     this.save();
     const ev = E.events[eventId];
     this.modal.dataset.locked = '1';
@@ -744,6 +778,7 @@ class EmpireApp {
     const r = this.empire.prestige();
     this.closeModal();
     if (!r.ok) return this.toast(this.reasonText(r));
+    snd('win');
     this.save();
     this.renderRooms();
     scrollTo({ top: 0, behavior: 'smooth' });

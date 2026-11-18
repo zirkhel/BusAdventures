@@ -5,6 +5,8 @@ export const GAME = {
   id:        "my-adventure",       // unique slug — also the save key, so never reuse one
   title:     "My Adventure",
   startRoom: "lobby",              // must be a room id in rooms.js
+  // music: "spooky",               // optional synth music mood (see SOUND.md)
+  // ambient: "thunder",            // optional: random distant thunder
 
   intro: {
     title:      "My Adventure",

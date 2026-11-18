@@ -61,6 +61,7 @@
     ]
   },
   "presentation": {
+    "music": "tavern",
     "sceneAspect": 1.6,
     "palette": { "bg": "#120e17", "panel": "#1c1624", "panel2": "#272033", "text": "#f1ece2", "muted": "#9a90a6", "accent": "#b03a2e", "good": "#2ecc71" },
     "fontDisplay": "Georgia, 'Times New Roman', serif",

@@ -501,6 +501,13 @@ document.getElementById('btnMeny').onclick=()=>{ if(S) S.paused=true; meny.class
 document.getElementById('btnHjem').onclick=()=>{ location.href=HJEM; };
 requestAnimationFrame(loop);
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'arcade', playing: s => s && !s.paused && !s.over,
+    rate: s => 1 + Math.min(0.3, (s.wave - 1) * 0.03),
+    on: { 'shots#+': ['laser', { vol: 0.5 }], 'score+': 'pop', 'combo+': 'pickup', 'lives-': 'lifeLost',
+          'wave+': 'levelup', 'over!': 'gameover' } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-up="w" data-down="s" data-left="a" data-right="d" data-rstick="arrows" data-a="none"></script>
 </body>
 </html>

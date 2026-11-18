@@ -602,6 +602,12 @@ window.addEventListener('keyup', e=>{
 
 layout(); draw(); requestAnimationFrame(frame);
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'space', playing: s => s && !s.paused && !s.over,
+    on: { 'air!': 'jump', 'shots#+': ['laser', { vol: 0.6 }], 'bonus+': 'coin', 'lives-': 'boom', 'over!': 'gameover' },
+    every: s => { if (s._air && !s.air) BASound.play('land'); s._air = s.air; } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>
 </body>
 </html>

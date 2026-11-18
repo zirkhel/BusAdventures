@@ -28,6 +28,7 @@
     "epicPity": 8
   },
   "presentation": {
+    "music": "drive",
     "sceneAspect": 1.6,
     "palette": { "bg": "#10161a", "panel": "#18222a", "panel2": "#22303a", "accent": "#06d6a0" },
     "fontDisplay": "'Trebuchet MS', sans-serif"

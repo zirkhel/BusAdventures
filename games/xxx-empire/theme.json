@@ -71,6 +71,7 @@
     ]
   },
   "presentation": {
+    "music": "lounge",
     "sceneAspect": 1.6,
     "palette": { "bg": "#14070f", "panel": "#1f0f19", "panel2": "#2b1624", "text": "#fbeff5", "muted": "#b291a6", "accent": "#e0115f", "good": "#2ecc71" },
     "fontDisplay": "Impact, 'Arial Black', sans-serif",

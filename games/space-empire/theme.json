@@ -61,6 +61,7 @@
     ]
   },
   "presentation": {
+    "music": "space",
     "sceneAspect": 1.6,
     "palette": { "bg": "#070a14", "panel": "#10162a", "panel2": "#18203a", "text": "#e8eefc", "muted": "#8a96b8", "accent": "#2e86de", "good": "#2ecc71" },
     "fontDisplay": "'Trebuchet MS', 'Segoe UI', sans-serif",

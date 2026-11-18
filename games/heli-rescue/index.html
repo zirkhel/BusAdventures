@@ -774,6 +774,12 @@ window.__controlsTest = {
   }
 };
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'action', playing: s => s && !s.paused && !s.over,
+    on: { 'shots#+': ['shoot', { vol: 0.6 }], 'onboard+': 'pickup', 'saved+': 'coin', 'dead+': 'hurt',
+          'lives-': 'boom', 'zone+': 'levelup', 'over!': 'gameover' } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-a="z" data-b="x" data-x="Space"></script>
 </body>
 </html>

@@ -45,7 +45,7 @@ canvas{display:block;width:100%;height:100%}
   <div id="game">
     <canvas id="c"></canvas>
     <a id="home" href="../../index.html" title="Til Bus Adventures">⌂</a>
-    <div id="mute" title="Musikk av/på (M)">♪</div>
+    <div id="mute" title="Lyd av/på (M)">♪</div>
     <div id="ov"><div class="card" id="card"></div></div>
   </div>
   <div id="ctrl">
@@ -108,7 +108,7 @@ function audioInit() {
       const src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
       const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 500;
       burnGain = ac.createGain(); burnGain.gain.value = 0;
-      src.connect(f).connect(burnGain).connect(ac.destination); src.start();
+      src.connect(f).connect(burnGain).connect(OUT()); src.start();
       G.noiseBuf = buf;
     } catch (e) { ac = null; }
   }
@@ -120,26 +120,29 @@ function tone(f, d, type = 'square', v = 0.06, slide = 0, delay = 0) {
   o.type = type; o.frequency.setValueAtTime(f, t);
   if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + d);
   g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
-  o.connect(g).connect(ac.destination); o.start(t); o.stop(t + d + 0.02);
+  o.connect(g).connect(OUT()); o.start(t); o.stop(t + d + 0.02);
 }
 function noiseHit(d, v = 0.25, freq = 1200) {
   if (!ac || !G.noiseBuf) return;
   const s = ac.createBufferSource(), g = ac.createGain(), f = ac.createBiquadFilter();
   s.buffer = G.noiseBuf; f.type = 'bandpass'; f.frequency.value = freq;
   g.gain.setValueAtTime(v, ac.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + d);
-  s.connect(f).connect(g).connect(ac.destination); s.start(); s.stop(ac.currentTime + d + 0.02);
+  s.connect(f).connect(g).connect(OUT()); s.start(); s.stop(ac.currentTime + d + 0.02);
 }
 // ---------- soundtrack ----------
 // X-Files-ish theremin over a plucky bass: Am | F | C | E
+// Shared Bus Adventures sound setting (same key as ui/sound.js): mutes everything in the game
+let OUTNODE = null;
+function OUT() { if (!OUTNODE) { OUTNODE = ac.createGain(); OUTNODE.gain.value = music.on ? 1 : 0; OUTNODE.connect(ac.destination); } return OUTNODE; }
 let music = { on: true, playing: false, step: 0, nextT: 0, gain: null, th: null, thG: null };
-try { music.on = localStorage.getItem('satelloon_music') !== 'off'; } catch (e) {}
+try { music.on = localStorage.getItem('busadv_audio') !== 'false'; } catch (e) {}
 const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
 const BASS = [45, 41, 48, 40]; // per bar
 const LEAD_A = [76, 0, 0, 0, 72, 0, 74, 0,   77, 0, 0, 0, 76, 0, 72, 0,   76, 0, 0, 0, 79, 0, 76, 0,   75, 0, 0, 0, 71, 0, -1, 0];
 const LEAD_B = [81, 0, 0, 0, 79, 0, 76, 0,   77, 0, 0, 0, 72, 0, 74, 0,   76, 0, 72, 0, 67, 0, 0, 0,   68, 0, 71, 0, 76, 0, -1, 0];
 function musicInit() {
   if (!ac || music.gain) return;
-  music.gain = ac.createGain(); music.gain.gain.value = music.on ? 1 : 0; music.gain.connect(ac.destination);
+  music.gain = ac.createGain(); music.gain.gain.value = 1; music.gain.connect(OUT());
   music.th = ac.createOscillator(); music.th.type = 'sine'; music.th.frequency.value = 440;
   const lfo = ac.createOscillator(), lfoG = ac.createGain(); lfo.frequency.value = 5.5; lfoG.gain.value = 7;
   lfo.connect(lfoG).connect(music.th.frequency); lfo.start();
@@ -156,8 +159,8 @@ function musicStop() {
 }
 function musicSetOn(on) {
   music.on = on;
-  try { localStorage.setItem('satelloon_music', on ? 'on' : 'off'); } catch (e) {}
-  if (music.gain && ac) music.gain.gain.setTargetAtTime(on ? 1 : 0, ac.currentTime, 0.05);
+  try { localStorage.setItem('busadv_audio', on ? 'true' : 'false'); } catch (e) {}
+  if (ac) OUT().gain.setTargetAtTime(on ? 1 : 0, ac.currentTime, 0.05);
   document.getElementById('mute').classList.toggle('off', !on);
 }
 function musicTick() {
@@ -201,7 +204,7 @@ function hat(t, v, freq = 7000) {
 function crowdSound(kind, dur) {
   if (!ac || !G.noiseBuf) return;
   const t0 = ac.currentTime + 0.02, out = ac.createGain();
-  out.gain.value = kind === 'mega' ? 0.5 : 0.35; out.connect(ac.destination);
+  out.gain.value = kind === 'mega' ? 0.5 : 0.35; out.connect(OUT());
   const voices = kind === 'mega' ? 12 : kind === 'aww' ? 7 : 7;
   for (let i = 0; i < voices; i++) {
     const o = ac.createOscillator(), g = ac.createGain(), f1 = ac.createBiquadFilter(), f2 = ac.createBiquadFilter();
@@ -286,7 +289,7 @@ function setPtr(pid, name) {
     if (ac) { const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
       o.type = 'square'; o.frequency.setValueAtTime(2600, t); o.frequency.exponentialRampToValueAtTime(900, t + 0.03);
       g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
-      o.connect(g).connect(ac.destination); o.start(t); o.stop(t + 0.05); }
+      o.connect(g).connect(OUT()); o.start(t); o.stop(t + 0.05); }
   }
   const held = new Set(ptrs.values());
   touch.left = held.has('left'); touch.right = held.has('right'); touch.burn = held.has('burn');

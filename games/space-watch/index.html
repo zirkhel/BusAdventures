@@ -322,6 +322,13 @@ window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='a')keys.l
 window.addEventListener('keyup',e=>{if(e.key==='ArrowLeft'||e.key==='a')keys.left=false;if(e.key==='ArrowRight'||e.key==='d')keys.right=false});
 layout();draw();requestAnimationFrame(frame);
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'arcade', playing: s => s && !s.paused && !s.over,
+    rate: s => 1 + Math.min(0.3, (s.wave - 1) * 0.04),
+    on: { 'bullets#+': ['laser', { vol: 0.6 }], 'score+': 'pop', 'flash!': 'explode', 'perk!': 'powerup',
+          'lives-': 'lifeLost', 'wave+': 'levelup', 'over!': 'gameover' } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>
 </body>
 </html>

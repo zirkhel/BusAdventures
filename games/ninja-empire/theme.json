@@ -72,6 +72,7 @@
     ]
   },
   "presentation": {
+    "music": "ninja",
     "sceneAspect": 1.6,
     "palette": { "bg": "#0a0c14", "panel": "#131722", "panel2": "#1c2130", "text": "#ecebe4", "muted": "#8f95a8", "accent": "#c0392b", "good": "#2ecc71" },
     "fontDisplay": "'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif",

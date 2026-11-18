@@ -5,7 +5,7 @@
 "use strict";
 
 import * as S from "../engine/state.js";
-import { playBg, playSfx } from "./audio.js";
+import { playBg, playSfx, sfx, startMood, stopMood } from "./audio.js";
 import * as E from "../engine/engine.js";
 import { renderMedia } from "./fx.js";
 
@@ -175,6 +175,7 @@ function showFeedback(text, type = "neutral", command = null, warning = null) {
 // ── Death / Win ───────────────────────────────────────────────────────────────
 
 function renderDeath(text, hazardMedia = null) {
+  stopMood(); sfx("hurt", { pitch: 0.7 }); setTimeout(() => sfx("gameover"), 350);
   if (CFG.hooks?.onDeath?.(text) === true) return;
   const roomId  = S.get().room;
   const roomDef = S.roomDef(roomId);
@@ -192,6 +193,7 @@ function renderDeath(text, hazardMedia = null) {
 }
 
 function renderWin() {
+  stopMood(); sfx("win");
   if (CFG.hooks?.onWin?.() === true) return;
   const roomId  = S.get().room;
   const roomDef = S.roomDef(roomId);
@@ -214,6 +216,7 @@ function handleCommand(input) {
   // Special internal command from startBtn
   if (raw === "__start__") {
     S.fresh();
+    startMood();
     if (typeof window._resetUI === "function") window._resetUI();
     S.incVisit(S.get().room);
     renderRoom();
@@ -248,6 +251,10 @@ function handleCommand(input) {
 
   if (result.roomChanged) renderRoom();
   if (result.sound) playSfx(result.sound);
+  else if (result.warning) sfx("drum", { pitch: 0.6 });          // heartbeat when a hazard warns
+  else if (result.roomChanged) { sfx("step"); setTimeout(() => sfx("step", { pitch: 0.9 }), 160); }
+  else if (result.type === "ok") sfx("pickup", { vol: 0.7 });
+  else if (result.type === "bad") sfx("miss", { vol: 0.4 });
   showFeedback(result.text || "", result.type, raw, result.warning || null);
 }
 

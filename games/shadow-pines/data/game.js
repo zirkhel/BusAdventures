@@ -2,6 +2,8 @@ export const GAME = {
   id: "shadow_over_iron_pines",
   title: "Shadow Over Iron Pines",
   startRoom: "outer_wall",
+  music:     "ninja",
+  ambient:   "thunder",
 
   intro: {
     title: "Shadow Over Iron Pines",

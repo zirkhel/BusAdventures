@@ -479,6 +479,13 @@ document.getElementById('btnMeny').onclick=()=>{
 document.getElementById('btnHjem').onclick=()=>{ location.href=HJEM; };
 requestAnimationFrame(loop);
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'drive', playing: s => s && !s.paused && !s.over,
+    rate: s => 1 + Math.min(0.3, (s.level - 1) * 0.04),
+    on: { 'pax+': 'coin', 'complaints+': 'honk', 'lives-': 'boom', 'level+': 'levelup', 'over!': 'gameover',
+          'kryss~': (s, v) => { if (v === 'warn') BASound.play('alarm'); } } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-lstick="none" data-rstick="none" data-up="w" data-down="s" data-left="a" data-right="d" data-y="ArrowUp" data-a="ArrowDown" data-x="ArrowLeft" data-b="ArrowRight" data-rt="none"></script>
 </body>
 </html>

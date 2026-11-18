@@ -612,6 +612,11 @@ document.addEventListener('visibilitychange', ()=>{
 });
 window.onerror=(m,s,l)=> { errBox.style.display='block'; errBox.textContent=m+' @'+l; };
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'cheeky', playing: s => s && !s.paused && !s.over,
+    on: { 'mist#+': ['spray', { vol: 0.35 }], 'converted+': 'pop', 'escaped+': 'warn', 'wave+': 'levelup', 'over!': 'gameover' } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-left="#left" data-right="#right" data-a="#sprayBtn" data-up="none" data-down="none"></script>
 </body>
 </html>

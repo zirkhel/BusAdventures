@@ -1160,6 +1160,12 @@ try {
   requestAnimationFrame(frame);
 } catch (e){ report('STARTUP: ' + (e && e.message) + '\n' + (e && e.stack || '')); }
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'deepsea', playing: s => s && !s.paused && !s.over,
+    on: { 'pos~': 'bubble', 'bar+': 'pickup', 'score+': 'cash', 'liv-': 'lifeLost', 'over!': 'gameover' },
+    every: (s, dt) => { if (!s.over && !s.paused && s.n && s.oksygen < s.n.luft * 0.25) { s._snd = (s._snd || 0) - dt; if (s._snd <= 0) { BASound.play('warn', { pitch: 0.8 }); s._snd = 0.8; } } } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>
 </body>
 </html>

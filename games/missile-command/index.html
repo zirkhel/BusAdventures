@@ -480,6 +480,13 @@ document.querySelectorAll('.valg').forEach(btn=>btn.addEventListener('click',()=
 
 layout(); draw(); requestAnimationFrame(frame);
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto"></script>
+<script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'action', playing: s => s && !s.paused && !s.over,
+    rate: s => 1 + Math.min(0.3, (s.wave - 1) * 0.04),
+    on: { 'outgoing#+': 'shoot', 'blasts#+': 'explode', 'wave+': 'levelup', 'over!': 'gameover' },
+    every: s => { const c = s.cities.filter(x => x.alive).length; if (s._cities != null && c < s._cities) BASound.play('boom'); s._cities = c; } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-lstick="cursor"></script>
 </body>
 </html>

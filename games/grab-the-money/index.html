@@ -758,6 +758,12 @@ bindEl(btnHome,()=>{
 last=performance.now();
 requestAnimationFrame(loop);
 </script>
+<!-- SOUND:start -->
+<script src="../../ui/sound.js" data-button="auto" data-anchor="#btnMenu"></script>
+<script>BASound.watch({ state: () => ({ running, ended, score, thrown, pen: penalties.length }), mood: 'cheeky',
+    playing: s => s.running,
+    on: { 'thrown+': ['whoosh', { vol: 0.5 }], 'score+': 'cash', 'pen+': 'error', 'ended!': 'gameover' } });</script>
+<!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>
 </body>
 </html>

@@ -61,6 +61,7 @@
     ]
   },
   "presentation": {
+    "music": "fighter",
     "sceneAspect": 1.6,
     "palette": { "bg": "#0d0f14", "panel": "#171a22", "panel2": "#1f2330", "text": "#eef1f6", "muted": "#8a93a6", "accent": "#ff5a3c", "good": "#2ecc71" },
     "fontDisplay": "Impact, 'Arial Black', sans-serif"
