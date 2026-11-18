@@ -66,7 +66,8 @@
         <button class="valg" data-mode="B"><b>GAME B</b><span>Rocks + UFOs.</span></button>
         <button class="valg" data-mode="C"><b>GAME C</b><span>Bombing runs.</span></button>
         <p class="hint">Moon Patrol set: pits, rocks, mines, UFOs, crater bombs,<br>
-        tanks, plants, rolling stones, cars from behind.</p>
+        tanks, plants, rolling stones, cars from behind.<br>
+        Big rocks: shoot to break · small rocks: jump.</p>
         <button type="button" id="btnTilbake"><b>BACK</b><span>Bus Adventures</span></button>
       </div>
     </div>
@@ -226,17 +227,18 @@ function update(dt){
   for(const r of S.rocks){
     const rx=r.x-S.scroll;
     if(!r.hit){
-      // By design: a big rock (hp 2) is cracked down to a small rock by the
-      // first shot. A cracked rock can't be shot any more — it must be jumped.
+      // Rock rules: a BIG rock is too tall to jump — one shot breaks it down to a
+      // small rock. A SMALL rock can't be shot (shots ping off it) — it must be jumped.
+      const big = (r.hp||1)>=2 && !r.cracked;
       for(const sh of S.shots){
-        if(sh.vy===0 && !r.cracked && Math.abs(sh.x-rx)<10 && Math.abs(sh.y-(GROUND-8))<12){
-          r.hp = (r.hp||1)-1; sh.x=W+20;
-          if(r.hp<=0){ r.hit=true; S.bonus+=15; burst(rx,GROUND-8,8,'spark'); }
-          else { r.cracked=true; burst(rx,GROUND-8,5,'spark'); }
+        if(sh.vy===0 && Math.abs(sh.x-rx)<10 && sh.y>GROUND-(big?30:12) && sh.y<GROUND+2){
+          sh.x=W+20;
+          if(big){ r.cracked=true; r.hp=1; S.bonus+=15; burst(rx,GROUND-14,10,'spark'); }
+          else burst(rx-6,GROUND-10,2,'spark');
           break;
         }
       }
-      if(S.invuln<=0 && rx>PX-4 && rx<PX+22 && S.py>GROUND-14)
+      if(S.invuln<=0 && rx>PX-4 && rx<PX+22 && (big || S.py>GROUND-14))
         crash('ROCK');
     }
   }
@@ -444,11 +446,14 @@ function draw(){
   for(const r of S.rocks){
     if(r.hit) continue;
     const x=r.x-S.scroll;
-    if((r.hp||1)>=2){
-      px(x-9, GROUND-14, 18, 14, '#6a5a48');
-      px(x-7, GROUND-18, 14, 4, '#c4b49a');
-      px(x-4, GROUND-10, 4, 4, '#3a3028');
-      px(x+2, GROUND-12, 4, 3, '#e8d5a8');
+    if((r.hp||1)>=2 && !r.cracked){
+      // big rock: tall enough that it can't be jumped
+      px(x-10, GROUND-26, 20, 26, '#6a5a48');
+      px(x-8, GROUND-30, 16, 4, '#c4b49a');
+      px(x-5, GROUND-31, 8, 2, '#e8d5a8');
+      px(x-6, GROUND-18, 4, 5, '#3a3028');
+      px(x+3, GROUND-11, 4, 4, '#3a3028');
+      px(x+3, GROUND-24, 4, 3, '#e8d5a8');
     } else {
       px(x-6, GROUND-9, 12, 9, '#8a7a68');
       px(x-4, GROUND-12, 8, 3, '#c4b49a');
