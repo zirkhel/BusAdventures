@@ -3,11 +3,18 @@
 All sound in Bus Adventures is made in code with the Web Audio API — there are no audio files.
 The shared module is `ui/sound.js` (global `BASound`).
 
-## One on/off for everything
+## One setting for everything: music + sound → sound only → off
 
-The setting lives in `localStorage["busadv_audio"]` (`"true"` / `"false"`). Every game reads the same
-key, so turning sound off in one game turns it off everywhere (including the text adventures' *Sound: On/Off*).
-`M` on the keyboard toggles it in every game.
+The sound button (and `M` on the keyboard) cycles three modes in every game:
+🔊 music + sound effects → 🔉 sound effects only → 🔇 off. A short label shows the new mode.
+Stored in `localStorage["busadv_audio"]` (on/off) and `localStorage["busadv_music"]` (music on/off), shared by
+all games, the text adventures (*Sound:* in the ⚙ menu) and the Empire games. API: `BASound.mode()`,
+`setMode('all' | 'sfx' | 'off')`, `cycle()`.
+
+## Back to the menu
+
+Every game has the same house icon in the top-left corner that goes back to the Bus Adventures front page
+(`../../index.html`). Use the path `M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z` for new games.
 
 ## Arcade games
 

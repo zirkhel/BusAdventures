@@ -80,7 +80,7 @@ export function isEnabled() { return _enabled; }
 export function setEnabled(val) {
   _enabled = !!val;
   try { localStorage.setItem(STORAGE_KEY, String(_enabled)); } catch {}
-  _bas()?.setEnabled(_enabled);
+  if (_bas() && _bas().enabled() !== _enabled) _bas().setEnabled(_enabled);
 
   if (!_enabled) {
     _fadeOut(_bgAudio);

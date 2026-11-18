@@ -118,7 +118,7 @@ class EmpireApp {
     this.root.classList.add('emp');
     this.root.innerHTML = `
       <header class="emp-hud">
-        <a class="emp-back" href="../../index.html" aria-label="Back to Bus Adventures">‹</a>
+        <a class="emp-back" href="../../index.html" aria-label="Back to Bus Adventures"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></a>
         <div class="emp-hud-main">
           <div class="emp-coins" data-bind="coins"></div>
           <div class="emp-income"><span data-bind="income"></span>/s<span class="emp-prestige-badge" data-bind="prestige"></span></div>
@@ -146,8 +146,9 @@ class EmpireApp {
 
   paintSound() {
     const b = this.root.querySelector('.emp-snd'); if (!b) return;
-    const on = window.BASound ? window.BASound.enabled() : true;
-    b.textContent = on ? '🔊' : '🔇'; b.style.fontSize = '18px'; b.style.opacity = on ? '1' : '.6';
+    const m = window.BASound ? window.BASound.mode() : 'all';
+    b.textContent = m === 'all' ? '🔊' : m === 'sfx' ? '🔉' : '🔇'; b.style.fontSize = '18px'; b.style.opacity = m === 'off' ? '.6' : '1';
+    b.title = window.BASound ? window.BASound.LABEL[m] : '';
   }
   startMusic() {
     const B = window.BASound; if (!B) return;
@@ -162,7 +163,7 @@ class EmpireApp {
     if (!btn || btn.disabled) return;
     const { act, kind, id } = btn.dataset;
     const E = this.empire;
-    if (act === 'sound') { window.BASound?.toggle(); this.paintSound(); if (window.BASound?.enabled()) { snd('click'); this.startMusic(); } return; }
+    if (act === 'sound') { window.BASound?.cycle(); this.paintSound(); this.startMusic(); return; }
     if (['menu', 'help', 'open-room', 'card', 'close-room', 'prestige'].includes(act)) snd('select', { vol: 0.6 });
     if (['close', 'detail-close'].includes(act)) snd('back', { vol: 0.6 });
     if (act === 'pack') return this.openPack(+(btn.dataset.n || 1));

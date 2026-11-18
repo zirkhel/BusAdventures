@@ -21,7 +21,8 @@ html, body { margin: 0; background: var(--emp-bg, #0d0f14); }
   padding: calc(8px + env(safe-area-inset-top)) 12px 8px; background: rgba(13, 15, 20, .92);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid #ffffff14;
 }
-.emp-back { color: var(--emp-muted); text-decoration: none; font-size: 28px; line-height: 1; padding: 0 4px; }
+.emp-back { color: var(--emp-muted); text-decoration: none; line-height: 0; padding: 4px; display: inline-flex; }
+.emp-back svg { width: 20px; height: 20px; fill: currentColor; }
 .emp-hud-main { flex: 1; min-width: 0; }
 .emp-coins { font-family: var(--emp-display); font-size: 26px; letter-spacing: .5px; line-height: 1.05; }
 .emp-income { font-size: 13px; color: var(--emp-good); font-variant-numeric: tabular-nums; }

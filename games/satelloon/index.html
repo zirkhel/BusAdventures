@@ -26,8 +26,9 @@ canvas{display:block;width:100%;height:100%}
 #snap.miss{background:#5a1416;border-color:#ff5a5a}
 #burn{background:#3a2210;border-color:#a55a1c}
 #snap{background:#10303a;border-color:#2aa3c0}
-#mute{position:absolute;top:8px;left:calc(50% + 22px);transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(10,20,45,.7);border:1px solid #34405f;display:flex;align-items:center;justify-content:center;font-size:17px;z-index:2;cursor:pointer}
-#home{position:absolute;top:8px;left:calc(50% - 46px);transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(10,20,45,.7);border:1px solid #34405f;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:2;color:#cfe;text-decoration:none}
+#mute{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:32px;height:32px;border-radius:50%;background:rgba(10,20,45,.7);border:1px solid #34405f;display:flex;align-items:center;justify-content:center;font-size:17px;z-index:2;cursor:pointer}
+#home{position:absolute;top:8px;left:8px;width:36px;height:36px;border-radius:50%;background:rgba(10,20,45,.7);border:1px solid #34405f;display:flex;align-items:center;justify-content:center;z-index:2;color:#cfe;text-decoration:none}
+#home svg{width:17px;height:17px;fill:currentColor}
 #mute.off{opacity:.45;text-decoration:line-through}
 #ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,12,.78);text-align:center;padding:22px;box-sizing:border-box}
 #ov.hide{display:none}
@@ -44,7 +45,7 @@ canvas{display:block;width:100%;height:100%}
 <div id="wrap">
   <div id="game">
     <canvas id="c"></canvas>
-    <a id="home" href="../../index.html" title="Til Bus Adventures">⌂</a>
+    <a id="home" href="../../index.html" title="Til Bus Adventures" aria-label="Til Bus Adventures"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></a>
     <div id="mute" title="Lyd av/på (M)">♪</div>
     <div id="ov"><div class="card" id="card"></div></div>
   </div>
@@ -135,14 +136,14 @@ function noiseHit(d, v = 0.25, freq = 1200) {
 let OUTNODE = null;
 function OUT() { if (!OUTNODE) { OUTNODE = ac.createGain(); OUTNODE.gain.value = music.on ? 1 : 0; OUTNODE.connect(ac.destination); } return OUTNODE; }
 let music = { on: true, playing: false, step: 0, nextT: 0, gain: null, th: null, thG: null };
-try { music.on = localStorage.getItem('busadv_audio') !== 'false'; } catch (e) {}
+try { music.on = localStorage.getItem('busadv_audio') !== 'false'; music.mus = localStorage.getItem('busadv_music') !== 'false'; } catch (e) { music.mus = true; }
 const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
 const BASS = [45, 41, 48, 40]; // per bar
 const LEAD_A = [76, 0, 0, 0, 72, 0, 74, 0,   77, 0, 0, 0, 76, 0, 72, 0,   76, 0, 0, 0, 79, 0, 76, 0,   75, 0, 0, 0, 71, 0, -1, 0];
 const LEAD_B = [81, 0, 0, 0, 79, 0, 76, 0,   77, 0, 0, 0, 72, 0, 74, 0,   76, 0, 72, 0, 67, 0, 0, 0,   68, 0, 71, 0, 76, 0, -1, 0];
 function musicInit() {
   if (!ac || music.gain) return;
-  music.gain = ac.createGain(); music.gain.gain.value = 1; music.gain.connect(OUT());
+  music.gain = ac.createGain(); music.gain.gain.value = music.mus === false ? 0 : 1; music.gain.connect(OUT());
   music.th = ac.createOscillator(); music.th.type = 'sine'; music.th.frequency.value = 440;
   const lfo = ac.createOscillator(), lfoG = ac.createGain(); lfo.frequency.value = 5.5; lfoG.gain.value = 7;
   lfo.connect(lfoG).connect(music.th.frequency); lfo.start();
@@ -157,11 +158,23 @@ function musicStop() {
   music.playing = false;
   if (music.thG && ac) music.thG.gain.setTargetAtTime(0, ac.currentTime, 0.08);
 }
-function musicSetOn(on) {
-  music.on = on;
-  try { localStorage.setItem('busadv_audio', on ? 'true' : 'false'); } catch (e) {}
-  if (ac) OUT().gain.setTargetAtTime(on ? 1 : 0, ac.currentTime, 0.05);
-  document.getElementById('mute').classList.toggle('off', !on);
+// Shared Bus Adventures sound mode: music + sound → sound only → off
+function soundMode() { return !music.on ? 'off' : music.mus === false ? 'sfx' : 'all'; }
+function setSoundMode(m) {
+  music.on = m !== 'off'; music.mus = m === 'all';
+  try { localStorage.setItem('busadv_audio', String(music.on)); localStorage.setItem('busadv_music', String(music.mus)); } catch (e) {}
+  if (ac) { OUT().gain.setTargetAtTime(music.on ? 1 : 0, ac.currentTime, 0.05); if (music.gain) music.gain.gain.setTargetAtTime(music.mus ? 1 : 0, ac.currentTime, 0.05); }
+  paintMute();
+}
+function paintMute() {
+  const m = soundMode(), el = document.getElementById('mute');
+  el.textContent = m === 'all' ? '🔊' : m === 'sfx' ? '🔉' : '🔇';
+  el.title = { all: 'Musikk + lyd', sfx: 'Bare lydeffekter', off: 'Lyd av' }[m];
+  el.classList.toggle('off', m === 'off');
+}
+function cycleSound() {
+  setSoundMode({ all: 'sfx', sfx: 'off', off: 'all' }[soundMode()]);
+  say({ all: 'Musikk + lyd', sfx: 'Bare lydeffekter', off: 'Lyd av' }[soundMode()], 1.2);
 }
 function musicTick() {
   if (!music.playing || !ac) return;
@@ -263,7 +276,7 @@ const touch = { left: false, right: false, burn: false };
 let snapQueued = false, startQueued = false;
 addEventListener('keydown', e => {
   keys.add(e.code);
-  if (e.code === 'KeyM') { audioInit(); musicSetOn(!music.on); }
+  if (e.code === 'KeyM') { audioInit(); cycleSound(); }
   if (['KeyF', 'Enter', 'KeyX', 'KeyK'].includes(e.code)) { if (state === 'play') snapQueued = true; else startQueued = true; }
   if (e.code === 'Space' && state !== 'play') startQueued = true;
   if (e.code.startsWith('Arrow') || e.code === 'Space') e.preventDefault();
@@ -921,9 +934,9 @@ function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.a
 function drawHUD() {
   ctx.save(); ctx.textBaseline = 'top';
   ctx.font = '800 18px system-ui,sans-serif'; ctx.textAlign = 'left';
-  ctx.fillStyle = '#000a'; ctx.fillText('👍 ' + likes, 13, 13); ctx.fillStyle = '#fff'; ctx.fillText('👍 ' + likes, 12, 12);
+  ctx.fillStyle = '#000a'; ctx.fillText('👍 ' + likes, 55, 13); ctx.fillStyle = '#fff'; ctx.fillText('👍 ' + likes, 54, 12);
   ctx.font = '600 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.65)';
-  ctx.fillText(`Bevis: ${proofs}` + (streak > 1 ? `   Rekke x${(1 + Math.min(streak - 1, 6) * 0.25).toFixed(2)}` : ''), 12, 36);
+  ctx.fillText(`Bevis: ${proofs}` + (streak > 1 ? `   Rekke x${(1 + Math.min(streak - 1, 6) * 0.25).toFixed(2)}` : ''), 54, 36);
   ctx.textAlign = 'right'; ctx.font = '18px system-ui,sans-serif';
   ctx.fillText('🎈'.repeat(Math.max(0, lives)), W - 12, 12);
   { // gas gauge
@@ -968,8 +981,8 @@ addEventListener('resize', resize);
 cv.addEventListener('touchstart', e => { e.preventDefault(); audioInit(); if (state === 'play') { setPtr('sky', 'snap'); setPtr('sky', null); } }, { passive: false });
 cv.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; audioInit(); if (state === 'play') { setPtr('sky', 'snap'); setPtr('sky', null); } });
 { const m = document.getElementById('mute');
-  m.classList.toggle('off', !music.on);
-  m.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); audioInit(); musicSetOn(!music.on); }); }
+  paintMute();
+  m.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); audioInit(); cycleSound(); }); }
 resize(); menu(); resetBalloon();
 requestAnimationFrame(frame);
 })();

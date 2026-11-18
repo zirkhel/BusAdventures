@@ -8,7 +8,8 @@
 //   BASound.music.play('spooky');         // loop a mood from MOODS (or pass your own track object)
 //   BASound.music.rate(1.1);              // tempo multiplier (e.g. speed up per level)
 //   BASound.music.stop();
-//   BASound.button();                     // sound on/off button (auto-added next to #btnMeny if present)
+//   BASound.button();                     // sound button (auto-added next to #btnMeny): music+sound → sound only → off
+//   BASound.mode() / setMode('all'|'sfx'|'off') / cycle()
 //
 // One setting for the whole platform: localStorage "busadv_audio" ("true"/"false"),
 // the same key ui/audio.js uses, so turning sound off anywhere turns it off everywhere.
@@ -19,9 +20,13 @@
   'use strict';
   if (window.BASound) return;
 
-  const KEY = 'busadv_audio';
-  let enabled = true;
+  // Three modes: 'all' (music + effects) → 'sfx' (effects only) → 'off'.
+  // Stored as two keys so ui/audio.js (busadv_audio = on/off) keeps working.
+  const KEY = 'busadv_audio', KEY_MUSIC = 'busadv_music';
+  let enabled = true, musicOn = true;
   try { const v = localStorage.getItem(KEY); if (v !== null) enabled = v === 'true'; } catch (e) {}
+  try { const v = localStorage.getItem(KEY_MUSIC); if (v !== null) musicOn = v === 'true'; } catch (e) {}
+  let musGate = null;
 
   let ac = null, master = null, sfxBus = null, musBus = null, noiseBuf = null, unlocked = false;
   const listeners = [];
@@ -34,7 +39,8 @@
       master = ac.createGain(); master.gain.value = enabled ? 1 : 0;
       master.connect(comp).connect(ac.destination);
       sfxBus = ac.createGain(); sfxBus.gain.value = 0.9; sfxBus.connect(master);
-      musBus = ac.createGain(); musBus.gain.value = 0.42; musBus.connect(master);
+      musGate = ac.createGain(); musGate.gain.value = musicOn ? 1 : 0; musGate.connect(master);
+      musBus = ac.createGain(); musBus.gain.value = 0.42; musBus.connect(musGate);
       noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
       const d = noiseBuf.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
@@ -50,12 +56,30 @@
     if (document.hidden) ac.suspend(); else if (unlocked) { ac.resume(); seq.resync(); }
   });
 
-  function setEnabled(v) {
-    enabled = !!v;
-    try { localStorage.setItem(KEY, String(enabled)); } catch (e) {}
+  const mode = () => !enabled ? 'off' : musicOn ? 'all' : 'sfx';
+  function setMode(m) {
+    enabled = m !== 'off'; musicOn = m === 'all';
+    try { localStorage.setItem(KEY, String(enabled)); localStorage.setItem(KEY_MUSIC, String(musicOn)); } catch (e) {}
     if (ac && master) master.gain.setTargetAtTime(enabled ? 1 : 0, ac.currentTime, 0.04);
-    if (enabled) seq.resync();
-    listeners.forEach(fn => { try { fn(enabled); } catch (e) {} });
+    if (ac && musGate) musGate.gain.setTargetAtTime(musicOn ? 1 : 0, ac.currentTime, 0.04);
+    seq.resync();
+    listeners.forEach(fn => { try { fn(mode()); } catch (e) {} });
+  }
+  // on/off only (keeps the music choice)
+  function setEnabled(v) { setMode(v ? (musicOn ? 'all' : 'sfx') : 'off'); }
+  const NEXT = { all: 'sfx', sfx: 'off', off: 'all' };
+  const LABEL = { all: 'Music + sound', sfx: 'Sound effects only', off: 'Sound off' };
+  function cycle() { setMode(NEXT[mode()]); flashLabel(LABEL[mode()]); if (enabled) play('click'); return mode(); }
+  let labelEl = null, labelT = 0;
+  function flashLabel(text) {
+    if (!document.body) return;
+    if (!labelEl) {
+      labelEl = document.createElement('div');
+      labelEl.style.cssText = 'position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 56px);transform:translateX(-50%);z-index:10000;padding:7px 14px;border-radius:999px;background:rgba(10,14,22,.88);color:#e8eef5;font:600 13px/1.2 system-ui,-apple-system,sans-serif;pointer-events:none;transition:opacity .25s;box-shadow:0 4px 14px rgba(0,0,0,.4)';
+      document.body.appendChild(labelEl);
+    }
+    labelEl.textContent = text; labelEl.style.opacity = '1';
+    clearTimeout(labelT); labelT = setTimeout(() => { labelEl.style.opacity = '0'; }, 1100);
   }
 
   // ---------- primitives ----------
@@ -361,7 +385,7 @@
     resync() { if (ac) this.nextT = ac.currentTime + 0.06; },
     tick() {
       if (!ac || !this.track || ac.state !== 'running') return;
-      if (!enabled) { this.resync(); return; }
+      if (!enabled || !musicOn) { this.resync(); return; }
       if (this.nextT < ac.currentTime - 0.25) this.resync();
       const stepDur = 60 / (this.track.bpm * this.mult) / 2;
       while (this.nextT < ac.currentTime + 0.12) {
@@ -402,6 +426,7 @@
 
   // ---------- on/off button ----------
   const ICON_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const ICON_ALL = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9h3l4-4v14l-4-4H2z"/><path d="M12.5 9.5a3.5 3.5 0 0 1 0 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M17 4v10.2a2.3 2.3 0 1 1-1.6-2.2V6.6l5.6-1.6v7.6a2.3 2.3 0 1 1-1.6-2.2V3.2z"/></svg>';
   const ICON_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   function button(opt) {
     opt = opt || {};
@@ -420,9 +445,9 @@
       b.style.cssText = css + `position:fixed;${v}:calc(env(safe-area-inset-${v}) + 8px);${h}:calc(env(safe-area-inset-${h}) + 8px);z-index:9999;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);color:#e6e6e6;border:1px solid rgba(255,255,255,.25);`;
       document.body.appendChild(b);
     }
-    const paint = () => { b.innerHTML = enabled ? ICON_ON : ICON_OFF; b.firstChild.style.cssText = 'width:15px;height:15px;fill:currentColor'; b.style.opacity = enabled ? '1' : '.55'; };
+    const paint = () => { const m = mode(); b.innerHTML = m === 'all' ? ICON_ALL : m === 'sfx' ? ICON_ON : ICON_OFF; b.firstChild.style.cssText = 'width:16px;height:16px;fill:currentColor'; b.style.opacity = m === 'off' ? '.55' : '1'; b.title = LABEL[m]; b.setAttribute('aria-label', 'Sound: ' + LABEL[m]); };
     paint(); listeners.push(paint);
-    const toggle = e => { e.preventDefault(); e.stopPropagation(); unlock(); setEnabled(!enabled); if (enabled) play('click'); };
+    const toggle = e => { e.preventDefault(); e.stopPropagation(); unlock(); cycle(); };
     b.addEventListener('click', toggle);
     b.addEventListener('touchend', e => { toggle(e); }, { passive: false });
     b.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
@@ -435,7 +460,7 @@
       const tag = (e.target && e.target.tagName) || '';
       if (/INPUT|TEXTAREA|SELECT/.test(tag) || (e.target && e.target.isContentEditable)) return;
       if (window.BASound_noMKey) return;
-      setEnabled(!enabled);
+      cycle();
     }
   });
 
@@ -513,18 +538,19 @@
     watch,
     play, tone, noise, SFX, MOODS, mood,
     music: { play: t => seq.play(t), stop: q => seq.stop(q), rate: m => seq.rate(m), get playing() { return !!seq.track; } },
-    enabled: () => enabled, setEnabled, toggle: () => setEnabled(!enabled), onChange: fn => listeners.push(fn),
+    enabled: () => enabled, musicOn: () => enabled && musicOn, mode, setMode, cycle, LABEL,
+    setEnabled, toggle: () => setEnabled(!enabled), onChange: fn => listeners.push(fn),
     button, unlock,
   };
 
   // auto-place the button once the page is ready
-  const me = document.currentScript, mode = (me && me.dataset.button) || 'auto';
-  if (mode !== 'none') {
+  const me = document.currentScript, btnMode = (me && me.dataset.button) || 'auto';
+  if (btnMode !== 'none') {
     const place = () => {
       const anchor = me && me.dataset.anchor;
       if (anchor && document.querySelector(anchor)) button({ anchor });
-      else if (mode === 'auto') button(document.getElementById('btnMeny') ? { anchor: '#btnMeny' } : { pos: 'tr' });
-      else button({ pos: mode });
+      else if (btnMode === 'auto') button(document.getElementById('btnMeny') ? { anchor: '#btnMeny' } : { pos: 'tr' });
+      else button({ pos: btnMode });
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', place); else place();
   }

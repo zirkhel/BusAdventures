@@ -2,7 +2,7 @@
 // Injects all game UI and wires all interaction.
 // Call initShell({ handleCommand, game: GAME }) before startGame().
 
-import { initAudio, setEnabled, isEnabled } from "./audio.js";
+import { initAudio, setEnabled, isEnabled, startMood } from "./audio.js";
 
 export function initShell({ handleCommand, game = {} }) {
 
@@ -31,6 +31,7 @@ export function initShell({ handleCommand, game = {} }) {
   <div class="game-layout">
     <div id="scene" class="scene flex-none"></div>
     <div class="action-bar flex-none">
+      <a id="homeBtn" class="action-btn" href="../../index.html" aria-label="Back to Bus Adventures" title="Back to Bus Adventures"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" style="display:block"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></a>
       <button id="settingsBtn" class="action-btn">⚙</button>
     </div>
     <div class="section-header flex-none" id="invToggle">
@@ -269,12 +270,19 @@ export function initShell({ handleCommand, game = {} }) {
   document.addEventListener('click', () => settingsMenu.classList.add('hidden'));
 
   const audioBtn = document.getElementById('audioBtn');
+  // Sound: Music + sound → Sound effects only → Off (shared with every Bus Adventures game)
   function updateAudioBtn() {
-    audioBtn.textContent = isEnabled() ? '\u{1F509} Sound: On' : '\u{1F507} Sound: Off';
+    const B = window.BASound;
+    const m = B ? B.mode() : (isEnabled() ? 'all' : 'off');
+    audioBtn.textContent = m === 'all' ? '\u{1F50A} Sound: Music + FX' : m === 'sfx' ? '\u{1F509} Sound: FX only' : '\u{1F507} Sound: Off';
   }
   updateAudioBtn();
-  audioBtn.addEventListener('click', () => {
-    setEnabled(!isEnabled());
+  const waitBas = () => { if (window.BASound) { updateAudioBtn(); window.BASound.onChange(updateAudioBtn); } else setTimeout(waitBas, 200); };
+  waitBas();
+  audioBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (window.BASound) { window.BASound.cycle(); setEnabled(window.BASound.enabled()); if (window.BASound.musicOn()) startMood(); }
+    else setEnabled(!isEnabled());
     updateAudioBtn();
   });
 
