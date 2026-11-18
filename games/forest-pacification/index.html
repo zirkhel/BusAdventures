@@ -132,9 +132,10 @@ function drawFinale(){const t=finalTime;rect(0,66,W,105,'#172b36');if(t<3){ellip
 function loop(now){const dt=Math.min(.04,(now-last)/1000||0);last=now;if(state==='playing')update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 </script><!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="auto" data-anchor="#menu"></script>
-<script>BASound.watch({ state: () => ({ state, armor, kills, beams: beams.length, heavyFX, wave, flash }), mood: 'march',
+<script>BASound.watch({ state: () => ({ state, armor, kills, beams: beams.length, heavyFX, wave, enemies, rocks, traps }), mood: 'march',
     playing: s => s.state === 'playing',
     on: { 'beams+': ['laser', { pitch: 0.7, vol: 0.6 }], 'kills+': 'explode', 'armor-': 'hit', 'heavyFX!': 'boom', 'wave+': 'warn',
+          'enemies@': ['step', { vol: 0.4 }], 'rocks@': ['fall', { vol: 0.5 }], 'traps@': ['warn', { pitch: 0.6, vol: 0.5 }],
           'state~': (s, v) => { if (v === 'over') BASound.play('gameover'); if (v === 'complete') BASound.play('win'); } } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-a="f" data-b="Space" data-x="h" data-start="Escape"></script>

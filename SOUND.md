@@ -25,7 +25,9 @@ BASound.watch({
 });
 ```
 
-Rules: `+` value went up, `-` down, `!` became truthy, `~` changed, `#` array length.
+Rules: `+` value went up, `-` down, `!` became truthy, `~` changed, `#` array length, `@` each new object
+in an array (e.g. `'bombs@': 'fall'`). `wrap: { burst: (x, y, n, kind) => ... }` hooks a global game function
+(most arcade games make explosions with `burst()`, so bombs hitting the ground, crashes and hits get sound there).
 A value is an effect name, `[name, { pitch, vol }]`, or a function. Change a game's sound in
 `tools/add-sound.py` and re-run it (safe to repeat).
 
@@ -36,10 +38,14 @@ The on/off button is placed next to `#btnMeny` automatically (or `data-anchor` /
 spooky · asylum · arcade · action · deepsea · cheeky · drive · retro · storm · march · folk · space ·
 idle · ninja · tavern · fighter · lounge — see `MOODS` in `ui/sound.js`. Add one with `BASound.mood(name, track)`.
 
+The loop is never played the same way twice in a row: every mood runs through an 8-phrase song form —
+plain, small melody variations, melody an octave up with busier hi-hats, breakdown with a drum fill,
+key change up a fourth (twice), low melody, and a fill back to the top.
+
 ## Effects
 
 `BASound.play(name)` — click, select, confirm, back, error, start, coin, pickup, powerup, cash, jump, land, step,
-shoot, laser, shotgun, swing, whoosh, hit, thud, hurt, explode, boom, splash, bubble, sonar, torpedo, thunder,
+shoot, laser, shotgun, fall (bomb whistle), impact (bomb hits the ground), debris, ricochet, rumble, ufo, growl, blab, baa, swing, whoosh, hit, thud, hurt, explode, boom, splash, bubble, sonar, torpedo, thunder,
 zap, alarm, warn, tick, beep, perfect, combo, miss, lifeLost, levelup, win, gameover, crowd, boo, drum, bell,
 flute, honk, engine, reload, spray, pop.
 

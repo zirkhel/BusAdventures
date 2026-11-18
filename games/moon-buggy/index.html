@@ -605,7 +605,9 @@ layout(); draw(); requestAnimationFrame(frame);
 <!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'space', playing: s => s && !s.paused && !s.over,
-    on: { 'air!': 'jump', 'shots#+': ['laser', { vol: 0.6 }], 'bonus+': 'coin', 'lives-': 'boom', 'over!': 'gameover' },
+    on: { 'air!': 'jump', 'shots@': ['laser', { vol: 0.6 }], 'bombs@': ['fall', { vol: 0.5 }], 'ufos@': 'ufo',
+          'bonus+': 'coin', 'lives-': 'lifeLost', 'over!': 'gameover' },
+    wrap: { burst: (x, y, n, kind) => { if (kind === 'boom') BASound.play(n >= 16 ? 'boom' : 'impact'); else BASound.play(n >= 8 ? 'explode' : 'hit', { pitch: 1.3, vol: 0.7 }); } },
     every: s => { if (s._air && !s.air) BASound.play('land'); s._air = s.air; } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>

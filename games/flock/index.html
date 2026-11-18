@@ -1301,8 +1301,9 @@ try {
 <!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'action', playing: s => s && !s.paused && !s.over,
-    on: { 'kol~': 'step', 'hugg!': 'swing', 'kills+': 'hit', 'perfects+': 'perfect',
-          'shotFlash!': 'shotgun', 'liv-': 'hurt', 'liv+': 'powerup', 'lightning!': 'thunder', 'over!': 'gameover' } });</script>
+    on: { 'kol~': 'step', 'hugg!': 'swing', 'kills+': 'hit', 'perfects+': 'perfect', 'z@': ['growl', { vol: 0.6 }],
+          'shotFlash!': 'shotgun', 'casings@': ['ricochet', { vol: 0.5 }], 'drop@': ['bell', { vol: 0.6 }], 'rifleAmmo-': 'shoot',
+          'liv-': 'hurt', 'liv+': 'powerup', 'lightning!': 'thunder', 'over!': 'gameover' } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-a="Enter" data-start="Escape"></script>
 </body>

@@ -355,7 +355,9 @@ window.onerror=(m,s,l)=>{ errBox.style.display='block'; errBox.textContent=m+' @
 <!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'deepsea', playing: s => s && !s.paused && !s.over,
-    on: { 'tubes-': 'torpedo', 'tubes+': 'reload', 'sunk+': 'boom', 'time+': 'powerup', 'over!': 'gameover' },
+    on: { 'tubes-': 'torpedo', 'tubes+': 'reload', 'ships@': ['honk', { pitch: 0.45, vol: 0.6 }], 'sunk+': 'splash',
+          'time+': 'powerup', 'over!': 'gameover' },
+    wrap: { burst: (x, y, n, kind) => { if (kind === 'boom') BASound.play(n >= 12 ? 'boom' : 'explode'); } },
     every: (s, dt) => { if (!s.over && !s.paused) { s._ping = (s._ping == null ? 2 : s._ping) - dt; if (s._ping <= 0) { BASound.play('sonar', { vol: 0.6 }); s._ping = 5; } } } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>

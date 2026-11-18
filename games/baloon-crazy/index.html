@@ -311,7 +311,7 @@ requestAnimationFrame(loop);
 <!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'retro', playing: s => s && !s.paused && !s.over,
-    on: { 'drop!': 'whoosh', 'stack#+': 'pickup', 'score+': 'coin', 'lives-': 'lifeLost', 'lvl+': 'levelup', 'over!': 'gameover' } });</script>
+    on: { 'drop!': 'fall', 'stack#+': 'pickup', 'score+': 'coin', 'msg~': ['beep', { vol: 0.5 }], 'lives-': 'lifeLost', 'lvl+': 'levelup', 'over!': 'gameover' } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>
 </body>

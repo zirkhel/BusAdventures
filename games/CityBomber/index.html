@@ -750,8 +750,18 @@ layout(); draw(); requestAnimationFrame(frame);
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'arcade', playing: s => s && !s.paused && !s.over,
     rate: s => 1 + Math.min(0.3, (s.wave - 1) * 0.05),
-    on: { 'bomb!': 'whoosh', 'score+': 'explode', 'flak#+': ['shoot', { pitch: 0.6, vol: 0.5 }],
-          'lives-': 'boom', 'wave+': 'levelup', 'over!': 'gameover' } });</script>
+    on: { 'bomb!': 'fall', 'flak@': ['shoot', { pitch: 0.5, vol: 0.5 }], 'shots@': 'shoot', 'score+': 'debris',
+          'lives-': 'lifeLost', 'wave+': 'levelup', 'over!': 'gameover' },
+    wrap: { burst: (x, y, n, kind) => {
+      if (kind === 'smoke' || kind === 'mist' || kind === 'jet' || kind === 'spray') return;
+      if (kind === 'dust') return BASound.play('impact');
+      if (kind === 'save') return BASound.play('powerup');
+      if (kind === 'bae') return BASound.play('baa');
+      if (kind === 'up') return BASound.play('pickup');
+      if (n >= 16) return BASound.play('boom');
+      if (kind === 'boom' || kind === 'crash' || n >= 10) return BASound.play('explode', { pitch: 1.25 - Math.min(n, 16) * 0.02 });
+      return BASound.play('hit', { pitch: 1.2, vol: 0.6 });
+    } } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-a="Space" data-b="f" data-x="z"></script>
 </body>

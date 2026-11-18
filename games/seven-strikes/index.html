@@ -1357,7 +1357,8 @@ try {
 <!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'storm', playing: s => s && !s.paused && !s.over,
-    on: { 'kol~': 'step', 'blitz!': 'thunder', 'truffet+': 'lifeLost', 'fjernBlitz!': ['thunder', { vol: 0.4, pitch: 0.7 }],
+    on: { 'kol~': 'step', 'varsler@': ['zap', { pitch: 0.5, vol: 0.4 }], 'nedslag@': 'impact', 'blitz!': 'thunder',
+          'truffet+': 'lifeLost', 'fjernBlitz!': ['rumble', { vol: 0.7 }], 'flair@': 'pickup',
           'dyttet!': 'thud', 'over!': 'gameover' } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>

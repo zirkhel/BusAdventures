@@ -819,7 +819,8 @@ try {
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'spooky', playing: s => s && !s.paused && !s.over,
     rate: s => 1 + Math.min(0.35, s.ramp * 0.025),
-    on: { 'pos~': 'tick', 'score+': ['pickup', { pitch: 1.2 }], 'reddet+': 'coin', 'tapt+': 'thud',
+    on: { 'pos~': 'tick', 'pending@': ['warn', { pitch: 0.7, vol: 0.4 }], 'fallers@': ['fall', { vol: 0.7 }],
+          'score+': ['pickup', { pitch: 1.2 }], 'reddet+': 'coin', 'tapt+': 'impact',
           'ramp+': 'levelup', 'over!': 'gameover' } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>

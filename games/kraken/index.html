@@ -1163,7 +1163,9 @@ try {
 <!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'deepsea', playing: s => s && !s.paused && !s.over,
-    on: { 'pos~': 'bubble', 'bar+': 'pickup', 'score+': 'cash', 'liv-': 'lifeLost', 'over!': 'gameover' },
+    on: { 'pos~': 'bubble', 'bar+': 'pickup', 'score+': 'cash', 'grip+': ['tick', { pitch: 0.6 }], 'kastet!': 'splash',
+          'druknet!': s => { for (let i = 0; i < 5; i++) setTimeout(() => BASound.play('bubble', { pitch: 0.7 + i * 0.15 }), i * 90); },
+          'liv-': 'lifeLost', 'over!': 'gameover' },
     every: (s, dt) => { if (!s.over && !s.paused && s.n && s.oksygen < s.n.luft * 0.25) { s._snd = (s._snd || 0) - dt; if (s._snd <= 0) { BASound.play('warn', { pitch: 0.8 }); s._snd = 0.8; } } } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>

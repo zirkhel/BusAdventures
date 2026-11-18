@@ -2044,9 +2044,10 @@ if(document.fonts&&document.fonts.load){
 
 <!-- SOUND:start -->
 <script src="../../ui/sound.js" data-button="tr"></script>
-<script>BASound.watch({ state: () => ({ state, score, health, crowd, special, enemyHit, grizzlyHit, enemyDown, fluteBoost }), mood: 'folk',
+<script>BASound.watch({ state: () => ({ state, score, health, crowd, special, enemyHit, grizzlyHit, enemyDown, fluteBoost, opponent, chants }), mood: 'folk',
     playing: s => s.state === 'fight' || s.state === 'special',
-    on: { 'enemyHit!': 'hit', 'grizzlyHit!': 'hurt', 'enemyDown!': 'crowd', 'fluteBoost!': () => [880, 1175, 1480].forEach((f, i) => BASound.tone({ f, dur: 0.22, type: 'sine', vol: 0.12, attack: 0.03, delay: i * 0.16 })),
+    on: { 'enemyHit!': 'hit', 'grizzlyHit!': 'hurt', 'enemyDown!': 'crowd', 'opponent+': 'start', 'chants@': ['crowd', { vol: 0.4, pitch: 1.2 }],
+          'fluteBoost!': () => [880, 1175, 1480].forEach((f, i) => BASound.tone({ f, dur: 0.22, type: 'sine', vol: 0.12, attack: 0.03, delay: i * 0.16 })),
           'state~': (s, v) => { if (v === 'special') BASound.play('perfect'); if (v === 'dead') BASound.play('gameover'); } } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-a="Space" data-x="f" data-y="Enter"></script>

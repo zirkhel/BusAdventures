@@ -484,7 +484,8 @@ layout(); draw(); requestAnimationFrame(frame);
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'action', playing: s => s && !s.paused && !s.over,
     rate: s => 1 + Math.min(0.3, (s.wave - 1) * 0.04),
-    on: { 'outgoing#+': 'shoot', 'blasts#+': 'explode', 'wave+': 'levelup', 'over!': 'gameover' },
+    on: { 'outgoing@': 'shoot', 'incoming@': ['fall', { vol: 0.35, pitch: 0.8 }], 'wave+': 'levelup', 'over!': 'gameover' },
+    wrap: { blast: (x, y, r) => BASound.play('explode', { pitch: r > 30 ? 0.8 : 1.1 }), burst: (x, y, n, kind) => { if (kind === 'spark') BASound.play('impact'); } },
     every: s => { const c = s.cities.filter(x => x.alive).length; if (s._cities != null && c < s._cities) BASound.play('boom'); s._cities = c; } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js" data-lstick="cursor"></script>

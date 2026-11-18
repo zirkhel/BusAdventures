@@ -326,8 +326,9 @@ layout();draw();requestAnimationFrame(frame);
 <script src="../../ui/sound.js" data-button="auto"></script>
 <script>BASound.watch({ state: () => (typeof S !== 'undefined' ? S : null), mood: 'arcade', playing: s => s && !s.paused && !s.over,
     rate: s => 1 + Math.min(0.3, (s.wave - 1) * 0.04),
-    on: { 'bullets#+': ['laser', { vol: 0.6 }], 'score+': 'pop', 'flash!': 'explode', 'perk!': 'powerup',
-          'lives-': 'lifeLost', 'wave+': 'levelup', 'over!': 'gameover' } });</script>
+    on: { 'bullets#+': ['laser', { vol: 0.6 }], 'bombs@': ['fall', { vol: 0.5 }], 'crates@': ['bell', { vol: 0.6 }], 'ufo!': 'ufo',
+          'fx@': (s, f) => ({ blast: 'explode', pop: ['pop', { vol: 0.7 }], shatter: 'zap', spark: ['hit', { pitch: 1.3, vol: 0.5 }], zap: 'zap', flare: 'whoosh' })[f.kind],
+          'perk!': 'powerup', 'lives-': 'lifeLost', 'wave+': 'levelup', 'over!': 'gameover' } });</script>
 <!-- SOUND:end -->
 <script src="../../ui/gamepad.js"></script>
 </body>

@@ -146,6 +146,15 @@
     engine:   (p, v) => tone({ f: 70 * p, f2: 95 * p, dur: 0.3, vol: 0.1 * v, type: 'sawtooth', lp: 400 }),
     reload:   (p, v) => { noise({ freq: 3000 * p, dur: 0.04, vol: 0.15 * v, q: 3 }); noise({ freq: 2200 * p, dur: 0.05, vol: 0.15 * v, q: 3, delay: 0.12 }); },
     spray:    (p, v) => noise({ freq: 3500 * p, dur: 0.3, vol: 0.12 * v, ft: 'highpass', attack: 0.03 }),
+    fall:     (p, v) => tone({ f: 1500 * p, f2: 420 * p, dur: 0.7, vol: 0.06 * v, type: 'sine', attack: 0.05 }),
+    impact:   (p, v) => { noise({ freq: 900 * p, f2: 90, dur: 0.6, vol: 0.4 * v, q: 0.6, ft: 'lowpass' }); tone({ f: 85 * p, f2: 30, dur: 0.45, vol: 0.38 * v, type: 'sine' }); noise({ freq: 2500, dur: 0.25, vol: 0.12 * v, ft: 'highpass', delay: 0.08 }); },
+    debris:   (p, v) => { for (let i = 0; i < 5; i++) noise({ freq: (500 + Math.random() * 1500) * p, dur: 0.05, vol: 0.12 * v, q: 3, delay: 0.05 + i * (0.04 + Math.random() * 0.05) }); },
+    ricochet: (p, v) => tone({ f: 2600 * p, f2: 1200 * p, dur: 0.18, vol: 0.06 * v, type: 'sine' }),
+    baa:      (p, v) => { const o = { f: 420 * p, f2: 380 * p, dur: 0.45, vol: 0.08 * v, type: 'sawtooth', lp: 1500, attack: 0.03 }; tone(o); tone(Object.assign({}, o, { f: 425 * p, vol: 0.05 * v })); },
+    rumble:   (p, v) => noise({ freq: 160 * p, f2: 60, dur: 0.8, vol: 0.3 * v, q: 0.7, ft: 'lowpass', attack: 0.05 }),
+    blab:     (p, v) => { for (let i = 0; i < 6; i++) tone({ f: (180 + Math.random() * 160) * p, dur: 0.06, vol: 0.06 * v, type: 'square', lp: 1600, delay: i * 0.07 }); },
+    ufo:      (p, v) => { for (let i = 0; i < 4; i++) tone({ f: 700 * p, f2: 1100 * p, dur: 0.12, vol: 0.06 * v, type: 'sine', delay: i * 0.12 }); },
+    growl:    (p, v) => tone({ f: 90 * p, f2: 70 * p, dur: 0.35, vol: 0.12 * v, type: 'sawtooth', lp: 500, attack: 0.04 }),
     pop:      (p, v) => { tone({ f: 600 * p, f2: 120 * p, dur: 0.06, vol: 0.2 * v, type: 'square' }); noise({ freq: 2000, dur: 0.05, vol: 0.15 * v }); },
   };
   function play(name, o) {
@@ -312,6 +321,19 @@
     node.connect(g).connect(musBus); o.start(t); o.stop(t + dur + 0.35);
   }
 
+  // Song form: the loop is played as an 8-phrase arrangement so it never sits still —
+  // plain, varied, octave lift, breakdown with drum fill, key change up a fourth, low lead, fill.
+  const ARRANGE = [
+    {},
+    { vary: true },
+    { leadOct: 1, hat: true },
+    { breakdown: true, fill: true },
+    { key: 5 },
+    { key: 5, leadOct: 1, vary: true, hat: true },
+    { leadOct: -1, vary: true },
+    { fill: true },
+  ];
+
   const seq = {
     track: null, parsed: null, step: 0, nextT: 0, timer: null, mult: 1, len: 0,
     play(t) {
@@ -320,7 +342,12 @@
       if (this.track === track && this.timer) return; // already playing
       this.stop(true);
       this.track = track; this.mult = 1; this.step = 0;
-      this.parsed = track.parts.map(p => Object.assign({}, p, parseNotes(p.notes)));
+      this.parsed = track.parts.map((p, i) => {
+        const q = Object.assign({}, p, parseNotes(p.notes));
+        q.isLead = i > 0 && (p.env === 'lead' || p.env === 'bell' || p.role === 'lead');
+        q.avg = q.list.length ? q.list.reduce((a, n) => a + n.midi, 0) / q.list.length : 60;
+        return q;
+      });
       this.len = Math.max.apply(null, this.parsed.map(p => p.len));
       this.resync();
       this.timer = setInterval(() => this.tick(), 30);
@@ -338,15 +365,36 @@
       if (this.nextT < ac.currentTime - 0.25) this.resync();
       const stepDur = 60 / (this.track.bpm * this.mult) / 2;
       while (this.nextT < ac.currentTime + 0.12) {
-        const i = this.step % this.len;
+        const i = this.step % this.len, phrase = Math.floor(this.step / this.len);
+        const arr = ARRANGE[phrase % ARRANGE.length];
         const sw = (this.track.swing && i % 2 === 1) ? stepDur * this.track.swing : 0;
         const t = this.nextT + sw;
-        for (const p of this.parsed) {
-          const li = i % p.len;
-          for (const n of p.list) if (n.step === li) voice(p, n.midi, t, (n.end - n.step) * stepDur);
+        this.parsed.forEach((p, pi) => {
+          const li = i % p.len, isBass = pi === 0;
+          if (arr.breakdown && p.isLead) return;                    // breakdown: melody rests
+          if (arr.breakdown && isBass && li % 2 === 1) return;      // ...and the bass thins out
+          let shift = arr.key || 0;
+          if (p.isLead && arr.leadOct > 0 && p.avg < 82) shift += 12;
+          if (p.isLead && arr.leadOct < 0 && p.avg > 70) shift -= 12;
+          for (const n of p.list) if (n.step === li) {
+            let m = n.midi + shift;
+            if (arr.vary && p.isLead) {                             // small live variations
+              const r = Math.random();
+              if (r < 0.1) continue;
+              if (r < 0.22) m += (m < 80 ? 12 : -12);
+            }
+            voice(p, m, t, (n.end - n.step) * stepDur);
+          }
+        });
+        const dr = this.track.drums || {}, hasDrums = Object.keys(dr).length > 0;
+        const fill = arr.fill && i >= this.len - 4;
+        for (const k in dr) {
+          const pat = dr[k];
+          if (arr.breakdown && k !== 'kick' && !fill) continue;
+          if (pat[i % pat.length] === 'x') drum(k, t, 1);
         }
-        const dr = this.track.drums || {};
-        for (const k in dr) { const pat = dr[k]; if (pat[i % pat.length] === 'x') drum(k, t, 1); }
+        if (arr.hat && hasDrums) drum('hat', t, 0.7);
+        if (fill && hasDrums) { drum('snare', t, 0.5 + (i - (this.len - 4)) * 0.2); if (i >= this.len - 2) drum('tom', t, 0.8); }
         this.step++; this.nextT += stepDur;
       }
     },
@@ -398,16 +446,28 @@
   //   playing: s => s && !s.paused && !s.over,
   //   rate: s => 1 + s.wave * 0.02,           // optional tempo multiplier
   //   on: { 'score+': 'coin', 'liv-': 'lifeLost', 'over!': 'gameover', 'shots#+': 'shoot',
-  //         'kol~': 'step', 'perk!': 'powerup' },  // + up, - down, ! becomes truthy, ~ any change, # array length
+  //         'kol~': 'step', 'perk!': 'powerup',
+  //         'fx@': (s, item) => item.kind === 'blast' ? 'explode' : null },  // + up, - down, ! truthy, ~ change, # length, @ each new array item
+  //   wrap: { burst: (x, y, n, kind) => BASound.play(...) },  // hook a global game function
   //   every: (s, dt, prev) => {}              // optional custom per-frame hook
   // })
   // A value can be a sound name, [name, {pitch, vol}], or a function (s, delta) => void.
   function watch(cfg) {
     let obj, prev = {}, lastPlay = {}, lastT = 0;
     const rules = Object.keys(cfg.on || {}).map(k => {
-      const m = /^(.*?)(#?)([+\-!~])$/.exec(k);
-      return { key: k, path: m[1], len: !!m[2], op: m[3], act: cfg.on[k] };
+      const m = /^(.*?)(#?)([+\-!~@])$/.exec(k);
+      return { key: k, path: m[1], len: !!m[2], op: m[3], act: cfg.on[k], seen: new WeakSet() };
     });
+    // wrap: { burst: (x, y, n, kind) => {...} } — run a sound hook whenever the game calls that global function
+    if (cfg.wrap) setTimeout(() => {
+      for (const name in cfg.wrap) {
+        const orig = window[name]; if (typeof orig !== 'function') continue;
+        const hook = cfg.wrap[name];
+        window[name] = function () { try { hook.apply(null, arguments); } catch (e) {} return orig.apply(this, arguments); };
+      }
+    }, 0);
+    const markSeen = (s, r) => { const arr = r.op === '@' ? getRaw(s, r) : null; if (arr && arr.forEach) arr.forEach(x => { if (x && typeof x === 'object') r.seen.add(x); }); };
+    const getRaw = (s, r) => { let v = s; for (const part of r.path.split('.')) { if (v == null) return undefined; v = v[part]; } return v; };
     const get = (s, r) => {
       let v = s;
       for (const part of r.path.split('.')) { if (v == null) return undefined; v = v[part]; }
@@ -415,7 +475,7 @@
     };
     const fire = (r, s, d) => {
       const a = r.act, now = performance.now();
-      if (typeof a === 'function') { try { a(s, d); } catch (e) {} return; }
+      if (typeof a === 'function') { try { const out = a(s, d); if (typeof out === 'string') play(out); else if (Array.isArray(out)) play(out[0], out[1]); } catch (e) {} return; }
       const [name, o] = Array.isArray(a) ? a : [a, null];
       if (lastPlay[name] && now - lastPlay[name] < 45) return;
       lastPlay[name] = now; play(name, o);
@@ -424,9 +484,14 @@
       requestAnimationFrame(loop);
       let s; try { s = cfg.state(); } catch (e) { s = null; }
       const dt = lastT ? Math.min(0.1, (t - lastT) / 1000) : 0; lastT = t;
-      if (s !== obj || !s) { obj = s; prev = {}; if (s) rules.forEach(r => { prev[r.key] = get(s, r); }); }
+      if (s !== obj || !s) { obj = s; prev = {}; if (s) rules.forEach(r => { prev[r.key] = get(s, r); markSeen(s, r); }); }
       else {
         for (const r of rules) {
+          if (r.op === '@') {                                   // each new object in the array
+            const arr = getRaw(s, r);
+            if (arr && arr.forEach) arr.forEach(x => { if (x && typeof x === 'object' && !r.seen.has(x)) { r.seen.add(x); fire(r, s, x); } });
+            continue;
+          }
           const v = get(s, r), p = prev[r.key];
           if (r.op === '+' && typeof v === 'number' && typeof p === 'number' && v > p) fire(r, s, v - p);
           else if (r.op === '-' && typeof v === 'number' && typeof p === 'number' && v < p) fire(r, s, p - v);
