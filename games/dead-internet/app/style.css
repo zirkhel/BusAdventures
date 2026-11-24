@@ -526,7 +526,8 @@ button.bar-title { text-align: left; }
 /* ── News apps (template "news": The Daily Record, Unfiltered) ─────────────── */
 .np-tile { font-family: Georgia, "Times New Roman", serif; font-weight: 700; font-size: 24px; letter-spacing: -.02em; }
 .np-tile.np-record { background: linear-gradient(160deg, #fbfaf6, #e7e2d6); color: #121212; }
-.np-tile.np-unfiltered { background: linear-gradient(160deg, #1c1c1c, #000); color: #e6ff3a; font-family: Impact, "Arial Black", sans-serif; font-size: 22px; letter-spacing: .02em; }
+/* The black masthead vanished on the dark home screen: the tile uses the acid-yellow app icon instead. */
+.np-tile.np-unfiltered { background: #d8f21a url("../assets/images/logo-unfiltered-icon.svg") center / 100% 100% no-repeat; color: transparent; font-size: 0; }
 .np-bar { gap: 4px; }
 .np-bar .np-logo, .np-bar .np-title { flex: 1; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .np-logo.np-record, .np-title.np-record { font-family: Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 700; color: #121212; }
