@@ -4,6 +4,7 @@
 
 import { h, icon, fmtDate, onLongPress } from "./ui.js";
 import { img, avatar } from "./media.js";
+import { publicView } from "../core/site-view.js";
 
 const PHOTO_RE = /\[(?:photo|image|screenshot)[^\]]*\]/i;
 
@@ -46,6 +47,7 @@ function who(phone, text, accId, tag = "span") {
  * @param {{context?:string}} [o]
  */
 export function renderArtifact(phone, v, o = {}) {
+  v = publicView(v);
   const g = phone.g, w = g.w;
   const a = w.artifacts.get(v.id);
   const acc = v.author ? w.accounts.get(v.author) : null;
@@ -210,6 +212,7 @@ function comments(phone, v) {
 
 /** Locked page with a sign-in form. */
 export function renderLogin(phone, v, onDone) {
+  v = publicView(v);
   const user = h("input", { type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false", placeholder: "Username" });
   const pass = h("input", { type: "password", autocomplete: "off", placeholder: "Password" });
   const err = h("div.form-err");
@@ -226,6 +229,7 @@ export function renderLogin(phone, v, onDone) {
 
 /** Page that is gone, deleted or never existed. */
 export function renderGone(phone, v, onCached) {
+  v = publicView(v);
   const has = (v.cachedVersions || []).length > 0;
   const msg = v.error === "deleted" ? "This content has been deleted." :
     v.error === "gone" ? "This page isn't available. It may have been removed, or the account was suspended." :
