@@ -8,12 +8,11 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 
 **Status**
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Alle 61 grafikkelementer er godkjent.
-- Casebook steg 0 (informasjonslekkasjer) er ferdig i PR #68, røyktestet i nettleser, og venter på Anders' ja til merge.
-- PR #69 (lesbart Unfiltered-ikon, B06-dato) er laget i en annen tråd og venter også.
+- Casebook steg 0 (informasjonslekkasjer) er ferdig og merget (PR #68). Unfiltered-ikonet og B06-datoen er merget (PR #69).
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
 - Nettstedene er godkjent som designretning ([docs/WEBSITES.md](docs/WEBSITES.md)), men skal ikke implementeres før veikartets punkt 5.
 
-**Neste steg:** Casebook steg 1 (se under) når PR #68 er merget. Deretter steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
+**Neste steg:** Casebook steg 1 (se under). Deretter steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
