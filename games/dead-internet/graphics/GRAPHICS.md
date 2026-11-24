@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 29.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 30.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -55,7 +55,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | IMG17 | `assets/images/img17-iris-profile.webp` | 512×512 | profile | required | final file | A08 | face: iris | Woman, 26, half her face hidden behind a speckled ceramic mug, messy bun, small gold disc earring, two silver rings, black knit sweater, café window light. |
 | IMG18 | `assets/images/img18-paul-profile.webp` | 512×512 | profile | required | final file | A52 |  | Man, 47, at a press doorstep: dark swept-back hair, stubble, navy suit and dark tie, microphones in the foreground, the NORTHGATE DEVELOPMENT sign behind him. Real, not synthetic: pores, small skin flaws. |
 | IMG19 | `assets/images/img19-renee-avatar.webp` | 512×512 | profile | required | final file | A10 |  | Same file as AVA_BRIGHTLINE: the Brightline sunrise mark in amber with BRIGHTLINE / MEDIA in white on a navy-to-amber gradient. No face. |
-| IMG20 | `assets/images/img20-mike-profile.webp` | 512×512 | profile | required | placeholder | A54 |  | Synthetic dad, 40s, at a grill. Slightly too perfect. |
+| IMG20 | `assets/images/img20-mike-profile.webp` | 512×512 | profile | required | final file | A54 |  | Synthetic dad, 40s, at a backyard grill at golden hour: ginger beard, glasses, red-and-navy flannel, dark apron, arms crossed. Slightly too perfect; the watch sits oddly on the crossed arms. Must not resemble Calvin (IMG06S). |
 | IMG21 | `assets/images/img21-pat-profile.webp` | 512×512 | profile | required | final file | A55 |  | From behind: a grey-haired person in a cap and olive rain jacket walks a golden retriever along a wet, foggy harbour promenade at dusk, railings, benches, lit lamps, harbour cranes in the fog. Face not visible. |
 | IMG22 | `assets/images/img22-lindsay-profile.webp` | 512×512 | profile | required | final file | A56 |  | Real woman in her 30s, 2019 evening selfie at home: messy bun, freckles, dark hoodie, a tabby cat with white paws on her shoulder, lamp light, dark window with city lights. Slightly dated phone quality. |
 | IMG23 | `assets/images/img23-priya-profile.webp` | 512×512 | profile | required | final file | A57 |  | Woman, 30s, children's librarian: dark curly hair up, nose stud, striped knitted cardigan, lanyard, chin on hand, picture-book shelves and a fox poster behind her. Real, warm library light. |

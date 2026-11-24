@@ -108,7 +108,8 @@
  },
  "IMG20": {
   "method": "generate",
-  "prompt": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers"
+  "prompt": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers",
+  "notes": "Done (Anders, ComfyUI, second version). The first version looked like Calvin and was replaced. No tongs in this one; the subtle tell is the watch on the crossed arms."
  },
  "IMG21": {
   "method": "generate",

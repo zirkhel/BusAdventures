@@ -1,18 +1,5 @@
 [
  {
-  "id": "IMG20",
-  "method": "generate",
-  "positive": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 970617814,
-  "out": "assets/images/img20-mike-profile.webp",
-  "dependsOn": []
- },
- {
   "id": "NIMG0001",
   "method": "generate",
   "positive": "press photograph on a rainy afternoon, a dense crowd of people with umbrellas on a harbour pier, a fish-and-chips stall at the right edge, in the bottom-left corner next to the stall an empty patch of wet boards with a single lone blue umbrella, grey sky, documentary news photo, realistic smartphone photo, natural light, slight sensor noise, no text overlays, no real brands",
