@@ -5,10 +5,12 @@
 // Rule:   { id, when: { event, match? }, if?, do: [effects], once?: true, case? }
 //         A rule from a mystery pack has `case`: it only runs once that case has started, and
 //         day.start gets `caseDay` (1 on the day the case started) to match on.
-// Events: game.start, day.start {day}, search {terms}, artifact.open {artifact, version},
+// Events: game.start, day.start {day}, search {query, terms, platform}, artifact.open {artifact, version},
 //         message.send {to, kind, topic?, artifact?, option?}, evidence.save {artifact},
 //         image.search {image, flip}, login {site}, report.published {channel, case, claims},
-//         case.start {case}
+//         case.start {case}, video.view {artifact, platform}, video.like {artifact},
+//         feed.scroll {platform, tab, offset}. Feed events are for mood only: the validator
+//         lets their rules send messages and notifications, nothing with consequences.
 // match:  each key must equal the payload value; an array means "any of"; if the payload
 //         value is an array, it must contain the expected value.
 //

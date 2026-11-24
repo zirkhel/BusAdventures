@@ -9,7 +9,12 @@ import { CONDITION_KEYS } from "../../core/conditions.js";
 import { EFFECT_KEYS } from "../../core/rules.js";
 import { explore } from "./explorer.mjs";
 
-const EVENTS = new Set(["game.start", "day.start", "search", "artifact.open", "message.send", "evidence.save", "image.search", "login", "report.published"]);
+const EVENTS = new Set(["game.start", "day.start", "search", "artifact.open", "message.send", "evidence.save", "image.search", "login", "report.published",
+  "case.start", "video.view", "video.like", "feed.scroll"]);
+// Watching, liking and scrolling cost nothing and change nothing that matters (proposal §6.6).
+const FEED_EVENTS = new Set(["video.view", "video.like", "feed.scroll"]);
+const MOOD_EFFECTS = new Set(["message", "notify", "later"]);
+const VIDEO_TRANSFORMS = new Set(["reupload", "crop", "mirror", "speed", "reencode", "trim", "overlay"]);
 const INDEX = new Set(["full", "weak", "exact", "none", "cache"]);
 const TRANSFORMS = new Set(["crop", "mirror", "recolor", "compress", "composite", "resize"]);
 const TRUTH = new Set(["facts", "operatedBy", "notHuman", "relation"]);
@@ -159,12 +164,30 @@ export function validateWorld(raw, opts = {}) {
     }
   }
 
+  // Unresolved canon (no operatedBy, isHuman null) stays open: no claim of a playable mystery may rest on it.
+  for (const c of w.claims.values()) {
+    const o = ownerOf(c.id);
+    if (!o || o.status === "seed") continue;
+    for (const t of arr(c.match)) {
+      const p = w.predicates.get(t.predicate);
+      const acc = w.accounts.get(p?.truth === "operatedBy" ? t.object : t.subject);
+      if ((p?.truth === "operatedBy" || p?.truth === "notHuman") && acc && acc.operatedBy === undefined)
+        err(`claim ${c.id}`, `depends on unresolved canon: nobody is said to operate ${acc.id}`);
+      const ent = w.entities.get(t.subject);
+      if (p?.truth === "notHuman" && !acc && ent && ent.isHuman == null)
+        err(`claim ${c.id}`, `depends on unresolved canon: ${ent.id} has isHuman null`);
+    }
+  }
+
   // ── Entities and accounts ─────────────────────────────────────────────────
   for (const e of w.entities.values()) for (const r of arr(e.relations)) if (!isRef(r.to)) err(`entity ${e.id}`, `relation to unknown ${r.to}`);
   for (const a of w.accounts.values()) {
     if (!w.platforms.has(a.platform)) err(`account ${a.id}`, `unknown platform ${a.platform}`);
-    if (!isEntity(a.claimsToBe)) err(`account ${a.id}`, `claimsToBe unknown ${a.claimsToBe}`);
-    if (!isEntity(a.operatedBy)) err(`account ${a.id}`, `operatedBy unknown ${a.operatedBy}`);
+    // A light account (pool) has no history and may leave claimsToBe/operatedBy out: unresolved canon.
+    const light = a.pool != null;
+    if (!(light && a.claimsToBe == null) && !isEntity(a.claimsToBe)) err(`account ${a.id}`, `claimsToBe unknown ${a.claimsToBe}`);
+    if (!(light && a.operatedBy === undefined) && !isEntity(a.operatedBy)) err(`account ${a.id}`, `operatedBy unknown ${a.operatedBy}`);
+    if (light && !a.handle) err(`account ${a.id}`, "light account without handle");
     if (a.avatar && !w.images.has(a.avatar)) err(`account ${a.id}`, `unknown avatar ${a.avatar}`);
     for (const h of arr(a.history)) if (h.by != null && !isEntity(h.by)) err(`account ${a.id}`, `history: unknown ${h.by}`);
   }
@@ -184,6 +207,45 @@ export function validateWorld(raw, opts = {}) {
     if (!w.imageUse.has(img.id) && !arr([...w.accounts.values()].map(a => a.avatar)).includes(img.id)) warn(`image ${img.id}`, "not used by any artifact or account");
     layerOk(`image ${img.id}`, img.layer, null, arr(img.supports));
   }
+
+  // ── Videos and transcripts ────────────────────────────────────────────────
+  for (const v of w.videos.values()) {
+    const where = `video ${v.id}`;
+    if (v.poster && !w.images.has(v.poster)) err(where, `unknown poster ${v.poster}`);
+    if (v.derivedFrom && !w.videos.has(v.derivedFrom)) err(where, `derivedFrom unknown ${v.derivedFrom}`);
+    for (const t of arr(v.transforms)) if (!VIDEO_TRANSFORMS.has(t)) err(where, `unknown transform ${t}`);
+    if (v.script && !w.scripts.has(v.script)) err(where, `unknown script ${v.script}`);
+    if (!v.script && v.transcript == null) warn(where, "no script or transcript: Show transcript will be empty");
+    for (const f of arr(v.frames)) {
+      if (!w.images.has(f.image)) err(where, `frame at ${f.t}s: unknown image ${f.image}`);
+      if (v.duration != null && !(f.t >= 0 && f.t <= v.duration)) err(where, `frame at ${f.t}s is outside the clip (${v.duration}s)`);
+    }
+    for (const sc of arr(v.scenes)) for (const d of arr(sc.depicts)) if (!isRef(d)) err(where, `scene depicts unknown ${d}`);
+    let cur = v, seen = new Set();
+    while (cur?.derivedFrom) { if (seen.has(cur.id)) { err(where, "derivation cycle"); break; } seen.add(cur.id); cur = w.videos.get(cur.derivedFrom); }
+  }
+  for (const sc of w.scripts.values()) if (typeof sc.text !== "string" || !sc.text.trim()) err(`script ${sc.id}`, "no text");
+
+  // ── Media fields on artifacts (articles, posts, clips) ───────────────────
+  const referenced = new Set(); // artifacts linked from other content (related, refs)
+  for (const a of w.artifacts.values()) for (const x of [a, ...a.versions]) for (const id of [...arr(x.related), ...arr(x.refs)]) if (typeof id === "string" && w.artifacts.has(id)) referenced.add(id);
+  const checkMedia = (where, a, x) => {
+    if (x.video && !w.videos.has(x.video)) err(where, `unknown video ${x.video}`);
+    for (const id of arr(x.related)) if (!w.artifacts.has(id)) err(where, `related: unknown artifact ${id}`);
+    for (const b of arr(x.byline)) if (/^acc_/.test(b) && !isAccount(b)) err(where, `byline: unknown account ${b}`);
+    for (const c of arr(x.corrections)) if (!c?.text) err(where, "correction without text");
+    if (x.sponsored && !isEntity(x.sponsored.by)) err(where, `sponsored by unknown ${x.sponsored.by}`);
+    for (const id of arr(x.covers)) if (!isRef(id)) err(where, `covers unknown ${id}`);
+    const sections = w.platforms.get(a.platform)?.app?.sections;
+    if (x.section && sections && !sections.includes(x.section)) err(where, `section ${x.section} is not a section of ${a.platform}`);
+    const cids = new Set(arr(x.comments).map(c => c.id));
+    if (cids.size !== arr(x.comments).length) err(where, "duplicate comment id");
+    for (const c of arr(x.comments)) {
+      if (!isAccount(c.account)) err(where, `comment ${c.id}: unknown account ${c.account}`);
+      if (c.replyTo && !cids.has(c.replyTo)) err(where, `comment ${c.id}: reply to unknown comment ${c.replyTo}`);
+      if (c.deletedIn && !a.versions.some(v => v.id === c.deletedIn)) err(where, `comment ${c.id}: deletedIn unknown version ${c.deletedIn}`);
+    }
+  };
 
   // ── Artifacts ─────────────────────────────────────────────────────────────
   const start = w.meta.startDate;
@@ -207,6 +269,7 @@ export function validateWorld(raw, opts = {}) {
     for (const i of arr(a.images)) if (!w.images.has(i)) err(where, `unknown image ${i}`);
     for (const m of [...arr(a.mentions), ...a.versions.flatMap(v => arr(v.mentions))]) if (!isRef(m)) err(where, `mentions unknown ${m}`);
     checkCond(where, a.visibleIf); checkCond(where, a.access);
+    checkMedia(where, a, a); for (const v of a.versions) checkMedia(`${where} version ${v.id}`, a, v);
     if (a.access && !a.loginSite) warn(where, "access condition but no loginSite");
     // Universe content (background, filler) may become evidence, but only when the mystery says so.
     const sup = [...new Set([...arr(a.supports), ...a.versions.flatMap(v => arr(v.supports))])];
@@ -290,6 +353,12 @@ export function validateWorld(raw, opts = {}) {
     if (ruleIds.has(r.id)) err(where, "duplicate rule id");
     ruleIds.add(r.id);
     if (!EVENTS.has(r.when?.event)) err(where, `unknown event ${r.when?.event}`);
+    if (FEED_EVENTS.has(r.when?.event)) {
+      const bad = [];
+      const scan = effs => { for (const e of arr(effs)) for (const [k, v] of Object.entries(e)) { if (!MOOD_EFFECTS.has(k)) bad.push(k); if (k === "later") scan(v.do); if (k === "message" && (arr(v.attach).length || arr(v.supports).length)) bad.push("message with attach/supports"); } };
+      scan(r.do);
+      if (bad.length) err(where, `${r.when.event} may only send messages and notifications, not ${[...new Set(bad)].join(", ")}`);
+    }
     if (r.when?.match?.to && !arr(r.when.match.to).every(id => w.characters.has(id))) err(where, `match.to: unknown character ${r.when.match.to}`);
     checkCond(where, r.if); checkEffects(where, r.do); collectReveals(r.do);
   }
@@ -302,6 +371,19 @@ export function validateWorld(raw, opts = {}) {
     }
   }
   for (const a of w.artifacts.values()) if (a.hidden && !revealed.has(a.id)) err(`artifact ${a.id}`, "hidden, and nothing ever reveals it");
+  // No evidence only by scrolling: everything that supports a claim of a playable mystery must also
+  // be reachable by search, through its author's profile, a link from other content, or being given.
+  const given = new Set([...revealed, ...arr(w.meta.startArtifacts), ...[...w.mysteries.values()].flatMap(m => arr(m.start?.artifacts)),
+    ...[...w.characters.values()].flatMap(c => arr(c.has))]);
+  for (const a of w.artifacts.values()) {
+    const sup = [...new Set([...arr(a.supports), ...a.versions.flatMap(v => arr(v.supports))])].filter(c => { const o = ownerOf(c); return o && o.status !== "seed"; });
+    if (!sup.length) continue;
+    const profile = a.author && w.profileOf.get(a.author);
+    const viaProfile = profile && (w.artifacts.get(profile).index || "full") !== "none";
+    if ((a.index || "full") !== "none" || viaProfile || referenced.has(a.id) || given.has(a.id)) continue;
+    err(`artifact ${a.id}`, `supports ${sup.join(", ")} but can only be found in a feed (no search, profile, link or giver)`);
+  }
+  for (const m of w.mysteries.values()) for (const p of arr(m.platforms)) if (!w.platforms.has(p)) err(`mystery ${m.id}`, `platforms: unknown platform ${p}`);
 
   // ── Per mystery: source independence, reachability, blocking ─────────────
   const allRuns = {};

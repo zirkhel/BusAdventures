@@ -68,7 +68,42 @@ export function resolveVersion(a, v) {
     supports: v.supports ?? a.supports ?? [],
     mentions: [...new Set([...asArray(a.mentions), ...asArray(v.mentions)])],
     source: v.source ?? a.source ?? a.id,
+    // Media fields (all optional). covers and pool are authoring data and never shown.
+    section: v.section ?? a.section ?? null,
+    byline: asArray(v.byline ?? a.byline),
+    corrections: asArray(v.corrections ?? a.corrections),
+    related: asArray(v.related ?? a.related),
+    refs: asArray(v.refs ?? a.refs),
+    sponsored: v.sponsored ?? a.sponsored ?? null,
+    comments: commentsIn(a, v),
+    video: v.video ?? a.video ?? null,
+    stats: v.stats ?? a.stats ?? null,
   };
+}
+
+/** Comments visible in a version: a comment with deletedIn is gone from that version on. */
+function commentsIn(a, v) {
+  const at = a.versions.indexOf(v);
+  return asArray(v.comments ?? a.comments).filter(c => {
+    if (!c.deletedIn) return true;
+    const d = a.versions.findIndex(x => x.id === c.deletedIn);
+    return d < 0 || at < d;
+  }).map(({ deletedIn, ...c }) => c);
+}
+
+/** What the player sees of a video: never its scenes, location, source or script id. */
+export function videoView(w, id) {
+  const v = w.videos.get(id);
+  if (!v) return null;
+  return { id: v.id, duration: v.duration ?? null, poster: v.poster ?? null, frames: asArray(v.frames).map(f => ({ t: f.t, image: f.image })),
+    audio: v.audio ?? null, meta: v.meta ?? null };
+}
+
+/** Transcript of a clip: the video's own text, or its script's. */
+export function transcriptOf(w, videoId) {
+  const v = w.videos.get(videoId);
+  if (!v) return "";
+  return v.transcript ?? w.scripts.get(v.script)?.text ?? "";
 }
 
 /**
@@ -86,7 +121,7 @@ export function viewArtifact(g, id, opts = {}) {
     const live = isVisible(g, id) ? liveVersionId(g, a) : null;
     const ok = v && (v.id === live || cachedVersions(g, a).some(c => c.id === v.id));
     if (!ok) return { ...base, error: "not_available" };
-    return { ...base, versionId: v.id, cached: v.id !== live, ...resolveVersion(a, v) };
+    return { ...base, versionId: v.id, cached: v.id !== live, ...media(g, resolveVersion(a, v)) };
   }
   if (!isVisible(g, id)) {
     const cached = cachedVersions(g, a);
@@ -101,7 +136,13 @@ export function viewArtifact(g, id, opts = {}) {
     return { ...base, error: "deleted", cachedVersions: cached.map(v => v.id) };
   }
   const v = getVersion(a, vid);
-  return { ...base, versionId: vid, cached: false, cachedVersions: cachedVersions(g, a).map(c => c.id), ...resolveVersion(a, v) };
+  return { ...base, versionId: vid, cached: false, cachedVersions: cachedVersions(g, a).map(c => c.id), ...media(g, resolveVersion(a, v)) };
+}
+
+/** Player-facing media: the video object (without hidden canon) and its transcript. */
+function media(g, r) {
+  if (!r.video) return r;
+  return { ...r, video: videoView(g.w, r.video), transcript: transcriptOf(g.w, r.video) };
 }
 
 /** Supports (claim ids) of a specific version, or of the live/latest one. */

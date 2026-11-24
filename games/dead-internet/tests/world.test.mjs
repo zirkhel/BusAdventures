@@ -10,6 +10,7 @@ import { SCENARIOS } from "../tools/lib/scenarios.mjs";
 import { explore } from "../tools/lib/explorer.mjs";
 import { Game, replay } from "../core/game.js";
 import { serialize, deserialize } from "../core/save.js";
+import { SAVE_VERSION } from "../core/state.js";
 
 const world = await loadWorld();
 
@@ -215,7 +216,7 @@ test("version 1 saves are migrated: mentions become encountered, not known", asy
   old.saveVersion = 1; delete old.encountered; delete old.saved;
   for (const id of ["dana", "acc_danareyes", "kestrel", "lou"]) old.known[id] = true;
   const { state } = deserialize(world, serialize(old));
-  assert.equal(state.saveVersion, 5);
+  assert.equal(state.saveVersion, SAVE_VERSION);
   assert.equal(state.cases.quiet_account.status, "active", "the case an old save played is active");
   assert.deepEqual(state.timeline, [], "old saves get an empty timeline");
   assert.ok(state.known.theo && state.known.acc_theoquinn, "the profile the player opened is still investigated");

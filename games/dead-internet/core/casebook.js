@@ -215,11 +215,14 @@ export function truthOf(g, h, caseId = null) {
       return w.facts.some(f => sameTriple(f, h)) ? "true" : "false";
     case "operatedBy": {
       const acc = w.accounts.get(h.object);
+      // No operatedBy (a light account) is unresolved canon: nobody knows who runs it.
+      if (acc && acc.operatedBy === undefined) return "unknown";
       return acc && acc.operatedBy === h.subject ? "true" : "false";
     }
     case "notHuman": {
       const acc = w.accounts.get(h.subject);
       if (acc) {
+        if (acc.operatedBy === undefined) return "unknown";
         const who = w.entities.get(acc.claimsToBe);
         if (who && who.isHuman === false) return "true";
         // An account run by someone other than the person it claims to be is a fake persona.
