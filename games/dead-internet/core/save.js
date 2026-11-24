@@ -6,6 +6,7 @@
 import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
 import { migrateCases, migrateCaseStates } from "./cases.js";
+import { migrateMedia } from "./feed.js";
 
 export const SAVE_FORMAT = "dead-internet-save";
 
@@ -19,6 +20,8 @@ const MIGRATIONS = {
   3: (s, w) => { migrateCases(s, w); s.saveVersion = 4; return s; },
   // 4 → 5: case states (universe split). The case an old save played is active from day one.
   4: (s, w) => { migrateCaseStates(s, w); s.saveVersion = 5; return s; },
+  // 5 → 6: media. No follows, likes or "not interested" yet.
+  5: s => { migrateMedia(s); s.saveVersion = 6; return s; },
 };
 
 export function serialize(state) {
@@ -64,6 +67,8 @@ export function deserialize(w, text) {
   }
   for (const k of ["evidence", "hypotheses", "notes", "timeline"])
     for (const x of s[k] || []) x.cases = (Array.isArray(x.cases) ? x.cases : []).filter(id => w.mysteries.has(id));
+  for (const [k, ok] of [["follows", id => w.accounts.has(id)], ["likes", id => w.artifacts.has(id)], ["notInterested", id => w.artifacts.has(id)]])
+    for (const id of Object.keys(s.media[k])) if (!ok(id)) { delete s.media[k][id]; drop(k, id); }
   for (const id of Object.keys(s.trust)) if (!w.characters.has(id)) delete s.trust[id];
   for (const c of w.characters.values()) if (!(c.id in s.trust)) s.trust[c.id] = c.trust?.start ?? 0;
   if (s.contentVersion !== w.meta.contentVersion) warnings.push(`content ${s.contentVersion} → ${w.meta.contentVersion}`);

@@ -12,6 +12,7 @@ import { sendMessage, canContact, contacts, thread, availablePrompts } from "./d
 import * as CB from "./casebook.js";
 import * as TL from "./timeline.js";
 import * as CS from "./cases.js";
+import * as FD from "./feed.js";
 import { asArray, addDays, deepClone } from "./util.js";
 import { nameOf } from "./world.js";
 import { scanText, suggest } from "./refs.js";
@@ -52,7 +53,7 @@ export class Game {
     let r;
     switch (a.type) {
       case "start": r = this.#start(a.case); break;
-      case "search": r = this.#search(a.query); break;
+      case "search": r = this.#search(a.query, a.platform); break;
       case "searchImage": r = this.#searchImage(a.image, a.flip); break;
       case "open": r = this.#open(a.artifact, a.version); break;
       case "login": r = this.#login(a.site, a.user, a.pass); break;
@@ -76,6 +77,11 @@ export class Game {
       case "updateEvent": r = TL.updateEvent(this, a.id, a.patch); break;
       case "deleteEvent": r = TL.deleteEvent(this, a.id); break;
       case "linkEventEvidence": r = TL.linkEventEvidence(this, a.event, a.evidence, a.stance ?? null); break;
+      case "watch": r = this.#watch(a.artifact); break;
+      case "scrollFeed": r = this.#scrollFeed(a.platform, a.tab, a.offset); break;
+      case "follow": r = FD.follow(this, a.account, a.on ?? true); break;
+      case "like": r = FD.like(this, a.artifact, a.on ?? true); if (r.ok && (a.on ?? true)) fire(this, "video.like", { artifact: a.artifact }); break;
+      case "notInterested": r = FD.notInterested(this, a.artifact, a.on ?? true); break;
       case "linkEventTheory": r = TL.linkEventTheory(this, a.event, a.hypothesis, a.on ?? true); break;
       default: throw new Error(`Unknown action "${a.type}"`);
     }
@@ -88,7 +94,8 @@ export class Game {
   // Convenience wrappers
   /** Start the game, or start another case. Without a case: the only case on the start screen. */
   start(caseId) { return this.dispatch({ type: "start", ...(caseId ? { case: caseId } : {}) }); }
-  search(query) { return this.dispatch({ type: "search", query }); }
+  /** Free search. opts.platform: search inside one app. */
+  search(query, opts = {}) { return this.dispatch({ type: "search", query, ...(opts.platform ? { platform: opts.platform } : {}) }); }
   searchImage(image, flip = false) { return this.dispatch({ type: "searchImage", image, flip }); }
   open(artifact, version) { return this.dispatch({ type: "open", artifact, version }); }
   login(site, user, pass) { return this.dispatch({ type: "login", site, user, pass }); }
@@ -115,6 +122,13 @@ export class Game {
   deleteEvent(id) { return this.dispatch({ type: "deleteEvent", id }); }
   linkEvent(event, evidence, stance) { return this.dispatch({ type: "linkEventEvidence", event, evidence, stance }); }
   linkEventTheory(event, hypothesis, on = true) { return this.dispatch({ type: "linkEventTheory", event, hypothesis, on }); }
+  /** Watch a clip (or read a feed item): the same as opening it, plus a video.view event. */
+  watch(artifact) { return this.dispatch({ type: "watch", artifact }); }
+  /** A page of a platform's feed (tab: forYou | following). Fires feed.scroll. */
+  scrollFeed(platform, tab = "forYou", offset = 0) { return this.dispatch({ type: "scrollFeed", platform, tab, offset }); }
+  follow(account, on = true) { return this.dispatch({ type: "follow", account, on }); }
+  like(artifact, on = true) { return this.dispatch({ type: "like", artifact, on }); }
+  notInterested(artifact, on = true) { return this.dispatch({ type: "notInterested", artifact, on }); }
 
   #start(caseId) {
     if (this.s.started) return caseId ? CS.startCase(this, caseId) : { ok: true, already: true };
@@ -128,13 +142,14 @@ export class Game {
     return { ok: true, case: id ?? null };
   }
 
-  #search(query) {
+  #search(query, platform) {
     const q = String(query || "").trim();
     if (!q) return { ok: true, results: [] };
-    this.s.searches.push({ q, day: this.s.day });
-    const results = search(this, q);
+    if (platform && !this.w.platforms.has(platform)) return { error: "unknown_platform" };
+    this.s.searches.push({ q, day: this.s.day, ...(platform ? { platform } : {}) });
+    const results = search(this, q, platform ? { platform } : {});
     investigateQuery(this, q, results.length > 0);
-    fire(this, "search", { query: q.toLowerCase(), terms: q.toLowerCase().split(/\s+/) });
+    fire(this, "search", { query: q.toLowerCase(), terms: q.toLowerCase().split(/\s+/), platform: platform ?? null });
     return { ok: true, results };
   }
 
@@ -157,6 +172,21 @@ export class Game {
     if (a.author) { if (a.type === "profile") markInvestigated(this, a.author); else encounter(this, a.author); }
     fire(this, "artifact.open", { artifact: id, version: v.versionId, cached: v.cached });
     return { ok: true, view: v, first };
+  }
+
+  #watch(id) {
+    const r = this.#open(id);
+    if (r.error || r.view?.locked) return r;
+    fire(this, "video.view", { artifact: id, platform: this.w.artifacts.get(id).platform });
+    return r;
+  }
+
+  #scrollFeed(platform, tab, offset) {
+    if (!this.w.platforms.has(platform)) return { error: "unknown_platform" };
+    if (tab !== "forYou" && tab !== "following") return { error: "bad_tab" };
+    const page = FD.feed(this, { platform, tab, offset: offset ?? 0 });
+    fire(this, "feed.scroll", { platform, tab, offset: offset ?? 0 });
+    return { ok: true, ...page };
   }
 
   #login(site, user, pass) {
@@ -274,6 +304,10 @@ export class Game {
   caseStatus(id) { return CS.caseStatus(this, id); }
   /** Cases that can be started from the start screen. */
   menuCases() { return CS.menuCases(this); }
+  /** A feed page without side effects (for rendering). */
+  feed(platform, tab = "forYou", offset = 0, limit = 10) { return FD.feed(this, { platform, tab, offset, limit }); }
+  /** The player's follows, likes and "not interested". */
+  media() { return FD.mediaView(this); }
   /** Endings reached, with epilogues. */
   endings() { return CS.endingsView(this); }
 }

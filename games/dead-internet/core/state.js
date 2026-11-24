@@ -2,13 +2,14 @@
 // Everything that changes during play lives in one plain, serialisable object.
 // The world (authored content) is never modified; the state only stores differences.
 
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 
 /**
  * @param {any} w world from buildWorld()
  * @param {{seed?:number, playerName?:string}} [opts]
  */
 import { initCases } from "./cases.js";
+import { initMedia } from "./feed.js";
 
 export function createState(w, opts = {}) {
   const trust = {};
@@ -67,6 +68,8 @@ export function createState(w, opts = {}) {
     exposed: {},
     /** site id → true */
     loggedIn: {},
+    /** feeds: follows, likes, "not interested" (account/artifact id → day). Never read by rules for consequences */
+    media: initMedia(),
     /** "rule:<id>" / "resp:<char>:<id>" → day fired, for once-only behaviour */
     fired: {},
     endings: [],

@@ -7,11 +7,12 @@
 //   none   – never in results (reachable only by being given or linked)
 // Deleted or changed artifacts can still be found through cached versions, but only on a
 // precise match (all words or a keyword), so the cache rewards deliberate digging.
-// "quoted phrases" match the exact phrase.
+// "quoted phrases" match the exact phrase. Transcripts of clips are searched like text.
+// opts.platform limits a search to one app (TokTok search, a newspaper's own search).
 
 import { asArray } from "./util.js";
-import { isVisible, liveVersionId, cachedVersions, resolveVersion, getVersion } from "./artifacts.js";
-import { imageRoot, mirrorParity } from "./world.js";
+import { isVisible, liveVersionId, cachedVersions, resolveVersion, getVersion, transcriptOf } from "./artifacts.js";
+import { imageRoot, mirrorParity, videoImages } from "./world.js";
 import { check } from "./conditions.js";
 
 const STOP = new Set(("a an the and or of in on at to for is are was were be been it its this that with by from as " +
@@ -54,11 +55,14 @@ function queryTerms(q) {
 function docFields(g, a, v) {
   const acc = a.author ? g.w.accounts.get(a.author) : null;
   const r = resolveVersion(a, v);
+  // Bylines count as authors. A clip's transcript is searchable text, like a caption.
+  const by = r.byline.map(b => { const x = g.w.accounts.get(b); return x ? `${x.handle} ${x.displayName}` : String(b); }).join(" ");
+  const said = r.video ? transcriptOf(g.w, r.video) : "";
   return {
     title: tokenize(r.title),
-    author: tokenize(acc ? `${acc.handle} ${acc.displayName}` : ""),
-    body: tokenize(`${r.body} ${a.url || ""}`),
-    phrase: normalize(`${r.title} ${r.body} ${a.url || ""}`).replace(/\s+/g, " "),
+    author: tokenize(`${acc ? `${acc.handle} ${acc.displayName}` : ""} ${by}`),
+    body: tokenize(`${r.body} ${said} ${a.url || ""}`),
+    phrase: normalize(`${r.title} ${r.body} ${said} ${a.url || ""}`).replace(/\s+/g, " "),
     r,
   };
 }
@@ -87,10 +91,11 @@ function snippet(body, terms) {
 /**
  * @param {any} g game
  * @param {string} query
- * @param {{limit?:number}} [opts]
+ * @param {{limit?:number, platform?:string|string[]}} [opts]  platform: search inside one app
  */
 export function search(g, query, opts = {}) {
   const limit = opts.limit ?? 12;
+  const platforms = opts.platform ? asArray(opts.platform) : null;
   const raw = String(query || "").trim();
   const phraseMatch = raw.match(/^"(.+)"$/);
   const qNorm = normalize(raw).replace(/^"|"$/g, "").replace(/\s+/g, " ").trim();
@@ -102,6 +107,7 @@ export function search(g, query, opts = {}) {
   for (const a of g.w.artifacts.values()) {
     const level = a.index || "full";
     if (level === "none") continue;
+    if (platforms && !platforms.includes(a.platform)) continue;
     const kwHit = keywordHit(a, qNorm, flat);
 
     const evaluate = (v, cached) => {
@@ -171,7 +177,8 @@ export function search(g, query, opts = {}) {
 
 /**
  * Search by image. Finds other uses of the same original picture.
- * Mirrored copies are only found with flip: true ("Flip & search").
+ * Mirrored copies are only found with flip: true ("Flip & search"). Key frames and posters
+ * count as images of their clip, so "Search by frame" finds reused footage.
  */
 export function searchImage(g, imageId, opts = {}) {
   const w = g.w;
@@ -188,13 +195,13 @@ export function searchImage(g, imageId, opts = {}) {
       if ((a.index || "full") === "none") continue;
       if (isVisible(g, aid) && liveVersionId(g, a) != null) {
         const live = getVersion(a, liveVersionId(g, a));
-        if (asArray(resolveVersion(a, live).images).includes(img.id)) {
+        if (shows(w, resolveVersion(a, live), img.id)) {
           out.push({ artifact: aid, image: img.id, title: resolveVersion(a, live).title, url: a.url, platform: a.platform, cached: false, versionId: live.id });
           continue;
         }
       }
       for (const v of cachedVersions(g, a)) {
-        if (asArray(resolveVersion(a, v).images).includes(img.id)) {
+        if (shows(w, resolveVersion(a, v), img.id)) {
           out.push({ artifact: aid, image: img.id, title: resolveVersion(a, v).title, url: a.url, platform: a.platform, cached: true, versionId: v.id });
           break;
         }
@@ -202,6 +209,11 @@ export function searchImage(g, imageId, opts = {}) {
     }
   }
   return out;
+}
+
+/** Does a version show the image (in its pictures, or as a frame or poster of its clip)? */
+function shows(w, r, imageId) {
+  return asArray(r.images).includes(imageId) || (r.video != null && videoImages(w, r.video).includes(imageId));
 }
 
 /** In-fiction metadata ("Image info"). */

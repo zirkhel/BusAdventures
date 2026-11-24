@@ -7,6 +7,7 @@ import { loadRaw, loadWorld } from "../tools/lib/node-world.mjs";
 import { buildWorld } from "../core/world.js";
 import { Game, replay } from "../core/game.js";
 import { serialize, deserialize } from "../core/save.js";
+import { SAVE_VERSION } from "../core/state.js";
 import { SCENARIOS } from "../tools/lib/scenarios.mjs";
 
 const world = await loadWorld();
@@ -108,7 +109,7 @@ test("version 3 saves migrate: items become unclassified, reports get their case
   for (const k of ["evidence", "hypotheses", "notes", "timeline"]) for (const x of old[k]) delete x.cases;
   for (const r of old.reports) delete r.case;
   const { state } = deserialize(world, serialize(old));
-  assert.equal(state.saveVersion, 5);
+  assert.equal(state.saveVersion, SAVE_VERSION);
   for (const k of ["evidence", "hypotheses", "notes", "timeline"]) for (const x of state[k]) assert.deepEqual(x.cases, [], `${k} ${x.id}`);
   assert.equal(state.reports[0].case, "quiet_account");
 });

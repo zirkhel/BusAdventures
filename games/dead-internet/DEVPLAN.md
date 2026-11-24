@@ -123,12 +123,14 @@ _Implementert 24. november 2026. Ingen synlig endring for spilleren utover start
 - [x] Saksspesifikke tekster flyttet: eksempelteorien til sakens tekster, «Port Calder» til plattformdata. `.pf-brightline_site` er universets plattformstil og blir værende.
 
 ## Fase 7 — Mediekjerne (M1)
-- [ ] Artikkelfelt: seksjon, byline, rettelser, relaterte, sponset, strukturerte kommentarer
-- [ ] `videos.json` og lette kontoer. Modellen skal tåle 150 klipp eller flere.
-- [ ] Delte innholdsbassenger (`pools/`) i universet
-- [ ] Deterministisk feed som er blind for relevans. TokTok-feeden bygger bare på likes, følger og eksplisitt interaksjon i TokTok, aldri søkehistorikk.
-- [ ] Validator: ingen bevis som bare kan finnes ved å scrolle, og scrolling har ingen konsekvenser
-- [ ] Innholdsrapport som viser fordelingen av sanne og usanne påstander per kanal (ingen kvote)
+_Implementert 24. november 2026. Bare motor, validator og verktøy. Ingen synlig endring i spillet._
+- [x] Artikkelfelt: seksjon, byline, rettelser, relaterte, referanser, sponset, strukturerte kommentarer (med `deletedIn`), dekker (skjult)
+- [x] `videos.json` og `scripts.json` (plakat, nøkkelbilder, transkripsjon, fiktiv «Video info»), og lette kontoer uten operatør (uavklart kanon). Modellen skal tåle 150 klipp eller flere.
+- [x] Delte innholdsbassenger (`universe/pools/`) lastes som vanlige universfiler. Første innhold kommer i fase 8.
+- [x] Deterministisk feed som er blind for relevans (`core/feed.js`). Feeden bygger bare på likes, følger og «Not interested» på plattformen, aldri søkehistorikk. Lagringsversjon 6.
+- [x] Søk i én app (`platform`), transkripsjoner i søk, og bildesøk på nøkkelbilder
+- [x] Validator: ingen bevis som bare kan finnes ved å scrolle, scrolling har ingen konsekvenser, uavklart kanon, video- og artikkelfelt
+- [x] Innholdsrapport (`tools/media-report.mjs`) som viser fordelingen av sanne og usanne påstander per plattform (ingen kvote) og bevis som skiller seg ut i visningstall
 
 ## Fase 8 — The Daily Record og Unfiltered (M2)
 - [ ] Én nyhetsmotor med to profiler. Unfiltered med egen logo og identitet.

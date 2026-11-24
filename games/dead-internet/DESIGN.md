@@ -30,7 +30,8 @@ games/dead-internet/
     conditions.js           betingelsesspråket
     rules.js                regler, effekter, planlagte effekter
     artifacts.js            synlighet, versjoner, cache, tilgang
-    search.js               Seeker: fritekst, bildesøk, bildeinfo
+    search.js               Seeker: fritekst (også i én app), bildesøk (også nøkkelbilder), bildeinfo
+    feed.js                 feeder: deterministisk rangering, følg, lik, «Not interested»
     refs.js                 referanser i tekst (leksikon, mønstre) og søkeforslag
     discovery.js            oppdagelsestilstander og kunnskapsgrenser
     timeline.js             spillerens tidslinje: hendelser, datotyper, koblinger, datovalg
@@ -45,6 +46,8 @@ games/dead-internet/
     universe/*.json         felles for alle mysterier: meta, predicates, platforms, entities,
                             accounts, images, characters, canon (fakta), terms, mysteries (frø),
                             artifacts/filler.json (bakgrunnsinnhold)
+    universe/pools/         delte medier (aviser, TokTok): artikler, lette kontoer, videos, scripts.
+                            Vanlige universfiler i manifest.files. Første innhold kommer i fase 8.
     mysteries/quiet-account/  mystery.json (start, lag, påstander, bevisliste, publisering,
                             testoppsett, tekster, avslutninger) + artifacts/, canon.json, rules.json
     strings/en.json         UI-tekster (lokalisering: nb.json senere)
@@ -58,9 +61,11 @@ games/dead-internet/
     simulate.mjs            skriptede gjennomspillinger og automatiske spillere
     make-placeholders.mjs   lager plassholdere fra katalogen
     graphics-report.mjs     lager GRAPHICS.md
+    media-report.mjs        medier per plattform og bevis som skiller seg ut
     lib/                    explorer, validator, scenarioer, Node-laster
   tests/                    core (motor), world (The Quiet Account), cases (saker og rapporter),
-                            universe (pakker, sakstilstander, frister, extends, lag)
+                            universe (pakker, sakstilstander, frister, extends, lag),
+                            media (artikkelfelt, video, feed, plattformsøk, medieregler)
   docs/                     plan og sakbeskrivelse
 ```
 
@@ -74,14 +79,17 @@ games/dead-internet/
 | `node games/dead-internet/tools/simulate.mjs lights_out` | Ett scenario med full samtalelogg |
 | `node games/dead-internet/tools/make-placeholders.mjs` | Lager plassholdere fra grafikkatalogen |
 | `node games/dead-internet/tools/graphics-report.mjs` | Oppdaterer GRAPHICS.md |
+| `node games/dead-internet/tools/media-report.mjs` | Medier per plattform, sann/usann/delvis-fordeling (ingen kvote) og bevis som skiller seg ut |
 
 ## Verdensmodellen
 
 | Type | Fil | Viktige felt |
 |---|---|---|
 | **Entity** | `entities.json` | `kind` (person, org, place, project, event, system), `isHuman` (true/false/null), `died`, `relations[]`, `secret` (skjules for spilleren) |
-| **Account** | `accounts.json` | `platform`, `handle`, `claimsToBe` (hvem kontoen utgir seg for), `operatedBy` (hvem som faktisk styrer den), `history[]` (tidligere operatører, `null` = sovende) |
+| **Account** | `accounts.json` | `platform`, `handle`, `claimsToBe` (hvem kontoen utgir seg for), `operatedBy` (hvem som faktisk styrer den), `history[]` (tidligere operatører, `null` = sovende). En **lett konto** (`pool`) har bare `platform`, `handle`, `displayName`, ev. `avatar`: uten `operatedBy` er kanon uavklart. |
 | **Artifact** | `artifacts/*.json` | `type`, `platform`, `author`, `date`, `versions[]`, `live`, `index`, `keywords`, `hidden`/`visibleIf`, `access`, `supports[]`, `source`, `mentions[]`, `images[]`, `filler` |
+| **Video** | `videos.json` | `duration`, `poster`, `frames[] {t, image}` (nøkkelbilder er vanlige bilder), `scenes[]` (skjult: `location`, `depicts`), `script`, `audio`, `meta` (fiktiv «Video info»), `derivedFrom`, `transforms` (reupload, crop, mirror, speed, reencode, trim, overlay) |
+| **Script** | `scripts.json` | `text`: transkripsjonen. Like manus gir like transkripsjoner. |
 | **Image** | `images.json` | `kind`, `derivedFrom`, `transforms` (crop, mirror …), `meta` (fiktiv EXIF), `manipulation`, `supports`, `source`, `depicts` |
 | **Character** | `characters.json` | `entity`, `account`, `kind` (person/autopilot), `trust`, `knows`/`believes`/`observed`, `has`, `responses[]`, `prompts[]`, `fallback` |
 | **Predicate** | `predicates.json` | `arity`, `subjectKinds`, `objectKinds`, `truth` (facts, operatedBy, notHuman, relation), `template` |
@@ -89,11 +97,17 @@ games/dead-internet/
 | **Rule** | `rules.json` | `when {event, match}`, `if`, `do[]`, `once` |
 | **Mystery** | `mysteries.json` | `claims`, `endings[]` med `if` og `effects` |
 
+### Medier (artikler, innlegg, klipp)
+Alle felt er valgfrie og kan ligge på artefakten eller en versjon: `section`, `byline[]` (konto-id eller fritekst), `corrections[] {date, text}`, `related[]`, `refs[]`, `sponsored {by}`, `comments[] {id, account, date, text, likes, replyTo, deletedIn, pinned}`, `video` (en video-id), `stats {views, likes}`, `category`. En kommentar med `deletedIn` er borte fra den versjonen og senere. `covers[]` (hendelser artikkelen dekker), `pool` og videoens `scenes`, `source` og `script`-id er forfatterdata og vises aldri. Spilleren ser klippet, bildeteksten, transkripsjonen og «Video info».
+
+### Feeder (core/feed.js)
+En feed er deterministisk og blind for etterforskningen. Den leser bare plattform, kategori (`category` eller `section`), popularitet (`stats.views`), dato, forfatter og spillerens egen interaksjon på plattformen (følger, liker, «Not interested»), pluss en hash av seed og dag. Den leser aldri `supports`, `mentions`, påstander, saker eller søkehistorikk. To faner: «For You» (rangert) og «Following» (fulgte kontoer, nyeste først). `state.media` holder følger, likes og «Not interested». Å like eller følge gir ingen kunnskap. Å se et klipp (`watch`) er det samme som å åpne det: klippet blir sett og skaperen møtt. Scrolling koster ingen tid.
+
 ### Versjoner og cache
 En artefakt har én eller flere versjoner. `live` sier hvilken som er publisert nå (`null` = slettet). Versjoner med `cached: true` kan leses via søkemotorens cache når de ikke lenger er live. En versjon kan ha egne `supports`, `mentions`, `images` og `source`, slik at en bufret originaltekst kan være et selvstendig bevis.
 
 ### Bilder som bevis
-Bilder er egne objekter med opphav (`derivedFrom`) og transformasjoner. Bildesøk finner alle bilder med samme original. Speilvendte kopier finnes bare med «Flip & search». «Image info» viser fiktiv metadata. Selve filene ligger utenfor motoren: verden refererer bare til bilde-id-er, og `graphics/catalog.json` sier hvilken fil som hører til hver id.
+Bilder er egne objekter med opphav (`derivedFrom`) og transformasjoner. Bildesøk finner alle bilder med samme original. Nøkkelbilder og plakat teller som bildene til klippet, så bildesøk på et nøkkelbilde finner andre klipp med samme opptak eller sett. Speilvendte kopier finnes bare med «Flip & search». «Image info» viser fiktiv metadata. Selve filene ligger utenfor motoren: verden refererer bare til bilde-id-er, og `graphics/catalog.json` sier hvilken fil som hører til hver id.
 
 ## Kanon, påstander og spillerens tro
 
@@ -120,7 +134,7 @@ Fritt søk, uten krav om at ord må være oppdaget først. Hva som finnes, styre
 | `exact` | Bare når et nøkkelord treffer (koder, adresser, domener) |
 | `none` | Aldri (bare via vedlegg eller lenker) |
 
-Bufrede versjoner kommer med når alle søkeordene treffer. Låste sider (`access`) vises med påloggingstittel. «Sitater i anførselstegn» søker etter eksakt frase.
+Bufrede versjoner kommer med når alle søkeordene treffer. Låste sider (`access`) vises med påloggingstittel. «Sitater i anførselstegn» søker etter eksakt frase. Transkripsjoner søkes som tekst, og `byline` teller som forfatter. Med `platform` søker man inne i én app (TokTok-søk, avisens eget søk).
 
 ## Dialog
 
@@ -128,11 +142,11 @@ Spilleren skriver aldri fritt til personer. Hun spør om noe hun kjenner (`ask`)
 
 ## Tid og regler
 
-Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (`later`), deretter `day.start`-regler, så avslutninger. Regler er engangs som standard (`once: false` for gjentakende). Hendelser: `game.start`, `day.start`, `search`, `artifact.open`, `message.send`, `evidence.save`, `image.search`, `login`, `report.published`.
+Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (`later`), deretter `day.start`-regler, så avslutninger. Regler er engangs som standard (`once: false` for gjentakende). Hendelser: `game.start`, `day.start`, `search`, `artifact.open`, `message.send`, `evidence.save`, `image.search`, `login`, `report.published`, `case.start`, og for stemning `video.view`, `video.like` og `feed.scroll`. Regler på de tre siste kan bare sende meldinger og varsler.
 
 ## Lagring
 
-`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 4: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak).
+`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 6: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»).
 
 ## Validator
 
@@ -142,7 +156,11 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 - **Kanon**: usanne påstander motsier ikke fakta, sanne påstander stemmer med verdensmodellen.
 - **Personkunnskap**: personer gir bare bort det de har og vitner bare om det de vet, tror eller har sett.
 - **Kildeuavhengighet**: hver kjernepåstand (S1–S3) har minst tre uavhengige kilder i innholdet.
-- **Fyllinnhold**: `filler` støtter ingen påstander i dag. I U1 erstattes dette av eksplisitte bevislister per mysterium (se «Univers og mysterier»).
+- **Bakgrunnsinnhold som bevis**: universinnhold kan støtte en påstand bare når mysteriet lister det i `evidence` (se «Univers og mysterier»).
+- **Uavklart kanon**: ingen påstand i et spillbart mysterium kan hvile på en konto uten `operatedBy` eller en person med `isHuman: null`.
+- **Medier**: videoer (plakat, nøkkelbilder innenfor klippet, manus, opphav, transformasjoner), manus med tekst, artikkelfelt (seksjon finnes i appen, byline, relaterte, sponsor, dekker), kommentarer (konto, svar, `deletedIn`).
+- **Ingen bevis bare i feeden**: alt som støtter en påstand i et spillbart mysterium må kunne nås ved søk, via forfatterens profil, en lenke (`related`, `refs`) eller ved å bli gitt. De automatiske spillerne bruker aldri feeden.
+- **Scrolling uten konsekvenser**: regler på `video.view`, `video.like` og `feed.scroll` kan bare bruke `message` (uten vedlegg og støtte), `notify` og `later`.
 - **Tilgang**: to automatiske spillere (forsiktig og hensynsløs) spiller gjennom og må nå minst to uavhengige kilder for hver kjernepåstand.
 - **Blokkeringer**: hver artefakt, hvert bilde og hver person som bidrar til en kjernepåstand fjernes én om gangen. Saken må fortsatt kunne løses.
 - **Grafikk**: hver bilde-id i verden finnes i katalogen med samme avhengighet, og har en plassholder.

@@ -10,14 +10,17 @@
 // mystery.json whose `files` (relative to its folder) add artifacts, claims, rules and
 // character extensions to the same world. Ids are global. A character entry with
 // `extends: "<id>"` adds knowledge and responses to an existing person for that mystery.
+//
+// Pools (shared background media: news archives, TokTok creators, clips, transcripts) are
+// ordinary universe files listed in manifest.files, e.g. "artifacts": ["universe/pools/toktok/clips.json"].
 
-const SECTIONS = ["entities", "accounts", "platforms", "images", "artifacts", "characters", "rules", "predicates", "mysteries", "terms"];
+const SECTIONS = ["entities", "accounts", "platforms", "images", "videos", "scripts", "artifacts", "characters", "rules", "predicates", "mysteries", "terms"];
 
 /** @param {(path:string)=>Promise<any>} readJson  path is relative to the content folder */
 export async function loadContent(readJson) {
   const manifest = await readJson("manifest.json");
   /** @type {any} */
-  const raw = { meta: null, strings: {}, entities: [], accounts: [], platforms: [], images: [], artifacts: [],
+  const raw = { meta: null, strings: {}, entities: [], accounts: [], platforms: [], images: [], videos: [], scripts: [], artifacts: [],
     characters: [], rules: [], predicates: [], canon: { claims: [], facts: [] }, mysteries: [], terms: [],
     /** artifact id → "universe" or the mystery that brought it */
     packOf: {} };

@@ -18,6 +18,10 @@ export function buildWorld(raw) {
     accounts: indexById(raw.accounts, "accounts"),
     platforms: indexById(raw.platforms, "platforms"),
     images: indexById(raw.images, "images"),
+    /** Video media objects (videos.json): poster, key frames, script. A clip artifact points to one. */
+    videos: indexById(raw.videos || [], "videos"),
+    /** Transcripts (scripts.json). Identical scripts give identical transcripts. */
+    scripts: indexById(raw.scripts || [], "scripts"),
     artifacts: indexById(raw.artifacts, "artifacts"),
     characters: indexById(raw.characters, "characters"),
     predicates: indexById(raw.predicates, "predicates"),
@@ -41,7 +45,10 @@ export function buildWorld(raw) {
 
   for (const c of w.characters.values()) if (c.account) w.characterByAccount.set(c.account, c.id);
   for (const a of w.artifacts.values()) {
-    const imgs = new Set([...asArray(a.images), ...a.versions.flatMap(v => asArray(v.images))]);
+    // A clip "shows" its poster and key frames, so searching by image also finds clips.
+    const vids = [a.video, ...a.versions.map(v => v.video)].filter(Boolean);
+    const frames = vids.flatMap(id => videoImages(w, id));
+    const imgs = new Set([...asArray(a.images), ...a.versions.flatMap(v => asArray(v.images)), ...frames]);
     for (const i of imgs) {
       if (!w.imageUse.has(i)) w.imageUse.set(i, []);
       w.imageUse.get(i).push(a.id);
@@ -49,6 +56,12 @@ export function buildWorld(raw) {
     if (a.type === "profile" && a.author) w.profileOf.set(a.author, a.id);
   }
   return w;
+}
+
+/** Poster and key-frame image ids of a video. */
+export function videoImages(w, id) {
+  const v = w.videos.get(id);
+  return v ? [v.poster, ...asArray(v.frames).map(f => f.image)].filter(Boolean) : [];
 }
 
 /** First image in the derivation chain (the original). */
