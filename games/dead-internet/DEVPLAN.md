@@ -1,6 +1,28 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 9 ferdig, Casebook steg 0–5 og nytt veikart)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (overlevering: fase 9 ferdig, Casebook steg 0–5, saksavslutning og nettsteder dokumentert)._
+
+## Overlevering (24. nov 2026)
+
+Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «Veikart» under, `DESIGN.md` (særlig «Prinsipper», «Kanon, påstander og spillerens tro», «Casebook som deduksjonsverktøy», «Saksavslutning og konsekvenser», «Autentiske nettsteder» og «Teststrategi») og dokumentene i `docs/`.
+
+**Status**
+- Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Alle 61 grafikkelementer er godkjent.
+- Casebook steg 0 (informasjonslekkasjer) er ferdig i PR #68, røyktestet i nettleser, og venter på Anders' ja til merge.
+- PR #69 (lesbart Unfiltered-ikon, B06-dato) er laget i en annen tråd og venter også.
+- Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
+- Nettstedene er godkjent som designretning ([docs/WEBSITES.md](docs/WEBSITES.md)), men skal ikke implementeres før veikartets punkt 5.
+
+**Neste steg:** Casebook steg 1 (se under) når PR #68 er merget. Deretter steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
+
+**Faste regler**
+- Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
+- Kanon og spillerkunnskap holdes strengt adskilt. Ingen visning, ingen karakter og ingen regel som reagerer på spillerens egne vurderinger, får avsløre skjulte sammenhenger. Tvillingverden-testen (`tests/twin.test.mjs`) er permanent, feiler den er det koden som skal rettes, aldri testen. Den utvides når nye Casebook- eller nettstedsfunksjoner kommer.
+- Ingen visuell markering av ledetråder. Ingen poeng, stjerner eller løsningsgrad.
+- Grafikk: hvert nytt bilde kontrolleres alltid mot spesifikasjonen og mot alle tidligere bilder, både for likhet og mangler (se `graphics/`).
+- Spilltekst på engelsk. Anders skriver norsk, og dokumentasjonen er på norsk.
+- Tester: `node --test games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs` og `node games/dead-internet/tools/simulate.mjs` fra repo-roten. Mobil røyktest (Playwright, 390×844) ved UI-endringer: et lagret spill kan legges i `localStorage`, telefonen låses opp med «Swipe up to unlock», introen lukkes med `.it-notips`, og Casebook er det fjerde ikonet i docken.
+
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
@@ -217,7 +239,27 @@ Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIG
 - [ ] Strukturert publisering som også dekker manipulerte dokumenter og falske identiteter
 - [ ] For, mot og egne forbehold i rapportbyggeren. Rapporten lagrer et øyeblikksbilde.
 - [ ] Dana kommenterer spillerens egne forbehold
-- [ ] Endringer fra gjennomgangen av saksavslutning tas inn her når de er godkjent (nøytral saksstatus som Active, Published, Closed, Reopened, ingen poeng eller løsningsgrad)
+- [ ] Forslag fra gjennomgangen av saksavslutning, bare når de er godkjent: nøytral saksstatus (Active, Published, Closed, Reopened forberedt), kanalbeskrivelse i rapportbyggeren fra kanalens egne data, øyeblikksbilde av påstander, bevis og forbehold
+- [ ] Tvillingverden-testen utvides med rapportbyggeren og saksstatusen
+
+### Saksavslutning (veikart punkt 2, etter steg 5, bare etter diskusjon med Anders)
+- [ ] Rett F-1: `too_late` og `ghost_story` krever `vote_passed`, ikke `vote_held`, med scenario «hele historien på Connect før avstemningen»
+- [ ] Rett F-2: et utfall for «kontoen er overtatt, ingen penger» (The Partial Truth)
+- [ ] Forslag som ikke er avklart: «neste morgen»-klimaks med DR-artikkel, Buried Story, Cover-Up, overskrift fra verden i varselet, Unfiltered som kanal (se docs/CASE-ENDINGS-REVIEW.md §8 og spørsmålene sist)
+- [ ] Utfallsmatrise-test: påstander × kanal × før/etter frist gir alltid en milepæl eller en bevisst åpen tilstand
+
+### Autentiske nettsteder (veikart punkt 5–7, se docs/WEBSITES.md §11)
+- [x] W0 Lekkasjevern: kanonfelt fjernet fra visningen (PR #68). Gjenstår: hviteliste i malene og DOM-test.
+- [ ] W1 Nettstedsmodell (`core/sites.js`, `sites/*.json`, `site`/`page`/`blocks`, designvalg etter dato, 404, automatiske lister, validator)
+- [ ] W2 Malverk og tre maler (Corporate, Government, Blog)
+- [ ] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering)
+- [ ] W4 Bakgrunn runde 1 (ca. 110 sider) og fil med bakgrunnsfakta
+- [ ] W5 Wiki, Forum, Document, Anonymous
+- [ ] W6 Legacy, Personal, Landing og eldre design
+- [ ] W7 Spor i design (bare med Anders' ja), ny gjennomspillingstest
+- [ ] W8 «Compare with…» fra Archive (etter Casebook steg 3)
+- [ ] Grafikk WEB0001–WEB0024, de tolv viktigste først
+- [ ] Bytt `corp-registries.example` med eget test for søk, referanser og lagrede spill
 
 ### Deretter
 - [ ] Ekstern spilltest av hele etterforskningsopplevelsen, etter steg 5

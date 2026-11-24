@@ -2,7 +2,7 @@
 
 _Oppdatert 24. november 2026, etter fase 9 og Anders' beslutninger om Casebook som deduksjonsverktøy og veikartet videre (se DEVPLAN.md)._
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md) (godkjent med justeringene i §0 der).
-Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
+Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Casebook: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md). Nettsteder: [docs/WEBSITES.md](docs/WEBSITES.md). Saksavslutning: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
 ## Prinsipper
 
@@ -375,7 +375,7 @@ Startskjermen bygges fra `mysteries[].menu` (`order`, `tagline`, `image`). Et ny
 
 ## Casebook som deduksjonsverktøy (godkjent 24. nov 2026)
 
-Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en oppgaveliste fra spillmotoren. Spilleren skal kunne samle, rydde, kommentere, stille spørsmål, sammenligne, trekke slutninger og endre mening. Spillet forteller aldri spilleren hva som er riktig å tro. Forslaget med begrunnelse ligger i prosjektmappen (`dead-internet/casebook-deduksjon-forslag.md`).
+Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en oppgaveliste fra spillmotoren. Spilleren skal kunne samle, rydde, kommentere, stille spørsmål, sammenligne, trekke slutninger og endre mening. Spillet forteller aldri spilleren hva som er riktig å tro. Forslaget med begrunnelse: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md) (presiseringene i DEVPLAN.md og under gjelder foran forslaget).
 
 - **Hvert spørsmål har ett hjem.** Search History (Seeker/Browser): hva har jeg søkt etter. Evidence: hva har jeg valgt å samle. Notes: hva tenker jeg, og hvilke spørsmål har jeg. Timeline: når mener jeg det skjedde. Theories: hva tror jeg har skjedd. Connections: hvordan henger det sammen (på beviskort, i sammenligning og i teorier, ingen egen fane). Kildekort: hvem stoler jeg på. Report: hva kan jeg stå for offentlig. Informasjon lagres ett sted og vises ved referanse.
 - **Bevis:** beviskort, egen kommentar, merker (viktig, tvilsom), «Legg bort» med årsak (irrelevant eller ferdig) og gjenoppretting. Ingen koblinger eller kommentarer forsvinner ved å legge bort. Å åpne et beviskort er ikke det samme som å ha vurdert det: «åpnet» registreres stille, «vurdert» settes av spilleren.
@@ -385,6 +385,36 @@ Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en oppgaveliste
 - **Kildevurdering** gjøres per synlig kilde: troverdighet, er den den den utgir seg for, og «samme opphav som». Spillerens egne «samme opphav» slår sammen kilder i spillerens telling.
 - **Spillerlaget er usynlig for reglene.** Merker, koblinger, spørsmål og kildevurderinger leses aldri av betingelser, så verden kan ikke belønne en riktig kobling og dermed røpe fasit.
 - **Mobil:** hurtigmenyer, valgmodus med langt trykk, filtrering etter egne vurderinger, korte valgfrie kommentarer, kontekstmenysystemet gjenbrukes, retur til originalkilden med bevart rulleposisjon.
+
+## Saksavslutning og konsekvenser (gjennomgang 24. nov 2026, ikke diskutert ennå)
+
+Full gjennomgang: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Prinsippene er godkjent (se «Prinsipper»). Forslagene til endringer er **ikke** diskutert eller godkjent, og ingen nye avslutningsmekanismer implementeres før det er gjort.
+
+**Slik virker det i dag.** Saken avsluttes gjennom handlinger i verden (publisering og tid), ikke en knapp. `checkEndings()` (`core/game.js`) kjøres etter hver publisering og hver Sleep og går gjennom `endings` i alle startede saker. Betingelsene er deklarative: `exposed` (sann påstand publisert med reell støtte, valgfritt kanal og frist), `published` (publisert, sann eller ikke) og flagg fra regler (`vote_held`, `silent_vote` …). Fristen i The Quiet Account er `beforeCaseDay: 8` (avstemningen). En avslutning med `closes: true` gjør saken *Resolved*, og verden går videre. Flere avslutninger kan inntreffe. The Quiet Account har ni: `lights_out`, `too_late`, `ghost_story`, `who_paid_whom` (lukker) og `wrong_murder`, `collateral_theo`, `collateral_owen`, `collateral_iris`, `silence` (lukker ikke). Utfall leser bare hva som er publisert og eksponert, aldri spillerens egne vurderinger.
+
+**Kjente feil (ikke rettet):**
+- **F-1:** hele historien (S2 + S3, sterk) på Connect eller Threadline før avstemningen gir utsatt avstemning (A67), men også `too_late` med teksten «the towers are approved». Årsak: `D11_vote_held` setter `vote_held` også når avstemningen utsettes. Foreslått retting: `too_late` og `ghost_story` krever `vote_passed`.
+- **F-2:** bare S2 gjennom Daily Record før avstemningen gir ingen avslutning noen gang («The Partial Truth» mangler). Foreslått retting: utvid `ghost_story` (S8 eller S2, uten krav om S1, kanalnøytral epilog) eller en egen avslutning.
+
+**Svakheter:** `lights_out` viser klimakset i publiseringsøyeblikket, ikke neste morgen. Daily Record skriver ingen egen artikkel om spillerens sak. `silence` etterfulgt av senere publisering gir to epiloger. Brightlines uttalelse (A42) kommer etter hvilken som helst rapport.
+
+**Forslag til diskusjon** (se §8 i gjennomgangen): nøytral saksstatus Active / Published / Closed (Reopened forberedt) og kanalbeskrivelse i rapportbyggeren i Casebook steg 5. En egen liten PR etterpå med F-1, F-2, «neste morgen»-avslutning, Buried Story, Cover-Up, overskrift fra verden i varselet og eventuelt Unfiltered som kanal. Tre åpne spørsmål til Anders står sist i gjennomgangen.
+
+**For fremtidige mysterier** (forslag): påstander er byggeklossene; tre lag avslutninger (milepæler, sidekonsekvenser, ettervirkninger); dimensjonene Accuracy, Evidence, Coverage, Impact, Collateral og Timing er en sjekkliste for forfatteren, aldri tall for spilleren; en utfallsmatrise-test publiserer kombinasjoner av påstander × kanal × før/etter frist.
+
+## Autentiske nettsteder (godkjent designretning 24. nov 2026, ikke implementert)
+
+Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjelder foran resten av dokumentet. Implementeres i veikartets punkt 5 (W0–W8), ikke før.
+
+- **Arkitektur:** artefakten er fortsatt grunnenheten (søk, cache, versjoner, oppdagelse og bevis uendret). Nytt: nettstedskonfigurasjon (`content/universe/sites/<site>.json`) med daterte `designs`, `nav`, `status` (parkert, vedlikehold, borte) og `notFound`. Sideversjoner får `blocks`. Sider med `body` vises som én tekstblokk, så alt eksisterende virker. Nye sider får id `W-<site>-<nnnn>`.
+- **Maler:** elleve gjenbrukbare maler (Corporate, Government, Blog, Wiki, Forum, News, Anonymous, Legacy, Personal, Landing, Document) med varianter og temaer. Ingen nye rammeverk, mobil først, bare systemfonter.
+- **Design versjoneres etter dato.** En cachet side vises med designet som gjaldt da.
+- **Lister bygger seg selv** fra synlige sider med samme `site`/`page`. Cachede versjoner viser bare sider fra før cache-datoen. `listed: false` holder en side utenfor.
+- **Malene får bare et hvitelistet offentlig visningsobjekt.** Aldri `supports`, `mentions`, `source`, `filler`, `hidden`, `covers` eller `pool`.
+- **Browser eier nettleseren** (tilbake/frem, bokmerker adskilt fra bevis, tekststørrelse, cache og Archive). Nettstedene eier sin presentasjon (404, innlogging i eget design).
+- **Samme mal er ikke samme opphav.** Uavhengige nettsteder kan dele et kommersielt tema. Malvalg skal aldri være en sikker indikator.
+- **Bakgrunnsinternett:** mål 140–170 sider i etapper, først Northgate, Brightline, bykommunen, Eastfield Notes, Kestrel, Calderpedia, Threadline, Faceless Stock, SpillCheck og Docshare. Nye fakta føres i en fil for bakgrunnsfakta med `status: canon | claim` og sjekkes mot kanon. Bakgrunnssider skal ha like god grafikk som sider med spor.
+- **Avklaringer:** SpillCheck beholder rollen. Eastfield Notes er fra 2019, med gammelt tema fra ca. 2012, og Brightline byttet design samtidig med innholdet i oktober 2025. `corp-registries.example` byttes med et troverdig domene, med egen test. En cachet personalside fra 2024 på biblioteket lister Mara og Priya, uten nye personopplysninger. Calvins stockfoto kan ha flere uavhengige treff. Maras møllebilde brukes ikke på Calderpedia nå. Brightlines kundecaser forblir anonyme.
 
 ## Appkart
 
