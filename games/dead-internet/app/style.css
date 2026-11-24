@@ -168,6 +168,8 @@ a.lnk:active { opacity: .6; }
 .soc-names .muted { font-size: 13px; }
 .avatar { display: inline-grid; place-items: center; border-radius: 50%; overflow: hidden; flex: none; background: #ccd; color: #fff; font-weight: 700; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-open { padding: 0; border: 0; background: none; border-radius: 50%; cursor: zoom-in; flex: none; }
+.avatar-open:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 .k-social .page-body { font-size: 16px; }
 .stats { font-size: 14px; color: var(--ink2); padding: 8px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 12px; }
 .comment { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 10px; }

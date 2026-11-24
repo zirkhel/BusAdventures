@@ -1,5 +1,5 @@
 [
-  {"id": "NIMG0001", "kind": "photo", "caption": "The crowd at Pier 2", "source": "dailyrecord", "depicts": ["evt_festival"], "meta": {"taken": "2025-10-11 14:20", "device": "Daily Record photo desk"}},
+  {"id": "NIMG0001", "kind": "photo", "caption": "The crowd at Pier 2", "source": "dailyrecord", "depicts": ["evt_festival"], "meta": {"taken": "2025-10-11 18:10", "device": "Daily Record photo desk"}},
   {"id": "NIMG0002", "kind": "photo", "caption": "Pier 2 at the 'record' festival", "derivedFrom": "NIMG0001", "transforms": ["crop"], "source": "unfiltered", "depicts": ["evt_festival"], "meta": {"taken": null, "device": null, "note": "No metadata."}},
   {"id": "NIMG0003", "kind": "photo", "caption": "The north ferry dock at Northpoint", "source": "harbor_photo", "depicts": ["evt_dock_closure"], "meta": {"taken": "2025-01-12 09:05", "device": "Lumen 8"}},
   {"id": "NIMG0004", "kind": "photo", "caption": "Harbor Street during the blackout", "source": "dailyrecord", "depicts": ["evt_blackout"], "meta": {"taken": "2026-02-17 19:48", "device": "Daily Record photo desk"}},

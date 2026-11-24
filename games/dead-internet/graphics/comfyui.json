@@ -108,25 +108,29 @@
  },
  "IMG20": {
   "method": "generate",
-  "prompt": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers"
+  "prompt": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers",
+  "notes": "Done (Anders, ComfyUI, second version). The first version looked like Calvin and was replaced. No tongs in this one; the subtle tell is the watch on the crossed arms."
  },
  "IMG21": {
   "method": "generate",
-  "prompt": "smartphone photo from behind of a person walking a dog along a foggy harbour path, face not visible, muted grey morning, railings and moored boats fading into fog"
+  "prompt": "smartphone photo from behind of a person walking a dog along a foggy harbour path, face not visible, muted grey morning, railings and moored boats fading into fog",
+  "notes": "Done (Anders, ComfyUI)."
  },
  "IMG22": {
   "method": "generate",
   "prompt": "dated 2019 smartphone photo of a real woman in her 30s at home with a tabby cat sitting on her shoulder, warm indoor light, slight blur, older phone colours and noise",
-  "negative": "airbrushed, studio lighting"
+  "negative": "airbrushed, studio lighting",
+  "notes": "Done (Anders, ComfyUI). Evening photo, so the metadata time in images.json was moved from 14:11 to 22:47 (same date). Claude added one mild JPEG pass for the older phone look."
  },
  "IMG23": {
   "method": "generate",
-  "prompt": "friendly portrait of a woman in her 30s, children's librarian, colourful knitted cardigan, shelves of picture books behind her, warm library light, natural skin"
+  "prompt": "friendly portrait of a woman in her 30s, children's librarian, colourful knitted cardigan, shelves of picture books behind her, warm library light, natural skin",
+  "notes": "Done (Anders, ComfyUI)."
  },
  "NIMG0001": {
   "method": "generate",
   "prompt": "press photograph on a rainy afternoon, a dense crowd of people with umbrellas on a harbour pier, a fish-and-chips stall at the right edge, in the bottom-left corner next to the stall an empty patch of wet boards with a single lone blue umbrella, grey sky, documentary news photo",
-  "notes": "Original for NIMG0002. The bottom-left corner must stand alone as a believable square crop."
+  "notes": "Done (Anders, ComfyUI). Claude changed 'Harbour' to 'Harbor' on the big flag (canon spelling); the small flags are unreadable. Dusk light, so the metadata time is 18:10."
  },
  "NIMG0002": {
   "method": "derive",
@@ -135,19 +139,23 @@
    "Crop a square from the bottom-left corner by the fish stall, showing only the blue umbrella and a few people",
    "Resize to 1080×1080",
    "No other edits: pixels must stay identical for image search"
-  ]
+  ],
+  "notes": "Made by Claude from the final NIMG0001 (see transform)."
  },
  "NIMG0003": {
   "method": "generate",
-  "prompt": "overcast morning photo of a small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a small passenger ferry waiting offshore, calm grey water, news photo"
+  "prompt": "overcast morning photo of a small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a small passenger ferry waiting offshore, calm grey water, news photo",
+  "notes": "Done (Anders, ComfyUI). Claude removed the stray 's' in 'Port Calders' on the sign."
  },
  "NIMG0004": {
   "method": "generate",
-  "prompt": "night photo of a dark town street during a blackout, traffic lights dead, only car headlights, one city bus with passengers using phone flashlights inside, documentary, high ISO noise"
+  "prompt": "night photo of a dark town street during a blackout, traffic lights dead, only car headlights, one city bus with passengers using phone flashlights inside, documentary, high ISO noise",
+  "notes": "Done (Anders, ComfyUI). Claude hand-fixed: bus LED 42 -> 14 (DR-2026-0058), 'Port Calders' -> 'Port Calder' on both banners and the bus side, near street lamp darkened."
  },
  "NIMG0005": {
   "method": "generate",
-  "prompt": "pre-dawn smartphone photo, grey smoke drifting from the loading bay of a long brick warehouse, one fire engine with lights on, wet tarmac reflecting the lights, blue hour"
+  "prompt": "pre-dawn smartphone photo, grey smoke drifting from the loading bay of a long brick warehouse, one fire engine with lights on, wet tarmac reflecting the lights, blue hour",
+  "notes": "Done (Anders, ComfyUI)."
  },
  "AVA_NORTHGATE": {
   "method": "derive",
@@ -155,7 +163,8 @@
   "steps": [
    "Place the logo centred on white with generous margin",
    "Export 512×512"
-  ]
+  ],
+  "notes": "Made by Claude from LOGO_NORTHGATE (graphics/sources/shoot-avatar.cjs)."
  },
  "AVA_BRIGHTLINE": {
   "method": "derive",
@@ -170,55 +179,104 @@
  "DRP01": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 38, city hall reporter, rolled-up shirt sleeves, a notebook in his shirt pocket",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI). Claude painted out the garbled, mirrored lettering on the right side of the lanyard: Tomas is real, so the photo must not carry an AI tell. Use this image as the backdrop and light reference for DRP02–DRP07."
  },
  "DRP02": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 45, business editor, short grey bob haircut, dark blazer",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI)."
  },
  "DRP03": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 31, technology reporter, short beard, headphones around his neck",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI)."
  },
  "DRP04": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 60, culture writer, bright patterned scarf, laughing",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI)."
  },
  "DRP05": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 55, columnist, loosened tie, one eyebrow raised sceptically",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI)."
  },
  "DRP06": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 34, public safety reporter, wearing a rain jacket",
-  "notes": "The brief said outdoors; kept in the studio so all seven match. Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI). Studio backdrop rather than outdoors, which keeps the set consistent."
  },
  "DRP07": {
   "method": "generate",
-  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, cardigan, kind face",
-  "notes": "The brief mentions a library behind her; kept in the studio so all seven match. Same seed family and the same backdrop for all seven: generate them as one batch."
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, short straight white hair, thin silver wire glasses, pearl necklace, plain cardigan, kind gentle face",
+  "notes": "Done (Anders, ComfyUI, second version). The first version was nearly the same woman as DRP04 and was not used. Same photographer and backdrop for all seven is intended."
  },
  "UFP01": {
   "method": "generate",
-  "prompt": "close-up of a printed line of text on paper with a thick black redaction bar over it, high contrast, grainy, no face"
+  "prompt": "close-up of a printed line of text on paper with a thick black redaction bar over it, high contrast, grainy, no face",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "UFP02": {
   "method": "generate",
-  "prompt": "a desk lamp with a single green light bulb glowing in a dark room, moody, grainy, no people"
+  "prompt": "a desk lamp with a single green light bulb glowing in a dark room, moody, grainy, no people",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "UFP03": {
   "method": "generate",
-  "prompt": "a woman in her 40s in profile against a bright window, face in deep shadow, silhouette, grainy"
+  "prompt": "a woman in her 40s in profile against a bright window, face in deep shadow, silhouette, grainy",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "UFP04": {
   "method": "generate",
-  "prompt": "old CRT television screen showing static noise with a faint indistinct shape in it, no face"
+  "prompt": "old CRT television screen showing static noise with a faint indistinct shape in it, no face",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "LOGO_BRIGHTLINE": {
   "notes": "Made by Claude from graphics/sources (logo-brightline.svg, avatar-brightline.html + shoot-avatar.cjs)."
+ },
+ "LOGO_SEEKER": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_CONNECT": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_THREADLINE": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_DAILYRECORD": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_NORTHGATE": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_CITY": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_SPILLCHECK": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_FACELESS": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_DOCSHARE": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_UNFILTERED": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_KESTREL": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_CALDERPEDIA": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_EASTFIELDNOTES": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_UNFILTERED_ICON": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_DAILYRECORD_ICON": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
  }
 }

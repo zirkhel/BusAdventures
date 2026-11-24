@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+ <rect width="512" height="512" rx="112" fill="#f4eee1"/>
+ <text x="256" y="310" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="230" fill="#111">DR</text>
+ <rect x="112" y="350" width="288" height="8" fill="#111"/>
+ <rect x="112" y="366" width="288" height="3" fill="#c8102e"/>
+</svg>
