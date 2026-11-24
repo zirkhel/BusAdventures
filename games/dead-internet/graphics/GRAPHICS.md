@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 56.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 58.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -69,8 +69,8 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_SPILLCHECK | `assets/images/logo-spillcheck.svg` | 256×256 | logo | required | final file |  |  | A red padlock dripping onto black. |
 | LOGO_FACELESS | `assets/images/logo-faceless.svg` | 256×256 | logo | required | final file |  |  | An empty dashed oval face outline with shoulders, grey on off-white. |
 | LOGO_DOCSHARE | `assets/images/logo-docshare.svg` | 256×256 | logo | required | final file |  |  | A folded document with a link chain, blue line art. |
-| NIMG0001 | `assets/images/nimg0001-festival-crowd.webp` | 1600×1067 | photo | required | placeholder | DR-2025-0322 | original for NIMG0002 | Press photo, rainy afternoon: a dense crowd with umbrellas on a harbor pier, fish-and-chips stall on the right edge, a lone blue umbrella in an empty bottom-left corner by the stall. |
-| NIMG0002 | `assets/images/nimg0002-festival-crop.webp` | 1080×1080 | photo | required | placeholder | UF-2025-0052 | from NIMG0001: crop: square, bottom-left corner by the fish stall, only the blue umbrella and a few people | Not generated: crop of NIMG0001. Keep pixels identical so image search can match. |
+| NIMG0001 | `assets/images/nimg0001-festival-crowd.webp` | 1600×1067 | photo | required | final file | DR-2025-0322 | original for NIMG0002 | Press photo, rainy dusk at Pier 2: a dense crowd with umbrellas, the stage with lights at the far end, 'Port Calder Harbor Festival' flags with the lighthouse mark, a Fish & Chips stall on the right edge, a lone man with a blue umbrella on the nearly empty wet pier in the bottom-left corner. |
+| NIMG0002 | `assets/images/nimg0002-festival-crop.webp` | 1080×1080 | photo | required | final file | UF-2025-0052 | from NIMG0001: crop: 590×590 square from NIMG0001 (1536×1024 original) at x 0, y 434, the man with the blue umbrella and a few people on the empty wet pier, resized to 1080×1080 | Not generated: crop of NIMG0001. Keep pixels identical so image search can match. |
 | NIMG0003 | `assets/images/nimg0003-north-dock.webp` | 1600×1067 | photo | required | placeholder | DR-2025-0101, UF-2025-0007 |  | Overcast morning, small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a ferry waiting offshore. |
 | NIMG0004 | `assets/images/nimg0004-blackout-street.webp` | 1600×1067 | photo | required | placeholder | DR-2026-0058 |  | Night, a dark town street with dead traffic lights, car headlights and one bus with interior flashlights. |
 | NIMG0005 | `assets/images/nimg0005-warehouse-smoke.webp` | 1080×1350 | photo | required | placeholder | DR-2026-0031, UF-2026-0004 |  | Pre-dawn phone photo: grey smoke from the loading bay of a long brick warehouse, one fire engine, wet tarmac. |

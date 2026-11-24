@@ -130,7 +130,7 @@
  "NIMG0001": {
   "method": "generate",
   "prompt": "press photograph on a rainy afternoon, a dense crowd of people with umbrellas on a harbour pier, a fish-and-chips stall at the right edge, in the bottom-left corner next to the stall an empty patch of wet boards with a single lone blue umbrella, grey sky, documentary news photo",
-  "notes": "Original for NIMG0002. The bottom-left corner must stand alone as a believable square crop."
+  "notes": "Done (Anders, ComfyUI). Claude changed 'Harbour' to 'Harbor' on the big flag (canon spelling); the small flags are unreadable. Dusk light, so the metadata time is 18:10."
  },
  "NIMG0002": {
   "method": "derive",
@@ -139,7 +139,8 @@
    "Crop a square from the bottom-left corner by the fish stall, showing only the blue umbrella and a few people",
    "Resize to 1080×1080",
    "No other edits: pixels must stay identical for image search"
-  ]
+  ],
+  "notes": "Made by Claude from the final NIMG0001 (see transform)."
  },
  "NIMG0003": {
   "method": "generate",

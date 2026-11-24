@@ -1,31 +1,5 @@
 [
  {
-  "id": "NIMG0001",
-  "method": "generate",
-  "positive": "press photograph on a rainy afternoon, a dense crowd of people with umbrellas on a harbour pier, a fish-and-chips stall at the right edge, in the bottom-left corner next to the stall an empty patch of wet boards with a single lone blue umbrella, grey sky, documentary news photo, realistic smartphone photo, natural light, slight sensor noise, no text overlays, no real brands",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1216,
-  "genHeight": 832,
-  "width": 1600,
-  "height": 1067,
-  "seed": 430445403,
-  "out": "assets/images/nimg0001-festival-crowd.webp",
-  "dependsOn": []
- },
- {
-  "id": "NIMG0002",
-  "method": "derive",
-  "from": "NIMG0001",
-  "steps": [
-   "Crop a square from the bottom-left corner by the fish stall, showing only the blue umbrella and a few people",
-   "Resize to 1080×1080",
-   "No other edits: pixels must stay identical for image search"
-  ],
-  "out": "assets/images/nimg0002-festival-crop.webp",
-  "width": 1080,
-  "height": 1080
- },
- {
   "id": "NIMG0003",
   "method": "generate",
   "positive": "overcast morning photo of a small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a small passenger ferry waiting offshore, calm grey water, news photo, realistic smartphone photo, natural light, slight sensor noise, no text overlays, no real brands",
