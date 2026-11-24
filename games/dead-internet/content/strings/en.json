@@ -1,4 +1,15 @@
 {
+  "menu": {
+    "title": "DEAD INTERNET",
+    "tagline": "Trust nothing. Verify everything.",
+    "continue": "Continue investigation",
+    "heading": "Available investigations",
+    "inProgress": "In progress",
+    "closed": "Case closed",
+    "start": "Start investigation",
+    "future": "Future investigation",
+    "back": "Back"
+  },
   "intro": {
     "title": "Dead Internet",
     "tagline": "Everyone is online. Nobody is real.",

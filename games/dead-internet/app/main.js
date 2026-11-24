@@ -37,8 +37,33 @@ async function boot() {
   }
   let saved = null;
   try { saved = loadFrom(store, world); } catch (err) { console.warn("Save could not be read:", err); }
-  if (saved) run(new Game(world, { state: saved.state }), false);
-  else intro();
+  menu(saved);
+}
+
+/**
+ * Start screen: the universe's title and the investigations it holds. Built from
+ * mysteries[].menu, so a new mystery shows up by adding content. Playable mysteries can be
+ * started or continued; seeds with a menu entry are shown as future investigations.
+ * Until the universe split (U1) there is one save per world, so every playable case shares it.
+ */
+function menu(saved) {
+  const S = world.strings.menu;
+  const game = saved ? new Game(world, { state: saved.state }) : null;
+  const resume = () => run(/** @type {Game} */ (game), false);
+  const entries = [...world.mysteries.values()].filter(m => m.menu).sort((a, b) => (a.menu.order ?? 99) - (b.menu.order ?? 99));
+  const item = (m, i) => {
+    const playable = m.status !== "seed" && m.status !== "locked";
+    const status = !playable ? S.future : !game ? S.start : game.caseStatus(m.id) === "closed" ? S.closed : S.inProgress;
+    const num = String(m.menu.order ?? i + 1).padStart(2, "0");
+    const thumb = h("div.menu-thumb", { class: `t-${m.id}` }, m.menu.image ? h("img", { src: m.menu.image, alt: "", onerror: e => e.target.remove() }) : null, h("span", num));
+    const body = h("div.menu-main", h("b", `${num} – ${m.title}`), h("div.menu-tag", m.menu.tagline || ""), h("div.menu-st", { class: playable ? "live" : "" }, status));
+    return playable ? h("button.menu-item", { onclick: () => (game ? resume() : intro()) }, thumb, body) : h("div.menu-item.future", thumb, body);
+  };
+  root.replaceChildren(h("div.menu",
+    h("div.menu-top", h("h1", S.title), h("div.menu-tagline", S.tagline)),
+    game ? h("button.menu-continue", { onclick: resume }, S.continue) : null,
+    h("div.menu-heading", S.heading),
+    h("div.menu-list", entries.map(item))));
 }
 
 function intro() {
@@ -53,6 +78,7 @@ function intro() {
     run(g, true);
   };
   root.replaceChildren(h("div.intro",
+    h("button.intro-back", { onclick: () => menu(null) }, "‹ ", world.strings.menu.back),
     h("div.intro-top", h("h1", S.title), h("div.tagline", S.tagline)),
     h("p.intro-text", S.text),
     h("form.intro-form", { onsubmit: start }, h("label", S.namePrompt, name), h("button.btn.primary", { type: "submit" }, S.start))));
