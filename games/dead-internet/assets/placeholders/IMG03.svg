@@ -3,9 +3,6 @@
 <rect x="12" y="12" width="576" height="376" fill="none" stroke="hsl(87 40% 60%)" stroke-dasharray="8 6"/>
 <g  font-family="system-ui, sans-serif" fill="hsl(87 30% 88%)">
 <text x="32" y="56" font-size="28" font-weight="700">IMG03</text>
-<text x="32" y="84" font-size="14" opacity=".8">photo · 1600×1067</text>
-<text x="32" y="124" font-size="16">Overcast press photo: a crane lifts the CALDER</text>
-<text x="32" y="146" font-size="16">MILL — EST. 1887 sign off the roof. Small</text>
-<text x="32" y="168" font-size="16">crowd behind a barrier. Same sign design as</text>
-<text x="32" y="190" font-size="16">IMG02.</text>
+<text x="32" y="84" font-size="14" opacity=".8">placeholder · 1600×1067</text>
+<text x="32" y="124" font-size="16">Crane lifts the Calder Mill sign</text>
 </g></svg>

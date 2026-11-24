@@ -247,7 +247,12 @@ export function registerDefaultActions(cs) {
     // Documents (attachments, linked pages)
     .register({ id: "doc-open", icon: "globe", types: ["document"], label: "Open document", run: (r, o, p) => p.openArtifact(r.artifact, r.version ?? undefined, p.appFor(r.artifact)) })
     .register({ id: "doc-save", icon: "bookmark", types: ["document"], label: "Save as evidence", when: (r, o, p) => { const v = p.g.view(r.artifact, r.version ?? undefined); return !v.error && !v.locked; },
-      run: (r, o, p) => { const v = p.g.view(r.artifact, r.version ?? undefined); p.saveEvidence({ artifact: r.artifact, version: v.versionId }); } })
+      run: (r, o, p) => {
+        const v = p.g.view(r.artifact, r.version ?? undefined);
+        // An attachment can be saved straight from the message: saving it means having looked at it.
+        if (p.g.s.seen[r.artifact] == null) p.g.open(r.artifact, v.cached ? v.versionId : undefined);
+        p.saveEvidence({ artifact: r.artifact, version: v.versionId });
+      } })
     .register({ id: "doc-versions", icon: "clock", types: ["document"], label: "View available versions", run: (r, o, p) => p.versions(r.artifact) })
     // Timeline (the player's own reconstruction; nothing is filled in from the story)
     .register({ id: "tl-date", icon: "clock", types: ["date"], label: "Add to Timeline", investigates: false, run: (r, o, p) => p.eventFromDate(r, o) })

@@ -256,6 +256,8 @@ export class Game {
         if (e.closes) CS.closeCase(this, m.id);
         applyEffects(this, e.effects, { ending: key });
         this.emit("ending", { mystery: m.id, ending: e.id });
+        // The player is told, wherever they are; the epilogue is in the Casebook's reports.
+        this.notify({ text: e.closes ? `Case closed: ${e.title ?? e.id}` : `An ending: ${e.title ?? e.id}`, ref: { case: m.id } });
       }
     }
   }

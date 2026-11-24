@@ -14,6 +14,36 @@ const lastFrom = (g, who) => [...g.s.messages].reverse().find(m => m.thread === 
 
 /** Brother + journalist route, ending with a Daily Record story before the vote. */
 function brotherAndJournalist(g) {
+  const r = gather(g);
+  g.review("daily_record", [r.h2, r.h3]);
+  g.publish("daily_record", [r.h2, r.h3]);
+  g.sleep();
+  return r;
+}
+
+/** The same investigation, but the story only runs after the vote. */
+function tooLate(g) {
+  const r = gather(g);
+  while (g.s.day < 9) g.sleep();
+  g.publish("daily_record", [r.h2, r.h3]);
+  g.sleep();
+  return r;
+}
+
+/** A wrong accusation against someone real, published on an open channel. */
+const accuse = (subject, evidence, channel) => g => {
+  g.start();
+  g.search("Mara Quinn"); g.open("A16"); g.open("A17");
+  for (const a of evidence) g.open(a);
+  const ids = evidence.map(a => ev(g, { artifact: a }));
+  const h = hyp(g, { subject, predicate: "operates", object: "acc_maraquinn" }).id;
+  ids.forEach(e => g.link(h, e));
+  g.publish(channel, [h]);
+  g.sleep();
+  return { h };
+};
+
+function gather(g) {
   g.start();
   // Day 1: who was Mara, and is this really her?
   g.search("Mara Quinn obituary"); g.open("A11");
@@ -50,9 +80,6 @@ function brotherAndJournalist(g) {
   const h3 = hyp(g, { subject: "northgate", predicate: "paid", object: "brightline" }).id;
   [invoice, lobby].forEach(e => g.link(h3, e));
   g.note("Theo's email: recovery address r…@bl-ops.net. bl-ops.net = Brightline client portal.");
-  g.review("daily_record", [h2, h3]);
-  g.publish("daily_record", [h2, h3]);
-  g.sleep();
   return { h2, h3, sign, orig };
 }
 
@@ -176,6 +203,29 @@ export const SCENARIOS = [
       ["Iris has cut contact", g.s.flags.iris_cut === true],
       ["Iris no longer answers", (ask(g, "iris", "brightline"), lastFrom(g, "iris")?.text.includes("Don't contact me again"))],
       ["portal session was revoked", !g.s.loggedIn.brightline_portal],
+    ] },
+  { id: "too_late", title: "The whole story, published after the vote", run: tooLate,
+    expect: g => [
+      ["Too Late reached", g.s.endings.includes("quiet_account:too_late")],
+      ["Lights Out not reached", !g.s.endings.includes("quiet_account:lights_out")],
+      ["the vote passed, and the paper reported it", !!g.s.flags.vote_passed && g.view("A68").error == null],
+      ["the player is told the case closed", g.s.notifications.some(n => n.ref?.case === "quiet_account" && /Too late/.test(n.text))],
+    ] },
+  { id: "collateral_theo", title: "Accuse the brother on Threadline", run: accuse("theo", ["A16"], "threadline"),
+    expect: g => [
+      ["Collateral reached", g.s.endings.includes("quiet_account:collateral_theo")],
+      ["Theo stops answering", g.s.flags.theo_blocked === true],
+      ["Unfiltered picks up the post", g.view("A69").error == null],
+    ] },
+  { id: "collateral_owen", title: "Accuse Owen on Connect", run: accuse("owen", ["A17"], "connect"),
+    expect: g => [
+      ["Collateral reached", g.s.endings.includes("quiet_account:collateral_owen")],
+      ["Owen writes", !!lastFrom(g, "owen")?.text.includes("hacker")],
+    ] },
+  { id: "collateral_iris", title: "Name Iris as the one behind the account", run: accuse("iris", ["A08"], "threadline"),
+    expect: g => [
+      ["Collateral reached", g.s.endings.includes("quiet_account:collateral_iris")],
+      ["Iris' account is gone", g.s.accounts.acc_irisbell?.deleted === true],
     ] },
   { id: "juno", title: "Show Juno the truth three times", run: breakJuno,
     expect: g => [

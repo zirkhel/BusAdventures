@@ -3,8 +3,6 @@
 <rect x="12" y="12" width="576" height="726" fill="none" stroke="hsl(116 40% 60%)" stroke-dasharray="8 6"/>
 <g  font-family="system-ui, sans-serif" fill="hsl(116 30% 88%)">
 <text x="32" y="56" font-size="28" font-weight="700">IMG11</text>
-<text x="32" y="84" font-size="14" opacity=".8">photo · 1080×1350</text>
-<text x="32" y="124" font-size="16">Mara (fixed reference) laughing at the harbour</text>
-<text x="32" y="146" font-size="16">in summer 2023, slightly blurry, taken by her</text>
-<text x="32" y="168" font-size="16">brother.</text>
+<text x="32" y="84" font-size="14" opacity=".8">placeholder · 1080×1350</text>
+<text x="32" y="124" font-size="16">Mara laughing at the harbour, 2023</text>
 </g></svg>

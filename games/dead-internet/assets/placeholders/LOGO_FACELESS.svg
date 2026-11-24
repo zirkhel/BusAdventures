@@ -3,6 +3,6 @@
 <rect x="12" y="12" width="576" height="576" fill="none" stroke="hsl(59 40% 60%)" stroke-dasharray="8 6"/>
 <g  font-family="system-ui, sans-serif" fill="hsl(59 30% 88%)">
 <text x="32" y="56" font-size="28" font-weight="700">LOGO_FACELESS</text>
-<text x="32" y="84" font-size="14" opacity=".8">logo · 256×256</text>
+<text x="32" y="84" font-size="14" opacity=".8">placeholder · 256×256</text>
 <text x="32" y="124" font-size="16">An empty oval face outline.</text>
 </g></svg>

@@ -8,7 +8,7 @@
 // Items can belong to one, several or no cases (cases: [], unclassified by default). The filter
 // (desc.filter: undefined = all, "" = unclassified, or a case id) only narrows the lists.
 
-import { h, icon, fmtDate, fmtEventDate } from "../ui.js";
+import { h, icon, fmtDate, fmtEventDate, TOPIC_NOTE } from "../ui.js";
 import { img, avatar } from "../media.js";
 import { richText } from "../render.js";
 
@@ -201,7 +201,7 @@ export function casebookApp(phone) {
     const pickTopic = (title, kinds, cb) => {
       const by = new Map();
       for (const t of topics.filter(t => kinds.has(t.kind))) { if (!by.has(t.kind)) by.set(t.kind, []); by.get(t.kind).push(t); }
-      phone.picker({ title, empty: "You don't know anyone or anything that fits yet.",
+      phone.picker({ title, empty: "You don't know anyone or anything that fits yet.", note: TOPIC_NOTE,
         groups: [...by.entries()].map(([k, items]) => ({ title: (KIND_TITLES[k] || k) + "s", items: items.sort((a, b) => a.name.localeCompare(b.name)).map(t => ({ id: t.id, label: t.name })) })),
         onPick: cb });
     };
