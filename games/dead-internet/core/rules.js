@@ -19,7 +19,7 @@
 //   credibility <delta>, show <artifact> (a `datedOnShow` artifact is dated that day), hide <artifact>, setLive {artifact, version|null},
 //   deleteAccount <account>, restoreAccount <account>, logout <site>,
 //   message {from|fromAccount, text, attach?, supports?, source?, mentions?},
-//   notify {text, ref?}, know <entity|account>, later {days, do:[effects]}
+//   notify {text, ref? | from? (platform id)}, know <entity|account>, later {days, do:[effects]}
 
 import { asArray, fill } from "./util.js";
 import { check } from "./conditions.js";

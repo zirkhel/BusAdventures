@@ -11,6 +11,7 @@ import { messagesApp } from "./apps/messages.js";
 import { casebookApp } from "./apps/casebook.js";
 import { settingsApp } from "./apps/settings.js";
 import { newsApp } from "./apps/news.js";
+import { Tips } from "./tips.js";
 import { ContextSystem, registerDefaultActions } from "./context.js";
 
 export class Phone {
@@ -53,7 +54,9 @@ export class Phone {
     this.toastBox = h("div.toasts");
     // Always-visible home button in every app: one tap to the home screen, however deep you are.
     this.homeBar = h("div.homebar", h("button.hb-pill", { "aria-label": "Home screen", onclick: () => this.goHome() }, icon("home"), h("span", "Home")));
-    root.replaceChildren(this.status, this.screen, this.bannerBox, this.overlay, this.toastBox, this.homeBar);
+    /** Introduction and first-use tips. */
+    this.tips = new Tips(this);
+    root.replaceChildren(this.status, this.screen, this.bannerBox, this.tips.box, this.overlay, this.toastBox, this.homeBar);
     /** The shared context action system (tappable words, action sheets, text selection). */
     this.ctx = new ContextSystem(this);
     registerDefaultActions(this.ctx);
@@ -64,7 +67,7 @@ export class Phone {
     this.shown = null;
 
     this.#gestures();
-    game.on("notify", n => this.#banner(n));
+    game.on("notify", n => { if (n.ref?.case) this.pendingTip = "outcome"; this.#banner(n); });
     game.on("state", () => { this.#statusBar(); this.#badges(); });
     this.#statusBar();
     setInterval(() => this.#statusBar(), 15000);
@@ -76,7 +79,7 @@ export class Phone {
   // ── Navigation ────────────────────────────────────────────────────────────
 
   lock() { this.where = "lock"; this.#render(); }
-  unlock() { this.woke = false; this.goHome(); }
+  unlock() { this.woke = false; this.goHome(); this.tips.intro(); }
   goHome() { this.closeOverlay(); this.where = "home"; this.#render(); }
 
   openApp(id) {
@@ -405,6 +408,7 @@ export class Phone {
     if (r.error) this.toast(this.str(`errors.${r.error}`));
     else this.toast(r.duplicate ? "Already in your Casebook." : "Saved to Casebook.");
     this.refresh();
+    if (!r.error) this.tips.trigger("save");
     return r;
   }
 
@@ -418,7 +422,18 @@ export class Phone {
     if (n.ref?.thread) this.push("messages", { kind: "thread", id: n.ref.thread });
     else if (n.ref?.artifact) this.openArtifact(n.ref.artifact);
     else if (n.ref?.case) { this.goHome(); this.openApp("casebook"); this.push("casebook", { kind: "reports" }); }
+    else if (n.from) this.#openFrom(n.from);
     else this.goHome();
+  }
+
+  /** The app a platform lives in: its own (Connect, a paper), or the browser for a website. */
+  #fromApp(pf) { return this.platformApp.get(pf) || (this.apps[pf] ? pf : null); }
+  #fromName(pf) { const a = this.#fromApp(pf); return a ? (this.apps[a].name || this.str(`apps.${a}`)) : (this.g.w.platforms.get(pf)?.name || pf); }
+  #openFrom(pf) {
+    const a = this.#fromApp(pf);
+    if (a) { this.goHome(); this.openApp(a); return; }
+    const d = this.g.w.platforms.get(pf)?.domain;
+    if (d) this.browse(d); else this.goHome();
   }
 
   // ── Image viewer ──────────────────────────────────────────────────────────
@@ -456,6 +471,7 @@ export class Phone {
       info.replaceChildren(h("dl", rows.map(([k, v]) => [h("dt", k), h("dd", v)])));
     };
     zoomable(stage, im);
+    this.tips.trigger("image");
     if (o.info) toggleInfo();
     this.overlay.replaceChildren(box);
     this.overlay.classList.add("open");
@@ -628,6 +644,24 @@ export class Phone {
       if (box && desc?.scroll) box.scrollTop = desc.scroll;
     }
     this.#statusBar();
+    this.#tipFor(this.where === "home" || this.where === "lock" ? null : this.top);
+  }
+
+  /** The first-use tip for the screen now shown, if any. */
+  #tipFor(desc) {
+    if (this.where === "lock") return;
+    const anchor = this.where === "home" ? "home" : desc;
+    this.tips.follow(anchor);
+    const trigger = k => this.tips.trigger(k, anchor);
+    if (this.pendingTip) { const k = this.pendingTip; this.pendingTip = null; trigger(k); return; }
+    if (this.where === "home") { if (this.tips.p.seen.length) trigger("sleep"); return; }
+    const k = desc?.kind;
+    const key = this.where === "messages" ? (k === "thread" ? "message" : null)
+      : this.where === "casebook" ? (k === "builder" ? "theory" : k === "report" ? "report" : null)
+      : this.where === "settings" ? null
+      : k === "results" ? "search"
+      : k === "home" || k === "history" || k === "lookup" || k === "imageResults" ? null : "read";
+    if (key) trigger(key);
   }
 
   #statusBar() {
@@ -660,7 +694,8 @@ export class Phone {
     const thread = n.ref?.thread;
     const c = thread ? this.g.w.characters.get(thread) : null;
     const target = n.ref?.artifact ? this.appFor(n.ref.artifact) : null;
-    const app = thread ? "Messages" : target ? (this.apps[target]?.name || this.str(`apps.${target}`)) : n.ref?.case ? this.str("apps.casebook") : "News";
+    const app = thread ? "Messages" : target ? (this.apps[target]?.name || this.str(`apps.${target}`)) : n.ref?.case ? this.str("apps.casebook")
+      : n.from ? this.#fromName(n.from) : this.str("apps.notification");
     const title = c ? this.contactName(thread) : app;
     return h("button.note", { onclick: onOpen },
       h("div.note-head", h("span.note-app", app), h("span.muted", n.day === this.g.s.day ? "now" : `Day ${n.day}`)),

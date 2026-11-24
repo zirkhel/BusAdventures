@@ -120,6 +120,7 @@ export function newsApp(phone, pf) {
     const list = (desc.results || []).filter(r => !r.cached && !seen.has(r.artifact) && seen.add(r.artifact));
     return [form, desc.q ? h("div.results",
       h("div.results-count.muted", list.length ? `${list.length} stor${list.length === 1 ? "y" : "ies"}` : ""),
+      list[0]?.partial ? h("div.results-partial.muted", "No story has all of these words. Showing stories with some of them.") : null,
       list.length ? list.map(r => item(r.artifact)) : h("div.empty", h("b", `No stories match “${desc.q}”.`), h("div.muted", "Older or removed stories may still be in Seeker's cache."))) : null];
   }
 

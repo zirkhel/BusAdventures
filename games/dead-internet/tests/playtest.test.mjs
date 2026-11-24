@@ -37,7 +37,7 @@ test("an ending reached overnight tells the player and opens the reports", () =>
   const g = new Game(world, { seed: 1 }); g.start();
   while (g.s.day < 8) g.sleep();
   assert.ok(g.s.endings.includes("quiet_account:silence"));
-  assert.ok(g.s.notifications.some(n => n.ref?.case === "quiet_account" && /Silence/.test(n.text)));
+  assert.ok(g.s.notifications.some(n => n.ref?.case === "quiet_account" && /^The Quiet Account: Silence/.test(n.text)));
 });
 
 test("the case's names also turn up in ordinary pages", () => {

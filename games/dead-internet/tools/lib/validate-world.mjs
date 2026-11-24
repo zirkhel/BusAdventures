@@ -79,7 +79,13 @@ export function validateWorld(raw, opts = {}) {
           for (const id of arr(v.mentions)) if (!isRef(id)) err(where, `message mentions unknown id ${id}`);
           if (arr(v.supports).length && !v.source) warn(where, "message with supports but no source");
         }
-        if (k === "notify" && v.ref?.artifact && !w.artifacts.has(v.ref.artifact)) err(where, `notify: unknown artifact ${v.ref.artifact}`);
+        if (k === "notify") {
+          const n = typeof v === "string" ? { text: v } : v;
+          if (n.ref?.artifact && !w.artifacts.has(n.ref.artifact)) err(where, `notify: unknown artifact ${n.ref.artifact}`);
+          // Every notification says who it is from: what it opens (ref) or the platform it came from.
+          if (!n.ref && !n.from) err(where, "notify without ref or from: the player would not know who sent it");
+          if (n.from && !w.platforms.has(n.from)) err(where, `notify: unknown platform ${n.from}`);
+        }
         if (k === "later") checkEffects(where, v.do, ctx);
       }
     }

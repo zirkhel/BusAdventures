@@ -118,6 +118,7 @@
     "any": [
      { "seen": "A39" },
      { "seen": "A53" },
+     { "seen": "DR-2026-0085" },
      { "visible": "A39" }
     ]
    },
@@ -182,7 +183,8 @@
     },
     {
      "notify": {
-      "text": "Connect has suspended 41 accounts linked to Brightline Media."
+      "text": "Connect has suspended 41 accounts linked to Brightline Media.",
+      "from": "connect"
      }
     },
     {
@@ -251,7 +253,8 @@
     },
     {
      "notify": {
-      "text": "Connect suspends Brightline-linked accounts. The Waterfront vote stands; Ruiz calls for an inquiry."
+      "text": "Connect suspends Brightline-linked accounts. The Waterfront vote stands; Ruiz calls for an inquiry.",
+      "from": "connect"
      }
     }
    ]
@@ -302,7 +305,8 @@
     },
     {
      "notify": {
-      "text": "'Dead woman's account kept posting' goes viral. Brightline blames 'a rogue contractor'. Northgate is not mentioned."
+      "text": "'Dead woman's account kept posting' goes viral. Brightline blames 'a rogue contractor'. Northgate is not mentioned.",
+      "from": "unfiltered"
      }
     }
    ]
@@ -338,7 +342,8 @@
     },
     {
      "notify": {
-      "text": "Northgate threatens legal action over 'defamatory murder claims'. Accounts across Eastfield share: 'conspiracy nuts harass grieving family'."
+      "text": "Northgate threatens legal action over 'defamatory murder claims'. Accounts across Eastfield share: 'conspiracy nuts harass grieving family'.",
+      "from": "connect"
      }
     },
     {
@@ -372,7 +377,8 @@
     },
     {
      "notify": {
-      "text": "Threadline users have found Theo Quinn's address."
+      "text": "Threadline users have found Theo Quinn's address.",
+      "from": "threadline"
      }
     }
    ]
@@ -422,7 +428,8 @@
     },
     {
      "notify": {
-      "text": "Iris Bell's name is trending. Her account is gone."
+      "text": "Iris Bell's name is trending. Her account is gone.",
+      "from": "connect"
      }
     }
    ]
@@ -496,7 +503,8 @@
     },
     {
      "notify": {
-      "text": "The vote passed. Nobody said anything. @maraquinn is still posting."
+      "text": "The vote passed. Nobody said anything. @maraquinn is still posting.",
+      "from": "dailyrecord"
      }
     }
    ]

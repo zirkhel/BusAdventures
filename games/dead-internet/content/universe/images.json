@@ -21,7 +21,7 @@
     "manipulation": { "kind": "composite", "tell": "The same woman appears twice. Calvin and Renee cast no shadows; everyone else's shadow falls left." } },
   { "id": "IMG09", "kind": "screenshot", "caption": "The Garden dashboard", "depicts": ["the_garden", "brightline"], "source": "iris", "meta": { "taken": "2025-12-12 16:05", "device": "Lumen 7" } },
   { "id": "IMG10", "kind": "scan", "caption": "Brightline invoice CSP-EF-Q1", "depicts": ["brightline", "northgate"], "source": "dana-tip", "meta": { "software": "ScanEasy" } },
-  { "id": "IMG11", "kind": "photo", "caption": "Mara laughing at the harbour, 2023", "depicts": ["mara"], "source": "theo", "meta": { "taken": "2023-08-19 18:20", "device": "Caldwell C3" } },
+  { "id": "IMG11", "kind": "photo", "caption": "Mara at the harbour, 2023", "depicts": ["mara"], "source": "theo", "meta": { "taken": "2023-08-19 18:20", "device": "Caldwell C3" } },
   { "id": "IMG12", "kind": "render", "caption": "Eastfield Waterfront rendering", "depicts": ["waterfront"], "source": "northgate", "meta": null },
   { "id": "IMG13", "kind": "profile", "caption": "Mara Quinn", "depicts": ["mara"], "source": "mara-account", "meta": { "taken": "2021-02-27 12:03", "device": "Lumen 5" } },
   { "id": "IMG14", "kind": "profile", "caption": "Theo Quinn", "depicts": ["theo"], "source": "theo", "meta": null },

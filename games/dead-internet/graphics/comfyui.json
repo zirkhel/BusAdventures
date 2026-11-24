@@ -1,0 +1,224 @@
+{
+ "IMG02": {
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI). Reference for the mill."
+ },
+ "IMG01": {
+  "method": "derive",
+  "from": "IMG02",
+  "steps": [
+   "Crop 720×720 at x 300, y 200 from the final IMG02 (1080×1350)",
+   "Resize to 1080×1080",
+   "Done: assets/images/img01-mill-sign-crop.webp"
+  ],
+  "done": true
+ },
+ "IMG03": {
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI)."
+ },
+ "IMG04S": {
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI). Replaced with a black-bob version so Juno does not look like Mara or Dana."
+ },
+ "IMG04": {
+  "method": "derive",
+  "from": "IMG04S",
+  "steps": [
+   "Crop 720×720 at x 170, y 130 from the final IMG04S (1024×1024)",
+   "Resize to 512×512",
+   "Done: assets/images/img04-juno-profile.webp"
+  ],
+  "done": true
+ },
+ "IMG05O": {
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI), landscape 1440×1080."
+ },
+ "IMG05": {
+  "method": "derive",
+  "from": "IMG05O",
+  "steps": [
+   "Mirror the final IMG05O (1440×1080) horizontally",
+   "Crop 740×740 at x 0, y 230",
+   "Resize to 1080×1080",
+   "Done: assets/images/img05-garden-mirrored.webp"
+  ],
+  "done": true
+ },
+ "IMG06S": {
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI). Calvin's face for IMG08."
+ },
+ "IMG06": {
+  "method": "derive",
+  "from": "IMG06S",
+  "steps": [
+   "Crop 680×680 at x 180, y 60 from the final IMG06S (1024×1024)",
+   "Resize to 512×512",
+   "Done: assets/images/img06-calvin-profile.webp"
+  ],
+  "done": true
+ },
+ "IMG07": {
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI). The red circle is Owen's own markup."
+ },
+ "IMG08": {
+  "method": "manual",
+  "how": "Generate the group on a lawn, then edit by hand (Photoshop/GIMP or ComfyUI inpainting)",
+  "prompt": "corporate offsite group photo, eleven people smiling in two rows on a sunny lawn, casual business clothes, mixed ages and looks, hard afternoon sun from the right so every shadow falls to the left on the grass, wide shot, slightly too polished marketing photo",
+  "notes": "Edits, all required (they are the evidence that Calvin is not real, S7): 1) paste the same woman twice, once on the left and once on the far right, same pose; 2) put Calvin's face from the final IMG06S on the man in the centre (keep the hoop/stud earrings); 3) remove the shadows under Calvin and under Renee (woman next to him in the centre); everyone else keeps a shadow falling left. The errors must be visible when zoomed on a phone. Avoid anyone who looks like Iris (messy dark bun, black knit sweater), Mara or Dana. No real brands; the Brightline logo may appear on a small banner only."
+ },
+ "IMG09": {
+  "method": "manual",
+  "how": "Build the dashboard in HTML, screenshot it, then make it a phone photo",
+  "prompt": "smartphone photo of a laptop screen in a dim office, visible moiré pattern, slight angle, screen glare",
+  "notes": "Dashboard title 'THE GARDEN — Port Calder': 41 active personas, dormant inventory 11,402, client NGD, a list that includes MARA_Q and JUNO_P. Composite the screenshot onto the laptop or use img2img at low denoise."
+ },
+ "IMG10": {
+  "method": "manual",
+  "how": "Make the invoice as a document (HTML or word processor), print to image, skew slightly, add scan noise",
+  "notes": "BRIGHTLINE MEDIA LLC, INVOICE CSP-EF-Q1, bill to Northgate Development attn. P. Navarro, $21,000, payable to Meridian Holdings Ltd. Text must be exact: do not generate it."
+ },
+ "IMG11": {
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI)."
+ },
+ "IMG12": {
+  "method": "generate",
+  "prompt": "glossy architectural visualisation rendering, four modern glass residential towers on a harbour waterfront, happy people walking on a promenade, blue sky, through a glass lobby wall the long old painted sign panel reading \"CALDER MILL — EST. 1887\" is mounted as decoration, developer marketing style",
+  "text": "CALDER MILL — EST. 1887",
+  "notes": "The sign panel must match IMG02.",
+  "faceRef": "mill"
+ },
+ "IMG16": {
+  "method": "generate",
+  "prompt": "low resolution photo of a rusty old cast-iron mill gear, close-up, heavy JPEG compression artefacts, oversaturated",
+  "notes": "Downscale to 256 px and back up to 512 px, then save at very low JPEG quality before the webp."
+ },
+ "IMG18": {
+  "method": "generate",
+  "prompt": "corporate headshot of a man, 47, navy jacket, light blue shirt, neutral office background, natural skin with small flaws and pores, slight asymmetry, real photographer lighting",
+  "negative": "airbrushed, plastic skin, perfect symmetry",
+  "notes": "Must read as a real person, not synthetic."
+ },
+ "IMG19": {
+  "method": "derive",
+  "from": "AVA_BRIGHTLINE",
+  "steps": [
+   "Same file as AVA_BRIGHTLINE (copy it)"
+  ]
+ },
+ "IMG20": {
+  "method": "generate",
+  "prompt": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers"
+ },
+ "IMG21": {
+  "method": "generate",
+  "prompt": "smartphone photo from behind of a person walking a dog along a foggy harbour path, face not visible, muted grey morning, railings and moored boats fading into fog"
+ },
+ "IMG22": {
+  "method": "generate",
+  "prompt": "dated 2019 smartphone photo of a real woman in her 30s at home with a tabby cat sitting on her shoulder, warm indoor light, slight blur, older phone colours and noise",
+  "negative": "airbrushed, studio lighting"
+ },
+ "IMG23": {
+  "method": "generate",
+  "prompt": "friendly portrait of a woman in her 30s, children's librarian, colourful knitted cardigan, shelves of picture books behind her, warm library light, natural skin"
+ },
+ "NIMG0001": {
+  "method": "generate",
+  "prompt": "press photograph on a rainy afternoon, a dense crowd of people with umbrellas on a harbour pier, a fish-and-chips stall at the right edge, in the bottom-left corner next to the stall an empty patch of wet boards with a single lone blue umbrella, grey sky, documentary news photo",
+  "notes": "Original for NIMG0002. The bottom-left corner must stand alone as a believable square crop."
+ },
+ "NIMG0002": {
+  "method": "derive",
+  "from": "NIMG0001",
+  "steps": [
+   "Crop a square from the bottom-left corner by the fish stall, showing only the blue umbrella and a few people",
+   "Resize to 1080×1080",
+   "No other edits: pixels must stay identical for image search"
+  ]
+ },
+ "NIMG0003": {
+  "method": "generate",
+  "prompt": "overcast morning photo of a small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a small passenger ferry waiting offshore, calm grey water, news photo"
+ },
+ "NIMG0004": {
+  "method": "generate",
+  "prompt": "night photo of a dark town street during a blackout, traffic lights dead, only car headlights, one city bus with passengers using phone flashlights inside, documentary, high ISO noise"
+ },
+ "NIMG0005": {
+  "method": "generate",
+  "prompt": "pre-dawn smartphone photo, grey smoke drifting from the loading bay of a long brick warehouse, one fire engine with lights on, wet tarmac reflecting the lights, blue hour"
+ },
+ "AVA_NORTHGATE": {
+  "method": "derive",
+  "from": "LOGO_NORTHGATE",
+  "steps": [
+   "Place the logo centred on white with generous margin",
+   "Export 512×512"
+  ]
+ },
+ "AVA_BRIGHTLINE": {
+  "method": "derive",
+  "from": "LOGO_BRIGHTLINE",
+  "steps": [
+   "Place the logo centred on a soft gradient",
+   "Export 512×512",
+   "Copy the same file to IMG19"
+  ]
+ },
+ "DRP01": {
+  "method": "generate",
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 38, city hall reporter, rolled-up shirt sleeves, a notebook in his shirt pocket",
+  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+ },
+ "DRP02": {
+  "method": "generate",
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 45, business editor, short grey bob haircut, dark blazer",
+  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+ },
+ "DRP03": {
+  "method": "generate",
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 31, technology reporter, short beard, headphones around his neck",
+  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+ },
+ "DRP04": {
+  "method": "generate",
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 60, culture writer, bright patterned scarf, laughing",
+  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+ },
+ "DRP05": {
+  "method": "generate",
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 55, columnist, loosened tie, one eyebrow raised sceptically",
+  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+ },
+ "DRP06": {
+  "method": "generate",
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 34, public safety reporter, wearing a rain jacket",
+  "notes": "The brief said outdoors; kept in the studio so all seven match. Same seed family and the same backdrop for all seven: generate them as one batch."
+ },
+ "DRP07": {
+  "method": "generate",
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, cardigan, kind face",
+  "notes": "The brief mentions a library behind her; kept in the studio so all seven match. Same seed family and the same backdrop for all seven: generate them as one batch."
+ },
+ "UFP01": {
+  "method": "generate",
+  "prompt": "close-up of a printed line of text on paper with a thick black redaction bar over it, high contrast, grainy, no face"
+ },
+ "UFP02": {
+  "method": "generate",
+  "prompt": "a desk lamp with a single green light bulb glowing in a dark room, moody, grainy, no people"
+ },
+ "UFP03": {
+  "method": "generate",
+  "prompt": "a woman in her 40s in profile against a bright window, face in deep shadow, silhouette, grainy"
+ },
+ "UFP04": {
+  "method": "generate",
+  "prompt": "old CRT television screen showing static noise with a faint indistinct shape in it, no face"
+ }
+}

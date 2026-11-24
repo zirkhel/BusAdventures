@@ -626,3 +626,28 @@ h2.np-head { font-size: 23px; }
 .wake-date { font-size: 17px; opacity: .9; }
 @keyframes wake-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
 .picker-note { font-size: 13px; line-height: 1.35; padding: 12px 16px 18px; text-align: center; }
+
+/* ── Introduction and first-use tips ─────────────────────────────────────── */
+/* In apps the card sits under the top bar, so it never covers the controls at the bottom (composer, home). */
+.tipbox { position: absolute; left: 10px; right: 10px; top: calc(var(--status-h) + var(--safe-t) + var(--bar-h) + 8px); z-index: 45; display: none; pointer-events: none; }
+.tipbox.on { display: block; }
+.tip { pointer-events: auto; background: rgba(28,30,36,.95); color: #f2f3f5; border-radius: 16px; padding: 12px 14px 8px; box-shadow: 0 8px 28px rgba(0,0,0,.35); animation: up .2s ease-out; }
+.tip-head { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.tip-head svg { width: 18px; height: 18px; color: #8fb4ff; flex: none; }
+.tip-text { font-size: 14px; line-height: 1.4; margin: 6px 0 4px; color: #d7dae0; }
+.tip-btns { display: flex; justify-content: flex-end; gap: 4px; }
+.tip-btns button { padding: 10px 12px; font-size: 14px; font-weight: 600; color: #8fb4ff; border-radius: 10px; min-height: 40px; }
+.tip-btns .tip-off { color: #a9aeb8; font-weight: 500; }
+#phone[data-where="home"] .tipbox { top: auto; bottom: calc(110px + var(--safe-b)); }
+.intro-sheet, .tips-all { max-height: 100%; }
+.it-body { background: rgba(245,245,248,.98); border-radius: 14px 14px 0 0; padding: 20px 20px 12px; overflow-y: auto; max-height: calc(100dvh - 190px); color: var(--ink); }
+.it-title { margin: 0 0 8px; font-size: 21px; }
+.it-lead { margin: 0 0 12px; font-size: 15px; line-height: 1.45; color: var(--ink2); }
+.it-points { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.4; }
+.ta-item { padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.4; }
+.ta-item b { display: block; font-size: 15px; margin-bottom: 2px; }
+.set-head { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; margin: 4px 6px 6px; }
+.set-switch { width: 22px; height: 22px; accent-color: var(--accent); }
+.dev-head { margin: 6px 0 6px; text-transform: uppercase; letter-spacing: .04em; }
+.results-partial { font-size: 13px; padding: 0 16px 8px; }
+#phone.tip-on .scroll::before { content: ""; display: block; height: 170px; }

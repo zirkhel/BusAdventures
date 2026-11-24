@@ -5,7 +5,7 @@
   "continue": "Continue investigation",
   "heading": "Available investigations",
   "inProgress": "In progress",
-  "closed": "Case closed",
+  "closed": "Case resolved · still open",
   "start": "Start investigation",
   "future": "Future investigation",
   "back": "Back",
@@ -22,6 +22,7 @@
   "connect": "Connect",
   "messages": "Messages",
   "casebook": "Casebook",
+  "notification": "Notification",
   "sleep": "Sleep until tomorrow"
  },
  "messages": {
@@ -64,5 +65,64 @@
   "deadlineTomorrow": "tomorrow",
   "deadlineIn": "in {n} days",
   "wakeHello": "Good morning"
+ },
+ "tips": {
+  "introTitle": "Your phone",
+  "introLead": "Everything you find, you find here: the web, social media, messages and the news. Nobody will tell you what matters.",
+  "introPoints": [
+   "Tap a name, a word, a date or an image to see what you can do with it.",
+   "Save what you find to your Casebook. Build theories from it and see how many independent sources back them.",
+   "Message people, ask them about what you have looked into, and show them what you have saved.",
+   "Time only moves when you sleep. Messages, news and pages can change overnight.",
+   "When your sources hold, publish. Nobody tells you if you are right."
+  ],
+  "introStart": "Start",
+  "introNoTips": "Start without tips",
+  "gotIt": "Got it",
+  "turnOff": "Turn off tips",
+  "settingsHead": "Tips",
+  "settingsShow": "Show tips",
+  "settingsIntro": "Show the introduction again",
+  "settingsAll": "Read all tips",
+  "settingsReset": "Show tips again from the start",
+  "settingsHint": "Tips appear once, the first time you use something. They never mention people, places or cases.",
+  "list": {
+   "read": {
+    "title": "Everything can be tapped",
+    "text": "Tap a name, a word or a date to see what you can do with it. Press and hold to select a phrase."
+   },
+   "image": {
+    "title": "Images have their own tools",
+    "text": "Look at an image's metadata, search for other copies of it, or flip it and search again."
+   },
+   "search": {
+    "title": "Searching",
+    "text": "Short searches work best. Put words in \"quotes\" for an exact phrase. Pages that have changed or gone may still be in the cache."
+   },
+   "save": {
+    "title": "Saved to your Casebook",
+    "text": "What you save starts unclassified. You decide which case it belongs to, if any."
+   },
+   "message": {
+    "title": "Talking to people",
+    "text": "Ask about something you have looked into, or show something from your Casebook. People answer in their own way, and not always truthfully."
+   },
+   "theory": {
+    "title": "Theories",
+    "text": "A theory says who did what. Link evidence to it. The Casebook counts your independent sources. It cannot tell you whether you are right."
+   },
+   "report": {
+    "title": "Publishing",
+    "text": "Publishing cannot be undone. Each channel has its own standards, and the world reacts to what you publish, true or not."
+   },
+   "sleep": {
+    "title": "Time",
+    "text": "The day only ends when you choose to sleep. Dates you have learnt about are listed on the home screen."
+   },
+   "outcome": {
+    "title": "A turn in the case",
+    "text": "Something you did has changed how the case stands. It is in the Casebook under Reports. You can keep investigating."
+   }
+  }
  }
 }
