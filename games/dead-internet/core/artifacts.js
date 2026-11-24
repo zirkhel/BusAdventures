@@ -64,6 +64,10 @@ export function resolveVersion(a, v) {
     title: v.title ?? a.title,
     body: v.body ?? a.body ?? "",
     date: v.date ?? a.date,
+    // The first publication date; `date` is when this version was published. A paper shows
+    // "Updated" for a later version unless the version is `silent` (a quiet edit).
+    publishedDate: a.date ?? v.date ?? null,
+    silent: !!v.silent,
     images: v.images ?? a.images ?? [],
     supports: v.supports ?? a.supports ?? [],
     mentions: [...new Set([...asArray(a.mentions), ...asArray(v.mentions)])],
@@ -78,6 +82,7 @@ export function resolveVersion(a, v) {
     comments: commentsIn(a, v),
     video: v.video ?? a.video ?? null,
     stats: v.stats ?? a.stats ?? null,
+    breaking: !!(v.breaking ?? a.breaking),
   };
 }
 
@@ -121,7 +126,7 @@ export function viewArtifact(g, id, opts = {}) {
     const live = isVisible(g, id) ? liveVersionId(g, a) : null;
     const ok = v && (v.id === live || cachedVersions(g, a).some(c => c.id === v.id));
     if (!ok) return { ...base, error: "not_available" };
-    return { ...base, versionId: v.id, cached: v.id !== live, ...media(g, resolveVersion(a, v)) };
+    return { ...base, versionId: v.id, cached: v.id !== live, ...media(g, resolveVersion(a, v), a) };
   }
   if (!isVisible(g, id)) {
     const cached = cachedVersions(g, a);
@@ -136,11 +141,23 @@ export function viewArtifact(g, id, opts = {}) {
     return { ...base, error: "deleted", cachedVersions: cached.map(v => v.id) };
   }
   const v = getVersion(a, vid);
-  return { ...base, versionId: vid, cached: false, cachedVersions: cachedVersions(g, a).map(c => c.id), ...media(g, resolveVersion(a, v)) };
+  return { ...base, versionId: vid, cached: false, cachedVersions: cachedVersions(g, a).map(c => c.id), ...media(g, resolveVersion(a, v), a) };
+}
+
+/**
+ * An artifact with `datedOnShow` is dated the day a rule shows it, keeping the time of day
+ * from its own date: a story about something the player caused cannot know its day in advance.
+ */
+export function shownDate(g, a, r) {
+  const on = a?.datedOnShow ? g.s.artifacts[a.id]?.shownOn : null;
+  if (!on) return r;
+  const re = d => d ? on + String(d).slice(10) : on;
+  return { ...r, date: re(r.date), publishedDate: re(r.publishedDate) };
 }
 
 /** Player-facing media: the video object (without hidden canon) and its transcript. */
-function media(g, r) {
+function media(g, r, a) {
+  r = shownDate(g, a, r);
   if (!r.video) return r;
   return { ...r, video: videoView(g.w, r.video), transcript: transcriptOf(g.w, r.video) };
 }

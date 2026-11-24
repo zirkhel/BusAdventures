@@ -16,7 +16,7 @@
 //
 // Effects (each is an object with one key):
 //   setFlag, clearFlag, incCounter {id,n?}, setCounter {id,n}, trust {id,delta},
-//   credibility <delta>, show <artifact>, hide <artifact>, setLive {artifact, version|null},
+//   credibility <delta>, show <artifact> (a `datedOnShow` artifact is dated that day), hide <artifact>, setLive {artifact, version|null},
 //   deleteAccount <account>, restoreAccount <account>, logout <site>,
 //   message {from|fromAccount, text, attach?, supports?, source?, mentions?},
 //   notify {text, ref?}, know <entity|account>, later {days, do:[effects]}
@@ -77,7 +77,7 @@ export function applyEffects(g, effects, src = {}) {
           break;
         }
         case "credibility": s.credibility = Math.max(0, Math.min(100, s.credibility + v)); break;
-        case "show": for (const id of asArray(v)) { s.artifacts[id] = { ...s.artifacts[id], visible: true, wasVisible: true }; } g.emit("artifact.changed", { ids: asArray(v) }); break;
+        case "show": for (const id of asArray(v)) { const o = s.artifacts[id]; s.artifacts[id] = { ...o, visible: true, wasVisible: true, ...(g.w.artifacts.get(id)?.datedOnShow && !o?.shownOn ? { shownOn: g.date } : {}) }; } g.emit("artifact.changed", { ids: asArray(v) }); break;
         case "hide": for (const id of asArray(v)) { s.artifacts[id] = { ...s.artifacts[id], visible: false, wasVisible: true }; } g.emit("artifact.changed", { ids: asArray(v) }); break;
         case "setLive": s.artifacts[v.artifact] = { ...s.artifacts[v.artifact], live: v.version ?? null }; g.emit("artifact.changed", { ids: [v.artifact] }); break;
         case "deleteAccount": for (const id of asArray(v)) s.accounts[id] = { ...s.accounts[id], deleted: true }; g.emit("account.changed", { ids: asArray(v) }); break;

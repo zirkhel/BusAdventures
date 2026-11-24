@@ -46,7 +46,8 @@
    "artifacts/threadline.json",
    "artifacts/brightline.json",
    "artifacts/records.json",
-   "artifacts/misc.json"
+   "artifacts/misc.json",
+   "artifacts/news-consequences.json"
   ],
   "canon": "canon.json",
   "rules": "rules.json"

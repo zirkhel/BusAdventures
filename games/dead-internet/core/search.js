@@ -11,7 +11,7 @@
 // opts.platform limits a search to one app (TokTok search, a newspaper's own search).
 
 import { asArray } from "./util.js";
-import { isVisible, liveVersionId, cachedVersions, resolveVersion, getVersion, transcriptOf } from "./artifacts.js";
+import { isVisible, liveVersionId, cachedVersions, resolveVersion, getVersion, transcriptOf, shownDate } from "./artifacts.js";
 import { imageRoot, mirrorParity, videoImages } from "./world.js";
 import { check } from "./conditions.js";
 
@@ -159,7 +159,7 @@ export function search(g, query, opts = {}) {
         } else {
           const hit = evaluate(getVersion(a, vid), false);
           if (hit) results.push({ artifact: a.id, title: hit.f.r.title, snippet: snippet(hit.f.r.body, terms), url: a.url,
-            platform: a.platform, date: hit.f.r.date, cached: false, versionId: vid, locked: false, score: hit.score });
+            platform: a.platform, date: shownDate(g, a, hit.f.r).date, cached: false, versionId: vid, locked: false, score: hit.score });
         }
       }
     }

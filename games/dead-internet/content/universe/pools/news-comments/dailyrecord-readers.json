@@ -1,0 +1,17 @@
+[
+  {"id": "acc_drc_harborgull", "platform": "dailyrecord", "handle": "@harborgull", "displayName": "harborgull", "pool": "news-comments"},
+  {"id": "acc_drc_eastfield_mom3", "platform": "dailyrecord", "handle": "@eastfield_mom3", "displayName": "Kara (Eastfield)", "pool": "news-comments"},
+  {"id": "acc_drc_old_salt_77", "platform": "dailyrecord", "handle": "@old_salt_77", "displayName": "old_salt_77", "pool": "news-comments"},
+  {"id": "acc_drc_calder_cyclist", "platform": "dailyrecord", "handle": "@calder_cyclist", "displayName": "Calder Cyclist", "pool": "news-comments"},
+  {"id": "acc_drc_ferryfrank", "platform": "dailyrecord", "handle": "@ferryfrank", "displayName": "Frank D.", "pool": "news-comments"},
+  {"id": "acc_drc_bikelane_now", "platform": "dailyrecord", "handle": "@bikelane_now", "displayName": "bikelane_now", "pool": "news-comments"},
+  {"id": "acc_drc_fogwatcher", "platform": "dailyrecord", "handle": "@fogwatcher", "displayName": "fogwatcher", "pool": "news-comments"},
+  {"id": "acc_drc_denise_k", "platform": "dailyrecord", "handle": "@denise_k", "displayName": "Denise K.", "pool": "news-comments"},
+  {"id": "acc_drc_retired_teacher_pc", "platform": "dailyrecord", "handle": "@retired_teacher_pc", "displayName": "Retired teacher", "pool": "news-comments"},
+  {"id": "acc_drc_northpointnate", "platform": "dailyrecord", "handle": "@northpointnate", "displayName": "Nate from Northpoint", "pool": "news-comments"},
+  {"id": "acc_drc_quietreader", "platform": "dailyrecord", "handle": "@quietreader", "displayName": "quietreader", "pool": "news-comments"},
+  {"id": "acc_drc_gullwing22", "platform": "dailyrecord", "handle": "@gullwing22", "displayName": "gullwing22", "pool": "news-comments"},
+  {"id": "acc_drc_pcmom_of4", "platform": "dailyrecord", "handle": "@pcmom_of4", "displayName": "Mom of 4", "pool": "news-comments"},
+  {"id": "acc_drc_tidepool_tom", "platform": "dailyrecord", "handle": "@tidepool_tom", "displayName": "Tom", "pool": "news-comments"},
+  {"id": "acc_drc_calderhistorian", "platform": "dailyrecord", "handle": "@calderhistorian", "displayName": "Calder Historian", "pool": "news-comments"}
+]

@@ -366,6 +366,38 @@
   ]
  },
  {
+  "id": "D10_unfiltered_pickup",
+  "when": {
+   "event": "report.published",
+   "match": {
+    "channel": [
+     "connect",
+     "threadline"
+    ]
+   }
+  },
+  "do": [
+   {
+    "later": {
+     "days": 1,
+     "do": [
+      {
+       "show": "A69"
+      },
+      {
+       "notify": {
+        "text": "Someone is asking questions about Port Calder's Waterfront crowd",
+        "ref": {
+         "artifact": "A69"
+        }
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
   "id": "D11_vote_held",
   "when": {
    "event": "day.start",
@@ -412,11 +444,17 @@
   },
   "do": [
    {
+    "show": "A67"
+   },
+   {
     "setFlag": "vote_postponed"
    },
    {
     "notify": {
-     "text": "Council postpones the Waterfront vote 'pending questions about public consultation'."
+     "text": "Council postpones the Waterfront vote 'pending questions about public consultation'.",
+     "ref": {
+      "artifact": "A67"
+     }
     }
    }
   ]
@@ -439,11 +477,17 @@
   },
   "do": [
    {
+    "show": "A68"
+   },
+   {
     "setFlag": "vote_passed"
    },
    {
     "notify": {
-     "text": "Council approves Eastfield Waterfront, 6–5. Councilmember Ruiz cast the deciding vote."
+     "text": "Council approves Eastfield Waterfront, 6–5. Councilmember Ruiz cast the deciding vote.",
+     "ref": {
+      "artifact": "A68"
+     }
     }
    }
   ]

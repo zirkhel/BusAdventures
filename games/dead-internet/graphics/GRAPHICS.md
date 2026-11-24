@@ -19,7 +19,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Produksjonsrekkefølge
-IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S → IMG06 → IMG07 → IMG08 → IMG09 → IMG10 → IMG11 → IMG12 → IMG13 → IMG14 → IMG15 → IMG16 → IMG17 → IMG18 → IMG19 → IMG20 → IMG21 → IMG22 → IMG23 → LOGO_SEEKER → LOGO_CONNECT → LOGO_THREADLINE → LOGO_DAILYRECORD → LOGO_BRIGHTLINE → LOGO_NORTHGATE → LOGO_CITY → LOGO_SPILLCHECK → LOGO_FACELESS → LOGO_DOCSHARE
+IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S → IMG06 → IMG07 → IMG08 → IMG09 → IMG10 → IMG11 → IMG12 → IMG13 → IMG14 → IMG15 → IMG16 → IMG17 → IMG18 → IMG19 → IMG20 → IMG21 → IMG22 → IMG23 → LOGO_SEEKER → LOGO_CONNECT → LOGO_THREADLINE → LOGO_DAILYRECORD → LOGO_BRIGHTLINE → LOGO_NORTHGATE → LOGO_CITY → LOGO_SPILLCHECK → LOGO_FACELESS → LOGO_DOCSHARE → NIMG0001 → NIMG0002 → NIMG0003 → NIMG0004 → NIMG0005
 
 ## Alle bilder
 | ID | Fil | Størrelse | Type | Status | Brukt i | Avhengighet | Beskrivelse |
@@ -60,3 +60,8 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_SPILLCHECK | `assets/images/logo-spillcheck.svg` | 256×256 | logo | placeholder |  |  | A dripping padlock. |
 | LOGO_FACELESS | `assets/images/logo-faceless.svg` | 256×256 | logo | placeholder |  |  | An empty oval face outline. |
 | LOGO_DOCSHARE | `assets/images/logo-docshare.svg` | 256×256 | logo | placeholder |  |  | A folded document with a link chain. |
+| NIMG0001 | `assets/images/nimg0001-festival-crowd.webp` | 1600×1067 | photo | placeholder | DR-2025-0322 | original for NIMG0002 | Press photo, rainy afternoon: a dense crowd with umbrellas on a harbor pier, fish-and-chips stall on the right edge, a lone blue umbrella in an empty bottom-left corner by the stall. |
+| NIMG0002 | `assets/images/nimg0002-festival-crop.webp` | 1080×1080 | photo | placeholder | UF-2025-0052 | from NIMG0001: crop: square, bottom-left corner by the fish stall, only the blue umbrella and a few people | Not generated: crop of NIMG0001. Keep pixels identical so image search can match. |
+| NIMG0003 | `assets/images/nimg0003-north-dock.webp` | 1600×1067 | photo | placeholder | DR-2025-0101, UF-2025-0007 |  | Overcast morning, small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a ferry waiting offshore. |
+| NIMG0004 | `assets/images/nimg0004-blackout-street.webp` | 1600×1067 | photo | placeholder | DR-2026-0058 |  | Night, a dark town street with dead traffic lights, car headlights and one bus with interior flashlights. |
+| NIMG0005 | `assets/images/nimg0005-warehouse-smoke.webp` | 1080×1350 | photo | placeholder | DR-2026-0031, UF-2026-0004 |  | Pre-dawn phone photo: grey smoke from the loading bay of a long brick warehouse, one fire engine, wet tarmac. |

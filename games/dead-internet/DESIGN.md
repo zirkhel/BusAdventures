@@ -22,7 +22,7 @@ games/dead-internet/
   DESIGN.md  DEVPLAN.md
   index.html  manifest.json egen PWA (start_url /games/dead-internet/)
   app/                      telefonen (DOM): main.js, phone.js, render.js, context.js, suggest.js, media.js, ui.js, style.css
-    apps/                   browser, connect, messages, casebook, settings
+    apps/                   browser, connect, messages, casebook, settings, news (mal for aviser)
   core/                     spillmotoren (ingen DOM, ingen I/O)
     game.js                 fasade: Game, dispatch, spørringer, replay()
     world.js                buildWorld(): indekser over innholdet
@@ -46,8 +46,9 @@ games/dead-internet/
     universe/*.json         felles for alle mysterier: meta, predicates, platforms, entities,
                             accounts, images, characters, canon (fakta), terms, mysteries (frø),
                             artifacts/filler.json (bakgrunnsinnhold)
-    universe/pools/         delte medier (aviser, TokTok): artikler, lette kontoer, videos, scripts.
-                            Vanlige universfiler i manifest.files. Første innhold kommer i fase 8.
+    universe/pools/         delte medier: news-dailyrecord/, news-unfiltered/ (artikler, skribenter,
+                            dokumenter), news-comments/ (lesere), news/ (hendelser, bilder, daglige saker).
+                            Vanlige universfiler i manifest.files. TokTok kommer i fase 11.
     mysteries/quiet-account/  mystery.json (start, lag, påstander, bevisliste, publisering,
                             testoppsett, tekster, avslutninger) + artifacts/, canon.json, rules.json
     strings/en.json         UI-tekster (lokalisering: nb.json senere)
@@ -99,6 +100,9 @@ games/dead-internet/
 
 ### Medier (artikler, innlegg, klipp)
 Alle felt er valgfrie og kan ligge på artefakten eller en versjon: `section`, `byline[]` (konto-id eller fritekst), `corrections[] {date, text}`, `related[]`, `refs[]`, `sponsored {by}`, `comments[] {id, account, date, text, likes, replyTo, deletedIn, pinned}`, `video` (en video-id), `stats {views, likes}`, `category`. En kommentar med `deletedIn` er borte fra den versjonen og senere. `covers[]` (hendelser artikkelen dekker), `pool` og videoens `scenes`, `source` og `script`-id er forfatterdata og vises aldri. Spilleren ser klippet, bildeteksten, transkripsjonen og «Video info».
+
+### Aviser (app/apps/news.js)
+En plattform med `app: { template: "news", sections, sectionLabels?, logo, short, icon, theme, tagline }` blir en egen app på hjemskjermen. Listene kommer fra `game.news(platform, {section, author})`: nyeste først, bare saker som er synlige og ikke datert etter i dag, aldri rangert og aldri etter relevans. Forfattersiden lister alt under en byline. Artikkelvisningen er den samme `renderArtifact` som Browser bruker, med seksjon, byline (trykk gir «Author page in …»), sponsormerking, rettelser, relaterte saker, kilder og kommentarer. Skribenter og kommentatorer er lette kontoer. Å lese en byline gjør navnet møtt, ikke undersøkt. Nye saker kommer med universregler på `day.start` (`universe/pools/news/rules.json`), og «Breaking» gir varsel. En sak kan utvikle seg: en regel bytter levende versjon (`setLive`), og eldre versjoner blir liggende i cachen. Avisen viser første publiseringsdato og «Updated» med versjonens `date`, med mindre versjonen er `silent` (en stille endring). Listen sorteres etter første publisering, så en oppdatering flytter ikke saken til toppen. En sak med `datedOnShow` (krever `hidden`) får datoen til dagen en regel viser den. Det brukes når avisene skriver om noe spilleren har forårsaket.
 
 ### Feeder (core/feed.js)
 En feed er deterministisk og blind for etterforskningen. Den leser bare plattform, kategori (`category` eller `section`), popularitet (`stats.views`), dato, forfatter og spillerens egen interaksjon på plattformen (følger, liker, «Not interested»), pluss en hash av seed og dag. Den leser aldri `supports`, `mentions`, påstander, saker eller søkehistorikk. To faner: «For You» (rangert) og «Following» (fulgte kontoer, nyeste først). `state.media` holder følger, likes og «Not interested». Å like eller følge gir ingen kunnskap. Å se et klipp (`watch`) er det samme som å åpne det: klippet blir sett og skaperen møtt. Scrolling koster ingen tid.
@@ -335,8 +339,8 @@ Startskjermen bygges fra `mysteries[].menu` (`order`, `tagline`, `image`). Et ny
 | Archive | i Browser foreløpig | versjoner og cache i motoren, «View cached versions» og «View available versions» |
 | Contacts | planlagt | `contacts()` gir i dag etablerte kontakter, og skal aldri fylles fra hele personregisteret |
 | Forensics | planlagt | skal gjenbruke bildeverktøyene i bildeviseren (metadata, bildesøk, speilvendt søk) |
-| The Daily Record | planlagt | artikler er vanlige artefakter i Browser i dag |
-| Unfiltered | planlagt | samme nyhetsmotor som The Daily Record, egen profil og identitet |
+| The Daily Record | ferdig | egen app fra nyhetsmalen: forside, seksjoner, artikkel, forfatterside, kommentarer, søk, del. Samme artikler som på nettstedet i Browser. |
+| Unfiltered | ferdig | samme nyhetsmal, egen logo, farger og seksjoner |
 | TokTok | planlagt | video følger bildemodellen (opphav, transformasjoner, metadata) |
 
 ## Kjente begrensninger

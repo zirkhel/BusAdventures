@@ -1,0 +1,11 @@
+[
+  {"id": "unfiltered_org", "kind": "org", "name": "Unfiltered", "website": "unfiltered.news", "isHuman": null, "bio": "Independent online outlet. 'News they don't want you to read.'", "relations": []},
+  {"id": "glownest", "kind": "org", "name": "GlowNest", "isHuman": null, "bio": "Sells a smart lamp.", "relations": []},
+  {"id": "harbor_dental", "kind": "org", "name": "Harbor Dental", "isHuman": null, "bio": "Dental clinic on Harbor Street.", "relations": []},
+  {"id": "calder_cu", "kind": "org", "name": "Calder Credit Union", "isHuman": null, "bio": "Local credit union since 1952.", "relations": []},
+  {"id": "evt_dock_closure", "kind": "event", "name": "Northpoint dock closure", "date": "2025-01-21", "isHuman": null, "relations": []},
+  {"id": "evt_kestrel_fire", "kind": "event", "name": "Kestrel warehouse fire", "date": "2026-01-26", "isHuman": null, "relations": []},
+  {"id": "evt_blackout", "kind": "event", "name": "February blackout", "date": "2026-02-17", "isHuman": null, "relations": []},
+  {"id": "evt_creek_dieoff", "kind": "event", "name": "Calder Creek fish die-off", "date": "2025-10-13", "isHuman": null, "relations": []},
+  {"id": "evt_festival", "kind": "event", "name": "Harbor Festival 2025", "date": "2025-10-11", "isHuman": null, "relations": []}
+]
