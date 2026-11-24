@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 22.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 25.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -54,7 +54,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | IMG16 | `assets/images/img16-truthseeker.webp` | 512×512 | profile | required | final file | acc_truthseeker |  | Low-res, upscaled photo of a rusty cast-iron gear inside the mill, visible pixels and JPEG compression: an avatar someone has re-saved many times. |
 | IMG17 | `assets/images/img17-iris-profile.webp` | 512×512 | profile | required | final file | A08 | face: iris | Woman, 26, half her face hidden behind a speckled ceramic mug, messy bun, small gold disc earring, two silver rings, black knit sweater, café window light. |
 | IMG18 | `assets/images/img18-paul-profile.webp` | 512×512 | profile | required | final file | A52 |  | Man, 47, at a press doorstep: dark swept-back hair, stubble, navy suit and dark tie, microphones in the foreground, the NORTHGATE DEVELOPMENT sign behind him. Real, not synthetic: pores, small skin flaws. |
-| IMG19 | `assets/images/img19-renee-avatar.webp` | 512×512 | profile | required | placeholder | A10 |  | Brightline logo on a gradient. No face. |
+| IMG19 | `assets/images/img19-renee-avatar.webp` | 512×512 | profile | required | final file | A10 |  | Same file as AVA_BRIGHTLINE: the Brightline sunrise mark in amber with BRIGHTLINE / MEDIA in white on a navy-to-amber gradient. No face. |
 | IMG20 | `assets/images/img20-mike-profile.webp` | 512×512 | profile | required | placeholder | A54 |  | Synthetic dad, 40s, at a grill. Slightly too perfect. |
 | IMG21 | `assets/images/img21-pat-profile.webp` | 512×512 | profile | required | placeholder | A55 |  | Back of a person walking a dog on a foggy harbour path. Face not visible. |
 | IMG22 | `assets/images/img22-lindsay-profile.webp` | 512×512 | profile | required | placeholder | A56 |  | Real woman, 2019 photo, cat on her shoulder, slightly dated phone quality. |
@@ -63,7 +63,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_CONNECT | `assets/images/logo-connect.svg` | 256×256 | logo | required | placeholder |  |  | Social network: two interlocking rounded speech shapes. |
 | LOGO_THREADLINE | `assets/images/logo-threadline.svg` | 256×256 | logo | required | placeholder |  |  | Forum: a single thread line looping into a T. |
 | LOGO_DAILYRECORD | `assets/images/logo-dailyrecord.svg` | 512×128 | logo | required | placeholder |  |  | Newspaper masthead 'The Daily Record', black serif, thin red rule under it (as on the newsroom poster in IMG15). |
-| LOGO_BRIGHTLINE | `assets/images/logo-brightline.svg` | 256×256 | logo | required | placeholder |  |  | Agency: a bright horizontal line rising into a sunrise. |
+| LOGO_BRIGHTLINE | `assets/images/logo-brightline.svg` | 256×256 | logo | required | final file |  |  | Agency: an amber horizontal line rising into a half sun with three rays (#e8a317). Same mark as on the invoice (IMG10). |
 | LOGO_NORTHGATE | `assets/images/logo-northgate.svg` | 256×256 | logo | required | placeholder |  |  | Developer: three rising slab towers (grey, tallest on the right) above a sweeping base line, NORTHGATE / DEVELOPMENT in grey capitals on navy. Must match the sign in IMG18. |
 | LOGO_CITY | `assets/images/logo-city.svg` | 256×256 | logo | required | placeholder |  |  | Port Calder city seal: lighthouse and gear. |
 | LOGO_SPILLCHECK | `assets/images/logo-spillcheck.svg` | 256×256 | logo | required | placeholder |  |  | A dripping padlock. |
@@ -82,7 +82,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_DAILYRECORD_ICON | `assets/images/logo-dailyrecord-icon.svg` | 512×512 | logo | required | placeholder | app:dailyrecord |  | App icon: serif 'DR' on warm paper, thin black rule under it. |
 | IMG24 | `assets/images/img24-owen-connect.webp` | 512×512 | profile | required | final file | A58, acc_owenpike | face: owen | Owen, close selfie outdoors on an overcast day: tweed flat cap, thick black glasses, grey beard, worn jacket over a flannel shirt, the brick mill and the harbour behind him. Real, unflattering, sincere. |
 | AVA_NORTHGATE | `assets/images/ava-northgate.webp` | 512×512 | profile | required | placeholder | A65, acc_northgate | needs LOGO_NORTHGATE | Northgate's Connect avatar: the Northgate logo on white, crisp. Made from LOGO_NORTHGATE. |
-| AVA_BRIGHTLINE | `assets/images/ava-brightline.webp` | 512×512 | profile | required | placeholder | A64, acc_brightline, A10 | needs LOGO_BRIGHTLINE | Brightline's Connect avatar: the Brightline sunrise line on a soft gradient. Made from LOGO_BRIGHTLINE. Renee Okafor's avatar (IMG19) is the same file. |
+| AVA_BRIGHTLINE | `assets/images/ava-brightline.webp` | 512×512 | profile | required | final file | A64, acc_brightline, A10 | needs LOGO_BRIGHTLINE | Brightline's Connect avatar: the amber sunrise mark with BRIGHTLINE / MEDIA in white on a navy-to-amber gradient. Rendered from graphics/sources/avatar-brightline.html. Renee Okafor's avatar (IMG19) is the same file. |
 | DRP01 | `assets/images/drp01-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_tadeyemi |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Man, 38, city hall reporter, rolled sleeves, notebook in shirt pocket. |
 | DRP02 | `assets/images/drp02-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_lhart |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Woman, 45, business editor, short grey bob, blazer. |
 | DRP03 | `assets/images/drp03-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_bwhitlow |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Man, 31, technology reporter, beard, headphones round his neck. |

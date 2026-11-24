@@ -1,16 +1,5 @@
 [
  {
-  "id": "IMG19",
-  "method": "derive",
-  "from": "AVA_BRIGHTLINE",
-  "steps": [
-   "Same file as AVA_BRIGHTLINE (copy it)"
-  ],
-  "out": "assets/images/img19-renee-avatar.webp",
-  "width": 512,
-  "height": 512
- },
- {
   "id": "IMG20",
   "method": "generate",
   "positive": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers, square profile picture, realistic, as a person would choose for themselves",
@@ -136,19 +125,6 @@
    "Export 512×512"
   ],
   "out": "assets/images/ava-northgate.webp",
-  "width": 512,
-  "height": 512
- },
- {
-  "id": "AVA_BRIGHTLINE",
-  "method": "derive",
-  "from": "LOGO_BRIGHTLINE",
-  "steps": [
-   "Place the logo centred on a soft gradient",
-   "Export 512×512",
-   "Copy the same file to IMG19"
-  ],
-  "out": "assets/images/ava-brightline.webp",
   "width": 512,
   "height": 512
  },

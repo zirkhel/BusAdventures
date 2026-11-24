@@ -103,7 +103,8 @@
   "from": "AVA_BRIGHTLINE",
   "steps": [
    "Same file as AVA_BRIGHTLINE (copy it)"
-  ]
+  ],
+  "notes": "Made by Claude (HTML render, no generative AI) from the Brightline mark used on the invoice."
  },
  "IMG20": {
   "method": "generate",
@@ -163,7 +164,8 @@
    "Place the logo centred on a soft gradient",
    "Export 512×512",
    "Copy the same file to IMG19"
-  ]
+  ],
+  "notes": "Made by Claude from graphics/sources (logo-brightline.svg, avatar-brightline.html + shoot-avatar.cjs)."
  },
  "DRP01": {
   "method": "generate",
@@ -215,5 +217,8 @@
  "UFP04": {
   "method": "generate",
   "prompt": "old CRT television screen showing static noise with a faint indistinct shape in it, no face"
+ },
+ "LOGO_BRIGHTLINE": {
+  "notes": "Made by Claude from graphics/sources (logo-brightline.svg, avatar-brightline.html + shoot-avatar.cjs)."
  }
 }
