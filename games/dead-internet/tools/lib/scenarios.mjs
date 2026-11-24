@@ -1,0 +1,180 @@
+// Scripted playthroughs of The Quiet Account. Each step is a game call; `expect` lists
+// what must be true at the end. Used by tools/simulate.mjs and tests/scenarios.test.mjs.
+// The scripts only use information a player would have at that point.
+
+const ev = (g, ref) => g.save(ref).id;
+const lastFrom = (g, who) => [...g.s.messages].reverse().find(m => m.thread === who && m.from !== "player");
+
+/** Brother + journalist route, ending with a Daily Record story before the vote. */
+function brotherAndJournalist(g) {
+  g.start();
+  // Day 1: who was Mara, and is this really her?
+  g.search("Mara Quinn obituary"); g.open("A11");
+  g.open("A02"); g.open("A05");
+  const sign = ev(g, { artifact: "A05", image: "IMG01" });
+  g.searchImage("IMG01"); g.open("A33");
+  const orig = ev(g, { artifact: "A33" });
+  g.search("Theo Quinn"); g.open("A06");
+  g.ask("theo", "calder_mill");               // "who is this" — first contact
+  g.ask("theo", "calder_mill");               // "she called it the old girl" (+2)
+  g.show("theo", "A33");                      // the photo is from May → Theo forwards his emails
+  g.sleep();
+  // Day 2: follow the recovery address
+  g.open("A32");
+  const emails = ev(g, { artifact: "A32" });
+  g.search("bl-ops.net"); g.open("A19");
+  g.ask("dana", "mara");                      // first contact
+  g.ask("dana", "mara");                      // the death notice / quote (+1)
+  g.show("dana", "A32");                      // → anonymous invoice (+2)
+  g.open("A25");
+  const invoice = ev(g, { artifact: "A25" });
+  g.ask("dana", "brightline");                // mentions Iris Bell
+  g.sleep();
+  // Day 3: the insider and the money
+  g.ask("iris", "brightline");                // "how did you find me"
+  g.show("iris", "A32");                      // "…where did you get that"
+  g.show("iris", "A33");                      // opens up, attaches the dashboard and the brief
+  g.open("A23"); g.open("A22");
+  const dash = ev(g, { artifact: "A23" }), brief = ev(g, { artifact: "A22" });
+  g.search("Northgate lobbying"); g.open("A26");
+  const lobby = ev(g, { artifact: "A26" });
+  const h2 = g.hypothesize({ subject: "brightline", predicate: "operates", object: "acc_maraquinn" }).id;
+  [emails, dash, brief].forEach(e => g.link(h2, e));
+  const h3 = g.hypothesize({ subject: "northgate", predicate: "paid", object: "brightline" }).id;
+  [invoice, lobby].forEach(e => g.link(h3, e));
+  g.note("Theo's email: recovery address r…@bl-ops.net. bl-ops.net = Brightline client portal.");
+  g.review("daily_record", [h2, h3]);
+  g.publish("daily_record", [h2, h3]);
+  g.sleep();
+  return { h2, h3, sign, orig };
+}
+
+/** Owen's route, believed uncritically and published on Threadline. */
+function believeOwen(g) {
+  g.start();
+  g.search("Mara Quinn dead"); g.open("A16");
+  const thread = ev(g, { artifact: "A16" });
+  g.ask("owen", "mara");                      // first contact → dossier
+  g.open("A18");
+  const dossier = ev(g, { artifact: "A18" });
+  g.search("Kestrel Logistics"); g.open("A38");
+  const kestrel = ev(g, { artifact: "A38" });
+  const h = g.hypothesize({ subject: "northgate", predicate: "caused", object: "evt_mara_death" }).id;
+  [thread, dossier, kestrel].forEach(e => g.link(h, e));
+  g.publish("threadline", [h]);
+  return { h };
+}
+
+/** Viral, but no money: a Connect post about the dead woman's account. */
+function ghostStory(g) {
+  g.start();
+  g.search("Mara Quinn obituary"); g.open("A11");
+  const notice = ev(g, { artifact: "A11" });
+  g.search("Theo Quinn"); g.open("A06");
+  const theo = ev(g, { artifact: "A06" });
+  g.open("A05");
+  const sign = ev(g, { artifact: "A05", image: "IMG01" });
+  g.searchImage("IMG01"); g.open("A33");
+  const orig = ev(g, { artifact: "A33" });
+  const h1 = g.hypothesize({ subject: "mara", predicate: "is_dead" }).id;
+  [notice, theo].forEach(e => g.link(h1, e));
+  const h8 = g.hypothesize({ subject: "acc_maraquinn", predicate: "not_real" }).id;
+  [sign, orig].forEach(e => g.link(h8, e));
+  g.publish("connect", [h1, h8]);
+  while (g.s.day < 8) g.sleep();
+}
+
+/** Do nothing until the vote. */
+function silence(g) { g.start(); while (g.s.day < 8) g.sleep(); }
+
+/** Lights Out, then pull on the CEO thread. */
+function whoPaidWhom(g) {
+  brotherAndJournalist(g);
+  g.open("A20"); g.open("A09");
+  const team = ev(g, { artifact: "A20", image: "IMG08" });
+  g.searchImage("IMG06"); g.open("A31");
+  const stock = ev(g, { artifact: "A31" });
+  g.search("Brightline Media LLC"); g.open("A27");
+  const reg = ev(g, { artifact: "A27" });
+  const h7 = g.hypothesize({ subject: "calvin", predicate: "not_real" }).id;
+  [team, stock, reg].forEach(e => g.link(h7, e));
+  g.publish("daily_record", [h7]);
+  g.sleep();
+}
+
+/** Use Iris' login, then lie about it. */
+function portalAndLie(g) {
+  brotherAndJournalist(g);
+  g.ask("iris", "mara"); g.ask("iris", "acc_eastfieldnotes");   // trust up to 6
+  g.ask("iris", "brightline");                                   // gives the login
+  const r = g.login("brightline_portal", "iris.bell", "garden2025!");
+  g.open("A24");
+  g.sleep();
+  g.reply("iris", "no");
+  return { login: r };
+}
+
+/** Juno is shown three pieces of evidence that she is a stock photo with borrowed pictures. */
+function breakJuno(g) {
+  g.start();
+  g.open("A02"); g.open("A04"); g.open("A07"); g.open("A37");
+  g.searchImage("IMG04"); g.open("A31B");
+  g.searchImage("IMG05", true); g.open("A36");
+  g.ask("juno", "mara");
+  g.show("juno", "A31B"); g.show("juno", "A37"); g.show("juno", "A07");
+  g.sleep();
+}
+
+export const SCENARIOS = [
+  { id: "lights_out", title: "Brother and journalist → Daily Record before the vote", run: brotherAndJournalist,
+    expect: g => [
+      ["Lights Out reached", g.s.endings.includes("quiet_account:lights_out")],
+      ["S2 and S3 exposed through the Daily Record", g.s.exposed.S2?.channel === "daily_record" && g.s.exposed.S3?.channel === "daily_record"],
+      ["Mara's profile is memorialized", g.view("A02").versionId === "v_memorial"],
+      ["Juno's account is suspended", g.s.accounts.acc_junopark?.deleted === true],
+      ["Theo writes back the next day", !!lastFrom(g, "theo")?.text.includes("memorialized")],
+      ["credibility went up", g.s.credibility > 50],
+      ["the dead account stops posting once memorialized", !["A47", "A48", "A50"].some(id => g.view(id).error == null)],
+    ] },
+  { id: "wrong_murder", title: "Believe Owen → murder claim on Threadline", run: believeOwen,
+    expect: g => [
+      ["The Wrong Murder reached", g.s.endings.includes("quiet_account:wrong_murder")],
+      ["F1 is published", "F1" in g.s.published],
+      ["nothing is exposed", Object.keys(g.s.exposed).length === 0],
+      ["credibility went down", g.s.credibility < 50],
+      ["Brightline is still up", g.view("A19").error == null],
+    ] },
+  { id: "ghost_story", title: "Dead woman's account goes viral, no money trail", run: ghostStory,
+    expect: g => [
+      ["Ghost Story reached", g.s.endings.includes("quiet_account:ghost_story")],
+      ["vote passed", !!g.s.flags.vote_passed],
+      ["Lights Out not reached", !g.s.endings.includes("quiet_account:lights_out")],
+    ] },
+  { id: "silence", title: "Nothing published before the vote", run: silence,
+    expect: g => [
+      ["Silence reached", g.s.endings.includes("quiet_account:silence")],
+      ["Mara's account celebrates the vote", g.view("A50").error == null],
+      ["the info night post appeared on day 4", g.view("A47").error == null],
+    ] },
+  { id: "who_paid_whom", title: "Lights Out, then the CEO who isn't there", run: whoPaidWhom,
+    expect: g => [
+      ["Who Paid Whom reached", g.s.endings.includes("quiet_account:who_paid_whom")],
+      ["S7 exposed", g.s.exposed.S7?.strength === "strong"],
+      ["the unknown sender writes", g.s.messages.some(m => m.from === "acc_unknown" && m.text.includes("gardener"))],
+    ] },
+  { id: "portal_lie", title: "Use Iris' login, then deny it", run: portalAndLie,
+    expect: g => [
+      ["login worked", g.s.flags.portal_used === true],
+      ["Iris' public profile is gone", g.view("A08").error != null],
+      ["Iris has cut contact", g.s.flags.iris_cut === true],
+      ["Iris no longer answers", (g.ask("iris", "brightline"), lastFrom(g, "iris")?.text.includes("Don't contact me again"))],
+      ["portal session was revoked", !g.s.loggedIn.brightline_portal],
+    ] },
+  { id: "juno", title: "Show Juno the truth three times", run: breakJuno,
+    expect: g => [
+      ["Juno reached stage 3", g.s.counters.juno_stage === 3],
+      ["Juno's account is gone", g.s.accounts.acc_junopark?.deleted === true],
+      ["Juno's last post is only in the cache", g.view("A43").error != null && g.view("A43", "v1").error == null],
+      ["the mirrored photo was found with Flip & search", "A36" in g.s.seen],
+    ] },
+];

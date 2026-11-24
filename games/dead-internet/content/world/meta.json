@@ -1,0 +1,31 @@
+{
+  "id": "dead-internet",
+  "title": "Dead Internet",
+  "contentVersion": "0.1.0",
+  "startDay": 1,
+  "startDate": "2026-03-09",
+  "credibilityStart": 50,
+  "player": { "defaultName": "Sam" },
+  "startKnown": ["mara", "acc_maraquinn", "evt_mara_death", "waterfront", "eastfield"],
+  "startArtifacts": [],
+  "logins": [
+    { "site": "brightline_portal", "user": "iris.bell", "pass": "garden2025!" }
+  ],
+  "publishing": {
+    "scoring": { "true_strong": 8, "true_weak": 3, "true_none": -2, "partial": -3, "false": -10, "unknown": -2 },
+    "channels": [
+      { "id": "daily_record", "name": "The Daily Record (via Dana Reyes)", "reviewer": "dana", "minTrust": 3, "requiresStrong": true, "credibilityWeight": 1.0 },
+      { "id": "connect", "name": "Your Connect profile", "credibilityWeight": 0.8 },
+      { "id": "threadline", "name": "Threadline (anonymous)", "credibilityWeight": 0.5 }
+    ]
+  },
+  "testing": {
+    "seedQueries": [
+      "Mara Quinn", "Mara Quinn obituary", "Mara Quinn death", "Eastfield Waterfront", "Calder Mill",
+      "dead person still posting", "Port Calder", "Route 9 crash", "Theo Quinn"
+    ],
+    "coreClaims": ["S1", "S2", "S3"],
+    "importantClaims": ["S4", "S5", "S6", "S7", "S8"],
+    "maxDays": 9
+  }
+}

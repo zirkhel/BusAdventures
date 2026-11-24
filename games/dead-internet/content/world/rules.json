@@ -1,0 +1,481 @@
+[
+ {
+  "id": "opening",
+  "when": {
+   "event": "game.start"
+  },
+  "do": [
+   {
+    "message": {
+     "from": "persona_mara",
+     "text": "Hey stranger!! It's been forever 💛 Are you coming to the Waterfront info night on Thursday? Would be so good to see a familiar face.",
+     "source": "mara-account",
+     "supports": [
+      "S8"
+     ],
+     "mentions": [
+      "waterfront"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "D2_mara_replies",
+  "when": {
+   "event": "message.send",
+   "match": {
+    "to": "persona_mara"
+   }
+  },
+  "do": [
+   {
+    "later": {
+     "days": 1,
+     "do": [
+      {
+       "show": "A45"
+      },
+      {
+       "notify": {
+        "text": "@maraquinn posted: Funny how people from the past show up 🙂",
+        "ref": {
+         "artifact": "A45"
+        }
+       }
+      }
+     ]
+    }
+   }
+  ],
+  "if": {
+   "flagFalse": "mara_memorialized"
+  }
+ },
+ {
+  "id": "D3_brightline_alert",
+  "when": {
+   "event": "message.send",
+   "match": {
+    "to": "calvin",
+    "topic": [
+     "mara",
+     "acc_maraquinn",
+     "the_garden",
+     "juno",
+     "acc_junopark"
+    ]
+   }
+  },
+  "do": [
+   {
+    "setFlag": "brightline_alert"
+   },
+   {
+    "later": {
+     "days": 1,
+     "do": [
+      {
+       "setLive": {
+        "artifact": "A21",
+        "version": null
+       }
+      },
+      {
+       "message": {
+        "from": "juno",
+        "text": "Eastfield is a small place! Saw you're asking around 😊 Coffee sometime?",
+        "source": "juno-account"
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "D3b_brightline_alert_via_persona",
+  "when": {
+   "event": "message.send",
+   "match": {
+    "to": "persona_mara",
+    "kind": "show",
+    "supports": [
+     "S1",
+     "S2",
+     "S5"
+    ]
+   }
+  },
+  "if": {
+   "flagFalse": "brightline_alert"
+  },
+  "do": [
+   {
+    "setFlag": "brightline_alert"
+   },
+   {
+    "later": {
+     "days": 1,
+     "do": [
+      {
+       "setLive": {
+        "artifact": "A21",
+        "version": null
+       }
+      },
+      {
+       "message": {
+        "from": "juno",
+        "text": "Hey! Mara said you two reconnected 💛 Eastfield is such a small place!",
+        "source": "juno-account"
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "D5_vote_confirmed",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 3
+   }
+  },
+  "do": [
+   {
+    "show": "A39"
+   },
+   {
+    "notify": {
+     "text": "Daily Record: Council confirms March 16 vote on Waterfront",
+     "ref": {
+      "artifact": "A39"
+     }
+    }
+   }
+  ]
+ },
+ {
+  "id": "D9_info_night",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 4
+   }
+  },
+  "do": [
+   {
+    "show": "A47"
+   },
+   {
+    "notify": {
+     "text": "@maraquinn posted: So proud of my neighbors tonight 💛",
+     "ref": {
+      "artifact": "A47"
+     }
+    }
+   }
+  ],
+  "if": {
+   "flagFalse": "mara_memorialized"
+  }
+ },
+ {
+  "id": "D15_pressure",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 6
+   }
+  },
+  "if": [
+   {
+    "reportsLt": 1
+   },
+   {
+    "flagFalse": "mara_memorialized"
+   }
+  ],
+  "do": [
+   {
+    "show": "A48"
+   },
+   {
+    "notify": {
+     "text": "@maraquinn posted: Why I'll be cheering on Monday",
+     "ref": {
+      "artifact": "A48"
+     }
+    }
+   }
+  ]
+ },
+ {
+  "id": "D15_dana_nudge",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 6
+   }
+  },
+  "if": [
+   {
+    "reportsLt": 1
+   },
+   {
+    "trustGte": {
+     "id": "dana",
+     "n": 1
+    }
+   }
+  ],
+  "do": [
+   {
+    "message": {
+     "from": "dana",
+     "text": "If you have something, now would be the time. The vote is Monday.",
+     "source": "dana"
+    }
+   }
+  ]
+ },
+ {
+  "id": "D7_portal_used",
+  "when": {
+   "event": "login",
+   "match": {
+    "site": "brightline_portal"
+   }
+  },
+  "do": [
+   {
+    "setFlag": "portal_used"
+   },
+   {
+    "later": {
+     "days": 1,
+     "do": [
+      {
+       "logout": "brightline_portal"
+      },
+      {
+       "hide": "A08"
+      },
+      {
+       "setFlag": "iris_awaiting"
+      },
+      {
+       "message": {
+        "from": "iris",
+        "text": "They know someone used my login. My account is gone and a lawyer emailed me at 6am. Was it you?",
+        "source": "iris"
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "D13_calvin_silent",
+  "when": {
+   "event": "message.send",
+   "match": {
+    "to": "calvin"
+   }
+  },
+  "once": false,
+  "if": [
+   {
+    "counterGte": {
+     "id": "calvin_real_q",
+     "n": 3
+    }
+   },
+   {
+    "flagFalse": "calvin_silent"
+   }
+  ],
+  "do": [
+   {
+    "setFlag": "calvin_silent"
+   },
+   {
+    "show": "A49"
+   },
+   {
+    "notify": {
+     "text": "@calvinmarsh posted: On authenticity in a noisy world",
+     "ref": {
+      "artifact": "A49"
+     }
+    }
+   }
+  ]
+ },
+ {
+  "id": "D10_brightline_statement",
+  "when": {
+   "event": "report.published"
+  },
+  "do": [
+   {
+    "later": {
+     "days": 1,
+     "do": [
+      {
+       "show": "A42"
+      },
+      {
+       "setFlag": "brightline_statement"
+      },
+      {
+       "notify": {
+        "text": "Brightline Media issued a statement.",
+        "ref": {
+         "artifact": "A42"
+        }
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "D10_reply_flood",
+  "when": {
+   "event": "report.published",
+   "match": {
+    "channel": [
+     "connect",
+     "threadline"
+    ]
+   }
+  },
+  "once": false,
+  "do": [
+   {
+    "notify": {
+     "text": "Your post is getting hundreds of replies. Many of them sound… familiar."
+    }
+   }
+  ]
+ },
+ {
+  "id": "D11_vote_held",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 8
+   }
+  },
+  "do": [
+   {
+    "setFlag": "vote_held"
+   }
+  ]
+ },
+ {
+  "id": "D11_silence",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 8
+   }
+  },
+  "if": {
+   "reportsLt": 1
+  },
+  "do": [
+   {
+    "setFlag": "silent_vote"
+   }
+  ]
+ },
+ {
+  "id": "D11_postponed",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 8
+   }
+  },
+  "if": {
+   "exposed": {
+    "claim": "S3",
+    "beforeDay": 8
+   }
+  },
+  "do": [
+   {
+    "setFlag": "vote_postponed"
+   },
+   {
+    "notify": {
+     "text": "Council postpones the Waterfront vote 'pending questions about public consultation'."
+    }
+   }
+  ]
+ },
+ {
+  "id": "D11_passed",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 8
+   }
+  },
+  "if": {
+   "not": {
+    "exposed": {
+     "claim": "S3",
+     "beforeDay": 8
+    }
+   }
+  },
+  "do": [
+   {
+    "setFlag": "vote_passed"
+   },
+   {
+    "notify": {
+     "text": "Council approves Eastfield Waterfront, 6–5. Councilmember Ruiz cast the deciding vote."
+    }
+   }
+  ]
+ },
+ {
+  "id": "D11_persona_celebrates",
+  "when": {
+   "event": "day.start",
+   "match": {
+    "day": 8
+   }
+  },
+  "if": [
+   {
+    "flag": "vote_passed"
+   },
+   {
+    "flagFalse": "mara_memorialized"
+   }
+  ],
+  "do": [
+   {
+    "show": "A50"
+   },
+   {
+    "notify": {
+     "text": "@maraquinn posted: Proud of my city today 💛",
+     "ref": {
+      "artifact": "A50"
+     }
+    }
+   }
+  ]
+ }
+]

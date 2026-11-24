@@ -1,0 +1,42 @@
+{
+  "intro": {
+    "title": "Dead Internet",
+    "tagline": "Everyone is online. Nobody is real.",
+    "text": "Mara Quinn died on July 2nd. You were at the funeral.",
+    "namePrompt": "What should people call you?",
+    "start": "Unlock phone"
+  },
+  "apps": {
+    "browser": "Browser",
+    "connect": "Connect",
+    "messages": "Messages",
+    "casebook": "Casebook",
+    "sleep": "Sleep"
+  },
+  "messages": {
+    "ask": "What can you tell me about {name}?",
+    "show": "Have a look at this: {title}"
+  },
+  "casebook": {
+    "evidence": "Evidence",
+    "hypotheses": "Hypotheses",
+    "notes": "Notes",
+    "reports": "Reports",
+    "counts": "{evidence} pieces of evidence · {sources} sources"
+  },
+  "review": {
+    "dana": {
+      "noTrust": "I don't know you. Show me you know something first.",
+      "strong": "\"{claim}\": two independent sources. I can stand behind that.",
+      "weak": "\"{claim}\": one source. That's a lead, not a story. Find me a second, independent one.",
+      "none": "\"{claim}\": nothing you've shown me backs this up. Cut it or find something.",
+      "bold": "\"{claim}\": that's a big claim. Big claims need more than this."
+    }
+  },
+  "errors": {
+    "not_seen": "You haven't seen that yet.",
+    "cannot_contact": "You can't message them.",
+    "unknown_topic": "You don't know enough about that to ask.",
+    "login_failed": "Incorrect username or password."
+  }
+}

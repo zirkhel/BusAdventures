@@ -1,0 +1,281 @@
+{
+ "claims": [
+  {
+   "id": "S1",
+   "label": "Mara Quinn is dead",
+   "truth": "true",
+   "core": true,
+   "match": [
+    {
+     "subject": "mara",
+     "predicate": "is_dead"
+    }
+   ]
+  },
+  {
+   "id": "S2",
+   "label": "Brightline Media operates @maraquinn",
+   "truth": "true",
+   "core": true,
+   "match": [
+    {
+     "subject": "brightline",
+     "predicate": "operates",
+     "object": "acc_maraquinn"
+    }
+   ]
+  },
+  {
+   "id": "S3",
+   "label": "Northgate paid Brightline",
+   "truth": "true",
+   "core": true,
+   "match": [
+    {
+     "subject": "northgate",
+     "predicate": "paid",
+     "object": "brightline"
+    }
+   ],
+   "review": {
+    "weak": "One source for the money isn't enough for a story about money. Find me a second, independent one."
+   }
+  },
+  {
+   "id": "S4",
+   "label": "Juno Park is not a real person",
+   "truth": "true",
+   "match": [
+    {
+     "subject": "juno",
+     "predicate": "not_real"
+    },
+    {
+     "subject": "acc_junopark",
+     "predicate": "not_real"
+    }
+   ]
+  },
+  {
+   "id": "S5",
+   "label": "Brightline altered Mara's blog",
+   "truth": "true",
+   "match": [
+    {
+     "subject": "brightline",
+     "predicate": "altered",
+     "object": "acc_eastfieldnotes"
+    }
+   ]
+  },
+  {
+   "id": "S6",
+   "label": "Paul Navarro knew Mara was dead",
+   "truth": "true",
+   "bold": true,
+   "match": [
+    {
+     "subject": "paul",
+     "predicate": "knew_about",
+     "object": "evt_mara_death"
+    },
+    {
+     "subject": "northgate",
+     "predicate": "knew_about",
+     "object": "evt_mara_death"
+    }
+   ]
+  },
+  {
+   "id": "S7",
+   "label": "Calvin Marsh is not a real person",
+   "truth": "true",
+   "bold": true,
+   "match": [
+    {
+     "subject": "calvin",
+     "predicate": "not_real"
+    },
+    {
+     "subject": "acc_calvinmarsh",
+     "predicate": "not_real"
+    }
+   ]
+  },
+  {
+   "id": "S8",
+   "label": "@maraquinn is not really Mara",
+   "truth": "true",
+   "match": [
+    {
+     "subject": "acc_maraquinn",
+     "predicate": "not_real"
+    }
+   ]
+  },
+  {
+   "id": "F1",
+   "label": "Mara was killed on purpose",
+   "truth": "false",
+   "bold": true,
+   "match": [
+    {
+     "subject": "northgate",
+     "predicate": "caused",
+     "object": "evt_mara_death"
+    },
+    {
+     "subject": "kestrel",
+     "predicate": "caused",
+     "object": "evt_mara_death"
+    },
+    {
+     "subject": "gerald",
+     "predicate": "caused",
+     "object": "evt_mara_death"
+    },
+    {
+     "subject": "paul",
+     "predicate": "caused",
+     "object": "evt_mara_death"
+    },
+    {
+     "subject": "brightline",
+     "predicate": "caused",
+     "object": "evt_mara_death"
+    }
+   ],
+   "review": {
+    "weak": "You want me to print that someone killed her? Based on what, a bowling league?",
+    "strong": "A client list and a Threadline thread. That's a delivery route, not a motive. If we print this, we'd better be very sure."
+   }
+  },
+  {
+   "id": "F2",
+   "label": "Theo is posting as Mara",
+   "truth": "false",
+   "match": [
+    {
+     "subject": "theo",
+     "predicate": "operates",
+     "object": "acc_maraquinn"
+    }
+   ]
+  },
+  {
+   "id": "F3",
+   "label": "Owen hacked Mara's account",
+   "truth": "false",
+   "match": [
+    {
+     "subject": "owen",
+     "predicate": "operates",
+     "object": "acc_maraquinn"
+    }
+   ]
+  },
+  {
+   "id": "F4",
+   "label": "Northgate paid The Daily Record",
+   "truth": "false",
+   "match": [
+    {
+     "subject": "northgate",
+     "predicate": "paid",
+     "object": "daily_record"
+    }
+   ],
+   "review": {
+    "weak": "Advertising isn't a bribe, and I'd know. Leave my paper out of it unless you have a cheque."
+   }
+  },
+  {
+   "id": "F5",
+   "label": "Iris Bell is behind @maraquinn",
+   "truth": "partial",
+   "match": [
+    {
+     "subject": "iris",
+     "predicate": "operates",
+     "object": "acc_maraquinn"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "subject": "mara",
+   "predicate": "is_dead"
+  },
+  {
+   "subject": "lou",
+   "predicate": "caused",
+   "object": "evt_mara_death"
+  },
+  {
+   "subject": "northgate",
+   "predicate": "paid",
+   "object": "brightline"
+  },
+  {
+   "subject": "northgate",
+   "predicate": "paid",
+   "object": "kestrel"
+  },
+  {
+   "subject": "brightline",
+   "predicate": "paid",
+   "object": "meridian"
+  },
+  {
+   "subject": "brightline",
+   "predicate": "altered",
+   "object": "acc_eastfieldnotes"
+  },
+  {
+   "subject": "brightline",
+   "predicate": "altered",
+   "object": "acc_maraquinn"
+  },
+  {
+   "subject": "paul",
+   "predicate": "knew_about",
+   "object": "evt_mara_death"
+  },
+  {
+   "subject": "brightline",
+   "predicate": "knew_about",
+   "object": "evt_mara_death"
+  },
+  {
+   "subject": "iris",
+   "predicate": "knew_about",
+   "object": "evt_mara_death"
+  },
+  {
+   "subject": "theo",
+   "predicate": "knew_about",
+   "object": "evt_mara_death"
+  },
+  {
+   "subject": "dana",
+   "predicate": "knew_about",
+   "object": "evt_mara_death"
+  },
+  {
+   "subject": "brightline",
+   "predicate": "knew_about",
+   "object": "evt_breach"
+  },
+  {
+   "subject": "daily_record",
+   "predicate": "altered",
+   "object": "daily_record"
+  },
+  {
+   "subject": "northgate",
+   "predicate": "knew_about",
+   "object": "evt_mara_death"
+  }
+ ]
+}

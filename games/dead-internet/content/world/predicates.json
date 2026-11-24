@@ -1,0 +1,10 @@
+[
+  { "id": "is_dead", "arity": 1, "label": "is dead", "template": "{subject} is dead", "subjectKinds": ["person"], "truth": "facts" },
+  { "id": "operates", "arity": 2, "label": "operates", "template": "{subject} operates {object}", "subjectKinds": ["person", "org", "system"], "objectKinds": ["account"], "truth": "operatedBy" },
+  { "id": "not_real", "arity": 1, "label": "is not a real person", "template": "{subject} is not a real person", "subjectKinds": ["person", "account"], "truth": "notHuman", "bold": true },
+  { "id": "paid", "arity": 2, "label": "paid", "template": "{subject} paid {object}", "subjectKinds": ["person", "org"], "objectKinds": ["person", "org"], "truth": "facts" },
+  { "id": "caused", "arity": 2, "label": "caused", "template": "{subject} caused {object}", "subjectKinds": ["person", "org"], "objectKinds": ["event"], "truth": "facts", "bold": true },
+  { "id": "altered", "arity": 2, "label": "secretly altered", "template": "{subject} secretly altered {object}", "subjectKinds": ["person", "org"], "objectKinds": ["account", "org"], "truth": "facts" },
+  { "id": "knew_about", "arity": 2, "label": "knew about", "template": "{subject} knew about {object}", "subjectKinds": ["person", "org"], "objectKinds": ["event"], "truth": "facts" },
+  { "id": "connected_to", "arity": 2, "label": "is connected to", "template": "{subject} is connected to {object}", "subjectKinds": ["person", "org", "account", "place", "project", "event", "system"], "objectKinds": ["person", "org", "account", "place", "project", "event", "system"], "truth": "relation" }
+]

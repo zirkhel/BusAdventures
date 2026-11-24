@@ -1,0 +1,71 @@
+// @ts-check
+// Saving and loading. Storage is injected (localStorage in the browser, a Map in tests).
+// Saves are plain JSON with a format tag and a version number, so they can be exported,
+// imported and migrated when the state shape or the content changes.
+
+import { SAVE_VERSION } from "./state.js";
+
+export const SAVE_FORMAT = "dead-internet-save";
+
+/** Migrations from version n to n+1. Add one whenever the state shape changes. */
+const MIGRATIONS = {
+  // 1: s => { ...; s.saveVersion = 2; return s; },
+};
+
+export function serialize(state) {
+  return JSON.stringify({ format: SAVE_FORMAT, saveVersion: state.saveVersion, state });
+}
+
+/**
+ * Parse, migrate and clean a save so it fits the current world.
+ * References to content that no longer exists are dropped instead of crashing the game.
+ * @returns {{state:any, warnings:string[]}}
+ */
+export function deserialize(w, text) {
+  const data = typeof text === "string" ? JSON.parse(text) : text;
+  if (data?.format !== SAVE_FORMAT) throw new Error("Not a Dead Internet save.");
+  let s = data.state;
+  if (s.worldId !== w.meta.id) throw new Error(`Save belongs to world "${s.worldId}", not "${w.meta.id}".`);
+  while (s.saveVersion < SAVE_VERSION) {
+    const m = MIGRATIONS[s.saveVersion];
+    if (!m) throw new Error(`No migration from save version ${s.saveVersion}.`);
+    s = m(s);
+  }
+  if (s.saveVersion > SAVE_VERSION) throw new Error("Save is from a newer version of the game.");
+
+  const warnings = [];
+  const drop = (what, id) => warnings.push(`dropped ${what} ${id}`);
+  for (const id of Object.keys(s.seen)) if (!w.artifacts.has(id)) { delete s.seen[id]; drop("seen", id); }
+  for (const id of Object.keys(s.artifacts)) if (!w.artifacts.has(id)) { delete s.artifacts[id]; drop("artifact state", id); }
+  s.evidence = s.evidence.filter(e => {
+    const ok = e.message ? s.messages.some(m => m.id === e.message) : w.artifacts.has(e.artifact);
+    if (!ok) drop("evidence", e.id);
+    return ok;
+  });
+  for (const h of s.hypotheses) h.evidence = h.evidence.filter(id => s.evidence.some(e => e.id === id));
+  s.hypotheses = s.hypotheses.filter(h => {
+    const ok = w.predicates.has(h.predicate);
+    if (!ok) drop("hypothesis", h.id);
+    return ok;
+  });
+  for (const id of Object.keys(s.trust)) if (!w.characters.has(id)) delete s.trust[id];
+  for (const c of w.characters.values()) if (!(c.id in s.trust)) s.trust[c.id] = c.trust?.start ?? 0;
+  if (s.contentVersion !== w.meta.contentVersion) warnings.push(`content ${s.contentVersion} → ${w.meta.contentVersion}`);
+  s.contentVersion = w.meta.contentVersion;
+  return { state: s, warnings };
+}
+
+export function saveKey(w) { return `ba_deadinternet_${w.meta.id}`; }
+
+export function saveTo(storage, w, state) {
+  try { storage.setItem(saveKey(w), serialize(state)); return true; } catch { return false; }
+}
+
+/** @returns {{state:any, warnings:string[]}|null} */
+export function loadFrom(storage, w) {
+  const raw = storage.getItem(saveKey(w));
+  if (!raw) return null;
+  return deserialize(w, raw);
+}
+
+export function clearSave(storage, w) { storage.removeItem(saveKey(w)); }

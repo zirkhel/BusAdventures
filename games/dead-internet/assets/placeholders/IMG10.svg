@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 849" width="600" height="849">
+<rect width="100%" height="100%" fill="hsl(115 30% 22%)"/>
+<rect x="12" y="12" width="576" height="825" fill="none" stroke="hsl(115 40% 60%)" stroke-dasharray="8 6"/>
+<g  font-family="system-ui, sans-serif" fill="hsl(115 30% 88%)">
+<text x="32" y="56" font-size="28" font-weight="700">IMG10</text>
+<text x="32" y="84" font-size="14" opacity=".8">scan · 1240×1754</text>
+<text x="32" y="124" font-size="16">Scanned invoice: BRIGHTLINE MEDIA LLC, INVOICE</text>
+<text x="32" y="146" font-size="16">CSP-EF-Q1, bill to Northgate Development attn.</text>
+<text x="32" y="168" font-size="16">P. Navarro, $21,000, payable to Meridian</text>
+<text x="32" y="190" font-size="16">Holdings Ltd. Slightly skewed scan.</text>
+</g></svg>
