@@ -189,7 +189,7 @@
  "DRP04": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 60, culture writer, bright patterned scarf, laughing",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI)."
  },
  "DRP05": {
   "method": "generate",
