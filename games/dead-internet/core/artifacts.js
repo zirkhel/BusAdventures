@@ -78,6 +78,7 @@ export function resolveVersion(a, v) {
     comments: commentsIn(a, v),
     video: v.video ?? a.video ?? null,
     stats: v.stats ?? a.stats ?? null,
+    breaking: !!(v.breaking ?? a.breaking),
   };
 }
 

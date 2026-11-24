@@ -170,6 +170,8 @@ export class Game {
     for (const m of mentionsOf(this, id, v.versionId)) encounter(this, m);
     const a = this.w.artifacts.get(id);
     if (a.author) { if (a.type === "profile") markInvestigated(this, a.author); else encounter(this, a.author); }
+    // A byline is a name on the page: met, not investigated.
+    for (const b of v.byline || []) if (this.w.accounts.has(b)) encounter(this, b);
     fire(this, "artifact.open", { artifact: id, version: v.versionId, cached: v.cached });
     return { ok: true, view: v, first };
   }
@@ -306,6 +308,8 @@ export class Game {
   menuCases() { return CS.menuCases(this); }
   /** A feed page without side effects (for rendering). */
   feed(platform, tab = "forYou", offset = 0, limit = 10) { return FD.feed(this, { platform, tab, offset, limit }); }
+  /** A newspaper's list, newest first: front page, a section (opts.section) or an author (opts.author). */
+  news(platform, opts = {}) { return FD.newsList(this, { platform, ...opts }); }
   /** The player's follows, likes and "not interested". */
   media() { return FD.mediaView(this); }
   /** Endings reached, with epilogues. */

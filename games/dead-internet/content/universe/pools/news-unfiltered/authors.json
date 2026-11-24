@@ -1,0 +1,6 @@
+[
+  {"id": "acc_uf_redactor", "platform": "unfiltered", "handle": "@theredactor", "displayName": "The Redactor", "pool": "news-unfiltered", "role": "Investigations", "bio": "I read what they don't want read. Documents welcome. Names protected."},
+  {"id": "acc_uf_nightdesk", "platform": "unfiltered", "handle": "@nightdesk", "displayName": "Night Desk", "pool": "news-unfiltered", "role": "Breaking and reader tips", "bio": "The desk that never sleeps. Send tips any hour."},
+  {"id": "acc_uf_corawick", "platform": "unfiltered", "handle": "@corawick", "displayName": "Cora Wick", "pool": "news-unfiltered", "role": "Senior writer", "bio": "Former Daily Record stringer. Left because they wouldn't print it."},
+  {"id": "acc_uf_static", "platform": "unfiltered", "handle": "@static_uf", "displayName": "STATIC", "pool": "news-unfiltered", "role": "Technology", "bio": "Technology, surveillance, the grid. Not a person you need to know.", "layer": 4}
+]

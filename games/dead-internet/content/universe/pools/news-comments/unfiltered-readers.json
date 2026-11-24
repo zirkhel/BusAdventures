@@ -1,0 +1,14 @@
+[
+  {"id": "acc_ufc_wakeup_calder", "platform": "unfiltered", "handle": "@wakeup_calder", "displayName": "wakeup_calder", "pool": "news-comments"},
+  {"id": "acc_ufc_truthseeker_pc", "platform": "unfiltered", "handle": "@truthseeker_pc", "displayName": "TruthSeeker", "pool": "news-comments"},
+  {"id": "acc_ufc_no_masters", "platform": "unfiltered", "handle": "@no_masters", "displayName": "no_masters", "pool": "news-comments"},
+  {"id": "acc_ufc_redpill_harbor", "platform": "unfiltered", "handle": "@redpill_harbor", "displayName": "redpill_harbor", "pool": "news-comments"},
+  {"id": "acc_ufc_skeptic_sam", "platform": "unfiltered", "handle": "@skeptic_sam", "displayName": "Skeptic Sam", "pool": "news-comments"},
+  {"id": "acc_ufc_just_asking_q", "platform": "unfiltered", "handle": "@just_asking_q", "displayName": "just asking", "pool": "news-comments"},
+  {"id": "acc_ufc_grid_watch", "platform": "unfiltered", "handle": "@grid_watch", "displayName": "Grid Watch", "pool": "news-comments"},
+  {"id": "acc_ufc_sheeple_no_more", "platform": "unfiltered", "handle": "@sheeple_no_more", "displayName": "sheeple_no_more", "pool": "news-comments"},
+  {"id": "acc_ufc_lurker9000", "platform": "unfiltered", "handle": "@lurker9000", "displayName": "lurker9000", "pool": "news-comments"},
+  {"id": "acc_ufc_factcheckfran", "platform": "unfiltered", "handle": "@factcheckfran", "displayName": "Fran (fact checks)", "pool": "news-comments"},
+  {"id": "acc_ufc_harbor_insider", "platform": "unfiltered", "handle": "@harbor_insider", "displayName": "harbor insider", "pool": "news-comments"},
+  {"id": "acc_ufc_anon_dockhand", "platform": "unfiltered", "handle": "@anon_dockhand", "displayName": "anon dockhand", "pool": "news-comments"}
+]

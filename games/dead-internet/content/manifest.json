@@ -5,16 +5,34 @@
   "strings": "strings/en.json",
   "predicates": "universe/predicates.json",
   "platforms": "universe/platforms.json",
-  "entities": "universe/entities.json",
-  "accounts": "universe/accounts.json",
-  "images": "universe/images.json",
+  "entities": [
+   "universe/entities.json",
+   "universe/pools/news/entities.json"
+  ],
+  "accounts": [
+   "universe/accounts.json",
+   "universe/pools/news-dailyrecord/authors.json",
+   "universe/pools/news-unfiltered/authors.json",
+   "universe/pools/news-comments/dailyrecord-readers.json",
+   "universe/pools/news-comments/unfiltered-readers.json"
+  ],
+  "images": [
+   "universe/images.json",
+   "universe/pools/news/images.json"
+  ],
   "artifacts": [
-   "universe/artifacts/filler.json"
+   "universe/artifacts/filler.json",
+   "universe/pools/news-dailyrecord/articles.json",
+   "universe/pools/news-unfiltered/articles.json",
+   "universe/pools/news-unfiltered/documents.json"
   ],
   "characters": "universe/characters.json",
   "canon": "universe/canon.json",
   "mysteries": "universe/mysteries.json",
-  "terms": "universe/terms.json"
+  "terms": "universe/terms.json",
+  "rules": [
+   "universe/pools/news/rules.json"
+  ]
  },
  "mysteries": [
   "mysteries/quiet-account/mystery.json"

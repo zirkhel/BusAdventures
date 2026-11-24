@@ -229,6 +229,13 @@ export function registerDefaultActions(cs) {
     if (!pf.lookup) continue;
     cs.register({ id: `lookup-${pf.id}`, icon: "search", types: pf.lookup.types, label: pf.lookup.label || `Check with ${pf.name}`, run: (r, o, p) => p.lookup(pf.id, r.text) });
   }
+  // News apps (data: platforms[].app): search the paper, and open an author's page from a byline.
+  for (const [pfId, appId] of cs.phone.platformApp || []) {
+    const name = w.platforms.get(pfId).name;
+    cs.register({ id: `news-search-${pfId}`, icon: "search", types: TEXTISH, label: `Search ${name}`, run: (r, o, p) => p.apps[appId].search(r.text) })
+      .register({ id: `news-author-${pfId}`, icon: "people", types: ["account", "handle"], label: `Author page in ${name}`,
+        when: (r, o, p) => !!r.id && p.g.news(pfId, { author: r.id, limit: 1 }).total > 0, run: (r, o, p) => p.openAuthor(r.id, appId) });
+  }
   cs.register({ id: "connect-search", icon: "people", types: ["text"], label: "Search on Connect", run: (r, o, p) => p.findProfile(r.text) })
     .register({ id: "cached", icon: "clock", types: ["domain", "url"], label: "View cached versions", run: (r, o, p) => p.cachedFor(r.text) })
     // Images

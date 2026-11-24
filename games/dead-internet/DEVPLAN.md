@@ -133,11 +133,17 @@ _Implementert 24. november 2026. Bare motor, validator og verktøy. Ingen synlig
 - [x] Innholdsrapport (`tools/media-report.mjs`) som viser fordelingen av sanne og usanne påstander per plattform (ingen kvote) og bevis som skiller seg ut i visningstall
 
 ## Fase 8 — The Daily Record og Unfiltered (M2)
-- [ ] Én nyhetsmotor med to profiler. Unfiltered med egen logo og identitet.
-- [ ] Forside, seksjoner, artikkel, forfatterside, kommentarer, søk og del
-- [ ] Hjemskjerm med flere apper
-- [ ] Innholdspakker for begge aviser
-- [ ] Playwright-test på iPhone- og Pixel-størrelse
+_Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7)._
+- [x] Én nyhetsmotor (`app/apps/news.js`) med to profiler fra plattformdata (`platforms[].app`). Unfiltered har egen logo, farger og tone. En tredje avis er bare innhold.
+- [x] Forside (nyeste først, aldri rangert), seksjoner, artikkel, forfatterside, kommentarer (Top/Newest), søk i avisen og del (kopier lenke, åpne i Browser, lagre, send til kontakt, versjoner)
+- [x] Rettelser, relaterte saker, kilder og sponsormerking vises både i appen og i Browser
+- [x] Hjemskjerm med flere apper (rutenett + dokk)
+- [x] Kontekstmeny: «Search The Daily Record», «Search Unfiltered» og «Author page in …» fra en byline
+- [x] «Breaking»-varsler når en ny sak kommer på `day.start`. Nye saker hver dag fra dag 2 til 8.
+- [x] Innhold: The Daily Record 62 saker (48 nye), 8 skribenter med side, 6 rettelser, 4 endrede og 3 fjernede saker, 5 sponsede, 6 nekrologer, 12 kommentarfelt. Unfiltered 26 saker, 4 skribenter, 4 lekkasjer med dokument på Docshare.
+- [x] Fem hendelser dekkes av begge aviser: Unfiltered har rett (kaien), Daily Record har rett (brannen), begge tar feil (strømbruddet), ingen kan avgjøres (fiskedøden), og Unfiltered beskjærer Daily Records festivalbilde.
+- [x] Sprekker uten forklaring (lag 4–5): samme skrivefeil hos en Daily Record- og en Unfiltered-skribent samme uke, en avdød festivalfrivillig som siteres måneder senere, en lampe ingen butikk har.
+- [x] Playwright-test på iPhone- og Pixel-størrelse
 
 ## Fase 9 — The Quiet Account ferdig
 - [ ] Hele The Quiet Account spilles gjennom på mobil, og friksjonen måles

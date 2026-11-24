@@ -40,7 +40,7 @@ function candidates(g, platform) {
     if (vid == null) continue;
     if (a.access && !check(a.access, g.ctx)) continue;
     const r = resolveVersion(a, getVersion(a, vid));
-    out.push({ a, date: r.date ?? a.date ?? "", views: r.stats?.views ?? 0 });
+    out.push({ a, r, date: r.date ?? a.date ?? "", views: r.stats?.views ?? 0 });
   }
   return out;
 }
@@ -88,6 +88,24 @@ export function feed(g, opts) {
     scored.sort((p, q) => q.s - p.s || p.x.a.id.localeCompare(q.x.a.id));
     list = scored.map(p => p.x);
   }
+  return { items: list.slice(offset, offset + limit).map(x => x.a.id), total: list.length };
+}
+
+/**
+ * A newspaper's own lists: newest first, never ranked. Front page, a section, or an author.
+ * Only items that are live, visible and not dated after today. Like the feed, it never reads
+ * supports, mentions, claims or cases.
+ * @param {any} g
+ * @param {{platform:string, section?:string|null, author?:string|null, offset?:number, limit?:number}} opts
+ * @returns {{items:string[], total:number}}
+ */
+export function newsList(g, opts) {
+  const today = g.date;
+  let list = candidates(g, opts.platform).filter(x => !x.date || String(x.date).slice(0, 10) <= today);
+  if (opts.section) list = list.filter(x => categoryOf(x.a) === opts.section);
+  if (opts.author) list = list.filter(x => x.a.author === opts.author || x.r.byline.includes(opts.author));
+  list.sort((x, y) => String(y.date).localeCompare(String(x.date)) || x.a.id.localeCompare(y.a.id));
+  const offset = opts.offset ?? 0, limit = opts.limit ?? 20;
   return { items: list.slice(offset, offset + limit).map(x => x.a.id), total: list.length };
 }
 

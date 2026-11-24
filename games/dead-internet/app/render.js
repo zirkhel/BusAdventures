@@ -107,13 +107,15 @@ export function renderArtifact(phone, v, o = {}) {
   const page = phone.ctx.block(h(`article.page.k-${kind}.pf-${v.platform}`), { artifact: v.id, version: v.versionId, title: v.title });
   page.append(header(phone, v, a, acc, pf, kind));
   if (kind === "news" && blocks[0]?.tagName === "P") {
-    // "Local news · Obituaries" kicker and "By …" byline
+    // Older articles write the kicker ("Local news · Obituaries") and "By …" in the text. When the
+    // article has a structured section or byline, the header shows those and the text lines go.
     const first = blocks[0].textContent || "";
-    if (/·/.test(first) && first.length < 60) { blocks[0].className = "kicker"; }
-    const by = blocks.find(b => /^By /.test(b.textContent || ""));
-    if (by) by.className = "byline";
+    if (/·/.test(first) && first.length < 60) { if (v.section) blocks.shift(); else blocks[0].className = "kicker"; }
+    const by = blocks.findIndex(b => /^By /.test(b.textContent || "") && (b.textContent || "").length < 80);
+    if (by >= 0) { if (v.byline?.length) blocks.splice(by, 1); else blocks[by].className = "byline"; }
   }
   page.append(h("div.page-body", blocks));
+  page.append(...extras(phone, v, o));
   if (o.context !== "message") page.append(h("div.page-foot", v.url ? h("span", phone.ctx.span(v.url, { type: "url" })) : null, v.date ? h("span", fmtDate(v.date)) : null));
   return page;
 }
@@ -133,13 +135,66 @@ function header(phone, v, a, acc, pf, kind) {
     return h("header.forum-head", h("div.crumb", "threadline › " + (v.url || "").split("/").slice(2, 3).join("")),
       h("h1", v.title), h("div.muted", acc ? ["started by ", who(phone, acc.handle, acc.id)] : "", v.date ? ` · ${fmtDate(v.date)}` : ""));
   }
-  if (kind === "news") return h("header.news-head", h("div.mast", pf?.name || ""), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
+  if (kind === "news") return h("header.news-head",
+    h("div.mast", pf?.app?.logo || pf?.name || ""),
+    v.sponsored ? h("div.np-sponsor", "Sponsored by ", phone.ctx.span(w.entities.get(v.sponsored.by)?.name || v.sponsored.by, { type: "org", id: v.sponsored.by })) : null,
+    v.section ? h("div.kicker", sectionName(pf, v.section)) : null,
+    h("h1", v.title),
+    v.byline?.length ? h("div.byline", "By ", v.byline.map((b, i) => [i ? (i === v.byline.length - 1 ? " and " : ", ") : "",
+      w.accounts.has(b) ? phone.ctx.span(w.accounts.get(b).displayName || b, { type: "account", id: b }) : b])) : null,
+    v.date ? h("div.muted", fmtDate(v.date)) : null);
   if (kind === "blog") return h("header.blog-head", h("div.mast", pf?.name || ""), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
   if (kind === "messaging") {
     return h("header.doc-head", h("div.doc-type", v.type === "email" ? "Email" : v.type === "image" ? "Image" : "Document"), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
   }
   if (kind === "registry") return h("header.reg-head", h("div.mast", pf?.mast || pf?.name || "", pf?.mastSub ? h("small", pf.mastSub) : null), h("h1", v.title));
   return h("header.site-head", h("div.mast", pf?.name || v.url?.split("/")[0] || ""), h("h1", v.title));
+}
+
+function sectionName(pf, id) {
+  return pf?.app?.sectionLabels?.[id] ?? String(id).replace(/(^|[-_ ])(\w)/g, (m, sp, c) => (sp ? " " : "") + c.toUpperCase());
+}
+
+/** Corrections, related stories, references and comments, when the article has them. */
+function extras(phone, v, o) {
+  const g = phone.g, w = g.w, out = [];
+  const openIn = id => phone.openArtifact(id, undefined, o.app && phone.appFor(id) === o.app ? o.app : phone.appFor(id));
+  if (v.corrections?.length) out.push(h("aside.corrections", h("b", v.corrections.length > 1 ? "Corrections" : "Correction"),
+    v.corrections.map(c => h("p", c.date ? h("span.muted", `${fmtDate(c.date)}: `) : null, phone.ctx.text(c.text)))));
+  const titleOf = id => { const x = g.view(id); return x.error || x.locked ? null : x.title; };
+  const related = (v.related || []).map(id => ({ id, title: titleOf(id) })).filter(x => x.title);
+  if (related.length) out.push(h("aside.related", h("b", "Related"), related.map(x => h("button.rel-item", { onclick: () => openIn(x.id) }, x.title))));
+  const refs = (v.refs || []).map(r => w.artifacts.has(r) ? { id: r, title: titleOf(r) } : { url: r }).filter(x => x.url || x.title);
+  if (refs.length) out.push(h("aside.refs", h("b", "Sources and links"),
+    refs.map(x => x.id ? h("button.rel-item", { onclick: () => openIn(x.id) }, x.title) : h("div.ref-url", phone.ctx.span(x.url, { type: "url" })))));
+  if (v.comments?.length) out.push(comments(phone, v));
+  return out;
+}
+
+/** Structured comments, sorted Top or Newest (a view choice only). */
+function comments(phone, v) {
+  const w = phone.g.w;
+  const list = h("div.cm-list");
+  const byId = new Map(v.comments.map(c => [c.id, c]));
+  const draw = mode => {
+    const roots = v.comments.filter(c => !c.replyTo || !byId.has(c.replyTo));
+    const order = mode === "new" ? (a, b) => String(b.date).localeCompare(String(a.date)) : (a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.likes || 0) - (a.likes || 0);
+    const one = (c, reply) => {
+      const acc = w.accounts.get(c.account);
+      return h("div.cm", { class: reply ? "reply" : "" }, avatar(w, c.account, reply ? 22 : 28),
+        h("div.cm-body",
+          h("div.cm-head", acc ? h("b", phone.ctx.span(acc.handle, { type: "handle", id: c.account })) : h("b", c.account),
+            c.pinned ? h("span.tag", "Pinned") : null, c.date ? h("span.muted", ` · ${fmtDate(c.date)}`) : null),
+          h("div.cm-text", phone.ctx.text(c.text)),
+          c.likes ? h("div.cm-likes.muted", `♥ ${c.likes.toLocaleString("en-US")}`) : null));
+    };
+    list.replaceChildren(...[...roots].sort(order).flatMap(c => [one(c, false), ...v.comments.filter(r => r.replyTo === c.id).map(r => one(r, true))]));
+    seg.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === mode));
+  };
+  const seg = h("div.seg.small", h("button", { "data-m": "top", onclick: () => draw("top") }, "Top"), h("button", { "data-m": "new", onclick: () => draw("new") }, "Newest"));
+  const box = h("section.comments", h("div.cm-title", h("b", `${v.comments.length} comment${v.comments.length === 1 ? "" : "s"}`), seg), list);
+  draw("top");
+  return box;
 }
 
 /** Locked page with a sign-in form. */

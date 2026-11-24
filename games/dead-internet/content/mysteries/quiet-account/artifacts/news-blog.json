@@ -1,9 +1,9 @@
 [
-  { "id": "A11", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2025/07/04/eastfield-librarian-dies", "date": "2025-07-04",
+  { "id": "A11", "section": "obituaries", "byline": ["acc_danareyes"], "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2025/07/04/eastfield-librarian-dies", "date": "2025-07-04",
     "title": "Eastfield librarian dies in Route 9 cycling crash", "source": "dailyrecord",
     "mentions": ["mara", "evt_mara_death", "theo", "lou", "kestrel", "acc_danareyes", "dana"], "supports": ["S1"],
     "versions": [{ "id": "v1", "cached": true, "body": "Local news · Obituaries\nBy Dana Reyes (@danareyes)\n\nMara Quinn, 34, a librarian at the Eastfield branch and author of the neighbourhood blog Eastfield Notes, died Wednesday after a collision with a delivery van at the Route 9 and Harbor Street intersection.\n\nPolice say the driver, an employee of Kestrel Logistics, remained at the scene and is cooperating. No charges are expected.\n\nQuinn was known for leading the 'Save the Mill' campaign against the Eastfield Waterfront rezoning. She is survived by her brother, Theo." }] },
-  { "id": "A12", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2025/12/05/former-critic-backs-waterfront", "date": "2025-12-05",
+  { "id": "A12", "section": "politics", "byline": ["acc_danareyes"], "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2025/12/05/former-critic-backs-waterfront", "date": "2025-12-05",
     "title": "Former critic backs Waterfront plan", "source": "dailyrecord", "mentions": ["waterfront", "northgate", "dana", "acc_danareyes", "paul"],
     "versions": [
       { "id": "v1", "date": "2025-12-05", "cached": true, "mentions": ["mara", "acc_maraquinn"], "supports": ["S8"],
@@ -11,16 +11,16 @@
       { "id": "v2", "date": "2025-12-11",
         "body": "By Dana Reyes\n\nSupport for Northgate Development's Eastfield Waterfront is growing, according to residents' posts on social media.\n\nNorthgate spokesperson Paul Navarro welcomed the shift: \"The conversation has matured.\"\n\nUpdated Dec 11: This article has been edited." }
     ] },
-  { "id": "A13", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2025/09/13/farewell-mill-sign", "date": "2025-09-13",
+  { "id": "A13", "section": "local", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2025/09/13/farewell-mill-sign", "date": "2025-09-13",
     "title": "Farewell to the old Calder Mill sign", "source": "dailyrecord", "images": ["IMG03"], "mentions": ["calder_mill", "evt_sign_removal", "northgate"],
     "versions": [{ "id": "v1", "cached": true, "body": "A crane lifted the 138-year-old CALDER MILL — EST. 1887 sign from the mill's roof on Friday, September 12. Northgate Development says the sign will be restored and displayed in the Waterfront lobby. A small crowd watched in silence. One former mill worker shouted 'Thieves!' and was asked to step back.\n[Photo: crane lifts the sign]" }] },
-  { "id": "A39", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2026/03/11/council-confirms-vote", "date": "2026-03-11",
+  { "id": "A39", "section": "politics", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2026/03/11/council-confirms-vote", "date": "2026-03-11",
     "title": "Council confirms March 16 vote on Waterfront", "source": "dailyrecord", "hidden": true, "mentions": ["city_council", "evt_vote", "waterfront", "ana"],
     "versions": [{ "id": "v1", "cached": true, "body": "The Port Calder City Council will vote on Ordinance 26-031, the Eastfield Waterfront rezoning, on Monday, March 16. Councilmember Ana Ruiz, who represents Eastfield, says she is 'still listening to residents' and has not decided." }] },
-  { "id": "A46", "type": "page", "platform": "dailyrecord", "url": "dailyrecord-pc.com/archive/2019/03", "date": "2026-03-09", "index": "weak",
+  { "id": "A46", "feed": false, "type": "page", "platform": "dailyrecord", "url": "dailyrecord-pc.com/archive/2019/03", "date": "2026-03-09", "index": "weak",
     "title": "Daily Record archive: March 2019", "source": "dailyrecord", "mentions": ["daily_record"],
     "versions": [{ "id": "v1", "body": "Archive, March 2019\n\nMar 1–10: 64 articles\nMar 11–17: No articles found.\nMar 18–31: 71 articles\n\nIf you believe an article is missing, contact the archive desk." }] },
-  { "id": "A60", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2023/02/20/eastfield-neighbors-breach", "date": "2023-02-20",
+  { "id": "A60", "section": "technology", "type": "article", "platform": "dailyrecord", "url": "dailyrecord-pc.com/2023/02/20/eastfield-neighbors-breach", "date": "2023-02-20",
     "title": "Eastfield Neighbors forum hacked, 31,000 accounts exposed", "source": "dailyrecord", "mentions": ["eastfield_neighbors", "evt_breach"],
     "versions": [{ "id": "v1", "cached": true, "body": "The volunteer-run Eastfield Neighbors forum says email addresses and passwords for about 31,000 accounts were stolen. Users who reused their password elsewhere are urged to change it. The forum has since shut down." }] },
 

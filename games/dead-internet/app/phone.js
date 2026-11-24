@@ -10,6 +10,7 @@ import { connectApp } from "./apps/connect.js";
 import { messagesApp } from "./apps/messages.js";
 import { casebookApp } from "./apps/casebook.js";
 import { settingsApp } from "./apps/settings.js";
+import { newsApp } from "./apps/news.js";
 import { ContextSystem, registerDefaultActions } from "./context.js";
 
 export class Phone {
@@ -34,6 +35,12 @@ export class Phone {
     }
 
     this.apps = Object.fromEntries([browserApp, connectApp, messagesApp, casebookApp, settingsApp].map(f => { const a = f(this); return [a.id, a]; }));
+    /** Apps made from platform data (news template): platform id → app id. A new paper is only content. */
+    this.platformApp = new Map();
+    for (const pf of w.platforms.values()) if (pf.app?.template === "news") {
+      const a = newsApp(this, pf);
+      this.apps[a.id] = a; this.platformApp.set(pf.id, a.id);
+    }
     /** @type {Record<string, any[]>} */
     this.stacks = {};
     /** "lock" | "home" | app id */
@@ -123,6 +130,8 @@ export class Phone {
   /** Short title of a screen, for the "return to" link and the recent list. */
   titleOf(appId, desc) {
     if (!desc) return this.str(`apps.${appId}`);
+    const own = this.apps[appId]?.title?.(desc);
+    if (own) return own;
     if (desc.kind === "page") return desc.view?.title || desc.url || "Page";
     if (desc.kind === "thread") return this.contactName(desc.id);
     if (desc.kind === "results") return desc.title || `“${desc.q}”`;
@@ -172,6 +181,7 @@ export class Phone {
   appFor(id) {
     const a = this.g.w.artifacts.get(id);
     if (a?.platform === "connect") return "connect";
+    if (a && this.platformApp.has(a.platform)) return /** @type {string} */ (this.platformApp.get(a.platform));
     if (a?.platform === "messages") return this.apps[this.where] ? this.where : "messages";
     return "browser";
   }
@@ -187,6 +197,16 @@ export class Phone {
     if (pid) this.openArtifact(pid, undefined, "connect");
     else this.toast("No profile found.");
   }
+
+  /** News apps where an account has a byline: [{app, name}]. */
+  bylineApps(accId) {
+    const out = [];
+    for (const [pf, app] of this.platformApp) if (this.g.news(pf, { author: accId, limit: 1 }).total) out.push({ app, name: this.apps[app].name });
+    return out;
+  }
+
+  /** Author page in a news app. */
+  openAuthor(accId, appId) { const a = this.apps[appId]; if (a?.openAuthor) a.openAuthor(accId); }
 
   accountByHandle(handle) { return this.handles.get(String(handle).toLowerCase()) || null; }
 
@@ -595,7 +615,8 @@ export class Phone {
   #noteCard(n, onOpen) {
     const thread = n.ref?.thread;
     const c = thread ? this.g.w.characters.get(thread) : null;
-    const app = thread ? "Messages" : n.ref?.artifact ? (this.appFor(n.ref.artifact) === "connect" ? "Connect" : "Browser") : "News";
+    const target = n.ref?.artifact ? this.appFor(n.ref.artifact) : null;
+    const app = thread ? "Messages" : target ? (this.apps[target]?.name || this.str(`apps.${target}`)) : "News";
     const title = c ? this.contactName(thread) : app;
     return h("button.note", { onclick: onOpen },
       h("div.note-head", h("span.note-app", app), h("span.muted", n.day === this.g.s.day ? "now" : `Day ${n.day}`)),
@@ -604,6 +625,10 @@ export class Phone {
   }
 
   #homeScreen() {
+    // A paper's icon is its own logo (from platform data), not a generic glyph.
+    const newsIcon = id => { const a = this.apps[id], pf = this.g.w.platforms.get(a.platform);
+      return h("button.app-icon", { "data-app": id, onclick: () => this.openApp(id) },
+        h("span.app-tile.np-tile", { class: `np-${pf.app.theme || pf.id}` }, h("span", pf.app.icon || pf.name.slice(0, 2))), h("span.app-label", pf.app.short || pf.name), h("span.badge")); };
     const appIcon = (id, label, ico) => h("button.app-icon", { "data-app": id, onclick: () => this.openApp(id) },
       h("span.app-tile", { class: `tile-${id}` }, icon(ico)), h("span.app-label", label), h("span.badge"));
     const scr = h("div.home",
@@ -611,7 +636,9 @@ export class Phone {
         h("div.hw-row", h("div.hw-name", this.g.s.playerName),
           h("button.hw-sleep", { onclick: () => this.sleep() }, icon("moon"), this.str("apps.sleep")))),
       this.#recentWidget(),
-      h("div.home-grid", appIcon("settings", "Settings", "gear")),
+      h("div.home-grid",
+        [...this.platformApp.values()].map(id => newsIcon(id)),
+        appIcon("settings", "Settings", "gear")),
       h("div.dock",
         appIcon("browser", this.str("apps.browser"), "globe"),
         appIcon("connect", this.str("apps.connect"), "people"),

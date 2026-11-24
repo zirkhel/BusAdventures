@@ -43,7 +43,8 @@ const withEcho = () => loadWith(ECHO_FILES, m => ({ ...m, mysteries: [...m.myste
 test("the content is one universe plus mystery packs", () => {
   assert.equal(world.packOf.get("B01"), "universe", "background content belongs to the universe");
   assert.equal(world.packOf.get("A02"), "quiet_account");
-  assert.ok(world.rules.every(r => r.case === "quiet_account"), "the vote and other story rules belong to the case");
+  assert.ok(world.rules.filter(r => !r.id.startsWith("news_")).every(r => r.case === "quiet_account"), "the vote and other story rules belong to the case");
+  assert.ok(world.rules.filter(r => r.id.startsWith("news_")).every(r => !r.case), "the papers publish whatever case is running");
   const qa = world.mysteries.get("quiet_account");
   assert.ok(qa.start.menu && qa.start.known.includes("mara") && qa.testing.coreClaims.length);
   assert.deepEqual(qa.layers.reveal, [1, 2]);
