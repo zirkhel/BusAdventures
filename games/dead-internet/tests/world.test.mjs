@@ -70,3 +70,48 @@ test("free search: any query works and precise queries are rewarded", () => {
   assert.ok(!ids("Renee Okafor").some(id => !["A10", "A20"].includes(id) && !world.artifacts.get(id).filler),
     "Renee barely exists outside Brightline's own pages");
 });
+
+test("notes can be added, edited and deleted; empty notes are refused", () => {
+  const g = new Game(world); g.start();
+  assert.ok(g.note("   ").error);
+  const { id } = g.note("bl-ops.net = Brightline?");
+  assert.ok(g.editNote(id, "bl-ops.net is Brightline's portal").ok);
+  assert.equal(g.s.notes[0].text, "bl-ops.net is Brightline's portal");
+  assert.ok(g.editNote(id, "").error);
+  assert.ok(g.deleteNote(id).ok);
+  assert.equal(g.s.notes.length, 0);
+  assert.ok(g.deleteNote(id).error);
+  const r = replay(world, {}, g.s.log);
+  assert.deepEqual(r.s.notes, g.s.notes);
+});
+
+test("topics and evidence views give names, kinds and sources, never claims", () => {
+  const g = new Game(world); g.start();
+  g.open("A05");
+  const e = g.save({ artifact: "A05" }).id;
+  const t = g.topics();
+  assert.ok(t.some(x => x.id === "acc_maraquinn" && x.kind === "account"));
+  assert.ok(t.some(x => x.id === "mara" && x.kind === "person"));
+  assert.ok(!t.some(x => world.entities.get(x.id)?.secret), "secret entities are never topics");
+  const about = g.evidenceAbout(e);
+  assert.ok(about.about.includes("acc_maraquinn"));
+  assert.equal(typeof about.source, "string");
+  assert.ok(!JSON.stringify(about).includes("S8"), "no claim ids leak");
+});
+
+test("a conversation started from the phone: ask, show saved evidence, get a reply option", () => {
+  const g = new Game(world); g.start();
+  g.search("Theo Quinn"); g.open("A06");
+  assert.ok(g.contacts().includes("theo"));
+  assert.equal(g.ask("theo", "calder_mill").error, "unknown_topic", "you can only ask about what you know");
+  g.open("A05");                                   // the post mentions the Mill
+  assert.ok(g.ask("theo", "calder_mill").ok); g.ask("theo", "calder_mill");
+  g.searchImage("IMG01"); g.open("A33");
+  const ev = g.save({ artifact: "A33" }).id;
+  const e = g.s.evidence.find(x => x.id === ev);
+  const before = g.thread("theo").length;
+  g.show("theo", e.artifact, e.version ?? undefined);
+  const th = g.thread("theo");
+  assert.ok(th.length > before + 1, "Theo answered");
+  assert.ok(th.some(m => m.attach?.includes("A32")), "Theo forwarded his emails");
+});

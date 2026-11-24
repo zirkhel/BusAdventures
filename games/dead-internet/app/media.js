@@ -52,7 +52,7 @@ export function avatar(w, accountId, size = 40) {
   const acc = accountId ? w.accounts.get(accountId) : null;
   const style = { width: `${size}px`, height: `${size}px`, fontSize: `${Math.round(size * 0.4)}px` };
   if (acc?.avatar) return h("span.avatar", { style }, img(acc.avatar, { alt: "" }));
-  const name = acc?.displayName || acc?.handle || accountId || "?";
+  const name = acc?.displayName || acc?.handle || w.entities.get(accountId)?.name || accountId || "?";
   const initials = name.replace(/^@/, "").split(/[\s_.]+/).filter(Boolean).slice(0, 2).map(s => s[0].toUpperCase()).join("");
   let hash = 0; for (const c of String(accountId || name)) hash = (hash * 31 + c.charCodeAt(0)) >>> 0;
   return h("span.avatar.initials", { style: { ...style, background: `hsl(${hash % 360} 28% 38%)` } }, initials || "?");

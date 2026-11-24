@@ -11,6 +11,7 @@ import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
 import * as CB from "./casebook.js";
 import { asArray, addDays, deepClone } from "./util.js";
+import { nameOf } from "./world.js";
 
 export class Game {
   /**
@@ -59,6 +60,8 @@ export class Game {
       case "deleteHypothesis": r = CB.deleteHypothesis(this, a.id); break;
       case "linkEvidence": r = CB.linkEvidence(this, a.hypothesis, a.evidence, a.on ?? true); break;
       case "addNote": r = CB.addNote(this, a.text); break;
+      case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
+      case "deleteNote": r = CB.deleteNote(this, a.id); break;
       case "review": r = CB.review(this, a.channel, a.hypotheses); break;
       case "publish": r = CB.publish(this, a.channel, a.hypotheses); break;
       case "sleep": r = this.#sleep(); break;
@@ -83,6 +86,8 @@ export class Game {
   hypothesize(hypothesis) { return this.dispatch({ type: "createHypothesis", hypothesis }); }
   link(hypothesis, evidence, on = true) { return this.dispatch({ type: "linkEvidence", hypothesis, evidence, on }); }
   note(t) { return this.dispatch({ type: "addNote", text: t }); }
+  editNote(id, t) { return this.dispatch({ type: "updateNote", id, text: t }); }
+  deleteNote(id) { return this.dispatch({ type: "deleteNote", id }); }
   review(channel, hypotheses) { return this.dispatch({ type: "review", channel, hypotheses }); }
   publish(channel, hypotheses) { return this.dispatch({ type: "publish", channel, hypotheses }); }
   sleep() { return this.dispatch({ type: "sleep" }); }
@@ -196,6 +201,11 @@ export class Game {
   thread(id) { return thread(this, id); }
   prompts(id) { return availablePrompts(this, id); }
   known() { return Object.keys(this.s.known).filter(id => this.w.entities.has(id) || this.w.accounts.has(id)).filter(id => !this.w.entities.get(id)?.secret); }
+  /** Known people, organisations, accounts, places, events… with their kind, for topic and hypothesis pickers. */
+  topics() { return this.known().map(id => ({ id, kind: CB.kindOfId(this, id), name: nameOf(this.w, id) })); }
+  /** Who and what a piece of evidence is about, and its source key. Never the claims it supports. */
+  evidenceAbout(evId) { const e = this.s.evidence.find(x => x.id === evId); return e ? CB.evidenceAbout(this, e) : null; }
+  hypothesisLabel(h) { return CB.hypothesisLabel(this, h); }
   casebook() { return CB.casebookView(this); }
   predicates() { return [...this.w.predicates.values()]; }
   channels() { return [...this.w.channels.values()].filter(c => !c.if || this.check(c.if)); }
