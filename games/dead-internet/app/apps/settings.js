@@ -11,7 +11,7 @@ export function settingsApp(phone) {
     render(desc, canBack) {
       const file = /** @type {HTMLInputElement} */ (h("input", { type: "file", accept: "application/json,.json", style: { display: "none" } }));
       file.addEventListener("change", () => { if (file.files?.[0]) phone.host.importSave(file.files[0]); });
-      return [h("div.topbar", h("div.bar-title", "Settings")),
+      return [h("div.topbar", phone.backButton(), h("div.bar-title", "Settings")),
         h("div.scroll", h("div.settings",
           h("div.set-group",
             h("div.set-row", h("span", "Name"), h("b", g.s.playerName)),
