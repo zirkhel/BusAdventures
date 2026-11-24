@@ -3,7 +3,7 @@
 // notification banners, the image viewer and toasts. Talks to the game only through
 // its public methods (dispatch wrappers and queries).
 
-import { h, icon, clock, fmtDate, weekday } from "./ui.js";
+import { h, icon, clock, fmtDate, weekday, fmtEventDate } from "./ui.js";
 import { img, avatar } from "./media.js";
 import { browserApp } from "./apps/browser.js";
 import { connectApp } from "./apps/connect.js";
@@ -126,6 +126,8 @@ export class Phone {
     if (desc.kind === "thread") return this.contactName(desc.id);
     if (desc.kind === "results") return desc.title || `“${desc.q}”`;
     if (desc.kind === "hyp") return "Theory";
+    if (desc.kind === "event") return this.g.s.timeline.find(e => e.id === desc.id)?.title || "Event";
+    if (desc.kind === "eventEdit") return "Event";
     const name = this.str(`apps.${appId}`);
     return name.startsWith("apps.") ? appId[0].toUpperCase() + appId.slice(1) : name;
   }
@@ -295,6 +297,63 @@ export class Phone {
         const first = th.findIndex((m, i) => i >= before && m.from !== "player");
         this.push("messages", { kind: "thread", id, typingFrom: first < 0 ? Infinity : first });
       } });
+  }
+
+  // ── Timeline helpers (used by the context menu and the Casebook) ─────────
+
+  /** Where something was found, as a Timeline source. */
+  sourceOf(origin) {
+    if (origin?.message) return { message: origin.message };
+    if (origin?.artifact) return { artifact: origin.artifact, version: origin.version ?? null };
+    return null;
+  }
+
+  /** Saved evidence that is exactly this source, if any (used to offer it as supporting). */
+  evidenceFor(src) {
+    if (!src) return null;
+    const ev = this.g.s.evidence;
+    if (src.message) return ev.find(e => e.message === src.message) || null;
+    if (src.image) return ev.find(e => e.artifact === src.artifact && e.image === src.image) || null;
+    if (src.artifact) return ev.find(e => e.artifact === src.artifact && !e.image && !e.message && (!src.version || !e.version || e.version === src.version)) || null;
+    return null;
+  }
+
+  /** Open the event editor with a draft. Nothing is created until the player saves. */
+  newEvent(draft) {
+    const e = this.evidenceFor(draft.source);
+    this.push("casebook", { kind: "eventEdit", draft: { title: "", description: "", note: "", date: { kind: "unknown" }, about: [], evidence: e ? [{ id: e.id, stance: "supports" }] : [], ...draft } });
+  }
+
+  /** "Add to Timeline" on a date in text. */
+  eventFromDate(ref, origin) {
+    const src = this.sourceOf(origin);
+    const year = String((src?.artifact && this.g.view(src.artifact, src.version || undefined).date) || this.g.date).slice(0, 4);
+    const parsed = this.g.parseDate(ref.text, year);
+    this.newEvent({ description: ref.context || "", date: parsed?.date || { kind: "unknown" }, dateSource: "in text", guessedYear: !!parsed?.guessedYear, source: src });
+  }
+
+  /** "Create event" from selected text. */
+  eventFromText(text, origin) {
+    const t = String(text || "").replace(/\s+/g, " ").trim();
+    const src = this.sourceOf(origin);
+    const year = String((src?.artifact && this.g.view(src.artifact, src.version || undefined).date) || this.g.date).slice(0, 4);
+    const ds = this.g.scan(t).find(x => x.type === "date");
+    const parsed = ds ? this.g.parseDate(ds.text, year) : null;
+    this.newEvent({ title: t.length <= 90 ? t : t.slice(0, 80).replace(/\s\S*$/, "") + "…", description: t.length > 90 ? t : "",
+      date: parsed?.date || { kind: "unknown" }, dateSource: parsed ? "in text" : "", guessedYear: !!parsed?.guessedYear, source: src });
+  }
+
+  /** "Add to Timeline" on an image, a document or a piece of evidence. */
+  eventFromSource(source, title = "") { this.newEvent({ title, source }); }
+
+  /** Attach saved evidence to an event the player already made. */
+  attachToEvent(evId) {
+    const events = this.g.timeline();
+    this.picker({ title: "Attach to event", empty: "No events yet.",
+      groups: [{ title: "", items: events.map(ev => ({ id: ev.id, label: ev.title, sub: fmtEventDate(ev.date) + (ev.evidence.some(x => x.id === evId) ? " · attached" : "") })) }],
+      onPick: id => this.actionSheet("This evidence…", [
+        { label: "Supports the event", icon: "check", run: () => { this.g.linkEvent(id, evId, "supports"); this.toast("Attached."); this.refresh(); } },
+        { label: "Contradicts the event", icon: "close", run: () => { this.g.linkEvent(id, evId, "contradicts"); this.toast("Attached."); this.refresh(); } }]) });
   }
 
   /** Reopen something from the recent list. */

@@ -107,3 +107,16 @@ export function clock() {
   const d = new Date();
   return `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
+
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+/** A Timeline date as the player entered it. */
+export function fmtEventDate(d) {
+  if (!d || d.kind === "unknown") return "Date unknown";
+  if (d.kind === "exact") return fmtDate(d.value) + (d.time ? ` · ${d.time}` : "");
+  if (d.kind === "range") return `${fmtDate(d.from)} – ${fmtDate(d.to)}`;
+  const [y, m, day] = String(d.value).split("-");
+  if (day) return `around ${fmtDate(d.value)}`;
+  if (m) return `around ${MONTH_NAMES[+m - 1]} ${y}`;
+  return `around ${y}`;
+}

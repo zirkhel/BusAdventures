@@ -3,12 +3,19 @@
 // [subject] [relation] [object] with linked evidence, and free notes.
 // It shows counts and sources, never whether a theory is right.
 // Screens: main {tab} · hyp {id} · builder {id?, subject?, predicate?, object?}
+//          event {id} · eventEdit {id?, draft}   (Timeline: the player's own reconstruction)
 
-import { h, icon, fmtDate } from "../ui.js";
+import { h, icon, fmtDate, fmtEventDate } from "../ui.js";
 import { img, avatar } from "../media.js";
 import { richText } from "../render.js";
 
 const KIND_TITLES = { person: "Person", account: "Account", org: "Organisation", place: "Place", event: "Event", project: "Project", system: "System" };
+const EVENT_ERRORS = {
+  empty_title: "Give the event a short title.",
+  bad_date: "That date isn't complete.",
+  bad_time: "That time isn't valid.",
+  unknown_ref: "You can only add people and places you have looked into.",
+};
 const ERRORS = {
   unknown_subject: "Pick who or what the theory is about.",
   unknown_object: "Pick the other side of the relation.",
@@ -44,6 +51,8 @@ export function casebookApp(phone) {
     const items = [];
     if (g.s.hypotheses.length) items.push({ label: "Link to a theory…", run: () => linkToTheory(e) });
     if (e.artifact) items.push({ label: "Show to someone…", run: () => showTo(e) });
+    items.push({ label: "Add to Timeline", run: () => phone.newEvent({ title: phone.evidenceTitle(e), source: e.message ? { message: e.message } : { artifact: e.artifact, version: e.version, image: e.image }, evidence: [{ id: e.id, stance: "supports" }] }) });
+    if (g.s.timeline.length) items.push({ label: "Attach to existing event…", run: () => phone.attachToEvent(e.id) });
     items.push({ label: "Remove from Casebook", danger: true, run: () => { g.dispatch({ type: "removeEvidence", id: e.id }); phone.refresh(); } });
     phone.sheet(phone.evidenceTitle(e), items);
   }
@@ -127,6 +136,7 @@ export function casebookApp(phone) {
       h("div.section-title", `Linked evidence (${linked.length})`),
       linked.length ? linked.map(e => evItem(e, { toggle: toggle(e, true) })) : h("div.empty.muted.small", "Nothing linked yet. Tap + on evidence below."),
       others.length ? [h("div.section-title", "Other evidence"), others.map(e => evItem(e, { toggle: toggle(e, false) }))] : null,
+      eventsOf(hy.id),
       h("div.hyp-actions",
         h("button.btn", { onclick: () => phone.push("casebook", { kind: "builder", id: hy.id, subject: hy.subject, predicate: hy.predicate, object: hy.object }) }, icon("edit"), " Edit"),
         h("button.btn.danger-btn", { onclick: () => phone.sheet("Delete this theory? Your evidence stays in the Casebook.", [
@@ -215,9 +225,168 @@ export function casebookApp(phone) {
 
   function main(desc) {
     const tab = desc.tab || "evidence";
-    const tabs = [["evidence", `${phone.str("casebook.evidence")} (${g.s.evidence.length})`], ["theories", `Theories (${g.s.hypotheses.length})`], ["notes", `${phone.str("casebook.notes")} (${g.s.notes.length})`]];
-    return [h("div.seg.tabs", tabs.map(([id, label]) => h("button", { class: tab === id ? "on" : "", onclick: () => phone.replaceTop({ ...desc, tab: id }) }, label))),
-      h("div.cb", tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab() : notesTab(desc))];
+    const tabs = [["evidence", phone.str("casebook.evidence"), g.s.evidence.length], ["theories", "Theories", g.s.hypotheses.length],
+      ["notes", phone.str("casebook.notes"), g.s.notes.length], ["timeline", "Timeline", g.s.timeline.length]];
+    return [h("div.seg.tabs.four", tabs.map(([id, label, n]) => h("button", { class: tab === id ? "on" : "", onclick: () => phone.replaceTop({ ...desc, tab: id, scroll: 0 }) },
+      h("span", label), h("small", String(n))))),
+      h("div.cb", tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab() : tab === "timeline" ? timelineTab() : notesTab(desc))];
+  }
+
+  // ── Timeline ────────────────────────────────────────────────────────────
+  // Built only by the player. Sorted by the player's own dates; nothing is checked or corrected.
+
+  function timelineTab() {
+    const list = g.timeline();
+    const dated = list.filter(e => e.date.kind !== "unknown"), undated = list.filter(e => e.date.kind === "unknown");
+    const row = ev => h("button.tl-row", { onclick: () => phone.push("casebook", { kind: "event", id: ev.id }) },
+      h("div.tl-date", fmtEventDate(ev.date)),
+      h("div.tl-dot", { class: ev.date.kind }),
+      h("div.tl-main", h("b", ev.title),
+        h("div.muted.tl-counts", [ev.supports ? `${ev.supports} supporting` : "", ev.contradicts ? `${ev.contradicts} contradicting` : "",
+          ev.theories.length ? `${ev.theories.length} ${ev.theories.length === 1 ? "theory" : "theories"}` : ""].filter(Boolean).join(" · ") || "No evidence attached")));
+    return [h("button.new-msg", { onclick: () => phone.newEvent({}) }, icon("plus"), "New event"),
+      list.length ? [h("div.tl", dated.map(row)), undated.length ? [h("div.section-title", "No date"), h("div.tl.undated", undated.map(row))] : null] :
+        h("div.empty", h("b", "Your timeline is empty."), h("div.muted", "Tap a date in a page or message and choose Add to Timeline, select text and choose Event, or add one from your evidence. You decide what happened and when."))];
+  }
+
+  function eventsOf(hypId) {
+    const evs = g.timeline().filter(e => e.theories.includes(hypId));
+    if (!evs.length) return null;
+    return [h("div.section-title", `Timeline events (${evs.length})`),
+      evs.map(ev => h("button.hist-row", { onclick: () => phone.push("casebook", { kind: "event", id: ev.id }) }, icon("clock"),
+        h("div.pi-main", h("b", ev.title), h("div.muted", fmtEventDate(ev.date)))))];
+  }
+
+  function eventDetail(desc) {
+    const ev = g.timeline().find(x => x.id === desc.id);
+    if (!ev) return h("div.empty", "This event was deleted.");
+    const items = stance => ev.evidence.filter(x => x.stance === stance).map(x => g.s.evidence.find(e => e.id === x.id)).filter(Boolean);
+    const stanceMenu = e => h("button.icon-btn.ev-more", { "aria-label": "Change", onclick: () => phone.actionSheet(phone.evidenceTitle(e), [
+      { label: "Supports the event", icon: "check", run: () => { g.linkEvent(ev.id, e.id, "supports"); phone.refresh(); } },
+      { label: "Contradicts the event", icon: "close", run: () => { g.linkEvent(ev.id, e.id, "contradicts"); phone.refresh(); } },
+      { label: "Detach from event", icon: "trash", run: () => { g.linkEvent(ev.id, e.id, null); phone.refresh(); } }]) }, icon("more"));
+    const attach = () => {
+      const free = [...g.s.evidence].reverse().filter(e => !ev.evidence.some(x => x.id === e.id));
+      phone.picker({ title: "Attach evidence", empty: "Nothing else in your Casebook.",
+        groups: [{ title: "", items: free.map(e => ({ id: e.id, label: phone.evidenceTitle(e), sub: phone.sourceLabel(e), thumb: e.image ? img(e.image, { cls: "thumb sm" }) : h("span.ev-ico.sm", icon(e.message ? "chat" : "globe")) })) }],
+        onPick: id => phone.actionSheet("This evidence…", [
+          { label: "Supports the event", icon: "check", run: () => { g.linkEvent(ev.id, id, "supports"); phone.refresh(); } },
+          { label: "Contradicts the event", icon: "close", run: () => { g.linkEvent(ev.id, id, "contradicts"); phone.refresh(); } }]) });
+    };
+    const linkTheory = () => phone.picker({ title: "Link to theory", empty: "No theories yet.",
+      groups: [{ title: "", items: g.casebook().hypotheses.map(hy => ({ id: hy.id, label: hy.label, sub: ev.theories.includes(hy.id) ? "linked · tap to unlink" : "" })) }],
+      onPick: id => { g.linkEventTheory(ev.id, id, !ev.theories.includes(id)); phone.refresh(); } });
+    const sup = items("supports"), con = items("contradicts");
+    const hyps = g.casebook().hypotheses.filter(hy => ev.theories.includes(hy.id));
+    const topics = g.topics();
+    return h("div.ev-detail",
+      h("div.ev-when", icon("clock"), fmtEventDate(ev.date), ev.dateSource ? h("span.muted", ` · ${ev.dateSource}`) : null),
+      phone.ctx.block(h("h2.ev-title", ev.title), { title: ev.title }),
+      ev.description ? phone.ctx.block(h("p.ev-desc", richText(phone, ev.description)), { title: ev.title }) : null,
+      ev.about.length ? h("div.sources", ev.about.map(id => { const t = topics.find(x => x.id === id);
+        return h("button.chip", { onclick: () => phone.ctx.open({ type: t?.kind === "account" ? "account" : t?.kind || "term", text: t?.name || id, id }) }, t?.name || id); })) : null,
+      ev.source ? sourceLink(ev.source) : null,
+      h("div.hint.muted", "Your reconstruction. Nothing here is checked against what really happened."),
+      h("div.section-title", `Supporting evidence (${sup.length})`),
+      sup.length ? sup.map(e => evItem(e, { toggle: stanceMenu(e) })) : null,
+      h("div.section-title", `Contradicting evidence (${con.length})`),
+      con.length ? con.map(e => evItem(e, { toggle: stanceMenu(e) })) : null,
+      h("div.pad", h("button.btn.wide", { onclick: attach, disabled: !g.s.evidence.length }, icon("plus"), " Attach evidence")),
+      h("div.section-title", `Theories (${hyps.length})`),
+      hyps.map(hy => h("button.hist-row", { onclick: () => phone.push("casebook", { kind: "hyp", id: hy.id }) }, icon("book"), h("div.pi-main", h("b", hy.label)))),
+      h("div.pad", h("button.btn.wide", { onclick: linkTheory, disabled: !g.s.hypotheses.length }, icon("plus"), " Link to theory")),
+      ev.note ? [h("div.section-title", "Note"), phone.ctx.block(h("div.pad.note-body", richText(phone, ev.note)), { title: "Note" })] : null,
+      h("div.hyp-actions",
+        h("button.btn", { onclick: () => phone.push("casebook", { kind: "eventEdit", id: ev.id, draft: structuredClone({ title: ev.title, description: ev.description, note: ev.note, date: ev.date, dateSource: ev.dateSource || "", about: ev.about, evidence: ev.evidence, source: ev.source || null }) }) }, icon("edit"), " Edit"),
+        h("button.btn.danger-btn", { onclick: () => phone.sheet("Delete this event? Evidence and theories stay in the Casebook.", [
+          { label: "Delete event", danger: true, run: () => { g.deleteEvent(ev.id); phone.back(); } }]) }, icon("trash"), " Delete")));
+  }
+
+  function sourceLink(src) {
+    if (src.message) {
+      const m = g.s.messages.find(x => x.id === src.message);
+      return m ? h("button.note-src", { onclick: () => phone.push("messages", { kind: "thread", id: m.thread }) }, icon("chat"), `From a message by ${phone.contactName(m.thread)}`) : null;
+    }
+    const v = g.view(src.artifact, src.version || undefined);
+    return h("button.note-src", { onclick: () => src.image ? phone.viewImage(src.image, { artifact: src.artifact }) : phone.openArtifact(src.artifact, v.cached ? src.version : undefined) },
+      icon(src.image ? "image" : "globe"), `From: ${src.image ? (w.images.get(src.image)?.caption || "image") : v.title || w.artifacts.get(src.artifact)?.title || ""}`);
+  }
+
+  /** Create or edit an event. The draft lives on the screen, so it survives switching apps. */
+  function eventEditor(desc) {
+    const d = desc.draft;
+    const sync = () => phone.refresh();
+    const title = /** @type {HTMLInputElement} */ (h("input.text-input", { type: "text", placeholder: "What happened?", maxlength: 140, value: d.title || "" }));
+    title.addEventListener("input", () => { d.title = title.value; });
+    const descr = /** @type {HTMLTextAreaElement} */ (h("textarea.note-input", { rows: 3, placeholder: "Details (optional)" }));
+    descr.value = d.description || ""; descr.addEventListener("input", () => { d.description = descr.value; });
+    const note = /** @type {HTMLTextAreaElement} */ (h("textarea.note-input", { rows: 2, placeholder: "Your note (optional)" }));
+    note.value = d.note || ""; note.addEventListener("input", () => { d.note = note.value; });
+
+    const kinds = [["exact", "Exact"], ["approx", "About"], ["range", "Between"], ["unknown", "Unknown"]];
+    const setKind = k => {
+      const cur = d.date || { kind: "unknown" };
+      const day = cur.value?.length === 10 ? cur.value : cur.from || (cur.value ? (cur.value + "-01-01").slice(0, 10) : "");
+      d.date = k === "exact" ? { kind: "exact", value: day } : k === "approx" ? { kind: "approx", value: (cur.value || cur.from || "").slice(0, 7) || String(g.date).slice(0, 4) }
+        : k === "range" ? { kind: "range", from: day, to: cur.to || day } : { kind: "unknown" };
+      sync();
+    };
+    const dateIn = (val, on) => { const i = /** @type {HTMLInputElement} */ (h("input.text-input.date-input", { type: "date", value: val || "" })); i.addEventListener("change", () => on(i.value)); return i; };
+    const k = d.date?.kind || "unknown";
+    let fields = null;
+    if (k === "exact") {
+      const time = /** @type {HTMLInputElement} */ (h("input.text-input.time-input", { type: "time", value: d.date.time || "" }));
+      time.addEventListener("change", () => { d.date.time = time.value || undefined; });
+      fields = h("div.date-row", dateIn(d.date.value, v => { d.date.value = v; d.guessedYear = false; }), time);
+    } else if (k === "approx") {
+      const [y, m] = String(d.date.value || "").split("-");
+      const year = /** @type {HTMLInputElement} */ (h("input.text-input.year-input", { type: "number", inputmode: "numeric", min: 1900, max: 2100, placeholder: "Year", value: y || "" }));
+      const month = /** @type {HTMLSelectElement} */ (h("select.text-input", h("option", { value: "" }, "Any month"),
+        ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((n, i) => h("option", { value: String(i + 1).padStart(2, "0") }, n))));
+      month.value = m || "";
+      const upd = () => { d.date.value = year.value ? `${year.value}${month.value ? "-" + month.value : ""}` : ""; };
+      year.addEventListener("input", upd); month.addEventListener("change", upd);
+      fields = h("div.date-row", month, year);
+    } else if (k === "range") {
+      fields = h("div.date-row", dateIn(d.date.from, v => { d.date.from = v; }), h("span.muted", "to"), dateIn(d.date.to, v => { d.date.to = v; }));
+    }
+    const cands = d.source ? g.dateCandidates(d.source) : [];
+    const topics = g.topics();
+    const addAbout = () => {
+      const by = new Map();
+      for (const t of topics.filter(t => !d.about.includes(t.id))) { if (!by.has(t.kind)) by.set(t.kind, []); by.get(t.kind).push(t); }
+      phone.picker({ title: "Who or what was involved?", empty: "Look into people, organisations or places first.",
+        groups: [...by.entries()].map(([kd, items]) => ({ title: (KIND_TITLES[kd] || kd) + "s", items: items.sort((a, b) => a.name.localeCompare(b.name)).map(t => ({ id: t.id, label: t.name })) })),
+        onPick: id => { d.about = [...d.about, id]; sync(); } });
+    };
+    const save = () => {
+      const input = { title: d.title, description: d.description, note: d.note, date: d.date, dateSource: d.dateSource, about: d.about, source: d.source || undefined, evidence: d.evidence };
+      const r = desc.id ? g.editEvent(desc.id, input) : g.addEvent(input);
+      if (r.error) { phone.toast(EVENT_ERRORS[r.error] || r.error); return; }
+      const ret = phone.top?.returnTo;
+      phone.back();
+      if (desc.id) return;
+      if (ret) phone.toast("Added to your Timeline.");
+      else phone.push("casebook", { kind: "event", id: r.id });
+    };
+    return h("div.builder.ev-edit",
+      h("label.field-label", "What happened"), title,
+      h("label.field-label", "When"),
+      h("div.seg.small", kinds.map(([id, label]) => h("button", { class: k === id ? "on" : "", onclick: () => setKind(id) }, label))),
+      fields,
+      d.guessedYear ? h("div.hint.muted", "The text gave no year. Check it.") : null,
+      cands.length ? [h("div.field-label.sub", "Dates on the source. You decide which one is the event."),
+        h("div.sources", cands.map(c => h("button.chip", { class: JSON.stringify(c.date) === JSON.stringify(d.date) ? "on" : "",
+          onclick: () => { d.date = structuredClone(c.date); d.dateSource = c.from; d.guessedYear = !!c.guessedYear; sync(); } }, c.label, ": ", fmtEventDate(c.date))))] : null,
+      h("label.field-label", "Details"), descr,
+      h("label.field-label", "Who or what"),
+      h("div.sources", d.about.map(id => h("button.chip.removable", { onclick: () => { d.about = d.about.filter(x => x !== id); sync(); } }, topics.find(t => t.id === id)?.name || id, " ×")),
+        h("button.chip", { onclick: addAbout }, "+ Add")),
+      d.evidence?.length ? [h("label.field-label", "Evidence"), h("div.sources", d.evidence.map(x => { const e = g.s.evidence.find(y => y.id === x.id);
+        return e ? h("button.chip.removable", { onclick: () => { d.evidence = d.evidence.filter(y => y.id !== x.id); sync(); } }, `${x.stance === "supports" ? "Supports" : "Contradicts"}: ${phone.evidenceTitle(e)} ×`) : null; }))] : null,
+      d.source ? sourceLink(d.source) : null,
+      h("label.field-label", "Note"), note,
+      h("button.btn.primary.wide", { onclick: save }, desc.id ? "Save changes" : "Add to Timeline"));
   }
 
   return {
@@ -226,6 +395,8 @@ export function casebookApp(phone) {
     render(desc) {
       if (desc.kind === "hyp") return [bar("Theory"), h("div.scroll", hypDetail(desc))];
       if (desc.kind === "builder") return [bar(desc.id ? "Edit theory" : "New theory"), h("div.scroll", builder(desc))];
+      if (desc.kind === "event") return [bar("Event"), h("div.scroll", eventDetail(desc))];
+      if (desc.kind === "eventEdit") return [bar(desc.id ? "Edit event" : "New event"), h("div.scroll", eventEditor(desc))];
       const m = main(desc);
       return [bar(phone.str("apps.casebook")), m[0], h("div.scroll", m[1])];
     },

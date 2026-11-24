@@ -12,6 +12,8 @@ export const SAVE_FORMAT = "dead-internet-save";
 const MIGRATIONS = {
   // 1 → 2: discovery states. Opening content used to make every mentioned name "known".
   1: (s, w) => { migrateDiscovery(s, w); s.saveVersion = 2; return s; },
+  // 2 → 3: the Timeline. Starts empty: it is built by the player, never from the story.
+  2: s => { s.timeline = []; s.saveVersion = 3; return s; },
 };
 
 export function serialize(state) {
@@ -50,6 +52,11 @@ export function deserialize(w, text) {
     if (!ok) drop("hypothesis", h.id);
     return ok;
   });
+  for (const ev of s.timeline || []) {
+    ev.evidence = ev.evidence.filter(x => s.evidence.some(e => e.id === x.id));
+    ev.theories = ev.theories.filter(id => s.hypotheses.some(h => h.id === id));
+    ev.about = ev.about.filter(id => w.entities.has(id) || w.accounts.has(id));
+  }
   for (const id of Object.keys(s.trust)) if (!w.characters.has(id)) delete s.trust[id];
   for (const c of w.characters.values()) if (!(c.id in s.trust)) s.trust[c.id] = c.trust?.start ?? 0;
   if (s.contentVersion !== w.meta.contentVersion) warnings.push(`content ${s.contentVersion} → ${w.meta.contentVersion}`);

@@ -64,34 +64,37 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 1. ~~Global kontekstmeny~~ ✅
 2. ~~Fjerne informasjonslekkasje~~ ✅
 3. ~~Navigasjon på tvers av apper~~ ✅
-4. Timeline-fane i Casebook (fase 4)
+4. ~~Timeline-fane i Casebook (fase 4)~~ ✅
 5. Teste hele etterforskningen på mobil (fase 4)
 6. Rapportering, publisering og konsekvenser (fase 5)
 7. Fullføre The Quiet Account som spillbart mysterium (fase 6)
 8. Resten av appene (fase 7)
 
 ## Fase 4 — Timeline og helhetlig mobiltest
-- [ ] Timeline som fjerde fane i Casebook. Den bygges av spilleren og genereres aldri automatisk.
-- [ ] Hendelser kan opprettes på flere måter:
+_Timeline implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, desktop)._
+- [x] Timeline er den fjerde fanen i Casebook. Den er tom ved start, bygges av spilleren og genereres aldri automatisk.
+- [x] Hendelser kan opprettes:
   - fra en dato («Add to Timeline»)
-  - fra markert tekst («Create event»)
-  - fra et bevis
-  - manuelt
-- [ ] Bevis kan knyttes til en eksisterende hendelse.
-- [ ] Hver hendelse har:
-  - tittel og beskrivelse
-  - dato: eksakt (med valgfri tid), omtrentlig, intervall eller ukjent
-  - personer, organisasjoner og steder
+  - fra markert tekst («Event» i markeringslinjen, eller «Create event»)
+  - fra et bilde, et dokument eller et bevis
+  - manuelt («New event»)
+- [x] Bevis kan knyttes til en eksisterende hendelse («Attach to existing event…»), som støttende eller motstridende. Flere bevis per hendelse er mulig.
+- [x] Hver hendelse har:
+  - tittel, beskrivelse og notat
+  - dato: eksakt (med valgfri tid), omtrentlig (år eller måned), intervall eller ukjent
+  - personer, organisasjoner og steder (bare det som er undersøkt)
   - støttende og motstridende bevis
-  - teorier og notater
-- [ ] Spilleren velger hvilken dato som gjelder: opprettet, publisert, endret, påstått eller metadata. Motoren løser aldri motsetninger.
-- [ ] Gale, motstridende og oppdiktede hendelser er tillatt. Ingen riktighetsindikator. Sortering bare etter spillerens egne datoer.
-- [ ] Kontekstmenyen får «Add to Timeline» og «Attach to existing event».
+  - teorier
+  - kilde
+- [x] Datoene på kilden tilbys som valg: publisert, kopiens dato, bildemetadata og datoer i teksten. Spilleren velger, og motoren løser aldri motsetninger.
+- [x] Gale, motstridende og oppdiktede hendelser er tillatt, og intervaller kan stå feil vei. Ingen riktighetsindikator. Sorteringen bruker bare spillerens egne datoer.
+- [x] Teorier viser tilknyttede hendelser.
+- [x] Lagringsversjon 3. Eldre lagringer får en tom tidslinje.
 - [ ] Hele The Quiet Account spilles gjennom på mobil, og friksjonen måles.
 
 ## Fase 5 — Rapport, publisering og konsekvenser
 - [ ] Publiseringsflyt med kanalvalg og Danas gjennomgang
-- [ ] Valgte tidslinjehendelser kan tas med i rapporter. Evalueringen holdes adskilt fra Timeline.
+- [ ] Valgte tidslinjehendelser kan tas med i rapporter. `casebookView().timeline` gir dem allerede. Evalueringen (nøyaktighet og støtte) skjer i rapportmotoren og holdes adskilt fra Timeline.
 - [ ] Visning av reaksjoner og avslutninger (epiloger)
 - [ ] Papirtest-funn innarbeidet i innholdet
 - [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang
@@ -105,9 +108,9 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 ## Fase 7 — Flere apper
 - [ ] Mail: innboks, tråder, vedlegg, videresending og metadata
 - [ ] Files: dokumenter, bilder og vedlegg som spilleren eksplisitt har lastet ned
-- [ ] Archive: historiske versjoner av sider, profiler og dokumenter. Bygges på motorens versjoner og Browser-cachen.
+- [ ] Archive: historiske versjoner av sider, profiler og dokumenter. Inntil videre er dette en del av Browser (cache, «View cached versions», «View available versions»).
 - [ ] Contacts: adressebok som spilleren selv styrer. Kontakter legges til eksplisitt eller gjennom legitime hendelser. Kontekstmenyen får «Add to Contacts».
-- [ ] Forensics: bildemetadata, bildesøk og bildesammenligning, transformasjon, dokument- og versjonssammenligning, kontoaktivitet. Viser observasjoner, aldri konklusjoner.
+- [ ] Forensics: gjenbruker bildeverktøyene som finnes (metadata, bildesøk, speilvendt søk), og legger til bildesammenligning, transformasjon, dokument- og versjonssammenligning, kontoaktivitet. Viser observasjoner, aldri konklusjoner.
 
 ## Fase 8 — Valgfri AI-dialog (eksperiment)
 - [ ] Vurdere AI for `autopilot`-personer bak et flagg, med personens kunnskap som eneste kilde
