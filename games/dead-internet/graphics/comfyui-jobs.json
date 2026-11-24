@@ -63,57 +63,5 @@
   "seed": 497555879,
   "out": "assets/images/nimg0005-warehouse-smoke.webp",
   "dependsOn": []
- },
- {
-  "id": "UFP01",
-  "method": "generate",
-  "positive": "close-up of a printed line of text on paper with a thick black redaction bar over it, high contrast, grainy, no face, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 57562777,
-  "out": "assets/images/ufp01-unfiltered.webp",
-  "dependsOn": []
- },
- {
-  "id": "UFP02",
-  "method": "generate",
-  "positive": "a desk lamp with a single green light bulb glowing in a dark room, moody, grainy, no people, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 7229920,
-  "out": "assets/images/ufp02-unfiltered.webp",
-  "dependsOn": []
- },
- {
-  "id": "UFP03",
-  "method": "generate",
-  "positive": "a woman in her 40s in profile against a bright window, face in deep shadow, silhouette, grainy, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 24007539,
-  "out": "assets/images/ufp03-unfiltered.webp",
-  "dependsOn": []
- },
- {
-  "id": "UFP04",
-  "method": "generate",
-  "positive": "old CRT television screen showing static noise with a faint indistinct shape in it, no face, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 107895634,
-  "out": "assets/images/ufp04-unfiltered.webp",
-  "dependsOn": []
  }
 ]

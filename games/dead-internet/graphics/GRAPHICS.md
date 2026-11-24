@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 52.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 56.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -90,7 +90,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | DRP05 | `assets/images/drp05-staff.webp` | 512×512 | profile | optional | final file | acc_dr_mvane |  | Daily Record staff photo, grey studio backdrop. Man, 55, columnist: tousled grey hair, grey beard, light-blue shirt, loosened red striped tie, dark tweed waistcoat, sceptical raised eyebrow. |
 | DRP06 | `assets/images/drp06-staff.webp` | 512×512 | profile | optional | final file | acc_dr_jsoto |  | Daily Record staff photo, grey studio backdrop. Woman, 34, public safety reporter: auburn hair in a messy bun, freckles, ear piercings, olive field jacket over a black sweater, backpack, camera on a strap. |
 | DRP07 | `assets/images/drp07-staff.webp` | 512×512 | profile | optional | final file | acc_dr_efitch |  | Daily Record staff photo by the same photographer as the other six (intended: same grey studio backdrop and light). Woman, 67, obituaries writer: short white pixie hair, thin metal oval glasses, pearl earrings and necklace, small-flower blouse, mauve cardigan, kind smile. Clearly different from Ruth Calloway (DRP04). |
-| UFP01 | `assets/images/ufp01-unfiltered.webp` | 512×512 | profile | optional | placeholder | acc_uf_redactor |  | Unfiltered writer avatar. A black bar over a printed line of text. No face. |
-| UFP02 | `assets/images/ufp02-unfiltered.webp` | 512×512 | profile | optional | placeholder | acc_uf_nightdesk |  | Unfiltered writer avatar. A desk lamp in a dark room, one green bulb. No face. |
-| UFP03 | `assets/images/ufp03-unfiltered.webp` | 512×512 | profile | optional | placeholder | acc_uf_corawick |  | Unfiltered writer avatar. Woman, 40s, in profile against a window, face in shadow. |
-| UFP04 | `assets/images/ufp04-unfiltered.webp` | 512×512 | profile | optional | placeholder | acc_uf_static |  | Unfiltered writer avatar. TV static with a faint shape in it. No face. |
+| UFP01 | `assets/images/ufp01-unfiltered.webp` | 512×512 | profile | optional | final file | acc_uf_redactor |  | Unfiltered writer avatar: grainy close-up of newsprint ('The city council investigation into … remain unclear, sources said.') with a thick black marker bar over one line. No face. |
+| UFP02 | `assets/images/ufp02-unfiltered.webp` | 512×512 | profile | optional | final file | acc_uf_nightdesk |  | Unfiltered writer avatar: a brass banker's lamp with a green glass shade glowing over papers in a dark room. No face. |
+| UFP03 | `assets/images/ufp03-unfiltered.webp` | 512×512 | profile | optional | final file | acc_uf_corawick |  | Unfiltered writer avatar: woman, 40s, in dark silhouette profile against a rain-streaked window with blurred lights, messy bun, face in shadow and not identifiable. |
+| UFP04 | `assets/images/ufp04-unfiltered.webp` | 512×512 | profile | optional | final file | acc_uf_static |  | Unfiltered writer avatar: horizontal TV static and glitch lines with a faint human shape in it. No face. |

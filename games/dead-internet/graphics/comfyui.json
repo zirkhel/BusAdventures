@@ -209,19 +209,23 @@
  },
  "UFP01": {
   "method": "generate",
-  "prompt": "close-up of a printed line of text on paper with a thick black redaction bar over it, high contrast, grainy, no face"
+  "prompt": "close-up of a printed line of text on paper with a thick black redaction bar over it, high contrast, grainy, no face",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "UFP02": {
   "method": "generate",
-  "prompt": "a desk lamp with a single green light bulb glowing in a dark room, moody, grainy, no people"
+  "prompt": "a desk lamp with a single green light bulb glowing in a dark room, moody, grainy, no people",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "UFP03": {
   "method": "generate",
-  "prompt": "a woman in her 40s in profile against a bright window, face in deep shadow, silhouette, grainy"
+  "prompt": "a woman in her 40s in profile against a bright window, face in deep shadow, silhouette, grainy",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "UFP04": {
   "method": "generate",
-  "prompt": "old CRT television screen showing static noise with a faint indistinct shape in it, no face"
+  "prompt": "old CRT television screen showing static noise with a faint indistinct shape in it, no face",
+  "notes": "Done (Anders, ComfyUI, delivered as one 2×2 sheet). Claude split the sheet and cropped each tile to a square."
  },
  "LOGO_BRIGHTLINE": {
   "notes": "Made by Claude from graphics/sources (logo-brightline.svg, avatar-brightline.html + shoot-avatar.cjs)."
