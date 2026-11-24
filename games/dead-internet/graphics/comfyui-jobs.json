@@ -1,59 +1,5 @@
 [
  {
-  "id": "IMG12",
-  "method": "generate",
-  "positive": "glossy architectural visualisation rendering, four modern glass residential towers on a harbour waterfront, happy people walking on a promenade, blue sky, through a glass lobby wall the long old painted sign panel reading \"CALDER MILL — EST. 1887\" is mounted as decoration, developer marketing style",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1344,
-  "genHeight": 768,
-  "width": 1600,
-  "height": 900,
-  "seed": 373133575,
-  "out": "assets/images/img12-waterfront-render.webp",
-  "reference": "assets/images/img02-mill-sign-original.webp",
-  "exactText": "CALDER MILL — EST. 1887",
-  "dependsOn": [
-   "IMG02"
-  ]
- },
- {
-  "id": "IMG16",
-  "method": "generate",
-  "positive": "low resolution photo of a rusty old cast-iron mill gear, close-up, heavy JPEG compression artefacts, oversaturated, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 306023099,
-  "out": "assets/images/img16-truthseeker.webp",
-  "dependsOn": []
- },
- {
-  "id": "IMG18",
-  "method": "generate",
-  "positive": "corporate headshot of a man, 47, navy jacket, light blue shirt, neutral office background, natural skin with small flaws and pores, slight asymmetry, real photographer lighting, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened, airbrushed, plastic skin, perfect symmetry",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 272467861,
-  "out": "assets/images/img18-paul-profile.webp",
-  "dependsOn": []
- },
- {
-  "id": "IMG19",
-  "method": "derive",
-  "from": "AVA_BRIGHTLINE",
-  "steps": [
-   "Same file as AVA_BRIGHTLINE (copy it)"
-  ],
-  "out": "assets/images/img19-renee-avatar.webp",
-  "width": 512,
-  "height": 512
- },
- {
   "id": "IMG20",
   "method": "generate",
   "positive": "profile photo of a cheerful dad in his 40s at a backyard barbecue grill, holding tongs, perfect teeth, overly smooth skin, flawless lighting, slightly too perfect stock look, faint AI tell: the tongs merge into his fingers, square profile picture, realistic, as a person would choose for themselves",
@@ -179,19 +125,6 @@
    "Export 512×512"
   ],
   "out": "assets/images/ava-northgate.webp",
-  "width": 512,
-  "height": 512
- },
- {
-  "id": "AVA_BRIGHTLINE",
-  "method": "derive",
-  "from": "LOGO_BRIGHTLINE",
-  "steps": [
-   "Place the logo centred on a soft gradient",
-   "Export 512×512",
-   "Copy the same file to IMG19"
-  ],
-  "out": "assets/images/ava-brightline.webp",
   "width": 512,
   "height": 512
  },

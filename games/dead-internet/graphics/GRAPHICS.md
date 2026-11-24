@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 19.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 25.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -47,14 +47,14 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | IMG09 | `assets/images/img09-garden-dashboard.webp` | 1080×1440 | screenshot | required | final file | A23 |  | Phone photo of a laptop screen (moiré, slight perspective, keyboard out of focus): the internal dashboard 'THE GARDEN — Port Calder', 41 active personas, dormant inventory 11,402, client NGD, program CSP-EF, top performers MARA_Q, JUNO_P, MIKE_E, LINDSAY_4, autopilot ON. Made from HTML: graphics/sources/. |
 | IMG10 | `assets/images/img10-invoice.webp` | 1240×1754 | scan | required | final file | A25 |  | Slightly skewed scan of a Brightline Media LLC invoice CSP-EF-Q1, January 8, 2026: bill to Northgate Development, attn. P. Navarro; Community Sentiment Program — Eastfield, Q1 2026, $21,000; payable to Meridian Holdings Ltd. (settlement account). Made from HTML: graphics/sources/. |
 | IMG11 | `assets/images/img11-mara-harbour.webp` | 1080×1350 | photo | required | final file | A06 | face: mara | Mara (reference), selfie at the harbour in summer 2023, green parka, the mill with its front-wall sign across the water. Theo posted it after her death. |
-| IMG12 | `assets/images/img12-waterfront-render.webp` | 1600×900 | render | required | placeholder | A40 | needs IMG02 | Glossy architectural rendering: four glass towers on a harbour, happy people, the old mill sign mounted in a glass lobby. |
+| IMG12 | `assets/images/img12-waterfront-render.webp` | 1600×900 | render | required | final file | A40 | needs IMG02 | Developer marketing render at dusk: four glass towers on the Eastfield harbour, a glass hall with the old CALDER MILL sign and brick wall preserved inside, EASTFIELD WATERFRONT on the stone wing, people on the promenade, a motor yacht at the quay. |
 | IMG13 | `assets/images/img13-mara-profile.webp` | 512×512 | profile | required | final file | A02, acc_maraquinn | face: mara | Mara (fixed reference), 2021, library shelves behind her, real and slightly imperfect. |
 | IMG14 | `assets/images/img14-theo-profile.webp` | 512×512 | profile | required | final file | A06 | face: theo | Man, 29, Mara's brother (same freckles), tired eyes, grey hoodie, overcast harbour with an old brick mill behind him. |
 | IMG15 | `assets/images/img15-dana-profile.webp` | 512×512 | profile | required | final file | A51 | face: dana | Woman, 41, reporter, reading glasses on her head, ink on her hand, cardigan, newsroom background with a Daily Record poster (black serif masthead, red rule). |
-| IMG16 | `assets/images/img16-truthseeker.webp` | 512×512 | profile | required | placeholder | acc_truthseeker |  | Low-res photo of a rusty mill gear, heavy JPEG compression. |
+| IMG16 | `assets/images/img16-truthseeker.webp` | 512×512 | profile | required | final file | acc_truthseeker |  | Low-res, upscaled photo of a rusty cast-iron gear inside the mill, visible pixels and JPEG compression: an avatar someone has re-saved many times. |
 | IMG17 | `assets/images/img17-iris-profile.webp` | 512×512 | profile | required | final file | A08 | face: iris | Woman, 26, half her face hidden behind a speckled ceramic mug, messy bun, small gold disc earring, two silver rings, black knit sweater, café window light. |
-| IMG18 | `assets/images/img18-paul-profile.webp` | 512×512 | profile | required | placeholder | A52 |  | Man, 47, corporate headshot, navy jacket, real (not synthetic: small skin flaws). |
-| IMG19 | `assets/images/img19-renee-avatar.webp` | 512×512 | profile | required | placeholder | A10 |  | Brightline logo on a gradient. No face. |
+| IMG18 | `assets/images/img18-paul-profile.webp` | 512×512 | profile | required | final file | A52 |  | Man, 47, at a press doorstep: dark swept-back hair, stubble, navy suit and dark tie, microphones in the foreground, the NORTHGATE DEVELOPMENT sign behind him. Real, not synthetic: pores, small skin flaws. |
+| IMG19 | `assets/images/img19-renee-avatar.webp` | 512×512 | profile | required | final file | A10 |  | Same file as AVA_BRIGHTLINE: the Brightline sunrise mark in amber with BRIGHTLINE / MEDIA in white on a navy-to-amber gradient. No face. |
 | IMG20 | `assets/images/img20-mike-profile.webp` | 512×512 | profile | required | placeholder | A54 |  | Synthetic dad, 40s, at a grill. Slightly too perfect. |
 | IMG21 | `assets/images/img21-pat-profile.webp` | 512×512 | profile | required | placeholder | A55 |  | Back of a person walking a dog on a foggy harbour path. Face not visible. |
 | IMG22 | `assets/images/img22-lindsay-profile.webp` | 512×512 | profile | required | placeholder | A56 |  | Real woman, 2019 photo, cat on her shoulder, slightly dated phone quality. |
@@ -63,8 +63,8 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_CONNECT | `assets/images/logo-connect.svg` | 256×256 | logo | required | placeholder |  |  | Social network: two interlocking rounded speech shapes. |
 | LOGO_THREADLINE | `assets/images/logo-threadline.svg` | 256×256 | logo | required | placeholder |  |  | Forum: a single thread line looping into a T. |
 | LOGO_DAILYRECORD | `assets/images/logo-dailyrecord.svg` | 512×128 | logo | required | placeholder |  |  | Newspaper masthead 'The Daily Record', black serif, thin red rule under it (as on the newsroom poster in IMG15). |
-| LOGO_BRIGHTLINE | `assets/images/logo-brightline.svg` | 256×256 | logo | required | placeholder |  |  | Agency: a bright horizontal line rising into a sunrise. |
-| LOGO_NORTHGATE | `assets/images/logo-northgate.svg` | 256×256 | logo | required | placeholder |  |  | Developer: an arch with a north arrow. |
+| LOGO_BRIGHTLINE | `assets/images/logo-brightline.svg` | 256×256 | logo | required | final file |  |  | Agency: an amber horizontal line rising into a half sun with three rays (#e8a317). Same mark as on the invoice (IMG10). |
+| LOGO_NORTHGATE | `assets/images/logo-northgate.svg` | 256×256 | logo | required | placeholder |  |  | Developer: three rising slab towers (grey, tallest on the right) above a sweeping base line, NORTHGATE / DEVELOPMENT in grey capitals on navy. Must match the sign in IMG18. |
 | LOGO_CITY | `assets/images/logo-city.svg` | 256×256 | logo | required | placeholder |  |  | Port Calder city seal: lighthouse and gear. |
 | LOGO_SPILLCHECK | `assets/images/logo-spillcheck.svg` | 256×256 | logo | required | placeholder |  |  | A dripping padlock. |
 | LOGO_FACELESS | `assets/images/logo-faceless.svg` | 256×256 | logo | required | placeholder |  |  | An empty oval face outline. |
@@ -82,7 +82,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_DAILYRECORD_ICON | `assets/images/logo-dailyrecord-icon.svg` | 512×512 | logo | required | placeholder | app:dailyrecord |  | App icon: serif 'DR' on warm paper, thin black rule under it. |
 | IMG24 | `assets/images/img24-owen-connect.webp` | 512×512 | profile | required | final file | A58, acc_owenpike | face: owen | Owen, close selfie outdoors on an overcast day: tweed flat cap, thick black glasses, grey beard, worn jacket over a flannel shirt, the brick mill and the harbour behind him. Real, unflattering, sincere. |
 | AVA_NORTHGATE | `assets/images/ava-northgate.webp` | 512×512 | profile | required | placeholder | A65, acc_northgate | needs LOGO_NORTHGATE | Northgate's Connect avatar: the Northgate logo on white, crisp. Made from LOGO_NORTHGATE. |
-| AVA_BRIGHTLINE | `assets/images/ava-brightline.webp` | 512×512 | profile | required | placeholder | A64, acc_brightline, A10 | needs LOGO_BRIGHTLINE | Brightline's Connect avatar: the Brightline sunrise line on a soft gradient. Made from LOGO_BRIGHTLINE. Renee Okafor's avatar (IMG19) is the same file. |
+| AVA_BRIGHTLINE | `assets/images/ava-brightline.webp` | 512×512 | profile | required | final file | A64, acc_brightline, A10 | needs LOGO_BRIGHTLINE | Brightline's Connect avatar: the amber sunrise mark with BRIGHTLINE / MEDIA in white on a navy-to-amber gradient. Rendered from graphics/sources/avatar-brightline.html. Renee Okafor's avatar (IMG19) is the same file. |
 | DRP01 | `assets/images/drp01-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_tadeyemi |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Man, 38, city hall reporter, rolled sleeves, notebook in shirt pocket. |
 | DRP02 | `assets/images/drp02-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_lhart |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Woman, 45, business editor, short grey bob, blazer. |
 | DRP03 | `assets/images/drp03-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_bwhitlow |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Man, 31, technology reporter, beard, headphones round his neck. |
