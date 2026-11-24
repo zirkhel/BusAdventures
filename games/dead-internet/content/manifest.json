@@ -1,0 +1,25 @@
+{
+  "world": "dead-internet",
+  "files": {
+    "meta": "world/meta.json",
+    "strings": "strings/en.json",
+    "predicates": "world/predicates.json",
+    "platforms": "world/platforms.json",
+    "entities": "world/entities.json",
+    "accounts": "world/accounts.json",
+    "images": "world/images.json",
+    "artifacts": [
+      "world/artifacts/connect.json",
+      "world/artifacts/news-blog.json",
+      "world/artifacts/threadline.json",
+      "world/artifacts/brightline.json",
+      "world/artifacts/records.json",
+      "world/artifacts/misc.json",
+      "world/artifacts/filler.json"
+    ],
+    "characters": "world/characters.json",
+    "canon": "world/canon.json",
+    "rules": "world/rules.json",
+    "mysteries": "world/mysteries.json"
+  }
+}

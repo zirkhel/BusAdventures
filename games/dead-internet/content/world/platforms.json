@@ -1,0 +1,17 @@
+[
+  { "id": "seeker", "name": "Seeker", "kind": "search", "domain": "seeker.search" },
+  { "id": "connect", "name": "Connect", "kind": "social", "domain": "connect.social" },
+  { "id": "threadline", "name": "Threadline", "kind": "forum", "domain": "threadline.net" },
+  { "id": "dailyrecord", "name": "The Daily Record", "kind": "news", "domain": "dailyrecord-pc.com" },
+  { "id": "eastfieldnotes", "name": "Eastfield Notes", "kind": "blog", "domain": "eastfieldnotes.blog" },
+  { "id": "brightline_site", "name": "Brightline Media", "kind": "site", "domain": "brightlinemedia.co" },
+  { "id": "northgate_site", "name": "Northgate Development", "kind": "site", "domain": "northgatedev.com" },
+  { "id": "kestrel_site", "name": "Kestrel Logistics", "kind": "site", "domain": "kestrel-logistics.com" },
+  { "id": "cityportal", "name": "Port Calder City Portal", "kind": "registry", "domain": "portcalder.gov" },
+  { "id": "spillcheck", "name": "SpillCheck", "kind": "tool", "domain": "spillcheck.io" },
+  { "id": "facelessstock", "name": "Faceless Stock", "kind": "site", "domain": "facelessstock.com" },
+  { "id": "docshare", "name": "Docshare", "kind": "site", "domain": "docshare.link" },
+  { "id": "calderpedia", "name": "Calderpedia", "kind": "site", "domain": "calderpedia.org" },
+  { "id": "web", "name": "Web", "kind": "site", "domain": "" },
+  { "id": "messages", "name": "Messages", "kind": "messaging", "domain": "" }
+]
