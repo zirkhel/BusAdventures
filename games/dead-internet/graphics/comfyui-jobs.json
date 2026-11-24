@@ -65,18 +65,6 @@
   "dependsOn": []
  },
  {
-  "id": "AVA_NORTHGATE",
-  "method": "derive",
-  "from": "LOGO_NORTHGATE",
-  "steps": [
-   "Place the logo centred on white with generous margin",
-   "Export 512×512"
-  ],
-  "out": "assets/images/ava-northgate.webp",
-  "width": 512,
-  "height": 512
- },
- {
   "id": "UFP01",
   "method": "generate",
   "positive": "close-up of a printed line of text on paper with a thick black redaction bar over it, high contrast, grainy, no face, square profile picture, realistic, as a person would choose for themselves",

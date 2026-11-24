@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+ <defs><clipPath id="c"><circle cx="128" cy="120" r="88"/></clipPath></defs>
+ <g clip-path="url(#c)">
+  <rect x="40" y="32" width="176" height="176" fill="#e6e9ee"/>
+  <g stroke="#fff" stroke-width="6">
+   <rect x="40" y="32" width="60" height="60" fill="#9aa5b4"/><rect x="100" y="32" width="56" height="60" fill="#cfd5dd"/><rect x="156" y="32" width="60" height="60" fill="#7f8b9c"/>
+   <rect x="40" y="92" width="60" height="56" fill="#cfd5dd"/><rect x="100" y="92" width="56" height="56" fill="#3f78b5"/><rect x="156" y="92" width="60" height="56" fill="#9aa5b4"/>
+   <rect x="40" y="148" width="60" height="60" fill="#3f78b5"/><rect x="100" y="148" width="56" height="60" fill="#5c93c9"/><rect x="156" y="148" width="60" height="60" fill="#3f78b5"/>
+  </g>
+  <path d="M40 176 Q70 164 100 176 T160 176 T220 176" fill="none" stroke="#fff" stroke-width="5"/>
+ </g>
+ <circle cx="128" cy="120" r="88" fill="none" stroke="#56606e" stroke-width="5"/>
+ <text x="128" y="236" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#3a414b">Calderpedia</text>
+</svg>

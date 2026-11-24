@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+ <g fill="#232a4d">
+  <path d="M44 30 C88 52 116 80 130 112 L114 118 C98 88 74 60 44 30 Z"/>
+  <path d="M36 62 C78 76 104 96 118 122 L104 128 C90 106 66 86 36 62 Z"/>
+  <path d="M34 96 C72 104 94 118 108 136 L96 142 C82 126 62 112 34 96 Z"/>
+  <path d="M44 128 C74 132 92 140 102 152 L92 158 C82 148 66 138 44 128 Z"/>
+  <path d="M96 150 C110 124 132 112 156 114 L172 118 L184 128 L170 130 C166 138 156 144 144 146 C128 160 112 176 84 186 C100 172 106 160 96 150 Z"/>
+  <circle cx="160" cy="121" r="2.6" fill="#fff"/>
+ </g>
+ <text x="128" y="220" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="40" fill="#232a4d">KESTREL</text>
+ <text x="128" y="243" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13" letter-spacing="7" fill="#232a4d">LOGISTICS</text>
+</svg>

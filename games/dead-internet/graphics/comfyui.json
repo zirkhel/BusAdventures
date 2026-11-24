@@ -159,7 +159,8 @@
   "steps": [
    "Place the logo centred on white with generous margin",
    "Export 512×512"
-  ]
+  ],
+  "notes": "Made by Claude from LOGO_NORTHGATE (graphics/sources/shoot-avatar.cjs)."
  },
  "AVA_BRIGHTLINE": {
   "method": "derive",
@@ -224,5 +225,50 @@
  },
  "LOGO_BRIGHTLINE": {
   "notes": "Made by Claude from graphics/sources (logo-brightline.svg, avatar-brightline.html + shoot-avatar.cjs)."
+ },
+ "LOGO_SEEKER": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_CONNECT": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_THREADLINE": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_DAILYRECORD": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_NORTHGATE": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_CITY": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_SPILLCHECK": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_FACELESS": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_DOCSHARE": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_UNFILTERED": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_KESTREL": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_CALDERPEDIA": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_EASTFIELDNOTES": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_UNFILTERED_ICON": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
+ },
+ "LOGO_DAILYRECORD_ICON": {
+  "notes": "Made by Claude as SVG in graphics/sources/logos/ (no generative AI)."
  }
 }

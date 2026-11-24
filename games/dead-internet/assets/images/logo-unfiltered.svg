@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="128" viewBox="0 0 512 128">
+ <rect width="512" height="128" fill="#0b0b0b"/>
+ <g font-family="Impact, 'Arial Narrow', 'Arial Black', sans-serif" font-weight="900" font-size="88" fill="#d8f21a" text-anchor="middle">
+  <text x="256" y="98" textLength="440" lengthAdjust="spacingAndGlyphs">UNFIL<tspan dy="-5" rotate="4">T</tspan><tspan dy="5">ERED</tspan></text>
+ </g>
+</svg>
