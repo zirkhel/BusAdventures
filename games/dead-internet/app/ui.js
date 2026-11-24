@@ -62,6 +62,8 @@ const ICONS = {
   more: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
   battery: '<rect x="2" y="7" width="18" height="10" rx="2.5"/><rect x="4" y="9" width="11" height="6" rx="1" fill="currentColor" stroke="none"/><path d="M22 10.5v3"/>',
   signal: '<path d="M4 18v-2M9 18v-5M14 18v-8M19 18V7" stroke-width="2.6"/>',
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 00-1-1H5a1 1 0 00-1 1v10a1 1 0 001 1h3"/>',
+  history: '<path d="M4 12a8 8 0 102.3-5.6"/><path d="M4 4v4h4"/><path d="M12 8v4l3 2"/>',
   reload: '<path d="M19 12a7 7 0 11-2.1-5"/><path d="M19 4v4h-4"/>',
 };
 

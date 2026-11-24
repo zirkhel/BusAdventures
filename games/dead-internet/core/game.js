@@ -12,6 +12,8 @@ import { sendMessage, canContact, contacts, thread, availablePrompts } from "./d
 import * as CB from "./casebook.js";
 import { asArray, addDays, deepClone } from "./util.js";
 import { nameOf } from "./world.js";
+import { scanText, suggest } from "./refs.js";
+import { encounter, markInvestigated, investigate, investigateQuery, discoveryState } from "./discovery.js";
 
 export class Game {
   /**
@@ -59,13 +61,14 @@ export class Game {
       case "updateHypothesis": r = CB.updateHypothesis(this, a.id, a.patch); break;
       case "deleteHypothesis": r = CB.deleteHypothesis(this, a.id); break;
       case "linkEvidence": r = CB.linkEvidence(this, a.hypothesis, a.evidence, a.on ?? true); break;
-      case "addNote": r = CB.addNote(this, a.text); break;
+      case "addNote": r = CB.addNote(this, a.text, a.from, a.about); break;
       case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
       case "deleteNote": r = CB.deleteNote(this, a.id); break;
       case "review": r = CB.review(this, a.channel, a.hypotheses); break;
       case "publish": r = CB.publish(this, a.channel, a.hypotheses); break;
       case "sleep": r = this.#sleep(); break;
       case "readNotification": r = this.#readNotification(a.id); break;
+      case "investigate": r = investigate(this, a.id, a.text); break;
       default: throw new Error(`Unknown action "${a.type}"`);
     }
     if (!r?.error) this.s.log.push(deepClone(action));
@@ -85,12 +88,15 @@ export class Game {
   save(ref) { return this.dispatch({ type: "saveEvidence", ref }); }
   hypothesize(hypothesis) { return this.dispatch({ type: "createHypothesis", hypothesis }); }
   link(hypothesis, evidence, on = true) { return this.dispatch({ type: "linkEvidence", hypothesis, evidence, on }); }
-  note(t) { return this.dispatch({ type: "addNote", text: t }); }
+  /** Free note. `from` says where it was written (artifact/message), `about` what it names. */
+  note(t, from, about) { return this.dispatch({ type: "addNote", text: t, ...(from ? { from } : {}), ...(about ? { about } : {}) }); }
   editNote(id, t) { return this.dispatch({ type: "updateNote", id, text: t }); }
   deleteNote(id) { return this.dispatch({ type: "deleteNote", id }); }
   review(channel, hypotheses) { return this.dispatch({ type: "review", channel, hypotheses }); }
   publish(channel, hypotheses) { return this.dispatch({ type: "publish", channel, hypotheses }); }
   sleep() { return this.dispatch({ type: "sleep" }); }
+  /** The player acts on a name they can see (context menu). */
+  investigate(id, text) { return this.dispatch({ type: "investigate", id, text }); }
 
   #start() {
     if (this.s.started) return { ok: true, already: true };
@@ -106,6 +112,7 @@ export class Game {
     if (!q) return { ok: true, results: [] };
     this.s.searches.push({ q, day: this.s.day });
     const results = search(this, q);
+    investigateQuery(this, q, results.length > 0);
     fire(this, "search", { query: q.toLowerCase(), terms: q.toLowerCase().split(/\s+/) });
     return { ok: true, results };
   }
@@ -123,9 +130,10 @@ export class Game {
     if (v.error || v.locked) return v.error ? { error: v.error, view: v } : { ok: true, view: v };
     const first = this.s.seen[id] == null;
     if (first) this.s.seen[id] = this.s.day;
-    for (const m of mentionsOf(this, id, v.versionId)) this.s.known[m] = true;
+    // Reading only encounters names. A profile is looked up on purpose, so its account is investigated.
+    for (const m of mentionsOf(this, id, v.versionId)) encounter(this, m);
     const a = this.w.artifacts.get(id);
-    if (a.author) { this.s.known[a.author] = true; }
+    if (a.author) { if (a.type === "profile") markInvestigated(this, a.author); else encounter(this, a.author); }
     fire(this, "artifact.open", { artifact: id, version: v.versionId, cached: v.cached });
     return { ok: true, view: v, first };
   }
@@ -165,10 +173,11 @@ export class Game {
     s.messages.push(msg);
     msg.attach = msg.attach.filter(id => !this.w.disabled?.has(id));
     for (const id of msg.attach) s.artifacts[id] = { ...s.artifacts[id], visible: true, wasVisible: true };
-    for (const id of msg.mentions) s.known[id] = true;
+    for (const id of msg.mentions) encounter(this, id);
+    // Someone who writes to you is an established contact.
     const c = this.w.characters.get(thread);
-    if (c?.account) s.known[c.account] = true;
-    if (c?.entity) s.known[c.entity] = true;
+    if (c?.account) markInvestigated(this, c.account);
+    if (c?.entity) markInvestigated(this, c.entity);
     this.notify({ text: msg.text, ref: { message: msg.id, thread } });
     this.emit("message", msg);
   }
@@ -200,12 +209,21 @@ export class Game {
   canContact(id) { return canContact(this, id); }
   thread(id) { return thread(this, id); }
   prompts(id) { return availablePrompts(this, id); }
+  /** @returns {"unknown"|"encountered"|"investigated"|"saved"} */
+  discovery(id) { return discoveryState(this, id); }
+  /** Names met in opened content (not yet necessarily investigated). */
+  encountered() { return Object.keys(this.s.encountered).filter(id => !this.w.entities.get(id)?.secret); }
+  /** Investigated or saved: what the player's tools (topics, theories, suggestions) may show. */
   known() { return Object.keys(this.s.known).filter(id => this.w.entities.has(id) || this.w.accounts.has(id)).filter(id => !this.w.entities.get(id)?.secret); }
   /** Known people, organisations, accounts, places, events… with their kind, for topic and hypothesis pickers. */
   topics() { return this.known().map(id => ({ id, kind: CB.kindOfId(this, id), name: nameOf(this.w, id) })); }
   /** Who and what a piece of evidence is about, and its source key. Never the claims it supports. */
   evidenceAbout(evId) { const e = this.s.evidence.find(x => x.id === evId); return e ? CB.evidenceAbout(this, e) : null; }
   hypothesisLabel(h) { return CB.hypothesisLabel(this, h); }
+  /** References (names, handles, addresses, dates, numbers) in a text, for tappable content. */
+  scan(text) { return scanText(this.w, text); }
+  /** Search suggestions from earlier searches and things already met. */
+  suggest(q, limit) { return suggest(this, q, limit); }
   casebook() { return CB.casebookView(this); }
   predicates() { return [...this.w.predicates.values()]; }
   channels() { return [...this.w.channels.values()].filter(c => !c.if || this.check(c.if)); }

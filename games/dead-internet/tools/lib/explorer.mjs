@@ -39,7 +39,8 @@ export function explore(world, opts = {}) {
 
   const queries = () => {
     const out = new Set(world.meta.testing?.seedQueries || []);
-    for (const id of g.known()) {
+    // A player reads names in what they open and searches for them: that is how they investigate.
+    for (const id of new Set([...g.known(), ...g.encountered()])) {
       const e = world.entities.get(id), a = world.accounts.get(id);
       if (e) { out.add(e.name); for (const al of e.aliases || []) out.add(al); }
       if (a) { out.add(a.handle.replace(/^@/, "")); out.add(a.displayName); }

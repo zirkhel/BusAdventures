@@ -4,12 +4,14 @@
 // imported and migrated when the state shape or the content changes.
 
 import { SAVE_VERSION } from "./state.js";
+import { migrateDiscovery } from "./discovery.js";
 
 export const SAVE_FORMAT = "dead-internet-save";
 
 /** Migrations from version n to n+1. Add one whenever the state shape changes. */
 const MIGRATIONS = {
-  // 1: s => { ...; s.saveVersion = 2; return s; },
+  // 1 → 2: discovery states. Opening content used to make every mentioned name "known".
+  1: (s, w) => { migrateDiscovery(s, w); s.saveVersion = 2; return s; },
 };
 
 export function serialize(state) {
@@ -29,7 +31,7 @@ export function deserialize(w, text) {
   while (s.saveVersion < SAVE_VERSION) {
     const m = MIGRATIONS[s.saveVersion];
     if (!m) throw new Error(`No migration from save version ${s.saveVersion}.`);
-    s = m(s);
+    s = m(s, w);
   }
   if (s.saveVersion > SAVE_VERSION) throw new Error("Save is from a newer version of the game.");
 

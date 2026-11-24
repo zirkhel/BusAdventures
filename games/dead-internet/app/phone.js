@@ -4,18 +4,19 @@
 // its public methods (dispatch wrappers and queries).
 
 import { h, icon, clock, fmtDate, weekday } from "./ui.js";
-import { img } from "./media.js";
+import { img, avatar } from "./media.js";
 import { browserApp } from "./apps/browser.js";
 import { connectApp } from "./apps/connect.js";
 import { messagesApp } from "./apps/messages.js";
 import { casebookApp } from "./apps/casebook.js";
 import { settingsApp } from "./apps/settings.js";
+import { ContextSystem, registerDefaultActions } from "./context.js";
 
 export class Phone {
   /**
    * @param {HTMLElement} root
    * @param {any} game
-   * @param {{restart:()=>void, exportSave:()=>void, importSave:(f:File)=>void}} host
+   * @param {{restart:()=>void, exportSave:()=>void, importSave:(f:File)=>void, store?:any}} host
    */
   constructor(root, game, host) {
     this.root = root;
@@ -45,6 +46,14 @@ export class Phone {
     this.toastBox = h("div.toasts");
     this.homeBar = h("button.homebar", { "aria-label": "Home", onclick: () => this.goHome() }, h("span"));
     root.replaceChildren(this.status, this.screen, this.bannerBox, this.overlay, this.toastBox, this.homeBar);
+    /** The shared context action system (tappable words, action sheets, text selection). */
+    this.ctx = new ContextSystem(this);
+    registerDefaultActions(this.ctx);
+    /** Recently visited pages, conversations and searches, newest first. Per game (keyed by seed). */
+    this.recentKey = `ba_deadinternet_recent_${game.w.meta.id}_${game.s.seed}`;
+    this.recent = this.#loadRecent();
+    /** The screen descriptor currently on screen (to remember its scroll position). */
+    this.shown = null;
 
     this.#gestures();
     game.on("notify", n => this.#banner(n));
@@ -64,15 +73,23 @@ export class Phone {
 
   openApp(id) {
     if (!this.stacks[id]?.length) this.stacks[id] = [this.apps[id].root()];
+    // Opened on purpose from the home screen: it no longer "returns" to where a link came from.
+    for (const d of this.stacks[id]) delete d.returnTo;
     this.where = id;
     this.closeOverlay();
     this.#render();
   }
 
-  /** Push a screen on an app's stack and show it. */
+  /**
+   * Push a screen on an app's stack and show it. Coming from another app, the screen remembers
+   * where it came from, so Back (and the link in the status bar) returns straight there with
+   * that app's page and scroll position intact.
+   */
   push(appId, desc) {
     if (!this.stacks[appId]?.length) this.stacks[appId] = [this.apps[appId].root()];
+    if (appId !== this.where && this.apps[this.where] && this.top) desc.returnTo = { app: this.where, title: this.titleOf(this.where, this.top) };
     this.stacks[appId].push(desc);
+    this.#remember(appId, desc);
     this.where = appId;
     this.closeOverlay();
     this.#render(true);
@@ -81,7 +98,13 @@ export class Phone {
   /** Replace the top screen of the current app (used after a sign-in or a search). */
   replaceTop(desc) {
     const st = this.stacks[this.where];
-    if (st?.length) st[st.length - 1] = desc;
+    if (st?.length) {
+      const old = st[st.length - 1];
+      if (old?.returnTo && !("returnTo" in desc)) desc.returnTo = old.returnTo;
+      if (!("scroll" in desc) || desc === old) desc.scroll = this.screen.querySelector(".scroll")?.scrollTop ?? 0;
+      st[st.length - 1] = desc;
+      this.shown = desc;
+    }
     this.#render();
   }
 
@@ -90,13 +113,26 @@ export class Phone {
     if (this.overlay.childElementCount) { this.closeOverlay(); return; }
     const st = this.stacks[this.where];
     if (!st) { if (this.where === "lock") this.unlock(); return; }
+    const ret = this.top?.returnTo;
+    if (ret && this.stacks[ret.app]?.length) { st.pop(); this.where = ret.app; this.#render(false, true); return; }
     if (st.length > 1) { st.pop(); this.#render(false, true); }
     else this.goHome();
   }
 
+  /** Short title of a screen, for the "return to" link and the recent list. */
+  titleOf(appId, desc) {
+    if (!desc) return this.str(`apps.${appId}`);
+    if (desc.kind === "page") return desc.view?.title || desc.url || "Page";
+    if (desc.kind === "thread") return this.contactName(desc.id);
+    if (desc.kind === "results") return desc.title || `“${desc.q}”`;
+    if (desc.kind === "hyp") return "Theory";
+    const name = this.str(`apps.${appId}`);
+    return name.startsWith("apps.") ? appId[0].toUpperCase() + appId.slice(1) : name;
+  }
+
   /** The top-left button of every app: back while there is somewhere to go back to, otherwise home. */
   backButton() {
-    const atRoot = (this.stacks[this.where]?.length ?? 1) <= 1 && !this.overlay.childElementCount;
+    const atRoot = (this.stacks[this.where]?.length ?? 1) <= 1 && !this.overlay.childElementCount && !this.top?.returnTo;
     return h("button.icon-btn.nav-btn", { "aria-label": atRoot ? "Home" : "Back", onclick: () => this.back() },
       icon(atRoot ? "home" : "back"), atRoot ? h("span.nav-label", "Home") : null);
   }
@@ -161,8 +197,126 @@ export class Phone {
   }
 
   search(q, appId = "browser") {
-    const r = this.g.search(q);
-    this.push(appId, { kind: "results", q, results: r.results || [] });
+    const t = String(q || "").trim();
+    if (!t) return;
+    const r = this.g.search(t);
+    this.push(appId, { kind: "results", q: t, results: r.results || [] });
+  }
+
+  /** "Find Connect profile": a Connect search. Opens the profile directly when the search finds exactly one profile (or one whose name or handle is the text). */
+  findProfile(text) {
+    const w = this.g.w;
+    const t = String(text || "").trim();
+    if (!t) return;
+    const r = this.g.search(t);
+    const res = (r.results || []).filter(x => x.platform === "connect");
+    const norm = x => String(x || "").toLowerCase().replace(/^@/, "");
+    const exact = res.filter(x => {
+      if (x.cached) return false;
+      const a = w.artifacts.get(x.artifact);
+      const acc = a?.type === "profile" ? w.accounts.get(a.author) : null;
+      return acc && (norm(acc.handle) === norm(t) || norm(acc.displayName) === norm(t));
+    });
+    const profiles = res.filter(x => !x.cached && w.artifacts.get(x.artifact)?.type === "profile");
+    const one = exact.length === 1 ? exact[0] : profiles.length === 1 ? profiles[0] : null;
+    if (one) this.openArtifact(one.artifact, undefined, "connect");
+    else this.push("connect", { kind: "results", q: t, results: res });
+  }
+
+  /** A look-up tool in the world (platform with `lookup`), such as a breach checker. */
+  lookup(platformId, text) {
+    const pf = this.g.w.platforms.get(platformId);
+    if (!pf?.lookup) return;
+    const q = String(text).trim();
+    const url = pf.lookup.url.replace("{q}", q);
+    const id = this.urls.get(normUrl(url));
+    if (id && !this.g.view(id).error) { this.openArtifact(id, undefined, "browser"); return; }
+    this.push("browser", { kind: "lookup", platform: platformId, q, url });
+  }
+
+  /** Seeker's cached copies of pages at an address. Found the same way a search finds them. */
+  cachedFor(text) {
+    const addr = normUrl(text);
+    const r = this.g.search(addr);
+    const results = (r.results || []).filter(x => x.cached && normUrl(x.url || "").startsWith(addr));
+    this.push("browser", { kind: "results", q: addr, results, title: `Cached: ${addr}`, cacheOnly: true });
+  }
+
+  /** The versions of a document the player can reach: the live one and Seeker's cached copies. */
+  versions(id) {
+    const v = this.g.view(id);
+    const items = [];
+    if (!v.error && !v.locked) items.push({ label: `Current version${v.date ? ` · ${fmtDate(v.date)}` : ""}`, icon: "globe", run: () => this.openArtifact(id, undefined, this.appFor(id)) });
+    for (const vid of v.cachedVersions || []) {
+      const c = this.g.view(id, vid);
+      if (!c.error) items.push({ label: `Cached copy${c.date ? ` · ${fmtDate(c.date)}` : ""}`, icon: "clock", run: () => this.openArtifact(id, vid, "browser") });
+    }
+    if (!items.length) { this.toast("No versions are available."); return; }
+    this.actionSheet(v.title || this.g.w.artifacts.get(id)?.title || "Versions", items);
+  }
+
+  imageSearch(imageId, flip) {
+    const r = this.g.searchImage(imageId, flip);
+    if (r.error) { this.toast(this.str(`errors.${r.error}`)); return; }
+    this.push("browser", { kind: "imageResults", image: imageId, flip, results: r.results });
+  }
+
+  /** Save a word or name to the Casebook as a note that remembers where it was found. */
+  saveText(ref, origin = {}) {
+    const about = ref.id && !ref.alias ? ref.id : undefined;
+    const from = origin.artifact || origin.message ? { artifact: origin.artifact, version: origin.version, message: origin.message } : undefined;
+    const r = this.g.note(ref.text, from, about);
+    this.toast(r.error ? "Nothing to save." : "Saved to Casebook notes.");
+  }
+
+  copy(text) {
+    const done = () => this.toast("Copied.");
+    const fallback = () => {
+      const t = h("textarea", { style: { position: "fixed", opacity: "0" } });
+      /** @type {HTMLTextAreaElement} */ (t).value = text;
+      document.body.append(t); /** @type {HTMLTextAreaElement} */ (t).select();
+      try { document.execCommand("copy"); done(); } catch { this.toast("Couldn't copy."); }
+      t.remove();
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch { fallback(); }
+  }
+
+  /** Pick a contact and ask them about a topic (context menu "Ask someone about this…"). */
+  askAbout(topic) {
+    const w = this.g.w;
+    if (!this.g.known().includes(topic)) { this.toast("Look into it first."); return; }
+    this.picker({ title: `Ask about ${w.entities.get(topic)?.name ?? w.accounts.get(topic)?.handle ?? topic}`, empty: "Nobody to ask yet.",
+      groups: [{ title: "", items: this.g.contacts().map(id => ({ id, label: this.contactName(id), thumb: avatar(w, w.characters.get(id)?.account, 32) })) }],
+      onPick: id => {
+        const before = this.g.thread(id).length;
+        const r = this.g.ask(id, topic);
+        if (r?.error) { this.toast(this.str(`errors.${r.error}`)); return; }
+        const th = this.g.thread(id);
+        const first = th.findIndex((m, i) => i >= before && m.from !== "player");
+        this.push("messages", { kind: "thread", id, typingFrom: first < 0 ? Infinity : first });
+      } });
+  }
+
+  /** Reopen something from the recent list. */
+  openRecent(r) {
+    if (r.kind === "page") this.openArtifact(r.id, r.version ?? undefined, r.app);
+    else if (r.kind === "thread") this.push("messages", { kind: "thread", id: r.id });
+    else if (r.kind === "results") this.search(r.q, "browser");
+  }
+
+  #loadRecent() {
+    try { return JSON.parse(localStorage.getItem(this.recentKey) || "[]"); } catch { return []; }
+  }
+
+  #remember(appId, desc) {
+    let r = null;
+    if (desc.kind === "page" && desc.view && !desc.view.error && !desc.view.locked) r = { kind: "page", app: appId, id: desc.id, version: desc.view.cached ? desc.view.versionId : null, title: desc.view.title || desc.url, sub: desc.url || "" };
+    else if (desc.kind === "thread") r = { kind: "thread", app: "messages", id: desc.id, title: this.contactName(desc.id), sub: "Messages" };
+    else if (desc.kind === "results" && appId === "browser" && !desc.cacheOnly) r = { kind: "results", app: "browser", q: desc.q, title: desc.q, sub: "Seeker search" };
+    if (!r) return;
+    const key = `${r.kind}:${r.id ?? r.q}:${r.version ?? ""}`;
+    this.recent = [{ ...r, key, day: this.g.s.day }, ...this.recent.filter(x => x.key !== key)].slice(0, 40);
+    try { localStorage.setItem(this.recentKey, JSON.stringify(this.recent)); } catch { /* storage blocked: keep in memory */ }
   }
 
   saveEvidence(ref) {
@@ -187,7 +341,7 @@ export class Phone {
 
   // ── Image viewer ──────────────────────────────────────────────────────────
 
-  viewImage(imageId, ctx) {
+  viewImage(imageId, ctx, o = {}) {
     const g = this.g;
     const im = img(imageId, { cls: "zoom-img", eager: true });
     const stage = h("div.zoom-stage", im);
@@ -195,11 +349,7 @@ export class Phone {
     const saved = () => !!ctx?.artifact && this.isSaved({ artifact: ctx.artifact, version: null, image: imageId });
     const saveBtn = h("button", { onclick: () => { if (ctx?.artifact) { this.saveEvidence({ artifact: ctx.artifact, image: imageId }); saveBtn.replaceChildren(icon(saved() ? "bookmarked" : "bookmark"), h("span", "Save")); } } },
       icon(saved() ? "bookmarked" : "bookmark"), h("span", "Save"));
-    const searchBy = flip => {
-      const r = g.searchImage(imageId, flip);
-      if (r.error) { this.toast(this.str(`errors.${r.error}`)); return; }
-      this.push("browser", { kind: "imageResults", image: imageId, flip, results: r.results });
-    };
+    const searchBy = flip => this.imageSearch(imageId, flip);
     const box = h("div.viewer",
       h("div.viewer-top", h("button.icon-btn", { "aria-label": "Close", onclick: () => this.closeOverlay() }, icon("close")),
         h("span.viewer-cap", g.w.images.get(imageId)?.caption || "")),
@@ -224,6 +374,7 @@ export class Phone {
       info.replaceChildren(h("dl", rows.map(([k, v]) => [h("dt", k), h("dd", v)])));
     };
     zoomable(stage, im);
+    if (o.info) toggleInfo();
     this.overlay.replaceChildren(box);
     this.overlay.classList.add("open");
   }
@@ -234,6 +385,28 @@ export class Phone {
       items.map(it => h("button.sheet-item", { class: it.danger ? "danger" : "", onclick: () => { this.closeOverlay(); it.run(); } }, it.label)),
       h("button.sheet-item.cancel", { onclick: () => this.closeOverlay() }, "Cancel"));
     const bg = h("div.sheet-bg", { onclick: e => { if (e.target === bg) this.closeOverlay(); } }, box);
+    this.overlay.replaceChildren(bg);
+    this.overlay.classList.add("open");
+  }
+
+  /**
+   * Context action sheet: a title (the text that was tapped) and large buttons with icons.
+   * @param {string} title
+   * @param {{label:string, icon?:string, run:()=>void, secondary?:boolean}[]} items
+   */
+  actionSheet(title, items) {
+    const t = String(title || "");
+    const box = h("div.sheet.ctx-sheet", { role: "dialog", "aria-label": t },
+      h("div.sheet-grab"),
+      t ? h("div.ctx-title", t.length > 70 ? t.slice(0, 69) + "…" : t) : null,
+      items.map(it => h("button.sheet-item.ctx-item", { class: it.secondary ? "secondary" : "", onclick: () => { this.closeOverlay(); it.run(); } },
+        it.icon ? icon(it.icon) : null, h("span", it.label))),
+      h("button.sheet-item.cancel", { onclick: () => this.closeOverlay() }, "Cancel"));
+    const bg = h("div.sheet-bg", { onclick: e => { if (e.target === bg) this.closeOverlay(); } }, box);
+    // Swipe the sheet down to dismiss it.
+    let y0 = null;
+    box.addEventListener("touchstart", e => { y0 = e.touches[0].clientY; }, { passive: true });
+    box.addEventListener("touchend", e => { if (y0 != null && e.changedTouches[0].clientY - y0 > 80) this.closeOverlay(); y0 = null; });
     this.overlay.replaceChildren(bg);
     this.overlay.classList.add("open");
   }
@@ -310,6 +483,10 @@ export class Phone {
   // ── Rendering ─────────────────────────────────────────────────────────────
 
   #render(forward = false, backward = false) {
+    // Remember where the screen we are leaving was scrolled to.
+    const sc = this.screen.querySelector(".scroll");
+    if (this.shown && sc) this.shown.scroll = sc.scrollTop;
+    this.shown = null;
     this.root.dataset.where = this.where;
     let view;
     if (this.where === "lock") view = this.#lockScreen();
@@ -322,14 +499,21 @@ export class Phone {
       if (backward) view.classList.add("in-back");
     }
     this.screen.replaceChildren(view);
+    if (this.apps[this.where]) {
+      const desc = this.top;
+      this.shown = desc;
+      const box = this.screen.querySelector(".scroll");
+      if (box && desc?.scroll) box.scrollTop = desc.scroll;
+    }
     this.#statusBar();
   }
 
   #statusBar() {
     const g = this.g;
     const d = g.date;
+    const ret = this.apps[this.where] ? this.top?.returnTo : null;
     this.status.replaceChildren(
-      h("span.sb-time", clock()),
+      ret ? h("button.sb-return", { onclick: () => this.back(), "aria-label": `Back to ${ret.title}` }, "◂ ", h("span", ret.title)) : h("span.sb-time", clock()),
       h("span.sb-day", `${weekday(d).slice(0, 3)} ${fmtDate(d, false)} · Day ${g.s.day}`),
       h("span.sb-icons", icon("signal"), icon("battery")));
   }
@@ -365,6 +549,7 @@ export class Phone {
       h("div.home-widget", h("div.hw-day", `Day ${this.g.s.day}`), h("div.hw-date", `${weekday(this.g.date)}, ${fmtDate(this.g.date)}`),
         h("div.hw-row", h("div.hw-name", this.g.s.playerName),
           h("button.hw-sleep", { onclick: () => this.sleep() }, icon("moon"), this.str("apps.sleep")))),
+      this.#recentWidget(),
       h("div.home-grid", appIcon("settings", "Settings", "gear")),
       h("div.dock",
         appIcon("browser", this.str("apps.browser"), "globe"),
@@ -373,6 +558,16 @@ export class Phone {
         appIcon("casebook", this.str("apps.casebook"), "book")));
     queueMicrotask(() => this.#badges());
     return scr;
+  }
+
+  #recentWidget() {
+    const items = this.recent.slice(0, 4);
+    if (!items.length) return null;
+    const ico = { page: "globe", thread: "chat", results: "search" };
+    return h("div.home-recent",
+      h("div.hr-head", h("span", "Recently visited"), h("button.hr-all", { onclick: () => { this.openApp("browser"); this.push("browser", { kind: "history" }); } }, "See all")),
+      items.map(r => h("button.hr-item", { onclick: () => this.openRecent(r) }, icon(r.app === "connect" ? "people" : ico[r.kind] || "globe"),
+        h("span.hr-title", r.title), h("span.hr-sub.muted", r.app === "connect" ? "Connect" : r.sub))));
   }
 
   #badges() {

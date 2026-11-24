@@ -1,7 +1,8 @@
 // @ts-check
 // Connect, the social network. Screens: home (search + recently viewed) · page {id, view} · results
 
-import { h, icon, fmtDate, onLongPress } from "../ui.js";
+import { h, icon, fmtDate } from "../ui.js";
+import { suggestBox } from "../suggest.js";
 import { avatar } from "../media.js";
 import { renderArtifact, renderGone } from "../render.js";
 
@@ -15,13 +16,15 @@ export function connectApp(phone) {
   }
 
   function home() {
-    const input = h("input.seek-input", { type: "search", enterkeyhint: "search", placeholder: "Search Connect", autocapitalize: "off", autocomplete: "off" });
+    const input = /** @type {HTMLInputElement} */ (h("input.seek-input", { type: "search", enterkeyhint: "search", placeholder: "Search Connect", autocapitalize: "off", autocomplete: "off" }));
+    const form = h("form.seek-form", { onsubmit: e => { e.preventDefault(); input.blur(); search(input.value); } }, icon("search", "addr-ico"), input);
+    suggestBox(phone, input, form, q => { input.blur(); search(q); });
     const seen = Object.entries(g.s.seen).filter(([id]) => w.artifacts.get(id)?.platform === "connect")
       .sort((a, b) => b[1] - a[1]).map(([id]) => id);
     const people = seen.filter(id => w.artifacts.get(id).type === "profile");
     const posts = seen.filter(id => w.artifacts.get(id).type === "post").slice(0, 12);
     return h("div.connect-home",
-      h("form.seek-form", { onsubmit: e => { e.preventDefault(); search(input.value); } }, icon("search", "addr-ico"), input),
+      form,
       people.length ? h("div.section-title", "People you've looked at") : null,
       h("div.people-row", people.map(id => {
         const a = w.artifacts.get(id), acc = w.accounts.get(a.author);
@@ -64,10 +67,6 @@ export function connectApp(phone) {
       const posts = postsBy(v.author);
       if (posts.length) art.append(h("div.section-title", "Posts"), ...posts.map(p => postCard(p.id)));
     }
-    onLongPress(art, e => {
-      if (/** @type {HTMLElement} */ (e.target).closest("figure,a,button")) return;
-      phone.sheet(v.title, [{ label: "Save to Casebook", run: () => phone.saveEvidence({ artifact: desc.id, version: v.versionId }) }]);
-    });
     return art;
   }
 
