@@ -199,7 +199,7 @@
  "DRP06": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 34, public safety reporter, wearing a rain jacket",
-  "notes": "The brief said outdoors; kept in the studio so all seven match. Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI). Studio backdrop rather than outdoors, which keeps the set consistent."
  },
  "DRP07": {
   "method": "generate",

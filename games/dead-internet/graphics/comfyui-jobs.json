@@ -77,19 +77,6 @@
   "height": 512
  },
  {
-  "id": "DRP06",
-  "method": "generate",
-  "positive": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 34, public safety reporter, wearing a rain jacket, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 741713447,
-  "out": "assets/images/drp06-staff.webp",
-  "dependsOn": []
- },
- {
   "id": "DRP07",
   "method": "generate",
   "positive": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, cardigan, kind face, square profile picture, realistic, as a person would choose for themselves",
