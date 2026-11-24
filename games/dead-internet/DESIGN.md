@@ -1,16 +1,19 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 24. november 2026, etter fase 3 (samtaler og Casebook)._
+_Oppdatert 24. november 2026, etter fase 4 (Timeline) og Anders' beslutninger om univers, mysterier og medieapper._
+Medieappene i detalj: `/mnt/project-files/dead-internet/MEDIA-APPS-PROPOSAL.md` (godkjent med justeringene i §0 der).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
 ## Prinsipper
 
 1. **Kjernen kjenner ikke DOM.** Alt i `core/` kjører i Node og i nettleseren. Presentasjonen leser tilstand og sender handlinger, ingenting annet.
-2. **Én verden, ikke saker.** Alt innhold ligger i én verden. Et `mystery` er bare en gruppering for vurdering og avslutninger, aldri en meny for spilleren.
+2. **Ett vedvarende univers, mange mysterier.** Alt innhold ligger i én verden. Et mysterium er en innholdspakke i den verdenen, ikke en egen installasjon eller kopi. The Quiet Account er det første mysteriet, ikke spillet. Se «Univers og mysterier».
 3. **Innhold er data.** Personer, kontoer, artefakter, bilder, dialog, regler og kanon er JSON i `content/`. Ingen historie i koden. Motoren kan brukes til andre etterforskningsspill med et annet `content/`.
 4. **Kanon, påstander og spillerens tro holdes adskilt** (se under). Spilleren ser aldri sannhetsverdier.
 5. **Reproduserbart.** All endring går gjennom `Game.dispatch(action)`, loggføres, og kan spilles av på nytt med samme resultat.
 6. **Ingen avhengigheter, ingen byggesteg.** Ren JavaScript med ES-moduler og `// @ts-check`. Tester med Nodes innebygde `node:test`.
+7. **Ingen synlig relevans.** Ingen app markerer, sorterer eller vekter etter hva som er bevis.
+8. **Det store spørsmålet står åpent.** Om det finnes ekte mennesker igjen på nettet, avgjøres ikke av tilfeldige bakgrunnskontoer eller tidlige mysterier.
 
 ## Mappestruktur
 
@@ -236,6 +239,39 @@ Timeline er spillerens egen rekonstruksjon. Den er ikke et sammendrag av histori
 - En handling som åpner noe i en annen app, husker opphavet (`returnTo`). Tilbake, og lenken «◂ tittel» i statuslinjen, går rett tilbake dit, med samme rulleposisjon. Åpner man appen fra hjemskjermen, glemmes opphavet.
 - Hjemskjermen viser «Recently visited». Browser har «History» med besøkte sider og alle søk, der ett trykk gjentar et søk. Søkefelt i Browser og Connect viser forslag.
 
+## Univers og mysterier
+
+_Besluttet av Anders 24. november 2026. Det meste er arkitektur som bygges i U0 og U1 (se DEVPLAN.md). Ingenting av valgmenyen er bygd ennå._
+
+**Ett univers.** Personer, kontoer, medier, selskaper, apper, bilder og bakgrunnsinnhold er felles. Et mysterium er en innholdspakke med egen start, påstander, regler, avslutninger, publiseringskanaler og testoppsett. Nye mysterier legges til som pakker i samme verden.
+
+**Hybridmodell for valg av mysterier.**
+- Spilleren kan velge et tilgjengelig startmysterium fra hovedmenyen.
+- Nye mysterier kan også oppdages naturlig i verden, gjennom vanlige hendelser og betingelser.
+- Flere mysterier kan være aktive samtidig.
+- Når en sak er avsluttet, kan spilleren fortsette å utforske verden.
+- Kunnskap, bevis, relasjoner og konsekvenser følger med, fordi de er universtilstand.
+- Mysterier kan ha forutsetninger (`requires`), men følger ikke nødvendigvis en fast rekkefølge.
+
+Planlagt modell: `state.cases` med status `locked`, `available`, `active` og `closed`. Avslutninger evalueres bare for aktive saker. Frister regnes fra sakens start (`beforeCaseDay`), mens `beforeDay` beholdes for univershendelser.
+
+**Casebook er spillerens, ikke sakens.** Bevis, teorier, notater og tidslinjehendelser ligger i én felles notatbok. Hvert element får `cases: []`.
+- Tom liste betyr uklassifisert, og det er standard.
+- Ingenting knyttes automatisk til aktive saker. Spilleren velger én, flere eller ingen.
+- Casebook viser alt som standard, med filter per sak og for uklassifisert.
+- En rapport gjelder alltid én sak (`case`). Påstandene vurderes mot den sakens påstander og universets kanon. Kanaler og reviewer kommer fra saken, så Dana er reviewer i The Quiet Account uten at det er en motorregel.
+
+**Bakgrunnsinnhold kan bli bevis.** Fyllinnhold i universet og i delte bassenger kan senere bli bevis, men bare når et mysterium eksplisitt peker på det. Validatoren sjekker at referansen finnes og at innholdet var publisert før saken trenger det, så en ny sak ikke stille endrer en gammel.
+
+**Ingen kvoter på sannhet.** Aviser og kanaler har ingen fast andel sanne påstander. Innholdsrapporten kan vise fordelingen, men troverdighet skal komme fra historien og redaksjonelle interesser.
+
+**Medieapper (arbeidsnavn).** The Daily Record og Unfiltered er samme nyhetsmotor med hver sin profil. TokTok er en videoplattform. Unfiltered og TokTok beholdes som arbeidsnavn, med egne logoer og egen visuell identitet.
+- TokTok sin personlige feed bygger bare på likes, følger og annen eksplisitt interaksjon i TokTok. Aldri på søkehistorikk fra Seeker eller andre apper.
+- The Quiet Account kan ha 3–5 valgfrie TokTok-klipp med relevante spor. Saken skal fortsatt kunne løses uten TokTok, og validatoren skal vise det.
+- Arkitekturen skal tåle 150 videoklipp eller flere. Første produksjonsrunde er 20–30 ekte klipp, resten plassholdere, og vi utvider etter at produksjonsflyt, kvalitet og ytelse er testet.
+
+**Hva som er bundet til The Quiet Account i dag** (flyttes i U0 og U1): `meta.startKnown`, `startArtifacts`, `startDate` og introteksten, `meta.testing`, `meta.logins`, publiseringskanalene, absolutte frister, og tre tekster i grensesnittet (Theories-tomtekst, «Port Calder» i registeroverskriften, `.pf-brightline_site`). Kjernen har ellers ingen id-er fra saken.
+
 ## Appkart
 
 | App | Status | Hva som finnes i dag |
@@ -250,6 +286,9 @@ Timeline er spillerens egen rekonstruksjon. Den er ikke et sammendrag av histori
 | Archive | i Browser foreløpig | versjoner og cache i motoren, «View cached versions» og «View available versions» |
 | Contacts | planlagt | `contacts()` gir i dag etablerte kontakter, og skal aldri fylles fra hele personregisteret |
 | Forensics | planlagt | skal gjenbruke bildeverktøyene i bildeviseren (metadata, bildesøk, speilvendt søk) |
+| The Daily Record | planlagt | artikler er vanlige artefakter i Browser i dag |
+| Unfiltered | planlagt | samme nyhetsmotor som The Daily Record, egen profil og identitet |
+| TokTok | planlagt | video følger bildemodellen (opphav, transformasjoner, metadata) |
 
 ## Kjente begrensninger
 
