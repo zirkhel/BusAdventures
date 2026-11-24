@@ -116,7 +116,43 @@ export function linkEvidence(g, hypId, evId, on = true) {
   return { ok: true };
 }
 
-export function addNote(g, text) { const n = { id: `N${g.s.nextId++}`, text: String(text), day: g.s.day }; g.s.notes.push(n); return { ok: true, id: n.id }; }
+export function addNote(g, text) {
+  const t = String(text ?? "").trim();
+  if (!t) return { error: "empty_note" };
+  const n = { id: `N${g.s.nextId++}`, text: t, day: g.s.day };
+  g.s.notes.push(n);
+  return { ok: true, id: n.id };
+}
+
+export function updateNote(g, id, text) {
+  const n = g.s.notes.find(n => n.id === id);
+  if (!n) return { error: "unknown_note" };
+  const t = String(text ?? "").trim();
+  if (!t) return { error: "empty_note" };
+  n.text = t;
+  n.edited = g.s.day;
+  return { ok: true };
+}
+
+export function deleteNote(g, id) {
+  if (!g.s.notes.some(n => n.id === id)) return { error: "unknown_note" };
+  g.s.notes = g.s.notes.filter(n => n.id !== id);
+  return { ok: true };
+}
+
+/** What kind of thing an id is, for the hypothesis builder: "account" or the entity kind. */
+export function kindOfId(g, id) { return kindOf(g, id); }
+
+/**
+ * Evidence as the casebook shows it: who and what it is about (known, non-secret ids only)
+ * and its source key. Never the claims it supports.
+ */
+export function evidenceAbout(g, e) {
+  const f = evidenceFacts(g, e);
+  const about = [...new Set(f.mentions.filter(id => id && g.s.known[id] && !g.w.entities.get(id)?.secret &&
+    (g.w.entities.has(id) || g.w.accounts.has(id))))];
+  return { about, source: f.source };
+}
 
 export function hypothesisLabel(g, h) {
   const p = g.w.predicates.get(h.predicate);

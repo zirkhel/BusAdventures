@@ -238,6 +238,66 @@ export class Phone {
     this.overlay.classList.add("open");
   }
 
+  /**
+   * Full-height list picker with search.
+   * @param {{title:string, groups:{title:string, items:{id:string, label:string, sub?:string, thumb?:Node}[]}[], empty?:string, onPick:(id:string)=>void}} o
+   */
+  picker(o) {
+    const q = /** @type {HTMLInputElement} */ (h("input.seek-input", { type: "search", placeholder: "Filter", autocapitalize: "off", autocomplete: "off" }));
+    const list = h("div.picker-list");
+    const draw = () => {
+      const f = q.value.trim().toLowerCase();
+      const groups = o.groups.map(g => ({ ...g, items: g.items.filter(i => !f || `${i.label} ${i.sub || ""}`.toLowerCase().includes(f)) })).filter(g => g.items.length);
+      list.replaceChildren(...(groups.length ? groups.map(g => h("div.picker-group", g.title ? h("div.section-title", g.title) : null,
+        g.items.map(i => h("button.picker-item", { onclick: () => { this.closeOverlay(); o.onPick(i.id); } }, i.thumb || null,
+          h("div.pi-main", h("b", i.label), i.sub ? h("div.muted", i.sub) : null))))) : [h("div.empty.muted", o.empty || "Nothing here yet.")]));
+    };
+    q.addEventListener("input", draw);
+    draw();
+    const total = o.groups.reduce((n, g) => n + g.items.length, 0);
+    const panel = h("div.picker",
+      h("div.picker-head", h("div.bar-title", o.title), h("button.icon-btn", { "aria-label": "Close", onclick: () => this.closeOverlay() }, icon("close"))),
+      total > 7 ? h("div.picker-search", q) : null, h("div.scroll", list));
+    const bg = h("div.sheet-bg.picker-bg", { onclick: e => { if (e.target === bg) this.closeOverlay(); } }, panel);
+    this.overlay.replaceChildren(bg);
+    this.overlay.classList.add("open");
+  }
+
+  /** Where a piece of evidence came from, in words the player recognises. */
+  sourceLabel(e) {
+    const w = this.g.w;
+    if (e.message) { const m = this.g.s.messages.find(x => x.id === e.message); return this.contactName(m?.thread); }
+    const a = w.artifacts.get(e.artifact);
+    const acc = a?.author ? w.accounts.get(a.author) : null;
+    if (acc) return acc.displayName || acc.handle;
+    // A private document (forwarded email, leaked file) comes from the person who gave it to you.
+    const giver = [...w.characters.values()].find(c => (c.source ?? c.id) === a?.source || c.id === a?.source);
+    if (giver) return this.contactName(giver.id);
+    return w.platforms.get(a?.platform)?.name || a?.url?.split("/")[0] || "Unknown";
+  }
+
+  /** Title of a piece of evidence. */
+  evidenceTitle(e) {
+    const w = this.g.w;
+    if (e.message) { const m = this.g.s.messages.find(x => x.id === e.message); return `Message from ${this.contactName(m?.thread)}`; }
+    if (e.image) return w.images.get(e.image)?.caption || "Image";
+    const v = this.g.view(e.artifact, e.version || undefined);
+    return v.title || w.artifacts.get(e.artifact)?.title || e.artifact;
+  }
+
+  /** Go to sleep: the day ends, night events run, and the phone shows the lock screen in the morning. */
+  sleep() {
+    this.sheet(`End day ${this.g.s.day}? Whatever was going to happen tonight will happen.`, [{ label: "Sleep", run: () => {
+      this.root.classList.add("night");
+      setTimeout(() => {
+        this.g.sleep();
+        this.stacks = {};
+        this.lock();
+        this.root.classList.remove("night");
+      }, 650);
+    } }]);
+  }
+
   closeOverlay() { this.overlay.replaceChildren(); this.overlay.classList.remove("open"); }
 
   toast(msg) {
@@ -303,7 +363,8 @@ export class Phone {
       h("span.app-tile", { class: `tile-${id}` }, icon(ico)), h("span.app-label", label), h("span.badge"));
     const scr = h("div.home",
       h("div.home-widget", h("div.hw-day", `Day ${this.g.s.day}`), h("div.hw-date", `${weekday(this.g.date)}, ${fmtDate(this.g.date)}`),
-        h("div.hw-name", this.g.s.playerName)),
+        h("div.hw-row", h("div.hw-name", this.g.s.playerName),
+          h("button.hw-sleep", { onclick: () => this.sleep() }, icon("moon"), this.str("apps.sleep")))),
       h("div.home-grid", appIcon("settings", "Settings", "gear")),
       h("div.dock",
         appIcon("browser", this.str("apps.browser"), "globe"),

@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 2)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 3)._
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
@@ -40,10 +40,15 @@ _Implementert 24. november 2026, ukommittet. Testet i Playwright (iPhone 13, Pix
 - [x] Kort på landingssiden i `index.html` (MISC GAME, merket WIP)
 
 ## Fase 3 — Samtaler og Casebook
-- [ ] Messages: tråder, «spør om», «vis bevis», svaralternativer, ulest-markering
-- [ ] Casebook: bevisliste gruppert per person/organisasjon, notater, hypotesebygger med ark
-- [ ] Visning av antall bevis og kilder per hypotese (ingen vurdering)
-- [ ] Sleep-knapp og nattlige hendelser på låseskjermen
+_Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, desktop)._
+- [x] Messages: tråder, «spør om», «vis bevis», svaralternativer, ulest-markering
+- [x] Ny melding til personer man har funnet, «skriver …»-pause før svar, lagre meldinger som bevis
+- [x] Casebook: bevisliste gruppert per person/organisasjon/konto, notater, hypotesebygger med ark
+- [x] Hypoteser: opprette, redigere, slette, koble bevis, eget notat
+- [x] Visning av antall bevis og kilder per hypotese (ingen vurdering)
+- [x] Notater kan redigeres og slettes (`updateNote`, `deleteNote` i motoren)
+- [x] Sleep-knapp på hjemskjermen (ikke en egen app) og nattlige hendelser på låseskjermen
+- [ ] Mer variasjon i reserve-svar (i dag ett per type per person)
 
 ## Fase 4 — Rapport og avslutninger
 - [ ] Publiseringsflyt med kanalvalg og Danas gjennomgang

@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 24. november 2026, etter fase 2 (telefonen og lesing)._
+_Oppdatert 24. november 2026, etter fase 3 (samtaler og Casebook)._
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
 ## Prinsipper
@@ -143,6 +143,9 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 - `render.js` tegner en artefakt etter plattformtype (sosial, forum, avis, blogg, register, dokument). `[Photo: …]` i teksten byttes med neste bilde. Kommentarer (`@handle (tid): tekst`) og foruminnlegg (`navn: tekst`) gjenkjennes. Adresser, e-poster og @handles blir lenker. En kjent adresse åpner siden, alt annet blir et Seeker-søk.
 - Connect-adresser åpnes i Connect, alt annet i Browser. Private dokumenter (e-post, vedlegg) åpnes i appen man står i.
 - `media.js` bruker `graphics/catalog.json`: filen i `assets/images/` hvis den finnes, ellers plassholderen. Nye bilder krever ingen kodeendring.
+- **Messages** (fase 3): spilleren velger «Ask about…» (alt hun kjenner, gruppert som personer, kontoer, organisasjoner, hendelser og steder) eller «Show evidence…» (artefakter i Casebook, med versjonen som ble lagret). Svaralternativer (`prompts`) vises som knapper når en person tilbyr dem. «New message» viser personer man kan kontakte (`canContact`). Svarene bestemmes av personens `responses` i `characters.json`, ut fra kunnskap, tillit og flagg. UI-et velger aldri innhold selv.
+- **Casebook** (fase 3): bevis gruppert etter hvem de handler om (`game.evidenceAbout`, bare kjente og ikke-hemmelige id-er), teorier bygd med `[hvem] [relasjon] [hvem/hva]`, der relasjoner filtreres etter `subjectKinds`/`objectKinds`, og notater. En teori viser antall bevis, antall uavhengige kilder og hvem kildene er, aldri om den stemmer.
+- **Sleep** er en knapp på hjemskjermen. Dagen går, nattlige hendelser kjøres, og telefonen viser låseskjermen med nye varsler.
 - Spillet må serveres over HTTP (ES-moduler fungerer ikke fra `file://`). Lokalt: `python -m http.server` eller `npx serve` fra repo-roten, så `/games/dead-internet/`.
 
 ## Kjente begrensninger
