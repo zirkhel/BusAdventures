@@ -77,19 +77,6 @@
   "height": 512
  },
  {
-  "id": "DRP03",
-  "method": "generate",
-  "positive": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 31, technology reporter, short beard, headphones around his neck, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 657825352,
-  "out": "assets/images/drp03-staff.webp",
-  "dependsOn": []
- },
- {
   "id": "DRP04",
   "method": "generate",
   "positive": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 60, culture writer, bright patterned scarf, laughing, square profile picture, realistic, as a person would choose for themselves",

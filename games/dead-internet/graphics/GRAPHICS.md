@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 31.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 32.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -85,7 +85,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | AVA_BRIGHTLINE | `assets/images/ava-brightline.webp` | 512×512 | profile | required | final file | A64, acc_brightline, A10 | needs LOGO_BRIGHTLINE | Brightline's Connect avatar: the amber sunrise mark with BRIGHTLINE / MEDIA in white on a navy-to-amber gradient. Rendered from graphics/sources/avatar-brightline.html. Renee Okafor's avatar (IMG19) is the same file. |
 | DRP01 | `assets/images/drp01-staff.webp` | 512×512 | profile | optional | final file | acc_dr_tadeyemi |  | Daily Record staff photo, grey studio backdrop (the look for all seven). Man, 38, city hall reporter: short hair, beard, light-blue shirt, arms crossed, Daily Record lanyard, notebook and pen in his shirt pocket. |
 | DRP02 | `assets/images/drp02-staff.webp` | 512×512 | profile | optional | final file | acc_dr_lhart |  | Daily Record staff photo, grey studio backdrop. Woman, 45, business editor: short grey bob, freckles, hoop earrings in both ears, dark blazer, cream blouse, coin pendant. |
-| DRP03 | `assets/images/drp03-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_bwhitlow |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Man, 31, technology reporter, beard, headphones round his neck. |
+| DRP03 | `assets/images/drp03-staff.webp` | 512×512 | profile | optional | final file | acc_dr_bwhitlow |  | Daily Record staff photo, grey studio backdrop. Man, 31, technology reporter: messy dark hair, beard, black headphones round his neck, navy flannel over a dark T-shirt. |
 | DRP04 | `assets/images/drp04-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_rcalloway |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Woman, 60, culture writer, bright scarf, laughing. |
 | DRP05 | `assets/images/drp05-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_mvane |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Man, 55, columnist, tie loosened, sceptical eyebrow. |
 | DRP06 | `assets/images/drp06-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_jsoto |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Woman, 34, public safety reporter, rain jacket, outdoors. |

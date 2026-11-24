@@ -184,7 +184,7 @@
  "DRP03": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 31, technology reporter, short beard, headphones around his neck",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI)."
  },
  "DRP04": {
   "method": "generate",
