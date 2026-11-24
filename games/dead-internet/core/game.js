@@ -9,6 +9,8 @@ import { isVisible, isLive, accountActive, viewArtifact, mentionsOf } from "./ar
 import { search, searchImage, imageInfo } from "./search.js";
 import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
+import { updateEvidence } from "./workbench.js";
+import { savedArtifactView } from "./artifacts.js";
 import * as CB from "./casebook.js";
 import * as TL from "./timeline.js";
 import * as CS from "./cases.js";
@@ -58,6 +60,7 @@ export class Game {
       case "open": r = this.#open(a.artifact, a.version); break;
       case "login": r = this.#login(a.site, a.user, a.pass); break;
       case "message": r = sendMessage(this, a.to, a.msg); break;
+      case "updateEvidence": r = updateEvidence(this, a.id, a.patch); break;
       case "saveEvidence": r = CB.saveEvidence(this, a.ref); break;
       case "removeEvidence": r = CB.removeEvidence(this, a.id); TL.forgetEvidence(this, a.id); break;
       case "createHypothesis": r = CB.createHypothesis(this, a.hypothesis); break;
@@ -102,6 +105,8 @@ export class Game {
   ask(to, topic) { return this.dispatch({ type: "message", to, msg: { kind: "ask", topic } }); }
   show(to, artifact, version) { return this.dispatch({ type: "message", to, msg: { kind: "show", artifact, version } }); }
   reply(to, option) { return this.dispatch({ type: "message", to, msg: { kind: "reply", option } }); }
+  evidenceView(id) { return savedArtifactView(this, id); }
+  editEvidence(id, patch) { return this.dispatch({ type: "updateEvidence", id, patch }); }
   save(ref) { return this.dispatch({ type: "saveEvidence", ref }); }
   hypothesize(hypothesis) { return this.dispatch({ type: "createHypothesis", hypothesis }); }
   link(hypothesis, evidence, on = true) { return this.dispatch({ type: "linkEvidence", hypothesis, evidence, on }); }

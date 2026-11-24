@@ -67,14 +67,10 @@ export function casebookApp(phone) {
   // ── Evidence ────────────────────────────────────────────────────────────
   function evItem(e, opts = {}) {
     const thumb = e.image ? img(e.image, { cls: "thumb" }) : e.message ? h("span.ev-ico", icon("chat")) : h("span.ev-ico", icon("globe"));
-    const a = e.artifact ? w.artifacts.get(e.artifact) : null;
-    const cached = e.artifact && e.version && g.view(e.artifact, e.version).cached;
-    const open = () => {
-      if (e.message) { const m = g.s.messages.find(x => x.id === e.message); phone.push("messages", { kind: "thread", id: m.thread }); }
-      else if (e.image) phone.viewImage(e.image, { artifact: e.artifact });
-      else phone.openArtifact(e.artifact, cached ? e.version : undefined);
-    };
-    const sub = e.message ? "Message" : e.image ? `Image · ${a?.title || ""}` : `${a?.url || w.platforms.get(a?.platform)?.name || ""}${cached ? " · cached copy" : ""}`;
+    const open = () => { g.editEvidence(e.id, { opened: true }); phone.push("casebook", { kind: "evidence", id: e.id }); };
+    const sub = [e.quote ? "Excerpt" : e.message ? "Message" : e.image ? "Image" : "Saved page",
+      e.marks.reviewed ? "Reviewed" : "Not reviewed", e.marks.important ? "Important" : "", e.marks.doubtful ? "Doubtful" : "",
+      e.shelf ? `Set aside: ${e.shelf}` : ""].filter(Boolean).join(" · ");
     const row = h("div.ev-item",
       h("button.ev-open", { onclick: open }, thumb,
         h("div.ev-main", h("b", phone.evidenceTitle(e)), h("div.muted.ev-sub", sub), h("div.muted.ev-day", `${phone.sourceLabel(e)} · saved day ${e.day}`))),
@@ -82,8 +78,74 @@ export function casebookApp(phone) {
     return row;
   }
 
+  function triageFilters(desc) {
+    const select = (label, values, current, change) => {
+      const el = h("select.text-input", { "aria-label": label }, values.map(([value, text]) => h("option", { value }, text)));
+      el.value = current;
+      el.addEventListener("change", () => change(el.value));
+      return el;
+    };
+    return h("div.evidence-filters",
+      select("Evidence filter", [["active", "Active"], ["unreviewed", "Not reviewed"], ["important", "Important"], ["doubtful", "Doubtful"], ["shelved", "Set aside"]], desc.triage || "active",
+        triage => phone.replaceTop({ ...desc, triage, scroll: 0 })),
+      select("Case filter", [["*", "All cases"], ...g.cases().map(c => [c.id, c.title]), ["", "Unclassified"]], desc.filter ?? "*",
+        filter => phone.replaceTop({ ...desc, filter: filter === "*" ? undefined : filter, scroll: 0 })));
+  }
+
+  function shelve(e) {
+    phone.actionSheet("Set aside — your reason", [
+      { label: "Irrelevant", run: () => { g.editEvidence(e.id, { shelf: "irrelevant" }); phone.refresh(); } },
+      { label: "Finished with it", run: () => { g.editEvidence(e.id, { shelf: "finished" }); phone.refresh(); } },
+    ]);
+  }
+
+  function evidenceDetail(desc) {
+    const e = g.s.evidence.find(x => x.id === desc.id);
+    if (!e) return h("div.empty", "This evidence was removed.");
+    const view = e.artifact ? g.evidenceView(e.id) : null;
+    const message = e.message ? g.s.messages.find(m => m.id === e.message) : null;
+    const origin = e.message ? { message: e.message } : { artifact: e.artifact, version: e.version };
+    const update = patch => { g.editEvidence(e.id, patch); phone.refresh(); };
+    const mark = (key, label) => h("button.chip", { "aria-pressed": String(!!e.marks[key]), onclick: () => update({ [key]: !e.marks[key] }) }, `${e.marks[key] ? "✓ " : ""}${label}`);
+    const note = h("textarea.note-input", { rows: 3, "aria-label": "My comment", placeholder: "Your comment (optional)" });
+    note.value = e.note;
+    // Persist on input so navigation cannot silently lose a comment.
+    note.addEventListener("input", () => g.editEvidence(e.id, { note: note.value }));
+    const openCopy = () => {
+      if (e.image) return phone.viewImage(e.image, origin);
+      if (e.message) return phone.push("messages", { kind: "thread", id: message.thread });
+      phone.push("browser", { kind: "page", id: e.artifact, version: e.version, view: { ...view, saved: true, cached: false }, url: view.url || "" });
+    };
+    const theories = g.casebook().hypotheses.filter(hy => hy.evidence.includes(e.id));
+    const events = g.timeline().filter(ev => ev.evidence.some(x => x.id === e.id));
+    return h("div.evidence-detail.pad",
+      h("h2", phone.evidenceTitle(e)),
+      h("div.muted", `${phone.sourceLabel(e)} · saved day ${e.day}${view?.date ? ` · ${fmtDate(view.date)}` : ""}`),
+      e.quote ? phone.ctx.block(h("blockquote", e.quote.text), origin) : null,
+      e.image ? img(e.image, { cls: "evidence-preview" }) : message ? phone.ctx.block(h("p", message.text), origin) : null,
+      h("button.btn.wide", { onclick: openCopy, disabled: !!view?.error }, e.message ? "Open original message" : e.image ? "Open image" : "Open saved copy"),
+      e.artifact ? h("button.btn.wide", { onclick: () => phone.openArtifact(e.artifact, undefined, phone.appFor(e.artifact) === "casebook" ? "browser" : undefined) }, "Open original source") : null,
+      h("div.field-label", "My marks"), h("div.evidence-marks", mark("reviewed", "Reviewed"), mark("important", "Important"), mark("doubtful", "Doubtful")),
+      h("label.field-label", "My comment"), note,
+      casesRow("evidence", e),
+      theories.length ? h("div.section-title", "Linked theories") : null,
+      theories.map(hy => h("button.hist-row", { onclick: () => phone.push("casebook", { kind: "hyp", id: hy.id }) }, hy.label)),
+      events.length ? h("div.section-title", "Timeline") : null,
+      events.map(ev => h("button.hist-row", { onclick: () => phone.push("casebook", { kind: "event", id: ev.id }) }, ev.title)),
+      e.shelf ? h("p.muted", `Set aside: ${e.shelf === "finished" ? "finished with it" : "irrelevant"} · day ${e.shelvedDay}`) : null,
+      h("button.btn.wide", { onclick: () => e.shelf ? update({ shelf: null }) : shelve(e) }, e.shelf ? "Restore evidence" : "Set aside…"),
+      h("button.btn.wide", { onclick: () => evMenu(e) }, "More actions…"));
+  }
+
   function evMenu(e) {
-    const items = [];
+    const update = patch => { g.editEvidence(e.id, patch); phone.refresh(); };
+    const items = [
+      { label: e.marks.reviewed ? "Mark not reviewed" : "Mark reviewed", run: () => update({ reviewed: !e.marks.reviewed }) },
+      { label: e.marks.important ? "Unmark important" : "Mark important", run: () => update({ important: !e.marks.important }) },
+      { label: e.marks.doubtful ? "Unmark doubtful" : "Mark doubtful", run: () => update({ doubtful: !e.marks.doubtful }) },
+      { label: "Comment…", run: () => { g.editEvidence(e.id, { opened: true }); phone.push("casebook", { kind: "evidence", id: e.id }); } },
+      { label: e.shelf ? "Restore evidence" : "Set aside…", run: () => e.shelf ? update({ shelf: null }) : shelve(e) },
+    ];
     if (g.s.hypotheses.length) items.push({ label: "Link to a theory…", run: () => linkToTheory(e) });
     if (e.artifact) items.push({ label: "Show to someone…", run: () => showTo(e) });
     items.push({ label: `Case: ${casesLabel(e)}…`, run: () => pickCases("evidence", e) });
@@ -110,23 +172,30 @@ export function casebookApp(phone) {
   }
 
   function evidenceTab(desc) {
-    const list = [...g.s.evidence].reverse().filter(e => inFilter(e, desc.filter));
-    if (!list.length && desc.filter !== undefined) return h("div.empty.muted", "Nothing here with this filter.");
-    if (!list.length) return h("div.empty", h("b", "No evidence yet."), h("div.muted", "Tap the bookmark on a page, or tap an image or a word in a message and choose Save, to collect it here."));
+    const filter = desc.triage || "active";
+    const list = [...g.s.evidence].reverse().filter(e => inFilter(e, desc.filter)).filter(e =>
+      filter === "shelved" ? !!e.shelf : !e.shelf && (filter === "active" || (filter === "unreviewed" ? !e.marks.reviewed : !!e.marks[filter])));
+    const controls = triageFilters(desc);
+    if (!g.s.evidence.length) return [controls, h("div.empty", h("b", "No evidence yet."), h("div.muted", "Save a page, image, message or excerpt to collect it here."))];
+    if (!list.length) return [controls, h("div.empty.muted", "No evidence with these filters.")];
+    const pending = list.filter(e => !e.marks.reviewed);
+    const reviewed = list.filter(e => e.marks.reviewed);
+    const triage = [controls, pending.length ? h("div.section-title", `Not reviewed (${pending.length})`) : null, pending.map(e => evItem(e)),
+      reviewed.length ? h("div.section-title", `Reviewed (${reviewed.length})`) : null];
     const mode = desc.group ?? "about";
     const toggle = h("div.seg.small",
       h("button", { class: mode === "about" ? "on" : "", onclick: () => phone.replaceTop({ ...desc, group: "about" }) }, "By who it's about"),
       h("button", { class: mode === "all" ? "on" : "", onclick: () => phone.replaceTop({ ...desc, group: "all" }) }, "Newest first"));
-    if (mode === "all") return [toggle, list.map(e => evItem(e))];
+    if (mode === "all") return [...triage, toggle, reviewed.map(e => evItem(e))];
     const groups = new Map();
-    for (const e of list) {
+    for (const e of reviewed) {
       const about = g.evidenceAbout(e.id)?.about || [];
       const keys = about.filter(id => ["person", "org", "account"].includes(g.topics().find(t => t.id === id)?.kind ?? ""));
       for (const k of keys.length ? keys : ["_other"]) { if (!groups.has(k)) groups.set(k, []); groups.get(k).push(e); }
     }
     const order = [...groups.keys()].sort((a, b) => (a === "_other") - (b === "_other") || groups.get(b).length - groups.get(a).length);
     const open = desc.open || {};
-    return [toggle, order.map(k => {
+    return [...triage, toggle, order.map(k => {
       const t = g.topics().find(x => x.id === k);
       const isOpen = open[k] ?? false;
       return h("div.ev-group",
@@ -272,7 +341,7 @@ export function casebookApp(phone) {
       ["notes", phone.str("casebook.notes"), n(g.s.notes)], ["timeline", "Timeline", n(g.s.timeline)]];
     return [h("div.seg.tabs.four", tabs.map(([id, label, n]) => h("button", { class: tab === id ? "on" : "", onclick: () => phone.replaceTop({ ...desc, tab: id, scroll: 0 }) },
       h("span", label), h("small", String(n))))),
-      h("div.cb", filterBar(desc), tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab(desc) : tab === "timeline" ? timelineTab(desc) : notesTab(desc))];
+      h("div.cb", tab === "evidence" ? null : filterBar(desc), tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab(desc) : tab === "timeline" ? timelineTab(desc) : notesTab(desc))];
   }
 
   // ── Timeline ────────────────────────────────────────────────────────────
@@ -520,6 +589,7 @@ export function casebookApp(phone) {
     id: "casebook",
     root: () => ({ kind: "main", tab: "evidence" }),
     render(desc) {
+      if (desc.kind === "evidence") return [bar("Evidence"), h("div.scroll", evidenceDetail(desc))];
       if (desc.kind === "hyp") return [bar("Theory"), h("div.scroll", hypDetail(desc))];
       if (desc.kind === "builder") return [bar(desc.id ? "Edit theory" : "New theory"), h("div.scroll", builder(desc))];
       if (desc.kind === "event") return [bar("Event"), h("div.scroll", eventDetail(desc))];

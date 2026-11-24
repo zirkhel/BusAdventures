@@ -288,8 +288,11 @@ export class Phone {
     this.push("browser", { kind: "imageResults", image: imageId, flip, results: r.results });
   }
 
-  /** Save a word or name to the Casebook as a note that remembers where it was found. */
+  /** Save a sourced selection as evidence; unsourced player text stays a note. */
   saveText(ref, origin = {}) {
+    if (origin.artifact || origin.message) {
+      return this.saveEvidence({ artifact: origin.artifact, version: origin.version, message: origin.artifact ? undefined : origin.message, quote: { text: ref.text } });
+    }
     const about = ref.id && !ref.alias ? ref.id : undefined;
     const from = origin.artifact || origin.message ? { artifact: origin.artifact, version: origin.version, message: origin.message } : undefined;
     const r = this.g.note(ref.text, from, about);
@@ -413,7 +416,8 @@ export class Phone {
   }
 
   isSaved(ref) {
-    return this.g.s.evidence.some(e => e.artifact === (ref.artifact ?? null) && (e.version ?? null) === (ref.version ?? null) &&
+    const version = ref.artifact ? ref.version ?? this.g.view(ref.artifact).versionId ?? null : null;
+    return this.g.s.evidence.some(e => !e.quote && e.artifact === (ref.artifact ?? null) && (e.version ?? null) === version &&
       (e.image ?? null) === (ref.image ?? null) && (e.message ?? null) === (ref.message ?? null));
   }
 
@@ -443,8 +447,8 @@ export class Phone {
     const im = img(imageId, { cls: "zoom-img", eager: true });
     const stage = h("div.zoom-stage", im);
     const info = h("div.img-info");
-    const saved = () => !!ctx?.artifact && this.isSaved({ artifact: ctx.artifact, version: null, image: imageId });
-    const saveBtn = h("button", { onclick: () => { if (ctx?.artifact) { this.saveEvidence({ artifact: ctx.artifact, image: imageId }); saveBtn.replaceChildren(icon(saved() ? "bookmarked" : "bookmark"), h("span", "Save")); } } },
+    const saved = () => !!ctx?.artifact && this.isSaved({ artifact: ctx.artifact, version: ctx.version, image: imageId });
+    const saveBtn = h("button", { onclick: () => { if (ctx?.artifact) { this.saveEvidence({ artifact: ctx.artifact, version: ctx.version, image: imageId }); saveBtn.replaceChildren(icon(saved() ? "bookmarked" : "bookmark"), h("span", "Save")); } } },
       icon(saved() ? "bookmarked" : "bookmark"), h("span", "Save"));
     const searchBy = flip => this.imageSearch(imageId, flip);
     const box = h("div.viewer",
@@ -542,9 +546,10 @@ export class Phone {
   /** Title of a piece of evidence. */
   evidenceTitle(e) {
     const w = this.g.w;
+    if (e.quote) return `“${e.quote.text}”`;
     if (e.message) { const m = this.g.s.messages.find(x => x.id === e.message); return `Message from ${this.contactName(m?.thread)}`; }
     if (e.image) return w.images.get(e.image)?.caption || "Image";
-    const v = this.g.view(e.artifact, e.version || undefined);
+    const v = this.g.evidenceView(e.id);
     return v.title || w.artifacts.get(e.artifact)?.title || e.artifact;
   }
 

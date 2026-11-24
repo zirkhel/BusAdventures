@@ -10,7 +10,7 @@
 
 import { investigate } from "./discovery.js";
 import { asArray, fill } from "./util.js";
-import { supportsOf, mentionsOf, sourceOf } from "./artifacts.js";
+import { viewArtifact, savedArtifactView, supportsOf, mentionsOf, sourceOf } from "./artifacts.js";
 import { applyEffects, fire } from "./rules.js";
 import { nameOf, str } from "./world.js";
 import { isCase, soleCase } from "./cases.js";
@@ -21,15 +21,24 @@ import { apparentSource, visibleRefsOfEvidence } from "./provenance.js";
 /**
  * Save something as evidence.
  * @param {any} g
- * @param {{artifact?:string, version?:string, message?:string, image?:string, note?:string}} ref
+ * @param {{artifact?:string, version?:string, message?:string, image?:string, note?:string, quote?:{text:string}}} ref
  */
 export function saveEvidence(g, ref) {
   const s = g.s;
+  const quote = ref.quote == null ? null : String(ref.quote.text || "").trim();
+  if (quote === "") return { error: "empty_quote" };
+  let snapshot = null;
   if (ref.artifact) {
     if (s.seen[ref.artifact] == null) return { error: "not_seen" };
+    snapshot = viewArtifact(g, ref.artifact, ref.version ? { version: ref.version } : {});
+    if (snapshot.error || snapshot.locked) {
+      const saved = s.evidence.find(e => e.artifact === ref.artifact && e.version === ref.version);
+      if (!saved) return { error: "not_available" };
+      snapshot = savedArtifactView(g, saved.id);
+      if (snapshot.error) return { error: "not_available" };
+    }
     if (ref.image) {
-      const a = g.w.artifacts.get(ref.artifact);
-      const imgs = [...asArray(a.images), ...a.versions.flatMap(v => asArray(v.images))];
+      const imgs = [...asArray(snapshot.images), ...asArray(snapshot.video?.frames).map(f => f.image), snapshot.video?.poster];
       if (!imgs.includes(ref.image)) return { error: "image_not_in_artifact" };
     }
   } else if (ref.message) {
@@ -37,12 +46,15 @@ export function saveEvidence(g, ref) {
     if (!m || m.from === "player") return { error: "unknown_message" };
   } else return { error: "nothing_to_save" };
 
-  const same = s.evidence.find(e => e.artifact === ref.artifact && e.version === (ref.version ?? null) &&
-    e.message === (ref.message ?? null) && e.image === (ref.image ?? null));
+  const version = snapshot?.versionId ?? null;
+  const same = s.evidence.find(e => e.artifact === (ref.artifact ?? null) && e.version === version &&
+    e.message === (ref.message ?? null) && e.image === (ref.image ?? null) && (e.quote?.text ?? null) === quote);
   if (same) return { ok: true, id: same.id, duplicate: true };
 
-  const e = { id: `E${s.nextId++}`, artifact: ref.artifact ?? null, version: ref.version ?? null, message: ref.message ?? null,
-    image: ref.image ?? null, note: ref.note ?? "", day: s.day, cases: [] };
+  const e = { id: `E${s.nextId++}`, artifact: ref.artifact ?? null, version, message: ref.message ?? null,
+    image: ref.image ?? null, note: ref.note ?? "", day: s.day, cases: [],
+    opened: null, marks: { reviewed: null, important: false, doubtful: false }, shelf: null,
+    ...(quote ? { quote: { text: quote } } : {}), ...(snapshot ? { snapshot: structuredClone(snapshot) } : {}) };
   s.evidence.push(e);
   if (ref.artifact) fire(g, "evidence.save", { artifact: ref.artifact });
   return { ok: true, id: e.id };

@@ -12,7 +12,7 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
 - Nettstedene er godkjent som designretning ([docs/WEBSITES.md](docs/WEBSITES.md)), men skal ikke implementeres før veikartets punkt 5.
 
-**Neste steg:** Casebook steg 1 (se under). Deretter steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
+**Neste steg på main:** Casebook steg 1. Implementert på `codex/casebook-step-1`, til gjennomgang; ikke merget. Etter godkjent merge kommer steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
@@ -214,11 +214,14 @@ Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIG
 - [x] Tvillingverden-test som permanent regresjonstest, pluss test av at `app/` ikke bruker kanonhjelpere
 
 ### Steg 1 — Bevis
-- [ ] Beviskort med retur til original (bevart rulleposisjon), kommentar, merker (viktig, tvilsom), åpnet vs. vurdert
-- [ ] «Legg bort» med årsak og gjenoppretting, uten at koblinger eller kommentarer forsvinner
-- [ ] Filter etter egne vurderinger, «Ikke vurdert» øverst, lagret utdrag som bevis i stedet for notat. Lagring v7.
-- [ ] Et lagret bevis åpner versjonen spilleren lagret, ikke den levende siden
-- [ ] DOM-test i Playwright: Casebook gir samme tekst og CSS-klasser i tvillingverdenene
+_Implementert 25. november 2026 på egen branch; venter på Anders’ PR-gjennomgang og eksplisitte merge-godkjenning._
+- [x] Beviskort med retur til original (bevart rulleposisjon), kommentar, merker (viktig, tvilsom), åpnet vs. vurdert
+- [x] «Legg bort» med årsak og gjenoppretting, uten at koblinger eller kommentarer forsvinner
+- [x] Filter etter egne vurderinger, «Ikke vurdert» øverst, lagret utdrag som bevis i stedet for notat. Lagring v7.
+- [x] Et lagret bevis åpner versjonen spilleren lagret, ikke den levende siden
+- [x] DOM-test i Playwright: Casebook gir samme tekst og CSS-klasser i tvillingverdenene
+
+Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 scenarioer og begge automatiske spillere. Playwright på 390×844: merker, kommentar, lagret kopi/original, retur med faktisk rulleposisjon, legg bort/gjenopprett, filtre og ny lasting. DOM-testen sammenligner 411 beviskort og alle filter/grupperingsvalg i tre tvillingverdener. Kjør med `node games/dead-internet/tools/test-casebook-ui.mjs` (Playwright installert; valgfritt `PLAYWRIGHT_MODULE` og `PLAYWRIGHT_CHANNEL`).
 
 ### Steg 2 — Teorier og spørsmål
 - [ ] Fri formulering, bevis for og mot, status med historikk, alternative forklaringer

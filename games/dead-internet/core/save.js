@@ -3,6 +3,7 @@
 // Saves are plain JSON with a format tag and a version number, so they can be exported,
 // imported and migrated when the state shape or the content changes.
 
+import { migrateEvidence } from "./workbench.js";
 import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
 import { migrateCases, migrateCaseStates } from "./cases.js";
@@ -20,6 +21,7 @@ const MIGRATIONS = {
   3: (s, w) => { migrateCases(s, w); s.saveVersion = 4; return s; },
   // 4 → 5: case states (universe split). The case an old save played is active from day one.
   4: (s, w) => { migrateCaseStates(s, w); s.saveVersion = 5; return s; },
+  6: (s, w) => { migrateEvidence(s, w); s.saveVersion = 7; return s; },
   // 5 → 6: media. No follows, likes or "not interested" yet.
   5: s => { migrateMedia(s); s.saveVersion = 6; return s; },
 };

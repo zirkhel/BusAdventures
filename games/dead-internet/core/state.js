@@ -2,7 +2,7 @@
 // Everything that changes during play lives in one plain, serialisable object.
 // The world (authored content) is never modified; the state only stores differences.
 
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 
 /**
  * @param {any} w world from buildWorld()

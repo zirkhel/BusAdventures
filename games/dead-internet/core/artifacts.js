@@ -144,6 +144,18 @@ export function viewArtifact(g, id, opts = {}) {
   return { ...base, versionId: vid, cached: false, cachedVersions: cachedVersions(g, a).map(c => c.id), ...media(g, resolveVersion(a, v), a) };
 }
 
+/** A saved reference alone grants access to that exact version, never another version. */
+export function savedArtifactView(g, evidence) {
+  const e = g.s.evidence.find(x => x.id === evidence);
+  if (!e?.artifact) return { error: "unknown_evidence" };
+  if (e.snapshot) return structuredClone(e.snapshot);
+  const a = g.w.artifacts.get(e.artifact);
+  const v = a && getVersion(a, e.version);
+  if (!v) return { error: "not_available" };
+  return { id: a.id, type: a.type, platform: a.platform, url: a.url, author: a.author ?? null,
+    versionId: v.id, cached: false, ...media(g, resolveVersion(a, v), a) };
+}
+
 /**
  * An artifact with `datedOnShow` is dated the day a rule shows it, keeping the time of day
  * from its own date: a story about something the player caused cannot know its day in advance.
