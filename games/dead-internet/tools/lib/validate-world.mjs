@@ -267,6 +267,9 @@ export function validateWorld(raw, opts = {}) {
     }
     if ("live" in a && a.live != null && !vids.has(a.live)) err(where, `live version ${a.live} does not exist`);
     if (a.live === null && !a.versions.some(v => v.cached)) err(where, "deleted (live: null) and nothing cached: unreachable");
+    // A story dated the day a rule shows it must start hidden, or it would have no day.
+    if (a.datedOnShow && !a.hidden) err(where, "datedOnShow needs hidden: true (a rule shows it and gives it its day)");
+    if (a.versions[0]?.silent) err(where, "the first version cannot be a silent edit");
     for (const c of arr(a.supports)) if (!w.claims.has(c)) err(where, `supports unknown claim ${c}`);
     for (const i of arr(a.images)) if (!w.images.has(i)) err(where, `unknown image ${i}`);
     for (const m of [...arr(a.mentions), ...a.versions.flatMap(v => arr(v.mentions))]) if (!isRef(m)) err(where, `mentions unknown ${m}`);

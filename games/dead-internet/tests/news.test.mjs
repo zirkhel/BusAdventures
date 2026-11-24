@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import { loadWorld } from "../tools/lib/node-world.mjs";
 import { Game } from "../core/game.js";
 import { mediaReport } from "../tools/lib/media.mjs";
+import { fire } from "../core/rules.js";
 
 const world = await loadWorld();
 const started = () => { const g = new Game(world, { seed: 1 }); g.start(); return g; };
@@ -24,8 +25,8 @@ test("a paper's list is newest first, never ranked, and never shows tomorrow's p
   const g = started();
   const { items, total } = g.news("dailyrecord", { limit: 500 });
   assert.equal(items.length, total);
-  const dates = items.map(id => g.view(id).date ?? world.artifacts.get(id).date);
-  assert.deepEqual(dates, [...dates].sort().reverse(), "newest first");
+  const dates = items.map(id => g.view(id).publishedDate);
+  assert.deepEqual(dates, [...dates].sort().reverse(), "newest first, by first publication");
   assert.ok(dates.every(d => d.slice(0, 10) <= g.date), "nothing dated after today");
   assert.ok(!items.includes("DR-2026-0090"), "Tuesday's water main is not news on Monday");
   assert.ok(!items.includes("A46"), "the archive page is not a story");
@@ -109,4 +110,47 @@ test("the media report shows both papers, with no quota", () => {
   assert.ok(dr.artifacts >= 45 && uf.artifacts >= 25);
   assert.ok(dr.comments >= 85 && uf.comments >= 20, `${dr.comments} / ${uf.comments} comments`);
   assert.deepEqual(r.outliers, []);
+});
+
+test("a story develops from day to day: honest updates say so, quiet edits do not", () => {
+  const g = started();
+  g.sleep();                                                       // day 2: the break
+  assert.equal(g.view("DR-2026-0090").versionId, "v1");
+  g.sleep();                                                       // day 3: first update
+  let v = g.view("DR-2026-0090");
+  assert.equal(v.versionId, "v2");
+  assert.equal(v.publishedDate, "2026-03-10", "still first published on the day of the break");
+  assert.ok(v.date > v.publishedDate && !v.silent && v.corrections.length, "an honest update, with a correction");
+  g.sleep(); g.sleep();                                            // day 5: second update
+  v = g.view("DR-2026-0090");
+  assert.equal(v.versionId, "v3");
+  assert.deepEqual(v.cachedVersions, ["v1", "v2"], "earlier versions stay readable in the cache");
+  assert.equal(g.view("DR-2026-0090", "v1").title, "Water main break floods Harbor Street");
+  const tip = g.view("UF-2026-0091");
+  assert.ok(tip.versionId === "v2" && tip.silent, "Unfiltered changes its tip without a word");
+  // An update does not move a story back to the top of the paper
+  const front = g.news("dailyrecord", { limit: 6 }).items;
+  assert.ok(front.indexOf("DR-2026-0095") < front.indexOf("DR-2026-0090"));
+  g.sleep(); g.sleep(); g.sleep();                                 // day 8
+  assert.deepEqual(g.view("DR-2026-0099").related, ["DR-2026-0090"], "the follow-up links back");
+});
+
+test("the papers report what the player caused, dated the day it happened", () => {
+  const g = started();
+  for (const id of ["A67", "A68", "A69"]) {
+    const a = world.artifacts.get(id);
+    assert.ok(a.hidden && a.datedOnShow && !(a.supports || []).length, `${id}: hidden, dated when shown, supports nothing`);
+  }
+  g.sleep(); g.sleep();                                            // day 3
+  fire(g, "report.published", { channel: "threadline", case: "quiet_account", claims: [], exposed: [] });
+  assert.ok(!g.news("unfiltered", { limit: 50 }).items.includes("A69"));
+  g.sleep();                                                       // day 4
+  assert.ok(g.news("unfiltered", { limit: 5 }).items.includes("A69"), "Unfiltered picks up the player's post the next day");
+  assert.equal(g.view("A69").date.slice(0, 10), g.date, "dated the day it appeared");
+  assert.ok(g.s.notifications.some(n => n.ref?.artifact === "A69"));
+  // The vote: without an exposed money trail it passes, and the paper says so.
+  while (g.s.day < 8) g.sleep();
+  assert.ok(g.s.flags.vote_passed);
+  assert.ok(g.news("dailyrecord", { limit: 5 }).items.includes("A68") && !g.view("A67").title);
+  assert.equal(g.view("A68").date.slice(0, 10), g.date);
 });

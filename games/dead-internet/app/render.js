@@ -142,13 +142,21 @@ function header(phone, v, a, acc, pf, kind) {
     h("h1", v.title),
     v.byline?.length ? h("div.byline", "By ", v.byline.map((b, i) => [i ? (i === v.byline.length - 1 ? " and " : ", ") : "",
       w.accounts.has(b) ? phone.ctx.span(w.accounts.get(b).displayName || b, { type: "account", id: b }) : b])) : null,
-    v.date ? h("div.muted", fmtDate(v.date)) : null);
+    newsDates(v));
   if (kind === "blog") return h("header.blog-head", h("div.mast", pf?.name || ""), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
   if (kind === "messaging") {
     return h("header.doc-head", h("div.doc-type", v.type === "email" ? "Email" : v.type === "image" ? "Image" : "Document"), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
   }
   if (kind === "registry") return h("header.reg-head", h("div.mast", pf?.mast || pf?.name || "", pf?.mastSub ? h("small", pf.mastSub) : null), h("h1", v.title));
   return h("header.site-head", h("div.mast", pf?.name || v.url?.split("/")[0] || ""), h("h1", v.title));
+}
+
+/** "Mar 10, 2026 · Updated Mar 11, 09:10": the paper's own note that a story changed. Quiet edits say nothing. */
+function newsDates(v) {
+  const pub = v.publishedDate ?? v.date;
+  if (!pub) return null;
+  const upd = v.date && v.date !== pub && !v.silent ? v.date : null;
+  return h("div.muted.np-dates", fmtDate(pub), upd ? h("span.np-updated", ` · Updated ${fmtDate(upd)}`) : null);
 }
 
 function sectionName(pf, id) {

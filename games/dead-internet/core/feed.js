@@ -13,7 +13,7 @@
 // Liking or following gives no knowledge and fills no tool (discovery is unchanged).
 // Watching a clip is opening it: the clip is seen, its creator and captioned names encountered.
 
-import { isVisible, liveVersionId, getVersion, resolveVersion } from "./artifacts.js";
+import { isVisible, liveVersionId, getVersion, resolveVersion, shownDate } from "./artifacts.js";
 import { check } from "./conditions.js";
 
 /** Empty media state (state.media). */
@@ -39,8 +39,8 @@ function candidates(g, platform) {
     const vid = liveVersionId(g, a);
     if (vid == null) continue;
     if (a.access && !check(a.access, g.ctx)) continue;
-    const r = resolveVersion(a, getVersion(a, vid));
-    out.push({ a, r, date: r.date ?? a.date ?? "", views: r.stats?.views ?? 0 });
+    const r = shownDate(g, a, resolveVersion(a, getVersion(a, vid)));
+    out.push({ a, r, date: r.date ?? a.date ?? "", published: r.publishedDate ?? r.date ?? "", views: r.stats?.views ?? 0 });
   }
   return out;
 }
@@ -101,10 +101,11 @@ export function feed(g, opts) {
  */
 export function newsList(g, opts) {
   const today = g.date;
-  let list = candidates(g, opts.platform).filter(x => !x.date || String(x.date).slice(0, 10) <= today);
+  // By first publication: an update does not move an old story back to the top.
+  let list = candidates(g, opts.platform).filter(x => !x.published || String(x.published).slice(0, 10) <= today);
   if (opts.section) list = list.filter(x => categoryOf(x.a) === opts.section);
   if (opts.author) list = list.filter(x => x.a.author === opts.author || x.r.byline.includes(opts.author));
-  list.sort((x, y) => String(y.date).localeCompare(String(x.date)) || x.a.id.localeCompare(y.a.id));
+  list.sort((x, y) => String(y.published).localeCompare(String(x.published)) || x.a.id.localeCompare(y.a.id));
   const offset = opts.offset ?? 0, limit = opts.limit ?? 20;
   return { items: list.slice(offset, offset + limit).map(x => x.a.id), total: list.length };
 }

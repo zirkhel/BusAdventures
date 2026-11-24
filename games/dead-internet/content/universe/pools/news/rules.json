@@ -1,8 +1,8 @@
 [
   {"id": "news_d2", "when": {"event": "day.start", "match": {"day": 2}}, "do": [{"show": ["DR-2026-0090", "UF-2026-0091"]}, {"notify": {"text": "Breaking: Water main break floods Harbor Street", "ref": {"artifact": "DR-2026-0090"}}}]},
-  {"id": "news_d3", "when": {"event": "day.start", "match": {"day": 3}}, "do": [{"show": "DR-2026-0708"}]},
-  {"id": "news_d4", "when": {"event": "day.start", "match": {"day": 4}}, "do": [{"show": ["DR-2026-0093", "UF-2026-0094"]}, {"notify": {"text": "Who is buying Harbor Street?", "ref": {"artifact": "UF-2026-0094"}}}]},
-  {"id": "news_d5", "when": {"event": "day.start", "match": {"day": 5}}, "do": [{"show": ["DR-2026-0095", "UF-2026-0099", "DS-UF-02"]}]},
+  {"id": "news_d3", "when": {"event": "day.start", "match": {"day": 3}}, "do": [{"show": "DR-2026-0708"}, {"setLive": {"artifact": "DR-2026-0090", "version": "v2"}}]},
+  {"id": "news_d4", "when": {"event": "day.start", "match": {"day": 4}}, "do": [{"show": ["DR-2026-0093", "UF-2026-0094"]}, {"notify": {"text": "Who is buying Harbor Street?", "ref": {"artifact": "UF-2026-0094"}}}, {"setLive": {"artifact": "UF-2026-0091", "version": "v2"}}]},
+  {"id": "news_d5", "when": {"event": "day.start", "match": {"day": 5}}, "do": [{"show": ["DR-2026-0095", "UF-2026-0099", "DS-UF-02"]}, {"setLive": {"artifact": "DR-2026-0090", "version": "v3"}}]},
   {"id": "news_d6", "when": {"event": "day.start", "match": {"day": 6}}, "do": [{"show": "DR-2026-0097"}, {"notify": {"text": "Breaking: Power restored after second outage in a month", "ref": {"artifact": "DR-2026-0097"}}}]},
   {"id": "news_d7", "when": {"event": "day.start", "match": {"day": 7}}, "do": [{"show": "DR-2026-0098"}]},
   {"id": "news_d8", "when": {"event": "day.start", "match": {"day": 8}}, "do": [{"show": "DR-2026-0099"}]}

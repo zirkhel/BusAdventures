@@ -143,6 +143,8 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7)._
 - [x] Innhold: The Daily Record 62 saker (48 nye), 8 skribenter med side, 6 rettelser, 4 endrede og 3 fjernede saker, 5 sponsede, 6 nekrologer, 12 kommentarfelt. Unfiltered 26 saker, 4 skribenter, 4 lekkasjer med dokument på Docshare.
 - [x] Fem hendelser dekkes av begge aviser: Unfiltered har rett (kaien), Daily Record har rett (brannen), begge tar feil (strømbruddet), ingen kan avgjøres (fiskedøden), og Unfiltered beskjærer Daily Records festivalbilde.
 - [x] Sprekker uten forklaring (lag 4–5): samme skrivefeil hos en Daily Record- og en Unfiltered-skribent samme uke, en avdød festivalfrivillig som siteres måneder senere, en lampe ingen butikk har.
+- [x] Saker utvikler seg: vannledningssaken får to åpne oppdateringer (dag 3 og 5) med rettelse og «Updated», mens Unfiltered endrer tipset sitt stille. Tidligere versjoner ligger i cachen. Oppfølgingssaker lenker tilbake.
+- [x] Avisene skriver om spillerens handlinger: Unfiltered plukker opp en publisert rapport (Connect/Threadline) neste dag, og Daily Record skriver om bystyrevedtaket (utsatt eller vedtatt). Slike saker dateres den dagen de dukker opp (`datedOnShow`).
 - [x] Playwright-test på iPhone- og Pixel-størrelse
 
 ## Fase 9 — The Quiet Account ferdig
