@@ -96,7 +96,7 @@
   "method": "generate",
   "prompt": "corporate headshot of a man, 47, navy jacket, light blue shirt, neutral office background, natural skin with small flaws and pores, slight asymmetry, real photographer lighting",
   "negative": "airbrushed, plastic skin, perfect symmetry",
-  "notes": "Must read as a real person, not synthetic."
+  "notes": "Done (Anders, ComfyUI): a press situation rather than a studio portrait. The Northgate sign behind him set the logo design (LOGO_NORTHGATE brief updated)."
  },
  "IMG19": {
   "method": "derive",

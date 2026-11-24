@@ -1,18 +1,5 @@
 [
  {
-  "id": "IMG18",
-  "method": "generate",
-  "positive": "corporate headshot of a man, 47, navy jacket, light blue shirt, neutral office background, natural skin with small flaws and pores, slight asymmetry, real photographer lighting, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened, airbrushed, plastic skin, perfect symmetry",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 272467861,
-  "out": "assets/images/img18-paul-profile.webp",
-  "dependsOn": []
- },
- {
   "id": "IMG19",
   "method": "derive",
   "from": "AVA_BRIGHTLINE",

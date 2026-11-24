@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 21.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 22.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -53,7 +53,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | IMG15 | `assets/images/img15-dana-profile.webp` | 512×512 | profile | required | final file | A51 | face: dana | Woman, 41, reporter, reading glasses on her head, ink on her hand, cardigan, newsroom background with a Daily Record poster (black serif masthead, red rule). |
 | IMG16 | `assets/images/img16-truthseeker.webp` | 512×512 | profile | required | final file | acc_truthseeker |  | Low-res, upscaled photo of a rusty cast-iron gear inside the mill, visible pixels and JPEG compression: an avatar someone has re-saved many times. |
 | IMG17 | `assets/images/img17-iris-profile.webp` | 512×512 | profile | required | final file | A08 | face: iris | Woman, 26, half her face hidden behind a speckled ceramic mug, messy bun, small gold disc earring, two silver rings, black knit sweater, café window light. |
-| IMG18 | `assets/images/img18-paul-profile.webp` | 512×512 | profile | required | placeholder | A52 |  | Man, 47, corporate headshot, navy jacket, real (not synthetic: small skin flaws). |
+| IMG18 | `assets/images/img18-paul-profile.webp` | 512×512 | profile | required | final file | A52 |  | Man, 47, at a press doorstep: dark swept-back hair, stubble, navy suit and dark tie, microphones in the foreground, the NORTHGATE DEVELOPMENT sign behind him. Real, not synthetic: pores, small skin flaws. |
 | IMG19 | `assets/images/img19-renee-avatar.webp` | 512×512 | profile | required | placeholder | A10 |  | Brightline logo on a gradient. No face. |
 | IMG20 | `assets/images/img20-mike-profile.webp` | 512×512 | profile | required | placeholder | A54 |  | Synthetic dad, 40s, at a grill. Slightly too perfect. |
 | IMG21 | `assets/images/img21-pat-profile.webp` | 512×512 | profile | required | placeholder | A55 |  | Back of a person walking a dog on a foggy harbour path. Face not visible. |
@@ -64,7 +64,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_THREADLINE | `assets/images/logo-threadline.svg` | 256×256 | logo | required | placeholder |  |  | Forum: a single thread line looping into a T. |
 | LOGO_DAILYRECORD | `assets/images/logo-dailyrecord.svg` | 512×128 | logo | required | placeholder |  |  | Newspaper masthead 'The Daily Record', black serif, thin red rule under it (as on the newsroom poster in IMG15). |
 | LOGO_BRIGHTLINE | `assets/images/logo-brightline.svg` | 256×256 | logo | required | placeholder |  |  | Agency: a bright horizontal line rising into a sunrise. |
-| LOGO_NORTHGATE | `assets/images/logo-northgate.svg` | 256×256 | logo | required | placeholder |  |  | Developer: an arch with a north arrow. |
+| LOGO_NORTHGATE | `assets/images/logo-northgate.svg` | 256×256 | logo | required | placeholder |  |  | Developer: three rising slab towers (grey, tallest on the right) above a sweeping base line, NORTHGATE / DEVELOPMENT in grey capitals on navy. Must match the sign in IMG18. |
 | LOGO_CITY | `assets/images/logo-city.svg` | 256×256 | logo | required | placeholder |  |  | Port Calder city seal: lighthouse and gear. |
 | LOGO_SPILLCHECK | `assets/images/logo-spillcheck.svg` | 256×256 | logo | required | placeholder |  |  | A dripping padlock. |
 | LOGO_FACELESS | `assets/images/logo-faceless.svg` | 256×256 | logo | required | placeholder |  |  | An empty oval face outline. |
