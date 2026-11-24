@@ -2,10 +2,13 @@
 // Rules and effects: the simulation. The world changes only through effects, and effects
 // run only when a rule fires, a character responds, or an ending is reached.
 //
-// Rule:   { id, when: { event, match? }, if?, do: [effects], once?: true }
+// Rule:   { id, when: { event, match? }, if?, do: [effects], once?: true, case? }
+//         A rule from a mystery pack has `case`: it only runs once that case has started, and
+//         day.start gets `caseDay` (1 on the day the case started) to match on.
 // Events: game.start, day.start {day}, search {terms}, artifact.open {artifact, version},
 //         message.send {to, kind, topic?, artifact?, option?}, evidence.save {artifact},
-//         image.search {image, flip}, login {site}, report.published {channel, claims}
+//         image.search {image, flip}, login {site}, report.published {channel, case, claims},
+//         case.start {case}
 // match:  each key must equal the payload value; an array means "any of"; if the payload
 //         value is an array, it must contain the expected value.
 //
@@ -39,10 +42,17 @@ export function matches(match, payload) {
 export function fire(g, event, payload = {}) {
   for (const r of g.w.rules) {
     if (r.when?.event !== event) continue;
-    if (!matches(r.when.match, payload)) continue;
+    let p = payload, ctx = g.ctx;
+    if (r.case) {
+      const c = g.s.cases?.[r.case];
+      if (!c || (c.status !== "active" && c.status !== "closed")) continue;
+      p = event === "day.start" ? { ...payload, caseDay: g.s.day - c.startedDay + 1 } : payload;
+      ctx = g.caseCtx(r.case);
+    }
+    if (!matches(r.when.match, p)) continue;
     const key = `rule:${r.id}`;
     if (r.once !== false && g.s.fired[key] != null) continue; // rules are once-only unless once:false
-    if (r.if && !check(r.if, g.ctx)) continue;
+    if (r.if && !check(r.if, ctx)) continue;
     g.s.fired[key] = g.s.day;
     applyEffects(g, r.do, { rule: r.id });
   }

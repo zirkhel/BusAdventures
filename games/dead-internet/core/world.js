@@ -24,6 +24,8 @@ export function buildWorld(raw) {
     claims: indexById(raw.canon?.claims, "canon.claims"),
     facts: raw.canon?.facts || [],
     rules: raw.rules || [],
+    /** @type {Map<string,string>} artifact id → "universe" or the mystery that brought it */
+    packOf: new Map(Object.entries(raw.packOf || {})),
     mysteries: indexById(raw.mysteries, "mysteries"),
     // Universe channels (meta.publishing) are open to every case; a mystery's own channels
     // (mysteries[].publishing.channels) only to that case. Ids are global.

@@ -51,13 +51,20 @@ function menu(saved) {
   const game = saved ? new Game(world, { state: saved.state }) : null;
   const resume = () => run(/** @type {Game} */ (game), false);
   const entries = [...world.mysteries.values()].filter(m => m.menu).sort((a, b) => (a.menu.order ?? 99) - (b.menu.order ?? 99));
+  const fresh = new Game(world);  // case states of a new game, for the start screen without a save
   const item = (m, i) => {
-    const playable = m.status !== "seed" && m.status !== "locked";
-    const status = !playable ? S.future : !game ? S.start : game.caseStatus(m.id) === "closed" ? S.closed : S.inProgress;
+    const st = (game ?? fresh).caseStatus(m.id);
+    const playable = st !== "unknown" && st !== "locked";
+    const status = st === "unknown" ? S.future : st === "locked" ? S.locked : st === "closed" ? S.closed : st === "active" ? S.inProgress : S.start;
+    const open = () => {
+      if (!game) return intro(m);
+      if (st === "available") game.start(m.id);   // another case in the same universe and save
+      resume();
+    };
     const num = String(m.menu.order ?? i + 1).padStart(2, "0");
     const thumb = h("div.menu-thumb", { class: `t-${m.id}` }, m.menu.image ? h("img", { src: m.menu.image, alt: "", onerror: e => e.target.remove() }) : null, h("span", num));
     const body = h("div.menu-main", h("b", `${num} – ${m.title}`), h("div.menu-tag", m.menu.tagline || ""), h("div.menu-st", { class: playable ? "live" : "" }, status));
-    return playable ? h("button.menu-item", { onclick: () => (game ? resume() : intro()) }, thumb, body) : h("div.menu-item.future", thumb, body);
+    return playable ? h("button.menu-item", { onclick: open }, thumb, body) : h("div.menu-item.future", thumb, body);
   };
   root.replaceChildren(h("div.menu",
     h("div.menu-top", h("h1", S.title), h("div.menu-tagline", S.tagline)),
@@ -66,7 +73,8 @@ function menu(saved) {
     h("div.menu-list", entries.map(item))));
 }
 
-function intro() {
+/** New game: the chosen mystery's premise, and a name. */
+function intro(m) {
   const S = world.strings.intro;
   const name = /** @type {HTMLInputElement} */ (h("input.name-input", { type: "text", maxlength: 20, autocomplete: "off", autocapitalize: "words",
     placeholder: world.meta.player?.defaultName || "Sam", "aria-label": S.namePrompt }));
@@ -74,13 +82,13 @@ function intro() {
     e.preventDefault();
     const playerName = name.value.trim().replace(/\s+/g, " ").slice(0, 20) || world.meta.player?.defaultName || "Sam";
     const g = new Game(world, { seed: (Date.now() % 2147483647) >>> 0, playerName });
-    g.start();
+    g.start(m.id);
     run(g, true);
   };
   root.replaceChildren(h("div.intro",
     h("button.intro-back", { onclick: () => menu(null) }, "‹ ", world.strings.menu.back),
     h("div.intro-top", h("h1", S.title), h("div.tagline", S.tagline)),
-    h("p.intro-text", S.text),
+    h("p.intro-text", m.start?.intro || ""),
     h("form.intro-form", { onsubmit: start }, h("label", S.namePrompt, name), h("button.btn.primary", { type: "submit" }, S.start))));
 }
 

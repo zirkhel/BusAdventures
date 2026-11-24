@@ -138,7 +138,7 @@ function header(phone, v, a, acc, pf, kind) {
   if (kind === "messaging") {
     return h("header.doc-head", h("div.doc-type", v.type === "email" ? "Email" : v.type === "image" ? "Image" : "Document"), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
   }
-  if (kind === "registry") return h("header.reg-head", h("div.mast", "Port Calder", h("small", "City Portal")), h("h1", v.title));
+  if (kind === "registry") return h("header.reg-head", h("div.mast", pf?.mast || pf?.name || "", pf?.mastSub ? h("small", pf.mastSub) : null), h("h1", v.title));
   return h("header.site-head", h("div.mast", pf?.name || v.url?.split("/")[0] || ""), h("h1", v.title));
 }
 

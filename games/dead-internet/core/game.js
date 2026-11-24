@@ -51,7 +51,7 @@ export class Game {
     const a = action;
     let r;
     switch (a.type) {
-      case "start": r = this.#start(); break;
+      case "start": r = this.#start(a.case); break;
       case "search": r = this.#search(a.query); break;
       case "searchImage": r = this.#searchImage(a.image, a.flip); break;
       case "open": r = this.#open(a.artifact, a.version); break;
@@ -79,13 +79,15 @@ export class Game {
       case "linkEventTheory": r = TL.linkEventTheory(this, a.event, a.hypothesis, a.on ?? true); break;
       default: throw new Error(`Unknown action "${a.type}"`);
     }
+    if (this.s.started && !r?.error) CS.updateCases(this);
     if (!r?.error) this.s.log.push(deepClone(action));
     this.emit("state", { action: a.type });
     return r;
   }
 
   // Convenience wrappers
-  start() { return this.dispatch({ type: "start" }); }
+  /** Start the game, or start another case. Without a case: the only case on the start screen. */
+  start(caseId) { return this.dispatch({ type: "start", ...(caseId ? { case: caseId } : {}) }); }
   search(query) { return this.dispatch({ type: "search", query }); }
   searchImage(image, flip = false) { return this.dispatch({ type: "searchImage", image, flip }); }
   open(artifact, version) { return this.dispatch({ type: "open", artifact, version }); }
@@ -114,13 +116,16 @@ export class Game {
   linkEvent(event, evidence, stance) { return this.dispatch({ type: "linkEventEvidence", event, evidence, stance }); }
   linkEventTheory(event, hypothesis, on = true) { return this.dispatch({ type: "linkEventTheory", event, hypothesis, on }); }
 
-  #start() {
-    if (this.s.started) return { ok: true, already: true };
+  #start(caseId) {
+    if (this.s.started) return caseId ? CS.startCase(this, caseId) : { ok: true, already: true };
+    const id = caseId ?? (() => { const l = CS.menuCases(this); return l.length ? l[0] : Object.keys(this.s.cases).find(k => this.s.cases[k].status === "available"); })();
+    if (caseId && this.s.cases[caseId]?.status !== "available") return { error: this.s.cases[caseId] ? "case_locked" : "unknown_case" };
     this.s.started = true;
-    for (const id of this.w.meta.startArtifacts || []) this.s.artifacts[id] = { ...this.s.artifacts[id], visible: true, wasVisible: true };
+    for (const a of this.w.meta.startArtifacts || []) this.s.artifacts[a] = { ...this.s.artifacts[a], visible: true, wasVisible: true };
+    if (id) CS.startCase(this, id);
     fire(this, "game.start", {});
     fire(this, "day.start", { day: this.s.day });
-    return { ok: true };
+    return { ok: true, case: id ?? null };
   }
 
   #search(query) {
@@ -155,7 +160,7 @@ export class Game {
   }
 
   #login(site, user, pass) {
-    const def = asArray(this.w.meta.logins).find(l => l.site === site);
+    const def = this.logins().find(l => l.site === site);
     if (!def) return { error: "unknown_site" };
     if (def.if && !this.check(def.if)) return { error: "login_failed" };
     if (String(user).trim().toLowerCase() !== def.user.toLowerCase() || String(pass) !== def.pass) return { error: "login_failed" };
@@ -204,18 +209,33 @@ export class Game {
     this.emit("notify", item);
   }
 
+  /** Endings of started cases only. A closing ending closes its case; the world goes on. */
   checkEndings() {
     for (const m of this.w.mysteries.values()) {
+      const st = this.s.cases?.[m.id]?.status;
+      if (st !== "active" && st !== "closed") continue;
+      const ctx = this.caseCtx(m.id);
       for (const e of asArray(m.endings)) {
         const key = `${m.id}:${e.id}`;
         if (this.s.endings.includes(key)) continue;
         if (asArray(e.requiresEnding).some(r => !this.s.endings.includes(`${m.id}:${r}`))) continue;
-        if (!this.check(e.if)) continue;
+        if (!check(e.if, ctx)) continue;
         this.s.endings.push(key);
+        if (e.closes) CS.closeCase(this, m.id);
         applyEffects(this, e.effects, { ending: key });
         this.emit("ending", { mystery: m.id, ending: e.id });
       }
     }
+  }
+
+  /** Condition context for a case's rules and endings: deadlines count from the case's start. */
+  caseCtx(id) { return Object.assign(Object.create(this.ctx), { caseStart: CS.caseStart(this, id) }); }
+
+  /** Logins the world knows: the universe's and those of started cases. */
+  logins() {
+    const out = [...asArray(this.w.meta.logins)];
+    for (const c of CS.caseList(this)) out.push(...asArray(this.w.mysteries.get(c.id)?.start?.logins));
+    return out;
   }
 
   // ── Queries (no state change) ─────────────────────────────────────────────
@@ -252,6 +272,8 @@ export class Game {
   /** Cases the player can classify under and report on. */
   cases() { return CS.caseList(this); }
   caseStatus(id) { return CS.caseStatus(this, id); }
+  /** Cases that can be started from the start screen. */
+  menuCases() { return CS.menuCases(this); }
   /** Endings reached, with epilogues. */
   endings() { return CS.endingsView(this); }
 }

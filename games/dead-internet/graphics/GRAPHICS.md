@@ -2,7 +2,7 @@
 
 _Generert fra `graphics/catalog.json` av `tools/graphics-report.mjs`. Rediger katalogen, ikke denne fila._
 
-Production list for Dead Internet graphics. Ids are stable and used by the world (content/world/images.json). Replace a file by saving it under the same name; no code changes. Order matters: generate originals before the copies derived from them.
+Production list for Dead Internet graphics. Ids are stable and used by the world (content/universe/images.json). Replace a file by saving it under the same name; no code changes. Order matters: generate originals before the copies derived from them.
 
 ## Stil
 - **photo:** Realistic smartphone photo, natural light, slight noise, no text overlays, no real brands.

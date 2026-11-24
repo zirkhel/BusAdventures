@@ -139,13 +139,16 @@ export function casebookApp(phone) {
   }
 
   // ── Theories ────────────────────────────────────────────────────────────
+  /** An example from a case the player has started; the Casebook itself knows no story. */
+  const theoryExample = () => g.cases().map(c => w.mysteries.get(c.id)?.strings?.theoryExample).find(Boolean) || "Someone operates an account";
+
   function theoriesTab(desc) {
     const hyps = g.casebook().hypotheses.filter(hy => inFilter(hy, desc.filter));
     return [h("button.new-msg", { onclick: () => phone.push("casebook", { kind: "builder" }) }, icon("plus"), "New theory"),
       hyps.length ? [...hyps].reverse().map(hy => h("button.hyp-row", { onclick: () => phone.push("casebook", { kind: "hyp", id: hy.id }) },
         h("div.hyp-label", hy.label),
         h("div.muted.hyp-counts", `${hy.evidenceCount} evidence · ${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"}`, hy.note ? " · note" : ""))) :
-        h("div.empty", h("b", "No theories yet."), h("div.muted", "A theory says who did what: “Brightline operates @maraquinn”. Link evidence to it and see how many independent sources you have."))];
+        h("div.empty", h("b", "No theories yet."), h("div.muted", `A theory says who did what: “${theoryExample()}”. Link evidence to it and see how many independent sources you have.`))];
   }
 
   function hypDetail(desc) {
