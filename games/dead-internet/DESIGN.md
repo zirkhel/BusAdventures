@@ -85,7 +85,7 @@ games/dead-internet/
 
 | Kommando | Hva den gjør |
 |---|---|
-| `node --test games/dead-internet/tests/*.test.mjs` | Alle tester (ca. 16 s, mest den fulle validatoren) |
+| `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs` | Alle tester (ca. 16 s, mest den fulle validatoren) |
 | `node games/dead-internet/tools/validate.mjs` | Validerer innholdet. `--fast` hopper over simulerte spillere, `--info` viser detaljer |
 | `node games/dead-internet/tools/simulate.mjs` | Kjører alle scenarioer og to automatiske spillere |
 | `node games/dead-internet/tools/simulate.mjs lights_out` | Ett scenario med full samtalelogg |
@@ -183,7 +183,7 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 
 ## Teststrategi (Anders, 24. nov)
 
-Testene skal beskytte både teknisk funksjonalitet og spillopplevelsen. Status per punkt:
+Testene skal beskytte både teknisk funksjonalitet og spillopplevelsen. Følg også «Testbelastning» i DEVPLAN.md: målrettede tester under utvikling, sekvensielle kjøringer og én nettleser om gangen. Status per punkt:
 
 | Test | Status |
 |---|---|

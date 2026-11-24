@@ -20,8 +20,27 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Ingen visuell markering av ledetråder. Ingen poeng, stjerner eller løsningsgrad.
 - Grafikk: hvert nytt bilde kontrolleres alltid mot spesifikasjonen og mot alle tidligere bilder, både for likhet og mangler (se `graphics/`).
 - Spilltekst på engelsk. Anders skriver norsk, og dokumentasjonen er på norsk.
-- Tester: `node --test games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs` og `node games/dead-internet/tools/simulate.mjs` fra repo-roten. Mobil røyktest (Playwright, 390×844) ved UI-endringer: et lagret spill kan legges i `localStorage`, telefonen låses opp med «Swipe up to unlock», introen lukkes med `.it-notips`, og Casebook er det fjerde ikonet i docken.
+- Tester: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs` og `node games/dead-internet/tools/simulate.mjs` fra repo-roten. Mobil røyktest (Playwright, 390×844) ved UI-endringer: et lagret spill kan legges i `localStorage`, telefonen låses opp med «Swipe up to unlock», introen lukkes med `.it-notips`, og Casebook er det fjerde ikonet i docken.
 
+
+## Testbelastning (Anders, 25. nov 2026)
+
+Full testdekning beholdes. Vi reduserer hyppighet og parallellitet, ikke kvaliteten på testene.
+
+- **Under aktiv utvikling:** kjør bare tester som berører endret kode. Ikke kjør fullpakken etter små endringer. Kjør testprosesser sekvensielt som standard og bruk `node --test --test-concurrency=1` for å kjøre testfilene sekvensielt.
+- **Etter fullført deloppgave:** kjør relevante regresjonstester. Tvillingverden-testen kreves ved endringer i Casebook, proveniens eller spillerens synlige informasjon. Kjør én mobil røyktest ved UI-endringer.
+- **Før PR:** kjør hele testpakken én gang, deretter validator og simulator, og nødvendig Playwright-røyktest. Rapporter feil. Allerede fullførte kontroller gjentas bare dersom nye relevante endringer eller feil gjør det nødvendig.
+- **Playwright:** maksimalt én worker og én nettleser om gangen som standard. Gjenbruk nettleseren gjennom kjøringen; unngå unødvendige oppstarter. `tools/test-casebook-ui.mjs` bruker én nettleser, sekvensielle sider og ingen parallelle workers.
+- **Ressurser:** ingen samtidige fullpakker, ubegrenset parallellisering eller kontinuerlige bakgrunnstester. Undersøk hengende tester før ny kjøring; ikke start flere kopier. Ingen permanente endringer i globale systeminnstillinger.
+
+Kommandoene før PR kjøres én etter én fra repo-roten:
+
+```text
+node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs
+node games/dead-internet/tools/validate.mjs
+node games/dead-internet/tools/simulate.mjs
+node games/dead-internet/tools/test-casebook-ui.mjs
+```
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
