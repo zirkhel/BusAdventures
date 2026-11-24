@@ -42,6 +42,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .game-desc{color:var(--text);font-size:12px;line-height:1.5;font-style:italic}
 .game-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .tag{font-size:10px;padding:2px 6px;border:1px solid var(--green-dim);border-radius:2px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.game-tags .tag-wip{color:var(--amber);border-color:var(--amber)}
 .coming-soon{opacity:.4;pointer-events:none}
 .coming-soon .game-title::after{content:' [LOCKED]';font-size:13px;color:var(--muted)}
 .terminal-footer{border-top:1px solid var(--green-dim);padding-top:16px;color:var(--muted);font-size:11px;line-height:1.8}
@@ -469,10 +470,21 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
       <div class="genre-section" id="misc">
         <div class="genre-header">
           <h2 class="genre-tag">// MISC GAME</h2>
-          <span class="genre-count">1 available</span>
+          <span class="genre-count">2 available</span>
         </div>
         <div class="genre-note">Odd experiments, rescued relics, and games that refuse to fit the filing system.</div>
         <div class="game-grid">
+          <a class="game-card" href="games/dead-internet/">
+            <div class="game-card-inner">
+              <div class="game-icon" aria-hidden="true">📱</div>
+              <div class="game-info">
+                <h3 class="game-title">Dead Internet</h3>
+                <div class="game-meta"><span>investigation</span> · phone · portrait</div>
+                <div class="game-desc">Mara Quinn died in July. Her account is still posting. Search, save the evidence, and find out who is speaking for the dead.</div>
+                <div class="game-tags"><span class="tag tag-wip">WIP</span> <span class="tag">mystery</span> <span class="tag">investigation</span></div>
+              </div>
+            </div>
+          </a>
           <a class="game-card" href="games/baloon-crazy/index.html">
             <div class="game-card-inner">
               <div class="game-icon" aria-hidden="true">🎈</div>

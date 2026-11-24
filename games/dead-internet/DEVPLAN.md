@@ -37,7 +37,7 @@ _Implementert 24. november 2026, ukommittet. Testet i Playwright (iPhone 13, Pix
 - [x] Bilder: bruk `assets/images/<fil>` hvis den finnes, ellers plassholder
 - [x] Lesevisning i Messages (tråder og vedlegg) og bevisliste i Casebook, så fase 2 kan spilles
 - [ ] Test på ekte telefon (iOS Safari og Android Chrome), portrett, én hånd
-- [ ] Kort på landingssiden i `index.html` (etter avtale)
+- [x] Kort på landingssiden i `index.html` (MISC GAME, merket WIP)
 
 ## Fase 3 — Samtaler og Casebook
 - [ ] Messages: tråder, «spør om», «vis bevis», svaralternativer, ulest-markering
