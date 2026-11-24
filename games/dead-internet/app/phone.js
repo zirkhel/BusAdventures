@@ -128,6 +128,7 @@ export class Phone {
     if (desc.kind === "hyp") return "Theory";
     if (desc.kind === "event") return this.g.s.timeline.find(e => e.id === desc.id)?.title || "Event";
     if (desc.kind === "eventEdit") return "Event";
+    if (desc.kind === "reports" || desc.kind === "report" || desc.kind === "reportDone") return "Reports";
     const name = this.str(`apps.${appId}`);
     return name.startsWith("apps.") ? appId[0].toUpperCase() + appId.slice(1) : name;
   }

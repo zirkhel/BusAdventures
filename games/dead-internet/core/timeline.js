@@ -15,9 +15,11 @@
 //     evidence: [{ id, stance: "supports" | "contradicts" }]
 //     theories: [hypothesis ids]
 //     source?: { artifact?, version?, message?, image? }   where it was created from (no evidence implied)
+//     cases: [case ids]       empty = unclassified (the default); never filled in automatically
 //     day, edited? }
 
 import { isPublicRef } from "./discovery.js";
+import { cleanCases } from "./cases.js";
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 const APPROX = /^\d{4}(?:-\d{2}(?:-\d{2})?)?$/;
@@ -77,9 +79,11 @@ function cleanEvent(g, input, base = {}) {
   }
   const theories = [...new Set(input.theories ?? base.theories ?? [])];
   for (const id of theories) if (!g.s.hypotheses.some(h => h.id === id)) return { error: "unknown_hypothesis" };
+  const cs = cleanCases(g, input.cases ?? base.cases ?? []);
+  if ("error" in cs) return cs;
   /** @type {any} */
   const ev = { title: title.slice(0, 140), description: String(input.description ?? base.description ?? "").trim(), note: String(input.note ?? base.note ?? "").trim(),
-    date: nd.ok, about, evidence, theories };
+    date: nd.ok, about, evidence, theories, cases: cs.ok };
   const ds = String(input.dateSource ?? base.dateSource ?? "").trim();
   if (ds) ev.dateSource = ds.slice(0, 40);
   const src = input.source ?? base.source;

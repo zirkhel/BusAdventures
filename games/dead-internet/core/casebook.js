@@ -11,6 +11,7 @@ import { asArray, fill } from "./util.js";
 import { supportsOf, mentionsOf, sourceOf } from "./artifacts.js";
 import { applyEffects, fire } from "./rules.js";
 import { nameOf, str } from "./world.js";
+import { isCase, soleCase } from "./cases.js";
 
 // ── Evidence ────────────────────────────────────────────────────────────────
 
@@ -38,7 +39,7 @@ export function saveEvidence(g, ref) {
   if (same) return { ok: true, id: same.id, duplicate: true };
 
   const e = { id: `E${s.nextId++}`, artifact: ref.artifact ?? null, version: ref.version ?? null, message: ref.message ?? null,
-    image: ref.image ?? null, note: ref.note ?? "", day: s.day };
+    image: ref.image ?? null, note: ref.note ?? "", day: s.day, cases: [] };
   s.evidence.push(e);
   if (ref.artifact) fire(g, "evidence.save", { artifact: ref.artifact });
   return { ok: true, id: e.id };
@@ -89,7 +90,7 @@ function checkTriple(g, h) {
 export function createHypothesis(g, h) {
   const p = g.w.predicates.get(h.predicate);
   const hyp = { id: `H${g.s.nextId++}`, subject: h.subject, predicate: h.predicate, object: p?.arity === 2 ? h.object : null,
-    evidence: [], note: h.note ?? "", day: g.s.day };
+    evidence: [], note: h.note ?? "", day: g.s.day, cases: [] };
   const err = checkTriple(g, hyp);
   if (err) return { error: err };
   for (const id of asArray(h.evidence)) if (g.s.evidence.some(e => e.id === id)) hyp.evidence.push(id);
@@ -121,7 +122,7 @@ export function addNote(g, text, from, about) {
   const t = String(text ?? "").trim();
   if (!t) return { error: "empty_note" };
   /** @type {any} */
-  const n = { id: `N${g.s.nextId++}`, text: t, day: g.s.day };
+  const n = { id: `N${g.s.nextId++}`, text: t, day: g.s.day, cases: [] };
   if (from && (from.artifact || from.message)) n.from = { artifact: from.artifact ?? null, version: from.version ?? null, message: from.message ?? null };
   // Saving a name you can read marks it as known (so you can ask about it or use it in a theory).
   // Secrets never; and only real ids.
@@ -177,7 +178,9 @@ export function casebookView(g) {
     }),
     // The player's own timeline, for reports later. Events carry only what the player entered.
     timeline: (g.s.timeline || []).map(e => ({ ...e })),
-    reports: g.s.reports.map(r => ({ id: r.id, day: r.day, channel: r.channel, items: r.items.map(i => ({ label: i.label })) })),
+    reports: g.s.reports.map(r => ({ id: r.id, day: r.day, case: r.case, channel: r.channel, items: r.items.map(i => ({ label: i.label })),
+      cut: asArray(r.cut).map(id => { const h = g.s.hypotheses.find(x => x.id === id); return h ? hypothesisLabel(g, h) : null; }).filter(Boolean),
+      events: asArray(r.events).map(e => ({ id: e.id, title: e.title, date: e.date })) })),
   };
 }
 
@@ -187,9 +190,14 @@ function sameTriple(a, b) {
   return a.subject === b.subject && a.predicate === b.predicate && (a.object ?? null) === (b.object ?? null);
 }
 
-/** Canonical claim that this hypothesis states, if any. */
-export function matchClaim(g, h) {
+/**
+ * Canonical claim that this hypothesis states, if any. With a case, only that case's claims
+ * count; everything else is judged from the world model (universe canon).
+ */
+export function matchClaim(g, h, caseId = null) {
+  const own = caseId ? new Set(asArray(g.w.mysteries.get(caseId)?.claims)) : null;
   for (const c of g.w.claims.values()) {
+    if (own && !own.has(c.id)) continue;
     const variants = c.match ? asArray(c.match) : [c];
     if (variants.some(v => sameTriple(v, h))) return c;
   }
@@ -197,8 +205,8 @@ export function matchClaim(g, h) {
 }
 
 /** @returns {"true"|"false"|"partial"|"unknown"} */
-export function truthOf(g, h) {
-  const c = matchClaim(g, h);
+export function truthOf(g, h, caseId = null) {
+  const c = matchClaim(g, h, caseId);
   if (c) return c.truth;
   const p = g.w.predicates.get(h.predicate);
   const w = g.w;
@@ -235,8 +243,8 @@ export function truthOf(g, h) {
 }
 
 /** Independent sources among the linked evidence that actually back this hypothesis. */
-export function supportOf(g, h) {
-  const c = matchClaim(g, h);
+export function supportOf(g, h, caseId = null) {
+  const c = matchClaim(g, h, caseId);
   const sources = new Set();
   for (const id of h.evidence) {
     const e = g.s.evidence.find(e => e.id === id);
@@ -253,15 +261,16 @@ export function supportOf(g, h) {
 // ── Review and publishing ───────────────────────────────────────────────────
 
 /** A reviewer's journalistic comment on source strength. Never on truth. */
-export function review(g, channelId, hypIds) {
+export function review(g, channelId, hypIds, opts = {}) {
   const ch = g.w.channels.get(channelId);
   if (!ch || !ch.reviewer) return { error: "no_reviewer" };
+  const caseId = opts.case ?? ch.case ?? soleCase(g);
   if ((g.s.trust[ch.reviewer] ?? 0) < (ch.minTrust ?? 0)) return { ok: true, lines: [{ text: str(g.w, `review.${ch.reviewer}.noTrust`) }] };
   const lines = [];
   for (const id of hypIds) {
     const h = g.s.hypotheses.find(h => h.id === id);
     if (!h) continue;
-    const sup = supportOf(g, h);
+    const sup = supportOf(g, h, caseId);
     const c = sup.claim ? g.w.claims.get(sup.claim) : null;
     const pred = g.w.predicates.get(h.predicate);
     const bold = !!(c?.bold ?? pred?.bold);
@@ -272,24 +281,42 @@ export function review(g, channelId, hypIds) {
   return { ok: true, lines };
 }
 
+/** Which channels a case can publish through: the universe's own and the case's. */
+export function channelsFor(g, caseId) {
+  return [...g.w.channels.values()].filter(c => (!c.case || c.case === caseId) && (!c.if || g.check(c.if)));
+}
+
+/** Independent sources for and against a timeline event, counted like theories. Never its accuracy. */
+function eventSupport(g, ev) {
+  const count = stance => new Set(ev.evidence.filter(x => x.stance === stance)
+    .map(x => g.s.evidence.find(e => e.id === x.id)).filter(Boolean).map(e => evidenceFacts(g, e).source)).size;
+  return { supportSources: count("supports"), contradictSources: count("contradicts") };
+}
+
 /**
- * Publish a report through a channel. Returns { ok, report } or { error } / { refused, lines }.
+ * Publish a report about one case through a channel.
+ * opts.case: the case (defaults to the only case on offer); opts.events: timeline event ids to include.
+ * Returns { ok, report } or { error } / { refused, lines }.
  */
-export function publish(g, channelId, hypIds) {
+export function publish(g, channelId, hypIds, opts = {}) {
   const s = g.s, w = g.w;
   const ch = w.channels.get(channelId);
   if (!ch) return { error: "unknown_channel" };
-  if (ch.if && !g.check(ch.if)) return { error: "channel_unavailable" };
+  const caseId = opts.case ?? ch.case ?? soleCase(g);
+  if (!caseId) return { error: "no_case" };
+  if (!isCase(g, caseId)) return { error: "unknown_case" };
+  if ((ch.case && ch.case !== caseId) || (ch.if && !g.check(ch.if))) return { error: "channel_unavailable" };
   const hyps = asArray(hypIds).map(id => s.hypotheses.find(h => h.id === id)).filter(Boolean);
+  const evs = asArray(opts.events).map(id => s.timeline.find(e => e.id === id)).filter(Boolean);
   if (!hyps.length) return { error: "empty_report" };
   if (ch.reviewer && (s.trust[ch.reviewer] ?? 0) < (ch.minTrust ?? 0)) return { refused: true, lines: [{ text: str(w, `review.${ch.reviewer}.noTrust`) }] };
 
-  const scoring = w.meta.publishing.scoring;
+  const scoring = w.mysteries.get(caseId)?.publishing?.scoring ?? w.meta.publishing.scoring;
   const items = [], cut = [];
   for (const h of hyps) {
-    const sup = supportOf(g, h);
+    const sup = supportOf(g, h, caseId);
     if (ch.requiresStrong && sup.strength !== "strong") { cut.push(h.id); continue; }
-    const truth = truthOf(g, h);
+    const truth = truthOf(g, h, caseId);
     let delta;
     if (truth === "true") delta = scoring[`true_${sup.strength}`];
     else if (truth === "partial") delta = scoring.partial;
@@ -299,9 +326,11 @@ export function publish(g, channelId, hypIds) {
     items.push({ hypothesis: h.id, label: hypothesisLabel(g, h), subject: h.subject, predicate: h.predicate, object: h.object,
       claim: sup.claim, truth, strength: sup.strength, sources: sup.sources, credibility: delta });
   }
-  if (!items.length) return { refused: true, lines: review(g, channelId, cut).lines ?? [] };
+  if (!items.length) return { refused: true, lines: review(g, channelId, cut, { case: caseId }).lines ?? [] };
 
-  const report = { id: `R${s.nextId++}`, day: s.day, channel: channelId, items, cut };
+  // Timeline events go in as the player wrote them, with their source counts. They are not judged here.
+  const events = evs.map(ev => ({ id: ev.id, title: ev.title, description: ev.description, date: { ...ev.date }, ...eventSupport(g, ev) }));
+  const report = { id: `R${s.nextId++}`, day: s.day, case: caseId, channel: channelId, items, cut, events };
   s.reports.push(report);
   const claims = [], exposed = [];
   for (const it of items) {
@@ -316,7 +345,7 @@ export function publish(g, channelId, hypIds) {
     }
   }
   applyEffects(g, ch.onPublish, { channel: channelId });
-  fire(g, "report.published", { channel: channelId, claims, exposed });
+  fire(g, "report.published", { channel: channelId, case: caseId, claims, exposed });
   g.checkEndings();
-  return { ok: true, report: { id: report.id, items: items.map(i => ({ label: i.label })), cut } };
+  return { ok: true, report: { id: report.id, case: caseId, items: items.map(i => ({ label: i.label })), cut, events: events.map(e => ({ id: e.id, title: e.title })) } };
 }

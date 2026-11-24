@@ -2,8 +2,14 @@
   {
     "id": "quiet_account", "title": "The Quiet Account", "status": "playable",
     "claims": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "F1", "F2", "F3", "F4", "F5"],
+    "publishing": {
+      "channels": [
+        { "id": "daily_record", "name": "The Daily Record (via Dana Reyes)", "reviewer": "dana", "minTrust": 3, "requiresStrong": true, "credibilityWeight": 1.0 }
+      ]
+    },
     "endings": [
-      { "id": "lights_out", "closes": true,
+      { "id": "lights_out", "title": "Lights out",
+        "epilogue": "The story ran before the vote. Brightline's garden of accounts went dark in an afternoon, and the Waterfront vote was postponed. Mara's profile now says Remembering. Somewhere, a mailbox on Harbor Street keeps receiving letters.", "closes": true,
         "if": [{ "exposed": { "claim": "S2", "channel": "daily_record", "beforeDay": 8 } }, { "exposed": { "claim": "S3", "channel": "daily_record", "beforeDay": 8 } }],
         "effects": [
           { "setFlag": ["ending_lights_out", "garden_down", "mara_memorialized"] },
@@ -14,7 +20,8 @@
           { "message": { "from": "dana", "text": "It ran. Front page. Ruiz just asked the council to postpone. Also: I went to Suite 400, 18 Harbor Street. It's a mailbox. Nobody has ever seen anybody there.", "source": "dana" } },
           { "later": { "days": 1, "do": [{ "message": { "from": "theo", "text": "connect memorialized her account. it says Remembering now. thank you. i'm going to go sit on her bench.", "source": "theo" } }] } }
         ] },
-      { "id": "too_late", "closes": true,
+      { "id": "too_late", "title": "Too late",
+        "epilogue": "You were right, and you were late. The accounts are gone, the towers are approved, and the inquiry will report in eighteen months. Eastfield got the truth after it stopped mattering.", "closes": true,
         "if": [{ "exposed": "S2" }, { "exposed": "S3" }, { "flag": "vote_held" }, { "flagFalse": "ending_lights_out" }],
         "effects": [
           { "setFlag": ["ending_too_late", "garden_down", "mara_memorialized"] },
@@ -22,14 +29,16 @@
           { "deleteAccount": ["acc_junopark", "acc_mike", "acc_pat", "acc_lindsay"] },
           { "notify": { "text": "Connect suspends Brightline-linked accounts. The Waterfront vote stands; Ruiz calls for an inquiry." } }
         ] },
-      { "id": "ghost_story", "closes": true,
+      { "id": "ghost_story", "title": "A ghost story",
+        "epilogue": "The internet loved the dead woman who kept posting. It did not care who paid for her. Brightline found a contractor to blame, and the vote went the way the money wanted.", "closes": true,
         "if": [{ "exposed": "S1" }, { "any": [{ "exposed": "S8" }, { "exposed": "S2" }] }, { "flag": "vote_held" }, { "not": { "exposed": { "claim": "S3", "allowWeak": true } } }],
         "effects": [
           { "setFlag": ["ending_ghost_story", "mara_memorialized"] },
           { "setLive": { "artifact": "A02", "version": "v_memorial" } },
           { "notify": { "text": "'Dead woman's account kept posting' goes viral. Brightline blames 'a rogue contractor'. Northgate is not mentioned." } }
         ] },
-      { "id": "wrong_murder",
+      { "id": "wrong_murder", "title": "The wrong murder",
+        "epilogue": "You published a killing that never happened. The people who wanted a conspiracy got one, and the people who built the real one got a gift.",
         "if": { "published": "F1" },
         "effects": [
           { "setFlag": "ending_wrong_murder" },
@@ -37,23 +46,28 @@
           { "notify": { "text": "Northgate threatens legal action over 'defamatory murder claims'. Accounts across Eastfield share: 'conspiracy nuts harass grieving family'." } },
           { "message": { "from": "owen", "text": "THEY'RE LISTENING NOW. 3,000 new followers. Is this what winning feels like? Why does it feel like this?", "source": "owen" } }
         ] },
-      { "id": "collateral_theo", "if": { "published": "F2" },
+      { "id": "collateral_theo", "title": "Collateral: Theo",
+        "epilogue": "You put Theo's name where strangers could reach it. They did.", "if": { "published": "F2" },
         "effects": [{ "setFlag": ["ending_collateral", "theo_blocked"] }, { "trust": { "id": "theo", "delta": -10 } },
           { "notify": { "text": "Threadline users have found Theo Quinn's address." } }] },
-      { "id": "collateral_owen", "if": { "published": "F3" },
+      { "id": "collateral_owen", "title": "Collateral: Owen",
+        "epilogue": "Owen wanted to be heard. Now he is, for the wrong reasons.", "if": { "published": "F3" },
         "effects": [{ "setFlag": "ending_collateral" }, { "trust": { "id": "owen", "delta": -5 } },
           { "message": { "from": "owen", "text": "They're calling me a hacker now. I can't even work the TV remote. Thanks a lot.", "source": "owen" } }] },
-      { "id": "collateral_iris", "if": { "published": "F5" },
+      { "id": "collateral_iris", "title": "Collateral: Iris",
+        "epilogue": "Iris gave you a way in. You gave her name away. Her account is gone, and so is she.", "if": { "published": "F5" },
         "effects": [{ "setFlag": ["ending_collateral", "iris_cut"] }, { "deleteAccount": "acc_irisbell" },
           { "notify": { "text": "Iris Bell's name is trending. Her account is gone." } }] },
-      { "id": "who_paid_whom", "closes": true,
+      { "id": "who_paid_whom", "title": "Who paid whom",
+        "epilogue": "Northgate paid Brightline. Brightline paid Meridian. Nobody has met anyone from Meridian. Someone has noticed that you are asking.", "closes": true,
         "if": [{ "any": [{ "flag": "ending_lights_out" }, { "flag": "ending_too_late" }, { "flag": "ending_ghost_story" }] }, { "exposed": "S7" }],
         "effects": [
           { "setFlag": "ending_who_paid_whom" },
           { "message": { "from": "dana", "text": "Northgate paid Brightline. Brightline pays Meridian. Brightline's CEO doesn't exist. So who's Meridian?", "source": "dana", "mentions": ["meridian"] } },
           { "later": { "days": 1, "do": [{ "message": { "fromAccount": "acc_unknown", "text": "You found the garden. You haven't found the gardener.", "source": "unknown" } }, { "setFlag": "echo_contact" }] } }
         ] },
-      { "id": "silence", "if": { "flag": "silent_vote" },
+      { "id": "silence", "title": "Silence",
+        "epilogue": "Nobody said anything. The vote passed, and @maraquinn is still posting.", "if": { "flag": "silent_vote" },
         "effects": [{ "setFlag": "ending_silence" }, { "notify": { "text": "The vote passed. Nobody said anything. @maraquinn is still posting." } }] }
     ]
   },

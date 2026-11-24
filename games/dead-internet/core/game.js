@@ -11,6 +11,7 @@ import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
 import * as CB from "./casebook.js";
 import * as TL from "./timeline.js";
+import * as CS from "./cases.js";
 import { asArray, addDays, deepClone } from "./util.js";
 import { nameOf } from "./world.js";
 import { scanText, suggest } from "./refs.js";
@@ -65,8 +66,9 @@ export class Game {
       case "addNote": r = CB.addNote(this, a.text, a.from, a.about); break;
       case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
       case "deleteNote": r = CB.deleteNote(this, a.id); break;
-      case "review": r = CB.review(this, a.channel, a.hypotheses); break;
-      case "publish": r = CB.publish(this, a.channel, a.hypotheses); break;
+      case "review": r = CB.review(this, a.channel, a.hypotheses, { case: a.case }); break;
+      case "publish": r = CB.publish(this, a.channel, a.hypotheses, { case: a.case, events: a.events }); break;
+      case "setCases": r = CS.setCases(this, a.kind, a.id, a.cases); break;
       case "sleep": r = this.#sleep(); break;
       case "readNotification": r = this.#readNotification(a.id); break;
       case "investigate": r = investigate(this, a.id, a.text); break;
@@ -98,8 +100,11 @@ export class Game {
   note(t, from, about) { return this.dispatch({ type: "addNote", text: t, ...(from ? { from } : {}), ...(about ? { about } : {}) }); }
   editNote(id, t) { return this.dispatch({ type: "updateNote", id, text: t }); }
   deleteNote(id) { return this.dispatch({ type: "deleteNote", id }); }
-  review(channel, hypotheses) { return this.dispatch({ type: "review", channel, hypotheses }); }
-  publish(channel, hypotheses) { return this.dispatch({ type: "publish", channel, hypotheses }); }
+  review(channel, hypotheses, opts = {}) { return this.dispatch({ type: "review", channel, hypotheses, ...(opts.case ? { case: opts.case } : {}) }); }
+  /** Publish a report. opts.case: which case it is about; opts.events: timeline events to include. */
+  publish(channel, hypotheses, opts = {}) { return this.dispatch({ type: "publish", channel, hypotheses, ...(opts.case ? { case: opts.case } : {}), ...(opts.events ? { events: opts.events } : {}) }); }
+  /** Classify a Casebook item (kind: evidence | hypothesis | note | event). [] = unclassified. */
+  setCases(kind, id, cases) { return this.dispatch({ type: "setCases", kind, id, cases }); }
   sleep() { return this.dispatch({ type: "sleep" }); }
   /** The player acts on a name they can see (context menu). */
   investigate(id, text) { return this.dispatch({ type: "investigate", id, text }); }
@@ -242,7 +247,13 @@ export class Game {
   dateCandidates(source) { return TL.dateCandidates(this, source); }
   parseDate(text, yearHint) { return TL.parseDateText(text, yearHint); }
   predicates() { return [...this.w.predicates.values()]; }
-  channels() { return [...this.w.channels.values()].filter(c => !c.if || this.check(c.if)); }
+  /** Channels open to a case (all available channels without one). */
+  channels(caseId) { return caseId ? CB.channelsFor(this, caseId) : [...this.w.channels.values()].filter(c => !c.if || this.check(c.if)); }
+  /** Cases the player can classify under and report on. */
+  cases() { return CS.caseList(this); }
+  caseStatus(id) { return CS.caseStatus(this, id); }
+  /** Endings reached, with epilogues. */
+  endings() { return CS.endingsView(this); }
 }
 
 /** Rebuild a game by replaying a log. Used by tests to prove determinism. */

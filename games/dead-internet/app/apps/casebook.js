@@ -2,8 +2,11 @@
 // Casebook: saved evidence (grouped by who it is about), theories built as
 // [subject] [relation] [object] with linked evidence, and free notes.
 // It shows counts and sources, never whether a theory is right.
-// Screens: main {tab} · hyp {id} · builder {id?, subject?, predicate?, object?}
+// Screens: main {tab, filter?} · hyp {id} · builder {id?, subject?, predicate?, object?}
 //          event {id} · eventEdit {id?, draft}   (Timeline: the player's own reconstruction)
+//          reports · report {case, channel?, hyps, events, review?} · reportDone {id, n0, e0}
+// Items can belong to one, several or no cases (cases: [], unclassified by default). The filter
+// (desc.filter: undefined = all, "" = unclassified, or a case id) only narrows the lists.
 
 import { h, icon, fmtDate, fmtEventDate } from "../ui.js";
 import { img, avatar } from "../media.js";
@@ -15,6 +18,12 @@ const EVENT_ERRORS = {
   bad_date: "That date isn't complete.",
   bad_time: "That time isn't valid.",
   unknown_ref: "You can only add people and places you have looked into.",
+};
+const REPORT_ERRORS = {
+  empty_report: "Pick at least one claim.",
+  channel_unavailable: "You can't publish there.",
+  unknown_case: "That case isn't open to you.",
+  no_case: "Choose which case the report is about.",
 };
 const ERRORS = {
   unknown_subject: "Pick who or what the theory is about.",
@@ -28,6 +37,32 @@ export function casebookApp(phone) {
   const g = phone.g, w = g.w;
 
   const bar = (title, extra) => h("div.topbar.cb-bar", phone.backButton(), h("div.bar-title", title), extra || null);
+
+  // ── Cases ───────────────────────────────────────────────────────────────
+  const caseTitle = id => g.cases().find(c => c.id === id)?.title || w.mysteries.get(id)?.title || id;
+  const casesLabel = item => (item.cases || []).length ? item.cases.map(caseTitle).join(", ") : "Unclassified";
+  const inFilter = (item, f) => f == null ? true : f === "" ? !(item.cases || []).length : (item.cases || []).includes(f);
+  const chName = id => w.channels.get(id)?.name || id;
+
+  /** Toggle cases for an item. The sheet reopens so several can be picked. */
+  function pickCases(kind, item) {
+    const cur = new Set(item.cases || []);
+    const save = next => { g.setCases(kind, item.id, next); phone.refresh(); };
+    phone.actionSheet("Which cases is this part of?", [
+      ...g.cases().map(c => ({ label: c.title, icon: cur.has(c.id) ? "check" : "plus", run: () => {
+        if (cur.has(c.id)) cur.delete(c.id); else cur.add(c.id);
+        save([...cur]); pickCases(kind, { ...item, cases: [...cur] });
+      } })),
+      { label: "Unclassified", icon: cur.size ? "plus" : "check", secondary: true, run: () => save([]) }]);
+  }
+  const casesRow = (kind, item) => h("button.case-row", { onclick: () => pickCases(kind, item) },
+    icon("book"), h("span.muted", "Case"), h("b", casesLabel(item)), h("span.chev", "›"));
+
+  function filterBar(desc) {
+    const f = desc.filter;
+    const chip = (label, val) => h("button.chip", { class: f === val ? "on" : "", onclick: () => phone.replaceTop({ ...desc, filter: val, scroll: 0 }) }, label);
+    return h("div.case-filter", chip("All", undefined), g.cases().map(c => chip(c.title, c.id)), chip("Unclassified", ""));
+  }
 
   // ── Evidence ────────────────────────────────────────────────────────────
   function evItem(e, opts = {}) {
@@ -51,6 +86,7 @@ export function casebookApp(phone) {
     const items = [];
     if (g.s.hypotheses.length) items.push({ label: "Link to a theory…", run: () => linkToTheory(e) });
     if (e.artifact) items.push({ label: "Show to someone…", run: () => showTo(e) });
+    items.push({ label: `Case: ${casesLabel(e)}…`, run: () => pickCases("evidence", e) });
     items.push({ label: "Add to Timeline", run: () => phone.newEvent({ title: phone.evidenceTitle(e), source: e.message ? { message: e.message } : { artifact: e.artifact, version: e.version, image: e.image }, evidence: [{ id: e.id, stance: "supports" }] }) });
     if (g.s.timeline.length) items.push({ label: "Attach to existing event…", run: () => phone.attachToEvent(e.id) });
     items.push({ label: "Remove from Casebook", danger: true, run: () => { g.dispatch({ type: "removeEvidence", id: e.id }); phone.refresh(); } });
@@ -74,7 +110,8 @@ export function casebookApp(phone) {
   }
 
   function evidenceTab(desc) {
-    const list = [...g.s.evidence].reverse();
+    const list = [...g.s.evidence].reverse().filter(e => inFilter(e, desc.filter));
+    if (!list.length && desc.filter !== undefined) return h("div.empty.muted", "Nothing here with this filter.");
     if (!list.length) return h("div.empty", h("b", "No evidence yet."), h("div.muted", "Tap the bookmark on a page, or tap an image or a word in a message and choose Save, to collect it here."));
     const mode = desc.group ?? "about";
     const toggle = h("div.seg.small",
@@ -102,8 +139,8 @@ export function casebookApp(phone) {
   }
 
   // ── Theories ────────────────────────────────────────────────────────────
-  function theoriesTab() {
-    const hyps = g.casebook().hypotheses;
+  function theoriesTab(desc) {
+    const hyps = g.casebook().hypotheses.filter(hy => inFilter(hy, desc.filter));
     return [h("button.new-msg", { onclick: () => phone.push("casebook", { kind: "builder" }) }, icon("plus"), "New theory"),
       hyps.length ? [...hyps].reverse().map(hy => h("button.hyp-row", { onclick: () => phone.push("casebook", { kind: "hyp", id: hy.id }) },
         h("div.hyp-label", hy.label),
@@ -129,6 +166,7 @@ export function casebookApp(phone) {
       onclick: () => { g.link(hy.id, e.id, !on); phone.refresh(); } }, icon(on ? "check" : "plus"));
     return h("div.hyp-detail",
       phone.ctx.block(h("div.hyp-big", richText(phone, hy.label)), { title: "Theory" }),
+      casesRow("hypothesis", hy),
       h("div.hyp-stats", h("div", h("b", String(hy.evidenceCount)), h("span", "evidence")), h("div", h("b", String(hy.sourceCount)), h("span", hy.sourceCount === 1 ? "source" : "independent sources"))),
       sources.size ? h("div.sources", [...sources.values()].map(s => h("span.chip.static", `${s.label}${s.n > 1 ? ` ×${s.n}` : ""}`))) : null,
       h("div.hint.muted", "The Casebook counts your evidence and where it comes from. It can't tell you whether you're right."),
@@ -191,13 +229,14 @@ export function casebookApp(phone) {
   function notesTab(desc) {
     const input = /** @type {HTMLTextAreaElement} */ (h("textarea.note-input", { rows: 3, placeholder: "Write a note…" }));
     const add = () => { const r = g.note(input.value); if (!r.error) phone.refresh(); };
-    const notes = [...g.s.notes].reverse();
+    const notes = [...g.s.notes].reverse().filter(n => inFilter(n, desc.filter));
     return [h("div.pad", input, h("button.btn.primary.wide", { onclick: add }, "Add note")),
       notes.map(n => desc.editing === n.id ? editNote(desc, n) :
         h("div.note-item", phone.ctx.block(h("div.note-body", richText(phone, n.text)), { title: "Note" }),
           n.from ? noteSource(n) : null,
-          h("div.note-foot.muted", `Day ${n.day}${n.edited ? " · edited" : ""}`,
+          h("div.note-foot.muted", `Day ${n.day}${n.edited ? " · edited" : ""}${(n.cases || []).length ? ` · ${casesLabel(n)}` : ""}`,
           h("span.spacer"),
+          h("button.icon-btn.small", { "aria-label": "Case", onclick: () => pickCases("note", n) }, icon("book")),
           h("button.icon-btn.small", { "aria-label": "Edit", onclick: () => phone.replaceTop({ ...desc, editing: n.id }) }, icon("edit")),
           h("button.icon-btn.small", { "aria-label": "Delete", onclick: () => phone.sheet("Delete note?", [{ label: "Delete", danger: true, run: () => { g.deleteNote(n.id); phone.refresh(); } }]) }, icon("trash"))))),
       !notes.length ? h("div.empty.muted", "Notes are yours alone. Nobody else reads them.") : null];
@@ -225,18 +264,19 @@ export function casebookApp(phone) {
 
   function main(desc) {
     const tab = desc.tab || "evidence";
-    const tabs = [["evidence", phone.str("casebook.evidence"), g.s.evidence.length], ["theories", "Theories", g.s.hypotheses.length],
-      ["notes", phone.str("casebook.notes"), g.s.notes.length], ["timeline", "Timeline", g.s.timeline.length]];
+    const n = list => list.filter(x => inFilter(x, desc.filter)).length;
+    const tabs = [["evidence", phone.str("casebook.evidence"), n(g.s.evidence)], ["theories", "Theories", n(g.s.hypotheses)],
+      ["notes", phone.str("casebook.notes"), n(g.s.notes)], ["timeline", "Timeline", n(g.s.timeline)]];
     return [h("div.seg.tabs.four", tabs.map(([id, label, n]) => h("button", { class: tab === id ? "on" : "", onclick: () => phone.replaceTop({ ...desc, tab: id, scroll: 0 }) },
       h("span", label), h("small", String(n))))),
-      h("div.cb", tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab() : tab === "timeline" ? timelineTab() : notesTab(desc))];
+      h("div.cb", filterBar(desc), tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab(desc) : tab === "timeline" ? timelineTab(desc) : notesTab(desc))];
   }
 
   // ── Timeline ────────────────────────────────────────────────────────────
   // Built only by the player. Sorted by the player's own dates; nothing is checked or corrected.
 
-  function timelineTab() {
-    const list = g.timeline();
+  function timelineTab(desc) {
+    const list = g.timeline().filter(ev => inFilter(ev, desc.filter));
     const dated = list.filter(e => e.date.kind !== "unknown"), undated = list.filter(e => e.date.kind === "unknown");
     const row = ev => h("button.tl-row", { onclick: () => phone.push("casebook", { kind: "event", id: ev.id }) },
       h("div.tl-date", fmtEventDate(ev.date)),
@@ -282,6 +322,7 @@ export function casebookApp(phone) {
     return h("div.ev-detail",
       h("div.ev-when", icon("clock"), fmtEventDate(ev.date), ev.dateSource ? h("span.muted", ` · ${ev.dateSource}`) : null),
       phone.ctx.block(h("h2.ev-title", ev.title), { title: ev.title }),
+      casesRow("event", ev),
       ev.description ? phone.ctx.block(h("p.ev-desc", richText(phone, ev.description)), { title: ev.title }) : null,
       ev.about.length ? h("div.sources", ev.about.map(id => { const t = topics.find(x => x.id === id);
         return h("button.chip", { onclick: () => phone.ctx.open({ type: t?.kind === "account" ? "account" : t?.kind || "term", text: t?.name || id, id }) }, t?.name || id); })) : null,
@@ -389,6 +430,86 @@ export function casebookApp(phone) {
       h("button.btn.primary.wide", { onclick: save }, desc.id ? "Save changes" : "Add to Timeline"));
   }
 
+  // ── Reports ─────────────────────────────────────────────────────────────
+  // A report is about one case. What happens after is up to the world: reactions arrive as
+  // messages and notifications, and endings show their epilogue here.
+
+  const epilogue = e => h("div.epilogue", h("b", e.title || "An ending"), e.epilogue ? h("p", e.epilogue) : null);
+
+  function reportsScreen() {
+    const ends = g.endings(), reps = g.casebook().reports;
+    return [
+      g.cases().map(c => {
+        const st = g.caseStatus(c.id);
+        return h("div.case-card",
+          h("div.case-head", h("b", c.title), h("span.case-st", { class: st }, st === "closed" ? "Closed" : "Open")),
+          ends.filter(e => e.case === c.id).map(epilogue),
+          st === "closed" ? h("div.hint.muted", "The case is closed. The world goes on, and you can keep digging.") : null,
+          h("button.btn.primary.wide", { onclick: () => phone.push("casebook", { kind: "report", case: c.id, hyps: [], events: [] }) }, icon("plus"), " New report"));
+      }),
+      h("div.section-title", `Published reports (${reps.length})`),
+      reps.length ? [...reps].reverse().map(r => h("div.rep-row",
+        h("div.muted.small", `Day ${r.day} · ${chName(r.channel)} · ${caseTitle(r.case)}`),
+        r.items.map(i => h("div.rep-item", `“${i.label}”`)),
+        r.events.length ? h("div.muted.small", `${r.events.length} timeline ${r.events.length === 1 ? "event" : "events"}`) : null,
+        r.cut.length ? h("div.muted.small", `Cut before publishing: ${r.cut.join("; ")}`) : null)) :
+        h("div.empty.muted", "Nothing published yet. A report goes out under your name, and people will react to it.")];
+  }
+
+  function reportBuilder(desc) {
+    const cid = desc.case;
+    const chans = g.channels(cid);
+    const ch = chans.find(c => c.id === desc.channel);
+    const set = patch => phone.replaceTop({ ...desc, review: null, ...patch });
+    // Grouped by the player's own classification. Every item can be picked, classified or not.
+    const group = items => [[`In ${caseTitle(cid)}`, items.filter(x => (x.cases || []).includes(cid))], ["Unclassified", items.filter(x => !(x.cases || []).length)],
+      ["Other cases", items.filter(x => (x.cases || []).length && !x.cases.includes(cid))]].filter(([, l]) => l.length);
+    const row = (on, label, sub, toggle) => h("button.check-row", { class: on ? "on" : "", onclick: toggle },
+      h("span.box", on ? icon("check") : null), h("div.pi-main", h("b", label), sub ? h("div.muted", sub) : null));
+    const tog = (key, id) => set({ [key]: desc[key].includes(id) ? desc[key].filter(x => x !== id) : [...desc[key], id] });
+    const hyps = g.casebook().hypotheses, evs = g.timeline();
+    const reviewer = ch?.reviewer ? phone.contactName(ch.reviewer) : null;
+    const ready = !!ch && desc.hyps.length > 0;
+    const ask = () => { const r = g.review(ch.id, desc.hyps, { case: cid }); phone.replaceTop({ ...desc, review: r.lines || [] }); };
+    const publish = () => phone.sheet(`Publish ${desc.hyps.length} ${desc.hyps.length === 1 ? "claim" : "claims"} through ${ch.name}? You can't take it back.`, [{ label: "Publish", run: () => {
+      const n0 = g.s.notifications.length, e0 = g.s.endings.length;
+      const r = g.publish(ch.id, desc.hyps, { case: cid, events: desc.events });
+      if (r.error) { phone.toast(REPORT_ERRORS[r.error] || r.error); return; }
+      if (r.refused) { phone.replaceTop({ ...desc, review: r.lines }); phone.toast("Nothing was published."); return; }
+      phone.replaceTop({ kind: "reportDone", id: r.report.id, n0, e0 });
+    } }]);
+    return h("div.builder.report",
+      h("div.hint.muted", `A report about ${caseTitle(cid)}. It goes out under your name.`),
+      h("label.field-label", "Where"),
+      h("div.sources", chans.map(c => h("button.chip", { class: c.id === desc.channel ? "on" : "", onclick: () => set({ channel: c.id }) }, c.name))),
+      h("label.field-label", `Claims (${desc.hyps.length})`),
+      hyps.length ? group(hyps).map(([t, l]) => [h("div.field-label.sub", t), l.map(hy => row(desc.hyps.includes(hy.id), hy.label,
+        `${hy.evidenceCount} evidence · ${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"}`, () => tog("hyps", hy.id)))]) :
+        h("div.muted.small", "Build a theory first. Each theory you pick becomes a claim."),
+      h("label.field-label", `Timeline events (${desc.events.length})`),
+      evs.length ? group(evs).map(([t, l]) => [h("div.field-label.sub", t), l.map(ev => row(desc.events.includes(ev.id), ev.title, fmtEventDate(ev.date), () => tog("events", ev.id)))]) :
+        h("div.muted.small", "Optional. Events you pick go in as you wrote them."),
+      desc.review ? h("div.review", h("div.review-who", `${reviewer || "Review"}:`), desc.review.map(l => h("p", l.text))) : null,
+      reviewer ? h("button.btn.wide", { disabled: !ready, onclick: ask }, icon("chat"), ` Ask ${reviewer} first`) : null,
+      h("button.btn.primary.wide", { disabled: !ready, onclick: publish }, "Publish"));
+  }
+
+  function reportDone(desc) {
+    const r = g.casebook().reports.find(x => x.id === desc.id);
+    if (!r) return h("div.empty", "Report not found.");
+    const reactions = g.s.notifications.slice(desc.n0 ?? g.s.notifications.length);
+    const ends = g.endings().slice(desc.e0 ?? g.s.endings.length);
+    return h("div.report-done",
+      h("div.hint", `Published through ${chName(r.channel)} on day ${r.day}.`),
+      h("div.section-title", "Claims"), r.items.map(i => h("div.rep-item.pad", `“${i.label}”`)),
+      r.cut.length ? [h("div.section-title", "Cut before publishing"), r.cut.map(l => h("div.rep-item.pad.muted", `“${l}”`))] : null,
+      r.events.length ? [h("div.section-title", "Timeline events"), r.events.map(e => h("div.rep-item.pad", `${fmtEventDate(e.date)} · ${e.title}`))] : null,
+      h("div.section-title", "Reactions"),
+      reactions.length ? reactions.map(n => h("div.reaction", n.text)) : h("div.muted.pad", "Nothing yet. Reactions can take a day."),
+      ends.map(epilogue),
+      h("div.pad", h("button.btn.wide", { onclick: () => phone.back() }, "Done")));
+  }
+
   return {
     id: "casebook",
     root: () => ({ kind: "main", tab: "evidence" }),
@@ -397,8 +518,11 @@ export function casebookApp(phone) {
       if (desc.kind === "builder") return [bar(desc.id ? "Edit theory" : "New theory"), h("div.scroll", builder(desc))];
       if (desc.kind === "event") return [bar("Event"), h("div.scroll", eventDetail(desc))];
       if (desc.kind === "eventEdit") return [bar(desc.id ? "Edit event" : "New event"), h("div.scroll", eventEditor(desc))];
+      if (desc.kind === "reports") return [bar("Reports"), h("div.scroll", reportsScreen())];
+      if (desc.kind === "report") return [bar("New report"), h("div.scroll", reportBuilder(desc))];
+      if (desc.kind === "reportDone") return [bar("Published"), h("div.scroll", reportDone(desc))];
       const m = main(desc);
-      return [bar(phone.str("apps.casebook")), m[0], h("div.scroll", m[1])];
+      return [bar(phone.str("apps.casebook"), h("button.bar-link", { onclick: () => phone.push("casebook", { kind: "reports" }) }, "Reports")), m[0], h("div.scroll", m[1])];
     },
   };
 }
