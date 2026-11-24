@@ -179,9 +179,9 @@ Never generated: made from the final original with an editor or a script.
 
 ### IMG08
 - **File:** `assets/images/img08-brightline-team.webp` · 1600×900 · used in A20
-- **How:** Generate the group, then edit by hand
-- **ComfyUI part:** corporate offsite group photo, eleven people smiling in two rows on a sunny lawn, casual business clothes, hard afternoon sun from the right so every shadow falls to the left, wide shot
-- **Note:** Then in an editor: paste the same woman twice (left and far right); put Calvin's face from the final IMG06S on one man; remove the shadows of Calvin and of one woman in the centre. The errors must be visible when zoomed on a phone.
+- **How:** Generate the group on a lawn, then edit by hand (Photoshop/GIMP or ComfyUI inpainting)
+- **ComfyUI part:** corporate offsite group photo, eleven people smiling in two rows on a sunny lawn, casual business clothes, mixed ages and looks, hard afternoon sun from the right so every shadow falls to the left on the grass, wide shot, slightly too polished marketing photo
+- **Note:** Edits, all required (they are the evidence that Calvin is not real, S7): 1) paste the same woman twice, once on the left and once on the far right, same pose; 2) put Calvin's face from the final IMG06S on the man in the centre (keep the hoop/stud earrings); 3) remove the shadows under Calvin and under Renee (woman next to him in the centre); everyone else keeps a shadow falling left. The errors must be visible when zoomed on a phone. Avoid anyone who looks like Iris (messy dark bun, black knit sweater), Mara or Dana. No real brands; the Brightline logo may appear on a small banner only.
 
 ### IMG09
 - **File:** `assets/images/img09-garden-dashboard.webp` · 1080×1440 · used in A23
