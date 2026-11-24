@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 33.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 34.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -87,7 +87,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | DRP02 | `assets/images/drp02-staff.webp` | 512×512 | profile | optional | final file | acc_dr_lhart |  | Daily Record staff photo, grey studio backdrop. Woman, 45, business editor: short grey bob, freckles, hoop earrings in both ears, dark blazer, cream blouse, coin pendant. |
 | DRP03 | `assets/images/drp03-staff.webp` | 512×512 | profile | optional | final file | acc_dr_bwhitlow |  | Daily Record staff photo, grey studio backdrop. Man, 31, technology reporter: messy dark hair, beard, black headphones round his neck, navy flannel over a dark T-shirt. |
 | DRP04 | `assets/images/drp04-staff.webp` | 512×512 | profile | optional | final file | acc_dr_rcalloway |  | Daily Record staff photo, grey studio backdrop. Woman, 60, culture editor: curly grey hair pinned up, tortoiseshell glasses, gold hoops, paisley scarf in red, navy and ochre over a black cardigan, laughing. |
-| DRP05 | `assets/images/drp05-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_mvane |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Man, 55, columnist, tie loosened, sceptical eyebrow. |
+| DRP05 | `assets/images/drp05-staff.webp` | 512×512 | profile | optional | final file | acc_dr_mvane |  | Daily Record staff photo, grey studio backdrop. Man, 55, columnist: tousled grey hair, grey beard, light-blue shirt, loosened red striped tie, dark tweed waistcoat, sceptical raised eyebrow. |
 | DRP06 | `assets/images/drp06-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_jsoto |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Woman, 34, public safety reporter, rain jacket, outdoors. |
 | DRP07 | `assets/images/drp07-staff.webp` | 512×512 | profile | optional | placeholder | acc_dr_efitch |  | Daily Record staff photo, same grey studio backdrop and light for all seven. Woman, 67, obituaries writer, cardigan, kind face, library behind her. |
 | UFP01 | `assets/images/ufp01-unfiltered.webp` | 512×512 | profile | optional | placeholder | acc_uf_redactor |  | Unfiltered writer avatar. A black bar over a printed line of text. No face. |
