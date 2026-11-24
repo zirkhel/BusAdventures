@@ -1,0 +1,52 @@
+/* Corporate template (W2). Variants: glossy, agency, industrial. */
+.tmpl-corporate {
+  background: var(--site-bg, #f4f1ea);
+  color: var(--site-ink, #1b2a4a);
+}
+.tmpl-corporate .site-shell { display: flex; flex-direction: column; min-height: 100%; }
+.tmpl-corporate .site-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 16px; border-bottom: 0; margin: 0;
+  background: #1b2a4a; color: #f4f1ea;
+}
+.tmpl-corporate .site-brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.tmpl-corporate .site-logo-img { display: block; height: 36px; width: auto; max-width: 120px; object-fit: contain; background: #fff; border-radius: 2px; padding: 3px; }
+.tmpl-corporate .site-logo-text { font-family: Georgia, "Times New Roman", serif; font-size: 16px; letter-spacing: 0.04em; }
+.tmpl-corporate .mast { color: #f4f1ea; text-transform: none; letter-spacing: 0.12em; font-size: 11px; font-weight: 600; }
+.tmpl-corporate .site-tagline { color: #c8c2b6; font-size: 11px; font-weight: 400; text-transform: none; letter-spacing: 0; margin-top: 1px; }
+.tmpl-corporate .site-wordmark { min-width: 0; }
+.tmpl-corporate .site-menu-btn {
+  width: 40px; height: 40px; border: 0; background: transparent; color: #f4f1ea;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; padding: 0; flex: none;
+}
+.tmpl-corporate .site-menu-btn span { display: block; width: 18px; height: 1.5px; background: currentColor; }
+.tmpl-corporate .site-nav {
+  display: none; position: absolute; left: 0; right: 0; top: 100%;
+  background: #142038; flex-direction: column; padding: 8px 0; z-index: 2;
+}
+.tmpl-corporate .site-head { position: relative; }
+.tmpl-corporate .site-nav.is-open { display: flex; }
+.tmpl-corporate .site-nav-link {
+  display: block; width: 100%; text-align: left; border: 0; background: none;
+  color: #f4f1ea; padding: 12px 16px; font-size: 15px; min-height: 44px;
+}
+.tmpl-corporate .site-nav-link:active, .tmpl-corporate .site-nav-link:hover { background: #0e1728; }
+.tmpl-corporate .site-main { padding: 8px 0 24px; }
+.tmpl-corporate h1 {
+  font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 28px;
+  line-height: 1.2; margin: 18px 16px 10px; letter-spacing: -0.02em;
+}
+.tmpl-corporate .site-date { padding: 0 16px 8px; }
+.tmpl-corporate .site-hero { margin: 0 0 16px; }
+.tmpl-corporate .site-hero .fig { margin: 0; max-height: none; }
+.tmpl-corporate .site-hero img { width: 100%; height: auto; max-height: 52vh; object-fit: cover; }
+.tmpl-corporate .site-foot {
+  margin-top: auto; padding: 16px; font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #6b655c; border-top: 1px solid #ddd6c8;
+}
+.tmpl-corporate.var-glossy .page-body { padding-top: 4px; }
+.tmpl-corporate.var-agency .site-head { background: #0f1a2b; }
+.tmpl-corporate.var-agency h1 { font-weight: 700; text-transform: uppercase; letter-spacing: -0.03em; }
+.tmpl-corporate.var-industrial { --site-radius: 0; }
+.tmpl-corporate.var-industrial .site-head { background: #14213d; }
+.tmpl-corporate.var-industrial h1 { font-family: "Arial Narrow", Impact, sans-serif; text-transform: uppercase; letter-spacing: 0.04em; }

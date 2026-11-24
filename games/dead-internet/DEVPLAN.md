@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (Casebook steg 1 merget, W0 og W1 ferdig)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (Casebook steg 1 merget, W0–W2 ferdig)._
 
 ## Overlevering (24. nov 2026)
 
@@ -10,9 +10,9 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Alle 61 grafikkelementer er godkjent.
 - Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2–5 gjenstår.
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
-- Nettsteder: W0 er ferdig. W1 (nettstedsmodell, ingen synlig endring) er ferdig: `core/sites.js`, `content/universe/sites/`, inventar i [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md), validatorregel for uløste domenereferanser. W2–W8 gjenstår. Godkjent designretning: [docs/WEBSITES.md](docs/WEBSITES.md).
+- Nettsteder: W0–W2 er ferdige. W2: malverk i `app/sites/` (Corporate, Government, Blog). Northgate, Port Calder City Portal og Eastfield Notes er flyttet over med uendret tekst. Andre nettsteder med disse malnavnene (bl.a. Brightline, Kestrel, Calder Transit) bruker også motoren. W3–W8 gjenstår. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md).
 
-**Neste steg på main:** Casebook steg 2 (teorier og spørsmål), parallelt med nettsidearbeidet W1–W2 som er startet etter ønske om at nettstedene skal se ut som ekte nettsteder. Etter steg 5 og avklaring av saksavslutning: ekstern spilltest.
+**Neste steg på main:** Casebook steg 2 (teorier og spørsmål), parallelt med videre nettsidearbeid (W3–W8). W0–W2 er ferdige. Etter steg 5 og avklaring av saksavslutning: ekstern spilltest.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
@@ -272,7 +272,7 @@ Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 
 ### Autentiske nettsteder (veikart punkt 5–7, se docs/WEBSITES.md §11)
 - [x] W0 Lekkasjevern: kanonfelt fjernet fra visningen (PR #68). Hviteliste i `core/site-view.js` (`publicView`): malene og `renderArtifact` får bare visningsfelt. `filler`, `covers`, `pool` og øvrige forfatterfelt holdes utenfor. DOM-tvillingtesten forblir i Casebook-arbeidet (`tests/twin.test.mjs` røres ikke her).
 - [x] W1 Nettstedsmodell (`core/sites.js`, `content/universe/sites/*.json`, `site`/`page`/`blocks`, designvalg etter dato, 404-data, automatiske lister, validator og inventar). Ingen synlige endringer i Browser ennå.
-- [ ] W2 Malverk og tre maler (Corporate, Government, Blog)
+- [x] W2 Malverk og tre maler (Corporate, Government, Blog). Northgate (`glossy`), bykommunen (`municipal`, monospace bare på registeroppslag) og Eastfield Notes (`classic` / `minimal` etter 22. okt 2025) er flyttet over. Eksisterende tekst er uendret.
 - [ ] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering)
 - [ ] W4 Bakgrunn runde 1 (ca. 110 sider) og fil med bakgrunnsfakta
 - [ ] W5 Wiki, Forum, Document, Anonymous

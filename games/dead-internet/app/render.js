@@ -5,6 +5,7 @@
 import { h, icon, fmtDate, onLongPress } from "./ui.js";
 import { img, avatar } from "./media.js";
 import { publicView } from "../core/site-view.js";
+import { canRenderSite, renderSite } from "./sites/index.js";
 
 const PHOTO_RE = /\[(?:photo|image|screenshot)[^\]]*\]/i;
 
@@ -48,6 +49,7 @@ function who(phone, text, accId, tag = "span") {
  */
 export function renderArtifact(phone, v, o = {}) {
   v = publicView(v);
+  if (canRenderSite(phone, v)) return renderSite(phone, v, o);
   const g = phone.g, w = g.w;
   const a = w.artifacts.get(v.id);
   const acc = v.author ? w.accounts.get(v.author) : null;

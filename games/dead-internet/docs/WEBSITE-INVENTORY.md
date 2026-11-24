@@ -67,3 +67,7 @@ Paul Navarro's fallback, «I'd refer you to our website,» points at the existin
 ## Coverage at W1
 
 25 site configs, 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes is updated in W2; other templates come in later steps.
+
+## Test-only domains
+
+The media test pool in `tests/media.test.mjs` injects a virtual TokTok app (`toktok.app`). It is not part of the playable universe. The pool registers a site config so the site-reference validator still holds when that pool is loaded on top of the real world.
