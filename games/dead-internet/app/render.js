@@ -125,7 +125,10 @@ function header(phone, v, a, acc, pf, kind) {
   if (kind === "social") {
     const isProfile = v.type === "profile";
     return h("header.soc-head", { class: isProfile ? "profile" : "" },
-      avatar(w, v.author, isProfile ? 72 : 40),
+      isProfile && acc?.avatar
+        // A profile picture is small on a phone: a tap opens it full size in the image viewer.
+        ? h("button.avatar-open", { "aria-label": w.images.get(acc.avatar)?.caption || "Profile picture", onclick: () => phone.viewImage(acc.avatar, { artifact: v.id }) }, avatar(w, v.author, 84))
+        : avatar(w, v.author, isProfile ? 72 : 40),
       h("div.soc-names",
         acc ? who(phone, acc.displayName || acc.handle, acc.id, "b") : h("b", v.title),
         acc ? h("span.handle", who(phone, acc.handle, acc.id)) : null,

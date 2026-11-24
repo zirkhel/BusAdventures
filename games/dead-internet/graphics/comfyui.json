@@ -118,11 +118,13 @@
  "IMG22": {
   "method": "generate",
   "prompt": "dated 2019 smartphone photo of a real woman in her 30s at home with a tabby cat sitting on her shoulder, warm indoor light, slight blur, older phone colours and noise",
-  "negative": "airbrushed, studio lighting"
+  "negative": "airbrushed, studio lighting",
+  "notes": "Done (Anders, ComfyUI). Evening photo, so the metadata time in images.json was moved from 14:11 to 22:47 (same date). Claude added one mild JPEG pass for the older phone look."
  },
  "IMG23": {
   "method": "generate",
-  "prompt": "friendly portrait of a woman in her 30s, children's librarian, colourful knitted cardigan, shelves of picture books behind her, warm library light, natural skin"
+  "prompt": "friendly portrait of a woman in her 30s, children's librarian, colourful knitted cardigan, shelves of picture books behind her, warm library light, natural skin",
+  "notes": "Done (Anders, ComfyUI)."
  },
  "NIMG0001": {
   "method": "generate",

@@ -32,7 +32,7 @@
   { "id": "IMG19", "kind": "profile", "caption": "Renee Okafor (Brightline logo)", "depicts": ["brightline"], "source": "brightline-public", "meta": null },
   { "id": "IMG20", "kind": "profile", "caption": "Mike", "depicts": ["mike_p"], "source": "garden", "meta": null },
   { "id": "IMG21", "kind": "profile", "caption": "Pat", "depicts": ["pat_p"], "source": "garden", "meta": null },
-  { "id": "IMG22", "kind": "profile", "caption": "Lindsay", "depicts": ["lindsay"], "source": "garden", "meta": { "taken": "2019-07-04 14:11", "device": "Lumen 3" } },
+  { "id": "IMG22", "kind": "profile", "caption": "Lindsay", "depicts": ["lindsay"], "source": "garden", "meta": { "taken": "2019-07-04 22:47", "device": "Lumen 3" } },
   { "id": "IMG23", "kind": "profile", "caption": "Priya Shah", "depicts": ["priya"], "source": "priya", "meta": null },
   { "id": "IMG24", "kind": "profile", "caption": "Owen Pike", "depicts": ["owen"], "source": "owen", "meta": { "taken": "2024-11-03 13:12", "device": "Caldwell C1" } },
   { "id": "AVA_NORTHGATE", "kind": "profile", "caption": "Northgate Development", "depicts": ["northgate"], "source": "northgate", "meta": null },

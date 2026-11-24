@@ -13,32 +13,6 @@
   "dependsOn": []
  },
  {
-  "id": "IMG22",
-  "method": "generate",
-  "positive": "dated 2019 smartphone photo of a real woman in her 30s at home with a tabby cat sitting on her shoulder, warm indoor light, slight blur, older phone colours and noise, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened, airbrushed, studio lighting",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 937062576,
-  "out": "assets/images/img22-lindsay-profile.webp",
-  "dependsOn": []
- },
- {
-  "id": "IMG23",
-  "method": "generate",
-  "positive": "friendly portrait of a woman in her 30s, children's librarian, colourful knitted cardigan, shelves of picture books behind her, warm library light, natural skin, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 953840195,
-  "out": "assets/images/img23-priya-profile.webp",
-  "dependsOn": []
- },
- {
   "id": "NIMG0001",
   "method": "generate",
   "positive": "press photograph on a rainy afternoon, a dense crowd of people with umbrellas on a harbour pier, a fish-and-chips stall at the right edge, in the bottom-left corner next to the stall an empty patch of wet boards with a single lone blue umbrella, grey sky, documentary news photo, realistic smartphone photo, natural light, slight sensor noise, no text overlays, no real brands",
