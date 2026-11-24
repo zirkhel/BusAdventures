@@ -44,9 +44,9 @@ function miniRaw() {
     artifacts: [
       { id: "P1", type: "profile", platform: "social", author: "acc_ann", title: "Ann Lee (@ann)", date: "2029-12-01", source: "acc", mentions: ["ann"],
         versions: [{ id: "v1", body: "Hello from Ann" }] },
-      { id: "N1", type: "article", platform: "web", title: "Ann Lee has died", date: "2029-06-02", source: "news", mentions: ["ann"], supports: ["C1"],
+      { id: "N1", type: "article", platform: "web", url: "news.example/ann-lee", title: "Ann Lee has died", date: "2029-06-02", source: "news", mentions: ["ann"], supports: ["C1"],
         versions: [{ id: "v1", body: "Local woman Ann Lee died on Tuesday." }] },
-      { id: "N2", type: "record", platform: "web", title: "Death record 42", date: "2029-06-10", source: "registry", index: "weak", supports: ["C1"], mentions: ["ann"],
+      { id: "N2", type: "record", platform: "web", url: "registry.example/42", title: "Death record 42", date: "2029-06-10", source: "registry", index: "weak", supports: ["C1"], mentions: ["ann"],
         versions: [{ id: "v1", body: "Record of death for Ann Lee, case 42." }] },
       { id: "X1", type: "document", platform: "web", title: "Secret plan", date: "2029-09-01", source: "leak", index: "exact", keywords: ["PLAN-7"], supports: ["C2"],
         versions: [{ id: "v1", body: "Corp runs the account." }] },

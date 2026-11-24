@@ -167,6 +167,46 @@ _Gjennomspilling 24. november 2026: se `PLAYTEST-FASE9.md`._
 - [x] Flere dynamiske hendelser og reaksjoner på publisering (avisene melder konsekvenser, fase 8)
 - [ ] Service worker for offline og rask lasting
 
+## Casebook som deduksjonsverktøy (godkjent 24. nov 2026)
+
+Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIGN.md, «Casebook som deduksjonsverktøy».
+
+### Steg 0 — Informasjonslekkasjer
+- [x] L1: teoriens kildetall og kildebrikker (Casebook og rapportbygger) teller synlige kilder (`core/provenance.js`), ikke skjult `source`
+- [x] L2: «etter hvem det handler om» bygges av navn som står synlig i innholdet, ikke skjulte `mentions`
+- [x] L3: Dana vurderer og kutter ut fra synlige kilder (`apparentSupportOf`). Verdens dom etter publisering bruker fortsatt kanon.
+- [x] L4: kildenavnet hentes fra synlig opphav, ikke fra en karakter med samme skjulte kildenøkkel
+- [x] Artefaktvisninger bærer ikke `source`, `supports` eller `mentions`
+- [x] Tvillingverden-test som permanent regresjonstest, pluss test av at `app/` ikke bruker kanonhjelpere
+
+### Steg 1 — Bevis
+- [ ] Beviskort med retur til original (bevart rulleposisjon), kommentar, merker (viktig, tvilsom), åpnet vs. vurdert
+- [ ] «Legg bort» med årsak og gjenoppretting, uten at koblinger eller kommentarer forsvinner
+- [ ] Filter etter egne vurderinger, «Ikke vurdert» øverst, lagret utdrag som bevis i stedet for notat. Lagring v7.
+
+### Steg 2 — Teorier og spørsmål
+- [ ] Fri formulering, bevis for og mot, status med historikk, alternative forklaringer
+- [ ] Ubesvarte spørsmål i Notes, valgfritt knyttet til bevis, personer, kilder, teorier og saker
+- [ ] Velger med søk i stedet for lange «Other evidence»-lister
+
+### Steg 3 — Sammenligning og koblinger
+- [ ] Valgmodus (langt trykk) og sammenligning av bilder, dokumenter, meldinger, artikler og versjoner
+- [ ] Bytte mellom to bilder og zoom
+- [ ] Seks koblingstyper med kort, valgfri begrunnelse
+
+### Steg 4 — Kildevurdering
+- [ ] Kildekort per synlig kilde: troverdighet, autentisitet, «samme opphav som», kommentar
+- [ ] Spillerens egen telling av uavhengige kilder
+
+### Steg 5 — Rapportering med spillerens vurderinger
+- [ ] Strukturert publisering som også dekker manipulerte dokumenter og falske identiteter
+- [ ] For, mot og egne forbehold i rapportbyggeren. Rapporten lagrer et øyeblikksbilde.
+- [ ] Dana kommenterer spillerens egne forbehold
+
+### Deretter
+- [ ] Ekstern spilltest av hele etterforskningsopplevelsen
+- [ ] Justeringer etter observasjonene
+
 ## Fase 10 — Resterende verktøyapper
 - [ ] Mail: innboks, tråder, vedlegg, videresending og metadata
 - [ ] Files: dokumenter, bilder og vedlegg som spilleren eksplisitt har lastet ned

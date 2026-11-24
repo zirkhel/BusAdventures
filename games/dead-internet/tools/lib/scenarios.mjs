@@ -43,7 +43,7 @@ const accuse = (subject, evidence, channel) => g => {
   return { h };
 };
 
-function gather(g) {
+export function gather(g) {
   g.start();
   // Day 1: who was Mara, and is this really her?
   g.search("Mara Quinn obituary"); g.open("A11");

@@ -157,7 +157,9 @@ export function shownDate(g, a, r) {
 
 /** Player-facing media: the video object (without hidden canon) and its transcript. */
 function media(g, r, a) {
-  r = shownDate(g, a, r);
+  // Hidden canon never leaves the core in a view: where it really comes from, what it proves, who it is really about.
+  const { source, supports, mentions, ...shown } = r;
+  r = shownDate(g, a, shown);
   if (!r.video) return r;
   return { ...r, video: videoView(g.w, r.video), transcript: transcriptOf(g.w, r.video) };
 }

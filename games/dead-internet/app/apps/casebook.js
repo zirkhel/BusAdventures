@@ -158,7 +158,7 @@ export function casebookApp(phone) {
     const others = [...g.s.evidence].reverse().filter(e => !hy.evidence.includes(e.id));
     const sources = new Map();
     for (const e of linked) {
-      const key = g.evidenceAbout(e.id)?.source ?? e.id;
+      const key = g.evidenceAbout(e.id)?.source ?? e.id;   // visible source, never the hidden one
       if (!sources.has(key)) sources.set(key, { label: phone.sourceLabel(e), n: 0 });
       sources.get(key).n++;
     }

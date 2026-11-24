@@ -534,17 +534,9 @@ export class Phone {
     this.overlay.classList.add("open");
   }
 
-  /** Where a piece of evidence came from, in words the player recognises. */
+  /** Where a piece of evidence visibly came from (core/provenance.js). Never its hidden source. */
   sourceLabel(e) {
-    const w = this.g.w;
-    if (e.message) { const m = this.g.s.messages.find(x => x.id === e.message); return this.contactName(m?.thread); }
-    const a = w.artifacts.get(e.artifact);
-    const acc = a?.author ? w.accounts.get(a.author) : null;
-    if (acc) return acc.displayName || acc.handle;
-    // A private document (forwarded email, leaked file) comes from the person who gave it to you.
-    const giver = [...w.characters.values()].find(c => (c.source ?? c.id) === a?.source || c.id === a?.source);
-    if (giver) return this.contactName(giver.id);
-    return w.platforms.get(a?.platform)?.name || a?.url?.split("/")[0] || "Unknown";
+    return this.g.evidenceAbout(e.id)?.sourceLabel || "Unknown";
   }
 
   /** Title of a piece of evidence. */

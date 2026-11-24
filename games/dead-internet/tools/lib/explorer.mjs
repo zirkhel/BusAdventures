@@ -10,6 +10,8 @@
 
 import { Game } from "../../core/game.js";
 import { truthOf } from "../../core/casebook.js";
+// The explorer is an authoring tool and reads hidden canon on purpose. Player views never carry it.
+import { supportsOf, sourceOf } from "../../core/artifacts.js";
 
 const CODE_RE = /[A-Za-z0-9]+(?:[._@-][A-Za-z0-9]+)+/g;
 
@@ -37,7 +39,7 @@ export function explore(world, opts = {}) {
     if (!r.ok && !version && r.view?.cachedVersions?.length) { for (const v of r.view.cachedVersions) openAndSave(id, v); return; }
     if (!r.ok || !r.view || r.view.locked) return;
     texts.push(`${r.view.title} ${r.view.body}`);
-    if (r.view.supports?.length) g.save({ artifact: id, version: r.view.versionId });
+    if (supportsOf(g, id, r.view.versionId).length) g.save({ artifact: id, version: r.view.versionId });
     for (const img of r.view.images || []) {
       if (world.disabled?.has(img)) continue;
       if ((world.images.get(img)?.supports || []).length) g.save({ artifact: id, image: img });
@@ -59,7 +61,7 @@ export function explore(world, opts = {}) {
 
   const useful = (artifact, version) => {
     const v = g.view(artifact, version);
-    const sup = v.supports || [];
+    const sup = v.error || v.locked ? [] : supportsOf(g, artifact, v.versionId);
     if (!sup.length) return false;
     if (mode === "reckless") return true;
     return sup.every(c => claimTruth.get(c) === "true");
@@ -143,7 +145,7 @@ export function coverage(g) {
     let supports, source;
     if (e.message) { const m = g.s.messages.find(m => m.id === e.message); supports = m?.supports || []; source = m?.source; }
     else if (e.image) { const img = g.w.images.get(e.image); supports = img?.supports || []; source = img?.source; }
-    else { const v = g.view(e.artifact, e.version ?? undefined); supports = v.supports || []; source = v.source ?? g.w.artifacts.get(e.artifact).source; }
+    else { const v = g.view(e.artifact, e.version ?? undefined); supports = supportsOf(g, e.artifact, v.versionId ?? e.version ?? undefined); source = sourceOf(g, e.artifact, v.versionId ?? e.version ?? undefined); }
     for (const c of supports) if (out[c]) { out[c].sources.add(source); out[c].items++; }
   }
   return out;
@@ -159,7 +161,7 @@ export function hypothesisFor(g, claimId) {
     let supports;
     if (e.message) supports = g.s.messages.find(x => x.id === e.message)?.supports || [];
     else if (e.image) supports = g.w.images.get(e.image)?.supports || [];
-    else supports = g.view(e.artifact, e.version ?? undefined).supports || [];
+    else { const v = g.view(e.artifact, e.version ?? undefined); supports = supportsOf(g, e.artifact, v.versionId ?? e.version ?? undefined); }
     if (supports.includes(claimId)) g.link(r.id, e.id);
   }
   return r.id;

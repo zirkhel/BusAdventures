@@ -38,6 +38,7 @@ games/dead-internet/
     cases.js                saker i Casebook: klassifisering (cases: []), filter, epiloger, sakens status
     dialogue.js             skriptede samtaler, tillit, svaralternativer
     casebook.js             bevis, hypoteser, notater, vurdering, publisering
+    provenance.js           synlig opphav og synlige navn for bevis (aldri kanon)
     save.js                 lagring, versjonering, migrering, eksport/import
     content.js              laster content/manifest.json (fetch eller fs injiseres)
     util.js
@@ -117,15 +118,33 @@ Bilder er egne objekter med opphav (`derivedFrom`) og transformasjoner. Bildesø
 
 1. **Kanon** (`canon.json` + `accounts.operatedBy` + `entities.isHuman`) er fasit. Bare publisering og validatoren leser den.
 2. **Påstander og vitnemål**: artefakter og personer har `supports` (hvilke påstander de gir bevis for), også usanne påstander. Personer kan bare støtte påstander de `knows`, `believes` eller har `observed`, og bare gi bort artefakter de `has`. Validatoren sjekker dette.
-3. **Spillerens tro** (`state.evidence`, `state.hypotheses`, `state.notes`) er det spilleren har samlet og bygd. Casebook viser bare antall bevis og antall uavhengige kilder.
+3. **Spillerens tro** (`state.evidence`, `state.hypotheses`, `state.notes`) er det spilleren har samlet og bygd. Casebook viser bare antall bevis og antall kilder slik de *ser ut* (se «Synlig opphav» under).
+
+### Fem lag som aldri blandes
+
+| Lag | Hva | Hvor | Casebook og karakterer kan lese |
+|---|---|---|---|
+| 0 Kanon | hva som er sant, hvor ting egentlig kommer fra | `canon.json`, `facts`, `claims`, `operatedBy`, `isHuman`, `source`, skjulte `mentions` | nei, bare publisering, regler og validator |
+| 1 Karakterenes tro | hva Dana, Theo og andre vet og tror | dialogdata (`knows`, `believes`, `observed`) | bare gjennom det karakteren sier |
+| 2 Kildenes påstand | hva teksten, bildet eller meldingen sier | synlig tekst, dato, metadata, `supports` (hva innholdet gir seg ut for å vise) | ja |
+| 3 Spillerens oppdagelser | sett, møtt, undersøkt, lagret | `seen`, `encountered`, `known`, `saved` | ja |
+| 4 Spillerens slutninger | bevis, teorier, notater, tidslinje (senere merker, koblinger, kildevurdering) | Casebook-tilstanden | ja, det er spillerens egne data |
+
+**Synlig opphav (`core/provenance.js`).** Alt spilleren ser om hvor et bevis kommer fra, bygges av `apparentSource`: avsender av en melding (kontaktens konto), kontoen som postet, personen som sendte et vedlegg, håndtaket i adressen, adressen til et dokument eller en forumtråd, ellers nettstedet. Hvem et bevis handler om, bygges av `visibleRefsOf…`: navn som står i teksten, forfatter, byline og kommentatorer. Et alias teller bare når innholdet selv lister det. Skjult `source` og `mentions` brukes aldri til visning. Tre personakontoer som styres av samme aktør er derfor tre kilder i Casebook, akkurat som for en leser.
+
+**Ingen karakter er en fasitmekanisme.** Dana og alle andre karakterer vurderer ut fra det de kan se og det de vet (lag 1–2). De kan ta feil, bli manipulert og trekke feil slutninger. Danas vurdering og hennes kutt før publisering bruker `apparentSupportOf`. Bare verdens reaksjon etter publisering bruker kanon.
+
+**Visninger bærer ikke kanon.** `viewArtifact` fjerner `source`, `supports` og `mentions` før visningen forlater kjernen. Verktøy som explorer og validator leser kanon direkte gjennom `supportsOf`/`sourceOf`, og det er tillatt der.
+
+**Tvillingverden-testen (`tests/twin.test.mjs`) er permanent.** Verden bygges tre ganger: som den er, med ett felles skjult opphav for alt, og med eget opphav for hver ting. I tvillingene snus også `operatedBy`, `isHuman`, sannheten i `claims` og `facts`, og det legges til skjulte mentions av navn som ikke står i teksten. Samme spiller gjør det samme i alle tre. Alt Casebook viser, og alt Dana sier og kutter, skal være identisk. Bare konsekvensene etter publisering får avvike. Feiler testen, er det visningen som skal rettes, aldri testen. En annen test sjekker at `app/` og `core/provenance.js` ikke bruker kanonhjelperne.
 
 En **hypotese** er `[subjekt] [predikat] [objekt]` med koblede bevis og et fritt notat. Ved publisering:
 - **Sannhet**: hypotesen matches mot en kanonisk påstand. Ellers utledes den fra verdensmodellen (for eksempel: en konto som styres av en annen enn den utgir seg for, er ikke en ekte person).
-- **Støtte**: antall forskjellige `source` blant koblede bevis som faktisk støtter påstanden. To eller flere er sterk, én er svak.
+- **Støtte**: antall forskjellige skjulte `source` blant koblede bevis som faktisk støtter påstanden. To eller flere er sterk, én er svak. Dette er verdens dom og vises aldri. Dana bruker samme regel med synlige kilder (`apparentSupportOf`), så hun kan bli lurt.
 - **Troverdighet** endres etter tabellen i `meta.publishing.scoring`, vektet per kanal.
 - Sanne påstander med støtte registreres i `state.exposed`, alle publiserte i `state.published`. Avslutninger og regler leser disse.
 
-Dana (kanalen `daily_record`) har en `reviewer`: hun kommenterer kildestyrke og dristighet, aldri sannhet, og kutter påstander med svak støtte før publisering.
+Dana (kanalen `daily_record`) har en `reviewer`: hun kommenterer kildestyrke og dristighet, aldri sannhet, og kutter påstander som ser svakt støttet ut før publisering. Hun ser bare synlige kilder.
 
 ## Søk
 
@@ -324,6 +343,19 @@ Startskjermen bygges fra `mysteries[].menu` (`order`, `tagline`, `image`). Et ny
 - Avslutninger har `title` og `epilogue`. En avslutning med `closes: true` gjør saken lukket. Spillet fortsetter, og spilleren kan fortsette å utforske.
 
 **Hva som fortsatt er felles.** `startDate` er universets kalender. Personene ligger samlet i `universe/characters.json`, og deling i `extends` per sak gjøres når et nytt mysterium trenger det. `.pf-brightline_site` er stil for en plattform i universet, ikke for saken. Kjernen og appene har ingen id-er eller tekster fra The Quiet Account. Introteksten, premisset, innloggingen, testoppsettet og eksempelteorien ligger i `mystery.json`.
+
+## Casebook som deduksjonsverktøy (godkjent 24. nov 2026)
+
+Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en oppgaveliste fra spillmotoren. Spilleren skal kunne samle, rydde, kommentere, stille spørsmål, sammenligne, trekke slutninger og endre mening. Spillet forteller aldri spilleren hva som er riktig å tro. Forslaget med begrunnelse ligger i prosjektmappen (`dead-internet/casebook-deduksjon-forslag.md`).
+
+- **Hvert spørsmål har ett hjem.** Search History (Seeker/Browser): hva har jeg søkt etter. Evidence: hva har jeg valgt å samle. Notes: hva tenker jeg, og hvilke spørsmål har jeg. Timeline: når mener jeg det skjedde. Theories: hva tror jeg har skjedd. Connections: hvordan henger det sammen (på beviskort, i sammenligning og i teorier, ingen egen fane). Kildekort: hvem stoler jeg på. Report: hva kan jeg stå for offentlig. Informasjon lagres ett sted og vises ved referanse.
+- **Bevis:** beviskort, egen kommentar, merker (viktig, tvilsom), «Legg bort» med årsak (irrelevant eller ferdig) og gjenoppretting. Ingen koblinger eller kommentarer forsvinner ved å legge bort. Å åpne et beviskort er ikke det samme som å ha vurdert det: «åpnet» registreres stille, «vurdert» settes av spilleren.
+- **Spørsmål** kan registreres uten teori, i Notes. De kan valgfritt knyttes til bevis, personer, kilder, teorier og saker, og spilleren markerer dem som besvart, gjenåpner eller legger dem bort. Spillet lager aldri spørsmål fra kanon.
+- **Teorier:** fri formulering mens spilleren tenker, strukturert form først ved publisering. Bevis for og mot, status (arbeidsteori, overbevist, forkastet) med historikk, og alternative forklaringer. Strukturen ved publisering må dekke manipulerte dokumenter, falske identiteter og liknende, ikke bare dagens relasjoner.
+- **Sammenligning** av bilder, dokumenter, meldinger, artikler og versjoner av samme kilde. To bilder kan byttes mellom og zoomes. Seks koblingstyper: støtter, motsier, relatert, samme opphav, mulig manipulert, urelatert.
+- **Kildevurdering** gjøres per synlig kilde: troverdighet, er den den den utgir seg for, og «samme opphav som». Spillerens egne «samme opphav» slår sammen kilder i spillerens telling.
+- **Spillerlaget er usynlig for reglene.** Merker, koblinger, spørsmål og kildevurderinger leses aldri av betingelser, så verden kan ikke belønne en riktig kobling og dermed røpe fasit.
+- **Mobil:** hurtigmenyer, valgmodus med langt trykk, filtrering etter egne vurderinger, korte valgfrie kommentarer, kontekstmenysystemet gjenbrukes, retur til originalkilden med bevart rulleposisjon.
 
 ## Appkart
 

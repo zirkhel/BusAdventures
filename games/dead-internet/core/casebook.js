@@ -3,8 +3,10 @@
 //
 // The casebook never tells the player whether a hypothesis is right or well supported.
 // It shows facts about the player's own work: how many pieces of evidence are linked and
-// how many independent sources they come from. Truth is only consulted when a report is
-// published, and a reviewer (Dana) comments on source strength, never on truth.
+// how many sources they visibly come from (core/provenance.js). Hidden origins (`source`),
+// hidden mentions and truth are only consulted when a report is published, to decide what
+// happens in the world. A reviewer (Dana) judges like a person would, from what she can see:
+// she can be fooled by sources that look independent but are not.
 
 import { investigate } from "./discovery.js";
 import { asArray, fill } from "./util.js";
@@ -12,6 +14,7 @@ import { supportsOf, mentionsOf, sourceOf } from "./artifacts.js";
 import { applyEffects, fire } from "./rules.js";
 import { nameOf, str } from "./world.js";
 import { isCase, soleCase } from "./cases.js";
+import { apparentSource, visibleRefsOfEvidence } from "./provenance.js";
 
 // ── Evidence ────────────────────────────────────────────────────────────────
 
@@ -52,7 +55,7 @@ export function removeEvidence(g, id) {
   return { ok: true };
 }
 
-/** Source key and supported claims for one evidence item. */
+/** Hidden canon: real source key, supported claims and authored mentions. Scoring only, never shown. */
 export function evidenceFacts(g, e) {
   if (e.message) {
     const m = g.s.messages.find(m => m.id === e.message);
@@ -151,14 +154,15 @@ export function deleteNote(g, id) {
 export function kindOfId(g, id) { return kindOf(g, id); }
 
 /**
- * Evidence as the casebook shows it: who and what it is about (known, non-secret ids only)
- * and its source key. Never the claims it supports.
+ * Evidence as the casebook shows it: who and what is visibly named in it (known, non-secret
+ * ids only) and where it visibly comes from. Never its hidden source, mentions or claims.
+ * @returns {{about:string[], source:string, sourceLabel:string}}
  */
 export function evidenceAbout(g, e) {
-  const f = evidenceFacts(g, e);
-  const about = [...new Set(f.mentions.filter(id => id && g.s.known[id] && !g.w.entities.get(id)?.secret &&
-    (g.w.entities.has(id) || g.w.accounts.has(id))))];
-  return { about, source: f.source };
+  const about = visibleRefsOfEvidence(g, e).filter(id => id && g.s.known[id] && !g.w.entities.get(id)?.secret &&
+    (g.w.entities.has(id) || g.w.accounts.has(id)));
+  const src = apparentSource(g, e);
+  return { about, source: src.key, sourceLabel: src.label };
 }
 
 export function hypothesisLabel(g, h) {
@@ -173,7 +177,7 @@ export function casebookView(g) {
     notes: g.s.notes.map(n => ({ ...n })),
     hypotheses: g.s.hypotheses.map(h => {
       const items = h.evidence.map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
-      const sources = new Set(items.map(e => evidenceFacts(g, e).source));
+      const sources = new Set(items.map(e => apparentSource(g, e).key));
       return { ...h, label: hypothesisLabel(g, h), evidenceCount: items.length, sourceCount: sources.size };
     }),
     // The player's own timeline, for reports later. Events carry only what the player entered.
@@ -261,9 +265,32 @@ export function supportOf(g, h, caseId = null) {
   return { claim: c?.id ?? null, sources: [...sources], strength: n >= 2 ? "strong" : n === 1 ? "weak" : "none" };
 }
 
+/**
+ * Support as a person sees it: like supportOf, but sources are counted as they visibly
+ * appear, and "about" means visibly named. Used by reviewers and by everything the player
+ * sees. Three accounts run by one operator count as three sources here.
+ */
+export function apparentSupportOf(g, h, caseId = null) {
+  const c = matchClaim(g, h, caseId);
+  const sources = new Set();
+  for (const id of h.evidence) {
+    const e = g.s.evidence.find(e => e.id === id);
+    if (!e) continue;
+    let backs;
+    if (c) backs = evidenceFacts(g, e).supports.includes(c.id);
+    else { const refs = visibleRefsOfEvidence(g, e); backs = refs.includes(h.subject) && (h.object == null || refs.includes(h.object)); }
+    if (backs) sources.add(apparentSource(g, e).key);
+  }
+  const n = sources.size;
+  return { claim: c?.id ?? null, sources: [...sources], strength: n >= 2 ? "strong" : n === 1 ? "weak" : "none" };
+}
+
 // ── Review and publishing ───────────────────────────────────────────────────
 
-/** A reviewer's journalistic comment on source strength. Never on truth. */
+/**
+ * A reviewer's journalistic comment on source strength. Never on truth. The reviewer only
+ * knows what she can see (apparentSupportOf), so she can be wrong or manipulated.
+ */
 export function review(g, channelId, hypIds, opts = {}) {
   const ch = g.w.channels.get(channelId);
   if (!ch || !ch.reviewer) return { error: "no_reviewer" };
@@ -273,7 +300,7 @@ export function review(g, channelId, hypIds, opts = {}) {
   for (const id of hypIds) {
     const h = g.s.hypotheses.find(h => h.id === id);
     if (!h) continue;
-    const sup = supportOf(g, h, caseId);
+    const sup = apparentSupportOf(g, h, caseId);
     const c = sup.claim ? g.w.claims.get(sup.claim) : null;
     const pred = g.w.predicates.get(h.predicate);
     const bold = !!(c?.bold ?? pred?.bold);
@@ -289,10 +316,10 @@ export function channelsFor(g, caseId) {
   return [...g.w.channels.values()].filter(c => (!c.case || c.case === caseId) && (!c.if || g.check(c.if)));
 }
 
-/** Independent sources for and against a timeline event, counted like theories. Never its accuracy. */
+/** Visible sources for and against a timeline event, counted like theories. Never its accuracy. */
 function eventSupport(g, ev) {
   const count = stance => new Set(ev.evidence.filter(x => x.stance === stance)
-    .map(x => g.s.evidence.find(e => e.id === x.id)).filter(Boolean).map(e => evidenceFacts(g, e).source)).size;
+    .map(x => g.s.evidence.find(e => e.id === x.id)).filter(Boolean).map(e => apparentSource(g, e).key)).size;
   return { supportSources: count("supports"), contradictSources: count("contradicts") };
 }
 
@@ -317,8 +344,9 @@ export function publish(g, channelId, hypIds, opts = {}) {
   const scoring = w.mysteries.get(caseId)?.publishing?.scoring ?? w.meta.publishing.scoring;
   const items = [], cut = [];
   for (const h of hyps) {
+    // The editor cuts what looks weak to her; the world judges what was really behind it.
+    if (ch.requiresStrong && apparentSupportOf(g, h, caseId).strength !== "strong") { cut.push(h.id); continue; }
     const sup = supportOf(g, h, caseId);
-    if (ch.requiresStrong && sup.strength !== "strong") { cut.push(h.id); continue; }
     const truth = truthOf(g, h, caseId);
     let delta;
     if (truth === "true") delta = scoring[`true_${sup.strength}`];
