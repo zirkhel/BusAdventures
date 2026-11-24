@@ -203,8 +203,8 @@
  },
  "DRP07": {
   "method": "generate",
-  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, cardigan, kind face",
-  "notes": "The brief mentions a library behind her; kept in the studio so all seven match. Same seed family and the same backdrop for all seven: generate them as one batch."
+  "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, short straight white hair, thin silver wire glasses, pearl necklace, plain cardigan, kind gentle face",
+  "notes": "First version (24.11) was nearly the same woman as DRP04 and was not used. Same photographer and backdrop as the set is intended."
  },
  "UFP01": {
   "method": "generate",

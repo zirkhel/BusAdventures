@@ -49,8 +49,8 @@ Shared negative prompt: `watermark, signature, logo of a real brand, extra finge
 ### DRP07 (optional)
 - **File:** `assets/images/drp07-staff.webp` · final 512×512 · generate 1024×1024 · seed 724935828
 - **Used in:** acc_dr_efitch
-- **Prompt:** staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, cardigan, kind face, square profile picture, realistic, as a person would choose for themselves
-- **Note:** The brief mentions a library behind her; kept in the studio so all seven match. Same seed family and the same backdrop for all seven: generate them as one batch.
+- **Prompt:** staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, woman, 67, obituaries writer, short straight white hair, thin silver wire glasses, pearl necklace, plain cardigan, kind gentle face, square profile picture, realistic, as a person would choose for themselves
+- **Note:** First version (24.11) was nearly the same woman as DRP04 and was not used. Same photographer and backdrop as the set is intended.
 
 ### UFP01 (optional)
 - **File:** `assets/images/ufp01-unfiltered.webp` · final 512×512 · generate 1024×1024 · seed 57562777
