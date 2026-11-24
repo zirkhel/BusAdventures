@@ -1,0 +1,27 @@
+{
+ "id": "eastfieldgarden",
+ "platform": "web",
+ "domain": "eastfieldgarden.org",
+ "designs": [
+  {
+   "id": "d2016",
+   "from": "2016-01-01",
+   "template": "personal",
+   "variant": "club",
+   "theme": {
+    "logo": "text:Eastfield Community Garden"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Not found",
+  "text": "That page isn't on the garden site."
+ },
+ "status": []
+}

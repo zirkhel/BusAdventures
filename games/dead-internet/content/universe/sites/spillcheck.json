@@ -1,0 +1,28 @@
+{
+ "id": "spillcheck",
+ "platform": "spillcheck",
+ "domain": "spillcheck.io",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2020-01-01",
+   "template": "anonymous",
+   "variant": "terminal",
+   "theme": {
+    "logo": "LOGO_SPILLCHECK",
+    "palette": {
+     "bg": "#0b0b0b",
+     "ink": "#c8f0c8",
+     "accent": "#ff4d4d"
+    },
+    "font": "mono"
+   },
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "No record",
+  "text": "No known breaches include that address."
+ },
+ "status": []
+}

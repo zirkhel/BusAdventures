@@ -24,7 +24,7 @@
     "title": "Eastfield Neighbors forum hacked, 31,000 accounts exposed", "source": "dailyrecord", "mentions": ["eastfield_neighbors", "evt_breach"],
     "versions": [{ "id": "v1", "cached": true, "body": "The volunteer-run Eastfield Neighbors forum says email addresses and passwords for about 31,000 accounts were stolen. Users who reused their password elsewhere are urged to change it. The forum has since shut down." }] },
 
-  { "id": "A14", "type": "page", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog", "author": "acc_eastfieldnotes", "date": "2025-10-22",
+  { "id": "A14", "site": "eastfieldnotes", "page": "front", "type": "page", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog", "author": "acc_eastfieldnotes", "date": "2025-10-22",
     "title": "Eastfield Notes", "source": "mara-blog", "mentions": ["mara", "eastfield"],
     "versions": [
       { "id": "v1", "date": "2025-06-20", "cached": true, "source": "blog-cache", "supports": ["S5"], "mentions": ["calder_mill", "waterfront"],
@@ -32,13 +32,13 @@
       { "id": "v2", "date": "2025-10-22",
         "body": "Eastfield Notes — growing together.\n\nLatest:\n• The old girl, still standing (May 14, 2025)\n• Waterfront: let's keep listening (Jun 2, 2024)\n• Community garden, June (Jun 8, 2024)\n\nContact form only." }
     ] },
-  { "id": "A15", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2024/04/save-the-mill", "author": "acc_eastfieldnotes", "date": "2024-04-20",
+  { "id": "A15", "site": "eastfieldnotes", "page": "post", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2024/04/save-the-mill", "author": "acc_eastfieldnotes", "date": "2024-04-20",
     "title": "Save the Mill: what you can do this week", "source": "blog-cache", "live": null, "mentions": ["mara", "calder_mill", "waterfront", "northgate"], "supports": ["S5"],
     "versions": [{ "id": "v1", "cached": true, "body": "4,100 signatures! The old girl has more friends than Northgate expected. This week: write to Councilmember Ruiz, come to the garden on Saturday, and tell one neighbour. They want towers. We want a library, a market hall and the Mill. — M." }] },
-  { "id": "A33", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2025/05/the-old-girl", "author": "acc_eastfieldnotes", "date": "2025-05-14",
+  { "id": "A33", "site": "eastfieldnotes", "page": "post", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2025/05/the-old-girl", "author": "acc_eastfieldnotes", "date": "2025-05-14",
     "title": "The old girl, still standing", "source": "mara-blog", "images": ["IMG02"], "mentions": ["mara", "calder_mill"], "supports": ["S8"],
     "versions": [{ "id": "v1", "cached": true, "body": "Up at six to catch the light on the sign. 138 years and she's still standing. Whatever happens with the vote, I wanted a picture of her like this. — M.\n[Photo: the CALDER MILL — EST. 1887 sign at sunrise]" }] },
-  { "id": "A34", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2024/06/waterfront", "author": "acc_eastfieldnotes", "date": "2024-06-02",
+  { "id": "A34", "site": "eastfieldnotes", "page": "post", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2024/06/waterfront", "author": "acc_eastfieldnotes", "date": "2024-06-02",
     "title": "Waterfront: let's keep listening", "source": "mara-blog", "mentions": ["mara", "waterfront", "northgate"],
     "versions": [
       { "id": "v1", "date": "2024-06-02", "cached": true, "title": "Why I'm fighting the Waterfront", "source": "blog-cache", "supports": ["S5"],
@@ -46,7 +46,7 @@
       { "id": "v2", "date": "2025-10-22", "title": "Waterfront: let's keep listening",
         "body": "There are strong feelings on all sides about the Waterfront. I think we owe it to each other to keep listening. Change can be scary, but it can also be good." }
     ] },
-  { "id": "A36", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2024/06/garden", "author": "acc_eastfieldnotes", "date": "2024-06-08",
+  { "id": "A36", "site": "eastfieldnotes", "page": "post", "type": "post", "platform": "eastfieldnotes", "url": "eastfieldnotes.blog/2024/06/garden", "author": "acc_eastfieldnotes", "date": "2024-06-08",
     "title": "Community garden, June", "source": "mara-blog", "images": ["IMG05O"], "mentions": ["mara", "eastfield"],
     "versions": [{ "id": "v1", "cached": true, "body": "Plot 12 finally has tomatoes. The sign Priya painted is crooked and perfect. — M.\n[Photo: raised beds, a hand-painted PLOT 12 sign]" }] }
 ]

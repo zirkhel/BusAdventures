@@ -1,0 +1,27 @@
+{
+ "id": "harbordesk",
+ "platform": "web",
+ "domain": "harbordesk.co",
+ "designs": [
+  {
+   "id": "d2021",
+   "from": "2021-01-01",
+   "template": "landing",
+   "variant": "smallbiz",
+   "theme": {
+    "logo": "text:HarborDesk"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Not found",
+  "text": "HarborDesk has no page there."
+ },
+ "status": []
+}

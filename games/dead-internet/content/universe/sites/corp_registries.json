@@ -1,0 +1,28 @@
+{
+ "id": "corp_registries",
+ "platform": "web",
+ "domain": "corp-registries.example",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2009-01-01",
+   "template": "government",
+   "variant": "registry",
+   "theme": {
+    "logo": "text:Corporate Registries"
+   },
+   "nav": [
+    {
+     "label": "Meridian Holdings Ltd",
+     "href": "/meridian-holdings-ltd"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "No record",
+  "text": "No company matches that identifier."
+ },
+ "status": [],
+ "notes": "Placeholder domain, to be replaced later with a believable fictional name (WEBSITES.md §13.4). Not renamed in W1."
+}

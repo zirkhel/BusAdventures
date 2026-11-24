@@ -1,0 +1,29 @@
+{
+ "id": "eastfield_neighbors",
+ "platform": "eastfield_neighbors",
+ "domain": "eastfieldneighbors.net",
+ "org": "eastfield_neighbors",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2010-01-01",
+   "template": "forum",
+   "variant": "classic",
+   "theme": {
+    "logo": "text:Eastfield Neighbors"
+   },
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "Forum closed",
+  "text": "The Eastfield Neighbors forum has shut down."
+ },
+ "status": [
+  {
+   "from": "2023-02-20",
+   "state": "gone"
+  }
+ ],
+ "notes": "The 2023-02-20 Daily Record article says the volunteer forum was breached and has since shut down. Canon does not name the domain; eastfieldneighbors.net is assigned only so the gone site can be addressed. No live or cached pages (none are described)."
+}

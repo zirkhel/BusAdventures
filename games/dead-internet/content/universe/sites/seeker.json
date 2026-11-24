@@ -1,0 +1,24 @@
+{
+ "id": "seeker",
+ "platform": "seeker",
+ "domain": "seeker.search",
+ "presentation": "browser",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2020-01-01",
+   "template": "app",
+   "variant": "seeker",
+   "theme": {
+    "logo": "LOGO_SEEKER"
+   },
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "No results",
+  "text": "Seeker has no page at that address."
+ },
+ "status": [],
+ "notes": "Search engine owned by Browser. Not a third-party site."
+}

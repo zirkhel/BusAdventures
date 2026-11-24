@@ -1,0 +1,45 @@
+{
+ "id": "brightline",
+ "platform": "brightline_site",
+ "domain": "brightlinemedia.co",
+ "org": "brightline",
+ "designs": [
+  {
+   "id": "d2023",
+   "from": "2023-06-09",
+   "template": "corporate",
+   "variant": "agency",
+   "theme": {
+    "logo": "LOGO_BRIGHTLINE",
+    "palette": {
+     "bg": "#0f1a2b",
+     "ink": "#f4f0e8",
+     "accent": "#ffcc66"
+    }
+   },
+   "nav": [
+    {
+     "label": "Services",
+     "href": "/services"
+    },
+    {
+     "label": "Team",
+     "href": "/team"
+    },
+    {
+     "label": "Careers",
+     "href": "/careers/community-writer"
+    },
+    {
+     "label": "Statement",
+     "href": "/statement"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Missing",
+  "text": "We can't find that page."
+ },
+ "status": []
+}

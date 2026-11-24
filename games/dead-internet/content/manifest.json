@@ -25,7 +25,8 @@
    "universe/pools/news-dailyrecord/articles.json",
    "universe/pools/news-unfiltered/articles.json",
    "universe/pools/news-unfiltered/documents.json",
-   "universe/pools/background-qa/articles.json"
+   "universe/pools/background-qa/articles.json",
+   "universe/artifacts/referenced-sites.json"
   ],
   "characters": "universe/characters.json",
   "canon": "universe/canon.json",
@@ -33,6 +34,33 @@
   "terms": "universe/terms.json",
   "rules": [
    "universe/pools/news/rules.json"
+  ],
+  "sites": [
+   "universe/sites/aiwriterpro.json",
+   "universe/sites/brightline.json",
+   "universe/sites/brightline_portal.json",
+   "universe/sites/calderpedia.json",
+   "universe/sites/caldertransit.json",
+   "universe/sites/city.json",
+   "universe/sites/connect.json",
+   "universe/sites/corp_registries.json",
+   "universe/sites/dailyrecord.json",
+   "universe/sites/docshare.json",
+   "universe/sites/eastfield_neighbors.json",
+   "universe/sites/eastfieldgarden.json",
+   "universe/sites/eastfieldnotes.json",
+   "universe/sites/facelessstock.json",
+   "universe/sites/harbor_authority.json",
+   "universe/sites/harbordental.json",
+   "universe/sites/harbordesk.json",
+   "universe/sites/kestrel.json",
+   "universe/sites/northgate.json",
+   "universe/sites/saltys.json",
+   "universe/sites/seeker.json",
+   "universe/sites/spillcheck.json",
+   "universe/sites/static_channel.json",
+   "universe/sites/threadline.json",
+   "universe/sites/unfiltered.json"
   ]
  },
  "mysteries": [

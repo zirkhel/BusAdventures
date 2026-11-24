@@ -1,0 +1,32 @@
+{
+ "id": "saltys",
+ "platform": "web",
+ "domain": "saltys-portcalder.com",
+ "designs": [
+  {
+   "id": "d2008",
+   "from": "2008-01-01",
+   "template": "legacy",
+   "variant": "2008",
+   "theme": {
+    "logo": "text:Salty's Fish Bar",
+    "palette": {
+     "bg": "#fff8f0",
+     "ink": "#3a0000",
+     "accent": "#c41200"
+    }
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "Best viewed in Internet Explorer 6, probably."
+ },
+ "status": []
+}
