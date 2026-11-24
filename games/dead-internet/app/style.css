@@ -34,10 +34,11 @@ a.lnk:active { opacity: .6; }
 .sb-icons { display: flex; gap: 4px; }
 .sb-icons .ico { width: 18px; height: 18px; }
 .screen { position: absolute; inset: 0; }
-.homebar { position: absolute; bottom: 0; left: 0; right: 0; height: calc(22px + var(--safe-b)); display: flex; justify-content: center; align-items: flex-start; padding-top: 9px; z-index: 30; }
-.homebar span { width: 134px; height: 5px; border-radius: 3px; background: rgba(0,0,0,.75); }
-#phone[data-where="lock"] .homebar span, #phone[data-where="home"] .homebar span { background: rgba(255,255,255,.8); }
-#phone[data-where="lock"] .homebar { pointer-events: none; }
+.homebar { position: absolute; bottom: 0; left: 0; right: 0; padding-bottom: calc(8px + var(--safe-b)); display: flex; justify-content: center; z-index: 30; pointer-events: none; }
+.hb-pill { pointer-events: auto; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 18px 0 14px; border-radius: 18px; background: rgba(22,24,30,.86); color: #fff; font-size: 14px; font-weight: 600; box-shadow: 0 2px 12px rgba(0,0,0,.28); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.hb-pill .ico { width: 18px; height: 18px; }
+.hb-pill:active { transform: scale(.96); }
+#phone[data-where="lock"] .homebar, #phone[data-where="home"] .homebar { display: none; }
 
 /* Lock screen */
 .lock, .home { position: absolute; inset: 0; color: #fff; background: radial-gradient(120% 70% at 20% 0%, #3b4a63 0%, transparent 60%), radial-gradient(90% 60% at 100% 100%, #4b2c3b 0%, transparent 60%), linear-gradient(#141821, #0c0e13); display: flex; flex-direction: column; touch-action: none; }
@@ -280,9 +281,7 @@ a.lnk:active { opacity: .6; }
 /* Navigation: back or home in every app, and a bigger home bar to tap. */
 .nav-btn { width: auto; min-width: 44px; padding: 0 8px; gap: 4px; display: inline-flex; align-items: center; justify-content: center; }
 .nav-label { font-size: 15px; font-weight: 500; }
-.homebar { height: calc(30px + var(--safe-b)); padding-top: 13px; }
-.homebar span { width: 150px; height: 6px; }
-.app .scroll { padding-bottom: calc(52px + var(--safe-b)); }
+.app .scroll { padding-bottom: calc(60px + var(--safe-b)); }
 
 /* ── Phase 3: conversations, sleep, casebook ───────────────────────────── */
 .hw-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
@@ -298,7 +297,7 @@ button.bar-title { text-align: left; }
 .bubble.typing span { width: 7px; height: 7px; border-radius: 50%; background: #999; animation: blink 1s infinite; }
 .bubble.typing span:nth-child(2) { animation-delay: .2s; } .bubble.typing span:nth-child(3) { animation-delay: .4s; }
 @keyframes blink { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
-.composer { flex: none; border-top: 1px solid var(--line); background: var(--paper); padding: 8px 10px calc(30px + var(--safe-b)); }
+.composer { flex: none; border-top: 1px solid var(--line); background: var(--paper); padding: 8px 10px calc(54px + var(--safe-b)); }
 .composer.center { text-align: center; font-size: 14px; }
 .composer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .cmp-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 8px; border-radius: 14px; background: var(--paper2); color: var(--accent); font-weight: 600; font-size: 15px; }
@@ -394,7 +393,7 @@ button.bar-title { text-align: left; }
 .ctx-sheet .sheet-item:nth-last-child(2) { border-radius: 0; }
 
 /* Selection bar: appears while text is selected */
-.selbar { position: absolute; left: 10px; right: 10px; bottom: calc(30px + var(--safe-b)); z-index: 40; display: none; gap: 4px; padding: 6px; border-radius: 16px; background: rgba(28,30,36,.94); box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+.selbar { position: absolute; left: 10px; right: 10px; bottom: calc(52px + var(--safe-b)); z-index: 40; display: none; gap: 4px; padding: 6px; border-radius: 16px; background: rgba(28,30,36,.94); box-shadow: 0 6px 24px rgba(0,0,0,.3); }
 .selbar.on { display: flex; animation: up .15s ease-out; }
 .selbar button { color: #fff; font-size: 15px; min-height: 44px; padding: 0 12px; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .selbar button:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; justify-content: flex-start; }
