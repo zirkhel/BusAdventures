@@ -58,7 +58,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
  @media(max-width:420px){.terminal-body{padding:22px 16px}.game-card{padding:12px}.game-card-inner{gap:10px}.game-icon{width:40px;height:40px}.category-nav{gap:6px}}
 
 /* Dead Internet universe and collapsible sections. */
- .universe{border:1px solid var(--green);border-radius:3px;padding:16px;margin-bottom:36px;background:linear-gradient(180deg,rgba(57,255,20,.06),rgba(0,0,0,.25));scroll-margin-top:20px}
+ .universe{border:1px solid var(--green);border-radius:3px;padding:16px;margin-top:10px;background:linear-gradient(180deg,rgba(57,255,20,.06),rgba(0,0,0,.25));scroll-margin-top:20px}
  .universe-head{display:flex;gap:14px;align-items:center;margin-bottom:10px}
  .universe-kicker{font-family:VT323,monospace;font-size:16px;color:var(--amber);letter-spacing:.14em}
  .universe-title{font-family:VT323,monospace;font-weight:400;font-size:30px;line-height:1;color:var(--green);text-shadow:0 0 8px rgba(57,255,20,.5);letter-spacing:.06em;margin:2px 0 4px}
@@ -117,12 +117,17 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
         <a href="#idle">IDLE</a>
         <a href="#in-development">IN DEVELOPMENT</a>
       </nav>
-      <section class="universe" id="dead-internet" aria-labelledby="di-title">
+      <details class="genre-section" id="dead-internet" open>
+        <summary class="genre-header">
+          <h2 class="genre-tag">// DEAD INTERNET</h2>
+          <span class="genre-count">universe · 1 case</span>
+        </summary>
+      <section class="universe" aria-labelledby="di-title">
         <div class="universe-head">
           <div class="game-icon" aria-hidden="true">📱</div>
           <div class="game-info">
             <div class="universe-kicker">// UNIVERSE</div>
-            <h2 class="universe-title" id="di-title">Dead Internet</h2>
+            <h3 class="universe-title" id="di-title">Dead Internet</h3>
             <div class="game-meta"><span>investigation</span> · phone · portrait</div>
           </div>
         </div>
@@ -149,6 +154,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
           </li>
         </ol>
       </section>
+      </details>
       <details class="genre-section" id="text">
         <summary class="genre-header">
           <h2 class="genre-tag">// TEXT</h2>
@@ -678,9 +684,10 @@ updateAuthorityRecord();window.addEventListener('pageshow',updateAuthorityRecord
 (function(){
  const KEY='bus-adventures.open-sections';
  const sections=[...document.querySelectorAll('details.genre-section')];
- let saved=null;try{saved=JSON.parse(localStorage.getItem(KEY))}catch(e){}
- if(Array.isArray(saved))sections.forEach(d=>{d.open=saved.includes(d.id)});
- const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(sections.filter(d=>d.open).map(d=>d.id)))}catch(e){}};
+ // Sections the visitor has not seen before keep their default state.
+ let saved=null,known=null;try{saved=JSON.parse(localStorage.getItem(KEY));known=JSON.parse(localStorage.getItem(KEY+'.known'))}catch(e){}
+ if(Array.isArray(saved)){if(!Array.isArray(known))known=sections.map(d=>d.id).filter(id=>id!=='dead-internet');sections.forEach(d=>{if(known.includes(d.id))d.open=saved.includes(d.id)})}
+ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(sections.filter(d=>d.open).map(d=>d.id)));localStorage.setItem(KEY+'.known',JSON.stringify(sections.map(d=>d.id)))}catch(e){}};
  sections.forEach(d=>d.addEventListener('toggle',()=>{save();syncTool()}));
  function openHash(){const d=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(d&&d.tagName==='DETAILS'&&!d.open)d.open=true}
  openHash();window.addEventListener('hashchange',openHash);
