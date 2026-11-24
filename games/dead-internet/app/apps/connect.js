@@ -10,7 +10,7 @@ export function connectApp(phone) {
 
   function bar(title, canBack, extra) {
     return h("div.topbar.connect-bar",
-      canBack ? h("button.icon-btn", { "aria-label": "Back", onclick: () => phone.back() }, icon("back")) : null,
+      phone.backButton(),
       h("div.bar-title", title), extra || null);
   }
 

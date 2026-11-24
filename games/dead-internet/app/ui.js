@@ -38,6 +38,7 @@ function append(el, kids) {
 /** Inline SVG icons (24×24, stroke = currentColor). */
 const ICONS = {
   back: '<path d="M15 5l-7 7 7 7"/>',
+  home: '<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
   search: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
   bookmark: '<path d="M7 4h10v16l-5-4-5 4z"/>',
   bookmarked: '<path d="M7 4h10v16l-5-4-5 4z" fill="currentColor"/>',

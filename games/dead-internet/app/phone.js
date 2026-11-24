@@ -51,11 +51,7 @@ export class Phone {
     game.on("state", () => { this.#statusBar(); this.#badges(); });
     this.#statusBar();
     setInterval(() => this.#statusBar(), 15000);
-    this.skipPop = false;
-    window.addEventListener("popstate", () => {
-      if (this.skipPop) { this.skipPop = false; return; }
-      if (this.where !== "lock" && this.where !== "home") this.back(true);
-    });
+    this.#historyTrap();
   }
 
   str(key) { const v = key.split(".").reduce((o, k) => o?.[k], this.g.w.strings); return v ?? key; }
@@ -79,7 +75,6 @@ export class Phone {
     this.stacks[appId].push(desc);
     this.where = appId;
     this.closeOverlay();
-    history.pushState({ di: true }, "");
     this.#render(true);
   }
 
@@ -90,14 +85,42 @@ export class Phone {
     this.#render();
   }
 
-  back(fromPopstate = false) {
+  /** Back inside the phone: close an overlay, pop the app's stack, or go to the home screen. */
+  back() {
     if (this.overlay.childElementCount) { this.closeOverlay(); return; }
     const st = this.stacks[this.where];
-    if (!st) return;
+    if (!st) { if (this.where === "lock") this.unlock(); return; }
     if (st.length > 1) { st.pop(); this.#render(false, true); }
     else this.goHome();
-    // Keep the browser's history in step, so the Android back button and in-app back agree.
-    if (!fromPopstate && history.state?.di) { this.skipPop = true; history.back(); }
+  }
+
+  /** The top-left button of every app: back while there is somewhere to go back to, otherwise home. */
+  backButton() {
+    const atRoot = (this.stacks[this.where]?.length ?? 1) <= 1 && !this.overlay.childElementCount;
+    return h("button.icon-btn.nav-btn", { "aria-label": atRoot ? "Home" : "Back", onclick: () => this.back() },
+      icon(atRoot ? "home" : "back"), atRoot ? h("span.nav-label", "Home") : null);
+  }
+
+  /**
+   * The browser's own back button (Android back, iOS swipe, desktop Back) stays inside the game.
+   * One extra history entry is kept on top. Every back press lands on it, is undone, and is handled
+   * as an in-game back. Only on the home screen does a second press within 2 seconds leave the game.
+   */
+  #historyTrap() {
+    let exitArmed = 0;
+    history.replaceState({ di: "base" }, "");
+    history.pushState({ di: "top" }, "");
+    window.addEventListener("popstate", () => {
+      const atHome = this.where === "home" || this.where === "lock";
+      if (atHome && !this.overlay.childElementCount) {
+        if (Date.now() - exitArmed < 2000) { history.back(); return; }
+        exitArmed = Date.now();
+        this.toast("Press back again to leave the game.");
+      } else {
+        this.back();
+      }
+      history.pushState({ di: "top" }, "");
+    });
   }
 
   get top() { const st = this.stacks[this.where]; return st?.[st.length - 1]; }

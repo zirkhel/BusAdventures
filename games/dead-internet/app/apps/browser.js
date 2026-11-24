@@ -17,7 +17,7 @@ export function browserApp(phone) {
       desc.kind === "page" && desc.view?.cached ? h("span.addr-tag", "cached") : desc.kind === "page" && desc.view?.locked ? icon("lock", "addr-ico") : icon("search", "addr-ico"),
       input);
     return h("div.topbar.browser-bar",
-      canBack ? h("button.icon-btn", { "aria-label": "Back", onclick: () => phone.back() }, icon("back")) : null,
+      phone.backButton(),
       form,
       desc.kind === "page" ? saveButton(desc) : null);
   }

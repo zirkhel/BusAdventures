@@ -276,3 +276,10 @@ a.lnk:active { opacity: .6; }
 .intro .btn.primary { background: #e8e2d6; color: #07080b; padding: 15px; font-size: 17px; }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* Navigation: back or home in every app, and a bigger home bar to tap. */
+.nav-btn { width: auto; min-width: 44px; padding: 0 8px; gap: 4px; display: inline-flex; align-items: center; justify-content: center; }
+.nav-label { font-size: 15px; font-weight: 500; }
+.homebar { height: calc(30px + var(--safe-b)); padding-top: 13px; }
+.homebar span { width: 150px; height: 6px; }
+.app .scroll { padding-bottom: calc(52px + var(--safe-b)); }

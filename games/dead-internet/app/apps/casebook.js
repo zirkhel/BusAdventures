@@ -31,7 +31,7 @@ export function casebookApp(phone) {
     root: () => ({ kind: "evidence" }),
     render(desc, canBack) {
       const list = [...g.s.evidence].reverse();
-      return [h("div.topbar.cb-bar", canBack ? h("button.icon-btn", { onclick: () => phone.back() }, icon("back")) : null,
+      return [h("div.topbar.cb-bar", phone.backButton(),
         h("div.bar-title", phone.str("apps.casebook"))),
       h("div.scroll", h("div.cb",
         h("div.section-title", `${phone.str("casebook.evidence")} (${list.length})`),
