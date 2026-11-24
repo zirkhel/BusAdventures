@@ -6,6 +6,7 @@
 
 import { h, icon, fmtDate } from "../ui.js";
 import { img, avatar } from "../media.js";
+import { richText } from "../render.js";
 
 const KIND_TITLES = { person: "Person", account: "Account", org: "Organisation", place: "Place", event: "Event", project: "Project", system: "System" };
 const ERRORS = {
@@ -65,7 +66,7 @@ export function casebookApp(phone) {
 
   function evidenceTab(desc) {
     const list = [...g.s.evidence].reverse();
-    if (!list.length) return h("div.empty", h("b", "No evidence yet."), h("div.muted", "Tap the bookmark on a page, or long-press a page, image or message, to save it here."));
+    if (!list.length) return h("div.empty", h("b", "No evidence yet."), h("div.muted", "Tap the bookmark on a page, or tap an image or a word in a message and choose Save, to collect it here."));
     const mode = desc.group ?? "about";
     const toggle = h("div.seg.small",
       h("button", { class: mode === "about" ? "on" : "", onclick: () => phone.replaceTop({ ...desc, group: "about" }) }, "By who it's about"),
@@ -118,7 +119,7 @@ export function casebookApp(phone) {
     const toggle = (e, on) => h("button.icon-btn.link-toggle", { class: on ? "on" : "", "aria-label": on ? "Unlink" : "Link",
       onclick: () => { g.link(hy.id, e.id, !on); phone.refresh(); } }, icon(on ? "check" : "plus"));
     return h("div.hyp-detail",
-      h("div.hyp-big", hy.label),
+      phone.ctx.block(h("div.hyp-big", richText(phone, hy.label)), { title: "Theory" }),
       h("div.hyp-stats", h("div", h("b", String(hy.evidenceCount)), h("span", "evidence")), h("div", h("b", String(hy.sourceCount)), h("span", hy.sourceCount === 1 ? "source" : "independent sources"))),
       sources.size ? h("div.sources", [...sources.values()].map(s => h("span.chip.static", `${s.label}${s.n > 1 ? ` ×${s.n}` : ""}`))) : null,
       h("div.hint.muted", "The Casebook counts your evidence and where it comes from. It can't tell you whether you're right."),
@@ -183,11 +184,24 @@ export function casebookApp(phone) {
     const notes = [...g.s.notes].reverse();
     return [h("div.pad", input, h("button.btn.primary.wide", { onclick: add }, "Add note")),
       notes.map(n => desc.editing === n.id ? editNote(desc, n) :
-        h("div.note-item", h("div.note-body", n.text), h("div.note-foot.muted", `Day ${n.day}${n.edited ? " · edited" : ""}`,
+        h("div.note-item", phone.ctx.block(h("div.note-body", richText(phone, n.text)), { title: "Note" }),
+          n.from ? noteSource(n) : null,
+          h("div.note-foot.muted", `Day ${n.day}${n.edited ? " · edited" : ""}`,
           h("span.spacer"),
           h("button.icon-btn.small", { "aria-label": "Edit", onclick: () => phone.replaceTop({ ...desc, editing: n.id }) }, icon("edit")),
           h("button.icon-btn.small", { "aria-label": "Delete", onclick: () => phone.sheet("Delete note?", [{ label: "Delete", danger: true, run: () => { g.deleteNote(n.id); phone.refresh(); } }]) }, icon("trash"))))),
       !notes.length ? h("div.empty.muted", "Notes are yours alone. Nobody else reads them.") : null];
+  }
+
+  /** Where a saved name was found. Tapping it goes back there. */
+  function noteSource(n) {
+    const f = n.from;
+    if (f.message) {
+      const m = g.s.messages.find(x => x.id === f.message);
+      return m ? h("button.note-src", { onclick: () => phone.push("messages", { kind: "thread", id: m.thread }) }, icon("chat"), `From a message by ${phone.contactName(m.thread)}`) : null;
+    }
+    const v = g.view(f.artifact, f.version || undefined);
+    return h("button.note-src", { onclick: () => phone.openArtifact(f.artifact, v.cached ? f.version : undefined) }, icon("globe"), `From: ${v.title || w.artifacts.get(f.artifact)?.title || ""}`);
   }
 
   function editNote(desc, n) {

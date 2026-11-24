@@ -6,6 +6,7 @@
 // how many independent sources they come from. Truth is only consulted when a report is
 // published, and a reviewer (Dana) comments on source strength, never on truth.
 
+import { investigate } from "./discovery.js";
 import { asArray, fill } from "./util.js";
 import { supportsOf, mentionsOf, sourceOf } from "./artifacts.js";
 import { applyEffects, fire } from "./rules.js";
@@ -116,10 +117,15 @@ export function linkEvidence(g, hypId, evId, on = true) {
   return { ok: true };
 }
 
-export function addNote(g, text) {
+export function addNote(g, text, from, about) {
   const t = String(text ?? "").trim();
   if (!t) return { error: "empty_note" };
+  /** @type {any} */
   const n = { id: `N${g.s.nextId++}`, text: t, day: g.s.day };
+  if (from && (from.artifact || from.message)) n.from = { artifact: from.artifact ?? null, version: from.version ?? null, message: from.message ?? null };
+  // Saving a name you can read marks it as known (so you can ask about it or use it in a theory).
+  // Secrets never; and only real ids.
+  if (about && investigate(g, about, t).ok) { n.about = about; g.s.saved[about] = g.s.day; }
   g.s.notes.push(n);
   return { ok: true, id: n.id };
 }

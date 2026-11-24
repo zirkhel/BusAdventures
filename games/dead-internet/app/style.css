@@ -376,3 +376,60 @@ button.bar-title { text-align: left; }
 .icon-btn.small .ico { width: 18px; height: 18px; }
 .cb .pad { padding-top: 10px; }
 .bubble.mine a.lnk { color: #fff; text-decoration: underline; }
+
+/* ── Context actions (shared by all apps) ─────────────────────────────────
+   Tappable words look exactly like the text around them: no colour, underline or weight. */
+.ctx { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
+.ref { color: inherit; font: inherit; text-decoration: none; }
+.soc-names .handle { color: var(--ink2); font-size: 14px; }
+.ctx-sheet { background: rgba(245,245,248,.98); border-radius: 18px; padding: 6px 0 0; gap: 0; max-height: 78%; overflow: auto; }
+.sheet-grab { width: 38px; height: 5px; border-radius: 3px; background: #c9ccd2; margin: 4px auto 6px; flex: none; }
+.ctx-title { font-size: 15px; font-weight: 600; color: var(--ink); text-align: center; padding: 4px 18px 10px; border-bottom: 1px solid var(--line); word-break: break-word; }
+.ctx-sheet .sheet-item { background: transparent; }
+.ctx-item { display: flex; align-items: center; gap: 14px; text-align: left; font-size: 17px; color: var(--ink); padding: 0 20px; min-height: 54px; border-bottom: 1px solid var(--line); }
+.ctx-item .ico { width: 22px; height: 22px; color: var(--accent); flex: none; }
+.ctx-item:active { background: rgba(0,0,0,.05); }
+.ctx-item.secondary { color: var(--ink2); font-size: 15px; }
+.ctx-sheet .sheet-item.cancel { margin: 8px 10px 10px; background: #fff; color: var(--accent); border-radius: 14px; min-height: 50px; }
+.ctx-sheet .sheet-item:nth-last-child(2) { border-radius: 0; }
+
+/* Selection bar: appears while text is selected */
+.selbar { position: absolute; left: 10px; right: 10px; bottom: calc(30px + var(--safe-b)); z-index: 40; display: none; gap: 4px; padding: 6px; border-radius: 16px; background: rgba(28,30,36,.94); box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+.selbar.on { display: flex; animation: up .15s ease-out; }
+.selbar button { color: #fff; font-size: 15px; min-height: 44px; padding: 0 12px; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.selbar button:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; justify-content: flex-start; }
+.selbar button:first-child span { overflow: hidden; text-overflow: ellipsis; }
+.selbar button:active { background: rgba(255,255,255,.14); }
+.selbar .ico { width: 18px; height: 18px; flex: none; }
+
+/* Return link in the status bar after jumping to another app */
+.sb-return { pointer-events: auto; display: inline-flex; align-items: center; max-width: 46%; font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; overflow: hidden; padding: 4px 0; }
+.sb-return span { overflow: hidden; text-overflow: ellipsis; }
+
+/* Search suggestions */
+.has-suggest { position: relative; }
+.suggest { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 15; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.12); overflow: hidden; display: none; }
+.suggest.on { display: block; }
+.suggest-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 0 14px; min-height: 46px; font-size: 15px; color: var(--ink); border-bottom: 1px solid var(--line); }
+.suggest-item:last-child { border-bottom: 0; }
+.suggest-item .ico { width: 18px; height: 18px; color: var(--ink2); flex: none; }
+.suggest-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* History and recent */
+.link-btn { display: inline-flex; align-items: center; gap: 8px; margin: 18px auto 0; padding: 10px 16px; border-radius: 20px; color: var(--accent); font-size: 15px; }
+.link-btn .ico { width: 18px; height: 18px; }
+.seek-home { display: flex; flex-direction: column; }
+.hist-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 10px 16px; min-height: 56px; border-bottom: 1px solid var(--line); }
+.hist-row .ico { width: 20px; height: 20px; color: var(--ink2); flex: none; }
+.hist-row .pi-main { min-width: 0; }
+.hist-row b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.home-recent { margin-top: 14px; background: rgba(255,255,255,.12); border-radius: 22px; padding: 10px 8px 6px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); color: #fff; }
+.hr-head { display: flex; justify-content: space-between; align-items: center; padding: 0 10px 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; opacity: .85; }
+.hr-all { color: #fff; font-size: 12px; text-transform: none; letter-spacing: 0; padding: 6px 4px; opacity: .9; }
+.hr-item { display: grid; grid-template-columns: 22px 1fr; column-gap: 10px; align-items: center; width: 100%; text-align: left; color: #fff; padding: 7px 10px; border-radius: 12px; min-height: 44px; }
+.hr-item:active { background: rgba(255,255,255,.12); }
+.hr-item .ico { width: 18px; height: 18px; grid-row: span 2; opacity: .85; }
+.hr-title { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hr-sub { font-size: 12px; opacity: .7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #fff; }
+.note-src { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink2); padding: 4px 0; text-align: left; }
+.note-src .ico { width: 15px; height: 15px; flex: none; }

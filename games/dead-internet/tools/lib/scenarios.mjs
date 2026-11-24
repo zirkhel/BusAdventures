@@ -3,6 +3,13 @@
 // The scripts only use information a player would have at that point.
 
 const ev = (g, ref) => g.save(ref).id;
+// A player can only ask about, or theorise about, what they have investigated: tapping a name they
+// read and picking an action does that. These helpers do the tap first.
+const ask = (g, who, topic) => { reach(g, who); g.investigate(topic); return g.ask(who, topic); };
+const show = (g, who, ...a) => { reach(g, who); return g.show(who, ...a); };
+const reply = (g, who, ...a) => { reach(g, who); return g.reply(who, ...a); };
+const reach = (g, who) => { const c = g.w.characters.get(who); if (c?.account && !g.canContact(who)) g.investigate(c.account); };
+const hyp = (g, t) => { g.investigate(t.subject); if (t.object) g.investigate(t.object); return g.hypothesize(t); };
 const lastFrom = (g, who) => [...g.s.messages].reverse().find(m => m.thread === who && m.from !== "player");
 
 /** Brother + journalist route, ending with a Daily Record story before the vote. */
@@ -15,32 +22,32 @@ function brotherAndJournalist(g) {
   g.searchImage("IMG01"); g.open("A33");
   const orig = ev(g, { artifact: "A33" });
   g.search("Theo Quinn"); g.open("A06");
-  g.ask("theo", "calder_mill");               // "who is this" — first contact
-  g.ask("theo", "calder_mill");               // "she called it the old girl" (+2)
-  g.show("theo", "A33");                      // the photo is from May → Theo forwards his emails
+  ask(g, "theo", "calder_mill");               // "who is this" — first contact
+  ask(g, "theo", "calder_mill");               // "she called it the old girl" (+2)
+  show(g, "theo", "A33");                      // the photo is from May → Theo forwards his emails
   g.sleep();
   // Day 2: follow the recovery address
   g.open("A32");
   const emails = ev(g, { artifact: "A32" });
   g.search("bl-ops.net"); g.open("A19");
-  g.ask("dana", "mara");                      // first contact
-  g.ask("dana", "mara");                      // the death notice / quote (+1)
-  g.show("dana", "A32");                      // → anonymous invoice (+2)
+  ask(g, "dana", "mara");                      // first contact
+  ask(g, "dana", "mara");                      // the death notice / quote (+1)
+  show(g, "dana", "A32");                      // → anonymous invoice (+2)
   g.open("A25");
   const invoice = ev(g, { artifact: "A25" });
-  g.ask("dana", "brightline");                // mentions Iris Bell
+  ask(g, "dana", "brightline");                // mentions Iris Bell
   g.sleep();
   // Day 3: the insider and the money
-  g.ask("iris", "brightline");                // "how did you find me"
-  g.show("iris", "A32");                      // "…where did you get that"
-  g.show("iris", "A33");                      // opens up, attaches the dashboard and the brief
+  ask(g, "iris", "brightline");                // "how did you find me"
+  show(g, "iris", "A32");                      // "…where did you get that"
+  show(g, "iris", "A33");                      // opens up, attaches the dashboard and the brief
   g.open("A23"); g.open("A22");
   const dash = ev(g, { artifact: "A23" }), brief = ev(g, { artifact: "A22" });
   g.search("Northgate lobbying"); g.open("A26");
   const lobby = ev(g, { artifact: "A26" });
-  const h2 = g.hypothesize({ subject: "brightline", predicate: "operates", object: "acc_maraquinn" }).id;
+  const h2 = hyp(g, { subject: "brightline", predicate: "operates", object: "acc_maraquinn" }).id;
   [emails, dash, brief].forEach(e => g.link(h2, e));
-  const h3 = g.hypothesize({ subject: "northgate", predicate: "paid", object: "brightline" }).id;
+  const h3 = hyp(g, { subject: "northgate", predicate: "paid", object: "brightline" }).id;
   [invoice, lobby].forEach(e => g.link(h3, e));
   g.note("Theo's email: recovery address r…@bl-ops.net. bl-ops.net = Brightline client portal.");
   g.review("daily_record", [h2, h3]);
@@ -54,12 +61,12 @@ function believeOwen(g) {
   g.start();
   g.search("Mara Quinn dead"); g.open("A16");
   const thread = ev(g, { artifact: "A16" });
-  g.ask("owen", "mara");                      // first contact → dossier
+  ask(g, "owen", "mara");                      // first contact → dossier
   g.open("A18");
   const dossier = ev(g, { artifact: "A18" });
   g.search("Kestrel Logistics"); g.open("A38");
   const kestrel = ev(g, { artifact: "A38" });
-  const h = g.hypothesize({ subject: "northgate", predicate: "caused", object: "evt_mara_death" }).id;
+  const h = hyp(g, { subject: "northgate", predicate: "caused", object: "evt_mara_death" }).id;
   [thread, dossier, kestrel].forEach(e => g.link(h, e));
   g.publish("threadline", [h]);
   return { h };
@@ -76,9 +83,9 @@ function ghostStory(g) {
   const sign = ev(g, { artifact: "A05", image: "IMG01" });
   g.searchImage("IMG01"); g.open("A33");
   const orig = ev(g, { artifact: "A33" });
-  const h1 = g.hypothesize({ subject: "mara", predicate: "is_dead" }).id;
+  const h1 = hyp(g, { subject: "mara", predicate: "is_dead" }).id;
   [notice, theo].forEach(e => g.link(h1, e));
-  const h8 = g.hypothesize({ subject: "acc_maraquinn", predicate: "not_real" }).id;
+  const h8 = hyp(g, { subject: "acc_maraquinn", predicate: "not_real" }).id;
   [sign, orig].forEach(e => g.link(h8, e));
   g.publish("connect", [h1, h8]);
   while (g.s.day < 8) g.sleep();
@@ -96,7 +103,7 @@ function whoPaidWhom(g) {
   const stock = ev(g, { artifact: "A31" });
   g.search("Brightline Media LLC"); g.open("A27");
   const reg = ev(g, { artifact: "A27" });
-  const h7 = g.hypothesize({ subject: "calvin", predicate: "not_real" }).id;
+  const h7 = hyp(g, { subject: "calvin", predicate: "not_real" }).id;
   [team, stock, reg].forEach(e => g.link(h7, e));
   g.publish("daily_record", [h7]);
   g.sleep();
@@ -105,12 +112,12 @@ function whoPaidWhom(g) {
 /** Use Iris' login, then lie about it. */
 function portalAndLie(g) {
   brotherAndJournalist(g);
-  g.ask("iris", "mara"); g.ask("iris", "acc_eastfieldnotes");   // trust up to 6
-  g.ask("iris", "brightline");                                   // gives the login
+  ask(g, "iris", "mara"); ask(g, "iris", "acc_eastfieldnotes");   // trust up to 6
+  ask(g, "iris", "brightline");                                   // gives the login
   const r = g.login("brightline_portal", "iris.bell", "garden2025!");
   g.open("A24");
   g.sleep();
-  g.reply("iris", "no");
+  reply(g, "iris", "no");
   return { login: r };
 }
 
@@ -120,8 +127,8 @@ function breakJuno(g) {
   g.open("A02"); g.open("A04"); g.open("A07"); g.open("A37");
   g.searchImage("IMG04"); g.open("A31B");
   g.searchImage("IMG05", true); g.open("A36");
-  g.ask("juno", "mara");
-  g.show("juno", "A31B"); g.show("juno", "A37"); g.show("juno", "A07");
+  ask(g, "juno", "mara");
+  show(g, "juno", "A31B"); show(g, "juno", "A37"); show(g, "juno", "A07");
   g.sleep();
 }
 
@@ -167,7 +174,7 @@ export const SCENARIOS = [
       ["login worked", g.s.flags.portal_used === true],
       ["Iris' public profile is gone", g.view("A08").error != null],
       ["Iris has cut contact", g.s.flags.iris_cut === true],
-      ["Iris no longer answers", (g.ask("iris", "brightline"), lastFrom(g, "iris")?.text.includes("Don't contact me again"))],
+      ["Iris no longer answers", (ask(g, "iris", "brightline"), lastFrom(g, "iris")?.text.includes("Don't contact me again"))],
       ["portal session was revoked", !g.s.loggedIn.brightline_portal],
     ] },
   { id: "juno", title: "Show Juno the truth three times", run: breakJuno,

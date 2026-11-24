@@ -6,46 +6,37 @@ import { h, icon, fmtDate, onLongPress } from "./ui.js";
 import { img, avatar } from "./media.js";
 
 const PHOTO_RE = /\[(?:photo|image|screenshot)[^\]]*\]/i;
-// email | url/domain | @handle (handle must start a word)
-const LINK_RE = /([\w.+\-•]+@[a-z0-9\-]+(?:\.[a-z0-9\-]+)+)|((?:https?:\/\/)?(?:[a-z0-9\-]+\.)+(?:com|net|co|org|blog|link|io|gov|social|search|app|me)(?:\/[^\s,;)"'”’]*)?)|((?:^|(?<=[\s(]))@[a-z0-9_]+)/gi;
 
 /**
- * Turn plain text into nodes with tappable links, emails and handles.
+ * Content text as nodes. Names, handles, addresses, dates and numbers carry a reference for the
+ * context menu, but look exactly like the rest of the text. See app/context.js.
  * @param {any} phone
  * @param {string} text
  */
-export function linkify(phone, text) {
-  const out = [];
-  let last = 0;
-  for (const m of String(text).matchAll(LINK_RE)) {
-    const s = m[0], at = m.index ?? 0;
-    if (at > last) out.push(text.slice(last, at));
-    if (m[1]) out.push(h("a.lnk", { href: "#", onclick: ev => { ev.preventDefault(); phone.browse(m[1].replace(/^[•.]+/, "")); } }, s));
-    else if (m[2]) {
-      const url = s.replace(/[.]+$/, "");
-      out.push(h("a.lnk", { href: "#", onclick: ev => { ev.preventDefault(); phone.browse(url); } }, url));
-      if (url.length < s.length) out.push(s.slice(url.length));
-    } else if (m[3]) {
-      const acc = phone.accountByHandle(s);
-      out.push(acc ? h("a.lnk.handle", { href: "#", onclick: ev => { ev.preventDefault(); phone.openAccount(acc); } }, s) : s);
-    }
-    last = at + s.length;
-  }
-  if (last < text.length) out.push(text.slice(last));
-  return out;
-}
+export function richText(phone, text) { return phone.ctx.text(text); }
+
+/** @deprecated kept for older callers: same as richText. */
+export const linkify = richText;
 
 /** Paragraphs with line breaks kept. */
 function para(phone, text, cls = "p") {
   const lines = String(text).split("\n");
-  return h(`p.${cls}`, lines.map((l, i) => [linkify(phone, l), i < lines.length - 1 ? h("br") : null]));
+  return h(`p.${cls}`, lines.map((l, i) => [richText(phone, l), i < lines.length - 1 ? h("br") : null]));
 }
 
-/** A tappable image. Long press or tap opens the image viewer. */
+/** An image. A tap opens its context menu (view, metadata, image search, save). */
 export function figure(phone, imageId, ctx) {
   const el = h("figure.fig", img(imageId, { alt: phone.g.w.images.get(imageId)?.caption || "" }));
-  el.addEventListener("click", () => phone.viewImage(imageId, ctx));
+  el.addEventListener("click", () => phone.ctx.open({ type: "image", text: "", image: imageId, artifact: ctx?.artifact }, ctx));
   return el;
+}
+
+/** A handle or name in a page header: plain text that opens the context menu. */
+function who(phone, text, accId, tag = "span") {
+  const acc = accId ? phone.g.w.accounts.get(accId) : null;
+  const ref = acc && String(text) === acc.handle ? { type: "handle", id: accId } : acc ? { type: "account", id: accId } : { type: "text" };
+  const sp = phone.ctx.span(text, ref);
+  return tag === "b" ? h("b", sp) : sp;
 }
 
 /**
@@ -82,8 +73,8 @@ export function renderArtifact(phone, v, o = {}) {
       flush();
       const handleAcc = phone.accountByHandle(fm[1]);
       blocks.push(h("div.reply", { class: fm[2] ? "op" : "" },
-        h("div.reply-head", avatar(w, handleAcc, 22), h("b", fm[1]), fm[2] ? h("span.tag", "OP") : null),
-        h("div.reply-body", linkify(phone, fm[3]))));
+        h("div.reply-head", avatar(w, handleAcc, 22), h("b", phone.ctx.span(fm[1], { type: "handle", id: handleAcc })), fm[2] ? h("span.tag", "OP") : null),
+        h("div.reply-body", richText(phone, fm[3]))));
       if (PHOTO_RE.test(fm[3])) { const im = takeImage(); if (im) blocks.push(figure(phone, im, ctx)); }
       continue;
     }
@@ -92,8 +83,8 @@ export function renderArtifact(phone, v, o = {}) {
       const handleAcc = phone.accountByHandle(cm[1]);
       blocks.push(h("div.comment", avatar(w, handleAcc, 28),
         h("div.comment-bubble", h("div.comment-head",
-          handleAcc ? h("a.lnk.handle", { href: "#", onclick: e => { e.preventDefault(); phone.openAccount(handleAcc); } }, cm[1]) : h("b", cm[1]),
-          cm[2] ? h("span.muted", ` · ${cm[2]}`) : null), linkify(phone, cm[3]))));
+          h("b", phone.ctx.span(cm[1], { type: "handle", id: handleAcc })),
+          cm[2] ? h("span.muted", ` · ${cm[2]}`) : null), richText(phone, cm[3]))));
       continue;
     }
     if (kind === "social" && /^[\d,.]+k? (likes|comments)\b|^\d+ comments ·/i.test(line)) { flush(); blocks.push(h("div.stats", line)); continue; }
@@ -113,7 +104,7 @@ export function renderArtifact(phone, v, o = {}) {
   flush();
   for (const im of images) blocks.push(figure(phone, im, ctx));
 
-  const page = h(`article.page.k-${kind}.pf-${v.platform}`);
+  const page = phone.ctx.block(h(`article.page.k-${kind}.pf-${v.platform}`), { artifact: v.id, version: v.versionId, title: v.title });
   page.append(header(phone, v, a, acc, pf, kind));
   if (kind === "news" && blocks[0]?.tagName === "P") {
     // "Local news · Obituaries" kicker and "By …" byline
@@ -123,7 +114,7 @@ export function renderArtifact(phone, v, o = {}) {
     if (by) by.className = "byline";
   }
   page.append(h("div.page-body", blocks));
-  if (o.context !== "message") page.append(h("div.page-foot", v.url ? h("span", v.url) : null, v.date ? h("span", fmtDate(v.date)) : null));
+  if (o.context !== "message") page.append(h("div.page-foot", v.url ? h("span", phone.ctx.span(v.url, { type: "url" })) : null, v.date ? h("span", fmtDate(v.date)) : null));
   return page;
 }
 
@@ -134,13 +125,13 @@ function header(phone, v, a, acc, pf, kind) {
     return h("header.soc-head", { class: isProfile ? "profile" : "" },
       avatar(w, v.author, isProfile ? 72 : 40),
       h("div.soc-names",
-        h("b", acc?.displayName || v.title),
-        acc ? h("a.lnk.handle", { href: "#", onclick: e => { e.preventDefault(); phone.openAccount(acc.id); } }, acc.handle) : null,
+        acc ? who(phone, acc.displayName || acc.handle, acc.id, "b") : h("b", v.title),
+        acc ? h("span.handle", who(phone, acc.handle, acc.id)) : null,
         !isProfile && v.date ? h("span.muted", fmtDate(v.date)) : null));
   }
   if (kind === "forum") {
     return h("header.forum-head", h("div.crumb", "threadline › " + (v.url || "").split("/").slice(2, 3).join("")),
-      h("h1", v.title), h("div.muted", acc ? `started by ${acc.handle}` : "", v.date ? ` · ${fmtDate(v.date)}` : ""));
+      h("h1", v.title), h("div.muted", acc ? ["started by ", who(phone, acc.handle, acc.id)] : "", v.date ? ` · ${fmtDate(v.date)}` : ""));
   }
   if (kind === "news") return h("header.news-head", h("div.mast", pf?.name || ""), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
   if (kind === "blog") return h("header.blog-head", h("div.mast", pf?.name || ""), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);

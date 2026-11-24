@@ -20,6 +20,7 @@
     "characters": "world/characters.json",
     "canon": "world/canon.json",
     "rules": "world/rules.json",
-    "mysteries": "world/mysteries.json"
+    "mysteries": "world/mysteries.json",
+    "terms": "world/terms.json"
   }
 }

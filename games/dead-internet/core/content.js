@@ -9,7 +9,7 @@
 export async function loadContent(readJson) {
   const manifest = await readJson("manifest.json");
   const raw = { meta: null, strings: {}, entities: [], accounts: [], platforms: [], images: [], artifacts: [],
-    characters: [], rules: [], predicates: [], canon: { claims: [], facts: [] }, mysteries: [] };
+    characters: [], rules: [], predicates: [], canon: { claims: [], facts: [] }, mysteries: [], terms: [] };
   for (const [key, files] of Object.entries(manifest.files)) {
     for (const f of [].concat(files)) {
       const data = await readJson(f);

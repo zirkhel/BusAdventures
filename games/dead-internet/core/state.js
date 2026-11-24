@@ -2,7 +2,7 @@
 // Everything that changes during play lives in one plain, serialisable object.
 // The world (authored content) is never modified; the state only stores differences.
 
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 /**
  * @param {any} w world from buildWorld()
@@ -34,8 +34,12 @@ export function createState(w, opts = {}) {
     accounts: {},
     /** artifact id → day first opened */
     seen: {},
-    /** entity or account id → true; drives which topics the player can ask about */
+    /** Discovery (see core/discovery.js). known = investigated: drives topics, theory pickers, suggestions */
     known,
+    /** entity or account id → day it first appeared in content the player opened */
+    encountered: Object.fromEntries(Object.keys(known).map(id => [id, w.meta.startDay ?? 1])),
+    /** entity or account id → day the player saved it to the Casebook */
+    saved: {},
     /** queries typed, in order */
     searches: [],
     /** all direct messages, both directions */

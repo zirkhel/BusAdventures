@@ -4,9 +4,9 @@
 // answer is decided by the world data (knowledge, trust, flags), not by this file.
 // Screens: list · thread {id} · page {id, view}
 
-import { h, icon, onLongPress } from "../ui.js";
+import { h, icon } from "../ui.js";
 import { avatar, img } from "../media.js";
-import { renderArtifact, renderGone, linkify } from "../render.js";
+import { renderArtifact, renderGone, richText } from "../render.js";
 
 const KIND_TITLES = { person: "People", account: "Accounts", org: "Organisations", place: "Places", event: "Events", project: "Projects", system: "Other" };
 const KIND_ORDER = ["person", "account", "org", "event", "place", "project", "system"];
@@ -63,12 +63,10 @@ export function messagesApp(phone) {
     msgs.forEach((m, i) => {
       if (m.day !== day) { day = m.day; out.push(h("div.day-sep", `Day ${m.day}`)); }
       const mine = m.from === "player";
-      const bubble = h("div.bubble", { class: mine ? "mine" : "theirs" }, linkify(phone, m.text),
-        (m.attach || []).map(aid => attachment(aid)));
-      if (!mine) {
-        onLongPress(bubble, () => phone.sheet("Message", [{ label: "Save message to Casebook", run: () => phone.saveEvidence({ message: m.id }) }]));
-        if (phone.isSaved({ message: m.id })) bubble.classList.add("saved");
-      }
+      // Tap a word for its actions; select text to search it. Their messages can be saved from either menu.
+      const bubble = phone.ctx.block(h("div.bubble", { class: mine ? "mine" : "theirs" }, richText(phone, m.text),
+        (m.attach || []).map(aid => attachment(aid))), mine ? { title: "Your message" } : { message: m.id, title: `Message from ${phone.contactName(m.thread)}` });
+      if (!mine && phone.isSaved({ message: m.id })) bubble.classList.add("saved");
       if (!mine && i >= typingFrom) {
         // Replies appear after a short "typing" pause, one after another.
         const delay = 650 + (i - typingFrom) * 900;
@@ -90,7 +88,7 @@ export function messagesApp(phone) {
   function attachment(aid) {
     const a = w.artifacts.get(aid);
     if (!a) return null;
-    return h("button.attach", { onclick: e => { e.stopPropagation(); phone.openArtifact(aid, undefined, phone.appFor(aid) === "messages" ? "messages" : undefined); } },
+    return h("button.attach", { onclick: e => { e.stopPropagation(); phone.ctx.open({ type: "document", text: a.title || aid, artifact: aid }); } },
       icon("paperclip"), h("span", a.title || aid));
   }
 

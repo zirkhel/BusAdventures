@@ -18,7 +18,7 @@ Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Oppr
 games/dead-internet/
   DESIGN.md  DEVPLAN.md
   index.html  manifest.json egen PWA (start_url /games/dead-internet/)
-  app/                      telefonen (DOM): main.js, phone.js, render.js, media.js, ui.js, style.css
+  app/                      telefonen (DOM): main.js, phone.js, render.js, context.js, suggest.js, media.js, ui.js, style.css
     apps/                   browser, connect, messages, casebook, settings
   core/                     spillmotoren (ingen DOM, ingen I/O)
     game.js                 fasade: Game, dispatch, spørringer, replay()
@@ -28,6 +28,8 @@ games/dead-internet/
     rules.js                regler, effekter, planlagte effekter
     artifacts.js            synlighet, versjoner, cache, tilgang
     search.js               Seeker: fritekst, bildesøk, bildeinfo
+    refs.js                 referanser i tekst (leksikon, mønstre) og søkeforslag
+    discovery.js            oppdagelsestilstander og kunnskapsgrenser
     dialogue.js             skriptede samtaler, tillit, svaralternativer
     casebook.js             bevis, hypoteser, notater, vurdering, publisering
     save.js                 lagring, versjonering, migrering, eksport/import
@@ -36,7 +38,7 @@ games/dead-internet/
   content/
     manifest.json           hvilke filer verden består av
     world/*.json            meta, predicates, platforms, entities, accounts, images,
-                            artifacts/*.json, characters, canon, rules, mysteries
+                            artifacts/*.json, characters, canon, rules, mysteries, terms
     strings/en.json         UI-tekster (lokalisering: nb.json senere)
   graphics/
     catalog.json            grafikkoversikt: stabile id-er, filnavn, størrelser, beskrivelser, avhengigheter
@@ -140,13 +142,88 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 - `main.js` laster verden med `fetch`, gjenoppretter lagring fra `localStorage` (eller viser navnevalg), og lagrer etter hver handling via `game.on("state")`. Eksport og import bruker `save.js`.
 - `phone.js` eier statuslinje (klokke, dato og dag), låseskjerm med varsler, hjemskjerm, bannervarsler, bildevisning og ark. Hver app har sin egen tilbakestabel. Knappen øverst til venstre i hver app er «tilbake», og «Home» når appen står på første skjerm. Sveip fra venstre kant, Esc og nettleserens egen tilbakeknapp gjør det samme. Nettleserens tilbake holdes inne i spillet med en ekstra historikkoppføring. Bare på hjemskjermen forlater to trykk innen 2 sekunder spillet.
 - Skjermer er rene data (`{kind:"page", id, version, view}`), så tilbake viser samme visning uten å sende handlingen på nytt.
-- `render.js` tegner en artefakt etter plattformtype (sosial, forum, avis, blogg, register, dokument). `[Photo: …]` i teksten byttes med neste bilde. Kommentarer (`@handle (tid): tekst`) og foruminnlegg (`navn: tekst`) gjenkjennes. Adresser, e-poster og @handles blir lenker. En kjent adresse åpner siden, alt annet blir et Seeker-søk.
+- `render.js` tegner en artefakt etter plattformtype (sosial, forum, avis, blogg, register, dokument). `[Photo: …]` i teksten byttes med neste bilde. Kommentarer (`@handle (tid): tekst`) og foruminnlegg (`navn: tekst`) gjenkjennes. All tekst går gjennom kontekstsystemet (se under), så navn, adresser og @handles ser ut som vanlig tekst og åpner et handlingsark ved trykk.
 - Connect-adresser åpnes i Connect, alt annet i Browser. Private dokumenter (e-post, vedlegg) åpnes i appen man står i.
 - `media.js` bruker `graphics/catalog.json`: filen i `assets/images/` hvis den finnes, ellers plassholderen. Nye bilder krever ingen kodeendring.
-- **Messages** (fase 3): spilleren velger «Ask about…» (alt hun kjenner, gruppert som personer, kontoer, organisasjoner, hendelser og steder) eller «Show evidence…» (artefakter i Casebook, med versjonen som ble lagret). Svaralternativer (`prompts`) vises som knapper når en person tilbyr dem. «New message» viser personer man kan kontakte (`canContact`). Svarene bestemmes av personens `responses` i `characters.json`, ut fra kunnskap, tillit og flagg. UI-et velger aldri innhold selv.
+- **Messages** (fase 3): spilleren velger «Ask about…» (alt hun har undersøkt eller lagret, gruppert som personer, kontoer, organisasjoner, hendelser og steder) eller «Show evidence…» (artefakter i Casebook, med versjonen som ble lagret). Svaralternativer (`prompts`) vises som knapper når en person tilbyr dem. «New message» viser personer man kan kontakte (`canContact`). Svarene bestemmes av personens `responses` i `characters.json`, ut fra kunnskap, tillit og flagg. UI-et velger aldri innhold selv.
 - **Casebook** (fase 3): bevis gruppert etter hvem de handler om (`game.evidenceAbout`, bare kjente og ikke-hemmelige id-er), teorier bygd med `[hvem] [relasjon] [hvem/hva]`, der relasjoner filtreres etter `subjectKinds`/`objectKinds`, og notater. En teori viser antall bevis, antall uavhengige kilder og hvem kildene er, aldri om den stemmer.
 - **Sleep** er en knapp på hjemskjermen. Dagen går, nattlige hendelser kjøres, og telefonen viser låseskjermen med nye varsler.
 - Spillet må serveres over HTTP (ES-moduler fungerer ikke fra `file://`). Lokalt: `python -m http.server` eller `npx serve` fra repo-roten, så `/games/dead-internet/`.
+
+## Kontekstsystemet (app/context.js, core/refs.js)
+
+Ett felles system for alle apper, ikke én løsning per app.
+
+- **Kjernen (`core/refs.js`, uten DOM)** bygger et leksikon fra verden: navn og alias på ikke-hemmelige entiteter, kontoer (brukernavn og visningsnavn) og begreper fra `world/terms.json`. `scanText` finner i tillegg e-poster, nettadresser, domener, @handles, datoer og referansenummer med mønstre. Hvert treff er et spenn `{start, end, text, type, id, alias}`.
+- Et alias som også er et brukernavn (`truthseeker_88`) er en identitetspåstand. Det tolkes som kontoen, aldri som personen. Handlingsarket viser og søker alltid på teksten slik den står, aldri på et kanonisk navn.
+- **Presentasjonen (`app/context.js`)**: `ctx.text()` gjør tekst om til noder der referanser er `span.ref` uten synlig forskjell (ingen farge, understrek, vekt eller ikon). `ctx.block(el, origin)` merker lesbart innhold med opphav (side, melding, notat).
+- **Ett trykk på et hvilket som helst ord** i et merket område åpner handlingsarket. Ord som ikke er referanser fungerer også (søk, Connect-søk, lagre, kopier), og en rekke ord med stor forbokstav («Harbor Street») tas som ett navn. Å være trykkbar betyr derfor ingenting.
+- **Langt trykk markerer tekst** som vanlig. En linje nederst tilbyr «Search», «Copy», «Save» og flere handlinger for markeringen.
+- **Handlinger registreres** med `ctx.register({id, icon, types, label, when?, run, investigates?})`. Standardsettet ligger i `registerDefaultActions`:
+  - Søk med Seeker.
+  - Finn Connect-profil. Dette er et søk, som åpner profilen direkte bare når søket finner nøyaktig én.
+  - Send melding, bare til eksisterende kontakter.
+  - Spør noen om dette.
+  - Lag teori.
+  - Besøk nettsted (entitetens `website`).
+  - Åpne side eller nettsted.
+  - Vis cachede versjoner.
+  - Oppslag i verktøy (plattformens `lookup`, for eksempel SpillCheck for e-post).
+  - Bilde: vis, metadata, bildesøk, speilvendt søk, lagre.
+  - Dokument: åpne, lagre, tilgjengelige versjoner.
+  - Lagre i Casebook, som et notat som husker hvor det ble funnet.
+  - Kopier.
+- **`when`-tester bruker bare det spilleren allerede kan se eller gjøre.** Eksempler: kontaktlisten, egne oppdagelsestilstander og offentlige data som en organisasjons nettsted. De bruker aldri skjulte relasjoner eller kontoer.
+- Nye typer og handlinger krever ingen endring i appene.
+
+## Oppdagelse og kunnskapsgrenser (core/discovery.js)
+
+Verden vet alt. Spilleren vet bare det hun har gjort noe med. Tilstander per entitet eller konto:
+
+| Tilstand | Betyr | Lagres i |
+|---|---|---|
+| unknown | finnes i verden, aldri møtt | – |
+| encountered | sto i innhold spilleren åpnet | `s.encountered` |
+| investigated | søkt etter, valgt i kontekstmenyen, profilen åpnet, eller personen skrev til deg | `s.known` |
+| saved | lagret i Casebook | `s.saved` |
+
+- Å åpne en artikkel gir bare `encountered`. Emner i Messages, velgerne i teoribyggeren, Casebook-grupper og søkeforslag bruker bare `investigated` og `saved` (`game.known()`, `game.topics()`).
+- Et fritt søk undersøker navnene i spørringen hvis søket gir treff, eller hvis navnet er møtt før. Et alias teller bare for noe som er møtt, så det å gjette et kallenavn sier ikke hvem det er.
+- `investigate` krever at navnet er møtt, eller at teksten er selve navnet. Den virker aldri på hemmeligheter.
+- Kontakter er folk som har skrevet til deg, folk hvis profil du har åpnet, eller folk du har undersøkt. Unntaket er kontoen saken starter med.
+- Søkeforslag kommer bare fra egne søk og undersøkte navn (`game.suggest`).
+- «Nylig besøkt» lagres per spill (nøkkel med seed) i `localStorage` og fylles bare av faktisk navigasjon.
+- Lagringsversjon 2. Version 1-lagringer migreres slik:
+  - Alt som var «kjent» blir `encountered`.
+  - Følgende blir `investigated` igjen: startpremisset, temaer man har spurt om, folk man har snakket med, åpnede profiler, teoriers subjekt og objekt, og navn i tidligere søk.
+- Testene i `tests/world.test.mjs` sjekker:
+  - at en ny verden bare viser premisset
+  - at det å lese ikke fyller verktøy
+  - at én person ikke avslører andre
+  - at hemmeligheter og identitetsalias aldri lekker
+  - at forslag holder seg innenfor grensene
+  - at migreringen fungerer
+
+## Navigasjon
+
+- Hver app har sin egen stabel. Når man bytter app, beholdes side, rulleposisjon, søkeresultater, åpen samtale og Casebook-fane.
+- En handling som åpner noe i en annen app, husker opphavet (`returnTo`). Tilbake, og lenken «◂ tittel» i statuslinjen, går rett tilbake dit, med samme rulleposisjon. Åpner man appen fra hjemskjermen, glemmes opphavet.
+- Hjemskjermen viser «Recently visited». Browser har «History» med besøkte sider og alle søk, der ett trykk gjentar et søk. Søkefelt i Browser og Connect viser forslag.
+
+## Appkart
+
+| App | Status | Hva som finnes i dag |
+|---|---|---|
+| Browser | ferdig | Seeker, nettsteder, cachede kopier, historikk |
+| Connect | ferdig | profiler, innlegg, søk |
+| Messages | ferdig | emnebaserte samtaler, vis bevis, svarvalg |
+| Casebook | Evidence, Theories, Notes | Timeline kommer (spillerbygd, uten fasit) |
+| Settings | ferdig | navn, eksport/import, start på nytt |
+| Mail | planlagt | e-poster finnes som dokumenter (videresendte e-poster i vedlegg) |
+| Files | planlagt | vedlegg åpnes fra Messages, og lagrede dokumenter ligger i Casebook |
+| Archive | planlagt | bygges på versjoner og cache i motoren og Browser (ikke dupliser) |
+| Contacts | planlagt | `contacts()` gir i dag etablerte kontakter, og skal aldri fylles fra hele personregisteret |
+| Forensics | planlagt | bildemetadata, bildesøk og speilvendt søk finnes i bildeviseren |
 
 ## Kjente begrensninger
 
