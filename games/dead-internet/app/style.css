@@ -654,3 +654,14 @@ h2.np-head { font-size: 23px; }
 .dev-head { margin: 6px 0 6px; text-transform: uppercase; letter-spacing: .04em; }
 .results-partial { font-size: 13px; padding: 0 16px 8px; }
 #phone.tip-on .scroll::before { content: ""; display: block; height: 170px; }
+
+/* Casebook judgments are the player's, all in the same neutral colour. */
+.evidence-filters { display: flex; gap: 8px; padding: 12px; }
+.evidence-filters select { flex: 1; min-width: 0; width: 50%; }
+.evidence-detail { overflow-wrap: anywhere; }
+.evidence-detail .btn { margin: 10px 0; }
+.evidence-detail .note-input { width: 100%; box-sizing: border-box; }
+.evidence-marks { display: flex; flex-wrap: wrap; gap: 8px; }
+.evidence-marks .chip { color: inherit; min-height: 44px; }
+.evidence-marks [aria-pressed="true"] { border-color: currentColor; font-weight: 700; }
+.evidence-preview { max-width: 100%; max-height: 240px; object-fit: contain; }

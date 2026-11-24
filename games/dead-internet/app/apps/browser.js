@@ -123,6 +123,7 @@ export function browserApp(phone) {
     });
     if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"));
     const art = renderArtifact(phone, v);
+    if (v.saved) art.prepend(h("div.cache-banner", h("b", "Saved copy"), " This is the version you saved to Casebook."));
     if (v.cached) art.prepend(h("div.cache-banner", h("b", "Seeker cache"), ` This is a copy of ${v.url || "the page"} as it appeared on ${fmtDate(v.date)}. The current page may have changed or been removed.`));
     return art;
   }

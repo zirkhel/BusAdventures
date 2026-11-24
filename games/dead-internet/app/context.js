@@ -240,11 +240,11 @@ export function registerDefaultActions(cs) {
   cs.register({ id: "connect-search", icon: "people", types: ["text"], label: "Search on Connect", run: (r, o, p) => p.findProfile(r.text) })
     .register({ id: "cached", icon: "clock", types: ["domain", "url"], label: "View cached versions", run: (r, o, p) => p.cachedFor(r.text) })
     // Images
-    .register({ id: "img-view", icon: "image", types: ["image"], label: "View image", run: (r, o, p) => p.viewImage(r.image, { artifact: r.artifact }) })
-    .register({ id: "img-info", icon: "info", types: ["image"], label: "View metadata", run: (r, o, p) => p.viewImage(r.image, { artifact: r.artifact }, { info: true }) })
+    .register({ id: "img-view", icon: "image", types: ["image"], label: "View image", run: (r, o, p) => p.viewImage(r.image, { artifact: r.artifact, version: o.version }) })
+    .register({ id: "img-info", icon: "info", types: ["image"], label: "View metadata", run: (r, o, p) => p.viewImage(r.image, { artifact: r.artifact, version: o.version }, { info: true }) })
     .register({ id: "img-search", icon: "search", types: ["image"], label: "Reverse image search", run: (r, o, p) => p.imageSearch(r.image, false) })
     .register({ id: "img-flip", icon: "flip", types: ["image"], label: "Flip and search", run: (r, o, p) => p.imageSearch(r.image, true) })
-    .register({ id: "img-save", icon: "bookmark", types: ["image"], label: "Save as evidence", when: r => !!r.artifact, run: (r, o, p) => p.saveEvidence({ artifact: r.artifact, image: r.image }) })
+    .register({ id: "img-save", icon: "bookmark", types: ["image"], label: "Save as evidence", when: r => !!r.artifact, run: (r, o, p) => p.saveEvidence({ artifact: r.artifact, version: o.version, image: r.image }) })
     // Documents (attachments, linked pages)
     .register({ id: "doc-open", icon: "globe", types: ["document"], label: "Open document", run: (r, o, p) => p.openArtifact(r.artifact, r.version ?? undefined, p.appFor(r.artifact)) })
     .register({ id: "doc-save", icon: "bookmark", types: ["document"], label: "Save as evidence", when: (r, o, p) => { const v = p.g.view(r.artifact, r.version ?? undefined); return !v.error && !v.locked; },

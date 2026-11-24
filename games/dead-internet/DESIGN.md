@@ -85,7 +85,7 @@ games/dead-internet/
 
 | Kommando | Hva den gjør |
 |---|---|
-| `node --test games/dead-internet/tests/*.test.mjs` | Alle tester (ca. 16 s, mest den fulle validatoren) |
+| `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs` | Alle tester (ca. 16 s, mest den fulle validatoren) |
 | `node games/dead-internet/tools/validate.mjs` | Validerer innholdet. `--fast` hopper over simulerte spillere, `--info` viser detaljer |
 | `node games/dead-internet/tools/simulate.mjs` | Kjører alle scenarioer og to automatiske spillere |
 | `node games/dead-internet/tools/simulate.mjs lights_out` | Ett scenario med full samtalelogg |
@@ -179,17 +179,17 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 
 ## Lagring
 
-`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 6: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»).
+`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 7: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»), 6→7 beviskort med tomme egne vurderinger og lagret visningskopi.
 
 ## Teststrategi (Anders, 24. nov)
 
-Testene skal beskytte både teknisk funksjonalitet og spillopplevelsen. Status per punkt:
+Testene skal beskytte både teknisk funksjonalitet og spillopplevelsen. Følg også «Testbelastning» i DEVPLAN.md: målrettede tester under utvikling, sekvensielle kjøringer og én nettleser om gangen. Status per punkt:
 
 | Test | Status |
 |---|---|
 | Permanent tvillingverden-test, utvides når nye Casebook-funksjoner kommer | finnes (`tests/twin.test.mjs`) |
-| DOM-tester for informasjonslekkasje | planlagt i Casebook steg 1 |
-| Lagrede bevis endres ikke når originalkilden endres | planlagt i Casebook steg 1 |
+| DOM-tester for informasjonslekkasje | `tools/test-casebook-ui.mjs`: 411 beviskort, filtre og grupper i tre tvillingverdener |
+| Lagrede bevis endres ikke når originalkilden endres | `tests/evidence.test.mjs`, også ikke-cachede/slettede versjoner og migrering |
 | Sammenligning av gamle og nye nettsideversjoner | nettsidefasen (W0–W8) |
 | Cache viser aldri fremtidig innhold | nettsidefasen |
 | Skjulte sider dukker ikke opp i automatiske lister | nettsidefasen |
@@ -385,6 +385,18 @@ Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en oppgaveliste
 - **Kildevurdering** gjøres per synlig kilde: troverdighet, er den den den utgir seg for, og «samme opphav som». Spillerens egne «samme opphav» slår sammen kilder i spillerens telling.
 - **Spillerlaget er usynlig for reglene.** Merker, koblinger, spørsmål og kildevurderinger leses aldri av betingelser, så verden kan ikke belønne en riktig kobling og dermed røpe fasit.
 - **Mobil:** hurtigmenyer, valgmodus med langt trykk, filtrering etter egne vurderinger, korte valgfrie kommentarer, kontekstmenysystemet gjenbrukes, retur til originalkilden med bevart rulleposisjon.
+
+### Implementert steg 1 (25. november 2026, venter på PR-gjennomgang)
+
+`core/workbench.js` håndterer bare spillerens vurderinger gjennom `dispatch`: `opened` registrerer første åpning stille, `marks.reviewed` settes/fjernes eksplisitt, og `important`/`doubtful` er uavhengige merker. `shelf` er `null`, `irrelevant` eller `finished`, med dag. Kommentar, saker og teori-/tidslinjekoblinger beholdes ved gjenoppretting. Reglene og publiseringsvurderingen leser ingen av disse feltene.
+
+Evidence-fanen har vurderings- og saksfilter, med ikke-vurderte bevis først. Kortet gir kommentar, merker, eksisterende koblinger og valg mellom lagret kopi og originalkilden; telefonens navigasjonsstakk bevarer rulleposisjonen. Utdrag med kilde blir bevis med `quote.text` og samme kildereferanse/versjon. Tekst uten kilde og spillerens egne notater forblir notater; gamle notater konverteres ikke automatisk.
+
+Nye sidebevis får eksplisitt versjon og `snapshot` av kjernens rensede visningsobjekt. `evidenceView(id)` krever et eksisterende bevis og gir en kopi av disse dataene; den gir aldri tilgang til andre versjoner. Den levende siden og Seeker-cachen beholder sine tilgangsregler. Bilder lagrer også sideversjonen de ble funnet på. Duplikater identifiseres etter kilde, versjon, bilde/melding og eventuelt utdrag.
+
+Migrering v6→v7 beholder alle eksisterende referanser og kommentarer og fyller tomme vurderinger. En eksplisitt gammel versjon gjenopprettes som lagret kopi selv om den ikke er cachet. Hvis et gammelt bevis mangler versjon, kan den historiske versjonen ikke rekonstrueres sikkert: migreringen binder den til nåværende versjon når den finnes. Ingen vurderinger utledes fra at spilleren tidligere har åpnet kilden.
+
+Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node games/dead-internet/tools/test-casebook-ui.mjs`. Den bruker installert `playwright`, eller en pakke angitt med `PLAYWRIGHT_MODULE`; `PLAYWRIGHT_CHANNEL` kan velge en installert nettleser. Den starter en lokal server, tester 390×844 og sammenligner tekst, CSS-klasser og kontrollverdier i tvillingverdenene. Skjermbildet lagres lokalt i `test-results/`.
 
 ## Saksavslutning og konsekvenser (gjennomgang 24. nov 2026, ikke diskutert ennå)
 

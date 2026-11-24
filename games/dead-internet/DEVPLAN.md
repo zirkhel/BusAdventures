@@ -12,7 +12,7 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
 - Nettstedene er godkjent som designretning ([docs/WEBSITES.md](docs/WEBSITES.md)), men skal ikke implementeres før veikartets punkt 5.
 
-**Neste steg:** Casebook steg 1 (se under). Deretter steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
+**Neste steg på main:** Casebook steg 1. Implementert på `codex/casebook-step-1`, til gjennomgang; ikke merget. Etter godkjent merge kommer steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
@@ -20,8 +20,27 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Ingen visuell markering av ledetråder. Ingen poeng, stjerner eller løsningsgrad.
 - Grafikk: hvert nytt bilde kontrolleres alltid mot spesifikasjonen og mot alle tidligere bilder, både for likhet og mangler (se `graphics/`).
 - Spilltekst på engelsk. Anders skriver norsk, og dokumentasjonen er på norsk.
-- Tester: `node --test games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs` og `node games/dead-internet/tools/simulate.mjs` fra repo-roten. Mobil røyktest (Playwright, 390×844) ved UI-endringer: et lagret spill kan legges i `localStorage`, telefonen låses opp med «Swipe up to unlock», introen lukkes med `.it-notips`, og Casebook er det fjerde ikonet i docken.
+- Tester: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs` og `node games/dead-internet/tools/simulate.mjs` fra repo-roten. Mobil røyktest (Playwright, 390×844) ved UI-endringer: et lagret spill kan legges i `localStorage`, telefonen låses opp med «Swipe up to unlock», introen lukkes med `.it-notips`, og Casebook er det fjerde ikonet i docken.
 
+
+## Testbelastning (Anders, 25. nov 2026)
+
+Full testdekning beholdes. Vi reduserer hyppighet og parallellitet, ikke kvaliteten på testene.
+
+- **Under aktiv utvikling:** kjør bare tester som berører endret kode. Ikke kjør fullpakken etter små endringer. Kjør testprosesser sekvensielt som standard og bruk `node --test --test-concurrency=1` for å kjøre testfilene sekvensielt.
+- **Etter fullført deloppgave:** kjør relevante regresjonstester. Tvillingverden-testen kreves ved endringer i Casebook, proveniens eller spillerens synlige informasjon. Kjør én mobil røyktest ved UI-endringer.
+- **Før PR:** kjør hele testpakken én gang, deretter validator og simulator, og nødvendig Playwright-røyktest. Rapporter feil. Allerede fullførte kontroller gjentas bare dersom nye relevante endringer eller feil gjør det nødvendig.
+- **Playwright:** maksimalt én worker og én nettleser om gangen som standard. Gjenbruk nettleseren gjennom kjøringen; unngå unødvendige oppstarter. `tools/test-casebook-ui.mjs` bruker én nettleser, sekvensielle sider og ingen parallelle workers.
+- **Ressurser:** ingen samtidige fullpakker, ubegrenset parallellisering eller kontinuerlige bakgrunnstester. Undersøk hengende tester før ny kjøring; ikke start flere kopier. Ingen permanente endringer i globale systeminnstillinger.
+
+Kommandoene før PR kjøres én etter én fra repo-roten:
+
+```text
+node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs
+node games/dead-internet/tools/validate.mjs
+node games/dead-internet/tools/simulate.mjs
+node games/dead-internet/tools/test-casebook-ui.mjs
+```
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
@@ -214,11 +233,14 @@ Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIG
 - [x] Tvillingverden-test som permanent regresjonstest, pluss test av at `app/` ikke bruker kanonhjelpere
 
 ### Steg 1 — Bevis
-- [ ] Beviskort med retur til original (bevart rulleposisjon), kommentar, merker (viktig, tvilsom), åpnet vs. vurdert
-- [ ] «Legg bort» med årsak og gjenoppretting, uten at koblinger eller kommentarer forsvinner
-- [ ] Filter etter egne vurderinger, «Ikke vurdert» øverst, lagret utdrag som bevis i stedet for notat. Lagring v7.
-- [ ] Et lagret bevis åpner versjonen spilleren lagret, ikke den levende siden
-- [ ] DOM-test i Playwright: Casebook gir samme tekst og CSS-klasser i tvillingverdenene
+_Implementert 25. november 2026 på egen branch; venter på Anders’ PR-gjennomgang og eksplisitte merge-godkjenning._
+- [x] Beviskort med retur til original (bevart rulleposisjon), kommentar, merker (viktig, tvilsom), åpnet vs. vurdert
+- [x] «Legg bort» med årsak og gjenoppretting, uten at koblinger eller kommentarer forsvinner
+- [x] Filter etter egne vurderinger, «Ikke vurdert» øverst, lagret utdrag som bevis i stedet for notat. Lagring v7.
+- [x] Et lagret bevis åpner versjonen spilleren lagret, ikke den levende siden
+- [x] DOM-test i Playwright: Casebook gir samme tekst og CSS-klasser i tvillingverdenene
+
+Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 scenarioer og begge automatiske spillere. Playwright på 390×844: merker, kommentar, lagret kopi/original, retur med faktisk rulleposisjon, legg bort/gjenopprett, filtre og ny lasting. DOM-testen sammenligner 411 beviskort og alle filter/grupperingsvalg i tre tvillingverdener. Kjør med `node games/dead-internet/tools/test-casebook-ui.mjs` (Playwright installert; valgfritt `PLAYWRIGHT_MODULE` og `PLAYWRIGHT_CHANNEL`).
 
 ### Steg 2 — Teorier og spørsmål
 - [ ] Fri formulering, bevis for og mot, status med historikk, alternative forklaringer

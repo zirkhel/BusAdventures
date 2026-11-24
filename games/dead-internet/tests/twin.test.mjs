@@ -142,3 +142,22 @@ test("the presentation layer and provenance never touch canon helpers", async ()
     assert.doesNotMatch(code, banned, `${f} reads hidden canon`);
   }
 });
+
+
+test("twin worlds: saved copies, excerpts and player judgments remain identical", async () => {
+  const workbench = w => {
+    const { g } = play(w);
+    for (const [i, e] of [...g.s.evidence].entries()) {
+      g.editEvidence(e.id, { opened: true, reviewed: i % 2 === 0, important: i % 3 === 0,
+        doubtful: i % 4 === 0, shelf: i % 5 === 0 ? "irrelevant" : null, note: "My interpretation" });
+      if (e.artifact && !e.image) {
+        const v = g.evidenceView(e.id);
+        if (v.body) g.save({ artifact: e.artifact, version: e.version, quote: { text: v.body.slice(0, 40) } });
+      }
+    }
+    return { evidence: g.s.evidence, copies: g.s.evidence.filter(e => e.artifact).map(e => g.evidenceView(e.id)), casebook: g.casebook() };
+  };
+  const base = workbench(await loadWorld());
+  assert.deepEqual(workbench(twin(await loadWorld(), () => "one-source")), base);
+  assert.deepEqual(workbench(twin(await loadWorld(), (kind, id) => `${kind}:${id}`)), base);
+});
