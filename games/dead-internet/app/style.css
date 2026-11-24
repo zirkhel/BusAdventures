@@ -465,3 +465,34 @@ button.bar-title { text-align: left; }
 .ev-edit .seg.small { margin: 0; }
 .chip.on { background: var(--accent); color: #fff; }
 .chip.removable { background: #e8eefb; }
+
+/* Cases and reports (phase 5) */
+.bar-link { padding: 8px 10px; font-size: 15px; font-weight: 600; color: var(--accent); }
+.case-filter { display: flex; gap: 0; overflow-x: auto; padding: 8px 16px 0; scrollbar-width: none; }
+.case-filter::-webkit-scrollbar { display: none; }
+.case-filter .chip { flex: none; padding: 6px 12px; font-size: 13px; margin-bottom: 4px; }
+.case-row { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.case-row .ico { width: 18px; height: 18px; opacity: .5; }
+.case-row b { flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.case-card { margin: 12px 16px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+.case-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-family: Georgia, serif; font-size: 18px; }
+.case-st { font-family: inherit; font-size: 12px; padding: 3px 8px; border-radius: 10px; background: var(--paper2); color: var(--ink2); }
+.case-st.closed { background: var(--ink); color: #fff; }
+.case-card .hint { padding: 4px 0 8px; }
+.epilogue { margin: 0 0 12px; padding: 10px 12px; border-left: 3px solid var(--ink); background: var(--paper2); border-radius: 0 8px 8px 0; }
+.epilogue p { margin: 6px 0 0; font-family: Georgia, serif; line-height: 1.45; }
+.report-done .epilogue { margin: 12px 16px; }
+.check-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 0; min-height: 52px; border-bottom: 1px solid var(--line); }
+.check-row .box { flex: none; width: 24px; height: 24px; border: 2px solid var(--line); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.check-row.on .box { background: var(--accent); border-color: var(--accent); color: #fff; }
+.check-row .box .ico { width: 16px; height: 16px; }
+.check-row .pi-main { min-width: 0; }
+.review { margin: 12px 0 4px; padding: 10px 12px; background: #fff8e6; border-radius: 10px; font-size: 14px; }
+.review-who { font-weight: 700; margin-bottom: 4px; }
+.review p { margin: 4px 0; line-height: 1.4; }
+.builder.report .btn.wide { margin-top: 10px; }
+.rep-row { padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.rep-item { font-family: Georgia, serif; padding: 4px 0; line-height: 1.4; }
+.rep-item.pad { padding: 6px 16px; }
+.reaction { margin: 6px 16px; padding: 10px 12px; background: var(--paper2); border-radius: 10px; font-size: 14px; line-height: 1.4; }
+.small { font-size: 13px; }

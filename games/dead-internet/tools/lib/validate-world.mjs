@@ -259,6 +259,7 @@ export function validateWorld(raw, opts = {}) {
     for (const e of arr(m.endings)) {
       checkCond(`mystery ${m.id} ending ${e.id}`, e.if); checkEffects(`mystery ${m.id} ending ${e.id}`, e.effects); collectReveals(e.effects);
       for (const r of arr(e.requiresEnding)) if (!arr(m.endings).some(x => x.id === r)) err(`mystery ${m.id} ending ${e.id}`, `requiresEnding unknown ${r}`);
+      if (!e.title || !e.epilogue) warn(`mystery ${m.id} ending ${e.id}`, "no title or epilogue: the Casebook will show it without one");
     }
   }
   for (const a of w.artifacts.values()) if (a.hidden && !revealed.has(a.id)) err(`artifact ${a.id}`, "hidden, and nothing ever reveals it");

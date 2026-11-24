@@ -213,7 +213,7 @@ test("version 1 saves are migrated: mentions become encountered, not known", asy
   old.saveVersion = 1; delete old.encountered; delete old.saved;
   for (const id of ["dana", "acc_danareyes", "kestrel", "lou"]) old.known[id] = true;
   const { state } = deserialize(world, serialize(old));
-  assert.equal(state.saveVersion, 3);
+  assert.equal(state.saveVersion, 4);
   assert.deepEqual(state.timeline, [], "old saves get an empty timeline");
   assert.ok(state.known.theo && state.known.acc_theoquinn, "the profile the player opened is still investigated");
   assert.ok(!state.known.kestrel && state.encountered.kestrel != null, "a name only read is now encountered");

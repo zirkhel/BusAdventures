@@ -25,7 +25,10 @@ export function buildWorld(raw) {
     facts: raw.canon?.facts || [],
     rules: raw.rules || [],
     mysteries: indexById(raw.mysteries, "mysteries"),
-    channels: indexById(raw.meta?.publishing?.channels, "meta.publishing.channels"),
+    // Universe channels (meta.publishing) are open to every case; a mystery's own channels
+    // (mysteries[].publishing.channels) only to that case. Ids are global.
+    channels: indexById([...asArray(raw.meta?.publishing?.channels),
+      ...asArray(raw.mysteries).flatMap(m => asArray(m.publishing?.channels).map(c => ({ ...c, case: m.id })))], "publishing.channels"),
     /** @type {Map<string,string>} account id → character id */
     characterByAccount: new Map(),
     /** @type {Map<string,string[]>} image id → artifact ids that show it */

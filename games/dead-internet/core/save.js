@@ -5,6 +5,7 @@
 
 import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
+import { migrateCases } from "./cases.js";
 
 export const SAVE_FORMAT = "dead-internet-save";
 
@@ -14,6 +15,8 @@ const MIGRATIONS = {
   1: (s, w) => { migrateDiscovery(s, w); s.saveVersion = 2; return s; },
   // 2 → 3: the Timeline. Starts empty: it is built by the player, never from the story.
   2: s => { s.timeline = []; s.saveVersion = 3; return s; },
+  // 3 → 4: cases. Everything already in the Casebook becomes unclassified; old reports get their case.
+  3: (s, w) => { migrateCases(s, w); s.saveVersion = 4; return s; },
 };
 
 export function serialize(state) {
@@ -57,6 +60,8 @@ export function deserialize(w, text) {
     ev.theories = ev.theories.filter(id => s.hypotheses.some(h => h.id === id));
     ev.about = ev.about.filter(id => w.entities.has(id) || w.accounts.has(id));
   }
+  for (const k of ["evidence", "hypotheses", "notes", "timeline"])
+    for (const x of s[k] || []) x.cases = (Array.isArray(x.cases) ? x.cases : []).filter(id => w.mysteries.has(id));
   for (const id of Object.keys(s.trust)) if (!w.characters.has(id)) delete s.trust[id];
   for (const c of w.characters.values()) if (!(c.id in s.trust)) s.trust[c.id] = c.trust?.start ?? 0;
   if (s.contentVersion !== w.meta.contentVersion) warnings.push(`content ${s.contentVersion} → ${w.meta.contentVersion}`);

@@ -98,14 +98,16 @@ _Timeline implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 
 
 
 ## Fase 5 — Rapportering og U0
+_Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, desktop)._
 _Rapporter og publisering bygges per sak fra starten, så de ikke må skrives om når neste mysterium kommer._
-- [ ] Publiseringsflyt med kanalvalg og Danas gjennomgang
-- [ ] En rapport har alltid én sak (`case`). Påstander vurderes mot den sakens påstander og universets kanon.
-- [ ] Kanaler og reviewer leses fra sakens `publishing`, ikke fra en motorregel
-- [ ] Valgte tidslinjehendelser kan tas med i rapporter. Evalueringen (nøyaktighet og støtte) skjer i rapportmotoren og holdes adskilt fra Timeline.
-- [ ] Bevis, teorier, notater og tidslinjehendelser får `cases: []`. Tomt betyr uklassifisert. Ingenting knyttes automatisk, og spilleren velger én, flere eller ingen saker.
-- [ ] Ny lagringsversjon med migrering: eksisterende elementer blir uklassifiserte
-- [ ] Visning av reaksjoner og avslutninger (epiloger)
+- [x] Publiseringsflyt med kanalvalg og Danas gjennomgang (Casebook → Reports)
+- [x] En rapport har alltid én sak (`case`). Påstander vurderes mot den sakens påstander og universets kanon.
+- [x] Kanaler og reviewer leses fra sakens `publishing`, ikke fra en motorregel. Universets kanaler er åpne for alle saker.
+- [x] Valgte tidslinjehendelser kan tas med i rapporter, med antall kilder for og mot. Ingen vurdering i Timeline.
+- [ ] Vurdering av tidslinjehendelsers nøyaktighet. Krever kanoniske hendelsesdatoer i innholdet, så det venter til det trengs.
+- [x] Bevis, teorier, notater og tidslinjehendelser får `cases: []`. Tomt betyr uklassifisert. Ingenting knyttes automatisk, og spilleren velger én, flere eller ingen saker. Casebook har filter (alle, per sak, uklassifisert).
+- [x] Lagringsversjon 4 med migrering: eksisterende elementer blir uklassifiserte, gamle rapporter får sin sak
+- [x] Visning av reaksjoner og avslutninger (epiloger). En avsluttet sak stopper ikke spillet.
 - [ ] Startskjerm med tilgjengelige etterforskninger (avhenger av Anders' valg om når)
 
 ## Fase 6 — Universdeling U1

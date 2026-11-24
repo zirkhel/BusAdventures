@@ -1,7 +1,7 @@
 # Dead Internet — teknisk design
 
 _Oppdatert 24. november 2026, etter fase 4 (Timeline) og Anders' beslutninger om univers, mysterier og medieapper._
-Medieappene i detalj: `/mnt/project-files/dead-internet/MEDIA-APPS-PROPOSAL.md` (godkjent med justeringene i §0 der).
+Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md) (godkjent med justeringene i §0 der).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
 ## Prinsipper
@@ -34,6 +34,7 @@ games/dead-internet/
     refs.js                 referanser i tekst (leksikon, mønstre) og søkeforslag
     discovery.js            oppdagelsestilstander og kunnskapsgrenser
     timeline.js             spillerens tidslinje: hendelser, datotyper, koblinger, datovalg
+    cases.js                saker i Casebook: klassifisering (cases: []), filter, epiloger, sakens status
     dialogue.js             skriptede samtaler, tillit, svaralternativer
     casebook.js             bevis, hypoteser, notater, vurdering, publisering
     save.js                 lagring, versjonering, migrering, eksport/import
@@ -127,7 +128,7 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 
 ## Lagring
 
-`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`.
+`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 4: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak).
 
 ## Validator
 
@@ -232,7 +233,7 @@ Timeline er spillerens egen rekonstruksjon. Den er ikke et sammendrag av histori
   - «New event» i fanen
 
   Utkastet ligger på skjermen og overlever bytte av app. Etter lagring går man tilbake dit man kom fra.
-- **Senere bruk:** `casebookView().timeline` gjør hendelsene tilgjengelige for rapporter. En eventuell vurdering skjer i rapportmotoren, aldri i Timeline.
+- **I rapporter:** spilleren kan velge hendelser i en rapport. De går inn slik spilleren skrev dem, med antall uavhengige kilder for og mot. Rapportmotoren vurderer dem ikke mot noen fasit, og Timeline viser aldri noen vurdering.
 
 ## Navigasjon
 
@@ -264,7 +265,7 @@ Planlagt modell: `state.cases` med status `locked`, `available`, `active` og `cl
 
 **Bakgrunnsinnhold kan bli bevis.** Fyllinnhold i universet og i delte bassenger kan senere bli bevis, men bare når et mysterium eksplisitt peker på det. Validatoren sjekker at referansen finnes og at innholdet var publisert før saken trenger det, så en ny sak ikke stille endrer en gammel. Dagens validatorregel om at `filler` aldri kan støtte påstander, erstattes av dette i U1. Inntil da støtter ingen fyllartefakter i The Quiet Account noen påstand.
 
-**Narrative lag per mysterium.** Innhold som berører det store narrativet kan ha en skjult `layer` (1–7). Lagene går fra «én konto er en marionett» (1) til «er spilleren et menneske?» (7). Hvilke lag et mysterium kan avsløre, er konfigurert i mysteriet, ikke globalt. Validatoren sjekker at et mysterium ikke er avhengig av, eller får støtte fra, innhold over sin egen grense. The Quiet Account avslører ikke lag 5–7 og har lag 3–4 bare som tvil. Senere mysterier kan utforske de høyere lagene. Uavklart kanon (`isHuman: null`, manglende `operatedBy`) betyr ukjent, ikke falsk.
+**Narrative lag per mysterium.** Innhold som berører det store narrativet kan ha en skjult `layer` (1–7). Lagene går fra «én konto er en marionett» (1) til «er spilleren et menneske?» (7). Hvilke lag et mysterium kan avsløre, er konfigurert i mysteriet, ikke globalt (`layers: { reveal, hint, background }` i `mystery.json`). Validatoren sjekker at et mysterium ikke er avhengig av, eller får støtte fra, innhold over sin egen grense. The Quiet Account avslører ikke lag 5–7 og har lag 3–4 bare som tvil. Senere mysterier kan utforske de høyere lagene. Uavklart kanon (`isHuman: null`, manglende `operatedBy`) betyr ukjent, ikke falsk.
 
 **Ingen kvoter på sannhet.** Aviser og kanaler har ingen fast andel sanne påstander. Innholdsrapporten kan vise fordelingen, men troverdighet skal komme fra historien og redaksjonelle interesser.
 
@@ -273,7 +274,15 @@ Planlagt modell: `state.cases` med status `locked`, `available`, `active` og `cl
 - The Quiet Account kan ha 3–5 valgfrie TokTok-klipp med relevante spor. Saken skal fortsatt kunne løses uten TokTok, og validatoren skal vise det.
 - Arkitekturen skal tåle 150 videoklipp eller flere. Første produksjonsrunde er 20–30 ekte klipp, resten plassholdere, og vi utvider etter at produksjonsflyt, kvalitet og ytelse er testet.
 
-**Hva som er bundet til The Quiet Account i dag** (flyttes i U0 og U1): `meta.startKnown`, `startArtifacts`, `startDate` og introteksten, `meta.testing`, `meta.logins`, publiseringskanalene, absolutte frister, og tre tekster i grensesnittet (Theories-tomtekst, «Port Calder» i registeroverskriften, `.pf-brightline_site`). Kjernen har ellers ingen id-er fra saken.
+**Rapporter (fase 5, `core/casebook.js` og Casebook → Reports).**
+- `publish(channel, hypotheses, { case, events })`. En rapport har alltid én sak. Hvis bare én sak finnes, brukes den.
+- Kanaler: universets kanaler (`meta.publishing.channels`, for eksempel Connect og Threadline) er åpne for alle saker. En sak kan ha egne kanaler (`mysteries[].publishing.channels`). Daily Record via Dana ligger i The Quiet Account, så Dana er reviewer der uten at det er en motorregel.
+- Påstander matches bare mot sakens egne `claims`. Alt annet vurderes ut fra verdensmodellen. Poengtabellen kan overstyres per sak (`publishing.scoring`).
+- Rapportbyggeren viser teorier og hendelser gruppert etter spillerens egen klassifisering: i saken, uklassifisert og andre saker. Alt kan velges.
+- Etter publisering vises reaksjonene (nye varsler og meldinger) og eventuelle avslutninger. Casebook viser aldri sannhet eller poeng.
+- Avslutninger har `title` og `epilogue`. En avslutning med `closes: true` gjør saken lukket. Spillet fortsetter, og spilleren kan fortsette å utforske.
+
+**Hva som er bundet til The Quiet Account i dag** (flyttes i U0 og U1): `meta.startKnown`, `startArtifacts`, `startDate` og introteksten, `meta.testing`, `meta.logins`, absolutte frister, og tre tekster i grensesnittet (Theories-tomtekst, «Port Calder» i registeroverskriften, `.pf-brightline_site`). Kjernen har ellers ingen id-er fra saken.
 
 ## Appkart
 
