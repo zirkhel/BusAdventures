@@ -17,11 +17,13 @@ Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Oppr
 
 **Overordnede designprinsipper (Anders, 24. nov):**
 - Deduksjon er spillet. Søking er verktøyet.
-- Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en fasit.
-- Internett skal fremstå som et autentisk, selvstendig univers, også utenfor mysteriene.
-- Spilleren skal kunne løse konkrete mysterier uten nødvendigvis å forstå den større virkeligheten.
-- Jo mer spilleren oppdager, desto mindre sikker kan spilleren bli på hvordan verden egentlig fungerer.
-- Ingen karakter er en skjult fasitmekanisme. Alle kan ta feil og bli manipulert.
+- Casebook er spillerens arbeidsflate og eksterne hukommelse, ikke en fasit.
+- Internett skal fremstå som et autentisk univers, ikke en samling spillspor.
+- Karakterer, medier og offentlige institusjoner kan ta feil. Ingen karakter er en skjult fasitmekanisme.
+- Spilleren skal kunne oppnå reelle resultater gjennom egne handlinger.
+- Man skal kunne vinne en sak uten å vinne spillet. Senere hendelser som utfordrer en avsluttet sak er forfattet og konsistente med kanon, aldri tilfeldige, og undergraver ikke systematisk spillerens seire.
+- Jo mer spilleren oppdager, desto bedre forstår hen de konkrete mysteriene, men desto mindre sikker kan hen bli på hvordan verden egentlig fungerer.
+- Saker avsluttes gjennom handlinger og konsekvenser i verden, ikke en «Solve case»-knapp. Spillerens egne merker, kildevurderinger og teoristatus påvirker aldri utfallet i seg selv. Ingen poeng, stjerner eller løsningsgrad vises.
 
 ## Mappestruktur
 
@@ -178,6 +180,25 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 ## Lagring
 
 `state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 6: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»).
+
+## Teststrategi (Anders, 24. nov)
+
+Testene skal beskytte både teknisk funksjonalitet og spillopplevelsen. Status per punkt:
+
+| Test | Status |
+|---|---|
+| Permanent tvillingverden-test, utvides når nye Casebook-funksjoner kommer | finnes (`tests/twin.test.mjs`) |
+| DOM-tester for informasjonslekkasje | planlagt i Casebook steg 1 |
+| Lagrede bevis endres ikke når originalkilden endres | planlagt i Casebook steg 1 |
+| Sammenligning av gamle og nye nettsideversjoner | nettsidefasen (W0–W8) |
+| Cache viser aldri fremtidig innhold | nettsidefasen |
+| Skjulte sider dukker ikke opp i automatiske lister | nettsidefasen |
+| Navigasjonslenker virker eller har en bevisst definert feiltilstand | nettsidefasen |
+| Gjennomspilling av The Quiet Account etter større innholdsendringer | finnes (scenarioer i `tools/simulate.mjs` og de automatiske spillerne i validatoren) |
+| Ulike rapporter og saksutfall, feilaktige teorier og konsekvenser | delvis (11 scenarioer); utvides etter gjennomgangen av saksavslutning |
+| Delvise avsløringer er mulige | utvides etter gjennomgangen av saksavslutning |
+| Bakgrunnsinnhold gjør ikke nødvendige spor urimelig vanskelige å finne | delvis (tilgangs- og blokkeringstestene i validatoren); nettsidefasen |
+| Mobil røyktest ved relevante UI-endringer | manuell eller Playwright før merge |
 
 ## Validator
 

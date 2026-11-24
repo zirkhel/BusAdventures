@@ -60,15 +60,18 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 - [x] Oppdagelsestilstander (unknown, encountered, investigated, saved) med migrering av gamle lagringer
 - [x] Revisjon av Browser, Connect, Messages, Casebook, søkeforslag og kontekstmenyen for lekkasjer, med automatiske tester
 
-## Veikart (Anders, 24. nov kveld)
-Fase 9 er ferdig, og alle 61 grafikkelementer er godkjent (eksisterende Cora-bilde beholdes, portrettproduksjonen er avsluttet).
-1. Casebook steg 0–5 (under). Lekkasjene L1–L4 har førsteprioritet.
-2. Ekstern spilltest av hele etterforskningsprosessen, inkludert kildevurdering og rapportering, etter steg 5.
-3. Justeringer etter spilltesten.
-4. Autentiske nettsider og gjenbrukbar nettsidearkitektur. Forslaget lages parallelt, men ingen implementering før det er diskutert og godkjent, og det skal ikke forsinke Casebook.
-5. Verktøyapper (fase 10).
-6. TokTok (fase 11).
-7. Nye mysterier (fase 12).
+## Veikart (Anders, 24. nov kveld, samlede beslutninger)
+Fase 9 er ferdig, og alle 61 grafikkelementer er godkjent (eksisterende Cora-bilde beholdes). Forbedringen av Unfiltered-ikonet kan gjennomføres. Små, avgrensede PR-er, og DESIGN.md og DEVPLAN.md oppdateres fortløpende.
+1. Fullfør Casebook steg 0–5 (under). Lekkasjene L1–L4 har førsteprioritet. Røyktest i nettleser før merge.
+2. Avklar og eventuelt kompletter mekanikken for saksavslutning og konsekvenser. Gjennomgangen gjøres i egen tråd først. Ingen nye avslutningsmekanismer før den er diskutert.
+3. Ekstern spilltest av The Quiet Account.
+4. Juster etterforskningsmekanikken etter observasjonene.
+5. Autentisk nettsidearkitektur gjennom W0–W8. Godkjent som designretning (forslaget «Et mer autentisk internett i Browser», med Anders' avklaringer), implementeres først i denne fasen.
+6. Bakgrunnsinnhold (mål 140–170 sider, i etapper) og nødvendig grafikk (WEB0001–WEB0024, de tolv viktigste først).
+7. Ny spilltest med det utvidede internettet.
+8. Resterende verktøyapper (fase 10).
+9. TokTok (fase 11), en egen større produksjonsfase.
+10. Nye mysterier i det eksisterende universet (fase 12).
 
 ## Tidligere rekkefølge (Anders, 24. nov)
 Ingen unødvendig utvidelse av fasen som pågår.
@@ -214,11 +217,12 @@ Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIG
 - [ ] Strukturert publisering som også dekker manipulerte dokumenter og falske identiteter
 - [ ] For, mot og egne forbehold i rapportbyggeren. Rapporten lagrer et øyeblikksbilde.
 - [ ] Dana kommenterer spillerens egne forbehold
+- [ ] Endringer fra gjennomgangen av saksavslutning tas inn her når de er godkjent (nøytral saksstatus som Active, Published, Closed, Reopened, ingen poeng eller løsningsgrad)
 
 ### Deretter
 - [ ] Ekstern spilltest av hele etterforskningsopplevelsen, etter steg 5
 - [ ] Justeringer etter observasjonene
-- [ ] Så: autentiske nettsider (eget forslag, godkjennes før implementering), deretter fase 10–12
+- [ ] Så: avklaring av saksavslutning, deretter autentiske nettsider (W0–W8) og fase 10–12 etter veikartet over
 
 ## Fase 10 — Resterende verktøyapper
 - [ ] Mail: innboks, tråder, vedlegg, videresending og metadata
