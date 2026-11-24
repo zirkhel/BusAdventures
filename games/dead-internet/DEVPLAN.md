@@ -116,7 +116,8 @@ _Ingen synlig endring for spilleren. Alle eksisterende tester skal passere._
 - [ ] Start fra hovedmenyen (`start.menu`) og naturlig oppdagelse i verden (`start.discover`)
 - [ ] Relative frister (`beforeCaseDay`), og `beforeDay` beholdes for univershendelser
 - [ ] Personer kan utvides per mysterium (`extends`)
-- [ ] Validator og simulator per mysterium. Bakgrunnsinnhold kan bli bevis når et mysterium eksplisitt peker på det.
+- [ ] Validator og simulator per mysterium. Bakgrunnsinnhold kan bli bevis når et mysterium eksplisitt peker på det. Den absolutte `filler`-regelen erstattes av dette.
+- [ ] Narrative lag (`layer` 1–7) konfigureres per mysterium. The Quiet Account avslører ikke lag 5–7. Validatoren sjekker grensen for hvert mysterium.
 - [ ] Saksspesifikke tekster i grensesnittet flyttes til sakens tekster (Theories-tomtekst, «Port Calder», `.pf-brightline_site`)
 
 ## Fase 7 — Mediekjerne (M1)

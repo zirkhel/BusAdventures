@@ -137,6 +137,7 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 - **Kanon**: usanne påstander motsier ikke fakta, sanne påstander stemmer med verdensmodellen.
 - **Personkunnskap**: personer gir bare bort det de har og vitner bare om det de vet, tror eller har sett.
 - **Kildeuavhengighet**: hver kjernepåstand (S1–S3) har minst tre uavhengige kilder i innholdet.
+- **Fyllinnhold**: `filler` støtter ingen påstander i dag. I U1 erstattes dette av eksplisitte bevislister per mysterium (se «Univers og mysterier»).
 - **Tilgang**: to automatiske spillere (forsiktig og hensynsløs) spiller gjennom og må nå minst to uavhengige kilder for hver kjernepåstand.
 - **Blokkeringer**: hver artefakt, hvert bilde og hver person som bidrar til en kjernepåstand fjernes én om gangen. Saken må fortsatt kunne løses.
 - **Grafikk**: hver bilde-id i verden finnes i katalogen med samme avhengighet, og har en plassholder.
@@ -261,7 +262,9 @@ Planlagt modell: `state.cases` med status `locked`, `available`, `active` og `cl
 - Casebook viser alt som standard, med filter per sak og for uklassifisert.
 - En rapport gjelder alltid én sak (`case`). Påstandene vurderes mot den sakens påstander og universets kanon. Kanaler og reviewer kommer fra saken, så Dana er reviewer i The Quiet Account uten at det er en motorregel.
 
-**Bakgrunnsinnhold kan bli bevis.** Fyllinnhold i universet og i delte bassenger kan senere bli bevis, men bare når et mysterium eksplisitt peker på det. Validatoren sjekker at referansen finnes og at innholdet var publisert før saken trenger det, så en ny sak ikke stille endrer en gammel.
+**Bakgrunnsinnhold kan bli bevis.** Fyllinnhold i universet og i delte bassenger kan senere bli bevis, men bare når et mysterium eksplisitt peker på det. Validatoren sjekker at referansen finnes og at innholdet var publisert før saken trenger det, så en ny sak ikke stille endrer en gammel. Dagens validatorregel om at `filler` aldri kan støtte påstander, erstattes av dette i U1. Inntil da støtter ingen fyllartefakter i The Quiet Account noen påstand.
+
+**Narrative lag per mysterium.** Innhold som berører det store narrativet kan ha en skjult `layer` (1–7). Lagene går fra «én konto er en marionett» (1) til «er spilleren et menneske?» (7). Hvilke lag et mysterium kan avsløre, er konfigurert i mysteriet, ikke globalt. Validatoren sjekker at et mysterium ikke er avhengig av, eller får støtte fra, innhold over sin egen grense. The Quiet Account avslører ikke lag 5–7 og har lag 3–4 bare som tvil. Senere mysterier kan utforske de høyere lagene. Uavklart kanon (`isHuman: null`, manglende `operatedBy`) betyr ukjent, ikke falsk.
 
 **Ingen kvoter på sannhet.** Aviser og kanaler har ingen fast andel sanne påstander. Innholdsrapporten kan vise fordelingen, men troverdighet skal komme fra historien og redaksjonelle interesser.
 
