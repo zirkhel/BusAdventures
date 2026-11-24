@@ -1,4 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
- <rect width="512" height="512" rx="112" fill="#0b0b0b"/>
- <text x="256" y="350" text-anchor="middle" font-family="Impact, 'Arial Narrow', 'Arial Black', sans-serif" font-weight="900" font-size="280" fill="#d8f21a">U<tspan dy="-10" rotate="4">F</tspan></text>
+ <rect width="512" height="512" rx="112" fill="#d8f21a"/>
+ <rect x="-40" y="392" width="600" height="52" fill="#0b0b0b" transform="rotate(-7 256 418)"/>
+ <path d="M96 150 Q256 40 416 150 Q256 260 96 150 Z" fill="#0b0b0b"/>
+ <circle cx="256" cy="150" r="52" fill="#d8f21a"/>
+ <circle cx="256" cy="150" r="26" fill="#0b0b0b"/>
+ <text x="256" y="368" text-anchor="middle" font-family="Impact, 'Arial Narrow', 'Arial Black', sans-serif" font-weight="900" font-size="200" fill="#0b0b0b" stroke="#d8f21a" stroke-width="10" paint-order="stroke">U<tspan dy="-8" rotate="5">F</tspan></text>
 </svg>
