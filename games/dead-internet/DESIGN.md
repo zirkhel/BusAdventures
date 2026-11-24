@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 24. november 2026, etter fase 1 (kjerne uten grensesnitt)._
+_Oppdatert 24. november 2026, etter fase 2 (telefonen og lesing)._
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
 ## Prinsipper
@@ -17,6 +17,9 @@ Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Oppr
 ```
 games/dead-internet/
   DESIGN.md  DEVPLAN.md
+  index.html  manifest.json egen PWA (start_url /games/dead-internet/)
+  app/                      telefonen (DOM): main.js, phone.js, render.js, media.js, ui.js, style.css
+    apps/                   browser, connect, messages, casebook, settings
   core/                     spillmotoren (ingen DOM, ingen I/O)
     game.js                 fasade: Game, dispatch, spørringer, replay()
     world.js                buildWorld(): indekser over innholdet
@@ -131,6 +134,16 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 - **Tilgang**: to automatiske spillere (forsiktig og hensynsløs) spiller gjennom og må nå minst to uavhengige kilder for hver kjernepåstand.
 - **Blokkeringer**: hver artefakt, hvert bilde og hver person som bidrar til en kjernepåstand fjernes én om gangen. Saken må fortsatt kunne løses.
 - **Grafikk**: hver bilde-id i verden finnes i katalogen med samme avhengighet, og har en plassholder.
+
+## Telefonen (app/)
+
+- `main.js` laster verden med `fetch`, gjenoppretter lagring fra `localStorage` (eller viser navnevalg), og lagrer etter hver handling via `game.on("state")`. Eksport og import bruker `save.js`.
+- `phone.js` eier statuslinje (klokke, dato og dag), låseskjerm med varsler, hjemskjerm, bannervarsler, bildevisning og ark. Hver app har sin egen tilbakestabel. Tilbake skjer med pilen, sveip fra venstre kant, Android-tilbakeknappen (`history`) eller Esc.
+- Skjermer er rene data (`{kind:"page", id, version, view}`), så tilbake viser samme visning uten å sende handlingen på nytt.
+- `render.js` tegner en artefakt etter plattformtype (sosial, forum, avis, blogg, register, dokument). `[Photo: …]` i teksten byttes med neste bilde. Kommentarer (`@handle (tid): tekst`) og foruminnlegg (`navn: tekst`) gjenkjennes. Adresser, e-poster og @handles blir lenker. En kjent adresse åpner siden, alt annet blir et Seeker-søk.
+- Connect-adresser åpnes i Connect, alt annet i Browser. Private dokumenter (e-post, vedlegg) åpnes i appen man står i.
+- `media.js` bruker `graphics/catalog.json`: filen i `assets/images/` hvis den finnes, ellers plassholderen. Nye bilder krever ingen kodeendring.
+- Spillet må serveres over HTTP (ES-moduler fungerer ikke fra `file://`). Lokalt: `python -m http.server` eller `npx serve` fra repo-roten, så `/games/dead-internet/`.
 
 ## Kjente begrensninger
 

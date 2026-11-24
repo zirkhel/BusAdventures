@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 2)._
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
@@ -22,18 +22,20 @@ _Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. nov
 - [x] Simulator med 7 scenarioer og to automatiske spillere
 - [x] 28 automatiserte tester
 - [x] Grafikkatalog, plassholdere og GRAPHICS.md
-- [ ] Commit og push (venter på klarsignal)
+- [x] Commit og push (PR #46)
 
 ## Fase 2 — Telefonen og lesing
-- [ ] `index.html` + eget `manifest.json` (egen PWA) + `app/main.js` som laster verden med `fetch`
-- [ ] Telefon-skall: låseskjerm med varsler, hjemskjerm, appbytte, tilbakeknapp/sveip, statuslinje med dag
-- [ ] Navnevalg ved start (standard Sam)
-- [ ] Browser: adresselinje, Seeker-søk, resultater med «Cached copy», sidevisning per plattform
-- [ ] Connect: profil, innlegg, kommentarer, bilder
-- [ ] Bildevisning med zoom, «Image info», «Search by image» og «Flip & search»
-- [ ] Lagre som bevis (langt trykk / bokmerke)
-- [ ] Automatisk lagring etter hver handling, eksport og import av lagring
-- [ ] Bilder: bruk `assets/images/<fil>` hvis den finnes, ellers plassholder
+_Implementert 24. november 2026, ukommittet. Testet i Playwright (iPhone 13, Pixel 7, desktop)._
+- [x] `index.html` + eget `manifest.json` (egen PWA) + `app/main.js` som laster verden med `fetch`
+- [x] Telefon-skall: låseskjerm med varsler, hjemskjerm, appbytte, tilbakeknapp/sveip, statuslinje med dag
+- [x] Navnevalg ved start (standard Sam)
+- [x] Browser: adresselinje, Seeker-søk, resultater med «Cached copy», sidevisning per plattform
+- [x] Connect: profil, innlegg, kommentarer, bilder
+- [x] Bildevisning med zoom, «Image info», «Search by image» og «Flip & search»
+- [x] Lagre som bevis (langt trykk / bokmerke)
+- [x] Automatisk lagring etter hver handling, eksport og import av lagring
+- [x] Bilder: bruk `assets/images/<fil>` hvis den finnes, ellers plassholder
+- [x] Lesevisning i Messages (tråder og vedlegg) og bevisliste i Casebook, så fase 2 kan spilles
 - [ ] Test på ekte telefon (iOS Safari og Android Chrome), portrett, én hånd
 - [ ] Kort på landingssiden i `index.html` (etter avtale)
 
