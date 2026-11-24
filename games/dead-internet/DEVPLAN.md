@@ -53,7 +53,7 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 ## Fase 3b — Kontekstmenyer, navigasjon og kunnskapsgrenser
 _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, desktop)._
 - [x] Felles kontekstsystem (`app/context.js`, `core/refs.js`): ett trykk på et ord gir et handlingsark, uten synlig markering
-- [x] Entiteter, alias, kontoer, e-post, domener, adresser, datoer, referansenummer og begreper (`world/terms.json`)
+- [x] Entiteter, alias, kontoer, e-post, domener, adresser, datoer, referansenummer og begreper (`universe/terms.json`)
 - [x] Fritekst: markér tekst for søk, kopi og lagring
 - [x] Søkehistorikk, nylige søk, forslag, ett-trykks gjentak, direkte til resultater fra menyen
 - [x] Bevart app-tilstand og rulleposisjon, retur til opphav på tvers av apper, «Recently visited»
@@ -111,16 +111,16 @@ _Rapporter og publisering bygges per sak fra starten, så de ikke må skrives om
 - [x] Startskjerm med tilgjengelige etterforskninger (`mysteries[].menu`): «Continue investigation», spillbare saker kan startes eller fortsettes, og frø vises som «Future investigation». Plassholderbilder til grafikken er klar.
 
 ## Fase 6 — Universdeling U1
-_Ingen synlig endring for spilleren. Alle eksisterende tester skal passere._
-- [ ] Innholdet deles i `content/universe/` og `content/mysteries/quiet-account/`
-- [ ] `mystery.json` med start (premiss, startKnown, startArtifacts, logins, intro), forutsetninger, frister, påstander, avslutninger, publisering, testoppsett og tekster
-- [ ] `state.cases` med `locked`, `available`, `active` og `closed`. Flere aktive saker samtidig, og en avsluttet sak stopper ikke spillet.
-- [ ] Start fra hovedmenyen (`start.menu`) og naturlig oppdagelse i verden (`start.discover`)
-- [ ] Relative frister (`beforeCaseDay`), og `beforeDay` beholdes for univershendelser
-- [ ] Personer kan utvides per mysterium (`extends`)
-- [ ] Validator og simulator per mysterium. Bakgrunnsinnhold kan bli bevis når et mysterium eksplisitt peker på det. Den absolutte `filler`-regelen erstattes av dette.
-- [ ] Narrative lag (`layer` 1–7) konfigureres per mysterium. The Quiet Account avslører ikke lag 5–7. Validatoren sjekker grensen for hvert mysterium.
-- [ ] Saksspesifikke tekster i grensesnittet flyttes til sakens tekster (Theories-tomtekst, «Port Calder», `.pf-brightline_site`)
+_Implementert 24. november 2026. Ingen synlig endring for spilleren utover startskjermen. Testet i Playwright (iPhone 13, Pixel 7, desktop)._
+- [x] Innholdet deles i `content/universe/` og `content/mysteries/quiet-account/`
+- [x] `mystery.json` med start (premiss, startartefakter, innlogging, intro), forutsetninger, frister, påstander, bevisliste, avslutninger, publisering, testoppsett, lag og tekster
+- [x] `state.cases` med `locked`, `available`, `active` og `closed`. Flere aktive saker samtidig, og en avsluttet sak stopper ikke spillet. Lagringsversjon 5.
+- [x] Start fra startskjermen (`start.menu`) og naturlig oppdagelse i verden (`start.discover`). Forutsetninger med `requires`.
+- [x] Relative frister (`beforeCaseDay`, `caseDay` i regler), og `beforeDay` beholdes for univershendelser
+- [x] Personer kan utvides per mysterium (`extends`). Personene i The Quiet Account er ikke delt opp ennå, det gjøres når neste mysterium trenger det.
+- [x] Validator og simulator per mysterium. Bakgrunnsinnhold kan bli bevis når et mysterium lister det i `evidence`. Den absolutte `filler`-regelen er erstattet.
+- [x] Narrative lag (`layer` 1–7) konfigureres per mysterium (`layers.reveal`, `hint`, `background`). The Quiet Account: reveal 1–2, hint 3–4, bakgrunn 5. Validatoren sjekker grensen.
+- [x] Saksspesifikke tekster flyttet: eksempelteorien til sakens tekster, «Port Calder» til plattformdata. `.pf-brightline_site` er universets plattformstil og blir værende.
 
 ## Fase 7 — Mediekjerne (M1)
 - [ ] Artikkelfelt: seksjon, byline, rettelser, relaterte, sponset, strukturerte kommentarer

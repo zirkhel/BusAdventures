@@ -90,6 +90,7 @@ export function migrateDiscovery(s, w) {
   const known = {};
   const add = id => { if (id && (w.entities.has(id) || w.accounts.has(id)) && !w.entities.get(id)?.secret) known[id] = true; };
   for (const id of w.meta.startKnown || []) add(id);
+  for (const m of w.mysteries.values()) if (m.start?.menu) for (const id of m.start.known || []) add(id);
   for (const m of s.messages || []) {
     if (m.from === "player" && m.kind === "ask") add(m.topic);
     const c = w.characters.get(m.thread);

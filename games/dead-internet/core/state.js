@@ -2,16 +2,19 @@
 // Everything that changes during play lives in one plain, serialisable object.
 // The world (authored content) is never modified; the state only stores differences.
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 /**
  * @param {any} w world from buildWorld()
  * @param {{seed?:number, playerName?:string}} [opts]
  */
+import { initCases } from "./cases.js";
+
 export function createState(w, opts = {}) {
   const trust = {};
   for (const c of w.characters.values()) trust[c.id] = c.trust?.start ?? 0;
   const known = {};
+  // Universe premise only. Each mystery adds its own premise when it starts (core/cases.js).
   for (const id of w.meta.startKnown || []) known[id] = true;
   const name = (opts.playerName || "").trim() || w.meta.player?.defaultName || "Sam";
   return {
@@ -22,6 +25,8 @@ export function createState(w, opts = {}) {
     rng: (opts.seed ?? 1) >>> 0,
     playerName: name,
     started: false,
+    /** mystery id → { status: locked|available|active|closed, startedDay?, closedDay? } */
+    cases: initCases(w),
     day: w.meta.startDay ?? 1,
     nextId: 1,
     flags: {},

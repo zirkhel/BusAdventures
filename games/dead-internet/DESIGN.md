@@ -41,9 +41,12 @@ games/dead-internet/
     content.js              laster content/manifest.json (fetch eller fs injiseres)
     util.js
   content/
-    manifest.json           hvilke filer verden består av
-    world/*.json            meta, predicates, platforms, entities, accounts, images,
-                            artifacts/*.json, characters, canon, rules, mysteries, terms
+    manifest.json           universets filer (files) og mysteriepakkene (mysteries)
+    universe/*.json         felles for alle mysterier: meta, predicates, platforms, entities,
+                            accounts, images, characters, canon (fakta), terms, mysteries (frø),
+                            artifacts/filler.json (bakgrunnsinnhold)
+    mysteries/quiet-account/  mystery.json (start, lag, påstander, bevisliste, publisering,
+                            testoppsett, tekster, avslutninger) + artifacts/, canon.json, rules.json
     strings/en.json         UI-tekster (lokalisering: nb.json senere)
   graphics/
     catalog.json            grafikkoversikt: stabile id-er, filnavn, størrelser, beskrivelser, avhengigheter
@@ -56,7 +59,8 @@ games/dead-internet/
     make-placeholders.mjs   lager plassholdere fra katalogen
     graphics-report.mjs     lager GRAPHICS.md
     lib/                    explorer, validator, scenarioer, Node-laster
-  tests/                    core.test.mjs (motor), world.test.mjs (The Quiet Account)
+  tests/                    core (motor), world (The Quiet Account), cases (saker og rapporter),
+                            universe (pakker, sakstilstander, frister, extends, lag)
   docs/                     plan og sakbeskrivelse
 ```
 
@@ -160,7 +164,7 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 
 Ett felles system for alle apper, ikke én løsning per app.
 
-- **Kjernen (`core/refs.js`, uten DOM)** bygger et leksikon fra verden: navn og alias på ikke-hemmelige entiteter, kontoer (brukernavn og visningsnavn) og begreper fra `world/terms.json`. `scanText` finner i tillegg e-poster, nettadresser, domener, @handles, datoer og referansenummer med mønstre. Hvert treff er et spenn `{start, end, text, type, id, alias}`.
+- **Kjernen (`core/refs.js`, uten DOM)** bygger et leksikon fra verden: navn og alias på ikke-hemmelige entiteter, kontoer (brukernavn og visningsnavn) og begreper fra `universe/terms.json`. `scanText` finner i tillegg e-poster, nettadresser, domener, @handles, datoer og referansenummer med mønstre. Hvert treff er et spenn `{start, end, text, type, id, alias}`.
 - Et alias som også er et brukernavn (`truthseeker_88`) er en identitetspåstand. Det tolkes som kontoen, aldri som personen. Handlingsarket viser og søker alltid på teksten slik den står, aldri på et kanonisk navn.
 - **Presentasjonen (`app/context.js`)**: `ctx.text()` gjør tekst om til noder der referanser er `span.ref` uten synlig forskjell (ingen farge, understrek, vekt eller ikon). `ctx.block(el, origin)` merker lesbart innhold med opphav (side, melding, notat).
 - **Ett trykk på et hvilket som helst ord** i et merket område åpner handlingsarket. Ord som ikke er referanser fungerer også (søk, Connect-søk, lagre, kopier), og en rekke ord med stor forbokstav («Harbor Street») tas som ett navn. Å være trykkbar betyr derfor ingenting.
@@ -243,7 +247,7 @@ Timeline er spillerens egen rekonstruksjon. Den er ikke et sammendrag av histori
 
 ## Univers og mysterier
 
-_Besluttet av Anders 24. november 2026. Det meste er arkitektur som bygges i U0 og U1 (se DEVPLAN.md). Ingenting av valgmenyen er bygd ennå._
+_Besluttet av Anders 24. november 2026. Bygd i U0 (fase 5) og U1 (fase 6)._
 
 **Ett univers.** Personer, kontoer, medier, selskaper, apper, bilder og bakgrunnsinnhold er felles. Et mysterium er en innholdspakke med egen start, påstander, regler, avslutninger, publiseringskanaler og testoppsett. Nye mysterier legges til som pakker i samme verden.
 
@@ -257,7 +261,18 @@ _Besluttet av Anders 24. november 2026. Det meste er arkitektur som bygges i U0 
 
 Startskjermen bygges fra `mysteries[].menu` (`order`, `tagline`, `image`). Et nytt mysterium dukker opp der ved å legge til innhold. Spillbare saker kan startes eller fortsettes, og frø med `menu` vises som «Future investigation». Inntil U1 deler alle saker én lagring.
 
-Planlagt modell: `state.cases` med status `locked`, `available`, `active` og `closed`. Avslutninger evalueres bare for aktive saker. Frister regnes fra sakens start (`beforeCaseDay`), mens `beforeDay` beholdes for univershendelser.
+**Innholdspakker (`core/content.js`).** `manifest.files` er universet. `manifest.mysteries` lister mysteriepakker. Hver pakke er en `mystery.json` med `files` (relativt til mappen) som legger artefakter, påstander, regler og personutvidelser inn i samme verden. Id-er er globale. `w.packOf` sier om en artefakt hører til universet eller et mysterium. En person kan utvides per mysterium med `{ "extends": "dana", ... }`: lister legges til og objekter slås sammen.
+
+**Sakstilstander (`state.cases`, `core/cases.js`).**
+- `locked` → `available` → `active` → `closed`.
+- `requires` (en vanlig betingelse, for eksempel `{ caseClosed: "quiet_account" }`) låser opp en sak.
+- `start.menu` gjør saken valgbar fra startskjermen, og `start.discover` starter den når betingelsen holder i verden. Dette sjekkes etter hver handling.
+- Når en sak starter, blir premisset (`start.known`) kjent, og startartefaktene (`start.artifacts`) dukker opp.
+- Regler fra en pakke kjører bare når saken er startet. `day.start` får da `caseDay`, som er dag 1 den dagen saken startet.
+- Avslutninger evalueres for aktive og lukkede saker, med `beforeCaseDay` regnet fra sakens start. `beforeDay` beholdes for univershendelser.
+- Flere saker kan være aktive samtidig. En lukket sak stopper ikke regler, verden eller andre saker.
+- Innlogginger (`start.logins`) gjelder når saken er startet.
+- Validator og simulator kjøres per mysterium med sakens `testing`.
 
 **Casebook er spillerens, ikke sakens.** Bevis, teorier, notater og tidslinjehendelser ligger i én felles notatbok. Hvert element får `cases: []`.
 - Tom liste betyr uklassifisert, og det er standard.
@@ -284,7 +299,7 @@ Planlagt modell: `state.cases` med status `locked`, `available`, `active` og `cl
 - Etter publisering vises reaksjonene (nye varsler og meldinger) og eventuelle avslutninger. Casebook viser aldri sannhet eller poeng.
 - Avslutninger har `title` og `epilogue`. En avslutning med `closes: true` gjør saken lukket. Spillet fortsetter, og spilleren kan fortsette å utforske.
 
-**Hva som er bundet til The Quiet Account i dag** (flyttes i U0 og U1): `meta.startKnown`, `startArtifacts`, `startDate` og introteksten, `meta.testing`, `meta.logins`, absolutte frister, og tre tekster i grensesnittet (Theories-tomtekst, «Port Calder» i registeroverskriften, `.pf-brightline_site`). Kjernen har ellers ingen id-er fra saken.
+**Hva som fortsatt er felles.** `startDate` er universets kalender. Personene ligger samlet i `universe/characters.json`, og deling i `extends` per sak gjøres når et nytt mysterium trenger det. `.pf-brightline_site` er stil for en plattform i universet, ikke for saken. Kjernen og appene har ingen id-er eller tekster fra The Quiet Account. Introteksten, premisset, innloggingen, testoppsettet og eksempelteorien ligger i `mystery.json`.
 
 ## Appkart
 

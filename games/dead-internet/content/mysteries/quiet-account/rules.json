@@ -141,7 +141,7 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 3
+    "caseDay": 3
    }
   },
   "do": [
@@ -163,7 +163,7 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 4
+    "caseDay": 4
    }
   },
   "do": [
@@ -188,7 +188,7 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 6
+    "caseDay": 6
    }
   },
   "if": [
@@ -218,7 +218,7 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 6
+    "caseDay": 6
    }
   },
   "if": [
@@ -370,7 +370,7 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 8
+    "caseDay": 8
    }
   },
   "do": [
@@ -384,7 +384,7 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 8
+    "caseDay": 8
    }
   },
   "if": {
@@ -401,13 +401,13 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 8
+    "caseDay": 8
    }
   },
   "if": {
    "exposed": {
     "claim": "S3",
-    "beforeDay": 8
+    "beforeCaseDay": 8
    }
   },
   "do": [
@@ -426,14 +426,14 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 8
+    "caseDay": 8
    }
   },
   "if": {
    "not": {
     "exposed": {
      "claim": "S3",
-     "beforeDay": 8
+     "beforeCaseDay": 8
     }
    }
   },
@@ -453,7 +453,7 @@
   "when": {
    "event": "day.start",
    "match": {
-    "day": 8
+    "caseDay": 8
    }
   },
   "if": [

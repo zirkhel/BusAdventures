@@ -1,0 +1,10 @@
+[
+  { "id": "project_echo", "title": "Project Echo", "status": "seed", "claims": [], "endings": [] },
+  { "id": "missing_millions", "title": "The Missing Millions", "status": "seed", "claims": [], "endings": [] },
+  { "id": "memory_rewrite", "title": "The Memory Rewrite", "status": "seed", "claims": [], "endings": [] },
+  { "id": "ghost_network", "title": "The Ghost Network", "status": "seed", "claims": [], "endings": [] },
+  { "id": "hidden_messages", "title": "Hidden Messages", "status": "seed", "claims": [], "endings": [],
+    "menu": { "order": 2, "tagline": "Someone is trying to communicate through the noise.", "image": null } },
+  { "id": "real_world", "title": "Is This the Real World?", "status": "seed", "claims": [], "endings": [],
+    "menu": { "order": 3, "tagline": "Reality no longer matches the records.", "image": null } }
+]

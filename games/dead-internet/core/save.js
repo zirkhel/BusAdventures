@@ -5,7 +5,7 @@
 
 import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
-import { migrateCases } from "./cases.js";
+import { migrateCases, migrateCaseStates } from "./cases.js";
 
 export const SAVE_FORMAT = "dead-internet-save";
 
@@ -17,6 +17,8 @@ const MIGRATIONS = {
   2: s => { s.timeline = []; s.saveVersion = 3; return s; },
   // 3 → 4: cases. Everything already in the Casebook becomes unclassified; old reports get their case.
   3: (s, w) => { migrateCases(s, w); s.saveVersion = 4; return s; },
+  // 4 → 5: case states (universe split). The case an old save played is active from day one.
+  4: (s, w) => { migrateCaseStates(s, w); s.saveVersion = 5; return s; },
 };
 
 export function serialize(state) {

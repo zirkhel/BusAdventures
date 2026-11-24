@@ -124,13 +124,15 @@ test("a conversation started from the phone: ask, show saved evidence, get a rep
 import { scanText, buildLexicon, suggest } from "../core/refs.js";
 
 const SECRET = [...world.entities.values()].filter(e => e.secret);
+// The premise now belongs to the mystery (universe split, U1).
+const START_KNOWN = world.mysteries.get("quiet_account").start.known;
 const publicName = id => world.entities.get(id)?.name ?? world.accounts.get(id)?.handle;
 
 test("a new game exposes only the starting premise, not the database", () => {
   const g = new Game(world); g.start();
-  assert.deepEqual(g.known().sort(), [...world.meta.startKnown].sort());
-  assert.ok(g.topics().length <= world.meta.startKnown.length);
-  const premise = [...world.characters.values()].filter(c => world.meta.startKnown.includes(c.account)).map(c => c.id);
+  assert.deepEqual(g.known().sort(), [...START_KNOWN].sort());
+  assert.ok(g.topics().length <= START_KNOWN.length);
+  const premise = [...world.characters.values()].filter(c => START_KNOWN.includes(c.account)).map(c => c.id);
   assert.deepEqual(g.contacts(), premise, "no contacts beyond the account the case starts with");
   assert.deepEqual(g.s.evidence, []); assert.deepEqual(g.s.notes, []);
 });
@@ -170,7 +172,7 @@ test("typed searches reward guesses, but aliases never tell whose they are", () 
   g.search("the old girl");                        // an alias of something not met
   assert.ok(!g.known().includes("calder_mill"));
   g.search("Zebediah Fakename");                   // nothing in the world
-  assert.equal(g.known().filter(id => !world.meta.startKnown.includes(id)).every(id => world.entities.has(id) || world.accounts.has(id)), true);
+  assert.equal(g.known().filter(id => !START_KNOWN.includes(id)).every(id => world.entities.has(id) || world.accounts.has(id)), true);
 });
 
 test("saving a name marks it saved; the Casebook only holds what was saved", () => {
@@ -213,7 +215,8 @@ test("version 1 saves are migrated: mentions become encountered, not known", asy
   old.saveVersion = 1; delete old.encountered; delete old.saved;
   for (const id of ["dana", "acc_danareyes", "kestrel", "lou"]) old.known[id] = true;
   const { state } = deserialize(world, serialize(old));
-  assert.equal(state.saveVersion, 4);
+  assert.equal(state.saveVersion, 5);
+  assert.equal(state.cases.quiet_account.status, "active", "the case an old save played is active");
   assert.deepEqual(state.timeline, [], "old saves get an empty timeline");
   assert.ok(state.known.theo && state.known.acc_theoquinn, "the profile the player opened is still investigated");
   assert.ok(!state.known.kestrel && state.encountered.kestrel != null, "a name only read is now encountered");

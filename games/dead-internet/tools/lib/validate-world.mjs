@@ -28,6 +28,7 @@ export function validateWorld(raw, opts = {}) {
   const isAccount = id => w.accounts.has(id);
   const isRef = id => isEntity(id) || isAccount(id);
   const arr = v => (v == null ? [] : Array.isArray(v) ? v : [v]);
+  const allLogins = [...arr(w.meta.logins), ...[...w.mysteries.values()].flatMap(m => arr(m.start?.logins))];
 
   // ── Conditions and effects ────────────────────────────────────────────────
   const checkCond = (where, c) => {
@@ -44,7 +45,8 @@ export function validateWorld(raw, opts = {}) {
       if (k === "known") for (const id of arr(v)) if (!isRef(id)) err(where, `known: unknown id ${id}`);
       if (k === "exposed") { const cl = typeof v === "string" ? v : v.claim; if (!w.claims.has(cl)) err(where, `exposed: unknown claim ${cl}`); }
       if (k === "published") for (const cl of arr(v)) if (!w.claims.has(cl)) err(where, `published: unknown claim ${cl}`);
-      if (k === "loggedIn" && !arr(w.meta.logins).some(l => l.site === v)) err(where, `loggedIn: unknown site ${v}`);
+      if (k === "loggedIn" && !allLogins.some(l => l.site === v)) err(where, `loggedIn: unknown site ${v}`);
+      if (["caseActive", "caseClosed", "caseStarted"].includes(k)) for (const id of arr(v)) if (!w.mysteries.has(id)) err(where, `${k}: unknown mystery ${id}`);
     }
   };
   const checkEffects = (where, effs, ctx = {}) => {
@@ -86,6 +88,35 @@ export function validateWorld(raw, opts = {}) {
 
   // ── Meta ──────────────────────────────────────────────────────────────────
   for (const id of arr(w.meta.startKnown)) if (!isRef(id)) err("meta.startKnown", `unknown id ${id}`);
+  // ── Mysteries (packs in one universe) ─────────────────────────────────────
+  const claimOwner = new Map();
+  for (const m of w.mysteries.values()) {
+    const where = `mystery ${m.id}`;
+    for (const c of arr(m.claims)) { if (claimOwner.has(c)) err(where, `claim ${c} also belongs to ${claimOwner.get(c)}`); claimOwner.set(c, m.id); }
+    if (m.status === "seed") continue;
+    for (const id of arr(m.start?.known)) if (!isRef(id)) err(where, `start.known: unknown id ${id}`);
+    for (const id of arr(m.start?.artifacts)) if (!w.artifacts.has(id)) err(where, `start.artifacts: unknown artifact ${id}`);
+    checkCond(`${where} requires`, m.requires); checkCond(`${where} start.discover`, m.start?.discover);
+    if (!m.start?.menu && !m.start?.discover) warn(where, "neither start.menu nor start.discover: the player can never start it");
+    for (const id of arr(m.evidence)) if (!w.artifacts.has(id) && !w.images.has(id)) err(where, `evidence: unknown artifact or image ${id}`);
+    const L = m.layers;
+    if (L) for (const k of ["reveal", "hint", "background"]) for (const n of arr(L[k])) if (!(n >= 1 && n <= 7)) err(where, `layers.${k}: ${n} is not a layer 1–7`);
+  }
+  const ownerOf = c => w.mysteries.get(claimOwner.get(c));
+  // Narrative layers are set per mystery (layers.reveal / hint / background). Nothing is global.
+  const layerOk = (where, layer, pack, supports) => {
+    if (layer == null) return;
+    if (!(layer >= 1 && layer <= 7)) { err(where, `layer ${layer} is not 1–7`); return; }
+    const m = pack && pack !== "universe" ? w.mysteries.get(pack) : null;
+    if (m) {
+      const L = m.layers || {};
+      if (![...arr(L.reveal), ...arr(L.hint), ...arr(L.background)].includes(layer)) err(where, `layer ${layer} is outside what ${m.id} may touch`);
+    }
+    for (const c of supports) {
+      const o = ownerOf(c);
+      if (o && !arr(o.layers?.reveal).includes(layer)) err(where, `layer ${layer} supports ${c}, but ${o.id} may not reveal layer ${layer}`);
+    }
+  };
   for (const ch of w.channels.values()) {
     if (ch.reviewer && !w.characters.has(ch.reviewer)) err(`channel ${ch.id}`, `unknown reviewer ${ch.reviewer}`);
     if (ch.reviewer) for (const k of ["noTrust", "strong", "weak", "none", "bold"]) if (w.strings?.review?.[ch.reviewer]?.[k] == null) err(`channel ${ch.id}`, `missing string review.${ch.reviewer}.${k}`);
@@ -151,6 +182,7 @@ export function validateWorld(raw, opts = {}) {
     let cur = img, seen = new Set();
     while (cur?.derivedFrom) { if (seen.has(cur.id)) { err(`image ${img.id}`, "derivation cycle"); break; } seen.add(cur.id); cur = w.images.get(cur.derivedFrom); }
     if (!w.imageUse.has(img.id) && !arr([...w.accounts.values()].map(a => a.avatar)).includes(img.id)) warn(`image ${img.id}`, "not used by any artifact or account");
+    layerOk(`image ${img.id}`, img.layer, null, arr(img.supports));
   }
 
   // ── Artifacts ─────────────────────────────────────────────────────────────
@@ -176,7 +208,14 @@ export function validateWorld(raw, opts = {}) {
     for (const m of [...arr(a.mentions), ...a.versions.flatMap(v => arr(v.mentions))]) if (!isRef(m)) err(where, `mentions unknown ${m}`);
     checkCond(where, a.visibleIf); checkCond(where, a.access);
     if (a.access && !a.loginSite) warn(where, "access condition but no loginSite");
-    if (a.filler && arr(a.supports).length) err(where, "filler must not support claims");
+    // Universe content (background, filler) may become evidence, but only when the mystery says so.
+    const sup = [...new Set([...arr(a.supports), ...a.versions.flatMap(v => arr(v.supports))])];
+    // (Only for worlds loaded as universe + packs; a flat world has no packs.)
+    if (w.packOf.get(a.id) === "universe") for (const c of sup) {
+      const o = ownerOf(c);
+      if (o && !arr(o.evidence).includes(a.id)) err(where, `universe content supports ${c}, but ${o.id} does not list it in evidence`);
+    }
+    layerOk(where, a.layer, w.packOf.get(a.id), sup);
     if ((a.index || "full") === "exact" && !arr(a.keywords).length) err(where, "index exact needs keywords");
     // Timeline
     const dates = a.versions.map(v => v.date).filter(Boolean);
@@ -264,53 +303,58 @@ export function validateWorld(raw, opts = {}) {
   }
   for (const a of w.artifacts.values()) if (a.hidden && !revealed.has(a.id)) err(`artifact ${a.id}`, "hidden, and nothing ever reveals it");
 
-  // ── Source independence ───────────────────────────────────────────────────
-  const testing = w.meta.testing || {};
-  const core = new Set(testing.coreClaims || []), important = new Set(testing.importantClaims || []);
-  const sourcesFor = new Map([...w.claims.keys()].map(k => [k, new Set()]));
-  for (const a of w.artifacts.values()) for (const v of a.versions) for (const c of arr(v.supports ?? a.supports)) sourcesFor.get(c)?.add(v.source ?? a.source);
-  for (const img of w.images.values()) for (const c of arr(img.supports)) sourcesFor.get(c)?.add(img.source);
-  for (const ch of w.characters.values()) for (const r of arr(ch.responses)) for (const c of arr(r.supports)) sourcesFor.get(c)?.add(r.source ?? ch.source ?? ch.id);
-  for (const [c, set] of sourcesFor) {
-    const n = set.size;
-    if (core.has(c) && n < 3) (n < 2 ? err : warn)(`claim ${c}`, `core claim has ${n} independent source(s) in the content; the rule is at least 3`);
-    else if (important.has(c) && n < 2) warn(`claim ${c}`, `has only ${n} independent source(s)`);
-    info(`claim ${c}`, `${n} sources in content: ${[...set].join(", ")}`);
-  }
+  // ── Per mystery: source independence, reachability, blocking ─────────────
+  const allRuns = {};
+  // A world without per-mystery testing (an older or minimal world) uses meta.testing for its first case.
+  let tested = [...w.mysteries.values()].filter(x => x.status !== "seed" && x.testing).map(m => ({ m, testing: m.testing }));
+  if (!tested.length && w.meta.testing) { const m = [...w.mysteries.values()].find(x => x.status !== "seed"); if (m) tested = [{ m, testing: w.meta.testing }]; }
+  for (const { m, testing } of tested) {
+    const core = new Set(testing.coreClaims || []), important = new Set(testing.importantClaims || []);
+    const sourcesFor = new Map([...w.claims.keys()].map(k => [k, new Set()]));
+    for (const a of w.artifacts.values()) for (const v of a.versions) for (const c of arr(v.supports ?? a.supports)) sourcesFor.get(c)?.add(v.source ?? a.source);
+    for (const img of w.images.values()) for (const c of arr(img.supports)) sourcesFor.get(c)?.add(img.source);
+    for (const ch of w.characters.values()) for (const r of arr(ch.responses)) for (const c of arr(r.supports)) sourcesFor.get(c)?.add(r.source ?? ch.source ?? ch.id);
+    for (const [c, set] of sourcesFor) {
+      const n = set.size;
+      if (core.has(c) && n < 3) (n < 2 ? err : warn)(`claim ${c}`, `core claim has ${n} independent source(s) in the content; the rule is at least 3`);
+      else if (important.has(c) && n < 2) warn(`claim ${c}`, `has only ${n} independent source(s)`);
+      info(`claim ${c}`, `${n} sources in content: ${[...set].join(", ")}`);
+    }
 
-  // ── Reachability and blocking (simulated players) ─────────────────────────
-  if (opts.reachability !== false && !issues.some(i => i.level === "ERROR")) {
-    const runs = {};
-    for (const mode of ["cautious", "reckless"]) {
-      const r = explore(w, { mode });
-      runs[mode] = r;
-      for (const c of [...core, ...important]) {
-        const n = r.coverage[c]?.sources.size ?? 0;
-        if (core.has(c) && n < 2) err(`reach ${c}`, `${mode} player can only reach ${n} independent source(s)`);
-        else if (important.has(c) && n < 2 && mode === "reckless") warn(`reach ${c}`, `reckless player reaches only ${n} source(s)`);
-        info(`reach ${c}`, `${mode}: ${n} sources (${[...(r.coverage[c]?.sources || [])].join(", ")})`);
-      }
-      const unseen = [...w.artifacts.values()].filter(a => !a.filler && !(a.id in r.game.s.seen)).map(a => a.id);
-      if (unseen.length) info(`reach ${mode}`, `never opened: ${unseen.join(" ")}`);
-    }
-    // Knock out each piece of core evidence in turn: no single artifact, image or person may block a core claim.
-    if (opts.knockout !== false) {
-      const contributors = new Set();
-      for (const a of w.artifacts.values()) if (a.versions.some(v => arr(v.supports ?? a.supports).some(c => core.has(c)))) contributors.add(a.id);
-      for (const img of w.images.values()) if (arr(img.supports).some(c => core.has(c))) contributors.add(img.id);
-      for (const ch of w.characters.values()) if (arr(ch.responses).some(r => arr(r.supports).some(c => core.has(c)) || arr(r.attach).length)) contributors.add(ch.id);
-      for (const id of contributors) {
-        const kw = buildWorld(raw);
-        kw.disabled = new Set([id]);
-        const r = explore(kw, { mode: "cautious" });
-        for (const c of core) {
+    // ── Reachability and blocking (simulated players) ─────────────────────────
+    if (opts.reachability !== false && !issues.some(i => i.level === "ERROR")) {
+      const runs = {}; allRuns[m.id] = runs;
+      for (const mode of ["cautious", "reckless"]) {
+        const r = explore(w, { mode, case: m.id });
+        runs[mode] = r;
+        for (const c of [...core, ...important]) {
           const n = r.coverage[c]?.sources.size ?? 0;
-          if (n < 2) err(`blocking ${id}`, `without ${id}, a cautious player reaches only ${n} source(s) for ${c}`);
+          if (core.has(c) && n < 2) err(`reach ${c}`, `${mode} player can only reach ${n} independent source(s)`);
+          else if (important.has(c) && n < 2 && mode === "reckless") warn(`reach ${c}`, `reckless player reaches only ${n} source(s)`);
+          info(`reach ${c}`, `${mode}: ${n} sources (${[...(r.coverage[c]?.sources || [])].join(", ")})`);
         }
+        const unseen = [...w.artifacts.values()].filter(a => !a.filler && !(a.id in r.game.s.seen)).map(a => a.id);
+        if (unseen.length) info(`reach ${mode}`, `never opened: ${unseen.join(" ")}`);
       }
-      info("blocking", `knocked out ${contributors.size} contributors one at a time`);
+      // Knock out each piece of core evidence in turn: no single artifact, image or person may block a core claim.
+      if (opts.knockout !== false) {
+        const contributors = new Set();
+        for (const a of w.artifacts.values()) if (a.versions.some(v => arr(v.supports ?? a.supports).some(c => core.has(c)))) contributors.add(a.id);
+        for (const img of w.images.values()) if (arr(img.supports).some(c => core.has(c))) contributors.add(img.id);
+        for (const ch of w.characters.values()) if (arr(ch.responses).some(r => arr(r.supports).some(c => core.has(c)) || arr(r.attach).length)) contributors.add(ch.id);
+        for (const id of contributors) {
+          const kw = buildWorld(raw);
+          kw.disabled = new Set([id]);
+          const r = explore(kw, { mode: "cautious", case: m.id });
+          for (const c of core) {
+            const n = r.coverage[c]?.sources.size ?? 0;
+            if (n < 2) err(`blocking ${id}`, `without ${id}, a cautious player reaches only ${n} source(s) for ${c}`);
+          }
+        }
+        info("blocking", `knocked out ${contributors.size} contributors one at a time`);
+      }
+
     }
-    return { issues, runs };
   }
-  return { issues };
+  return { issues, runs: allRuns[[...w.mysteries.values()].find(x => x.testing)?.id] };
 }

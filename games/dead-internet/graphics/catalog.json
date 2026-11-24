@@ -1,5 +1,5 @@
 {
-  "about": "Production list for Dead Internet graphics. Ids are stable and used by the world (content/world/images.json). Replace a file by saving it under the same name; no code changes. Order matters: generate originals before the copies derived from them.",
+  "about": "Production list for Dead Internet graphics. Ids are stable and used by the world (content/universe/images.json). Replace a file by saving it under the same name; no code changes. Order matters: generate originals before the copies derived from them.",
   "style": {
     "photo": "Realistic smartphone photo, natural light, slight noise, no text overlays, no real brands.",
     "profile": "Square avatar, realistic, as a person would choose for themselves. Synthetic personas: subtly too smooth, with one visible AI tell.",

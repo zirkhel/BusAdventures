@@ -11,7 +11,9 @@
 //   { visible: "A21" }                 { live: "A21" }  (has a live version)
 //   { accountActive: "acc_x" }         { loggedIn: "brightline_portal" }
 //   { known: "brightline" }            (entity or account known to the player)
-//   { exposed: "S2" } or { exposed: { claim, channel?, beforeDay?, allowWeak? } }
+//   { exposed: "S2" } or { exposed: { claim, channel?, beforeDay?, beforeCaseDay?, allowWeak? } }
+//                                      beforeCaseDay counts from the day the case started (day 1)
+//   { caseActive: "id" } { caseClosed: "id" } { caseStarted: "id" }   (case states, core/cases.js)
 //   { published: "F1" }                (any publication of that claim, true or not)
 //   { reportsGte: 1 } { reportsLt: 1 }
 //   { all: [...] } { any: [...] } { not: {...} }
@@ -22,7 +24,7 @@ export const CONDITION_KEYS = new Set([
   "all", "any", "not", "flag", "flagFalse", "counterGte", "counterLt", "dayGte", "dayLt",
   "trustGte", "trustLt", "credibilityGte", "credibilityLt", "seen", "notSeen", "saved",
   "visible", "live", "accountActive", "loggedIn", "known", "exposed", "published",
-  "reportsGte", "reportsLt",
+  "reportsGte", "reportsLt", "caseActive", "caseClosed", "caseStarted",
 ]);
 
 /**
@@ -32,6 +34,7 @@ export const CONDITION_KEYS = new Set([
  * @property {(id:string)=>boolean} isVisible
  * @property {(id:string)=>boolean} isLive
  * @property {(id:string)=>boolean} accountActive
+ * @property {number} [caseStart]          day the current case started (rules and endings of a mystery)
  */
 
 /** @param {any} cond @param {CondCtx} ctx @returns {boolean} */
@@ -73,11 +76,15 @@ function test(k, v, ctx) {
       if (e.strength !== "strong" && !spec.allowWeak) return false;
       if (spec.channel && !asArray(spec.channel).includes(e.channel)) return false;
       if (spec.beforeDay != null && !(e.day < spec.beforeDay)) return false;
+      if (spec.beforeCaseDay != null && !(e.day - (ctx.caseStart ?? 1) + 1 < spec.beforeCaseDay)) return false;
       return true;
     }
     case "published": return asArray(v).every(c => c in s.published);
     case "reportsGte": return s.reports.length >= v;
     case "reportsLt": return s.reports.length < v;
+    case "caseActive": return asArray(v).every(id => s.cases?.[id]?.status === "active");
+    case "caseClosed": return asArray(v).every(id => s.cases?.[id]?.status === "closed");
+    case "caseStarted": return asArray(v).every(id => ["active", "closed"].includes(s.cases?.[id]?.status));
     default: throw new Error(`Unknown condition "${k}"`);
   }
 }

@@ -13,11 +13,18 @@ import { truthOf } from "../../core/casebook.js";
 
 const CODE_RE = /[A-Za-z0-9]+(?:[._@-][A-Za-z0-9]+)+/g;
 
+/** The mystery a test run plays, and its testing setup (seed queries, core claims, days). */
+export function testCase(world, caseId) {
+  const m = caseId ? world.mysteries.get(caseId) : [...world.mysteries.values()].find(x => x.start?.menu && x.testing) ?? [...world.mysteries.values()].find(x => x.testing);
+  return { id: m?.id, testing: m?.testing ?? world.meta.testing ?? {} };
+}
+
 export function explore(world, opts = {}) {
   const mode = opts.mode ?? "cautious";
-  const maxDays = opts.maxDays ?? world.meta.testing?.maxDays ?? 9;
+  const tc = testCase(world, opts.case);
+  const maxDays = opts.maxDays ?? tc.testing.maxDays ?? 9;
   const g = new Game(world, { seed: opts.seed ?? 1, playerName: "Explorer" });
-  g.start();
+  g.start(tc.id);
 
   const done = new Set();
   const texts = [];
@@ -38,7 +45,7 @@ export function explore(world, opts = {}) {
   };
 
   const queries = () => {
-    const out = new Set(world.meta.testing?.seedQueries || []);
+    const out = new Set(tc.testing.seedQueries || []);
     // A player reads names in what they open and searches for them: that is how they investigate.
     for (const id of new Set([...g.known(), ...g.encountered()])) {
       const e = world.entities.get(id), a = world.accounts.get(id);
@@ -110,7 +117,7 @@ export function explore(world, opts = {}) {
 
       // Logins
       if (mode === "reckless") {
-        for (const l of world.meta.logins || []) {
+        for (const l of g.logins()) {
           if (!g.s.flags.iris_gave_login && l.site === "brightline_portal") continue;
           if (!g.s.loggedIn[l.site] && once(`login:${l.site}`)) {
             g.login(l.site, l.user, l.pass);
@@ -159,7 +166,7 @@ export function hypothesisFor(g, claimId) {
 }
 
 export function publishBest(g, channel, claims) {
-  const ids = (claims || g.w.meta.testing?.coreClaims || []).map(c => hypothesisFor(g, c)).filter(Boolean);
+  const ids = (claims || testCase(g.w, g.cases()[0]?.id).testing.coreClaims || []).map(c => hypothesisFor(g, c)).filter(Boolean);
   return g.publish(channel, ids);
 }
 

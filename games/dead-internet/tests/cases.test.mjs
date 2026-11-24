@@ -21,6 +21,7 @@ async function twoCaseWorld() {
 
 function collect(g) {
   g.start();
+  if (g.w.mysteries.has("test_case")) assert.ok(g.start("test_case").ok, "a second case can be started");
   g.search("Mara Quinn obituary"); g.open("A02"); g.open("A11");
   const e1 = g.save({ artifact: "A02" }).id, e2 = g.save({ artifact: "A11" }).id;
   g.search("Theo Quinn"); g.search("Brightline Media");
@@ -33,7 +34,7 @@ function collect(g) {
 test("new Casebook items are unclassified and nothing is linked to a case automatically", async () => {
   const g = new Game(await twoCaseWorld());
   const { e1, e2, h, n, t } = collect(g);
-  assert.deepEqual(g.cases().map(c => c.id), ["quiet_account", "test_case"], "seed mysteries are not offered");
+  assert.deepEqual(g.cases().map(c => c.id), ["quiet_account", "test_case"], "only started cases are offered, never seeds");
   const cb = g.casebook();
   for (const x of [...cb.evidence, ...cb.hypotheses, ...cb.notes, ...cb.timeline]) assert.deepEqual(x.cases, [], `${x.id} starts unclassified`);
   // One, several or none
@@ -107,7 +108,7 @@ test("version 3 saves migrate: items become unclassified, reports get their case
   for (const k of ["evidence", "hypotheses", "notes", "timeline"]) for (const x of old[k]) delete x.cases;
   for (const r of old.reports) delete r.case;
   const { state } = deserialize(world, serialize(old));
-  assert.equal(state.saveVersion, 4);
+  assert.equal(state.saveVersion, 5);
   for (const k of ["evidence", "hypotheses", "notes", "timeline"]) for (const x of state[k]) assert.deepEqual(x.cases, [], `${k} ${x.id}`);
   assert.equal(state.reports[0].case, "quiet_account");
 });

@@ -1,0 +1,33 @@
+{
+ "id": "dead-internet",
+ "title": "Dead Internet",
+ "contentVersion": "0.1.0",
+ "startDay": 1,
+ "startDate": "2026-03-09",
+ "credibilityStart": 50,
+ "player": {
+  "defaultName": "Sam"
+ },
+ "publishing": {
+  "scoring": {
+   "true_strong": 8,
+   "true_weak": 3,
+   "true_none": -2,
+   "partial": -3,
+   "false": -10,
+   "unknown": -2
+  },
+  "channels": [
+   {
+    "id": "connect",
+    "name": "Your Connect profile",
+    "credibilityWeight": 0.8
+   },
+   {
+    "id": "threadline",
+    "name": "Threadline (anonymous)",
+    "credibilityWeight": 0.5
+   }
+  ]
+ }
+}
