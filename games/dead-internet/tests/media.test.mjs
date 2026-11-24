@@ -213,6 +213,15 @@ test("the validator checks media and keeps evidence out of feed-only reach", asy
   raw.artifacts.find(a => a.id === "TT-90001").index = "weak";
   assert.ok(!errors(raw).some(i => i.where === "artifact TT-90001"), "searchable: fine");
 
+  // Searchable is not findable: an evidence clip found only by search needs a lead in other content
+  const warns = r => validateWorld(r, { reachability: false }).issues.filter(i => i.level === "WARN");
+  raw = await withEcho();
+  raw.accounts.push({ id: "acc_tt_nobody", platform: "toktok", handle: "@nobody_xq", displayName: "nobody", pool: "toktok" });
+  Object.assign(raw.artifacts.find(a => a.id === "TT-90001"), { index: "weak", author: "acc_tt_nobody", video: "VID0002" });
+  assert.ok(warns(raw).some(i => i.where === "artifact TT-90001" && /nothing else in the content leads to it/.test(i.msg)));
+  raw.artifacts.find(a => a.id === "DR-2025-0141").versions[0].body += " Watch @nobody_xq for more.";
+  assert.ok(!warns(raw).some(i => i.where === "artifact TT-90001"), "a handle written in an article is a lead");
+
   // Unresolved canon: a claim may not depend on who runs a light account
   raw = await withEcho();
   raw.artifacts.find(a => a.id === "TT-90001").index = "weak";
@@ -223,7 +232,14 @@ test("the validator checks media and keeps evidence out of feed-only reach", asy
   raw = await withPool();
   raw.rules.push({ id: "bad_like", when: { event: "video.like" }, do: [{ credibility: 5 }, { trust: { id: "dana", delta: 1 } }] });
   raw.rules.push({ id: "ok_scroll", when: { event: "feed.scroll" }, do: [{ later: { days: 1, do: [{ notify: { text: "hi" } }] } }] });
+  // ...nor single out a clip, a creator or the player's progress
+  raw.rules.push({ id: "hint_view", when: { event: "video.view", match: { artifact: "TT-00001" } }, do: [{ notify: { text: "hmm" } }] });
+  raw.rules.push({ id: "hint_seen", when: { event: "feed.scroll" }, if: { all: [{ seen: "A02" }] }, do: [{ notify: { text: "hmm" } }] });
+  raw.rules.push({ id: "ok_platform", when: { event: "video.view", match: { platform: "toktok" } }, if: { flag: "x" }, do: [{ notify: { text: "lol" } }] });
   e = errors(raw);
+  assert.ok(e.some(i => i.where === "rule hint_view" && /may only match on platform, tab, not artifact/.test(i.msg)));
+  assert.ok(e.some(i => i.where === "rule hint_seen" && /what the player has found \(seen\)/.test(i.msg)));
+  assert.ok(!e.some(i => i.where === "rule ok_platform"));
   assert.ok(e.some(i => i.where === "rule bad_like" && /credibility, trust/.test(i.msg)));
   assert.ok(!e.some(i => i.where === "rule ok_scroll"));
 });

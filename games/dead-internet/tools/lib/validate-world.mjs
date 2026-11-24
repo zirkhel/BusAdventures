@@ -14,6 +14,8 @@ const EVENTS = new Set(["game.start", "day.start", "search", "artifact.open", "m
 // Watching, liking and scrolling cost nothing and change nothing that matters (proposal §6.6).
 const FEED_EVENTS = new Set(["video.view", "video.like", "feed.scroll"]);
 const MOOD_EFFECTS = new Set(["message", "notify", "later"]);
+const FEED_MATCH = new Set(["platform", "tab"]);
+const PROGRESS_CONDS = new Set(["seen", "notSeen", "saved", "visible", "live", "known", "exposed", "published"]);
 const VIDEO_TRANSFORMS = new Set(["reupload", "crop", "mirror", "speed", "reencode", "trim", "overlay"]);
 const INDEX = new Set(["full", "weak", "exact", "none", "cache"]);
 const TRANSFORMS = new Set(["crop", "mirror", "recolor", "compress", "composite", "resize"]);
@@ -358,6 +360,15 @@ export function validateWorld(raw, opts = {}) {
       const scan = effs => { for (const e of arr(effs)) for (const [k, v] of Object.entries(e)) { if (!MOOD_EFFECTS.has(k)) bad.push(k); if (k === "later") scan(v.do); if (k === "message" && (arr(v.attach).length || arr(v.supports).length)) bad.push("message with attach/supports"); } };
       scan(r.do);
       if (bad.length) err(where, `${r.when.event} may only send messages and notifications, not ${[...new Set(bad)].join(", ")}`);
+      // A reaction to watching or scrolling must not single out a clip, a creator or the
+      // player's progress, or it becomes a hint that the clip matters.
+      const named = Object.keys(r.when.match || {}).filter(k => !FEED_MATCH.has(k));
+      if (named.length) err(where, `${r.when.event} may only match on ${[...FEED_MATCH].join(", ")}, not ${named.join(", ")}`);
+      const progress = [];
+      const scanCond = c => { if (c == null || typeof c !== "object") return; if (Array.isArray(c)) return c.forEach(scanCond);
+        for (const [k, v] of Object.entries(c)) { if (PROGRESS_CONDS.has(k)) progress.push(k); if (k === "all" || k === "any" || k === "not") scanCond(v); } };
+      scanCond(r.if);
+      if (progress.length) err(where, `${r.when.event} may not depend on what the player has found (${[...new Set(progress)].join(", ")})`);
     }
     if (r.when?.match?.to && !arr(r.when.match.to).every(id => w.characters.has(id))) err(where, `match.to: unknown character ${r.when.match.to}`);
     checkCond(where, r.if); checkEffects(where, r.do); collectReveals(r.do);
@@ -382,6 +393,23 @@ export function validateWorld(raw, opts = {}) {
     const viaProfile = profile && (w.artifacts.get(profile).index || "full") !== "none";
     if ((a.index || "full") !== "none" || viaProfile || referenced.has(a.id) || given.has(a.id)) continue;
     err(`artifact ${a.id}`, `supports ${sup.join(", ")} but can only be found in a feed (no search, profile, link or giver)`);
+  }
+  // Searchable is not the same as findable: a clip that is evidence and can only be found by
+  // search needs a lead elsewhere in the content (its creator named, or one of its keywords or
+  // its creator's handle written somewhere the player can read). Content testing does the rest.
+  const corpus = [];
+  for (const x of w.artifacts.values()) for (const v of x.versions) corpus.push({ id: x.id, text: `${v.title ?? x.title ?? ""} ${v.body ?? x.body ?? ""}`, mentions: [...arr(x.mentions), ...arr(v.mentions)] });
+  for (const c of w.characters.values()) for (const r of arr(c.responses)) corpus.push({ id: c.id, text: JSON.stringify(r.text ?? ""), mentions: arr(r.mentions) });
+  for (const r of w.rules) for (const e of arr(r.do)) if (e.message) corpus.push({ id: r.id, text: String(e.message.text ?? ""), mentions: arr(e.message.mentions) });
+  for (const a of w.artifacts.values()) {
+    if (!(a.video || a.versions.some(v => v.video))) continue;
+    const sup = [...new Set([...arr(a.supports), ...a.versions.flatMap(v => arr(v.supports))])].filter(c => { const o = ownerOf(c); return o && o.status !== "seed"; });
+    if (!sup.length || referenced.has(a.id) || given.has(a.id)) continue;
+    const acc = w.accounts.get(a.author);
+    const words = [...arr(a.keywords), acc?.handle, acc?.handle?.replace(/^@/, "")].filter(Boolean).map(x => String(x).toLowerCase());
+    const others = corpus.filter(c => c.id !== a.id && c.id !== w.profileOf.get(a.author));
+    const lead = others.some(c => (a.author && c.mentions.includes(a.author)) || words.some(k => c.text.toLowerCase().includes(k)));
+    if (!lead) warn(`artifact ${a.id}`, `clip supports ${sup.join(", ")} and can be searched, but nothing else in the content leads to it (creator or keywords)`);
   }
   for (const m of w.mysteries.values()) for (const p of arr(m.platforms)) if (!w.platforms.has(p)) err(`mystery ${m.id}`, `platforms: unknown platform ${p}`);
 
