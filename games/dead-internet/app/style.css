@@ -520,3 +520,34 @@ button.bar-title { text-align: left; }
 .menu-st.live { color: #3fbf6f; }
 .menu-item.future { opacity: .85; }
 .intro-back { position: absolute; top: calc(16px + var(--safe-t)); left: 18px; color: #8c877e; font-size: 15px; }
+
+/* ── Time: known deadlines, sleep dialog, waking up ───────────────────────── */
+.hw-deadlines { margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.18); }
+.dl-head { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; opacity: .7; margin-bottom: 4px; }
+.dl-item { display: flex; gap: 8px; align-items: flex-start; padding: 3px 0; }
+.dl-item > .ico { width: 16px; height: 16px; flex: none; margin-top: 2px; opacity: .85; }
+.dl-main { display: flex; flex-direction: column; min-width: 0; }
+.dl-main b { font-size: 14px; font-weight: 600; line-height: 1.25; }
+.dl-when { font-size: 13px; opacity: .8; }
+.dl-case { font-size: 12px; opacity: .6; }
+.sleep-sheet .sl-body { background: rgba(245,245,248,.98); color: var(--ink); border-radius: 14px 14px 0 0; padding: 14px 16px 12px; max-height: 66vh; overflow-y: auto; }
+.sl-icon { width: 34px; height: 34px; border-radius: 17px; background: #1d2340; color: #fff; display: grid; place-items: center; margin: 0 auto 8px; }
+.sl-icon .ico { width: 19px; height: 19px; }
+.sl-title { font-size: 18px; font-weight: 700; text-align: center; margin: 0 0 10px; }
+.sl-days { background: #fff; border-radius: 12px; padding: 10px 14px; display: flex; flex-direction: column; }
+.sl-day { display: flex; flex-direction: column; }
+.sl-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink2); }
+.sl-day b { font-size: 16px; }
+.sl-arrow { color: var(--ink2); padding: 2px 0; font-size: 13px; line-height: 1; }
+.sl-text { font-size: 14px; line-height: 1.4; margin: 10px 0 0; }
+.sl-note { font-size: 12.5px; line-height: 1.35; margin: 10px 0 0; }
+.sl-deadlines { margin-top: 10px; background: #fff; border-radius: 12px; padding: 10px 14px; }
+.sl-deadlines .dl-head { color: var(--ink2); opacity: 1; }
+.sl-go { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; }
+.sl-go .ico { width: 20px; height: 20px; }
+.sleep-sheet .sheet-item.sl-go { border-radius: 0 0 14px 14px; }
+.wake { margin: 22px auto 0; text-align: center; background: rgba(0,0,0,.32); border: 1px solid rgba(255,255,255,.18); border-radius: 18px; padding: 14px 22px; animation: wake-in 1.1s ease-out; max-width: 300px; }
+.wake-hello { font-size: 13px; text-transform: uppercase; letter-spacing: .14em; opacity: .75; }
+.wake-day { font-size: 30px; font-weight: 700; margin-top: 2px; }
+.wake-date { font-size: 17px; opacity: .9; }
+@keyframes wake-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }

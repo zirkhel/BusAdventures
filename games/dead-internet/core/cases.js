@@ -15,8 +15,9 @@
 // Several cases can be active at once. Knowledge, evidence and consequences are universe
 // state and carry over. Only cases the player has started are offered in the Casebook.
 
-import { asArray } from "./util.js";
+import { asArray, addDays } from "./util.js";
 import { fire } from "./rules.js";
+import { check } from "./conditions.js";
 
 /** Seeds are named in the world but have no content yet. */
 export const playable = m => m && m.status !== "seed";
@@ -110,6 +111,36 @@ export function endingsView(g) {
     const e = asArray(m?.endings).find(x => x.id === eid);
     return { key, case: mid, caseTitle: m?.title || mid, id: eid, title: e?.title || null, epilogue: e?.epilogue || null, closes: !!e?.closes };
   });
+}
+
+/**
+ * Deadlines the player knows about, in active cases. A mystery declares them in
+ * `deadlines: [{ id, label, caseDay | day, knownIf?, until? }]`:
+ *   caseDay   the case day the deadline falls on (day 1 = the day the case started)
+ *   day       or an absolute game day
+ *   knownIf   condition: only shown once the player has learnt it in the world
+ *             (read the article, got the message). Without it, known from the start.
+ *   until     condition that retires it early (postponed, cancelled)
+ * A deadline is shown up to and including its day, never after. Nothing here says
+ * what will happen; it only repeats a date the player has already met.
+ * @returns {{case:string, caseTitle:string, id:string, label:string, day:number, date:string, daysLeft:number}[]}
+ */
+export function knownDeadlines(g) {
+  const out = [];
+  for (const [cid, c] of Object.entries(g.s.cases || {})) {
+    if (c.status !== "active") continue;
+    const m = g.w.mysteries.get(cid);
+    for (const d of asArray(m?.deadlines)) {
+      const day = d.day ?? (d.caseDay != null ? c.startedDay + d.caseDay - 1 : null);
+      if (day == null || day < g.s.day) continue;
+      const ctx = g.caseCtx(cid);
+      if (d.knownIf && !check(d.knownIf, ctx)) continue;
+      if (d.until && check(d.until, ctx)) continue;
+      out.push({ case: cid, caseTitle: m.title || cid, id: d.id, label: d.label, day,
+        date: addDays(g.w.meta.startDate, day - (g.w.meta.startDay ?? 1)), daysLeft: day - g.s.day });
+    }
+  }
+  return out.sort((a, b) => a.day - b.day);
 }
 
 /** "locked" | "available" | "active" | "closed" (or "unknown" for a seed). The world goes on either way. */
