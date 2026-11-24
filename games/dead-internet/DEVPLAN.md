@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 3)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 4 og ny rekkefølge)._
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
@@ -60,17 +60,22 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 - [x] Oppdagelsestilstander (unknown, encountered, investigated, saved) med migrering av gamle lagringer
 - [x] Revisjon av Browser, Connect, Messages, Casebook, søkeforslag og kontekstmenyen for lekkasjer, med automatiske tester
 
-## Prioritert rekkefølge videre (Anders, 24. nov)
-1. ~~Global kontekstmeny~~ ✅
-2. ~~Fjerne informasjonslekkasje~~ ✅
-3. ~~Navigasjon på tvers av apper~~ ✅
-4. ~~Timeline-fane i Casebook (fase 4)~~ ✅
-5. Teste hele etterforskningen på mobil (fase 4)
-6. Rapportering, publisering og konsekvenser (fase 5)
-7. Fullføre The Quiet Account som spillbart mysterium (fase 6)
-8. Resten av appene (fase 7)
+## Rekkefølge videre (Anders, 24. nov)
+Ingen unødvendig utvidelse av fasen som pågår.
+1. ~~Global kontekstmeny, kunnskapsgrenser og navigasjon (fase 3b)~~ ✅
+2. ~~Timeline (fase 4)~~ ✅
+3. Rapportering og U0 (fase 5)
+4. Universdeling U1 (fase 6)
+5. Mediekjerne M1 (fase 7)
+6. The Daily Record og Unfiltered, M2 (fase 8)
+7. Ferdigstille The Quiet Account (fase 9)
+8. Resterende verktøyapper: Mail, Files, Contacts, Forensics, Archive (fase 10)
+9. TokTok, M3 og M4 (fase 11)
+10. Videre mysterier (fase 12)
 
-## Fase 4 — Timeline og helhetlig mobiltest
+Medieproduksjon (M5) går løpende ved siden av, med 20–30 ekte videoklipp i første runde.
+
+## Fase 4 — Timeline ✅
 _Timeline implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, desktop)._
 - [x] Timeline er den fjerde fanen i Casebook. Den er tom ved start, bygges av spilleren og genereres aldri automatisk.
 - [x] Hendelser kan opprettes:
@@ -90,33 +95,75 @@ _Timeline implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 
 - [x] Gale, motstridende og oppdiktede hendelser er tillatt, og intervaller kan stå feil vei. Ingen riktighetsindikator. Sorteringen bruker bare spillerens egne datoer.
 - [x] Teorier viser tilknyttede hendelser.
 - [x] Lagringsversjon 3. Eldre lagringer får en tom tidslinje.
-- [ ] Hele The Quiet Account spilles gjennom på mobil, og friksjonen måles.
 
-## Fase 5 — Rapport, publisering og konsekvenser
+
+## Fase 5 — Rapportering og U0
+_Rapporter og publisering bygges per sak fra starten, så de ikke må skrives om når neste mysterium kommer._
 - [ ] Publiseringsflyt med kanalvalg og Danas gjennomgang
-- [ ] Valgte tidslinjehendelser kan tas med i rapporter. `casebookView().timeline` gir dem allerede. Evalueringen (nøyaktighet og støtte) skjer i rapportmotoren og holdes adskilt fra Timeline.
+- [ ] En rapport har alltid én sak (`case`). Påstander vurderes mot den sakens påstander og universets kanon.
+- [ ] Kanaler og reviewer leses fra sakens `publishing`, ikke fra en motorregel
+- [ ] Valgte tidslinjehendelser kan tas med i rapporter. Evalueringen (nøyaktighet og støtte) skjer i rapportmotoren og holdes adskilt fra Timeline.
+- [ ] Bevis, teorier, notater og tidslinjehendelser får `cases: []`. Tomt betyr uklassifisert. Ingenting knyttes automatisk, og spilleren velger én, flere eller ingen saker.
+- [ ] Ny lagringsversjon med migrering: eksisterende elementer blir uklassifiserte
 - [ ] Visning av reaksjoner og avslutninger (epiloger)
+- [ ] Startskjerm med tilgjengelige etterforskninger (avhenger av Anders' valg om når)
+
+## Fase 6 — Universdeling U1
+_Ingen synlig endring for spilleren. Alle eksisterende tester skal passere._
+- [ ] Innholdet deles i `content/universe/` og `content/mysteries/quiet-account/`
+- [ ] `mystery.json` med start (premiss, startKnown, startArtifacts, logins, intro), forutsetninger, frister, påstander, avslutninger, publisering, testoppsett og tekster
+- [ ] `state.cases` med `locked`, `available`, `active` og `closed`. Flere aktive saker samtidig, og en avsluttet sak stopper ikke spillet.
+- [ ] Start fra hovedmenyen (`start.menu`) og naturlig oppdagelse i verden (`start.discover`)
+- [ ] Relative frister (`beforeCaseDay`), og `beforeDay` beholdes for univershendelser
+- [ ] Personer kan utvides per mysterium (`extends`)
+- [ ] Validator og simulator per mysterium. Bakgrunnsinnhold kan bli bevis når et mysterium eksplisitt peker på det. Den absolutte `filler`-regelen erstattes av dette.
+- [ ] Narrative lag (`layer` 1–7) konfigureres per mysterium. The Quiet Account avslører ikke lag 5–7. Validatoren sjekker grensen for hvert mysterium.
+- [ ] Saksspesifikke tekster i grensesnittet flyttes til sakens tekster (Theories-tomtekst, «Port Calder», `.pf-brightline_site`)
+
+## Fase 7 — Mediekjerne (M1)
+- [ ] Artikkelfelt: seksjon, byline, rettelser, relaterte, sponset, strukturerte kommentarer
+- [ ] `videos.json` og lette kontoer. Modellen skal tåle 150 klipp eller flere.
+- [ ] Delte innholdsbassenger (`pools/`) i universet
+- [ ] Deterministisk feed som er blind for relevans. TokTok-feeden bygger bare på likes, følger og eksplisitt interaksjon i TokTok, aldri søkehistorikk.
+- [ ] Validator: ingen bevis som bare kan finnes ved å scrolle, og scrolling har ingen konsekvenser
+- [ ] Innholdsrapport som viser fordelingen av sanne og usanne påstander per kanal (ingen kvote)
+
+## Fase 8 — The Daily Record og Unfiltered (M2)
+- [ ] Én nyhetsmotor med to profiler. Unfiltered med egen logo og identitet.
+- [ ] Forside, seksjoner, artikkel, forfatterside, kommentarer, søk og del
+- [ ] Hjemskjerm med flere apper
+- [ ] Innholdspakker for begge aviser
+- [ ] Playwright-test på iPhone- og Pixel-størrelse
+
+## Fase 9 — The Quiet Account ferdig
+- [ ] Hele The Quiet Account spilles gjennom på mobil, og friksjonen måles
 - [ ] Papirtest-funn innarbeidet i innholdet
 - [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang
-
-## Fase 6 — The Quiet Account ferdig, levende verden og produksjon
 - [ ] Grafikk produsert etter `graphics/GRAPHICS.md` (ComfyUI), originaler før kopier
-- [ ] Mer bakgrunnsinnhold (mål: 60+ fyllartefakter), generert med AI og kvalitetssikret med validatoren
-- [ ] Service worker for offline og rask lasting
 - [ ] Flere dynamiske hendelser og reaksjoner på publisering
+- [ ] Service worker for offline og rask lasting
 
-## Fase 7 — Flere apper
+## Fase 10 — Resterende verktøyapper
 - [ ] Mail: innboks, tråder, vedlegg, videresending og metadata
 - [ ] Files: dokumenter, bilder og vedlegg som spilleren eksplisitt har lastet ned
 - [ ] Archive: historiske versjoner av sider, profiler og dokumenter. Inntil videre er dette en del av Browser (cache, «View cached versions», «View available versions»).
 - [ ] Contacts: adressebok som spilleren selv styrer. Kontakter legges til eksplisitt eller gjennom legitime hendelser. Kontekstmenyen får «Add to Contacts».
-- [ ] Forensics: gjenbruker bildeverktøyene som finnes (metadata, bildesøk, speilvendt søk), og legger til bildesammenligning, transformasjon, dokument- og versjonssammenligning, kontoaktivitet. Viser observasjoner, aldri konklusjoner.
+- [ ] Forensics: gjenbruker bildeverktøyene (metadata, bildesøk, speilvendt søk), og legger til bildesammenligning, transformasjon, dokument- og versjonssammenligning, videometadata og kontoaktivitet. Viser observasjoner, aldri konklusjoner.
 
-## Fase 8 — Valgfri AI-dialog (eksperiment)
+## Fase 11 — TokTok (M3 og M4)
+- [ ] Vertikal sveip, For You og Following, profil, kommentarer, likes, lagre, del, søk. Egen logo og identitet.
+- [ ] Plassholder-video. Første produksjonsrunde er 20–30 ekte klipp, resten plassholdere.
+- [ ] Kontekstmeny: Video info, Show transcript, Search by frame
+- [ ] Søk på nøkkelbilder, slettede og endrede klipp, cache
+- [ ] 3–5 valgfrie klipp med spor i The Quiet Account. Validatoren viser at saken kan løses uten TokTok.
+- [ ] Utvide klippmengden etter at produksjonsflyt, kvalitet og ytelse er testet
+
+## Fase 12 — Videre mysterier
+- [ ] Neste mysterium (Project Echo, Missing Millions, Memory Rewrite eller Ghost Network) som innholdspakke i samme univers
+- [ ] Varige konsekvenser fra The Quiet Account leses av neste mysterium
+- [ ] Det store spørsmålet om ekte mennesker på nettet holdes åpent
+- [ ] Vurdere innholdseditor
+
+## Senere — Valgfri AI-dialog (eksperiment)
 - [ ] Vurdere AI for `autopilot`-personer bak et flagg, med personens kunnskap som eneste kilde
 - [ ] Kostnadsmåling og reserve til skriptet dialog
-
-## Fase 9 — Utvidelse
-- [ ] Neste mysterium (Project Echo, Missing Millions, Memory Rewrite eller Ghost Network) i samme verden
-- [ ] Varige konsekvenser fra The Quiet Account leses av neste mysterium
-- [ ] Vurdere innholdseditor
