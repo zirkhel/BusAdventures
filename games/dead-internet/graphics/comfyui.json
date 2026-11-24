@@ -144,15 +144,18 @@
  },
  "NIMG0003": {
   "method": "generate",
-  "prompt": "overcast morning photo of a small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a small passenger ferry waiting offshore, calm grey water, news photo"
+  "prompt": "overcast morning photo of a small wooden ferry dock on concrete pylons, one pylon visibly darker at the waterline, a small passenger ferry waiting offshore, calm grey water, news photo",
+  "notes": "Done (Anders, ComfyUI). Claude removed the stray 's' in 'Port Calders' on the sign."
  },
  "NIMG0004": {
   "method": "generate",
-  "prompt": "night photo of a dark town street during a blackout, traffic lights dead, only car headlights, one city bus with passengers using phone flashlights inside, documentary, high ISO noise"
+  "prompt": "night photo of a dark town street during a blackout, traffic lights dead, only car headlights, one city bus with passengers using phone flashlights inside, documentary, high ISO noise",
+  "notes": "Done (Anders, ComfyUI). Claude hand-fixed: bus LED 42 -> 14 (DR-2026-0058), 'Port Calders' -> 'Port Calder' on both banners and the bus side, near street lamp darkened."
  },
  "NIMG0005": {
   "method": "generate",
-  "prompt": "pre-dawn smartphone photo, grey smoke drifting from the loading bay of a long brick warehouse, one fire engine with lights on, wet tarmac reflecting the lights, blue hour"
+  "prompt": "pre-dawn smartphone photo, grey smoke drifting from the loading bay of a long brick warehouse, one fire engine with lights on, wet tarmac reflecting the lights, blue hour",
+  "notes": "Done (Anders, ComfyUI)."
  },
  "AVA_NORTHGATE": {
   "method": "derive",
