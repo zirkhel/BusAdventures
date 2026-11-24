@@ -255,6 +255,8 @@ _Besluttet av Anders 24. november 2026. Det meste er arkitektur som bygges i U0 
 - Kunnskap, bevis, relasjoner og konsekvenser følger med, fordi de er universtilstand.
 - Mysterier kan ha forutsetninger (`requires`), men følger ikke nødvendigvis en fast rekkefølge.
 
+Startskjermen bygges fra `mysteries[].menu` (`order`, `tagline`, `image`). Et nytt mysterium dukker opp der ved å legge til innhold. Spillbare saker kan startes eller fortsettes, og frø med `menu` vises som «Future investigation». Inntil U1 deler alle saker én lagring.
+
 Planlagt modell: `state.cases` med status `locked`, `available`, `active` og `closed`. Avslutninger evalueres bare for aktive saker. Frister regnes fra sakens start (`beforeCaseDay`), mens `beforeDay` beholdes for univershendelser.
 
 **Casebook er spillerens, ikke sakens.** Bevis, teorier, notater og tidslinjehendelser ligger i én felles notatbok. Hvert element får `cases: []`.

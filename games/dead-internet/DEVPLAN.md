@@ -108,7 +108,7 @@ _Rapporter og publisering bygges per sak fra starten, så de ikke må skrives om
 - [x] Bevis, teorier, notater og tidslinjehendelser får `cases: []`. Tomt betyr uklassifisert. Ingenting knyttes automatisk, og spilleren velger én, flere eller ingen saker. Casebook har filter (alle, per sak, uklassifisert).
 - [x] Lagringsversjon 4 med migrering: eksisterende elementer blir uklassifiserte, gamle rapporter får sin sak
 - [x] Visning av reaksjoner og avslutninger (epiloger). En avsluttet sak stopper ikke spillet.
-- [ ] Startskjerm med tilgjengelige etterforskninger (avhenger av Anders' valg om når)
+- [x] Startskjerm med tilgjengelige etterforskninger (`mysteries[].menu`): «Continue investigation», spillbare saker kan startes eller fortsettes, og frø vises som «Future investigation». Plassholderbilder til grafikken er klar.
 
 ## Fase 6 — Universdeling U1
 _Ingen synlig endring for spilleren. Alle eksisterende tester skal passere._
