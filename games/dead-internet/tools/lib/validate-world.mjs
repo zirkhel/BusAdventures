@@ -106,6 +106,12 @@ export function validateWorld(raw, opts = {}) {
     checkCond(`${where} requires`, m.requires); checkCond(`${where} start.discover`, m.start?.discover);
     if (!m.start?.menu && !m.start?.discover) warn(where, "neither start.menu nor start.discover: the player can never start it");
     for (const id of arr(m.evidence)) if (!w.artifacts.has(id) && !w.images.has(id)) err(where, `evidence: unknown artifact or image ${id}`);
+    for (const d of arr(m.deadlines)) {
+      const dw = `${where} deadline ${d.id}`;
+      if (!d.id || !d.label) err(dw, "needs id and label");
+      if ((d.caseDay == null) === (d.day == null)) err(dw, "needs exactly one of caseDay or day");
+      checkCond(`${dw} knownIf`, d.knownIf); checkCond(`${dw} until`, d.until);
+    }
     const L = m.layers;
     if (L) for (const k of ["reveal", "hint", "background"]) for (const n of arr(L[k])) if (!(n >= 1 && n <= 7)) err(where, `layers.${k}: ${n} is not a layer 1–7`);
   }

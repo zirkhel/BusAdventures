@@ -109,6 +109,26 @@
   ],
   "maxDays": 9
  },
+ "deadlines": [
+  {
+   "id": "waterfront_vote",
+   "label": "City Council votes on the Waterfront rezoning",
+   "caseDay": 8,
+   "knownIf": {
+    "any": [
+     { "seen": "A39" },
+     { "seen": "A53" },
+     { "visible": "A39" }
+    ]
+   },
+   "until": {
+    "any": [
+     { "flag": "vote_held" },
+     { "flag": "vote_postponed" }
+    ]
+   }
+  }
+ ],
  "endings": [
   {
    "id": "lights_out",

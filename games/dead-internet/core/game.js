@@ -304,6 +304,10 @@ export class Game {
   /** Cases the player can classify under and report on. */
   cases() { return CS.caseList(this); }
   caseStatus(id) { return CS.caseStatus(this, id); }
+  /** Deadlines in active cases that the player has learnt about (never unknown ones). */
+  deadlines() { return CS.knownDeadlines(this); }
+  /** Today's and tomorrow's date and day, for the sleep dialog. No state change. */
+  dayInfo() { return { day: this.s.day, date: this.date, nextDay: this.s.day + 1, nextDate: addDays(this.date, 1) }; }
   /** Cases that can be started from the start screen. */
   menuCases() { return CS.menuCases(this); }
   /** A feed page without side effects (for rendering). */

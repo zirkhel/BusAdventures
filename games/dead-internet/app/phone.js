@@ -76,7 +76,7 @@ export class Phone {
   // ── Navigation ────────────────────────────────────────────────────────────
 
   lock() { this.where = "lock"; this.#render(); }
-  unlock() { this.goHome(); }
+  unlock() { this.woke = false; this.goHome(); }
   goHome() { this.closeOverlay(); this.where = "home"; this.#render(); }
 
   openApp(id) {
@@ -539,17 +539,57 @@ export class Phone {
     return v.title || w.artifacts.get(e.artifact)?.title || e.artifact;
   }
 
-  /** Go to sleep: the day ends, night events run, and the phone shows the lock screen in the morning. */
+  /** Fill a string from content/strings with {placeholders}. */
+  fstr(key, vars = {}) { return this.str(key).replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m)); }
+
+  /** "today", "tomorrow" or "in 3 days" for a known deadline. */
+  #when(d) {
+    return d.daysLeft === 0 ? this.str("time.deadlineToday") : d.daysLeft === 1 ? this.str("time.deadlineTomorrow") : this.fstr("time.deadlineIn", { n: d.daysLeft });
+  }
+
+  /** Known deadlines as a list. Only dates the player has already met in the world. */
+  #deadlineList(cls) {
+    const list = this.g.deadlines();
+    if (!list.length) return null;
+    return h(`div.${cls}`, h("div.dl-head", this.str("time.deadlinesHead")),
+      list.map(d => h("div.dl-item", icon("clock"),
+        h("div.dl-main", h("b", d.label), h("span.dl-when", `${weekday(d.date)}, ${fmtDate(d.date, false)} · ${this.#when(d)}`),
+          this.g.cases().length > 1 ? h("span.dl-case", d.caseTitle) : null))));
+  }
+
+  /**
+   * Go to sleep. Time never moves by itself: only this does. The dialog shows the date now
+   * and the date the player will wake to, and says the world may change overnight,
+   * without saying how. In the morning the phone shows the lock screen with the new date.
+   */
   sleep() {
-    this.sheet(`End day ${this.g.s.day}? Whatever was going to happen tonight will happen.`, [{ label: "Sleep", run: () => {
-      this.root.classList.add("night");
-      setTimeout(() => {
-        this.g.sleep();
-        this.stacks = {};
-        this.lock();
-        this.root.classList.remove("night");
-      }, 650);
-    } }]);
+    const t = this.g.dayInfo();
+    const dayLine = (lbl, day, date) => h("div.sl-day", h("span.sl-lbl", `${lbl} · ${this.fstr("time.day", { day })}`),
+      h("b", `${weekday(date)}, ${fmtDate(date)}`));
+    const box = h("div.sheet.sleep-sheet", { role: "dialog", "aria-modal": "true", "aria-label": this.str("time.sleepTitle") },
+      h("div.sl-body",
+        h("div.sl-icon", icon("moon")),
+        h("h2.sl-title", this.str("time.sleepTitle")),
+        h("div.sl-days", dayLine(this.str("time.today"), t.day, t.date), h("div.sl-arrow", "↓"), dayLine(this.str("time.tomorrow"), t.nextDay, t.nextDate)),
+        h("p.sl-text", this.str("time.sleepExplain")),
+        this.#deadlineList("sl-deadlines"),
+        h("p.sl-note.muted", this.str("time.sleepStay"))),
+      h("button.sheet-item.sl-go", { onclick: () => { this.closeOverlay(); this.#doSleep(); } }, icon("moon"), this.str("time.sleepConfirm")),
+      h("button.sheet-item.cancel", { onclick: () => this.closeOverlay() }, this.str("time.stayAwake")));
+    const bg = h("div.sheet-bg", { onclick: e => { if (e.target === bg) this.closeOverlay(); } }, box);
+    this.overlay.replaceChildren(bg);
+    this.overlay.classList.add("open");
+  }
+
+  #doSleep() {
+    this.root.classList.add("night");
+    setTimeout(() => {
+      this.g.sleep();
+      this.stacks = {};
+      this.woke = true;
+      this.lock();
+      this.root.classList.remove("night");
+    }, 650);
   }
 
   closeOverlay() { this.overlay.replaceChildren(); this.overlay.classList.remove("open"); }
@@ -604,6 +644,9 @@ export class Phone {
     const unread = g.s.notifications.filter(n => !n.read).slice(-6).reverse();
     const scr = h("div.lock",
       h("div.lock-clock", h("div.lock-date", `${weekday(g.date)}, ${fmtDate(g.date, false)}`), h("div.lock-time", clock())),
+      this.woke ? h("div.wake", { role: "status" }, h("div.wake-hello", this.str("time.wakeHello")),
+        h("div.wake-day", this.fstr("time.day", { day: g.s.day })),
+        h("div.wake-date", `${weekday(g.date)}, ${fmtDate(g.date)}`)) : null,
       h("div.lock-notes", unread.map(n => this.#noteCard(n, () => { this.where = "home"; this.openNotification(n); }))),
       h("button.lock-unlock", { onclick: () => this.unlock() }, h("span.bar"), "Swipe up to unlock"));
     let y0 = null;
@@ -632,7 +675,8 @@ export class Phone {
     const appIcon = (id, label, ico) => h("button.app-icon", { "data-app": id, onclick: () => this.openApp(id) },
       h("span.app-tile", { class: `tile-${id}` }, icon(ico)), h("span.app-label", label), h("span.badge"));
     const scr = h("div.home",
-      h("div.home-widget", h("div.hw-day", `Day ${this.g.s.day}`), h("div.hw-date", `${weekday(this.g.date)}, ${fmtDate(this.g.date)}`),
+      h("div.home-widget", h("div.hw-day", this.fstr("time.day", { day: this.g.s.day })), h("div.hw-date", `${weekday(this.g.date)}, ${fmtDate(this.g.date)}`),
+        this.#deadlineList("hw-deadlines"),
         h("div.hw-row", h("div.hw-name", this.g.s.playerName),
           h("button.hw-sleep", { onclick: () => this.sleep() }, icon("moon"), this.str("apps.sleep")))),
       this.#recentWidget(),

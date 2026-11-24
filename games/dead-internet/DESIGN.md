@@ -96,7 +96,7 @@ games/dead-internet/
 | **Predicate** | `predicates.json` | `arity`, `subjectKinds`, `objectKinds`, `truth` (facts, operatedBy, notHuman, relation), `template` |
 | **Claim / Fact** | `canon.json` | Påstander med sannhet (`true`, `false`, `partial`) og formuleringer (`match`), pluss sanne fakta |
 | **Rule** | `rules.json` | `when {event, match}`, `if`, `do[]`, `once` |
-| **Mystery** | `mysteries.json` | `claims`, `endings[]` med `if` og `effects` |
+| **Mystery** | `mysteries.json` | `claims`, `endings[]` med `if` og `effects`, `deadlines[]` |
 
 ### Medier (artikler, innlegg, klipp)
 Alle felt er valgfrie og kan ligge på artefakten eller en versjon: `section`, `byline[]` (konto-id eller fritekst), `corrections[] {date, text}`, `related[]`, `refs[]`, `sponsored {by}`, `comments[] {id, account, date, text, likes, replyTo, deletedIn, pinned}`, `video` (en video-id), `stats {views, likes}`, `category`. En kommentar med `deletedIn` er borte fra den versjonen og senere. `covers[]` (hendelser artikkelen dekker), `pool` og videoens `scenes`, `source` og `script`-id er forfatterdata og vises aldri. Spilleren ser klippet, bildeteksten, transkripsjonen og «Video info».
@@ -180,7 +180,8 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 - `media.js` bruker `graphics/catalog.json`: filen i `assets/images/` hvis den finnes, ellers plassholderen. Nye bilder krever ingen kodeendring.
 - **Messages** (fase 3): spilleren velger «Ask about…» (alt hun har undersøkt eller lagret, gruppert som personer, kontoer, organisasjoner, hendelser og steder) eller «Show evidence…» (artefakter i Casebook, med versjonen som ble lagret). Svaralternativer (`prompts`) vises som knapper når en person tilbyr dem. «New message» viser personer man kan kontakte (`canContact`). Svarene bestemmes av personens `responses` i `characters.json`, ut fra kunnskap, tillit og flagg. UI-et velger aldri innhold selv.
 - **Casebook** (fase 3): bevis gruppert etter hvem de handler om (`game.evidenceAbout`, bare kjente og ikke-hemmelige id-er), teorier bygd med `[hvem] [relasjon] [hvem/hva]`, der relasjoner filtreres etter `subjectKinds`/`objectKinds`, og notater. En teori viser antall bevis, antall uavhengige kilder og hvem kildene er, aldri om den stemmer.
-- **Sleep** er en knapp på hjemskjermen. Dagen går, nattlige hendelser kjøres, og telefonen viser låseskjermen med nye varsler.
+- **Sleep until tomorrow** er en knapp på hjemskjermen, som også viser spilledag og dato. Knappen åpner en bekreftelse med dagens dato og datoen spilleren våkner til, og sier at meldinger, nyheter, dokumenter og hendelser kan ha endret seg, uten å si hva. Dagen går, nattlige hendelser kjøres, og låseskjermen viser «Good morning · Day N» med den nye datoen til spilleren låser opp. Lesing, søking, navigasjon og scrolling flytter aldri tiden.
+- **Kjente tidsfrister**: en mysteriepakke kan ha `deadlines: [{ id, label, caseDay | day, knownIf?, until? }]`. `caseDay` regnes fra dagen saken startet. En frist vises bare for aktive saker, bare når `knownIf` holder (spilleren har møtt datoen i verden), og bare til og med fristdagen eller til `until` holder. Den vises på hjemskjermen og i sove-dialogen under «Dates you know about». Kjernen: `game.deadlines()`.
 - Spillet må serveres over HTTP (ES-moduler fungerer ikke fra `file://`). Lokalt: `python -m http.server` eller `npx serve` fra repo-roten, så `/games/dead-internet/`.
 
 ## Kontekstsystemet (app/context.js, core/refs.js)

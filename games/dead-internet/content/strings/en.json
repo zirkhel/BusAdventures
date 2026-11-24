@@ -22,7 +22,7 @@
   "connect": "Connect",
   "messages": "Messages",
   "casebook": "Casebook",
-  "sleep": "Sleep"
+  "sleep": "Sleep until tomorrow"
  },
  "messages": {
   "ask": "What can you tell me about {name}?",
@@ -49,5 +49,20 @@
   "cannot_contact": "You can't message them.",
   "unknown_topic": "You don't know enough about that to ask.",
   "login_failed": "Incorrect username or password."
+ },
+ "time": {
+  "day": "Day {day}",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "sleepTitle": "Sleep until tomorrow?",
+  "sleepExplain": "The world moves on one day while you sleep. By morning, messages, news, documents and events may have changed.",
+  "sleepStay": "Reading, searching and browsing never use up time. Only sleeping does.",
+  "sleepConfirm": "Sleep until tomorrow",
+  "stayAwake": "Stay awake",
+  "deadlinesHead": "Dates you know about",
+  "deadlineToday": "today",
+  "deadlineTomorrow": "tomorrow",
+  "deadlineIn": "in {n} days",
+  "wakeHello": "Good morning"
  }
 }
