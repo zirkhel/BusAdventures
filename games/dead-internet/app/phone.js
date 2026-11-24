@@ -44,7 +44,8 @@ export class Phone {
     this.bannerBox = h("div.banners");
     this.overlay = h("div.overlay");
     this.toastBox = h("div.toasts");
-    this.homeBar = h("button.homebar", { "aria-label": "Home", onclick: () => this.goHome() }, h("span"));
+    // Always-visible home button in every app: one tap to the home screen, however deep you are.
+    this.homeBar = h("div.homebar", h("button.hb-pill", { "aria-label": "Home screen", onclick: () => this.goHome() }, icon("home"), h("span", "Home")));
     root.replaceChildren(this.status, this.screen, this.bannerBox, this.overlay, this.toastBox, this.homeBar);
     /** The shared context action system (tappable words, action sheets, text selection). */
     this.ctx = new ContextSystem(this);
