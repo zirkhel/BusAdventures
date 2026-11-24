@@ -23,7 +23,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 19.
+- Påkrevd: 50 bilder. Valgfritt: 11. Ferdige filer: 20.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
@@ -47,7 +47,7 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | IMG09 | `assets/images/img09-garden-dashboard.webp` | 1080×1440 | screenshot | required | final file | A23 |  | Phone photo of a laptop screen (moiré, slight perspective, keyboard out of focus): the internal dashboard 'THE GARDEN — Port Calder', 41 active personas, dormant inventory 11,402, client NGD, program CSP-EF, top performers MARA_Q, JUNO_P, MIKE_E, LINDSAY_4, autopilot ON. Made from HTML: graphics/sources/. |
 | IMG10 | `assets/images/img10-invoice.webp` | 1240×1754 | scan | required | final file | A25 |  | Slightly skewed scan of a Brightline Media LLC invoice CSP-EF-Q1, January 8, 2026: bill to Northgate Development, attn. P. Navarro; Community Sentiment Program — Eastfield, Q1 2026, $21,000; payable to Meridian Holdings Ltd. (settlement account). Made from HTML: graphics/sources/. |
 | IMG11 | `assets/images/img11-mara-harbour.webp` | 1080×1350 | photo | required | final file | A06 | face: mara | Mara (reference), selfie at the harbour in summer 2023, green parka, the mill with its front-wall sign across the water. Theo posted it after her death. |
-| IMG12 | `assets/images/img12-waterfront-render.webp` | 1600×900 | render | required | placeholder | A40 | needs IMG02 | Glossy architectural rendering: four glass towers on a harbour, happy people, the old mill sign mounted in a glass lobby. |
+| IMG12 | `assets/images/img12-waterfront-render.webp` | 1600×900 | render | required | final file | A40 | needs IMG02 | Developer marketing render at dusk: four glass towers on the Eastfield harbour, a glass hall with the old CALDER MILL sign and brick wall preserved inside, EASTFIELD WATERFRONT on the stone wing, people on the promenade, a motor yacht at the quay. |
 | IMG13 | `assets/images/img13-mara-profile.webp` | 512×512 | profile | required | final file | A02, acc_maraquinn | face: mara | Mara (fixed reference), 2021, library shelves behind her, real and slightly imperfect. |
 | IMG14 | `assets/images/img14-theo-profile.webp` | 512×512 | profile | required | final file | A06 | face: theo | Man, 29, Mara's brother (same freckles), tired eyes, grey hoodie, overcast harbour with an old brick mill behind him. |
 | IMG15 | `assets/images/img15-dana-profile.webp` | 512×512 | profile | required | final file | A51 | face: dana | Woman, 41, reporter, reading glasses on her head, ink on her hand, cardigan, newsroom background with a Daily Record poster (black serif masthead, red rule). |

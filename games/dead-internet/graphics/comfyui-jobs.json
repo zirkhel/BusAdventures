@@ -1,22 +1,5 @@
 [
  {
-  "id": "IMG12",
-  "method": "generate",
-  "positive": "glossy architectural visualisation rendering, four modern glass residential towers on a harbour waterfront, happy people walking on a promenade, blue sky, through a glass lobby wall the long old painted sign panel reading \"CALDER MILL — EST. 1887\" is mounted as decoration, developer marketing style",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1344,
-  "genHeight": 768,
-  "width": 1600,
-  "height": 900,
-  "seed": 373133575,
-  "out": "assets/images/img12-waterfront-render.webp",
-  "reference": "assets/images/img02-mill-sign-original.webp",
-  "exactText": "CALDER MILL — EST. 1887",
-  "dependsOn": [
-   "IMG02"
-  ]
- },
- {
   "id": "IMG16",
   "method": "generate",
   "positive": "low resolution photo of a rusty old cast-iron mill gear, close-up, heavy JPEG compression artefacts, oversaturated, square profile picture, realistic, as a person would choose for themselves",

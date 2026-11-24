@@ -84,7 +84,7 @@
   "method": "generate",
   "prompt": "glossy architectural visualisation rendering, four modern glass residential towers on a harbour waterfront, happy people walking on a promenade, blue sky, through a glass lobby wall the long old painted sign panel reading \"CALDER MILL — EST. 1887\" is mounted as decoration, developer marketing style",
   "text": "CALDER MILL — EST. 1887",
-  "notes": "The sign panel must match IMG02.",
+  "notes": "Done (Anders, ComfyUI). The sign is kept inside the glass hall, as A40 promises ('A restored Calder Mill sign in the lobby'). IMG03 shows it being taken down: the irony is intended.",
   "faceRef": "mill"
  },
  "IMG16": {
