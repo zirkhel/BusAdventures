@@ -213,7 +213,99 @@ test("version 1 saves are migrated: mentions become encountered, not known", asy
   old.saveVersion = 1; delete old.encountered; delete old.saved;
   for (const id of ["dana", "acc_danareyes", "kestrel", "lou"]) old.known[id] = true;
   const { state } = deserialize(world, serialize(old));
-  assert.equal(state.saveVersion, 2);
+  assert.equal(state.saveVersion, 3);
+  assert.deepEqual(state.timeline, [], "old saves get an empty timeline");
   assert.ok(state.known.theo && state.known.acc_theoquinn, "the profile the player opened is still investigated");
   assert.ok(!state.known.kestrel && state.encountered.kestrel != null, "a name only read is now encountered");
+});
+
+// ── Timeline ───────────────────────────────────────────────────────────────
+
+test("the timeline starts empty and is only filled by the player", () => {
+  const g = new Game(world); g.start();
+  assert.deepEqual(g.timeline(), []);
+  // Reading, searching, saving and talking never create events.
+  g.search("Mara Quinn obituary"); g.open("A11"); g.save({ artifact: "A11" });
+  g.search("Theo Quinn"); g.open("A06"); g.ask("theo", "mara");
+  g.sleep();
+  assert.deepEqual(g.timeline(), []);
+});
+
+test("events: exact, approximate, range and unknown dates; wrong and contradictory events are allowed", () => {
+  const g = new Game(world); g.start();
+  g.open("A11");
+  const a = g.addEvent({ title: "Mara dies on Route 9", date: { kind: "exact", value: "2025-07-02", time: "08:15" } });
+  const b = g.addEvent({ title: "Mara dies (my guess)", date: { kind: "exact", value: "2024-01-01" } });   // wrong on purpose
+  const c = g.addEvent({ title: "Account taken over", date: { kind: "approx", value: "2025-08" } });
+  const d = g.addEvent({ title: "Something happened", date: { kind: "range", from: "2025-10-01", to: "2025-09-01" } }); // reversed range kept
+  const e = g.addEvent({ title: "Who knows", date: { kind: "unknown" } });
+  for (const r of [a, b, c, d, e]) assert.ok(r.ok, JSON.stringify(r));
+  assert.equal(g.addEvent({ title: "Bad", date: { kind: "exact", value: "2025-02-30" } }).error, "bad_date");
+  assert.equal(g.addEvent({ title: "", date: { kind: "unknown" } }).error, "empty_title");
+  assert.deepEqual(g.timeline().map(x => x.title), ["Mara dies (my guess)", "Mara dies on Route 9", "Account taken over", "Something happened", "Who knows"],
+    "sorted by the player's dates only, unknown last");
+  const r = g.timeline().find(x => x.id === d.id);
+  assert.equal(r.date.from, "2025-10-01", "never corrected");
+  // Edit everything, then delete.
+  assert.ok(g.editEvent(b.id, { title: "Mara dies?", date: { kind: "approx", value: "2025" }, description: "not sure", note: "check" }).ok);
+  assert.equal(g.timeline().find(x => x.id === b.id).title, "Mara dies?");
+  assert.ok(g.deleteEvent(e.id).ok);
+  assert.equal(g.timeline().length, 4);
+});
+
+test("events link several pieces of evidence (supporting or contradicting) and theories; links follow removals", () => {
+  const g = new Game(world); g.start();
+  g.open("A11"); g.open("A02");
+  const e1 = g.save({ artifact: "A11" }).id, e2 = g.save({ artifact: "A02" }).id;
+  g.investigate("brightline", "Brightline Media");
+  const h = g.hypothesize({ subject: "brightline", predicate: "operates", object: "acc_maraquinn" }).id;
+  const t = g.addEvent({ title: "Last post by Mara herself", date: { kind: "unknown" }, evidence: [{ id: e1, stance: "supports" }] }).id;
+  assert.ok(g.linkEvent(t, e2, "contradicts").ok);
+  assert.ok(g.linkEventTheory(t, h).ok);
+  let ev = g.timeline()[0];
+  assert.equal(ev.supports, 1); assert.equal(ev.contradicts, 1); assert.deepEqual(ev.theories, [h]);
+  g.dispatch({ type: "removeEvidence", id: e2 });
+  g.dispatch({ type: "deleteHypothesis", id: h });
+  ev = g.timeline()[0];
+  assert.equal(ev.contradicts, 0); assert.deepEqual(ev.theories, []);
+  assert.equal(g.linkEvent(t, "E999", "supports").error, "unknown_evidence");
+});
+
+test("events can only name what the player has investigated, and never carry canon", () => {
+  const g = new Game(world); g.start();
+  g.open("A11");                                   // Kestrel only encountered
+  assert.equal(g.addEvent({ title: "x", date: { kind: "unknown" }, about: ["kestrel"] }).error, "unknown_ref");
+  for (const s of SECRET) assert.equal(g.addEvent({ title: "x", date: { kind: "unknown" }, about: [s.id] }).error, "unknown_ref");
+  g.search("Kestrel Logistics");
+  assert.ok(g.addEvent({ title: "Van", date: { kind: "unknown" }, about: ["kestrel"] }).ok);
+  const json = JSON.stringify(g.timeline());
+  for (const c of world.claims.keys()) assert.ok(!json.includes(`"${c}"`), `claim ${c} leaked`);
+  assert.ok(!/truth|correct|canon|claim/i.test(Object.keys(g.timeline()[0]).join(" ")));
+});
+
+test("date suggestions come only from what the player can see on the source", () => {
+  const g = new Game(world); g.start();
+  g.open("A11");
+  const c = g.dateCandidates({ artifact: "A11" });
+  assert.ok(c.some(x => x.from === "published" && x.date.value === "2025-07-04"));
+  // A photo: its metadata time is offered as one choice among others, never chosen for the player.
+  g.open("A05");
+  const p = g.dateCandidates({ artifact: "A05", image: "IMG01" });
+  assert.ok(p.some(x => x.from === "metadata"));
+  assert.ok(p.some(x => x.from === "published"));
+  // Something not visible gives nothing.
+  assert.deepEqual(g.dateCandidates({ artifact: "A24" }), []);
+  assert.deepEqual(g.parseDate("Jan 20, 2026").date, { kind: "exact", value: "2026-01-20" });
+  assert.deepEqual(g.parseDate("July 2025").date, { kind: "approx", value: "2025-07" });
+  assert.equal(g.parseDate("Mar 10", "2026").guessedYear, true);
+});
+
+test("timeline actions replay exactly", () => {
+  const g = new Game(world, { seed: 3 }); g.start();
+  g.open("A11"); const e = g.save({ artifact: "A11" }).id;
+  const t = g.addEvent({ title: "A", date: { kind: "exact", value: "2025-07-02" }, evidence: [{ id: e, stance: "supports" }], source: { artifact: "A11" } }).id;
+  g.editEvent(t, { note: "n" });
+  g.addEvent({ title: "B", date: { kind: "approx", value: "2025" } });
+  const r = replay(world, { seed: 3 }, g.s.log);
+  assert.deepEqual(r.s.timeline, g.s.timeline);
 });

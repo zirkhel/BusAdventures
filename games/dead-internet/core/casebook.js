@@ -175,6 +175,8 @@ export function casebookView(g) {
       const sources = new Set(items.map(e => evidenceFacts(g, e).source));
       return { ...h, label: hypothesisLabel(g, h), evidenceCount: items.length, sourceCount: sources.size };
     }),
+    // The player's own timeline, for reports later. Events carry only what the player entered.
+    timeline: (g.s.timeline || []).map(e => ({ ...e })),
     reports: g.s.reports.map(r => ({ id: r.id, day: r.day, channel: r.channel, items: r.items.map(i => ({ label: i.label })) })),
   };
 }

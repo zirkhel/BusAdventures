@@ -2,7 +2,7 @@
 // Everything that changes during play lives in one plain, serialisable object.
 // The world (authored content) is never modified; the state only stores differences.
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 /**
  * @param {any} w world from buildWorld()
@@ -52,6 +52,8 @@ export function createState(w, opts = {}) {
     evidence: [],
     hypotheses: [],
     notes: [],
+    /** the player's own timeline of events (core/timeline.js) */
+    timeline: [],
     reports: [],
     /** claim key → { day, channel } for every claim ever published */
     published: {},

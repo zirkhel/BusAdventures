@@ -30,6 +30,7 @@ games/dead-internet/
     search.js               Seeker: fritekst, bildesøk, bildeinfo
     refs.js                 referanser i tekst (leksikon, mønstre) og søkeforslag
     discovery.js            oppdagelsestilstander og kunnskapsgrenser
+    timeline.js             spillerens tidslinje: hendelser, datotyper, koblinger, datovalg
     dialogue.js             skriptede samtaler, tillit, svaralternativer
     casebook.js             bevis, hypoteser, notater, vurdering, publisering
     save.js                 lagring, versjonering, migrering, eksport/import
@@ -193,7 +194,7 @@ Verden vet alt. Spilleren vet bare det hun har gjort noe med. Tilstander per ent
 - Kontakter er folk som har skrevet til deg, folk hvis profil du har åpnet, eller folk du har undersøkt. Unntaket er kontoen saken starter med.
 - Søkeforslag kommer bare fra egne søk og undersøkte navn (`game.suggest`).
 - «Nylig besøkt» lagres per spill (nøkkel med seed) i `localStorage` og fylles bare av faktisk navigasjon.
-- Lagringsversjon 2. Version 1-lagringer migreres slik:
+- Lagringsversjon 2 (nå 3, med Timeline). Version 1-lagringer migreres slik:
   - Alt som var «kjent» blir `encountered`.
   - Følgende blir `investigated` igjen: startpremisset, temaer man har spurt om, folk man har snakket med, åpnede profiler, teoriers subjekt og objekt, og navn i tidligere søk.
 - Testene i `tests/world.test.mjs` sjekker:
@@ -203,6 +204,31 @@ Verden vet alt. Spilleren vet bare det hun har gjort noe med. Tilstander per ent
   - at hemmeligheter og identitetsalias aldri lekker
   - at forslag holder seg innenfor grensene
   - at migreringen fungerer
+
+## Timeline (core/timeline.js, Casebook)
+
+Timeline er spillerens egen rekonstruksjon. Den er ikke et sammendrag av historien.
+
+- **Hendelse:** tittel, beskrivelse, notat, dato, hvem eller hva, bevis med holdning (`supports`/`contradicts`), teorier og kilde.
+- **Datotyper:** `exact` (dag og valgfri tid), `approx` (år, måned eller dag), `range` (fra og til) og `unknown`.
+- **Motoren sjekker bare at feltene er gyldige.** Den sjekker at datoen finnes, at bevis og teorier finnes, og at personer og steder er undersøkt. Den leser aldri kanon, påstander, fakta eller hemmelige entiteter. Derfor kan den ikke rette, hinte eller avsløre noe.
+- **Feil er lov:** gale datoer, intervaller feil vei, motstridende og oppdiktede hendelser.
+- **Sortering:** bare etter spillerens dato. Ukjent dato kommer sist, og rekkefølgen er stabil.
+- **Datovalg (`dateCandidates`):** datoer spilleren kan se på kilden:
+  - publisert, eller datoen til en cachet kopi
+  - bildemetadata («taken»)
+  - datoer i teksten
+  - tidspunktet en melding kom
+
+  En dato uten år får kildens år og merkes som en gjetning. Spilleren velger og kan endre alt.
+- **Opprettelse:**
+  - kontekstmenyen: «Add to Timeline» på datoer, bilder og dokumenter
+  - markeringslinjen: «Event»
+  - bevismenyen: «Add to Timeline» og «Attach to existing event…»
+  - «New event» i fanen
+
+  Utkastet ligger på skjermen og overlever bytte av app. Etter lagring går man tilbake dit man kom fra.
+- **Senere bruk:** `casebookView().timeline` gjør hendelsene tilgjengelige for rapporter. En eventuell vurdering skjer i rapportmotoren, aldri i Timeline.
 
 ## Navigasjon
 
@@ -217,13 +243,13 @@ Verden vet alt. Spilleren vet bare det hun har gjort noe med. Tilstander per ent
 | Browser | ferdig | Seeker, nettsteder, cachede kopier, historikk |
 | Connect | ferdig | profiler, innlegg, søk |
 | Messages | ferdig | emnebaserte samtaler, vis bevis, svarvalg |
-| Casebook | Evidence, Theories, Notes | Timeline kommer (spillerbygd, uten fasit) |
+| Casebook | ferdig | Evidence, Theories, Notes, Timeline (bygd av spilleren, uten fasit) |
 | Settings | ferdig | navn, eksport/import, start på nytt |
 | Mail | planlagt | e-poster finnes som dokumenter (videresendte e-poster i vedlegg) |
 | Files | planlagt | vedlegg åpnes fra Messages, og lagrede dokumenter ligger i Casebook |
-| Archive | planlagt | bygges på versjoner og cache i motoren og Browser (ikke dupliser) |
+| Archive | i Browser foreløpig | versjoner og cache i motoren, «View cached versions» og «View available versions» |
 | Contacts | planlagt | `contacts()` gir i dag etablerte kontakter, og skal aldri fylles fra hele personregisteret |
-| Forensics | planlagt | bildemetadata, bildesøk og speilvendt søk finnes i bildeviseren |
+| Forensics | planlagt | skal gjenbruke bildeverktøyene i bildeviseren (metadata, bildesøk, speilvendt søk) |
 
 ## Kjente begrensninger
 

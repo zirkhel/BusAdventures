@@ -14,8 +14,8 @@
 
 import { h, icon } from "./ui.js";
 
-/** @typedef {{type:string, text:string, id?:string|null, alias?:boolean, image?:string, artifact?:string, version?:string|null}} Ref */
-/** @typedef {{app?:string, artifact?:string, version?:string|null, message?:string, title?:string}} Origin */
+/** @typedef {{type:string, text:string, id?:string|null, alias?:boolean, image?:string, artifact?:string, version?:string|null, context?:string}} Ref */
+/** @typedef {{app?:string, artifact?:string, version?:string|null, message?:string, title?:string, selected?:boolean}} Origin */
 /**
  * An action. Picking it counts as investigating the reference (core/discovery.js) unless
  * `investigates` is false (copying a name is not investigating it).
@@ -113,8 +113,10 @@ export class ContextSystem {
     const sel = getSelection();
     if (sel && !sel.isCollapsed && String(sel).trim()) return;
     const span = /** @type {any} */ (t.closest(".ref"));
-    const ref = span?._ref || wordAt(e.clientX, e.clientY);
-    if (!ref) return;
+    const found = span?._ref || wordAt(e.clientX, e.clientY);
+    if (!found) return;
+    // The sentence it was in, to prefill a Timeline event (the player edits it).
+    const ref = { ...found, context: sentenceAround(t.closest("p, li, .bubble, .reply-body, .comment-bubble, .note-body, .hyp-big, h1") || t, found.text) };
     this.open(ref, block._origin || {});
   }
 
@@ -130,7 +132,7 @@ export class ContextSystem {
     /** @type {Ref} */
     const ref = spans.length === 1 && spans[0].start === 0 && spans[0].end === text.length
       ? { type: spans[0].type, text, id: spans[0].id, alias: spans[0].alias } : { type: "text", text };
-    const origin = block._origin || {};
+    const origin = { ...(block._origin || {}), selected: true };
     const p = this.phone;
     const short = text.length > 22 ? text.slice(0, 21) + "…" : text;
     const done = () => { sel?.removeAllRanges(); this.selbar.classList.remove("on"); };
@@ -138,6 +140,7 @@ export class ContextSystem {
       h("button", { onclick: () => { done(); p.search(text); } }, icon("search"), h("span", `Search “${short}”`)),
       h("button", { onclick: () => { done(); p.copy(text); } }, h("span", "Copy")),
       h("button", { onclick: () => { done(); p.saveText(ref, origin); } }, h("span", "Save")),
+      h("button", { onclick: () => { done(); p.eventFromText(text, origin); } }, h("span", "Event")),
       h("button", { "aria-label": "More actions", onclick: () => { done(); this.open(ref, origin); } }, icon("more")));
     this.selbar.classList.add("on");
   }
@@ -170,6 +173,18 @@ function wordAt(x, y) {
   let text = s.slice(a, b).replace(/^['’\-]+|['’\-]+$/g, "").replace(/['’]s$/, "");
   if (text.length < 2) return null;
   return { type: "text", text };
+}
+
+/** The sentence of an element's text that contains `text`. */
+function sentenceAround(el, text) {
+  const raw = String(/** @type {any} */ (el)?.innerText ?? el?.textContent ?? "");
+  const all = raw.replace(/[ \t]+/g, " ").trim();
+  if (!all) return "";
+  const parts = all.split(/\n+|(?<=[.!?])\s+(?=[A-Z0-9"“@])/).map(x => x.trim()).filter(Boolean);
+  const i = parts.findIndex(x => x.includes(text));
+  // "Pinned post, July 5, 2025:" introduces the line after it.
+  const hit = i < 0 ? all : /:$/.test(parts[i]) && parts[i + 1] ? `${parts[i]} ${parts[i + 1]}` : parts[i];
+  return hit.length > 280 ? hit.slice(0, 279) + "…" : hit;
 }
 
 function prevWordStart(s, i) { while (i > 0 && WORD.test(s[i - 1])) i--; return i; }
@@ -227,6 +242,15 @@ export function registerDefaultActions(cs) {
     .register({ id: "doc-save", icon: "bookmark", types: ["document"], label: "Save as evidence", when: (r, o, p) => { const v = p.g.view(r.artifact, r.version ?? undefined); return !v.error && !v.locked; },
       run: (r, o, p) => { const v = p.g.view(r.artifact, r.version ?? undefined); p.saveEvidence({ artifact: r.artifact, version: v.versionId }); } })
     .register({ id: "doc-versions", icon: "clock", types: ["document"], label: "View available versions", run: (r, o, p) => p.versions(r.artifact) })
+    // Timeline (the player's own reconstruction; nothing is filled in from the story)
+    .register({ id: "tl-date", icon: "clock", types: ["date"], label: "Add to Timeline", investigates: false, run: (r, o, p) => p.eventFromDate(r, o) })
+    .register({ id: "tl-text", icon: "clock", types: TEXTISH, label: "Create event", investigates: false, when: (r, o) => !!o.selected && r.type !== "date", run: (r, o, p) => p.eventFromText(r.text, o) })
+    .register({ id: "tl-image", icon: "clock", types: ["image", "document"], label: "Add to Timeline", investigates: false,
+      when: (r, o, p) => r.type === "image" ? !!r.artifact : !p.g.view(r.artifact, r.version ?? undefined).error,
+      run: (r, o, p) => p.eventFromSource({ artifact: r.artifact, version: r.version ?? null, image: r.image ?? null }, r.type === "image" ? (p.g.w.images.get(r.image)?.caption || "") : r.text) })
+    .register({ id: "tl-attach", icon: "plus", types: ["image", "document"], label: "Attach to existing event…", investigates: false,
+      when: (r, o, p) => p.g.s.timeline.length > 0 && !!p.evidenceFor(r),
+      run: (r, o, p) => p.attachToEvent(p.evidenceFor(r).id) })
     // Everything that is text
     .register({ id: "save", icon: "bookmark", types: [...TEXTISH, "email", "domain", "url"], label: "Save to Casebook", run: (r, o, p) => p.saveText(r, o) })
     .register({ id: "copy", icon: "copy", investigates: false, types: [...TEXTISH, "email", "domain", "url"],

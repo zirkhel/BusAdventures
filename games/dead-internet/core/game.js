@@ -10,6 +10,7 @@ import { search, searchImage, imageInfo } from "./search.js";
 import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
 import * as CB from "./casebook.js";
+import * as TL from "./timeline.js";
 import { asArray, addDays, deepClone } from "./util.js";
 import { nameOf } from "./world.js";
 import { scanText, suggest } from "./refs.js";
@@ -56,10 +57,10 @@ export class Game {
       case "login": r = this.#login(a.site, a.user, a.pass); break;
       case "message": r = sendMessage(this, a.to, a.msg); break;
       case "saveEvidence": r = CB.saveEvidence(this, a.ref); break;
-      case "removeEvidence": r = CB.removeEvidence(this, a.id); break;
+      case "removeEvidence": r = CB.removeEvidence(this, a.id); TL.forgetEvidence(this, a.id); break;
       case "createHypothesis": r = CB.createHypothesis(this, a.hypothesis); break;
       case "updateHypothesis": r = CB.updateHypothesis(this, a.id, a.patch); break;
-      case "deleteHypothesis": r = CB.deleteHypothesis(this, a.id); break;
+      case "deleteHypothesis": r = CB.deleteHypothesis(this, a.id); TL.forgetTheory(this, a.id); break;
       case "linkEvidence": r = CB.linkEvidence(this, a.hypothesis, a.evidence, a.on ?? true); break;
       case "addNote": r = CB.addNote(this, a.text, a.from, a.about); break;
       case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
@@ -69,6 +70,11 @@ export class Game {
       case "sleep": r = this.#sleep(); break;
       case "readNotification": r = this.#readNotification(a.id); break;
       case "investigate": r = investigate(this, a.id, a.text); break;
+      case "createEvent": r = TL.createEvent(this, a.event); break;
+      case "updateEvent": r = TL.updateEvent(this, a.id, a.patch); break;
+      case "deleteEvent": r = TL.deleteEvent(this, a.id); break;
+      case "linkEventEvidence": r = TL.linkEventEvidence(this, a.event, a.evidence, a.stance ?? null); break;
+      case "linkEventTheory": r = TL.linkEventTheory(this, a.event, a.hypothesis, a.on ?? true); break;
       default: throw new Error(`Unknown action "${a.type}"`);
     }
     if (!r?.error) this.s.log.push(deepClone(action));
@@ -97,6 +103,11 @@ export class Game {
   sleep() { return this.dispatch({ type: "sleep" }); }
   /** The player acts on a name they can see (context menu). */
   investigate(id, text) { return this.dispatch({ type: "investigate", id, text }); }
+  addEvent(event) { return this.dispatch({ type: "createEvent", event }); }
+  editEvent(id, patch) { return this.dispatch({ type: "updateEvent", id, patch }); }
+  deleteEvent(id) { return this.dispatch({ type: "deleteEvent", id }); }
+  linkEvent(event, evidence, stance) { return this.dispatch({ type: "linkEventEvidence", event, evidence, stance }); }
+  linkEventTheory(event, hypothesis, on = true) { return this.dispatch({ type: "linkEventTheory", event, hypothesis, on }); }
 
   #start() {
     if (this.s.started) return { ok: true, already: true };
@@ -225,6 +236,11 @@ export class Game {
   /** Search suggestions from earlier searches and things already met. */
   suggest(q, limit) { return suggest(this, q, limit); }
   casebook() { return CB.casebookView(this); }
+  /** The player's timeline, sorted by the player's own dates. */
+  timeline() { return TL.timelineView(this); }
+  /** Dates visible on a source, to prefill an event. */
+  dateCandidates(source) { return TL.dateCandidates(this, source); }
+  parseDate(text, yearHint) { return TL.parseDateText(text, yearHint); }
   predicates() { return [...this.w.predicates.values()]; }
   channels() { return [...this.w.channels.values()].filter(c => !c.if || this.check(c.if)); }
 }
