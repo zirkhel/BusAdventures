@@ -13,19 +13,6 @@
   "dependsOn": []
  },
  {
-  "id": "IMG21",
-  "method": "generate",
-  "positive": "smartphone photo from behind of a person walking a dog along a foggy harbour path, face not visible, muted grey morning, railings and moored boats fading into fog, square profile picture, realistic, as a person would choose for themselves",
-  "negative": "watermark, signature, logo of a real brand, extra fingers, deformed hands, cartoon, illustration, 3d render, text artifacts, oversharpened",
-  "genWidth": 1024,
-  "genHeight": 1024,
-  "width": 512,
-  "height": 512,
-  "seed": 987395433,
-  "out": "assets/images/img21-pat-profile.webp",
-  "dependsOn": []
- },
- {
   "id": "IMG22",
   "method": "generate",
   "positive": "dated 2019 smartphone photo of a real woman in her 30s at home with a tabby cat sitting on her shoulder, warm indoor light, slight blur, older phone colours and noise, square profile picture, realistic, as a person would choose for themselves",

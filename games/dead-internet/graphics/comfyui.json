@@ -112,7 +112,8 @@
  },
  "IMG21": {
   "method": "generate",
-  "prompt": "smartphone photo from behind of a person walking a dog along a foggy harbour path, face not visible, muted grey morning, railings and moored boats fading into fog"
+  "prompt": "smartphone photo from behind of a person walking a dog along a foggy harbour path, face not visible, muted grey morning, railings and moored boats fading into fog",
+  "notes": "Done (Anders, ComfyUI)."
  },
  "IMG22": {
   "method": "generate",
