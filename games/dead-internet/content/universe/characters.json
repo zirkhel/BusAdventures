@@ -152,6 +152,20 @@
     "text": "who is this. if you're another threadline guy i'm blocking you."
    },
    {
+    "id": "after_mara",
+    "on": {
+     "ask": [
+      "mara",
+      "acc_maraquinn",
+      "evt_mara_death"
+     ]
+    },
+    "if": {
+     "flag": "mara_memorialized"
+    },
+    "text": "her page says Remembering now. people keep leaving library books on her bench. she would have hated that. she would have loved that."
+   },
+   {
     "id": "oldgirl",
     "on": {
      "ask": "calder_mill"
@@ -500,6 +514,30 @@
     ]
    },
    {
+    "id": "after_northgate",
+    "on": {
+     "ask": [
+      "northgate",
+      "paul",
+      "waterfront"
+     ]
+    },
+    "if": {
+     "any": [
+      {
+       "flag": "ending_lights_out"
+      },
+      {
+       "flag": "ending_too_late"
+      },
+      {
+       "flag": "ending_ghost_story"
+      }
+     ]
+    },
+    "text": "Northgate says it 'was not aware of any concerns regarding individual accounts'. Paul Navarro has stopped answering my emails, which is the most honest thing he's done all year."
+   },
+   {
     "id": "northgate",
     "on": {
      "ask": [
@@ -508,7 +546,33 @@
       "waterfront"
      ]
     },
-    "text": "Biggest advertiser we have. Paul Navarro answers every question with a fact sheet. Draw your own conclusions, but draw them carefully."
+    "text": "Biggest advertiser we have. Paul Navarro answers every question with a fact sheet. Draw your own conclusions, but draw them carefully. If they paid anyone to talk up the Waterfront, it has to be in their lobbying disclosure at City Hall. Nobody ever reads those."
+   },
+   {
+    "id": "after_brightline",
+    "on": {
+     "ask": [
+      "brightline",
+      "the_garden",
+      "calvin",
+      "acc_calvinmarsh",
+      "renee"
+     ]
+    },
+    "if": {
+     "any": [
+      {
+       "flag": "ending_lights_out"
+      },
+      {
+       "flag": "ending_too_late"
+      },
+      {
+       "flag": "ending_ghost_story"
+      }
+     ]
+    },
+    "text": "Hal wants a follow-up every day now. Funny how that works. Brightline's number is disconnected, the Harbor Street mailbox is full, and nobody has found Calvin Marsh. I'm starting to think nobody will."
    },
    {
     "id": "calvin",

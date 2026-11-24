@@ -4,7 +4,7 @@
 // answer is decided by the world data (knowledge, trust, flags), not by this file.
 // Screens: list · thread {id} · page {id, view}
 
-import { h, icon } from "../ui.js";
+import { h, icon, TOPIC_NOTE } from "../ui.js";
 import { avatar, img } from "../media.js";
 import { renderArtifact, renderGone, richText } from "../render.js";
 
@@ -108,7 +108,7 @@ export function messagesApp(phone) {
     for (const t of topics) { if (!byKind.has(t.kind)) byKind.set(t.kind, []); byKind.get(t.kind).push(t); }
     const asked = new Set(g.thread(desc.id).filter(m => m.from === "player" && m.kind === "ask").map(m => m.topic));
     phone.picker({
-      title: `Ask ${phone.contactName(desc.id)} about…`,
+      title: `Ask ${phone.contactName(desc.id)} about…`, note: TOPIC_NOTE,
       groups: KIND_ORDER.filter(k => byKind.has(k)).map(k => ({ title: KIND_TITLES[k] || k,
         items: byKind.get(k).sort((a, b) => a.name.localeCompare(b.name)).map(t => ({ id: t.id, label: t.name, sub: asked.has(t.id) ? "asked before" : "" })) })),
       onPick: topic => send(desc, { kind: "ask", topic }),

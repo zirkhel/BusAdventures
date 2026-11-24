@@ -20,7 +20,7 @@
   { "id": "A40", "type": "page", "platform": "northgate_site", "url": "northgatedev.com/waterfront", "date": "2026-02-01",
     "title": "Eastfield Waterfront — Homes for the next generation", "source": "northgate", "images": ["IMG12"], "mentions": ["northgate", "waterfront", "calder_mill", "paul", "acc_pnavarro"],
     "versions": [{ "id": "v1", "cached": true, "body": "1,200 new homes. 30% below market. A restored Calder Mill sign in the lobby. Eastfield Waterfront honours the past and builds the future.\nMedia contact: Paul Navarro (@pnavarro_ngd)" }] },
-  { "id": "A41", "type": "page", "platform": "northgate_site", "url": "northgatedev.com/news/community-partners", "date": "2026-03-10", "hidden": true,
+  { "id": "A41", "datedOnShow": true, "type": "page", "platform": "northgate_site", "url": "northgatedev.com/news/community-partners", "date": "2026-03-10", "hidden": true,
     "title": "Northgate statement on community partners", "source": "northgate", "mentions": ["northgate", "brightline"],
     "versions": [{ "id": "v1", "cached": true, "body": "Northgate Development works with many community partners to share information about Eastfield Waterfront. We expect every partner to meet the highest standards. We were not aware of any concerns regarding individual accounts." }] },
   { "id": "A29", "type": "email", "platform": "messages", "url": "", "date": "2026-01-08", "hidden": true, "index": "none",

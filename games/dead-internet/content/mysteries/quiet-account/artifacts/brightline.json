@@ -22,7 +22,7 @@
     "access": { "loggedIn": "brightline_portal" }, "source": "brightline-internal", "keywords": ["portal.bl-ops.net"],
     "mentions": ["brightline", "northgate", "acc_maraquinn", "the_garden", "meridian", "paul", "renee", "evt_mara_death"], "supports": ["S2", "S3", "S6"],
     "versions": [{ "id": "v1", "body": "Client: Northgate Development (NGD) · Program: Community Sentiment Program — Eastfield (CSP-EF)\nContract: Jan 14, 2025, renewed Jan 14, 2026 · Billed to date: $84,000\n\nMonthly report, February: sentiment +22 since program start. Lead persona MARA_Q.\n\nAccount notes:\n• Jan 8, 2026 — Client contact (P. Navarro) briefed on MARA_Q backstory. Client: 'keep her gentle until the vote.'\n\nUpstream: MERIDIAN · Settlement: monthly" }] },
-  { "id": "A42", "type": "page", "platform": "brightline_site", "url": "brightlinemedia.co/statement", "date": "2026-03-12", "hidden": true,
+  { "id": "A42", "datedOnShow": true, "type": "page", "platform": "brightline_site", "url": "brightlinemedia.co/statement", "date": "2026-03-12", "hidden": true,
     "title": "A statement from Brightline Media", "source": "brightline-public", "mentions": ["brightline", "calvin", "northgate"],
     "versions": [{ "id": "v1", "cached": true, "body": "Brightline Media is aware of recent online claims about our work. We take authenticity seriously. All programs are client-directed and delivered in line with client instructions. We have paused the program in question pending review. — Calvin Marsh, Founder & CEO" }] },
   { "id": "A31", "type": "page", "platform": "facelessstock", "url": "facelessstock.com/portrait/44812", "date": "2023-05-30", "index": "weak",

@@ -5,5 +5,8 @@
   {"id": "news_d5", "when": {"event": "day.start", "match": {"day": 5}}, "do": [{"show": ["DR-2026-0095", "UF-2026-0099", "DS-UF-02"]}, {"setLive": {"artifact": "DR-2026-0090", "version": "v3"}}]},
   {"id": "news_d6", "when": {"event": "day.start", "match": {"day": 6}}, "do": [{"show": "DR-2026-0097"}, {"notify": {"text": "Breaking: Power restored after second outage in a month", "ref": {"artifact": "DR-2026-0097"}}}]},
   {"id": "news_d7", "when": {"event": "day.start", "match": {"day": 7}}, "do": [{"show": "DR-2026-0098"}]},
-  {"id": "news_d8", "when": {"event": "day.start", "match": {"day": 8}}, "do": [{"show": "DR-2026-0099"}]}
+  {"id": "news_d8", "when": {"event": "day.start", "match": {"day": 8}}, "do": [{"show": "DR-2026-0099"}]},
+  {"id": "news_d9", "when": {"event": "day.start", "match": {"day": 9}}, "do": [{"show": ["DR-2026-0101"]}]},
+  {"id": "news_d10", "when": {"event": "day.start", "match": {"day": 10}}, "do": [{"show": ["DR-2026-0102", "UF-2026-0101"]}]},
+  {"id": "news_d11", "when": {"event": "day.start", "match": {"day": 11}}, "do": [{"show": ["DR-2026-0103"]}]}
 ]

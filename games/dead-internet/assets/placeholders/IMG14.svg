@@ -3,7 +3,6 @@
 <rect x="12" y="12" width="576" height="576" fill="none" stroke="hsl(119 40% 60%)" stroke-dasharray="8 6"/>
 <g  font-family="system-ui, sans-serif" fill="hsl(119 30% 88%)">
 <text x="32" y="56" font-size="28" font-weight="700">IMG14</text>
-<text x="32" y="84" font-size="14" opacity=".8">profile · 512×512</text>
-<text x="32" y="124" font-size="16">Man, 29, Mara's brother (same freckles), tired</text>
-<text x="32" y="146" font-size="16">eyes, hoodie, dim room.</text>
+<text x="32" y="84" font-size="14" opacity=".8">placeholder · 512×512</text>
+<text x="32" y="124" font-size="16">Theo Quinn</text>
 </g></svg>

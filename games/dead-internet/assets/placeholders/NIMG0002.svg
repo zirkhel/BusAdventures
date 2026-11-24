@@ -3,7 +3,6 @@
 <rect x="12" y="12" width="576" height="576" fill="none" stroke="hsl(109 40% 60%)" stroke-dasharray="8 6"/>
 <g  font-family="system-ui, sans-serif" fill="hsl(109 30% 88%)">
 <text x="32" y="56" font-size="28" font-weight="700">NIMG0002</text>
-<text x="32" y="84" font-size="14" opacity=".8">photo · 1080×1080 · from NIMG0001</text>
-<text x="32" y="124" font-size="16">Not generated: crop of NIMG0001. Keep pixels</text>
-<text x="32" y="146" font-size="16">identical so image search can match.</text>
+<text x="32" y="84" font-size="14" opacity=".8">placeholder · 1080×1080</text>
+<text x="32" y="124" font-size="16">Pier 2 at the 'record' festival</text>
 </g></svg>

@@ -8,7 +8,7 @@
   { "id": "acc_danareyes", "platform": "connect", "handle": "@danareyes", "displayName": "Dana Reyes", "claimsToBe": "dana", "operatedBy": "dana", "created": "2014-02-02", "avatar": "IMG15",
     "role": "Senior reporter, The Daily Record", "bio": "Local news and City Hall for The Daily Record since 2014." },
   { "id": "acc_truthseeker", "platform": "threadline", "handle": "truthseeker_88", "displayName": "truthseeker_88", "claimsToBe": "owen", "operatedBy": "owen", "created": "2016-06-06", "avatar": "IMG16" },
-  { "id": "acc_owenpike", "platform": "connect", "handle": "@owenpike58", "displayName": "Owen Pike", "claimsToBe": "owen", "operatedBy": "owen", "created": "2018-01-01" },
+  { "id": "acc_owenpike", "platform": "connect", "handle": "@owenpike58", "displayName": "Owen Pike", "claimsToBe": "owen", "operatedBy": "owen", "created": "2018-01-01", "avatar": "IMG24" },
   { "id": "acc_irisbell", "platform": "connect", "handle": "@irisbellwrites", "displayName": "Iris Bell", "claimsToBe": "iris", "operatedBy": "iris", "created": "2020-09-09", "avatar": "IMG17" },
   { "id": "acc_calvinmarsh", "platform": "connect", "handle": "@calvinmarsh", "displayName": "Calvin Marsh", "claimsToBe": "calvin", "operatedBy": "echo", "created": "2023-06-12", "avatar": "IMG06" },
   { "id": "acc_reneeokafor", "platform": "connect", "handle": "@reneeokafor", "displayName": "Renee Okafor", "claimsToBe": "renee", "operatedBy": "echo", "created": "2023-06-14", "avatar": "IMG19" },
@@ -18,8 +18,8 @@
   { "id": "acc_lindsay", "platform": "connect", "handle": "@lindsay.on.4th", "displayName": "Lindsay", "claimsToBe": "lindsay", "operatedBy": "brightline",
     "created": "2017-04-02", "history": [{ "by": "lindsay", "until": "2022-06-30" }, { "by": null, "until": "2025-08-15" }], "avatar": "IMG22" },
   { "id": "acc_pnavarro", "platform": "connect", "handle": "@pnavarro_ngd", "displayName": "Paul Navarro", "claimsToBe": "paul", "operatedBy": "paul", "created": "2015-03-03", "avatar": "IMG18" },
-  { "id": "acc_northgate", "platform": "connect", "handle": "@northgatedev", "displayName": "Northgate Development", "claimsToBe": "northgate", "operatedBy": "northgate", "created": "2013-01-01" },
-  { "id": "acc_brightline", "platform": "connect", "handle": "@brightlinemedia", "displayName": "Brightline Media", "claimsToBe": "brightline", "operatedBy": "brightline", "created": "2023-06-20" },
+  { "id": "acc_northgate", "platform": "connect", "handle": "@northgatedev", "displayName": "Northgate Development", "claimsToBe": "northgate", "operatedBy": "northgate", "created": "2013-01-01", "avatar": "AVA_NORTHGATE" },
+  { "id": "acc_brightline", "platform": "connect", "handle": "@brightlinemedia", "displayName": "Brightline Media", "claimsToBe": "brightline", "operatedBy": "brightline", "created": "2023-06-20", "avatar": "AVA_BRIGHTLINE" },
   { "id": "acc_priya", "platform": "connect", "handle": "@priyareads", "displayName": "Priya Shah", "claimsToBe": "priya", "operatedBy": "priya", "created": "2016-10-10", "avatar": "IMG23" },
   { "id": "acc_unknown", "platform": "messages", "handle": "Unknown sender", "displayName": "Unknown", "claimsToBe": "echo", "operatedBy": "echo", "created": "2026-03-01" }
 ]

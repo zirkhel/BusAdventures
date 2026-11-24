@@ -148,11 +148,18 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7)._
 - [x] Playwright-test på iPhone- og Pixel-størrelse
 
 ## Fase 9 — The Quiet Account ferdig
-- [ ] Hele The Quiet Account spilles gjennom på mobil, og friksjonen måles
+_Gjennomspilling 24. november 2026: se `PLAYTEST-FASE9.md`._
+- [x] Hele The Quiet Account spilt gjennom på mobil kun via UI (iPhone 13, Pixel 7): Lights out på dag 3 etter 127 trykk
+- [x] Alle avslutninger testet i simulatoren (11 scenarioer, 4 nye: Too late og tre Collateral)
+- [x] Spoilere fjernet: plassholdere viser ikke opphav, ingen fortellerlinjer i innhold eller metadata
+- [x] Bakgrunnsinnhold rundt sakens navn (19 sider), nyheter etter avstemningen (dag 9–11), replikker etter avslutningen
+- [x] Avslutninger gir varsel, saker spilleren utløser dateres den dagen de dukker opp, navn i sidetitler kan trykkes på
+- [x] Grafikkatalogen dekker alle bilder, profilbilder og logoer med prioritet, ansiktsreferanser og avhengigheter
+- [ ] Kort innføring i mekanikkene for nye spillere (forslag i rapporten, venter på ja)
 - [ ] Papirtest-funn innarbeidet i innholdet
 - [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang
 - [ ] Grafikk produsert etter `graphics/GRAPHICS.md` (ComfyUI), originaler før kopier
-- [ ] Flere dynamiske hendelser og reaksjoner på publisering
+- [x] Flere dynamiske hendelser og reaksjoner på publisering (avisene melder konsekvenser, fase 8)
 - [ ] Service worker for offline og rask lasting
 
 ## Fase 10 — Resterende verktøyapper

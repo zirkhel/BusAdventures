@@ -133,22 +133,22 @@ function header(phone, v, a, acc, pf, kind) {
   }
   if (kind === "forum") {
     return h("header.forum-head", h("div.crumb", "threadline › " + (v.url || "").split("/").slice(2, 3).join("")),
-      h("h1", v.title), h("div.muted", acc ? ["started by ", who(phone, acc.handle, acc.id)] : "", v.date ? ` · ${fmtDate(v.date)}` : ""));
+      h("h1", phone.ctx.text(v.title)), h("div.muted", acc ? ["started by ", who(phone, acc.handle, acc.id)] : "", v.date ? ` · ${fmtDate(v.date)}` : ""));
   }
   if (kind === "news") return h("header.news-head",
     h("div.mast", pf?.app?.logo || pf?.name || ""),
     v.sponsored ? h("div.np-sponsor", "Sponsored by ", phone.ctx.span(w.entities.get(v.sponsored.by)?.name || v.sponsored.by, { type: "org", id: v.sponsored.by })) : null,
     v.section ? h("div.kicker", sectionName(pf, v.section)) : null,
-    h("h1", v.title),
+    h("h1", phone.ctx.text(v.title)),
     v.byline?.length ? h("div.byline", "By ", v.byline.map((b, i) => [i ? (i === v.byline.length - 1 ? " and " : ", ") : "",
       w.accounts.has(b) ? phone.ctx.span(w.accounts.get(b).displayName || b, { type: "account", id: b }) : b])) : null,
     newsDates(v));
-  if (kind === "blog") return h("header.blog-head", h("div.mast", pf?.name || ""), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
+  if (kind === "blog") return h("header.blog-head", h("div.mast", pf?.name || ""), h("h1", phone.ctx.text(v.title)), v.date ? h("div.muted", fmtDate(v.date)) : null);
   if (kind === "messaging") {
-    return h("header.doc-head", h("div.doc-type", v.type === "email" ? "Email" : v.type === "image" ? "Image" : "Document"), h("h1", v.title), v.date ? h("div.muted", fmtDate(v.date)) : null);
+    return h("header.doc-head", h("div.doc-type", v.type === "email" ? "Email" : v.type === "image" ? "Image" : "Document"), h("h1", phone.ctx.text(v.title)), v.date ? h("div.muted", fmtDate(v.date)) : null);
   }
-  if (kind === "registry") return h("header.reg-head", h("div.mast", pf?.mast || pf?.name || "", pf?.mastSub ? h("small", pf.mastSub) : null), h("h1", v.title));
-  return h("header.site-head", h("div.mast", pf?.name || v.url?.split("/")[0] || ""), h("h1", v.title));
+  if (kind === "registry") return h("header.reg-head", h("div.mast", pf?.mast || pf?.name || "", pf?.mastSub ? h("small", pf.mastSub) : null), h("h1", phone.ctx.text(v.title)));
+  return h("header.site-head", h("div.mast", pf?.name || v.url?.split("/")[0] || ""), h("h1", phone.ctx.text(v.title)));
 }
 
 /** "Mar 10, 2026 · Updated Mar 11, 09:10": the paper's own note that a story changed. Quiet edits say nothing. */

@@ -24,7 +24,8 @@
    "universe/artifacts/filler.json",
    "universe/pools/news-dailyrecord/articles.json",
    "universe/pools/news-unfiltered/articles.json",
-   "universe/pools/news-unfiltered/documents.json"
+   "universe/pools/news-unfiltered/documents.json",
+   "universe/pools/background-qa/articles.json"
   ],
   "characters": "universe/characters.json",
   "canon": "universe/canon.json",

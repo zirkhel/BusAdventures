@@ -120,3 +120,6 @@ export function fmtEventDate(d) {
   if (m) return `around ${MONTH_NAMES[+m - 1]} ${y}`;
   return `around ${y}`;
 }
+
+/** Shown under topic pickers: only what the player has looked into can be asked about or theorised about. */
+export const TOPIC_NOTE = "Missing someone? Tap their name where you read it and pick an action, for example “Ask someone about this…”. Then they can be picked here.";

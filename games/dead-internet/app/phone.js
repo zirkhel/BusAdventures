@@ -417,6 +417,7 @@ export class Phone {
     if (!n.read) this.g.dispatch({ type: "readNotification", id: n.id });
     if (n.ref?.thread) this.push("messages", { kind: "thread", id: n.ref.thread });
     else if (n.ref?.artifact) this.openArtifact(n.ref.artifact);
+    else if (n.ref?.case) { this.goHome(); this.openApp("casebook"); this.push("casebook", { kind: "reports" }); }
     else this.goHome();
   }
 
@@ -511,7 +512,7 @@ export class Phone {
     const total = o.groups.reduce((n, g) => n + g.items.length, 0);
     const panel = h("div.picker",
       h("div.picker-head", h("div.bar-title", o.title), h("button.icon-btn", { "aria-label": "Close", onclick: () => this.closeOverlay() }, icon("close"))),
-      total > 7 ? h("div.picker-search", q) : null, h("div.scroll", list));
+      total > 7 ? h("div.picker-search", q) : null, h("div.scroll", list, o.note ? h("div.picker-note.muted", o.note) : null));
     const bg = h("div.sheet-bg.picker-bg", { onclick: e => { if (e.target === bg) this.closeOverlay(); } }, panel);
     this.overlay.replaceChildren(bg);
     this.overlay.classList.add("open");
@@ -659,7 +660,7 @@ export class Phone {
     const thread = n.ref?.thread;
     const c = thread ? this.g.w.characters.get(thread) : null;
     const target = n.ref?.artifact ? this.appFor(n.ref.artifact) : null;
-    const app = thread ? "Messages" : target ? (this.apps[target]?.name || this.str(`apps.${target}`)) : "News";
+    const app = thread ? "Messages" : target ? (this.apps[target]?.name || this.str(`apps.${target}`)) : n.ref?.case ? this.str("apps.casebook") : "News";
     const title = c ? this.contactName(thread) : app;
     return h("button.note", { onclick: onOpen },
       h("div.note-head", h("span.note-app", app), h("span.muted", n.day === this.g.s.day ? "now" : `Day ${n.day}`)),
