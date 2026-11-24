@@ -173,7 +173,7 @@
  "DRP01": {
   "method": "generate",
   "prompt": "staff portrait for a local newspaper website, plain mottled grey studio backdrop, soft key light from the left, head and shoulders, natural skin, man, 38, city hall reporter, rolled-up shirt sleeves, a notebook in his shirt pocket",
-  "notes": "Same seed family and the same backdrop for all seven: generate them as one batch."
+  "notes": "Done (Anders, ComfyUI). Claude painted out the garbled, mirrored lettering on the right side of the lanyard: Tomas is real, so the photo must not carry an AI tell. Use this image as the backdrop and light reference for DRP02–DRP07."
  },
  "DRP02": {
   "method": "generate",
