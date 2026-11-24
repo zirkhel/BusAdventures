@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 24. november 2026, etter fase 4 (Timeline) og Anders' beslutninger om univers, mysterier og medieapper._
+_Oppdatert 24. november 2026, etter fase 9 og Anders' beslutninger om Casebook som deduksjonsverktøy og veikartet videre (se DEVPLAN.md)._
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md) (godkjent med justeringene i §0 der).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
@@ -14,6 +14,14 @@ Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Oppr
 6. **Ingen avhengigheter, ingen byggesteg.** Ren JavaScript med ES-moduler og `// @ts-check`. Tester med Nodes innebygde `node:test`.
 7. **Ingen synlig relevans.** Ingen app markerer, sorterer eller vekter etter hva som er bevis.
 8. **Det store spørsmålet står åpent.** Om det finnes ekte mennesker igjen på nettet, avgjøres ikke av tilfeldige bakgrunnskontoer eller tidlige mysterier.
+
+**Overordnede designprinsipper (Anders, 24. nov):**
+- Deduksjon er spillet. Søking er verktøyet.
+- Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en fasit.
+- Internett skal fremstå som et autentisk, selvstendig univers, også utenfor mysteriene.
+- Spilleren skal kunne løse konkrete mysterier uten nødvendigvis å forstå den større virkeligheten.
+- Jo mer spilleren oppdager, desto mindre sikker kan spilleren bli på hvordan verden egentlig fungerer.
+- Ingen karakter er en skjult fasitmekanisme. Alle kan ta feil og bli manipulert.
 
 ## Mappestruktur
 

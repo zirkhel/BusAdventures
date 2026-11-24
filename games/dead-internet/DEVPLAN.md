@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 4 og ny rekkefølge)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 9 ferdig, Casebook steg 0–5 og nytt veikart)._
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
@@ -60,7 +60,17 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 - [x] Oppdagelsestilstander (unknown, encountered, investigated, saved) med migrering av gamle lagringer
 - [x] Revisjon av Browser, Connect, Messages, Casebook, søkeforslag og kontekstmenyen for lekkasjer, med automatiske tester
 
-## Rekkefølge videre (Anders, 24. nov)
+## Veikart (Anders, 24. nov kveld)
+Fase 9 er ferdig, og alle 61 grafikkelementer er godkjent (eksisterende Cora-bilde beholdes, portrettproduksjonen er avsluttet).
+1. Casebook steg 0–5 (under). Lekkasjene L1–L4 har førsteprioritet.
+2. Ekstern spilltest av hele etterforskningsprosessen, inkludert kildevurdering og rapportering, etter steg 5.
+3. Justeringer etter spilltesten.
+4. Autentiske nettsider og gjenbrukbar nettsidearkitektur. Forslaget lages parallelt, men ingen implementering før det er diskutert og godkjent, og det skal ikke forsinke Casebook.
+5. Verktøyapper (fase 10).
+6. TokTok (fase 11).
+7. Nye mysterier (fase 12).
+
+## Tidligere rekkefølge (Anders, 24. nov)
 Ingen unødvendig utvidelse av fasen som pågår.
 1. ~~Global kontekstmeny, kunnskapsgrenser og navigasjon (fase 3b)~~ ✅
 2. ~~Timeline (fase 4)~~ ✅
@@ -147,7 +157,7 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7)._
 - [x] Avisene skriver om spillerens handlinger: Unfiltered plukker opp en publisert rapport (Connect/Threadline) neste dag, og Daily Record skriver om bystyrevedtaket (utsatt eller vedtatt). Slike saker dateres den dagen de dukker opp (`datedOnShow`).
 - [x] Playwright-test på iPhone- og Pixel-størrelse
 
-## Fase 9 — The Quiet Account ferdig
+## Fase 9 — The Quiet Account ferdig ✅
 _Gjennomspilling 24. november 2026: se `PLAYTEST-FASE9.md`._
 - [x] Hele The Quiet Account spilt gjennom på mobil kun via UI (iPhone 13, Pixel 7): Lights out på dag 3 etter 127 trykk
 - [x] Alle avslutninger testet i simulatoren (11 scenarioer, 4 nye: Too late og tre Collateral)
@@ -162,8 +172,8 @@ _Gjennomspilling 24. november 2026: se `PLAYTEST-FASE9.md`._
 - [x] Avslutninger vises som utvikling i saken («The Quiet Account: Lights out», «How the case developed» med dag). Saken heter «Resolved», og spilleren kan fortsette å etterforske.
 - [x] ComfyUI-produksjonsliste: `tools/comfyui-list.mjs` → `graphics/COMFYUI.md` og `graphics/comfyui-jobs.json`, med prompter, størrelser, referanser og avledninger
 - [ ] Papirtest-funn innarbeidet i innholdet
-- [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang
-- [ ] Grafikk produsert etter `graphics/COMFYUI.md`, originaler før kopier (status i `graphics/COMFYUI.md`; de første ferdige bildene ligger inne)
+- [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang (flyttet: skjer etter Casebook steg 5)
+- [x] Grafikk produsert etter `graphics/COMFYUI.md`: alle 61 elementer godkjent
 - [x] Flere dynamiske hendelser og reaksjoner på publisering (avisene melder konsekvenser, fase 8)
 - [ ] Service worker for offline og rask lasting
 
@@ -183,6 +193,8 @@ Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIG
 - [ ] Beviskort med retur til original (bevart rulleposisjon), kommentar, merker (viktig, tvilsom), åpnet vs. vurdert
 - [ ] «Legg bort» med årsak og gjenoppretting, uten at koblinger eller kommentarer forsvinner
 - [ ] Filter etter egne vurderinger, «Ikke vurdert» øverst, lagret utdrag som bevis i stedet for notat. Lagring v7.
+- [ ] Et lagret bevis åpner versjonen spilleren lagret, ikke den levende siden
+- [ ] DOM-test i Playwright: Casebook gir samme tekst og CSS-klasser i tvillingverdenene
 
 ### Steg 2 — Teorier og spørsmål
 - [ ] Fri formulering, bevis for og mot, status med historikk, alternative forklaringer
@@ -204,8 +216,9 @@ Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIG
 - [ ] Dana kommenterer spillerens egne forbehold
 
 ### Deretter
-- [ ] Ekstern spilltest av hele etterforskningsopplevelsen
+- [ ] Ekstern spilltest av hele etterforskningsopplevelsen, etter steg 5
 - [ ] Justeringer etter observasjonene
+- [ ] Så: autentiske nettsider (eget forslag, godkjennes før implementering), deretter fase 10–12
 
 ## Fase 10 — Resterende verktøyapper
 - [ ] Mail: innboks, tråder, vedlegg, videresending og metadata
