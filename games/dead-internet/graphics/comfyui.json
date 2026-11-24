@@ -90,7 +90,7 @@
  "IMG16": {
   "method": "generate",
   "prompt": "low resolution photo of a rusty old cast-iron mill gear, close-up, heavy JPEG compression artefacts, oversaturated",
-  "notes": "Downscale to 256 px and back up to 512 px, then save at very low JPEG quality before the webp."
+  "notes": "Done (Anders, ComfyUI, already low-res and upscaled). Claude resized to 512 and added one low-quality JPEG pass before the webp."
  },
  "IMG18": {
   "method": "generate",
