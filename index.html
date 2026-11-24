@@ -56,6 +56,36 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
  .game-icon{font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}.game-icon svg{display:block}
  .genre-count,.genre-note,.game-meta,.tag,.tagline,.terminal-footer{color:#829a70}
  @media(max-width:420px){.terminal-body{padding:22px 16px}.game-card{padding:12px}.game-card-inner{gap:10px}.game-icon{width:40px;height:40px}.category-nav{gap:6px}}
+
+/* Dead Internet universe and collapsible sections. */
+ .universe{border:1px solid var(--green);border-radius:3px;padding:16px;margin-bottom:36px;background:linear-gradient(180deg,rgba(57,255,20,.06),rgba(0,0,0,.25));scroll-margin-top:20px}
+ .universe-head{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+ .universe-kicker{font-family:VT323,monospace;font-size:16px;color:var(--amber);letter-spacing:.14em}
+ .universe-title{font-family:VT323,monospace;font-weight:400;font-size:30px;line-height:1;color:var(--green);text-shadow:0 0 8px rgba(57,255,20,.5);letter-spacing:.06em;margin:2px 0 4px}
+ .case-label{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px dashed var(--green-dim);font-family:VT323,monospace;font-size:18px;color:var(--amber);letter-spacing:.12em}
+ .case-label span{font-family:'Space Mono',monospace;font-size:11px;color:#829a70;letter-spacing:0}
+ .case-list{list-style:none;display:grid;gap:8px}
+ .case-card{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--green-dim);border-radius:3px;background:rgba(0,0,0,.35);text-decoration:none}
+ a.case-card:hover,a.case-card:focus-visible{border-color:var(--green);background:rgba(57,255,20,.07)}
+ .case-no{font-family:VT323,monospace;font-size:28px;color:var(--amber);min-width:30px;text-align:center}
+ .case-info{flex:1;min-width:0;display:block}
+ .case-title{display:block;font-family:VT323,monospace;font-size:21px;color:var(--green);letter-spacing:.05em}
+ .case-desc{display:block;color:var(--text);font-size:12px;line-height:1.5;font-style:italic}
+ .case-go{font-family:VT323,monospace;font-size:30px;color:var(--green)}
+ .case-sealed{border-style:dashed;opacity:.55}.case-sealed .case-title,.case-sealed .case-no{color:#829a70}
+ summary.genre-header{cursor:pointer;list-style:none;margin-bottom:0;padding:10px 0;user-select:none}
+ summary.genre-header::-webkit-details-marker{display:none}
+ summary.genre-header::before{content:'▸';font-family:VT323,monospace;font-size:22px;color:var(--green);width:14px;transition:transform .15s}
+ details[open]>summary.genre-header::before{transform:rotate(90deg)}
+ details[open]>summary.genre-header{margin-bottom:6px}
+ summary.genre-header:hover .genre-tag{color:var(--green)}
+ summary.genre-header:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+ .genre-section{margin-bottom:14px}details[open].genre-section{margin-bottom:30px}
+ .genre-count{margin-left:auto}
+ .section-tools{display:flex;justify-content:flex-end;margin:-18px 0 8px}
+ .section-tools button{background:none;border:none;color:#829a70;font:inherit;font-size:11px;cursor:pointer;padding:6px 0;text-decoration:underline}
+ .section-tools button:hover{color:var(--green)}
+ @media(prefers-reduced-motion:reduce){summary.genre-header::before{transition:none}}
     .cursor{display:inline-block;animation:terminal-blink 1s steps(1,end) infinite}
 @keyframes terminal-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){.cursor{animation:none}}
@@ -79,6 +109,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
         <div class="prompt-line">SELECT GAME<span class="cursor" aria-hidden="true">_</span></div>
       </div>
       <nav class="category-nav" aria-label="Game categories">
+        <a href="#dead-internet">DEAD INTERNET</a>
         <a href="#text">TEXT</a>
         <a href="#game-watch">GAME &amp; WATCH</a>
         <a href="#arcade">ARCADE</a>
@@ -86,11 +117,43 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
         <a href="#idle">IDLE</a>
         <a href="#in-development">IN DEVELOPMENT</a>
       </nav>
-      <div class="genre-section" id="text">
-        <div class="genre-header">
-          <h2 class="genre-tag">// TEXT</h2>
-          <span class="genre-count">3 available</span>
+      <section class="universe" id="dead-internet" aria-labelledby="di-title">
+        <div class="universe-head">
+          <div class="game-icon" aria-hidden="true">📱</div>
+          <div class="game-info">
+            <div class="universe-kicker">// UNIVERSE</div>
+            <h2 class="universe-title" id="di-title">Dead Internet</h2>
+            <div class="game-meta"><span>investigation</span> · phone · portrait</div>
+          </div>
         </div>
+        <p class="game-desc">One internet. The same accounts, companies and rumours in every case. What you find in one investigation can turn into evidence in the next. Nobody is sure how many of the people on it are still people.</p>
+        <div class="case-label">CASE FILES <span>1 open</span></div>
+        <ol class="case-list">
+          <li>
+            <a class="case-card" href="games/dead-internet/">
+              <span class="case-no">01</span>
+              <span class="case-info">
+                <span class="case-title">The Quiet Account</span>
+                <span class="case-desc">Mara Quinn died in July. Her account is still posting. Find out who is speaking for the dead.</span>
+                <span class="game-tags"><span class="tag tag-wip">WIP</span> <span class="tag">mystery</span> <span class="tag">first case</span></span>
+              </span>
+              <span class="case-go" aria-hidden="true">›</span>
+            </a>
+          </li>
+          <li class="case-card case-sealed">
+            <span class="case-no">··</span>
+            <span class="case-info">
+              <span class="case-title">More cases</span>
+              <span class="case-desc">Sealed. Some of them are already out there, if you know where to look.</span>
+            </span>
+          </li>
+        </ol>
+      </section>
+      <details class="genre-section" id="text">
+        <summary class="genre-header">
+          <h2 class="genre-tag">// TEXT</h2>
+          <span class="genre-count">2 available</span>
+        </summary>
         <div class="genre-note">Type commands. Take your time. Death is permanent.</div>
         <div class="game-grid">
           <a class="game-card" href="games/ward-b/index.html">
@@ -130,12 +193,12 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
             </div>
           </a>
         </div>
-      </div>
-      <div class="genre-section" id="game-watch">
-        <div class="genre-header">
+      </details>
+      <details class="genre-section" id="game-watch">
+        <summary class="genre-header">
           <h2 class="genre-tag">// GAME &amp; WATCH</h2>
           <span class="genre-count">7 available</span>
-        </div>
+        </summary>
         <div class="genre-note">Two or three buttons, one screen. Play a round while the bus is at a light.</div>
         <div class="game-grid">
           <a class="game-card" href="games/lich-tower/index.html">
@@ -267,12 +330,12 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
             </div>
           </a>
         </div>
-      </div>
-      <div class="genre-section" id="arcade">
-        <div class="genre-header">
+      </details>
+      <details class="genre-section" id="arcade">
+        <summary class="genre-header">
           <h2 class="genre-tag">// ARCADE</h2>
-          <span class="genre-count">10 available</span>
-        </div>
+          <span class="genre-count">11 available</span>
+        </summary>
         <div class="genre-note">Cabinet games. More going on, more to hit back at.</div>
         <div class="game-grid">
           <a class="game-card" href="games/forest-pacification/index.html">
@@ -466,25 +529,14 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
             </div>
           </a>
         </div>
-      </div>
-      <div class="genre-section" id="misc">
-        <div class="genre-header">
+      </details>
+      <details class="genre-section" id="misc">
+        <summary class="genre-header">
           <h2 class="genre-tag">// MISC GAME</h2>
-          <span class="genre-count">2 available</span>
-        </div>
+          <span class="genre-count">1 available</span>
+        </summary>
         <div class="genre-note">Odd experiments, rescued relics, and games that refuse to fit the filing system.</div>
         <div class="game-grid">
-          <a class="game-card" href="games/dead-internet/">
-            <div class="game-card-inner">
-              <div class="game-icon" aria-hidden="true">📱</div>
-              <div class="game-info">
-                <h3 class="game-title">Dead Internet</h3>
-                <div class="game-meta"><span>investigation</span> · phone · portrait</div>
-                <div class="game-desc">Mara Quinn died in July. Her account is still posting. Search, save the evidence, and find out who is speaking for the dead.</div>
-                <div class="game-tags"><span class="tag tag-wip">WIP</span> <span class="tag">mystery</span> <span class="tag">investigation</span></div>
-              </div>
-            </div>
-          </a>
           <a class="game-card" href="games/baloon-crazy/index.html">
             <div class="game-card-inner">
               <div class="game-icon" aria-hidden="true">🎈</div>
@@ -497,12 +549,12 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
             </div>
           </a>
         </div>
-      </div>
-      <div class="genre-section" id="idle">
-        <div class="genre-header">
+      </details>
+      <details class="genre-section" id="idle">
+        <summary class="genre-header">
           <h2 class="genre-tag">// IDLE</h2>
           <span class="genre-count">5 available</span>
-        </div>
+        </summary>
         <div class="genre-note">Builds while you ride. Open it at your stop and collect.</div>
         <div class="game-grid">
           <a class="game-card" href="games/fighter-empire/index.html">
@@ -561,12 +613,12 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
             </div>
           </a>
         </div>
-      </div>
-      <div class="genre-section" id="in-development">
-        <div class="genre-header">
+      </details>
+      <details class="genre-section" id="in-development">
+        <summary class="genre-header">
           <h2 class="genre-tag">// IN DEVELOPMENT</h2>
           <span class="genre-count">3 in development</span>
-        </div>
+        </summary>
         <div class="game-grid">
           <div class="game-card coming-soon">
             <div class="game-card-inner">
@@ -605,7 +657,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
             </div>
           </div>
         </div>
-      </div>
+      </details>
       <div class="terminal-footer">
         <div>bus-adventures · pocket games for the commute</div>
       </div>
@@ -621,6 +673,24 @@ function updateAuthorityRecord(){
  label.textContent='Most people clubbed: '+score;
 }
 updateAuthorityRecord();window.addEventListener('pageshow',updateAuthorityRecord);window.addEventListener('storage',updateAuthorityRecord);
+
+// Collapsible sections: remember what is open, open the section a link points to.
+(function(){
+ const KEY='bus-adventures.open-sections';
+ const sections=[...document.querySelectorAll('details.genre-section')];
+ let saved=null;try{saved=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+ if(Array.isArray(saved))sections.forEach(d=>{d.open=saved.includes(d.id)});
+ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(sections.filter(d=>d.open).map(d=>d.id)))}catch(e){}};
+ sections.forEach(d=>d.addEventListener('toggle',()=>{save();syncTool()}));
+ function openHash(){const d=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(d&&d.tagName==='DETAILS'&&!d.open)d.open=true}
+ openHash();window.addEventListener('hashchange',openHash);
+ document.querySelectorAll('.category-nav a').forEach(a=>a.addEventListener('click',()=>{const d=document.querySelector(a.getAttribute('href'));if(d&&d.tagName==='DETAILS')d.open=true}));
+ const tools=document.createElement('div');tools.className='section-tools';
+ const btn=document.createElement('button');btn.type='button';tools.append(btn);
+ function syncTool(){btn.textContent=sections.every(d=>d.open)?'collapse all':'expand all'}
+ btn.addEventListener('click',()=>{const open=!sections.every(d=>d.open);sections.forEach(d=>{d.open=open});save();syncTool()});
+ sections[0].before(tools);syncTool();
+})();
 </script>
 <script src="ui/gamepad.js" data-nav="all"></script>
 </body>
