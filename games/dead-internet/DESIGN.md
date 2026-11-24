@@ -1,8 +1,8 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 24. november 2026, etter fase 4 (Timeline) og Anders' beslutninger om univers, mysterier og medieapper._
+_Oppdatert 24. november 2026, etter fase 9 og Anders' beslutninger om Casebook som deduksjonsverktøy og veikartet videre (se DEVPLAN.md)._
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md) (godkjent med justeringene i §0 der).
-Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
+Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Casebook: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md). Nettsteder: [docs/WEBSITES.md](docs/WEBSITES.md). Saksavslutning: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
 ## Prinsipper
 
@@ -14,6 +14,16 @@ Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Oppr
 6. **Ingen avhengigheter, ingen byggesteg.** Ren JavaScript med ES-moduler og `// @ts-check`. Tester med Nodes innebygde `node:test`.
 7. **Ingen synlig relevans.** Ingen app markerer, sorterer eller vekter etter hva som er bevis.
 8. **Det store spørsmålet står åpent.** Om det finnes ekte mennesker igjen på nettet, avgjøres ikke av tilfeldige bakgrunnskontoer eller tidlige mysterier.
+
+**Overordnede designprinsipper (Anders, 24. nov):**
+- Deduksjon er spillet. Søking er verktøyet.
+- Casebook er spillerens arbeidsflate og eksterne hukommelse, ikke en fasit.
+- Internett skal fremstå som et autentisk univers, ikke en samling spillspor.
+- Karakterer, medier og offentlige institusjoner kan ta feil. Ingen karakter er en skjult fasitmekanisme.
+- Spilleren skal kunne oppnå reelle resultater gjennom egne handlinger.
+- Man skal kunne vinne en sak uten å vinne spillet. Senere hendelser som utfordrer en avsluttet sak er forfattet og konsistente med kanon, aldri tilfeldige, og undergraver ikke systematisk spillerens seire.
+- Jo mer spilleren oppdager, desto bedre forstår hen de konkrete mysteriene, men desto mindre sikker kan hen bli på hvordan verden egentlig fungerer.
+- Saker avsluttes gjennom handlinger og konsekvenser i verden, ikke en «Solve case»-knapp. Spillerens egne merker, kildevurderinger og teoristatus påvirker aldri utfallet i seg selv. Ingen poeng, stjerner eller løsningsgrad vises.
 
 ## Mappestruktur
 
@@ -38,6 +48,7 @@ games/dead-internet/
     cases.js                saker i Casebook: klassifisering (cases: []), filter, epiloger, sakens status
     dialogue.js             skriptede samtaler, tillit, svaralternativer
     casebook.js             bevis, hypoteser, notater, vurdering, publisering
+    provenance.js           synlig opphav og synlige navn for bevis (aldri kanon)
     save.js                 lagring, versjonering, migrering, eksport/import
     content.js              laster content/manifest.json (fetch eller fs injiseres)
     util.js
@@ -117,15 +128,33 @@ Bilder er egne objekter med opphav (`derivedFrom`) og transformasjoner. Bildesø
 
 1. **Kanon** (`canon.json` + `accounts.operatedBy` + `entities.isHuman`) er fasit. Bare publisering og validatoren leser den.
 2. **Påstander og vitnemål**: artefakter og personer har `supports` (hvilke påstander de gir bevis for), også usanne påstander. Personer kan bare støtte påstander de `knows`, `believes` eller har `observed`, og bare gi bort artefakter de `has`. Validatoren sjekker dette.
-3. **Spillerens tro** (`state.evidence`, `state.hypotheses`, `state.notes`) er det spilleren har samlet og bygd. Casebook viser bare antall bevis og antall uavhengige kilder.
+3. **Spillerens tro** (`state.evidence`, `state.hypotheses`, `state.notes`) er det spilleren har samlet og bygd. Casebook viser bare antall bevis og antall kilder slik de *ser ut* (se «Synlig opphav» under).
+
+### Fem lag som aldri blandes
+
+| Lag | Hva | Hvor | Casebook og karakterer kan lese |
+|---|---|---|---|
+| 0 Kanon | hva som er sant, hvor ting egentlig kommer fra | `canon.json`, `facts`, `claims`, `operatedBy`, `isHuman`, `source`, skjulte `mentions` | nei, bare publisering, regler og validator |
+| 1 Karakterenes tro | hva Dana, Theo og andre vet og tror | dialogdata (`knows`, `believes`, `observed`) | bare gjennom det karakteren sier |
+| 2 Kildenes påstand | hva teksten, bildet eller meldingen sier | synlig tekst, dato, metadata, `supports` (hva innholdet gir seg ut for å vise) | ja |
+| 3 Spillerens oppdagelser | sett, møtt, undersøkt, lagret | `seen`, `encountered`, `known`, `saved` | ja |
+| 4 Spillerens slutninger | bevis, teorier, notater, tidslinje (senere merker, koblinger, kildevurdering) | Casebook-tilstanden | ja, det er spillerens egne data |
+
+**Synlig opphav (`core/provenance.js`).** Alt spilleren ser om hvor et bevis kommer fra, bygges av `apparentSource`: avsender av en melding (kontaktens konto), kontoen som postet, personen som sendte et vedlegg, håndtaket i adressen, adressen til et dokument eller en forumtråd, ellers nettstedet. Hvem et bevis handler om, bygges av `visibleRefsOf…`: navn som står i teksten, forfatter, byline og kommentatorer. Et alias teller bare når innholdet selv lister det. Skjult `source` og `mentions` brukes aldri til visning. Tre personakontoer som styres av samme aktør er derfor tre kilder i Casebook, akkurat som for en leser.
+
+**Ingen karakter er en fasitmekanisme.** Dana og alle andre karakterer vurderer ut fra det de kan se og det de vet (lag 1–2). De kan ta feil, bli manipulert og trekke feil slutninger. Danas vurdering og hennes kutt før publisering bruker `apparentSupportOf`. Bare verdens reaksjon etter publisering bruker kanon.
+
+**Visninger bærer ikke kanon.** `viewArtifact` fjerner `source`, `supports` og `mentions` før visningen forlater kjernen. Verktøy som explorer og validator leser kanon direkte gjennom `supportsOf`/`sourceOf`, og det er tillatt der.
+
+**Tvillingverden-testen (`tests/twin.test.mjs`) er permanent.** Verden bygges tre ganger: som den er, med ett felles skjult opphav for alt, og med eget opphav for hver ting. I tvillingene snus også `operatedBy`, `isHuman`, sannheten i `claims` og `facts`, og det legges til skjulte mentions av navn som ikke står i teksten. Samme spiller gjør det samme i alle tre. Alt Casebook viser, og alt Dana sier og kutter, skal være identisk. Bare konsekvensene etter publisering får avvike. Feiler testen, er det visningen som skal rettes, aldri testen. En annen test sjekker at `app/` og `core/provenance.js` ikke bruker kanonhjelperne.
 
 En **hypotese** er `[subjekt] [predikat] [objekt]` med koblede bevis og et fritt notat. Ved publisering:
 - **Sannhet**: hypotesen matches mot en kanonisk påstand. Ellers utledes den fra verdensmodellen (for eksempel: en konto som styres av en annen enn den utgir seg for, er ikke en ekte person).
-- **Støtte**: antall forskjellige `source` blant koblede bevis som faktisk støtter påstanden. To eller flere er sterk, én er svak.
+- **Støtte**: antall forskjellige skjulte `source` blant koblede bevis som faktisk støtter påstanden. To eller flere er sterk, én er svak. Dette er verdens dom og vises aldri. Dana bruker samme regel med synlige kilder (`apparentSupportOf`), så hun kan bli lurt.
 - **Troverdighet** endres etter tabellen i `meta.publishing.scoring`, vektet per kanal.
 - Sanne påstander med støtte registreres i `state.exposed`, alle publiserte i `state.published`. Avslutninger og regler leser disse.
 
-Dana (kanalen `daily_record`) har en `reviewer`: hun kommenterer kildestyrke og dristighet, aldri sannhet, og kutter påstander med svak støtte før publisering.
+Dana (kanalen `daily_record`) har en `reviewer`: hun kommenterer kildestyrke og dristighet, aldri sannhet, og kutter påstander som ser svakt støttet ut før publisering. Hun ser bare synlige kilder.
 
 ## Søk
 
@@ -151,6 +180,25 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 ## Lagring
 
 `state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 6: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»).
+
+## Teststrategi (Anders, 24. nov)
+
+Testene skal beskytte både teknisk funksjonalitet og spillopplevelsen. Status per punkt:
+
+| Test | Status |
+|---|---|
+| Permanent tvillingverden-test, utvides når nye Casebook-funksjoner kommer | finnes (`tests/twin.test.mjs`) |
+| DOM-tester for informasjonslekkasje | planlagt i Casebook steg 1 |
+| Lagrede bevis endres ikke når originalkilden endres | planlagt i Casebook steg 1 |
+| Sammenligning av gamle og nye nettsideversjoner | nettsidefasen (W0–W8) |
+| Cache viser aldri fremtidig innhold | nettsidefasen |
+| Skjulte sider dukker ikke opp i automatiske lister | nettsidefasen |
+| Navigasjonslenker virker eller har en bevisst definert feiltilstand | nettsidefasen |
+| Gjennomspilling av The Quiet Account etter større innholdsendringer | finnes (scenarioer i `tools/simulate.mjs` og de automatiske spillerne i validatoren) |
+| Ulike rapporter og saksutfall, feilaktige teorier og konsekvenser | delvis (11 scenarioer); utvides etter gjennomgangen av saksavslutning |
+| Delvise avsløringer er mulige | utvides etter gjennomgangen av saksavslutning |
+| Bakgrunnsinnhold gjør ikke nødvendige spor urimelig vanskelige å finne | delvis (tilgangs- og blokkeringstestene i validatoren); nettsidefasen |
+| Mobil røyktest ved relevante UI-endringer | manuell eller Playwright før merge |
 
 ## Validator
 
@@ -324,6 +372,49 @@ Startskjermen bygges fra `mysteries[].menu` (`order`, `tagline`, `image`). Et ny
 - Avslutninger har `title` og `epilogue`. En avslutning med `closes: true` gjør saken lukket. Spillet fortsetter, og spilleren kan fortsette å utforske.
 
 **Hva som fortsatt er felles.** `startDate` er universets kalender. Personene ligger samlet i `universe/characters.json`, og deling i `extends` per sak gjøres når et nytt mysterium trenger det. `.pf-brightline_site` er stil for en plattform i universet, ikke for saken. Kjernen og appene har ingen id-er eller tekster fra The Quiet Account. Introteksten, premisset, innloggingen, testoppsettet og eksempelteorien ligger i `mystery.json`.
+
+## Casebook som deduksjonsverktøy (godkjent 24. nov 2026)
+
+Casebook er spillerens eksterne hukommelse og arbeidsflate, ikke en oppgaveliste fra spillmotoren. Spilleren skal kunne samle, rydde, kommentere, stille spørsmål, sammenligne, trekke slutninger og endre mening. Spillet forteller aldri spilleren hva som er riktig å tro. Forslaget med begrunnelse: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md) (presiseringene i DEVPLAN.md og under gjelder foran forslaget).
+
+- **Hvert spørsmål har ett hjem.** Search History (Seeker/Browser): hva har jeg søkt etter. Evidence: hva har jeg valgt å samle. Notes: hva tenker jeg, og hvilke spørsmål har jeg. Timeline: når mener jeg det skjedde. Theories: hva tror jeg har skjedd. Connections: hvordan henger det sammen (på beviskort, i sammenligning og i teorier, ingen egen fane). Kildekort: hvem stoler jeg på. Report: hva kan jeg stå for offentlig. Informasjon lagres ett sted og vises ved referanse.
+- **Bevis:** beviskort, egen kommentar, merker (viktig, tvilsom), «Legg bort» med årsak (irrelevant eller ferdig) og gjenoppretting. Ingen koblinger eller kommentarer forsvinner ved å legge bort. Å åpne et beviskort er ikke det samme som å ha vurdert det: «åpnet» registreres stille, «vurdert» settes av spilleren.
+- **Spørsmål** kan registreres uten teori, i Notes. De kan valgfritt knyttes til bevis, personer, kilder, teorier og saker, og spilleren markerer dem som besvart, gjenåpner eller legger dem bort. Spillet lager aldri spørsmål fra kanon.
+- **Teorier:** fri formulering mens spilleren tenker, strukturert form først ved publisering. Bevis for og mot, status (arbeidsteori, overbevist, forkastet) med historikk, og alternative forklaringer. Strukturen ved publisering må dekke manipulerte dokumenter, falske identiteter og liknende, ikke bare dagens relasjoner.
+- **Sammenligning** av bilder, dokumenter, meldinger, artikler og versjoner av samme kilde. To bilder kan byttes mellom og zoomes. Seks koblingstyper: støtter, motsier, relatert, samme opphav, mulig manipulert, urelatert.
+- **Kildevurdering** gjøres per synlig kilde: troverdighet, er den den den utgir seg for, og «samme opphav som». Spillerens egne «samme opphav» slår sammen kilder i spillerens telling.
+- **Spillerlaget er usynlig for reglene.** Merker, koblinger, spørsmål og kildevurderinger leses aldri av betingelser, så verden kan ikke belønne en riktig kobling og dermed røpe fasit.
+- **Mobil:** hurtigmenyer, valgmodus med langt trykk, filtrering etter egne vurderinger, korte valgfrie kommentarer, kontekstmenysystemet gjenbrukes, retur til originalkilden med bevart rulleposisjon.
+
+## Saksavslutning og konsekvenser (gjennomgang 24. nov 2026, ikke diskutert ennå)
+
+Full gjennomgang: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Prinsippene er godkjent (se «Prinsipper»). Forslagene til endringer er **ikke** diskutert eller godkjent, og ingen nye avslutningsmekanismer implementeres før det er gjort.
+
+**Slik virker det i dag.** Saken avsluttes gjennom handlinger i verden (publisering og tid), ikke en knapp. `checkEndings()` (`core/game.js`) kjøres etter hver publisering og hver Sleep og går gjennom `endings` i alle startede saker. Betingelsene er deklarative: `exposed` (sann påstand publisert med reell støtte, valgfritt kanal og frist), `published` (publisert, sann eller ikke) og flagg fra regler (`vote_held`, `silent_vote` …). Fristen i The Quiet Account er `beforeCaseDay: 8` (avstemningen). En avslutning med `closes: true` gjør saken *Resolved*, og verden går videre. Flere avslutninger kan inntreffe. The Quiet Account har ni: `lights_out`, `too_late`, `ghost_story`, `who_paid_whom` (lukker) og `wrong_murder`, `collateral_theo`, `collateral_owen`, `collateral_iris`, `silence` (lukker ikke). Utfall leser bare hva som er publisert og eksponert, aldri spillerens egne vurderinger.
+
+**Kjente feil (ikke rettet):**
+- **F-1:** hele historien (S2 + S3, sterk) på Connect eller Threadline før avstemningen gir utsatt avstemning (A67), men også `too_late` med teksten «the towers are approved». Årsak: `D11_vote_held` setter `vote_held` også når avstemningen utsettes. Foreslått retting: `too_late` og `ghost_story` krever `vote_passed`.
+- **F-2:** bare S2 gjennom Daily Record før avstemningen gir ingen avslutning noen gang («The Partial Truth» mangler). Foreslått retting: utvid `ghost_story` (S8 eller S2, uten krav om S1, kanalnøytral epilog) eller en egen avslutning.
+
+**Svakheter:** `lights_out` viser klimakset i publiseringsøyeblikket, ikke neste morgen. Daily Record skriver ingen egen artikkel om spillerens sak. `silence` etterfulgt av senere publisering gir to epiloger. Brightlines uttalelse (A42) kommer etter hvilken som helst rapport.
+
+**Forslag til diskusjon** (se §8 i gjennomgangen): nøytral saksstatus Active / Published / Closed (Reopened forberedt) og kanalbeskrivelse i rapportbyggeren i Casebook steg 5. En egen liten PR etterpå med F-1, F-2, «neste morgen»-avslutning, Buried Story, Cover-Up, overskrift fra verden i varselet og eventuelt Unfiltered som kanal. Tre åpne spørsmål til Anders står sist i gjennomgangen.
+
+**For fremtidige mysterier** (forslag): påstander er byggeklossene; tre lag avslutninger (milepæler, sidekonsekvenser, ettervirkninger); dimensjonene Accuracy, Evidence, Coverage, Impact, Collateral og Timing er en sjekkliste for forfatteren, aldri tall for spilleren; en utfallsmatrise-test publiserer kombinasjoner av påstander × kanal × før/etter frist.
+
+## Autentiske nettsteder (godkjent designretning 24. nov 2026, ikke implementert)
+
+Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjelder foran resten av dokumentet. Implementeres i veikartets punkt 5 (W0–W8), ikke før.
+
+- **Arkitektur:** artefakten er fortsatt grunnenheten (søk, cache, versjoner, oppdagelse og bevis uendret). Nytt: nettstedskonfigurasjon (`content/universe/sites/<site>.json`) med daterte `designs`, `nav`, `status` (parkert, vedlikehold, borte) og `notFound`. Sideversjoner får `blocks`. Sider med `body` vises som én tekstblokk, så alt eksisterende virker. Nye sider får id `W-<site>-<nnnn>`.
+- **Maler:** elleve gjenbrukbare maler (Corporate, Government, Blog, Wiki, Forum, News, Anonymous, Legacy, Personal, Landing, Document) med varianter og temaer. Ingen nye rammeverk, mobil først, bare systemfonter.
+- **Design versjoneres etter dato.** En cachet side vises med designet som gjaldt da.
+- **Lister bygger seg selv** fra synlige sider med samme `site`/`page`. Cachede versjoner viser bare sider fra før cache-datoen. `listed: false` holder en side utenfor.
+- **Malene får bare et hvitelistet offentlig visningsobjekt.** Aldri `supports`, `mentions`, `source`, `filler`, `hidden`, `covers` eller `pool`.
+- **Browser eier nettleseren** (tilbake/frem, bokmerker adskilt fra bevis, tekststørrelse, cache og Archive). Nettstedene eier sin presentasjon (404, innlogging i eget design).
+- **Samme mal er ikke samme opphav.** Uavhengige nettsteder kan dele et kommersielt tema. Malvalg skal aldri være en sikker indikator.
+- **Bakgrunnsinternett:** mål 140–170 sider i etapper, først Northgate, Brightline, bykommunen, Eastfield Notes, Kestrel, Calderpedia, Threadline, Faceless Stock, SpillCheck og Docshare. Nye fakta føres i en fil for bakgrunnsfakta med `status: canon | claim` og sjekkes mot kanon. Bakgrunnssider skal ha like god grafikk som sider med spor.
+- **Avklaringer:** SpillCheck beholder rollen. Eastfield Notes er fra 2019, med gammelt tema fra ca. 2012, og Brightline byttet design samtidig med innholdet i oktober 2025. `corp-registries.example` byttes med et troverdig domene, med egen test. En cachet personalside fra 2024 på biblioteket lister Mara og Priya, uten nye personopplysninger. Calvins stockfoto kan ha flere uavhengige treff. Maras møllebilde brukes ikke på Calderpedia nå. Brightlines kundecaser forblir anonyme.
 
 ## Appkart
 

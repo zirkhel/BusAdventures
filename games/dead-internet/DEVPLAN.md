@@ -1,6 +1,28 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (fase 4 og ny rekkefølge)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (overlevering: fase 9 ferdig, Casebook steg 0–5, saksavslutning og nettsteder dokumentert)._
+
+## Overlevering (24. nov 2026)
+
+Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «Veikart» under, `DESIGN.md` (særlig «Prinsipper», «Kanon, påstander og spillerens tro», «Casebook som deduksjonsverktøy», «Saksavslutning og konsekvenser», «Autentiske nettsteder» og «Teststrategi») og dokumentene i `docs/`.
+
+**Status**
+- Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Alle 61 grafikkelementer er godkjent.
+- Casebook steg 0 (informasjonslekkasjer) er ferdig i PR #68, røyktestet i nettleser, og venter på Anders' ja til merge.
+- PR #69 (lesbart Unfiltered-ikon, B06-dato) er laget i en annen tråd og venter også.
+- Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
+- Nettstedene er godkjent som designretning ([docs/WEBSITES.md](docs/WEBSITES.md)), men skal ikke implementeres før veikartets punkt 5.
+
+**Neste steg:** Casebook steg 1 (se under) når PR #68 er merget. Deretter steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
+
+**Faste regler**
+- Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
+- Kanon og spillerkunnskap holdes strengt adskilt. Ingen visning, ingen karakter og ingen regel som reagerer på spillerens egne vurderinger, får avsløre skjulte sammenhenger. Tvillingverden-testen (`tests/twin.test.mjs`) er permanent, feiler den er det koden som skal rettes, aldri testen. Den utvides når nye Casebook- eller nettstedsfunksjoner kommer.
+- Ingen visuell markering av ledetråder. Ingen poeng, stjerner eller løsningsgrad.
+- Grafikk: hvert nytt bilde kontrolleres alltid mot spesifikasjonen og mot alle tidligere bilder, både for likhet og mangler (se `graphics/`).
+- Spilltekst på engelsk. Anders skriver norsk, og dokumentasjonen er på norsk.
+- Tester: `node --test games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs` og `node games/dead-internet/tools/simulate.mjs` fra repo-roten. Mobil røyktest (Playwright, 390×844) ved UI-endringer: et lagret spill kan legges i `localStorage`, telefonen låses opp med «Swipe up to unlock», introen lukkes med `.it-notips`, og Casebook er det fjerde ikonet i docken.
+
 
 ## Fase 0 — Design ✅
 - [x] Arkitekturforslag og MVP-omfang (docs/PLAN.md)
@@ -60,7 +82,20 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 - [x] Oppdagelsestilstander (unknown, encountered, investigated, saved) med migrering av gamle lagringer
 - [x] Revisjon av Browser, Connect, Messages, Casebook, søkeforslag og kontekstmenyen for lekkasjer, med automatiske tester
 
-## Rekkefølge videre (Anders, 24. nov)
+## Veikart (Anders, 24. nov kveld, samlede beslutninger)
+Fase 9 er ferdig, og alle 61 grafikkelementer er godkjent (eksisterende Cora-bilde beholdes). Forbedringen av Unfiltered-ikonet kan gjennomføres. Små, avgrensede PR-er, og DESIGN.md og DEVPLAN.md oppdateres fortløpende.
+1. Fullfør Casebook steg 0–5 (under). Lekkasjene L1–L4 har førsteprioritet. Røyktest i nettleser før merge.
+2. Avklar og eventuelt kompletter mekanikken for saksavslutning og konsekvenser. Gjennomgangen gjøres i egen tråd først. Ingen nye avslutningsmekanismer før den er diskutert.
+3. Ekstern spilltest av The Quiet Account.
+4. Juster etterforskningsmekanikken etter observasjonene.
+5. Autentisk nettsidearkitektur gjennom W0–W8. Godkjent som designretning (forslaget «Et mer autentisk internett i Browser», med Anders' avklaringer), implementeres først i denne fasen.
+6. Bakgrunnsinnhold (mål 140–170 sider, i etapper) og nødvendig grafikk (WEB0001–WEB0024, de tolv viktigste først).
+7. Ny spilltest med det utvidede internettet.
+8. Resterende verktøyapper (fase 10).
+9. TokTok (fase 11), en egen større produksjonsfase.
+10. Nye mysterier i det eksisterende universet (fase 12).
+
+## Tidligere rekkefølge (Anders, 24. nov)
 Ingen unødvendig utvidelse av fasen som pågår.
 1. ~~Global kontekstmeny, kunnskapsgrenser og navigasjon (fase 3b)~~ ✅
 2. ~~Timeline (fase 4)~~ ✅
@@ -147,7 +182,7 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7)._
 - [x] Avisene skriver om spillerens handlinger: Unfiltered plukker opp en publisert rapport (Connect/Threadline) neste dag, og Daily Record skriver om bystyrevedtaket (utsatt eller vedtatt). Slike saker dateres den dagen de dukker opp (`datedOnShow`).
 - [x] Playwright-test på iPhone- og Pixel-størrelse
 
-## Fase 9 — The Quiet Account ferdig
+## Fase 9 — The Quiet Account ferdig ✅
 _Gjennomspilling 24. november 2026: se `PLAYTEST-FASE9.md`._
 - [x] Hele The Quiet Account spilt gjennom på mobil kun via UI (iPhone 13, Pixel 7): Lights out på dag 3 etter 127 trykk
 - [x] Alle avslutninger testet i simulatoren (11 scenarioer, 4 nye: Too late og tre Collateral)
@@ -162,10 +197,74 @@ _Gjennomspilling 24. november 2026: se `PLAYTEST-FASE9.md`._
 - [x] Avslutninger vises som utvikling i saken («The Quiet Account: Lights out», «How the case developed» med dag). Saken heter «Resolved», og spilleren kan fortsette å etterforske.
 - [x] ComfyUI-produksjonsliste: `tools/comfyui-list.mjs` → `graphics/COMFYUI.md` og `graphics/comfyui-jobs.json`, med prompter, størrelser, referanser og avledninger
 - [ ] Papirtest-funn innarbeidet i innholdet
-- [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang
-- [ ] Grafikk produsert etter `graphics/COMFYUI.md`, originaler før kopier (status i `graphics/COMFYUI.md`; de første ferdige bildene ligger inne)
+- [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang (flyttet: skjer etter Casebook steg 5)
+- [x] Grafikk produsert etter `graphics/COMFYUI.md`: alle 61 elementer godkjent
 - [x] Flere dynamiske hendelser og reaksjoner på publisering (avisene melder konsekvenser, fase 8)
 - [ ] Service worker for offline og rask lasting
+
+## Casebook som deduksjonsverktøy (godkjent 24. nov 2026)
+
+Kommer før fase 10. Små, separate PR-er, interne tester fortløpende. Se DESIGN.md, «Casebook som deduksjonsverktøy».
+
+### Steg 0 — Informasjonslekkasjer
+- [x] L1: teoriens kildetall og kildebrikker (Casebook og rapportbygger) teller synlige kilder (`core/provenance.js`), ikke skjult `source`
+- [x] L2: «etter hvem det handler om» bygges av navn som står synlig i innholdet, ikke skjulte `mentions`
+- [x] L3: Dana vurderer og kutter ut fra synlige kilder (`apparentSupportOf`). Verdens dom etter publisering bruker fortsatt kanon.
+- [x] L4: kildenavnet hentes fra synlig opphav, ikke fra en karakter med samme skjulte kildenøkkel
+- [x] Artefaktvisninger bærer ikke `source`, `supports` eller `mentions`
+- [x] Tvillingverden-test som permanent regresjonstest, pluss test av at `app/` ikke bruker kanonhjelpere
+
+### Steg 1 — Bevis
+- [ ] Beviskort med retur til original (bevart rulleposisjon), kommentar, merker (viktig, tvilsom), åpnet vs. vurdert
+- [ ] «Legg bort» med årsak og gjenoppretting, uten at koblinger eller kommentarer forsvinner
+- [ ] Filter etter egne vurderinger, «Ikke vurdert» øverst, lagret utdrag som bevis i stedet for notat. Lagring v7.
+- [ ] Et lagret bevis åpner versjonen spilleren lagret, ikke den levende siden
+- [ ] DOM-test i Playwright: Casebook gir samme tekst og CSS-klasser i tvillingverdenene
+
+### Steg 2 — Teorier og spørsmål
+- [ ] Fri formulering, bevis for og mot, status med historikk, alternative forklaringer
+- [ ] Ubesvarte spørsmål i Notes, valgfritt knyttet til bevis, personer, kilder, teorier og saker
+- [ ] Velger med søk i stedet for lange «Other evidence»-lister
+
+### Steg 3 — Sammenligning og koblinger
+- [ ] Valgmodus (langt trykk) og sammenligning av bilder, dokumenter, meldinger, artikler og versjoner
+- [ ] Bytte mellom to bilder og zoom
+- [ ] Seks koblingstyper med kort, valgfri begrunnelse
+
+### Steg 4 — Kildevurdering
+- [ ] Kildekort per synlig kilde: troverdighet, autentisitet, «samme opphav som», kommentar
+- [ ] Spillerens egen telling av uavhengige kilder
+
+### Steg 5 — Rapportering med spillerens vurderinger
+- [ ] Strukturert publisering som også dekker manipulerte dokumenter og falske identiteter
+- [ ] For, mot og egne forbehold i rapportbyggeren. Rapporten lagrer et øyeblikksbilde.
+- [ ] Dana kommenterer spillerens egne forbehold
+- [ ] Forslag fra gjennomgangen av saksavslutning, bare når de er godkjent: nøytral saksstatus (Active, Published, Closed, Reopened forberedt), kanalbeskrivelse i rapportbyggeren fra kanalens egne data, øyeblikksbilde av påstander, bevis og forbehold
+- [ ] Tvillingverden-testen utvides med rapportbyggeren og saksstatusen
+
+### Saksavslutning (veikart punkt 2, etter steg 5, bare etter diskusjon med Anders)
+- [ ] Rett F-1: `too_late` og `ghost_story` krever `vote_passed`, ikke `vote_held`, med scenario «hele historien på Connect før avstemningen»
+- [ ] Rett F-2: et utfall for «kontoen er overtatt, ingen penger» (The Partial Truth)
+- [ ] Forslag som ikke er avklart: «neste morgen»-klimaks med DR-artikkel, Buried Story, Cover-Up, overskrift fra verden i varselet, Unfiltered som kanal (se docs/CASE-ENDINGS-REVIEW.md §8 og spørsmålene sist)
+- [ ] Utfallsmatrise-test: påstander × kanal × før/etter frist gir alltid en milepæl eller en bevisst åpen tilstand
+
+### Autentiske nettsteder (veikart punkt 5–7, se docs/WEBSITES.md §11)
+- [x] W0 Lekkasjevern: kanonfelt fjernet fra visningen (PR #68). Gjenstår: hviteliste i malene og DOM-test.
+- [ ] W1 Nettstedsmodell (`core/sites.js`, `sites/*.json`, `site`/`page`/`blocks`, designvalg etter dato, 404, automatiske lister, validator)
+- [ ] W2 Malverk og tre maler (Corporate, Government, Blog)
+- [ ] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering)
+- [ ] W4 Bakgrunn runde 1 (ca. 110 sider) og fil med bakgrunnsfakta
+- [ ] W5 Wiki, Forum, Document, Anonymous
+- [ ] W6 Legacy, Personal, Landing og eldre design
+- [ ] W7 Spor i design (bare med Anders' ja), ny gjennomspillingstest
+- [ ] W8 «Compare with…» fra Archive (etter Casebook steg 3)
+- [ ] Grafikk WEB0001–WEB0024, de tolv viktigste først
+- [ ] Bytt `corp-registries.example` med eget test for søk, referanser og lagrede spill
+
+### Deretter
+- [ ] Ekstern spilltest av hele etterforskningsopplevelsen, etter steg 5
+- [ ] Justeringer etter observasjonene
+- [ ] Så: avklaring av saksavslutning, deretter autentiske nettsider (W0–W8) og fase 10–12 etter veikartet over
 
 ## Fase 10 — Resterende verktøyapper
 - [ ] Mail: innboks, tråder, vedlegg, videresending og metadata
