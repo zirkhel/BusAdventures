@@ -65,21 +65,16 @@
   "notes": "Final file delivered (ComfyUI). The red circle is Owen's own markup."
  },
  "IMG08": {
-  "method": "manual",
-  "how": "Generate the group on a lawn, then edit by hand (Photoshop/GIMP or ComfyUI inpainting)",
-  "prompt": "corporate offsite group photo, eleven people smiling in two rows on a sunny lawn, casual business clothes, mixed ages and looks, hard afternoon sun from the right so every shadow falls to the left on the grass, wide shot, slightly too polished marketing photo",
-  "notes": "Edits, all required (they are the evidence that Calvin is not real, S7): 1) paste the same woman twice, once on the left and once on the far right, same pose; 2) put Calvin's face from the final IMG06S on the man in the centre (keep the hoop/stud earrings); 3) remove the shadows under Calvin and under Renee (woman next to him in the centre); everyone else keeps a shadow falling left. The errors must be visible when zoomed on a phone. Avoid anyone who looks like Iris (messy dark bun, black knit sweater), Mara or Dana. No real brands; the Brightline logo may appear on a small banner only."
+  "method": "done",
+  "notes": "Final file delivered (ComfyUI, edited). Tell: the duplicated woman and Calvin's stock face with mismatched earrings."
  },
  "IMG09": {
-  "method": "manual",
-  "how": "Build the dashboard in HTML, screenshot it, then make it a phone photo",
-  "prompt": "smartphone photo of a laptop screen in a dim office, visible moiré pattern, slight angle, screen glare",
-  "notes": "Dashboard title 'THE GARDEN — Port Calder': 41 active personas, dormant inventory 11,402, client NGD, a list that includes MARA_Q and JUNO_P. Composite the screenshot onto the laptop or use img2img at low denoise."
+  "method": "done",
+  "notes": "Made programmatically: graphics/sources/dashboard.html → shoot.cjs → post.py (perspective, moiré, noise)."
  },
  "IMG10": {
-  "method": "manual",
-  "how": "Make the invoice as a document (HTML or word processor), print to image, skew slightly, add scan noise",
-  "notes": "BRIGHTLINE MEDIA LLC, INVOICE CSP-EF-Q1, bill to Northgate Development attn. P. Navarro, $21,000, payable to Meridian Holdings Ltd. Text must be exact: do not generate it."
+  "method": "done",
+  "notes": "Made programmatically: graphics/sources/invoice.html → shoot.cjs → post.py (skew, scanner light, noise)."
  },
  "IMG11": {
   "method": "done",
