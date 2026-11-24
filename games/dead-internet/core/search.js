@@ -8,6 +8,10 @@
 // Deleted or changed artifacts can still be found through cached versions, but only on a
 // precise match (all words or a keyword), so the cache rewards deliberate digging.
 // "quoted phrases" match the exact phrase. Transcripts of clips are searched like text.
+// Forgiving like a real engine, and only that: light stemming (plural, -ing, -ed), small typos
+// in longer words, and a partial-match fallback when no page has enough of the words. Typos and
+// the fallback only reach "full" pages that the exact words would find anyway, so they never
+// surface a hidden page or a name the player has not spelt. Ranking never knows what matters.
 // opts.platform limits a search to one app (TokTok search, a newspaper's own search).
 
 import { asArray } from "./util.js";
@@ -25,7 +29,42 @@ export function normalize(text) {
   return String(text || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[“”]/g, '"');
 }
 
-/** Words and their parts, with a light plural stem. */
+/** A word and its light stems: plural -s/-es, -ing, -ed (posted → post, voting → vote). */
+export function stems(p) {
+  const out = [p];
+  if (p.length > 3 && p.endsWith("s") && !p.endsWith("ss")) out.push(p.slice(0, -1));
+  if (p.length > 4 && p.endsWith("es")) out.push(p.slice(0, -2));
+  if (p.length > 5 && p.endsWith("ing")) out.push(p.slice(0, -3), p.slice(0, -3) + "e");
+  if (p.length > 4 && p.endsWith("ed")) out.push(p.slice(0, -2), p.slice(0, -1));
+  return out;
+}
+
+/**
+ * Edit distance where a swap of two neighbouring letters counts as one typo
+ * (optimal string alignment). Stops early once it exceeds max and returns max + 1.
+ */
+export function editDistance(a, b, max) {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let pp = null, prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let best = i;
+    for (let j = 1; j <= b.length; j++) {
+      let d = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (pp && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d = Math.min(d, pp[j - 2] + 1);
+      cur[j] = d;
+      if (d < best) best = d;
+    }
+    if (best > max) return max + 1;
+    pp = prev; prev = cur;
+  }
+  return prev[b.length];
+}
+
+/** How many typos a word may have: none under 5 letters, one from 5, two from 9. */
+const typoBudget = t => t.length >= 9 ? 2 : t.length >= 5 ? 1 : 0;
+
+/** Words and their parts, with light stems. */
 export function tokenize(text) {
   const out = new Set();
   for (let tok of normalize(text).match(TOKEN_RE) || []) {
@@ -33,8 +72,7 @@ export function tokenize(text) {
     const parts = [tok, ...tok.split("@"), ...tok.split(/[._@'\-]/)];
     for (const p of parts) {
       if (!p || STOP.has(p)) continue;
-      out.add(p);
-      if (p.length > 3 && p.endsWith("s") && !p.endsWith("ss")) out.add(p.slice(0, -1));
+      for (const x of stems(p)) out.add(x);
     }
   }
   return out;
@@ -45,9 +83,7 @@ function queryTerms(q) {
   const terms = [];
   for (const tok of normalize(q).match(TOKEN_RE) || []) {
     if (STOP.has(tok)) continue;
-    const variants = [tok];
-    if (tok.length > 3 && tok.endsWith("s") && !tok.endsWith("ss")) variants.push(tok.slice(0, -1));
-    if (!terms.some(t => t[0] === tok)) terms.push(variants);
+    if (!terms.some(t => t[0] === tok)) terms.push(stems(tok));
   }
   return terms;
 }
@@ -95,6 +131,21 @@ function snippet(body, terms) {
  */
 export function search(g, query, opts = {}) {
   const limit = opts.limit ?? 12;
+  const strict = run(g, query, opts, false);
+  if (strict.length || opts.noFallback) return strict.slice(0, limit);
+  // Nothing has enough of the words: show pages that have some of them, and say so.
+  return run(g, query, opts, true).slice(0, limit);
+}
+
+/** Does a term (one of its stems) nearly match a word in the set? Typos only, never on short words. */
+function fuzzyHas(set, variants) {
+  const t = variants[0], max = typoBudget(t);
+  if (!max) return false;
+  for (const w of set) if (w.length >= 4 && w[0] === t[0] && editDistance(t, w, max) <= max) return true;
+  return false;
+}
+
+function run(g, query, opts, partial) {
   const platforms = opts.platform ? asArray(opts.platform) : null;
   const raw = String(query || "").trim();
   const phraseMatch = raw.match(/^"(.+)"$/);
@@ -117,6 +168,9 @@ export function search(g, query, opts = {}) {
         if (!f.phrase.includes(qNorm)) return null;
         matched = terms.length || 1; weight = 3;
       } else {
+        // Typos only count on "full" pages that are live: a near miss never opens the cache
+        // or a page that needs the exact word.
+        const forgiving = level === "full" && !cached;
         for (const variants of terms) {
           let w = 0;
           for (const t of variants) {
@@ -124,13 +178,15 @@ export function search(g, query, opts = {}) {
             else if (f.author.has(t)) w = Math.max(w, 2);
             else if (f.body.has(t)) w = Math.max(w, 1);
           }
+          if (!w && forgiving) w = fuzzyHas(f.title, variants) ? 1.5 : fuzzyHas(f.author, variants) ? 1 : fuzzyHas(f.body, variants) ? 0.5 : 0;
           if (w) { matched++; weight += w; }
         }
       }
       const n = Math.max(terms.length, 1);
       const coverage = matched / n;
       let include = false;
-      if (cached) include = kwHit || (phraseMatch ? matched > 0 : coverage === 1);
+      if (partial) include = !cached && level === "full" && matched > 0;
+      else if (cached) include = kwHit || (phraseMatch ? matched > 0 : coverage === 1);
       else if (level === "full") include = kwHit || (matched > 0 && coverage >= 0.5);
       else if (level === "weak") include = kwHit || (phraseMatch ? matched > 0 : coverage === 1 && n >= 2);
       else if (level === "exact") include = kwHit;
@@ -159,12 +215,13 @@ export function search(g, query, opts = {}) {
         } else {
           const hit = evaluate(getVersion(a, vid), false);
           if (hit) results.push({ artifact: a.id, title: hit.f.r.title, snippet: snippet(hit.f.r.body, terms), url: a.url,
-            platform: a.platform, date: shownDate(g, a, hit.f.r).date, cached: false, versionId: vid, locked: false, score: hit.score });
+            platform: a.platform, date: shownDate(g, a, hit.f.r).date, cached: false, versionId: vid, locked: false, score: hit.score,
+            ...(partial ? { partial: true } : {}) });
         }
       }
     }
-    // Cached versions
-    for (const v of cachedVersions(g, a)) {
+    // Cached versions (never in the partial fallback)
+    if (!partial) for (const v of cachedVersions(g, a)) {
       const hit = evaluate(v, true);
       if (hit) results.push({ artifact: a.id, title: hit.f.r.title, snippet: snippet(hit.f.r.body, terms), url: a.url,
         platform: a.platform, date: hit.f.r.date, cached: true, versionId: v.id, locked: false, score: hit.score });
@@ -172,7 +229,7 @@ export function search(g, query, opts = {}) {
   }
 
   results.sort((x, y) => y.score - x.score || String(y.date).localeCompare(String(x.date)) || x.artifact.localeCompare(y.artifact));
-  return results.slice(0, limit);
+  return results;
 }
 
 /**

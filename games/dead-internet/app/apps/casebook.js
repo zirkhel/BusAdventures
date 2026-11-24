@@ -437,17 +437,20 @@ export function casebookApp(phone) {
   // A report is about one case. What happens after is up to the world: reactions arrive as
   // messages and notifications, and endings show their epilogue here.
 
-  const epilogue = e => h("div.epilogue", h("b", e.title || "An ending"), e.epilogue ? h("p", e.epilogue) : null);
+  // Endings are developments in the case, not a "game over": each shows the day it happened.
+  const epilogue = e => h("div.epilogue", h("div.muted.small", e.day ? `Day ${e.day}` : ""), h("b", e.title || "A development"), e.epilogue ? h("p", e.epilogue) : null);
 
   function reportsScreen() {
     const ends = g.endings(), reps = g.casebook().reports;
     return [
       g.cases().map(c => {
         const st = g.caseStatus(c.id);
+        const dev = ends.filter(e => e.case === c.id);
         return h("div.case-card",
-          h("div.case-head", h("b", c.title), h("span.case-st", { class: st }, st === "closed" ? "Closed" : "Open")),
-          ends.filter(e => e.case === c.id).map(epilogue),
-          st === "closed" ? h("div.hint.muted", "The case is closed. The world goes on, and you can keep digging.") : null,
+          h("div.case-head", h("b", c.title), h("span.case-st", { class: st }, st === "closed" ? "Resolved" : "Open")),
+          dev.length ? h("div.dev-head.muted.small", "How the case developed") : null,
+          dev.map(epilogue),
+          dev.length ? h("div.hint.muted", "This is where the case stands now, not the end of it. The world goes on, and you can keep investigating.") : null,
           h("button.btn.primary.wide", { onclick: () => phone.push("casebook", { kind: "report", case: c.id, hyps: [], events: [] }) }, icon("plus"), " New report"));
       }),
       h("div.section-title", `Published reports (${reps.length})`),

@@ -155,10 +155,15 @@ _Gjennomspilling 24. november 2026: se `PLAYTEST-FASE9.md`._
 - [x] Bakgrunnsinnhold rundt sakens navn (19 sider), nyheter etter avstemningen (dag 9–11), replikker etter avslutningen
 - [x] Avslutninger gir varsel, saker spilleren utløser dateres den dagen de dukker opp, navn i sidetitler kan trykkes på
 - [x] Grafikkatalogen dekker alle bilder, profilbilder og logoer med prioritet, ansiktsreferanser og avhengigheter
-- [ ] Kort innføring i mekanikkene for nye spillere (forslag i rapporten, venter på ja)
+- [x] Kort, generell introduksjon ved første opplåsing og kontekstuelle tips første gang en mekanikk brukes (`app/tips.js`). Tips kan hoppes over, slås av, leses igjen og nullstilles i Settings. De nevner aldri personer, steder eller saker.
+- [x] Avstemningsdatoen kan finnes fra dag 1 i en vanlig «The week ahead»-sak i Daily Record, sammen med fem andre hendelser
+- [x] Varsler har riktig avsender (`notify.from`), og validatoren krever ref eller from
+- [x] Søk: lette stammer (-s, -es, -ing, -ed), små skrivefeil i ord på 5+ bokstaver og delvise treff merket som delvise. Kun på «full»-sider, uten relevans for saken i rangeringen.
+- [x] Avslutninger vises som utvikling i saken («The Quiet Account: Lights out», «How the case developed» med dag). Saken heter «Resolved», og spilleren kan fortsette å etterforske.
+- [x] ComfyUI-produksjonsliste: `tools/comfyui-list.mjs` → `graphics/COMFYUI.md` og `graphics/comfyui-jobs.json`, med prompter, størrelser, referanser og avledninger
 - [ ] Papirtest-funn innarbeidet i innholdet
 - [ ] Spilltest med 2–3 personer, måling av tid til første funn og tid uten fremgang
-- [ ] Grafikk produsert etter `graphics/GRAPHICS.md` (ComfyUI), originaler før kopier
+- [ ] Grafikk produsert etter `graphics/COMFYUI.md`, originaler før kopier (status i `graphics/COMFYUI.md`; de første ferdige bildene ligger inne)
 - [x] Flere dynamiske hendelser og reaksjoner på publisering (avisene melder konsekvenser, fase 8)
 - [ ] Service worker for offline og rask lasting
 

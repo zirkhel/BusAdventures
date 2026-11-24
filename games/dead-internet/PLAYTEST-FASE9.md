@@ -176,3 +176,27 @@ Katalogen (`graphics/catalog.json`, oversikt i `graphics/GRAPHICS.md`) har nå 6
   - hele ruten til Lights out kun via UI
   - kontekstmenyer i alle apper
   - nyhetsappene, startskjermen, rapportflyten og Timeline fra tidligere faser
+
+## 14. Oppfølging før ekstern spilltest
+
+Anders godkjente rapporten og ba om seks punkter før fase 9 avsluttes. Alle seks er gjort i en egen PR.
+
+1. **Introduksjon og tips.** Første gang telefonen låses opp vises «Your phone», med fem korte punkter om mekanikkene og knappene «Start» og «Start without tips». Deretter kommer ni kontekstuelle tips, ett om gangen og bare første gang:
+   - lese og trykke
+   - bilder
+   - søk
+   - lagre
+   - meldinger
+   - teorier
+   - publisering
+   - tid
+   - utvikling i saken
+
+   Tipsene dukker opp som et kort nederst og stopper ikke spillet. Settings har bryter, «Show the introduction again», «Read all tips» og nullstilling. En test sjekker at ingen tips nevner personer, steder, kontoer eller saker.
+2. **Fristen.** «The week ahead in Port Calder» (DR-2026-0085, 8. mars) står på forsiden fra dag 1. Den lister seks hendelser, og avstemningen 16. mars er én av dem. Når spilleren har lest saken, står datoen under «Dates you know about». Det sies ikke noe om at avstemningen er viktig.
+3. **Varsler.** Alle varsler har avsender: Messages, en app (Connect, Daily Record, Unfiltered), et nettsted (Threadline) eller Casebook. «News» er borte. Svarflommen etter publisering kommer fra den kanalen spilleren publiserte i.
+4. **Søk.** Søket bøyer enkle endelser, tåler én skrivefeil i ord fra fem bokstaver og to fra ni, og viser delvise treff med en merknad når ingen side har nok av ordene. Typo og delvise treff gjelder bare vanlige sider som de riktige ordene også ville funnet. Cache, svake og eksakte sider krever fortsatt presise ord, så ingenting skjult avsløres.
+5. **Avslutninger.** Varselet heter nå «The Quiet Account: Lights out», ikke «Case closed». Under Reports står «How the case developed» med dag og epilog, og en linje om at etterforskningen kan fortsette. Startmenyen viser «Case resolved · still open».
+6. **Grafikk.** `graphics/COMFYUI.md` deler arbeidet i fire: generere i ComfyUI (engelske prompter, generering og endelig størrelse, seed, referanse, eksakt tekst, avhengigheter), avlede (beskjæring, speiling, logo til avatar), lage for hånd (faktura, dashboard, kollasj) og logoer som vektor. Ferdige bilder legges inn etter hvert (status i COMFYUI.md). Fem ansiktsreferanser ligger i `graphics/references/`, og IMG02 er referanse for mølla.
+
+Endring i canon: skiltet på mølla henger på fasaden og ikke på taket, slik bildene viser. A13 er oppdatert.

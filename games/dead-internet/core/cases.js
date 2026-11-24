@@ -109,7 +109,8 @@ export function endingsView(g) {
     const [mid, eid] = key.split(":");
     const m = g.w.mysteries.get(mid);
     const e = asArray(m?.endings).find(x => x.id === eid);
-    return { key, case: mid, caseTitle: m?.title || mid, id: eid, title: e?.title || null, epilogue: e?.epilogue || null, closes: !!e?.closes };
+    return { key, case: mid, caseTitle: m?.title || mid, id: eid, title: e?.title || null, epilogue: e?.epilogue || null, closes: !!e?.closes,
+      day: g.s.fired?.[`ending:${key}`] ?? null };
   });
 }
 

@@ -97,6 +97,7 @@ export function browserApp(phone) {
       list.length ? list.map(resultItem) : h("div.empty", h("b", `Seeker has no cached copies of ${desc.q}.`), h("div.muted", "Only pages Seeker has seen are kept.")));
     return h("div.results",
       h("div.results-count.muted", list.length ? `About ${list.length} result${list.length === 1 ? "" : "s"}` : ""),
+      list[0]?.partial ? h("div.results-partial.muted", "No page has all of these words. Showing pages with some of them.") : null,
       list.length ? list.map(resultItem) :
         h("div.empty", h("b", `No results for “${desc.q}”.`), h("div.muted", "Try fewer or different words, a name, an address or a code.")));
   }

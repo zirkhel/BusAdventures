@@ -3,6 +3,21 @@
 
 import { h, icon } from "../ui.js";
 
+/** Tips: on/off, the introduction again, all tips in one list, and a reset. */
+function tipsGroup(phone) {
+  const T = phone.tips, S = phone.g.w.strings.tips || {};
+  const toggle = /** @type {HTMLInputElement} */ (h("input.set-switch", { type: "checkbox", "aria-label": S.settingsShow }));
+  toggle.checked = T.on;
+  toggle.addEventListener("change", () => T.setOn(toggle.checked));
+  return [h("div.set-head.muted", S.settingsHead),
+    h("div.set-group",
+      h("label.set-row", h("span", S.settingsShow), toggle),
+      h("button.set-row.btnrow", { onclick: () => T.intro(true) }, h("span", S.settingsIntro), icon("back", "rot")),
+      h("button.set-row.btnrow", { onclick: () => T.all() }, h("span", S.settingsAll), icon("back", "rot")),
+      h("button.set-row.btnrow", { onclick: () => { T.reset(); phone.toast("Tips will show again."); phone.refresh(); } }, h("span", S.settingsReset))),
+    h("div.set-hint.muted", S.settingsHint)];
+}
+
 export function settingsApp(phone) {
   const g = phone.g;
   return {
@@ -18,6 +33,7 @@ export function settingsApp(phone) {
             h("div.set-row", h("span", "Day"), h("b", String(g.s.day))),
             h("div.set-row", h("span", "Actions"), h("b", String(g.s.log.length)))),
           h("div.set-hint.muted", "The game saves automatically on this device after every action."),
+          tipsGroup(phone),
           h("div.set-group",
             h("button.set-row.btnrow", { onclick: () => phone.host.exportSave() }, h("span", "Export save"), icon("back", "rot")),
             h("button.set-row.btnrow", { onclick: () => file.click() }, h("span", "Import save"), icon("back", "rot")), file),

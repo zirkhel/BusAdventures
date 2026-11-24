@@ -236,7 +236,7 @@ export class Game {
   }
 
   notify(n) {
-    const item = { id: `n${this.s.nextId++}`, day: this.s.day, text: text(this, n.text), ref: n.ref ?? null, read: false };
+    const item = { id: `n${this.s.nextId++}`, day: this.s.day, text: text(this, n.text), ref: n.ref ?? null, from: n.from ?? null, read: false };
     this.s.notifications.push(item);
     this.emit("notify", item);
   }
@@ -253,11 +253,13 @@ export class Game {
         if (asArray(e.requiresEnding).some(r => !this.s.endings.includes(`${m.id}:${r}`))) continue;
         if (!check(e.if, ctx)) continue;
         this.s.endings.push(key);
+        this.s.fired[`ending:${key}`] = this.s.day;   // the day the case took this turn
         if (e.closes) CS.closeCase(this, m.id);
         applyEffects(this, e.effects, { ending: key });
         this.emit("ending", { mystery: m.id, ending: e.id });
-        // The player is told, wherever they are; the epilogue is in the Casebook's reports.
-        this.notify({ text: e.closes ? `Case closed: ${e.title ?? e.id}` : `An ending: ${e.title ?? e.id}`, ref: { case: m.id } });
+        // The player is told, wherever they are, as a development in the case (never "game over");
+        // the epilogue is in the Casebook's reports, and the investigation stays open.
+        this.notify({ text: `${m.title}: ${e.title ?? e.id}`, ref: { case: m.id } });
       }
     }
   }

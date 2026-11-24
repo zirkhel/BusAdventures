@@ -176,7 +176,7 @@ test("follow, like and not interested shape the feed and nothing else", () => {
 
 test("feed events reach rules, for mood only", async () => {
   const rules = [{ id: "doom", when: { event: "feed.scroll", match: { platform: "toktok" } }, once: true,
-    do: [{ notify: { text: "stop doomscrolling" } }] }];
+    do: [{ notify: { text: "stop doomscrolling", from: "connect" } }] }];
   const raw = await withPool({ "pools/rules.json": rules });
   raw.rules.push(...rules);
   const g = started(buildWorld(raw));
@@ -231,11 +231,11 @@ test("the validator checks media and keeps evidence out of feed-only reach", asy
   // Rules on feed events may not have consequences
   raw = await withPool();
   raw.rules.push({ id: "bad_like", when: { event: "video.like" }, do: [{ credibility: 5 }, { trust: { id: "dana", delta: 1 } }] });
-  raw.rules.push({ id: "ok_scroll", when: { event: "feed.scroll" }, do: [{ later: { days: 1, do: [{ notify: { text: "hi" } }] } }] });
+  raw.rules.push({ id: "ok_scroll", when: { event: "feed.scroll" }, do: [{ later: { days: 1, do: [{ notify: { text: "hi", from: "connect" } }] } }] });
   // ...nor single out a clip, a creator or the player's progress
-  raw.rules.push({ id: "hint_view", when: { event: "video.view", match: { artifact: "TT-00001" } }, do: [{ notify: { text: "hmm" } }] });
-  raw.rules.push({ id: "hint_seen", when: { event: "feed.scroll" }, if: { all: [{ seen: "A02" }] }, do: [{ notify: { text: "hmm" } }] });
-  raw.rules.push({ id: "ok_platform", when: { event: "video.view", match: { platform: "toktok" } }, if: { flag: "x" }, do: [{ notify: { text: "lol" } }] });
+  raw.rules.push({ id: "hint_view", when: { event: "video.view", match: { artifact: "TT-00001" } }, do: [{ notify: { text: "hmm", from: "connect" } }] });
+  raw.rules.push({ id: "hint_seen", when: { event: "feed.scroll" }, if: { all: [{ seen: "A02" }] }, do: [{ notify: { text: "hmm", from: "connect" } }] });
+  raw.rules.push({ id: "ok_platform", when: { event: "video.view", match: { platform: "toktok" } }, if: { flag: "x" }, do: [{ notify: { text: "lol", from: "connect" } }] });
   e = errors(raw);
   assert.ok(e.some(i => i.where === "rule hint_view" && /may only match on platform, tab, not artifact/.test(i.msg)));
   assert.ok(e.some(i => i.where === "rule hint_seen" && /what the player has found \(seen\)/.test(i.msg)));

@@ -101,6 +101,7 @@ export class ContextSystem {
       items.push({ label: "Save this message to Casebook", icon: "bookmark", run: () => p.saveEvidence({ message: origin.message }), secondary: true });
     const title = ref.type === "image" ? (p.g.w.images.get(ref.image)?.caption || "Image") : ref.text;
     p.actionSheet(title, items);
+    if (ref.type === "image") p.tips?.trigger("image");
   }
 
   // ── Tap ───────────────────────────────────────────────────────────────────

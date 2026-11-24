@@ -346,12 +346,31 @@
   ]
  },
  {
-  "id": "D10_reply_flood",
+  "id": "D10_reply_flood_connect",
   "when": {
    "event": "report.published",
    "match": {
     "channel": [
-     "connect",
+     "connect"
+    ]
+   }
+  },
+  "once": false,
+  "do": [
+   {
+    "notify": {
+     "text": "Your post is getting hundreds of replies. Many of them sound… familiar.",
+     "from": "connect"
+    }
+   }
+  ]
+ },
+ {
+  "id": "D10_reply_flood_threadline",
+  "when": {
+   "event": "report.published",
+   "match": {
+    "channel": [
      "threadline"
     ]
    }
@@ -360,7 +379,8 @@
   "do": [
    {
     "notify": {
-     "text": "Your post is getting hundreds of replies. Many of them sound… familiar."
+     "text": "Your post is getting hundreds of replies. Many of them sound… familiar.",
+     "from": "threadline"
     }
    }
   ]
