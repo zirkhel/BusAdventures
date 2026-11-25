@@ -31,6 +31,9 @@
   "url": "pclibrary.org/hours",
   "date": "2025-10-01",
   "title": "Hours",
+  "images": [
+   "WEB0011"
+  ],
   "filler": true,
   "source": "pclibrary",
   "index": "weak",
@@ -71,6 +74,9 @@
   "url": "pclibrary.org/branches/eastfield",
   "date": "2025-10-01",
   "title": "Eastfield branch",
+  "images": [
+   "WEB0011"
+  ],
   "filler": true,
   "source": "pclibrary",
   "index": "weak",

@@ -56,6 +56,9 @@
   "url": "northgatedev.com/projects/foundry-lofts",
   "date": "2017-09-12",
   "title": "Foundry Lofts",
+  "images": [
+   "WEB0001"
+  ],
   "filler": true,
   "source": "northgate",
   "index": "weak",
@@ -79,6 +82,9 @@
   "url": "northgatedev.com/projects/heights-commons",
   "date": "2020-06-18",
   "title": "Heights Commons",
+  "images": [
+   "WEB0002"
+  ],
   "filler": true,
   "source": "northgate",
   "index": "weak",
@@ -102,6 +108,9 @@
   "url": "northgatedev.com/projects/northpoint-landing",
   "date": "2023-11-02",
   "title": "Northpoint Landing",
+  "images": [
+   "WEB0003"
+  ],
   "filler": true,
   "source": "northgate",
   "index": "weak",
@@ -125,6 +134,9 @@
   "url": "northgatedev.com/about",
   "date": "2026-01-15",
   "title": "About Northgate",
+  "images": [
+   "WEB0004"
+  ],
   "filler": true,
   "source": "northgate",
   "index": "full",
@@ -242,6 +254,9 @@
   "url": "northgatedev.com/news/northpoint-landing-design-mention",
   "date": "2024-03-28",
   "title": "Northpoint Landing receives regional design mention",
+  "images": [
+   "WEB0003"
+  ],
   "filler": true,
   "source": "northgate",
   "index": "weak",
@@ -315,6 +330,9 @@
   "url": "northgatedev.com/news/foundry-lofts-five-years",
   "date": "2022-09-12",
   "title": "Five years at Foundry Lofts",
+  "images": [
+   "WEB0001"
+  ],
   "filler": true,
   "source": "northgate",
   "index": "weak",
@@ -338,6 +356,9 @@
   "url": "northgatedev.com/news/heights-commons-opens",
   "date": "2020-06-18",
   "title": "Heights Commons welcomes its first residents",
+  "images": [
+   "WEB0002"
+  ],
   "filler": true,
   "source": "northgate",
   "index": "weak",

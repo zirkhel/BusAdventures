@@ -8,6 +8,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 - **photo:** Realistic smartphone photo, natural light, slight noise, no text overlays, no real brands.
 - **profile:** Square avatar, realistic, as a person would choose for themselves. Synthetic personas: subtly too smooth, with one visible AI tell.
 - **ui:** Fictional interface, original design, no resemblance to real products.
+- **web photo:** Website photos WEB0001–WEB0038 (image generator, not ComfyUI): documentary photo of Port Calder, overcast pewter-grey sky, soft flat diffuse light, wet surfaces after rain, muted slate-blue / grey / weathered red-brick palette with small warm accents, slight sensor noise, no HDR, no readable text or logos unless the brief names one. Phone photos (Eastfield Notes) are softer with phone noise; 2008/2014/1987 pictures are deliberately low-resolution, flash-lit or faded. Full prompt: graphics/sources/web-photos/STYLE.md.
 
 ## Faste karakterer
 - **mara:** Woman, 34, warm round face, freckles, short dark curly hair, small silver hoop earrings, green parka. Face reference: graphics/references/mara.webp (the IMG13 original). Use it for every image of Mara.
@@ -23,12 +24,103 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 4. Inntil fila finnes, bruker spillet `assets/placeholders/<ID>.svg` (lages av `tools/make-placeholders.mjs`).
 
 ## Status
-- Påkrevd: 79 bilder. Valgfritt: 24. Ferdige filer: 103.
+- Påkrevd: 87 bilder. Valgfritt: 36. Ferdige filer: 123.
 - «face: X» betyr at bildet viser en fast person. Lag først én ansiktsreferanse per person (se Faste karakterer) og bruk den i alle bildene av vedkommende.
 - «needs X» betyr at bildet lages fra X (for eksempel et profilbilde laget av en logo).
 
 ## Produksjonsrekkefølge
-IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S → IMG06 → IMG07 → IMG08 → IMG09 → IMG10 → IMG11 → IMG12 → IMG13 → IMG14 → IMG15 → IMG16 → IMG17 → IMG18 → IMG19 → IMG20 → IMG21 → IMG22 → IMG23 → LOGO_SEEKER → LOGO_CONNECT → LOGO_THREADLINE → LOGO_DAILYRECORD → LOGO_BRIGHTLINE → LOGO_NORTHGATE → LOGO_CITY → LOGO_SPILLCHECK → LOGO_FACELESS → LOGO_DOCSHARE → NIMG0001 → NIMG0002 → NIMG0003 → NIMG0004 → NIMG0005 → LOGO_UNFILTERED → LOGO_KESTREL → LOGO_CALDERPEDIA → LOGO_EASTFIELDNOTES → LOGO_UNFILTERED_ICON → LOGO_DAILYRECORD_ICON → IMG24 → AVA_NORTHGATE → AVA_BRIGHTLINE → DRP01 → DRP02 → DRP03 → DRP04 → DRP05 → DRP06 → DRP07 → UFP01 → UFP02 → UFP03 → UFP04 → LOGO_CALDERTRANSIT → LOGO_HARBORAUTHORITY → LOGO_HARBORDENTAL → LOGO_HARBORDESK → LOGO_SALTYS → LOGO_EASTFIELDGARDEN → LOGO_AIWRITERPRO → LOGO_CORPREGISTRIES → LOGO_EASTFIELDNEIGHBORS → LOGO_STATIC → LOGO_EASTFIELDNOTES_MINIMAL → LOGO_EASTFIELDNOTES_ICON → WEB0005 → WEB0007 → WEB0010 → WEB0020 → WEB0025 → WEB0026 → WEB0027 → WEB0028 → WEB0029 → WEB0030 → LOGO_PCLIBRARY → LOGO_CALDERPOWER → LOGO_CALDERCU → LOGO_WALTS → LOGO_HARBORPA → LOGO_OPENFILINGS → LOGO_KESTREL_2014 → WEB0031 → WEB0032 → WEB0033 → WEB0034 → WEB0035 → IMG06A → IMG06B → LOGO_HAVENMUTUAL → LOGO_QUAYLEDGER → LOGO_NORTHLAMP → WEB0036 → WEB0037 → WEB0038
+IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S → IMG06 → IMG07 → IMG08 → IMG09 → IMG10 → IMG11 → IMG12 → IMG13 → IMG14 → IMG15 → IMG16 → IMG17 → IMG18 → IMG19 → IMG20 → IMG21 → IMG22 → IMG23 → LOGO_SEEKER → LOGO_CONNECT → LOGO_THREADLINE → LOGO_DAILYRECORD → LOGO_BRIGHTLINE → LOGO_NORTHGATE → LOGO_CITY → LOGO_SPILLCHECK → LOGO_FACELESS → LOGO_DOCSHARE → NIMG0001 → NIMG0002 → NIMG0003 → NIMG0004 → NIMG0005 → LOGO_UNFILTERED → LOGO_KESTREL → LOGO_CALDERPEDIA → LOGO_EASTFIELDNOTES → LOGO_UNFILTERED_ICON → LOGO_DAILYRECORD_ICON → IMG24 → AVA_NORTHGATE → AVA_BRIGHTLINE → DRP01 → DRP02 → DRP03 → DRP04 → DRP05 → DRP06 → DRP07 → UFP01 → UFP02 → UFP03 → UFP04 → LOGO_CALDERTRANSIT → LOGO_HARBORAUTHORITY → LOGO_HARBORDENTAL → LOGO_HARBORDESK → LOGO_SALTYS → LOGO_EASTFIELDGARDEN → LOGO_AIWRITERPRO → LOGO_CORPREGISTRIES → LOGO_EASTFIELDNEIGHBORS → LOGO_STATIC → LOGO_EASTFIELDNOTES_MINIMAL → LOGO_EASTFIELDNOTES_ICON → WEB0005 → WEB0007 → WEB0010 → WEB0020 → WEB0025 → WEB0026 → WEB0027 → WEB0001 → WEB0002 → WEB0003 → WEB0004 → WEB0006 → WEB0008 → WEB0009 → WEB0011 → WEB0012 → WEB0013 → WEB0014 → WEB0015 → WEB0016 → WEB0017 → WEB0018 → WEB0019 → WEB0021 → WEB0022 → WEB0023 → WEB0024 → WEB0028 → WEB0029 → WEB0030 → LOGO_PCLIBRARY → LOGO_CALDERPOWER → LOGO_CALDERCU → LOGO_WALTS → LOGO_HARBORPA → LOGO_OPENFILINGS → LOGO_KESTREL_2014 → WEB0031 → WEB0032 → WEB0033 → WEB0034 → WEB0035 → IMG06A → IMG06B → LOGO_HAVENMUTUAL → LOGO_QUAYLEDGER → LOGO_NORTHLAMP → WEB0036 → WEB0037 → WEB0038
+
+## Bildeinfo (fiktiv EXIF)
+Metadata står i `content/universe/images.json` (`meta`), ikke i katalogen. «Image info» i bildeviseren viser Taken, Camera (`device`), Location (bare når feltet finnes; `null` vises som «—»), Software og Note. `meta: null` betyr fjernet og vises som «None. It was stripped from this copy.». Alle bilder unntatt videorammer (de har klippets «Video info») skal ha et `meta`-valg, og `taken` («YYYY-MM-DD HH:MM») kan ikke være senere enn første versjon av siden som viser bildet (validatoren og `tests/image-meta.test.mjs`). Enheter: Lumen-telefoner (privatpersoner), Caldwell C-kameraer, «Daily Record photo desk», Orrin-kameraer (Orrin D7 profesjonelt, Orrin S5/S20 kompakt), skanneprogram i `software`, stockgeneratoren i `software`.
+
+| ID | Valg | Taken | Camera | Location | Software | Note |
+|---|---|---|---|---|---|---|
+| IMG02 | EXIF | 2025-05-14 06:52 | Lumen 7 | Harbor St, Eastfield |  |  |
+| IMG01 | EXIF | 2025-05-14 06:52 | Lumen 7 | — |  |  |
+| IMG03 | EXIF | 2025-09-12 10:31 | Daily Record photo desk | Calder Mill |  |  |
+| IMG04S | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG04 | stripped | | | | | |
+| IMG05O | EXIF | 2024-06-08 09:14 | Lumen 7 | Eastfield Community Garden |  |  |
+| IMG05 | stripped | | | | | |
+| IMG06S | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG06 | stripped | | | | | |
+| IMG07 | EXIF | 2025-11-02 15:40 | Caldwell C3 |  |  |  |
+| IMG08 | EXIF |  |  |  | Studio Compose 12 |  |
+| IMG09 | EXIF | 2025-12-12 16:05 | Lumen 7 |  |  |  |
+| IMG10 | EXIF |  |  |  | ScanEasy |  |
+| IMG11 | EXIF | 2023-08-19 18:20 | Caldwell C3 |  |  |  |
+| IMG12 | stripped | | | | | |
+| IMG13 | EXIF | 2021-02-27 12:03 | Lumen 5 |  |  |  |
+| IMG14 | stripped | | | | | |
+| IMG15 | stripped | | | | | |
+| IMG16 | stripped | | | | | |
+| IMG17 | stripped | | | | | |
+| IMG18 | stripped | | | | | |
+| IMG19 | stripped | | | | | |
+| IMG20 | stripped | | | | | |
+| IMG21 | stripped | | | | | |
+| IMG22 | EXIF | 2019-07-04 22:47 | Lumen 3 |  |  |  |
+| IMG23 | stripped | | | | | |
+| IMG24 | EXIF | 2024-11-03 13:12 | Caldwell C1 |  |  |  |
+| AVA_NORTHGATE | stripped | | | | | |
+| AVA_BRIGHTLINE | stripped | | | | | |
+| DRP01 | stripped | | | | | |
+| DRP02 | stripped | | | | | |
+| DRP03 | stripped | | | | | |
+| DRP04 | stripped | | | | | |
+| DRP05 | stripped | | | | | |
+| DRP06 | stripped | | | | | |
+| DRP07 | stripped | | | | | |
+| UFP01 | stripped | | | | | |
+| UFP02 | stripped | | | | | |
+| UFP03 | stripped | | | | | |
+| UFP04 | stripped | | | | | |
+| WEB0005 | stripped | | | | | |
+| WEB0007 | stripped | | | | | |
+| WEB0010 | stripped | | | | | |
+| WEB0020 | EXIF | 2025-08-14 12:31 | Lumen 6 |  |  |  |
+| WEB0025 | stripped | | | | | |
+| WEB0026 | stripped | | | | | |
+| WEB0027 | stripped | | | | | |
+| WEB0028 | stripped | | | | | |
+| WEB0029 | stripped | | | | | |
+| WEB0030 | stripped | | | | | |
+| WEB0031 | stripped | | | | | |
+| WEB0032 | stripped | | | | | |
+| WEB0033 | stripped | | | | | |
+| WEB0034 | EXIF | 2008-07-19 15:32 | Orrin S5 |  |  |  |
+| WEB0035 | stripped | | | | | |
+| WEB0036 | stripped | | | | | |
+| WEB0037 | EXIF | 2019-08-03 07:41 | Lumen 5 | Harbor St, Eastfield |  |  |
+| WEB0038 | stripped | | | | | |
+| WEB0001 | EXIF | 2017-08-24 10:14 | Orrin D7 |  |  |  |
+| WEB0002 | EXIF | 2020-06-02 17:05 | Orrin D7 |  |  |  |
+| WEB0003 | EXIF | 2023-10-12 10:40 | Orrin D7 |  |  |  |
+| WEB0004 | EXIF | 2026-01-08 09:20 | Orrin D7 |  |  |  |
+| WEB0006 | stripped | | | | | |
+| WEB0008 | stripped | | | | | |
+| WEB0009 | EXIF | 2014-05-27 10:12 | Orrin S20 |  |  |  |
+| WEB0011 | stripped | | | | | |
+| WEB0012 | stripped | | | | | |
+| WEB0013 | EXIF | 2025-09-27 07:22 | Lumen 6 | Northpoint |  |  |
+| WEB0014 | EXIF | 2025-06-29 15:48 | Lumen 6 | Old Town |  |  |
+| WEB0015 | EXIF | 2025-04-19 11:03 | Lumen 6 | Eastfield |  |  |
+| WEB0016 | EXIF | 2019-06-13 18:12 | Lumen 5 | Eastfield Library |  |  |
+| WEB0017 | EXIF | 2021-05-09 07:56 | Lumen 5 | Pier 2, Port Calder |  |  |
+| WEB0018 | EXIF | 2022-07-15 18:47 | Lumen 5 | Harbor St, Eastfield |  |  |
+| WEB0019 | EXIF | 2022-08-31 10:24 | Lumen 5 | Eastfield |  |  |
+| WEB0021 | stripped | | | | | |
+| WEB0022 | stripped | | | | | |
+| WEB0023 | EXIF | 2007-11-04 16:20 |  |  | Halden PhotoScan 2400 | Scanned from a print. |
+| WEB0024 | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG06A | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG06B | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| NIMG0001 | EXIF | 2025-10-11 18:10 | Daily Record photo desk |  |  |  |
+| NIMG0002 | EXIF |  |  |  |  | No metadata. |
+| NIMG0003 | EXIF | 2025-01-12 09:05 | Lumen 8 |  |  |  |
+| NIMG0004 | EXIF | 2026-02-17 19:48 | Daily Record photo desk |  |  |  |
+| NIMG0005 | EXIF | 2026-01-26 05:40 | Lumen 9 |  |  |  |
 
 ## Alle bilder
 | ID | Fil | Størrelse | Type | Prioritet | Status | Brukt i | Avhengighet | Beskrivelse |
@@ -113,8 +205,28 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | WEB0025 | `assets/images/web0025-harbor-dental.webp` | 1600×900 | photo | required | final file | W-harbordental-0001 |  | Harbor Dental shopfront: white and teal facade, glass waiting room, a teal wave mark and no lettering, wet street in a brick terrace. |
 | WEB0026 | `assets/images/web0026-calder-transit-bus.webp` | 1600×900 | photo | required | final file | W-caldertransit-0001 |  | A navy-and-cream municipal bus at a simple shelter on a wet harbour-town street, blank destination board, a crane in the distance. No operator name or advertisements. |
 | WEB0027 | `assets/images/web0027-harbor-authority.webp` | 1600×900 | photo | required | final file | W-harbor-authority-0001 |  | A small brick and concrete harbour operations building on a wet quay, radio mast, coiled ropes and a bollard, a crane and ship in the distance. No readable signs. |
-| WEB0028 | `assets/images/web0028-harbordesk-hero.svg` | 1600×900 | ui | optional | final file | B18 |  | HarborDesk hero illustration: a window frame over a pale harbour, a simple desk card in the lower pane. No lettering. |
-| WEB0029 | `assets/images/web0029-eastfieldgarden-hero.svg` | 1600×900 | ui | optional | final file | B20 |  | Eastfield Community Garden hero illustration: three raised beds of greens under a pale sky. No lettering. |
+| WEB0001 | `assets/images/web0001-foundry-lofts.webp` | 1600×900 | photo | required | final file | W-northgate-0003, W-northgate-0014 |  | Foundry Lofts, Old Town: a converted 19th-century red-brick metalworks with tall arched windows and a glass roof storey, a small courtyard with a bike shelter, wet cobbles. Inland: no water in view. Overcast. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0002 | `assets/images/web0002-heights-commons.webp` | 1600×900 | photo | required | final file | W-northgate-0004, W-northgate-0015 |  | Heights Commons: a four-storey pale-brick block with timber galleries on a slope above the harbour road, shared garden with a wooden playground, thin sun breaking through grey cloud, harbour and cranes below. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0003 | `assets/images/web0003-northpoint-landing.webp` | 1600×900 | photo | required | final file | W-northgate-0005, W-northgate-0011 |  | Northpoint Landing: two dark-brick apartment buildings and a courtyard on the quay; further along, the same ferry terminal as NIMG0003 from a new angle (pier on round pillars, glazed hall, navy board with only a ferry pictogram) and the white-and-navy ferry. Dusk, wet promenade. Not derived from NIMG0003. No people, no readable lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0004 | `assets/images/web0004-northgate-lobby.webp` | 1600×900 | photo | required | final file | W-northgate-0006 |  | Northgate head-office lobby: oak reception desk in front of a navy panelled wall with LOGO_NORTHGATE mounted in brass (the logo was composited from logo-northgate.svg, not generated), scale models of brick housing in a glass case, wet terraced street through the window. No people. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0006 | `assets/images/web0006-brightline-case-phone.webp` | 1600×900 | photo | optional | final file | W-brightline-0002 |  | Brightline case-study mockup: a hand holds an unbranded phone showing a generic feed (grey placeholder lines, a harbour photo, a coffee cup), the WEB0005 office with ring lights behind at dusk. Only a hand, no face, no Connect logo, no readable text. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0008 | `assets/images/web0008-kestrel-warehouse.webp` | 1600×900 | photo | optional | final file | W-kestrel-0008, W-kestrel-0013 |  | Inside the Dock Road depot (the converted cannery): yellow pallet racking with boxes and shrink-wrap, an orange forklift, brick walls with arched windows, grey daylight. Intact, no smoke. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0009 | `assets/images/web0009-kestrel-2014.webp` | 1024×768 | photo | optional | final file | W-kestrel-0001, W-kestrel-0005 |  | Kestrel in 2014 (cached 2014 versions only): low-resolution compact-camera photo of one white van with a navy band and the old gold KESTREL wordmark (as LOGO_KESTREL_2014, no bird) in front of a corrugated depot shed in a rented gravel yard. Downscaled and JPEG-compressed on purpose. No people. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0011 | `assets/images/web0011-eastfield-library.webp` | 1600×900 | photo | required | final file | W-pclibrary-0004, W-pclibrary-0002 |  | Eastfield branch library: a single-storey brick building, glass entrance with a ramp, a notice about the new opening hours taped inside the door (deliberately blurred, unreadable), warm light inside. No people. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0012 | `assets/images/web0012-recycling-truck.webp` | 1600×900 | photo | optional | final file | W-city-0003 |  | A plain white-and-green recycling truck tipping a green bin on an Eastfield terrace, a worker in hi-vis seen from behind, wet road, crane in the distance. No lettering, no face. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0013 | `assets/images/web0013-lighthouse-fog.webp` | 1600×900 | photo | required | final file | W-calderpedia-0006 |  | Port Calder lighthouse: white stone tower with a black lantern and the closed keeper's cottage on a granite breakwater, low tide, seaweed and mud, thick fog. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0014 | `assets/images/web0014-old-town-street.webp` | 1600×900 | photo | optional | final file | W-calderpedia-0004 |  | Old Town: a narrow wet cobbled street of brick shopfronts with dark blank fascias, iron lamps, crates and a bicycle; two distant walkers from behind. No water in view, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0015 | `assets/images/web0015-calder-creek.webp` | 1600×900 | photo | optional | final file | W-calderpedia-0009 |  | Calder Creek under the plain concrete Route 9 bridge before the fish kill: healthy water, reeds, a gravel path, one duck, brick houses beyond. No dead fish, no people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0016 | `assets/images/web0016-reading-circle-shelf.webp` | 1440×1080 | photo | required | final file | W-eastfieldnotes-0003 |  | Mara's phone photo, 2019: the reading-circle shelf in the library back room, identical green copies with sticky notes (scribbles unreadable), a mug, a tin and a desk fan by an open window. Soft 2019 phone camera. No people, no readable text. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0017 | `assets/images/web0017-fog-pier2.webp` | 1440×1080 | photo | required | final file | W-eastfieldnotes-0015 |  | Mara's phone photo, 2021: fog over the harbour from the end of Pier 2, wet planks, an iron railing and a bollard, a crane and a moored ship fading out. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0018 | `assets/images/web0018-duck-race.webp` | 1440×1080 | photo | optional | final file | W-eastfieldnotes-0022 |  | Mara's phone photo, 2022: yellow rubber ducks in the Harbor Festival race channel, bunting finish line, spectators' legs and green wellies only, crane and ship behind. No faces, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0019 | `assets/images/web0019-book-bus.webp` | 1440×1080 | photo | optional | final file | W-eastfieldnotes-0023 |  | Mara's phone photo (book bus, back to school, 2022 post; the §10 plan said 2023): a cream-and-green single-deck book bus in an Eastfield school yard, door open, crates of picture books on a folding table, hopscotch on wet tarmac. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0021 | `assets/images/web0021-caldercu-counters.webp` | 1600×900 | photo | optional | final file | W-caldercu-0003 |  | Calder Credit Union, 4th Street: inside, two oak counters with dark green fronts and glass screens, a bowl of mints, a small waiting area, the wet terraced street through the window. A ring-shaped wall mark from the generator was painted out so it cannot echo Harbor Dental's wave. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0022 | `assets/images/web0022-smart-meter.webp` | 1600×900 | photo | optional | final file | W-calderpower-0004 |  | A new grey smart meter beside an old beige meter cabinet on a wet brick house wall, a drainpipe and conduit, an Eastfield terrace behind. Display has no readable digits. No lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0023 | `assets/images/web0023-festival-1987.webp` | 1024×768 | photo | optional | final file | W-walts-0001 |  | Walt's scanned print, Harbor Festival 1987: volunteers in anoraks (from behind, no clear faces) tip a net of rubber ducks into the creek, children on a footbridge, an old fishing boat and a striped tent. Badly faded orange-magenta cast, white border, crease and dust, scanned small. Deliberately unlike NIMG0001. No lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0024 | `assets/images/web0024-faceless-sheet.webp` | 1600×1200 | portrait | optional | final file | W-faceless-0004 |  | Faceless Stock contact sheet: 12 synthetic head-and-shoulders portraits (4×3) on light grey, slightly too smooth. Twelve clearly different people; none resembles #44812 / IMG06S (no dark-haired man in his 40s, no suit) or #51007. Not derived from IMG06S or IMG04S. Cut tiles (512×512) are in graphics/sources/web0024-tiles/ for later gallery use; the library itself stays a login wall. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0028 | `assets/images/web0028-harbordesk-window.webp` | 1600×900 | photo | optional | final file | B18 |  | HarborDesk: a rented upper-floor office on Harbor Street, a plain desk at a sash window over the wet harbour street, scanned mail and a desk phone, a crane across the water. No people, no lettering, no product logos. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0029 | `assets/images/web0029-garden-beds.webp` | 1600×900 | photo | optional | final file | B20, W-eastfieldgarden-0002 |  | Eastfield Community Garden on an overcast spring morning: long timber raised beds of lettuce and kale, gravel paths, wheelbarrow and watering can, terraced houses behind. Deliberately unlike IMG05O (no shed, no plot sign, no hand, no sun). No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
 | WEB0030 | `assets/images/web0030-aiwriterpro-hero.svg` | 1600×900 | ui | optional | final file | B23 |  | AIWriterPro hero illustration: an abstract pale dashboard on indigo, cards and rules, no readable words or real-product UI. |
 | LOGO_PCLIBRARY | `assets/images/logo-pclibrary.svg` | 256×256 | logo | required | final file | site:pclibrary |  | Port Calder Public Library: a warm brown roundel with an open book and a small lamp. |
 | LOGO_CALDERPOWER | `assets/images/logo-calderpower.svg` | 256×256 | logo | required | final file | site:calderpower |  | Calder Power: a pale bolt on a deep teal disc, no lettering. |
@@ -123,16 +235,16 @@ IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S �
 | LOGO_HARBORPA | `assets/images/logo-harborpa.svg` | 256×256 | logo | required | final file | site:harborpa |  | Harbor Public Affairs: a dark grey square, HPA and HARBOR PA in a light serif. |
 | LOGO_OPENFILINGS | `assets/images/logo-openfilings.svg` | 256×256 | logo | required | final file | site:corp_registries |  | Open Filings: a grey official roundel with a simple column and pediment. |
 | LOGO_KESTREL_2014 | `assets/images/logo-kestrel-2014.svg` | 256×256 | logo | optional | final file | site:kestrel |  | Kestrel 2014 wordmark: KESTREL in condensed gold capitals on navy. Used only on the cached 2014 design. |
-| WEB0031 | `assets/images/web0031-pclibrary-hero.svg` | 1600×900 | ui | optional | final file | W-pclibrary-0001 |  | Library reading room illustration: a long room of shelves, warm paper light, no lettering. |
-| WEB0032 | `assets/images/web0032-calderpower-hero.svg` | 1600×900 | ui | optional | final file | W-calderpower-0001 |  | Utility illustration: three pylons on a grey shore, a small meter cabinet, no lettering and not the blackout-gate photograph. |
-| WEB0033 | `assets/images/web0033-caldercu-hero.svg` | 1600×900 | ui | optional | final file | W-caldercu-0001, W-caldercu-0003 |  | Credit union branch illustration: a modest facade with two counters, no lettering. |
-| WEB0034 | `assets/images/web0034-walts-hero.svg` | 1600×900 | ui | optional | final file | W-walts-0001 |  | A faded, scanned-looking Harbor Festival illustration on warm paper, no readable lettering. |
-| WEB0035 | `assets/images/web0035-harborpa-hero.svg` | 1600×900 | ui | optional | final file | W-harborpa-0001 |  | Consultancy illustration: a dark header and a plain desk, no lettering. |
+| WEB0031 | `assets/images/web0031-library-reading-room.webp` | 1600×900 | photo | optional | final file | W-pclibrary-0001 |  | Port Calder Public Library reading room: tall wooden shelves, oak tables with green lamps, arched windows with rain and grey harbour light, a returns trolley. No people, no readable spines. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0032 | `assets/images/web0032-calderpower-pylons.webp` | 1600×900 | photo | optional | final file | W-calderpower-0001 |  | Calder Power: three pylons across a grey coastal field, a green meter cabinet by a gravel track, cranes across the water. Ordinary daytime, not the blackout photograph (NIMG0004). No lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0033 | `assets/images/web0033-caldercu-front.webp` | 1600×900 | photo | optional | final file | W-caldercu-0001 |  | Calder Credit Union, 4th Street: a modest shopfront in a brick terrace, plain dark green fascia without lettering, two oak counters visible inside, a cash machine and a bicycle on the wet pavement. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0034 | `assets/images/web0034-walts-2008.webp` | 1024×768 | photo | optional | final file | W-walts-0004 |  | Walt's 2008 snapshot (cheap digital camera, flash, JPEG artefacts): a box of yellow rubber ducks, a bucket and a red cash tin on the quay, Walt's plaid sleeve and hand only, bunting and a crane behind. No faces, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0035 | `assets/images/web0035-harborpa-desk.webp` | 1600×900 | photo | optional | final file | W-harborpa-0001 |  | Harbor Public Affairs: a dark, anonymous consultancy room, an empty walnut desk with a closed folder and a glass of water, blinds half down over slate roofs and the harbour. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
 | IMG06A | `assets/images/img06a-harbordesk.webp` | 1024×1024 | portrait | required | final file | W-harbordesk-0003 | from IMG06S: none: identical file, used as a purchased stock portrait on HarborDesk | Not generated: same file as IMG06S, a purchased copy of synthetic portrait #44812. |
 | IMG06B | `assets/images/img06b-havenmutual.webp` | 1024×1024 | portrait | required | final file | W-havenmutual-0001 | from IMG06S: none: identical file, used as a purchased stock portrait on Haven Mutual | Not generated: same file as IMG06S, a purchased copy of synthetic portrait #44812. |
 | LOGO_HAVENMUTUAL | `assets/images/logo-havenmutual.svg` | 256×256 | logo | required | final file | site:havenmutual |  | Haven Mutual: a pale shield on dark teal with a simple cross. |
 | LOGO_QUAYLEDGER | `assets/images/logo-quayledger.svg` | 256×256 | logo | required | final file | site:quayledger |  | Quay Ledger: an open book outline on dark brown. |
 | LOGO_NORTHLAMP | `assets/images/logo-northlamp.svg` | 256×256 | logo | required | final file | site:northlamp |  | North Lamp Studio: a yellow lamp on a dark ground. |
 | WEB0036 | `assets/images/web0036-faceless-hero.svg` | 1600×900 | ui | optional | final file | W-faceless-0001 |  | Abstract violet circles on a pale ground, no faces and no lettering. |
-| WEB0037 | `assets/images/web0037-notes-fog.svg` | 1600×900 | ui | optional | final file | W-eastfieldnotes-0004 |  | Fog over a harbour shoreline, no people and no lettering. |
-| WEB0038 | `assets/images/web0038-haven-hero.svg` | 1600×900 | ui | optional | final file | W-havenmutual-0001 |  | A quiet harbour front of blocky buildings, no lettering. |
+| WEB0037 | `assets/images/web0037-notes-fog.webp` | 1600×900 | photo | optional | final file | W-eastfieldnotes-0004 |  | Mara's phone photo, August 2019: fog swallowing the harbour from the Eastfield wall, a lamp post, rocks and a faint sun burning through; the far cranes are gone. Phone-camera softness and noise. No people, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |
+| WEB0038 | `assets/images/web0038-market-row.webp` | 1600×900 | photo | optional | final file | W-havenmutual-0001 |  | Market Row, Old Town: blocky brick buildings, a stationer's window with an office above and a dark teal side door, a glimpse of grey water and a mast at the end of the street. No people, blank signs, no lettering. Made with the image generator (not ComfyUI), common style prompt in graphics/sources/web-photos/STYLE.md; checked against the existing photos. |

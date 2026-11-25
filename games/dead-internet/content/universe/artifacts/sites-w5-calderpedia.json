@@ -81,6 +81,9 @@
   "url": "calderpedia.org/Old_Town",
   "date": "2025-07-18",
   "title": "Old Town — Calderpedia",
+  "images": [
+   "WEB0014"
+  ],
   "filler": true,
   "source": "calderpedia",
   "index": "weak",
@@ -127,6 +130,9 @@
   "url": "calderpedia.org/Port_Calder_lighthouse",
   "date": "2025-10-05",
   "title": "Port Calder lighthouse — Calderpedia",
+  "images": [
+   "WEB0013"
+  ],
   "filler": true,
   "source": "calderpedia",
   "index": "weak",
@@ -197,6 +203,9 @@
   "url": "calderpedia.org/Calder_Creek",
   "date": "2025-05-22",
   "title": "Calder Creek — Calderpedia",
+  "images": [
+   "WEB0015"
+  ],
   "filler": true,
   "source": "calderpedia",
   "index": "weak",

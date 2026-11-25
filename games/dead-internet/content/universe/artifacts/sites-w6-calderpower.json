@@ -71,6 +71,9 @@
   "url": "calderpower.com/smart-meters",
   "date": "2026-02-17",
   "title": "Smart meters",
+  "images": [
+   "WEB0022"
+  ],
   "filler": true,
   "source": "calderpower",
   "index": "weak",

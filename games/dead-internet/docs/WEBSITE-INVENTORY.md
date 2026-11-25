@@ -122,9 +122,13 @@ The media test pool in `tests/media.test.mjs` injects a virtual TokTok app (`tok
 
 Every site in this inventory now has a catalog logo (`theme.logo`, SVG). Wide wordmarks (Daily Record, Unfiltered, Eastfield Notes) also have a square `theme.icon` for the Browser address bar; other sites reuse the square mark as the favicon.
 
-Hero photographs and illustrations were attached to existing artifacts only, with no wording changes. Evidence photographs were not reused as decoration (in particular NIMG0003 and NIMG0005). Planned WEB0001–WEB0024 images that have no existing page to live on were left unproduced.
+Hero photographs and illustrations were attached to existing artifacts only, with no wording changes. Evidence photographs were not reused as decoration (in particular NIMG0003 and NIMG0005). Planned WEB0001–WEB0024 images that have no existing page to live on were left unproduced. (Superseded: see «Website photos» below.)
 
 Test-only `toktok.app` is described in the previous section; it is not a playable-universe site.
+
+### Website photos (PR #83, `websites-photos`)
+
+The 20 remaining planned photos from WEBSITES.md §10 now exist (WEB0001–WEB0004, WEB0006, WEB0008, WEB0009, WEB0011–WEB0019, WEB0021–WEB0024), and the SVG stand-in heroes WEB0028, WEB0029, WEB0031–WEB0035, WEB0037 and WEB0038 are photographs under the same ids. WEB0030 (AIWriterPro dashboard) and WEB0036 (Faceless abstract) stay SVG. They were made with the image generator, not ComfyUI, from one shared style prompt (`graphics/sources/web-photos/STYLE.md`) with the existing photos as references. Only `images` fields changed: no ids, URLs or wording. New pictures sit on background pages of Northgate (three project pages, two news items, About), Brightline (Work), Kestrel (Warehouse job, Sixty jobs, and the cached 2014 home and About only), the library (Eastfield branch, Hours), the city (Waste), Calderpedia (lighthouse, Old Town, Calder Creek), Eastfield Notes (four posts 2019–2022), Calder CU (4th Street), Calder Power (Smart meters), Walt's page (home and Festival 2008) and Faceless (How it works). Every new image is its own original, so image search from IMG01, IMG02, IMG06S and the other evidence photos finds nothing new. Northgate's home and A40 keep IMG12. No new canon.
 
 ## Parked domain (W3)
 
