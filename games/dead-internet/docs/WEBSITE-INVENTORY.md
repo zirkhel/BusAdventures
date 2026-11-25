@@ -31,7 +31,7 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `aiwriterpro` | aiwriterpro.app | live | B23 plus W6 Pricing and FAQ (`W-aiwriterpro-*`) | Landing. Template `landing` / `saas` |
 | `static_channel` | static.channel | live | A44 | Raw text, no template |
 | `corp_registries` | openfilings.org (alias: corp-registries.example) | live | A63 plus W6 home (`W-corpregistries-0001`) | Renamed in W6 from the placeholder domain. Old host still resolves. Template `government` / `registry`. Meridian is not in the public nav |
-| `harbordental` | harbordental.com | live | W-harbordental-0001 plus W6 Services, Team, Hours, Parking, Contact (`W-harbordental-0002`–`0006`) | Connect post promised team and parking. Template `landing` / `saas`. Footer credits «Lumen by Pixelfold». Team names and hours are `claim` pending approval |
+| `harbordental` | harbordental.com | live | W-harbordental-0001 plus W6 Services, Team, Hours, Parking, Contact (`W-harbordental-0002`–`0006`) | Connect post promised team and parking. Template `landing` / `saas`. Footer credits «Lumen by Pixelfold». Team names, hours and parking are canon |
 | `caldertransit` | caldertransit.gov | live | W-caldertransit-0001 plus W6 Routes, Route 14, Fares, Alerts, About, Live map (`W-caldertransit-0002`–`0007`) | Government / `transit`. The live map page is «temporarily unavailable», not a working map. No brake-fault leak on the official site |
 | `harbor_authority` | harbor.portcalder.gov | live | W-harbor-authority-0001 (minimal home) | Unfiltered comment: memo letterhead «matches the one on their site». **Domain is not named in canon**; this municipal host is assigned so the reference can resolve. Home text is only the authority's name |
 | `eastfield_neighbors` | eastfieldneighbors.net | **gone** since 2023-02-20 | none | Daily Record A60: the forum was breached and «has since shut down». **Domain is not named in canon**; assigned only so the gone site can be addressed. No invented pages or cache |
@@ -42,9 +42,9 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `caldercu` | caldercu.com | live | W6 home, about, 4th Street, accounts, contact (`W-caldercu-*`) | Credit union since 1952, Eastfield branch on 4th Street (already in a sponsored article). Template `corporate` / `classic-2015` |
 | `walts` | waltbrennan.calderweb.net | live (last updated 2009) | W6 home, guestbook, duck race, Festival 2008, links (`W-walts-*`) | Walt Brennan's Harbor Festival page on an assigned free host. Template `personal` / `geocities`. Frozen 12 June 2009. Does not mention his 2025 death |
 | `harborpa` | harborpa.com | live | W6 home (`W-harborpa-0001`) | Harbor Public Affairs, named in the lobby register. Template `corporate` / `consultancy`. One simple page, no client list |
-| `havenmutual` | havenmutual.com | live | W7 home, cover, contact (`W-havenmutual-*`) | Insurance firm in Old Town. Template `corporate` / `agency`. Leaflet uses stock portrait IMG06B (Faceless #44812). Office at 9 Market Row is a `claim` |
-| `quayledger` | quayledger.com | live | W7 home, contact (`W-quayledger-*`) | Bookkeeping firm, Suite 110, 18 Harbor Street. Template `landing` / `smallbiz`. Tenant listing is a `claim` |
-| `northlamp` | northlamp.studio | live | W7 home, work (`W-northlamp-*`) | Sign and type studio, Suite 210, 18 Harbor Street. Template `landing` / `smallbiz`. Footer credits Lumen by Pixelfold. Tenant listing is a `claim` |
+| `havenmutual` | havenmutual.com | live | W7 home, cover, contact (`W-havenmutual-*`) | Insurance firm in Old Town. Template `corporate` / `agency`. Leaflet uses stock portrait IMG06B (Faceless #44812). Office at 9 Market Row, Old Town, since 2009 is canon |
+| `quayledger` | quayledger.com | live | W7 home, contact (`W-quayledger-*`) | Bookkeeping firm, Suite 110, 18 Harbor Street. Template `landing` / `smallbiz`. Tenant listing is canon |
+| `northlamp` | northlamp.studio | live | W7 home, work (`W-northlamp-*`) | Sign and type studio, Suite 210, 18 Harbor Street. Template `landing` / `smallbiz`. Footer credits Lumen by Pixelfold. Tenant listing is canon |
 
 ## Email-only domains (not websites)
 
@@ -106,13 +106,13 @@ W6 invented names, hours and prices were approved on 25 November 2026 and are no
 
 ## Design as a clue (W7)
 
-Implemented on `websites-w7` as open PR #81 (not merged). Anders approved the step on 25 November 2026. New pages: HarborDesk 2, Haven Mutual 3, Quay Ledger 2, North Lamp Studio 2, Brightline Insights 1, two Garden persona posts (12 in total). Existing ids, URLs and live wording are unchanged, including A20 v1, B18, A31 and A34 v2. Hidden pages stay hidden.
+Merged as PR #81 (`9190200`). Anders approved the step on 25 November 2026. New pages: HarborDesk 2, Haven Mutual 3, Quay Ledger 2, North Lamp Studio 2, Brightline Insights 1, two Garden persona posts (12 in total). Existing ids, URLs and live wording are unchanged, including A20 v1, B18, A31 and A34 v2. Hidden pages stay hidden.
 
 New independent sites: `havenmutual.com` (corporate / `agency`, so that variant is not unique to Brightline), `quayledger.com` and `northlamp.studio`. Two further 18 Harbor Street firms, Amber Fern Tutoring and Gull Wing Surveys, are named on HarborDesk without a URL. Brightline remains at Suite 400.
 
 IMG06A and IMG06B are purchased copies of IMG06S. Image search from the HarborDesk testimonial reaches Faceless #44812, Haven Mutual and Calvin's profile. IMG01/IMG02 image search is unchanged. The mill photograph on Calderpedia stays deferred. Brightline customer cases stay anonymous.
 
-New invented names and addresses are `claim` pending approval. The Lumen footer is the approved red herring from §9.3.
+The W7 invented names and addresses were approved on 25 November 2026 and are now canon: the four HarborDesk tenants at 18 Harbor Street, Haven Mutual's office at 9 Market Row since 2009, and the 2024 community leads Samira Holt, Jonah Ellison and Tamsin Roe. The Lumen footer is the approved red herring from §9.3.
 
 ## Test-only domains
 
