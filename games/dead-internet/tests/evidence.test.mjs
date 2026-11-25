@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { loadWorld } from "../tools/lib/node-world.mjs";
 import { Game, replay } from "../core/game.js";
 import { serialize, deserialize } from "../core/save.js";
+import { SAVE_VERSION } from "../core/state.js";
 import { gather } from "../tools/lib/scenarios.mjs";
 
 async function fixture() {
@@ -78,7 +79,7 @@ test("v6 migration retains notes, explicit versions and links without guessing j
   w.artifacts.get("A16").versions.push({ id: "later", body: "Replacement" });
   old.state.artifacts.A16 = { live: "later" };
   const state = deserialize(w, old).state;
-  assert.equal(state.saveVersion, 7);
+  assert.equal(state.saveVersion, SAVE_VERSION);
   assert.equal(state.evidence[0].note, "Old comment");
   assert.equal(state.evidence[0].version, e.version);
   assert.equal(state.evidence[0].snapshot.body, e.snapshot.body);

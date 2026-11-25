@@ -108,6 +108,22 @@ a.lnk:active { opacity: .6; }
 .addr-favicon { display: flex; align-items: center; flex: none; }
 .addr-favicon-img { width: 18px; height: 18px; object-fit: contain; border-radius: 4px; background: #fff; }
 .addr-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; background: #f0b429; color: #3a2a00; padding: 2px 6px; border-radius: 6px; }
+.browser-bar { gap: 2px; padding: 6px 4px; }
+.browser-bar .nav-btn { min-width: 36px; padding: 0 4px; }
+.fwd-btn:disabled { opacity: .28; pointer-events: none; }
+.ts-pair { display: flex; flex: none; align-items: center; }
+.ts-btn { width: 28px; height: 36px; border-radius: 8px; font: 700 12px/1 system-ui, sans-serif; color: var(--ink2); }
+.ts-btn:disabled { opacity: .28; }
+.ts-btn:active { background: var(--paper2); }
+.star-btn { color: var(--accent); }
+.ev-btn.is-saved { color: var(--accent); }
+.seek-links { display: flex; gap: 8px; justify-content: center; margin: 8px 0 24px; }
+.parked { padding: 48px 24px 32px; text-align: center; display: grid; gap: 10px; line-height: 1.45; background: #f3f4f6; color: #222; min-height: 60%; }
+.parked-mark { display: inline-block; justify-self: center; font-size: 11px; font-weight: 800; letter-spacing: .12em; background: #1a1a1a; color: #f5d76e; padding: 4px 10px; border-radius: 2px; }
+.parked h1 { font-size: 22px; font-weight: 700; }
+.unreachable h1 { font-size: 22px; }
+.page-status .site-main { padding: 28px 20px 40px; }
+.page-status .site-main h1 { margin-bottom: 8px; }
 .seek-home { padding: 64px 18px 0; }
 .seek-logo { font-size: 40px; font-weight: 700; letter-spacing: -1px; color: var(--seeker); text-align: center; margin-bottom: 22px; font-family: Georgia, "Times New Roman", serif; }
 .seek-form { display: flex; align-items: center; gap: 8px; border: 1px solid #d5d8dd; border-radius: 24px; padding: 0 16px; height: 48px; box-shadow: 0 1px 6px rgba(0,0,0,.06); background: var(--paper); }
@@ -124,6 +140,7 @@ a.lnk:active { opacity: .6; }
 .result-title { color: #1a4fb8; font-size: 18px; line-height: 1.25; margin: 3px 0; }
 .result-snip { font-size: 14px; line-height: 1.4; color: #3c4048; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .cached-tag { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 600; color: #8a5a00; background: #fff4d6; border-radius: 6px; padding: 2px 7px; }
+.official-tag { display: inline-block; margin-top: 6px; margin-right: 6px; font-size: 12px; font-weight: 600; color: #1a4fb8; background: #e8eef9; border-radius: 6px; padding: 2px 7px; }
 .img-query { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); }
 .img-result { display: flex; gap: 12px; align-items: flex-start; }
 .thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; flex: none; background: var(--paper2); }

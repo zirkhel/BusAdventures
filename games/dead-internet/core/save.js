@@ -8,6 +8,7 @@ import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
 import { migrateCases, migrateCaseStates } from "./cases.js";
 import { migrateMedia } from "./feed.js";
+import { migrateBrowser } from "./browser.js";
 
 export const SAVE_FORMAT = "dead-internet-save";
 
@@ -22,6 +23,8 @@ const MIGRATIONS = {
   // 4 → 5: case states (universe split). The case an old save played is active from day one.
   4: (s, w) => { migrateCaseStates(s, w); s.saveVersion = 5; return s; },
   6: (s, w) => { migrateEvidence(s, w); s.saveVersion = 7; return s; },
+  // 7 → 8: Browser bookmarks and text size. Forward is session-only and starts empty.
+  7: s => { migrateBrowser(s); s.saveVersion = 8; return s; },
   // 5 → 6: media. No follows, likes or "not interested" yet.
   5: s => { migrateMedia(s); s.saveVersion = 6; return s; },
 };
@@ -73,6 +76,13 @@ export function deserialize(w, text) {
     for (const id of Object.keys(s.media[k])) if (!ok(id)) { delete s.media[k][id]; drop(k, id); }
   for (const id of Object.keys(s.trust)) if (!w.characters.has(id)) delete s.trust[id];
   for (const c of w.characters.values()) if (!(c.id in s.trust)) s.trust[c.id] = c.trust?.start ?? 0;
+  if (s.browser && Array.isArray(s.browser.bookmarks)) {
+    s.browser.bookmarks = s.browser.bookmarks.filter(b => {
+      if (!b?.url) return false;
+      if (b.artifact && !w.artifacts.has(b.artifact)) { delete b.artifact; delete b.version; }
+      return true;
+    });
+  }
   if (s.contentVersion !== w.meta.contentVersion) warnings.push(`content ${s.contentVersion} → ${w.meta.contentVersion}`);
   s.contentVersion = w.meta.contentVersion;
   return { state: s, warnings };

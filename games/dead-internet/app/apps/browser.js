@@ -1,36 +1,67 @@
 // @ts-check
 // Browser with the Seeker search engine. Screens:
-//   home · results {q, results, title?, cacheOnly?} · page {id, version, view} · imageResults {image, flip, results}
-//   lookup {platform, q, url} (a tool page with no record for q) · history (recent pages and searches)
+//   home · results {q, results, title?, cacheOnly?} · page {id, version, view}
+//   imageResults {image, flip, results} · lookup {platform, q, url}
+//   history (recent pages, searches and bookmarks)
+//   notfound · maintenance · parked · gone · sitehome  (W3 site-status pages)
 
 import { h, icon, fmtDate } from "../ui.js";
 import { suggestBox } from "../suggest.js";
 import { img } from "../media.js";
-import { renderArtifact, renderLogin, renderGone } from "../render.js";
+import { renderArtifact, renderGone } from "../render.js";
 import { hostOf, designFor } from "../../core/sites.js";
+import { textScale, TEXT_SIZES } from "../../core/browser.js";
+import { renderNotFound, renderMaintenance, renderParked, renderUnreachable, renderSiteHome, renderSiteLogin } from "../sites/status.js";
 
 export function browserApp(phone) {
   const g = phone.g;
 
-  function addressBar(desc, canBack) {
+  function addressBar(desc) {
+    const addr = addressValue(desc);
     const input = /** @type {HTMLInputElement} */ (h("input.addr", { type: "search", enterkeyhint: "go", autocapitalize: "off", autocomplete: "off", spellcheck: "false",
-      placeholder: "Search Seeker or type an address", value: desc.kind === "page" ? desc.url || "" : desc.kind === "results" ? desc.q : desc.kind === "lookup" ? desc.url : "" }));
+      placeholder: "Search Seeker or type an address", value: addr }));
     input.addEventListener("focus", () => input.select());
     const form = h("form.addr-form", { onsubmit: e => { e.preventDefault(); input.blur(); phone.browse(input.value); } },
       leadIcon(desc),
       input);
-    suggestBox(phone, input, form, q => { input.blur(); phone.browse(q); }, desc.kind === "page" ? desc.url : desc.kind === "results" ? desc.q : "");
+    suggestBox(phone, input, form, q => { input.blur(); phone.browse(q); }, addr);
+    const canFwd = phone.canForward();
     return h("div.topbar.browser-bar",
       phone.backButton(),
+      h("button.icon-btn.nav-btn.fwd-btn", { type: "button", "aria-label": "Forward", disabled: canFwd ? undefined : true, onclick: () => phone.forward() }, icon("forward")),
       form,
-      desc.kind === "page" ? saveButton(desc) : null);
+      sizeButtons(),
+      starButton(desc),
+      evidenceButton(desc));
   }
 
+  function addressValue(desc) {
+    if (desc.kind === "page") return desc.url || "";
+    if (desc.kind === "results") return desc.q || "";
+    if (desc.kind === "lookup" || desc.kind === "notfound" || desc.kind === "maintenance" || desc.kind === "parked" || desc.kind === "gone" || desc.kind === "sitehome") return desc.url || "";
+    return "";
+  }
+
+  function sizeButtons() {
+    const i = g.s.browser?.textSize ?? 1;
+    return h("div.ts-pair",
+      h("button.ts-btn", { type: "button", "aria-label": "Smaller text", disabled: i <= 0 ? true : undefined, onclick: () => phone.stepTextSize(-1) }, "A−"),
+      h("button.ts-btn", { type: "button", "aria-label": "Larger text", disabled: i >= TEXT_SIZES.length - 1 ? true : undefined, onclick: () => phone.stepTextSize(1) }, "A+"));
+  }
+
+  function starButton(desc) {
+    const url = desc.url || desc.view?.url;
+    if (!url) return null;
+    const on = phone.isBookmarked(desc);
+    return h("button.icon-btn.star-btn", { type: "button", "aria-label": on ? "Remove bookmark" : "Bookmark this page", onclick: () => phone.toggleBookmark(desc) },
+      icon(on ? "starred" : "star"));
+  }
 
   function leadIcon(desc) {
     if (desc.kind === "page" && desc.view?.cached) return h("span.addr-tag", "cached");
     if (desc.kind === "page" && desc.view?.locked) return icon("lock", "addr-ico");
-    if (desc.kind === "page") {
+    if (desc.kind === "gone") return icon("globe", "addr-ico");
+    if (desc.kind === "page" || desc.kind === "sitehome" || desc.kind === "notfound" || desc.kind === "maintenance" || desc.kind === "parked") {
       const fav = faviconOf(desc);
       if (fav) return fav;
     }
@@ -39,7 +70,7 @@ export function browserApp(phone) {
 
   function faviconOf(desc) {
     const host = hostOf(desc.url || desc.view?.url || "");
-    const siteId = host && g.w.siteByDomain.get(host);
+    const siteId = (desc.site && g.w.sites.has(desc.site) && desc.site) || (host && g.w.siteByDomain.get(host));
     const site = siteId && g.w.sites.get(siteId);
     if (!site) return null;
     const asOf = String(g.date || "").slice(0, 10);
@@ -49,12 +80,14 @@ export function browserApp(phone) {
     return h("span.addr-favicon", img(raw, { cls: "addr-favicon-img", alt: "", eager: true }));
   }
 
-  function saveButton(desc) {
+  /** Casebook save — the book icon, not the star (the star is a Browser bookmark). */
+  function evidenceButton(desc) {
     const v = desc.view;
     if (!v || v.error || v.locked) return null;
     const ref = { artifact: desc.id, version: v.versionId };
-    return h("button.icon-btn", { "aria-label": "Save as evidence", onclick: () => phone.saveEvidence(ref) },
-      icon(phone.isSaved(ref) ? "bookmarked" : "bookmark"));
+    const saved = phone.isSaved(ref);
+    return h("button.icon-btn.ev-btn", { type: "button", class: saved ? "is-saved" : "", "aria-label": "Save as evidence", onclick: () => phone.saveEvidence(ref) },
+      icon("book"));
   }
 
   function home() {
@@ -66,7 +99,9 @@ export function browserApp(phone) {
       form,
       h("div.seek-tip", "Tip: put words in \"quotes\" to search for an exact phrase."),
       recent(),
-      h("button.link-btn", { onclick: () => phone.push("browser", { kind: "history" }) }, icon("history"), "History"));
+      h("div.seek-links",
+        h("button.link-btn", { onclick: () => phone.push("browser", { kind: "history", tab: "visited" }) }, icon("history"), "History"),
+        h("button.link-btn", { onclick: () => phone.push("browser", { kind: "history", tab: "bookmarks" }) }, icon("star"), "Bookmarks")));
   }
 
   /** One tap repeats a recent search. */
@@ -77,15 +112,20 @@ export function browserApp(phone) {
       qs.map(q => h("button.chip", { onclick: () => phone.search(q) }, icon("clock"), q)));
   }
 
-  /** Everything the player has visited, and every search, newest first. */
+  /** Everything the player has visited, every search, and Browser bookmarks, newest first. */
   function history(desc) {
     const tab = desc.tab || "visited";
-    const seg = h("div.seg.tabs", [["visited", "Visited"], ["searches", "Searches"]].map(([id, label]) =>
+    const seg = h("div.seg.tabs", [["visited", "Visited"], ["searches", "Searches"], ["bookmarks", "Bookmarks"]].map(([id, label]) =>
       h("button", { class: tab === id ? "on" : "", onclick: () => phone.replaceTop({ ...desc, tab: id }) }, label)));
     if (tab === "searches") {
       const list = [...g.s.searches].reverse();
       return [seg, list.length ? list.map(s => h("button.hist-row", { onclick: () => phone.search(s.q) }, icon("search"),
         h("div.pi-main", h("b", s.q), h("div.muted", `Day ${s.day}`)))) : h("div.empty.muted", "No searches yet.")];
+    }
+    if (tab === "bookmarks") {
+      const list = [...(g.s.browser?.bookmarks || [])].reverse();
+      return [seg, list.length ? list.map(b => h("button.hist-row", { onclick: () => phone.browse(b.url) }, icon("star"),
+        h("div.pi-main", h("b", b.title || b.url), h("div.muted", b.url + (b.day ? ` · Day ${b.day}` : ""))))) : h("div.empty.muted", "No bookmarks yet. Tap the star in the address bar.")];
     }
     const ico = { page: "globe", thread: "chat", results: "search" };
     return [seg, phone.recent.length ? phone.recent.map(r => h("button.hist-row", { onclick: () => phone.openRecent(r) }, icon(r.app === "connect" ? "people" : ico[r.kind] || "globe"),
@@ -105,10 +145,14 @@ export function browserApp(phone) {
   }
 
   function resultItem(r) {
-    const open = () => phone.openArtifact(r.artifact, r.cached ? r.versionId : undefined, phone.appFor(r.artifact) === "connect" && !r.cached ? "connect" : "browser");
+    const open = () => {
+      if (!r.artifact) { phone.browse(r.url); return; }
+      phone.openArtifact(r.artifact, r.cached ? r.versionId : undefined, phone.appFor(r.artifact) === "connect" && !r.cached ? "connect" : "browser");
+    };
     return h("div.result", h("button.result-main", { onclick: open },
       h("div.result-site", h("span.site-name", g.w.platforms.get(r.platform)?.name || domainOf(r.url, r.platform)), h("span.muted", r.url || "")),
       h("div.result-title", r.title),
+      r.official ? h("span.official-tag", r.kind === "gone" || r.kind === "parked" || r.kind === "maintenance" ? "Website" : "Official site") : null,
       r.locked ? h("div.result-snip.muted", icon("lock", "inline"), " Sign-in required") :
         h("div.result-snip", r.date ? h("span.muted", fmtDate(r.date) + " — ") : null, r.snippet || ""),
       r.cached ? h("span.cached-tag", "Cached copy") : null));
@@ -140,11 +184,14 @@ export function browserApp(phone) {
   function page(desc) {
     const v = desc.view;
     if (!v) return h("div.empty", "Nothing here.");
-    if (v.locked) return renderLogin(phone, v, () => {
-      const r = g.open(desc.id);
-      phone.replaceTop({ ...desc, view: r.view });
-      phone.toast("Signed in.");
-    });
+    if (v.locked) {
+      const form = loginForm(v, () => {
+        const r = g.open(desc.id);
+        phone.replaceTop({ ...desc, view: r.view });
+        phone.toast("Signed in.");
+      });
+      return renderSiteLogin(phone, v, form) || form;
+    }
     if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"));
     const art = renderArtifact(phone, v);
     if (v.saved) art.prepend(h("div.cache-banner", h("b", "Saved copy"), " This is the version you saved to Casebook."));
@@ -152,13 +199,55 @@ export function browserApp(phone) {
     return art;
   }
 
+  function loginForm(v, onDone) {
+    const user = h("input", { type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false", placeholder: "Username" });
+    const pass = h("input", { type: "password", autocomplete: "off", placeholder: "Password" });
+    const err = h("div.form-err");
+    const submit = e => {
+      e.preventDefault();
+      const r = phone.g.login(v.loginSite, user.value, pass.value);
+      if (r.error) { err.textContent = phone.str("errors.login_failed"); pass.value = ""; }
+      else onDone();
+    };
+    return h("div.login-card", icon("lock", "big"), h("h1", v.title), h("div.muted", v.url || ""),
+      h("form", { onsubmit: submit }, user, pass, err, h("button.btn.primary", { type: "submit" }, "Sign in")));
+  }
+
+  function bodyOf(desc) {
+    if (desc.kind === "home") return home();
+    if (desc.kind === "results") return results(desc);
+    if (desc.kind === "imageResults") return imageResults(desc);
+    if (desc.kind === "history") return history(desc);
+    if (desc.kind === "lookup") return lookup(desc);
+    if (desc.kind === "notfound") return renderNotFound(phone, desc);
+    if (desc.kind === "maintenance") return renderMaintenance(phone, desc);
+    if (desc.kind === "parked") return renderParked(phone, desc);
+    if (desc.kind === "gone") return renderUnreachable(phone, desc);
+    if (desc.kind === "sitehome") return renderSiteHome(phone, desc);
+    return page(desc);
+  }
+
+  function titleOf(desc) {
+    if (!desc) return "Seeker";
+    if (desc.kind === "home") return "Seeker";
+    if (desc.kind === "results") return desc.title || `“${desc.q}”`;
+    if (desc.kind === "history") return desc.tab === "bookmarks" ? "Bookmarks" : desc.tab === "searches" ? "Searches" : "History";
+    if (desc.kind === "notfound") return "Page not found";
+    if (desc.kind === "maintenance") return "We'll be back soon";
+    if (desc.kind === "parked") return "This domain may be for sale";
+    if (desc.kind === "gone") return "This site can't be reached";
+    if (desc.kind === "sitehome") return desc.url || "Home";
+    if (desc.kind === "page") return desc.view?.title || desc.url || "Page";
+    if (desc.kind === "lookup") return desc.q || "Lookup";
+    return "";
+  }
+
   return {
     id: "browser",
     root: () => ({ kind: "home" }),
+    title: titleOf,
     render(desc, canBack) {
-      const body = desc.kind === "home" ? home() : desc.kind === "results" ? results(desc) :
-        desc.kind === "imageResults" ? imageResults(desc) : desc.kind === "history" ? history(desc) : desc.kind === "lookup" ? lookup(desc) : page(desc);
-      return [addressBar(desc, canBack), h("div.scroll", body)];
+      return [addressBar(desc), h("div.scroll", { style: { zoom: String(textScale(g.s)) } }, bodyOf(desc))];
     },
   };
 }
