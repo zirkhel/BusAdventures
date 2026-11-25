@@ -6,7 +6,7 @@ import { initCases } from "./cases.js";
 import { initMedia } from "./feed.js";
 import { emptyBrowserState } from "./browser.js";
 
-export const SAVE_VERSION = 11;
+export const SAVE_VERSION = 12;
 
 /**
  * @param {any} w world from buildWorld()

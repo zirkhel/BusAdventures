@@ -12,6 +12,7 @@ import { sendMessage, canContact, contacts, thread, availablePrompts } from "./d
 import { updateEvidence, addQuestion, updateQuestion, linkQuestion, deleteQuestion, addLink, updateLink, removeLink } from "./workbench.js";
 import { assessSource, linkSources, sourceCard, sourcesView } from "./sources.js";
 import { compareView } from "./compare.js";
+import { editorNotes, reportBasis, eventBasis } from "./reporting.js";
 import { archiveView } from "./archive.js";
 import { savedArtifactView } from "./artifacts.js";
 import * as CB from "./casebook.js";
@@ -85,7 +86,15 @@ export class Game {
       case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
       case "deleteNote": r = CB.deleteNote(this, a.id); break;
       case "review": r = CB.review(this, a.channel, a.hypotheses, { case: a.case }); break;
-      case "publish": r = CB.publish(this, a.channel, a.hypotheses, { case: a.case, events: a.events }); break;
+      case "publish": {
+        // The player's own Casebook behind the report, taken before it goes out (step 5). Stored
+        // with the report for the player; publish() and the world never read it.
+        const basis = reportBasis(this, a.hypotheses, a.events);
+        r = CB.publish(this, a.channel, a.hypotheses, { case: a.case, events: a.events });
+        const rep = r?.ok ? this.s.reports.find(x => x.id === r.report.id) : null;
+        if (rep) rep.snapshot = { ...basis, cut: [...rep.cut] };
+        break;
+      }
       case "setCases": r = CS.setCases(this, a.kind, a.id, a.cases); break;
       case "sleep": r = this.#sleep(); break;
       case "readNotification": r = this.#readNotification(a.id); break;
@@ -144,6 +153,10 @@ export class Game {
   /** One source card (visible sources only), and every visible source with the player's answers. */
   sourceCard(key) { return sourceCard(this, key); }
   sources() { return sourcesView(this); }
+  /** The editor's notes on the player's own reservations, before publishing. Advice only (step 5). */
+  editorNotes(channel, hypotheses) { return editorNotes(this, channel, hypotheses); }
+  /** The player's own Casebook behind claims and events, as a report would store it. */
+  reportBasis(hypotheses, events = []) { return reportBasis(this, hypotheses, events); }
   /** Free note. `from` says where it was written (artifact/message), `about` what it names. */
   note(t, from, about) { return this.dispatch({ type: "addNote", text: t, ...(from ? { from } : {}), ...(about ? { about } : {}) }); }
   editNote(id, t) { return this.dispatch({ type: "updateNote", id, text: t }); }

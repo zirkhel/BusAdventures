@@ -297,7 +297,9 @@ export function casebookView(g) {
     timeline: (g.s.timeline || []).map(e => ({ ...e })),
     reports: g.s.reports.map(r => ({ id: r.id, day: r.day, case: r.case, channel: r.channel, items: r.items.map(i => ({ label: i.label })),
       cut: asArray(r.cut).map(id => { const h = g.s.hypotheses.find(x => x.id === id); return h ? hypothesisLabel(g, h) : null; }).filter(Boolean),
-      events: asArray(r.events).map(e => ({ id: e.id, title: e.title, date: e.date })) })),
+      events: asArray(r.events).map(e => ({ id: e.id, title: e.title, date: e.date })),
+      // The player's own Casebook when the report went out (step 5): counts and reservations, never truth.
+      snapshot: r.snapshot ? structuredClone(r.snapshot) : null })),
   };
 }
 

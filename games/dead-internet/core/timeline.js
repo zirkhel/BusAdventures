@@ -20,6 +20,7 @@
 
 import { isPublicRef } from "./discovery.js";
 import { cleanCases } from "./cases.js";
+import { eventBasis } from "./reporting.js";
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 const APPROX = /^\d{4}(?:-\d{2}(?:-\d{2})?)?$/;
@@ -144,7 +145,12 @@ const cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
 /** The player's timeline, sorted only by the player's own dates. Stable for equal keys. */
 export function timelineView(g) {
   return g.s.timeline.map((e, i) => ({ e, i })).sort((a, b) => cmp(sortKey(a.e), sortKey(b.e)) || a.i - b.i)
-    .map(({ e }) => ({ ...e, supports: e.evidence.filter(x => x.stance === "supports").length, contradicts: e.evidence.filter(x => x.stance === "contradicts").length }));
+    .map(({ e }) => {
+      // Visible sources and the player's own count (core/sources.js), labelled as theirs in the UI.
+      const b = eventBasis(g, e);
+      return { ...e, supports: e.evidence.filter(x => x.stance === "supports").length, contradicts: e.evidence.filter(x => x.stance === "contradicts").length,
+        supportSources: b.supportSources, ownSupportSources: b.ownSupportSources, contradictSources: b.contradictSources, ownContradictSources: b.ownContradictSources };
+    });
 }
 
 // ── Dates in text and on things, for prefilling (never for checking) ─────────

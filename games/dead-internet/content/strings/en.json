@@ -42,7 +42,14 @@
    "strong": "\"{claim}\": two independent sources. I can stand behind that.",
    "weak": "\"{claim}\": one source. That's a lead, not a story. Find me a second, independent one.",
    "none": "\"{claim}\": nothing you've shown me backs this up. Cut it or find something.",
-   "bold": "\"{claim}\": that's a big claim. Big claims need more than this."
+   "bold": "\"{claim}\": that's a big claim. Big claims need more than this.",
+   "own": {
+    "rejected": "\"{claim}\": you've rejected this theory yourself. Why put it out under your name?",
+    "against": "\"{claim}\": you've linked {against} against it yourself. Tell me why that doesn't sink it before it goes out.",
+    "ownCount": "\"{claim}\": you've marked some of these as the same origin yourself. By your own count that's {own}, not {visible}.",
+    "notTrusted": "\"{claim}\": you told me you don't trust {notTrusted} behind it. If you don't, why should readers?",
+    "notAuthentic": "\"{claim}\": you doubt {notAuthentic}. Don't lean on it until you know."
+   }
   }
  },
  "errors": {
@@ -110,6 +117,10 @@
    "theory": {
     "title": "Theories",
     "text": "A theory says who did what. Link evidence to it. The Casebook counts your independent sources. It cannot tell you whether you are right."
+   },
+   "compare": {
+    "title": "Comparing",
+    "text": "Put two or three things side by side. The differences are shown; what they mean is up to you. Connect two pieces when you see how they relate."
    },
    "report": {
     "title": "Publishing",

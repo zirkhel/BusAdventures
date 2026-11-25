@@ -148,6 +148,9 @@ function snapshot({ g, hyps }) {
     compare: comparisons(g),
     archive: archives(g),
     sources: g.sources(),
+    // Step 5: the editor's notes on the player's own reservations, and what a report would store.
+    editorNotes: g.editorNotes("daily_record", g.s.hypotheses.map(h => h.id)),
+    reportBasis: g.reportBasis(g.s.hypotheses.map(h => h.id), g.s.timeline.map(e => e.id)),
     _hiddenInViews: g.s.evidence.filter(e => e.artifact).map(e => g.view(e.artifact, e.version ?? undefined))
       .filter(v => JSON.stringify(v) !== JSON.stringify(strip(v))).map(v => v.id),
   };
@@ -174,6 +177,8 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
     && a.sources.some(x => x.group.some(y => !y.direct && y.via.length)) && a.sources.some(x => x.setAside && x.setAside === x.evidence.length),
     "step 4 source cards are part of the comparison");
   assert.ok(a.casebook.hypotheses.some(h => h.ownSourceCount < h.sourceCount), "the player's own source count is part of the comparison");
+  assert.ok(a.editorNotes.notes.length > 5 && new Set(a.editorNotes.notes.map(n => n.kind)).size >= 4 && a.reportBasis.theories.length > 3 && a.reportBasis.events.length,
+    "step 5 editor notes and report snapshots are part of the comparison");
   assert.deepEqual(b, a, "a world where everything has one hidden source looks the same");
   assert.deepEqual(c, a, "a world where everything has its own hidden source looks the same");
 });
@@ -182,7 +187,10 @@ test("twin worlds: the editor cuts the same claims; only the consequences differ
   const cutIn = async w => {
     const p = play(w);
     const r = p.g.publish("daily_record", p.hyps);
-    return { cut: r.ok ? r.report.cut : null, refused: !!r.refused, lines: r.lines ?? null };
+    // Step 5: the snapshot of the player's Casebook stored with the report is the same too.
+    const snap = r.ok ? p.g.casebook().reports.at(-1).snapshot : null;
+    const c = p.g.publish("connect", p.g.s.hypotheses.map(h => h.id), { events: p.g.s.timeline.map(e => e.id) });
+    return { cut: r.ok ? r.report.cut : null, refused: !!r.refused, lines: r.lines ?? null, snap, connect: c.ok ? p.g.casebook().reports.at(-1).snapshot : c };
   };
   const base = await cutIn(await loadWorld());
   assert.deepEqual(await cutIn(twin(await loadWorld(), () => "one-source")), base);
@@ -209,7 +217,7 @@ test("the presentation layer and provenance never touch canon helpers", async ()
   const { join, dirname } = await import("node:path");
   const { fileURLToPath } = await import("node:url");
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const files = ["core/provenance.js", "core/workbench.js", "core/compare.js", "core/archive.js", "core/sources.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
+  const files = ["core/provenance.js", "core/workbench.js", "core/compare.js", "core/archive.js", "core/sources.js", "core/reporting.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
     ...(await readdir(join(root, "app/apps"))).filter(f => f.endsWith(".js")).map(f => `app/apps/${f}`)];
   const banned = /\b(supportOf|truthOf|matchClaim|evidenceFacts|supportsOf|operatedBy|isHuman)\b|\.(claims|facts)\b|import[^;]*\bsourceOf\b/;
   for (const f of files) {
@@ -219,6 +227,9 @@ test("the presentation layer and provenance never touch canon helpers", async ()
   // Step 4: the source cards read sources only through apparentSource, never a hidden field.
   const cards = (await readFile(join(root, "core/sources.js"), "utf8")).split("\n").filter(l => !/^\s*(\/\/|\*|\/\*)/.test(l)).join("\n");
   assert.doesNotMatch(cards, /\.(source|supports|mentions|truth)\b|\bw\.(artifacts|accounts|entities|claims|facts|images|characters)\b/, "core/sources.js reads hidden fields");
+  // Step 5: the editor's notes and report snapshots read only the player's layer, never canon or support.
+  const rep = (await readFile(join(root, "core/reporting.js"), "utf8")).split("\n").filter(l => !/^\s*(\/\/|\*|\/\*)/.test(l)).join("\n");
+  assert.doesNotMatch(rep, /\.(source|supports|mentions|truth|operatedBy|isHuman)\b|\bw\.(artifacts|accounts|entities|claims|facts|images|characters|predicates)\b|supportOf|truthOf|matchClaim|evidenceFacts|sourceOf/, "core/reporting.js reads hidden fields");
   // The Casebook views live next to scoring in core/casebook.js: each view function must stay clean.
   const cb = await readFile(join(root, "core/casebook.js"), "utf8");
   const views = ["evidenceAbout", "hypothesisLabel", "theoryLabel", "counts", "visibleSources", "casebookView", "alternativesOf", "isStructured",
