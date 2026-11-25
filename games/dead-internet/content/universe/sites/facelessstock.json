@@ -1,0 +1,37 @@
+{
+ "id": "facelessstock",
+ "platform": "facelessstock",
+ "domain": "facelessstock.com",
+ "org": "facelessstock_org",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2021-01-01",
+   "template": "landing",
+   "variant": "saas",
+   "theme": {
+    "logo": "LOGO_FACELESS",
+    "palette": {
+     "bg": "#faf8ff",
+     "ink": "#1a1228",
+     "accent": "#8a4fff"
+    }
+   },
+   "nav": [
+    {
+     "label": "Portrait 44812",
+     "href": "/portrait/44812"
+    },
+    {
+     "label": "Portrait 51007",
+     "href": "/portrait/51007"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Not in the library",
+  "text": "That portrait is not in the public catalogue."
+ },
+ "status": []
+}

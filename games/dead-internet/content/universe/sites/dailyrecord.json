@@ -1,0 +1,25 @@
+{
+ "id": "dailyrecord",
+ "platform": "dailyrecord",
+ "domain": "dailyrecord-pc.com",
+ "org": "daily_record",
+ "presentation": "news-app",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "1911-01-01",
+   "template": "news",
+   "variant": "record",
+   "theme": {
+    "logo": "LOGO_DAILYRECORD"
+   },
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "The Daily Record has no article at that address."
+ },
+ "status": [],
+ "notes": "Already has a news template and its own app."
+}

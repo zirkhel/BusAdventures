@@ -1,0 +1,35 @@
+{
+ "id": "kestrel",
+ "platform": "kestrel_site",
+ "domain": "kestrel-logistics.com",
+ "org": "kestrel",
+ "designs": [
+  {
+   "id": "d2019",
+   "from": "2019-06-01",
+   "template": "corporate",
+   "variant": "industrial",
+   "theme": {
+    "logo": "LOGO_KESTREL",
+    "palette": {
+     "bg": "#f4f4f1",
+     "ink": "#14213d",
+     "accent": "#f2a900"
+    },
+    "font": "condensed",
+    "radius": 0
+   },
+   "nav": [
+    {
+     "label": "Who we deliver for",
+     "href": "/clients"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Wrong turn",
+  "text": "We couldn't find that page. Even our drivers get lost sometimes."
+ },
+ "status": []
+}

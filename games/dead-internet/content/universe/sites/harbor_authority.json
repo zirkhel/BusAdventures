@@ -1,0 +1,28 @@
+{
+ "id": "harbor_authority",
+ "platform": "harbor_authority",
+ "domain": "harbor.portcalder.gov",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2010-01-01",
+   "template": "government",
+   "variant": "municipal",
+   "theme": {
+    "logo": "text:Port Calder Harbor Authority"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "The Harbor Authority has no page at that address."
+ },
+ "status": [],
+ "notes": "Referenced only as 'their site' (Unfiltered comment on the pylon memo: letterhead matches the site). Canon does not name the domain; harbor.portcalder.gov is an assigned municipal host so the reference can resolve. Minimal home only; no engineering claims."
+}

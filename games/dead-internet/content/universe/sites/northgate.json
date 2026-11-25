@@ -1,0 +1,40 @@
+{
+ "id": "northgate",
+ "platform": "northgate_site",
+ "domain": "northgatedev.com",
+ "org": "northgate",
+ "designs": [
+  {
+   "id": "d2024",
+   "from": "2024-01-01",
+   "template": "corporate",
+   "variant": "glossy",
+   "theme": {
+    "logo": "LOGO_NORTHGATE",
+    "palette": {
+     "bg": "#f4f1ea",
+     "ink": "#1b2a4a",
+     "accent": "#8a8478"
+    },
+    "font": "serif"
+   },
+   "header": {
+    "tagline": "Homes for the next generation"
+   },
+   "nav": [
+    {
+     "label": "Eastfield Waterfront",
+     "href": "/waterfront"
+    }
+   ],
+   "footer": {
+    "text": "Northgate Development"
+   }
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "That page is not on Northgate's site."
+ },
+ "status": []
+}

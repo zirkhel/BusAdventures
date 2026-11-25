@@ -1,0 +1,35 @@
+{
+ "id": "brightline_portal",
+ "platform": "brightline_portal",
+ "domain": "portal.bl-ops.net",
+ "org": "brightline",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2023-06-09",
+   "template": "corporate",
+   "variant": "agency",
+   "theme": {
+    "logo": "LOGO_BRIGHTLINE",
+    "palette": {
+     "bg": "#0f1a2b",
+     "ink": "#f4f0e8",
+     "accent": "#ffcc66"
+    }
+   },
+   "nav": [
+    {
+     "label": "Client login",
+     "href": "/",
+     "state": "login"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Sign in required",
+  "text": "This portal is for Brightline clients."
+ },
+ "status": [],
+ "notes": "Client portal. The public Brightline site is brightlinemedia.co. bl-ops.net without the portal host is an email/ops domain, not a public website."
+}

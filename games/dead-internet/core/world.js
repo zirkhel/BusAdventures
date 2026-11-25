@@ -4,6 +4,7 @@
 // Nothing here knows about a specific story: Dead Internet is the first world, not the only one.
 
 import { indexById, asArray } from "./util.js";
+import { indexSites } from "./sites.js";
 
 /**
  * @param {any} raw  merged content: { meta, entities, accounts, platforms, images, artifacts,
@@ -43,6 +44,7 @@ export function buildWorld(raw) {
     profileOf: new Map(),
   };
 
+  indexSites(w, raw.sites || []);
   for (const c of w.characters.values()) if (c.account) w.characterByAccount.set(c.account, c.id);
   for (const a of w.artifacts.values()) {
     // A clip "shows" its poster and key frames, so searching by image also finds clips.

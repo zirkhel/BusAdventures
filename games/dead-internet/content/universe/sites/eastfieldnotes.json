@@ -1,0 +1,67 @@
+{
+ "id": "eastfieldnotes",
+ "platform": "eastfieldnotes",
+ "domain": "eastfieldnotes.blog",
+ "designs": [
+  {
+   "id": "d2012",
+   "from": "2012-01-01",
+   "template": "blog",
+   "variant": "classic",
+   "theme": {
+    "logo": "LOGO_EASTFIELDNOTES",
+    "palette": {
+     "bg": "#fdfaf3",
+     "ink": "#2a2418",
+     "accent": "#7a5c2e"
+    },
+    "font": "georgia"
+   },
+   "header": {
+    "tagline": "a librarian's notes on the old girl and her neighbours."
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ],
+   "footer": {
+    "text": "Eastfield Notes"
+   }
+  },
+  {
+   "id": "d2025",
+   "from": "2025-10-22",
+   "template": "blog",
+   "variant": "minimal",
+   "theme": {
+    "logo": "text:Eastfield Notes",
+    "palette": {
+     "bg": "#f7f5f0",
+     "ink": "#1c1c1c",
+     "accent": "#3d6b4f"
+    },
+    "font": "sans"
+   },
+   "header": {
+    "tagline": "growing together."
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ],
+   "footer": {
+    "text": "Eastfield Notes"
+   }
+  }
+ ],
+ "notFound": {
+  "title": "Nothing here",
+  "text": "That post has been moved or removed."
+ },
+ "status": [],
+ "notes": "Mara used a ~2012 blog theme from 2019. Brightline switched the theme on 2025-10-22 when they took the blog over."
+}

@@ -1,0 +1,27 @@
+{
+ "id": "docshare",
+ "platform": "docshare",
+ "domain": "docshare.link",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2019-01-01",
+   "template": "document",
+   "variant": "viewer",
+   "theme": {
+    "logo": "LOGO_DOCSHARE",
+    "palette": {
+     "bg": "#fafafa",
+     "ink": "#111",
+     "accent": "#2f6fde"
+    }
+   },
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "This link has expired",
+  "text": "The file is gone, or the link was typed wrong."
+ },
+ "status": []
+}

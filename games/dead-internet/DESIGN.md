@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 25. november 2026, etter Casebook steg 1 og W0-hvitelisten for nettstedsvisning (se DEVPLAN.md)._
+_Oppdatert 25. november 2026, etter Casebook steg 1, W0-hvitelisten og W1-nettstedsmodellen (se DEVPLAN.md)._
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md) (godkjent med justeringene i §0 der).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Casebook: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md). Nettsteder: [docs/WEBSITES.md](docs/WEBSITES.md). Saksavslutning: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
@@ -54,6 +54,7 @@ games/dead-internet/
     util.js
   content/
     manifest.json           universets filer (files) og mysteriepakkene (mysteries)
+    universe/sites/*.json   ett nettsted per fil (W1): design, nav, status, notFound
     universe/*.json         felles for alle mysterier: meta, predicates, platforms, entities,
                             accounts, images, characters, canon (fakta), terms, mysteries (frø),
                             artifacts/filler.json (bakgrunnsinnhold)
@@ -414,11 +415,11 @@ Full gjennomgang: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Pr
 
 **For fremtidige mysterier** (forslag): påstander er byggeklossene; tre lag avslutninger (milepæler, sidekonsekvenser, ettervirkninger); dimensjonene Accuracy, Evidence, Coverage, Impact, Collateral og Timing er en sjekkliste for forfatteren, aldri tall for spilleren; en utfallsmatrise-test publiserer kombinasjoner av påstander × kanal × før/etter frist.
 
-## Autentiske nettsteder (godkjent designretning 24. nov 2026, W0 implementert)
+## Autentiske nettsteder (godkjent designretning 24. nov 2026, W0–W1 implementert)
 
 Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjelder foran resten av dokumentet. Implementeres i veikartets punkt 5 (W0–W8), ikke før.
 
-- **Arkitektur:** artefakten er fortsatt grunnenheten (søk, cache, versjoner, oppdagelse og bevis uendret). Nytt: nettstedskonfigurasjon (`content/universe/sites/<site>.json`) med daterte `designs`, `nav`, `status` (parkert, vedlikehold, borte) og `notFound`. Sideversjoner får `blocks`. Sider med `body` vises som én tekstblokk, så alt eksisterende virker. Nye sider får id `W-<site>-<nnnn>`.
+- **Arkitektur:** artefakten er fortsatt grunnenheten (søk, cache, versjoner, oppdagelse og bevis uendret). Nytt i W1: nettstedskonfigurasjon (`content/universe/sites/<site>.json`) med daterte `designs`, `nav`, `status` (parkert, vedlikehold, borte) og `notFound`, indeksert av `core/sites.js`. Sideversjoner kan ha `blocks`; sider med bare `body` blir én tekstblokk. Inventar og uløste referanser: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Nye sider får id `W-<site>-<nnnn>`.
 - **Maler:** elleve gjenbrukbare maler (Corporate, Government, Blog, Wiki, Forum, News, Anonymous, Legacy, Personal, Landing, Document) med varianter og temaer. Ingen nye rammeverk, mobil først, bare systemfonter.
 - **Design versjoneres etter dato.** En cachet side vises med designet som gjaldt da.
 - **Lister bygger seg selv** fra synlige sider med samme `site`/`page`. Cachede versjoner viser bare sider fra før cache-datoen. `listed: false` holder en side utenfor.

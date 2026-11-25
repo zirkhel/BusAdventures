@@ -1,0 +1,31 @@
+{
+ "id": "threadline",
+ "platform": "threadline",
+ "domain": "threadline.net",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2012-01-01",
+   "template": "forum",
+   "variant": "classic",
+   "theme": {
+    "logo": "LOGO_THREADLINE"
+   },
+   "nav": [
+    {
+     "label": "r/port-calder",
+     "href": "/t/port-calder/best-fish-and-chips"
+    },
+    {
+     "label": "r/tech",
+     "href": "/t/tech/dead-internet-theory"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Thread not found",
+  "text": "That thread was removed, or the id is wrong."
+ },
+ "status": []
+}

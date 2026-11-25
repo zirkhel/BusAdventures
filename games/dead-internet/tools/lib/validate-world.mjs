@@ -5,6 +5,7 @@
 // INFO = worth a look.
 
 import { buildWorld, imageRoot } from "../../core/world.js";
+import { hostOf, siteIdOf, resolveHref, NAV_STATES, EMAIL_ONLY_DOMAINS } from "../../core/sites.js";
 import { CONDITION_KEYS } from "../../core/conditions.js";
 import { EFFECT_KEYS } from "../../core/rules.js";
 import { explore } from "./explorer.mjs";
@@ -481,5 +482,59 @@ export function validateWorld(raw, opts = {}) {
 
     }
   }
+  checkSites(w, raw, err, warn);
   return { issues, runs: allRuns[[...w.mysteries.values()].find(x => x.testing)?.id] };
 }
+
+const SITE_HOST_RE = /\b(?:https?:\/\/)?([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*\.(?:com|org|net|gov|io|co|app|blog|news|social|search|link|example|mail|edu|info|biz|us|uk|channel))\b/gi;
+
+function collectHosts(node, into) {
+  if (typeof node === "string") {
+    SITE_HOST_RE.lastIndex = 0;
+    let m;
+    while ((m = SITE_HOST_RE.exec(node))) into.add(m[1].toLowerCase());
+  } else if (Array.isArray(node)) node.forEach(x => collectHosts(x, into));
+  else if (node && typeof node === "object") Object.values(node).forEach(x => collectHosts(x, into));
+}
+
+function checkSites(w, raw, err, warn) {
+  const sites = raw.sites || [];
+  for (const s of sites) {
+    const where = `site ${s.id || "?"}`;
+    if (!s.id) err("sites", "site without id");
+    if (!s.domain) err(where, "missing domain");
+    if (s.platform && !w.platforms.has(s.platform)) err(where, `unknown platform ${s.platform}`);
+    if (s.org && !w.entities.has(s.org)) err(where, `unknown org ${s.org}`);
+    if (!Array.isArray(s.designs) || !s.designs.length) err(where, "needs at least one design");
+    for (const d of s.designs || []) {
+      const dw = `${where} design ${d.id || "?"}`;
+      if (!d.id) err(dw, "missing id");
+      if (!d.from) err(dw, "missing from date");
+      if (!d.template) err(dw, "missing template");
+      for (const link of d.nav || []) {
+        const lw = `${dw} nav "${link.label || link.href}"`;
+        if (!link.href) { err(lw, "nav link without href"); continue; }
+        if (link.state && !NAV_STATES.has(link.state)) err(lw, `unknown nav state "${link.state}"`);
+        const r = resolveHref(w, s, link.href);
+        if (!r.artifact && !link.state && r.state === "dead") err(lw, `href ${link.href} does not resolve to a page (use state: login, maintenance, dead or external)`);
+      }
+    }
+    for (const st of s.status || []) {
+      if (!st.from) err(where, "status entry without from date");
+      if (st.state && !["live", "parked", "gone", "maintenance"].includes(st.state)) err(where, `unknown status "${st.state}"`);
+    }
+  }
+  for (const a of w.artifacts.values()) {
+    if (a.site && !w.sites.has(a.site)) err(`artifact ${a.id}`, `unknown site ${a.site}`);
+  }
+  if (!sites.length) return;
+  if (w.meta?.id !== "dead-internet") return;
+  const hosts = new Set();
+  collectHosts(raw, hosts);
+  for (const host of [...hosts].sort()) {
+    if (EMAIL_ONLY_DOMAINS.has(host)) continue;
+    if (w.siteByDomain.has(host)) continue;
+    err("site-ref", `content references ${host}, but no site is registered for that domain`);
+  }
+}
+

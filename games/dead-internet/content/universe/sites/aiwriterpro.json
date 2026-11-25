@@ -1,0 +1,27 @@
+{
+ "id": "aiwriterpro",
+ "platform": "web",
+ "domain": "aiwriterpro.app",
+ "designs": [
+  {
+   "id": "d2025",
+   "from": "2025-01-01",
+   "template": "landing",
+   "variant": "saas",
+   "theme": {
+    "logo": "text:AIWriterPro"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "404",
+  "text": "This page does not exist."
+ },
+ "status": []
+}

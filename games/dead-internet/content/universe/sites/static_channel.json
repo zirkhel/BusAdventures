@@ -1,0 +1,21 @@
+{
+ "id": "static_channel",
+ "platform": "web",
+ "domain": "static.channel",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2000-01-01",
+   "template": "none",
+   "variant": "raw",
+   "theme": {},
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "",
+  "text": ""
+ },
+ "status": [],
+ "notes": "Kept as raw text. No template, by design."
+}

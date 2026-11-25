@@ -1,0 +1,31 @@
+{
+ "id": "calderpedia",
+ "platform": "calderpedia",
+ "domain": "calderpedia.org",
+ "designs": [
+  {
+   "id": "d2014",
+   "from": "2014-01-01",
+   "template": "wiki",
+   "variant": "standard",
+   "theme": {
+    "logo": "LOGO_CALDERPEDIA"
+   },
+   "nav": [
+    {
+     "label": "Port Calder",
+     "href": "/Port_Calder"
+    },
+    {
+     "label": "Calder Mill",
+     "href": "/Calder_Mill"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "No such article",
+  "text": "Calderpedia does not have a page with that title."
+ },
+ "status": []
+}

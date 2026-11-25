@@ -14,14 +14,14 @@
 // Pools (shared background media: news archives, TokTok creators, clips, transcripts) are
 // ordinary universe files listed in manifest.files, e.g. "artifacts": ["universe/pools/toktok/clips.json"].
 
-const SECTIONS = ["entities", "accounts", "platforms", "images", "videos", "scripts", "artifacts", "characters", "rules", "predicates", "mysteries", "terms"];
+const SECTIONS = ["entities", "accounts", "platforms", "images", "videos", "scripts", "artifacts", "characters", "rules", "predicates", "mysteries", "terms", "sites"];
 
 /** @param {(path:string)=>Promise<any>} readJson  path is relative to the content folder */
 export async function loadContent(readJson) {
   const manifest = await readJson("manifest.json");
   /** @type {any} */
   const raw = { meta: null, strings: {}, entities: [], accounts: [], platforms: [], images: [], videos: [], scripts: [], artifacts: [],
-    characters: [], rules: [], predicates: [], canon: { claims: [], facts: [] }, mysteries: [], terms: [],
+    characters: [], rules: [], predicates: [], canon: { claims: [], facts: [] }, mysteries: [], terms: [], sites: [],
     /** artifact id → "universe" or the mystery that brought it */
     packOf: {} };
   const extensions = [];
@@ -32,6 +32,7 @@ export async function loadContent(readJson) {
     else if (key === "characters") for (const c of data) (c.extends ? extensions : raw.characters).push({ ...c, ...(c.extends ? { pack } : {}) });
     else if (key === "rules") raw.rules.push(...data.map(r => (pack === "universe" ? r : { ...r, case: pack })));
     else if (key === "artifacts") { for (const a of data) raw.packOf[a.id] = pack; raw.artifacts.push(...data); }
+    else if (key === "sites") raw.sites.push(...(Array.isArray(data) ? data : [data]));
     else if (SECTIONS.includes(key)) raw[key].push(...data);
     else throw new Error(`manifest: unknown section "${key}"`);
   };

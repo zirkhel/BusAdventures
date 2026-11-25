@@ -1,0 +1,24 @@
+{
+ "id": "unfiltered",
+ "platform": "unfiltered",
+ "domain": "unfiltered.news",
+ "presentation": "news-app",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2022-01-01",
+   "template": "news",
+   "variant": "unfiltered",
+   "theme": {
+    "logo": "LOGO_UNFILTERED"
+   },
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "Gone",
+  "text": "We don't have a story at that address."
+ },
+ "status": [],
+ "notes": "Already has a news template and its own app."
+}

@@ -1,0 +1,28 @@
+{
+ "id": "harbordental",
+ "platform": "harbordental",
+ "domain": "harbordental.com",
+ "designs": [
+  {
+   "id": "d2025",
+   "from": "2025-04-02",
+   "template": "landing",
+   "variant": "saas",
+   "theme": {
+    "logo": "text:Harbor Dental"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "Harbor Dental has no page at that address."
+ },
+ "status": [],
+ "notes": "Referenced by a Connect post (BG-CON-01, 2 Apr 2025: 'New website is live'). Domain taken from the approved websites plan. Minimal home only; no new team names or parking facts."
+}

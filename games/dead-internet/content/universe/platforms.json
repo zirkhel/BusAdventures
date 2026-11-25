@@ -16,5 +16,10 @@
   { "id": "docshare", "name": "Docshare", "kind": "site", "domain": "docshare.link" },
   { "id": "calderpedia", "name": "Calderpedia", "kind": "site", "domain": "calderpedia.org" },
   { "id": "web", "name": "Web", "kind": "site", "domain": "" },
-  { "id": "messages", "name": "Messages", "kind": "messaging", "domain": "" }
+  { "id": "messages", "name": "Messages", "kind": "messaging", "domain": "" },
+  { "id": "harbordental", "name": "Harbor Dental", "kind": "site", "domain": "harbordental.com" },
+  { "id": "caldertransit", "name": "Calder Transit", "kind": "site", "domain": "caldertransit.gov" },
+  { "id": "harbor_authority", "name": "Port Calder Harbor Authority", "kind": "site", "domain": "harbor.portcalder.gov" },
+  { "id": "eastfield_neighbors", "name": "Eastfield Neighbors", "kind": "forum", "domain": "eastfieldneighbors.net" },
+  { "id": "brightline_portal", "name": "Brightline Client Portal", "kind": "site", "domain": "portal.bl-ops.net" }
 ]

@@ -1,0 +1,28 @@
+{
+ "id": "caldertransit",
+ "platform": "caldertransit",
+ "domain": "caldertransit.gov",
+ "designs": [
+  {
+   "id": "d2012",
+   "from": "2012-01-01",
+   "template": "government",
+   "variant": "transit",
+   "theme": {
+    "logo": "text:Calder Transit"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "Calder Transit has no page at that address."
+ },
+ "status": [],
+ "notes": "Referenced as 'the transit authority's website' (ghost-bus article). Domain from the approved websites plan. Minimal home only; the live map is mentioned in the paper but is not built here, so it cannot become new evidence."
+}

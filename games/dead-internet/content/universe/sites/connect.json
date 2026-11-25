@@ -1,0 +1,25 @@
+{
+ "id": "connect",
+ "platform": "connect",
+ "domain": "connect.social",
+ "org": "connect_inc",
+ "presentation": "app",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2018-01-01",
+   "template": "app",
+   "variant": "connect",
+   "theme": {
+    "logo": "LOGO_CONNECT"
+   },
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "This page isn't available",
+  "text": "The link may be broken, or the post was removed."
+ },
+ "status": [],
+ "notes": "Social app. Presentation stays in the Connect app (outside the website templates)."
+}

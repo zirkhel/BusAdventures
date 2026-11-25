@@ -1,0 +1,57 @@
+{
+ "id": "city",
+ "platform": "cityportal",
+ "domain": "portcalder.gov",
+ "org": "city_council",
+ "designs": [
+  {
+   "id": "d2017",
+   "from": "2017-01-01",
+   "template": "government",
+   "variant": "municipal",
+   "theme": {
+    "logo": "LOGO_CITY",
+    "palette": {
+     "bg": "#ffffff",
+     "ink": "#1a1a1a",
+     "accent": "#1f3b5a"
+    }
+   },
+   "header": {
+    "mast": "Port Calder",
+    "tagline": "City Portal"
+   },
+   "nav": [
+    {
+     "label": "Council calendar",
+     "href": "/council/calendar"
+    },
+    {
+     "label": "Ana Ruiz",
+     "href": "/council/ana-ruiz"
+    },
+    {
+     "label": "Ordinance 26-031",
+     "href": "/council/ordinances/26-031"
+    },
+    {
+     "label": "Business registry",
+     "href": "/business/brightline-media-llc"
+    },
+    {
+     "label": "Lobbying disclosures",
+     "href": "/lobbying/2025/northgate"
+    },
+    {
+     "label": "Records",
+     "href": "/records/pd-2025-07-0211"
+    }
+   ]
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "The City of Port Calder has no page at that address."
+ },
+ "status": []
+}
