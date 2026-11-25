@@ -1,6 +1,6 @@
-# Punkt 9: synlig vurderingsregel for Dana (forslag, revisjon 2)
+# Punkt 9: synlig vurderingsregel for Dana (revisjon 2, implementert)
 
-_Revidert 25. november 2026 etter Anders' svar på de åtte åpne spørsmålene (se DEVPLAN, Steg 5). **Ikke implementert.** Danas tekst, Daily Record-kuttet og innholdet er uendret på greina til Anders har godkjent denne beskrivelsen og tekstendringene i 5. Tallene er målt med en prototype utenfor repoet (patch på boksen: `/workspace/notes/punkt9v2-proto.patch`; skriptene ligger samme sted)._
+_Revidert 25. november 2026 etter Anders' svar på de åtte åpne spørsmålene, og **implementert 25. november 2026** etter Anders' svar på de sju spørsmålene i 10 (se 12 og DEVPLAN, Steg 5). Endelige linjer, hjelpetekster og målinger står i 12; der 12 og tidligere avsnitt er uenige, gjelder 12._
 
 Anders' rammer (25.11.2026), første runde:
 1. Samme vurderingsgrunnlag for tekst og kutt: synlig innhold og synlig opphav. Aldri skjulte `supports`, sannhetsverdier eller særbehandling av forhåndsdefinerte påstander.
@@ -40,12 +40,12 @@ For hvert bevis:
 Et navn i en synlig tekst gjelder en enhet bare hvis det er etablert slik. Rekkefølgen er den samme som i dagens oppslag (`core/refs.js`).
 
 1. **Fullt navn** (`name` i `entities.json`, også bakgrunnsfilene) for enheter som ikke er `secret`.
-2. **Brukernavn:** `@handle` (eller brukernavn på andre plattformer) gir kontoen. Visningsnavnet gir kontoen bare når det er ulikt alle fulle navn, som i dag. En konto og en person er aldri det samme: «Mara» og «Mara Quinn» er personen, `@maraquinn` er kontoen.
+2. **Brukernavn:** `@handle` (eller brukernavn på andre plattformer) gir kontoen. Visningsnavnet gir kontoen bare når det er ulikt alle fulle navn, som i dag, og ikke bare er et fornavn («Pat», «Mike», «Lindsay», «Tom»): et slikt visningsnavn nevner ingen (lagt til ved implementeringen). En konto og en person er aldri det samme: «Mara» og «Mara Quinn» er personen, `@maraquinn` er kontoen.
 3. **Kortformer** av det fulle navnet. Et forfattet alias teller som kortform når det er en sammenhengende del av navnet, eventuelt med «the» foran («Brightline», «Northgate», «Kestrel», «Mara», «Theo», «the Mill», «the Waterfront»), eller inneholder hele navnet («Brightline Media LLC»). For personer gjelder også «forbokstav. etternavn» («M. Quinn», «P. Navarro», «R. Okafor», «L. Adair»), avledet av det fulle navnet. **En kortform teller bare når den er entydig.** Hvert ord i et personnavn regnes som en mulig kortform for å avgjøre dette, så «Quinn» (Mara og Theo) er tvetydig og teller for ingen. Andre ord i et navn («Media», «Development») blir ikke kortformer.
 4. **Kallenavn:** andre forfattede alias («NGD», «the old girl», «Walt») teller bare når de er **innført i spillerens Casebook**: et lagret bevis som synlig skriver «Fullt navn (alias)» eller «alias (Fullt navn)». I dag gjelder det bare «Northgate Development (NGD)» på klientportalen (A24). Har spilleren lagret A24, nevner dashbordet (A23, «Client: NGD») Northgate; ellers ikke (målt).
 5. **Hendelser** med navn av formen «‹fullt navn›'s ‹substantiv›» («Mara Quinn's death») nevnes av det fulle navnet, eller av «‹form›'s ‹substantiv›» og «‹substantiv› of ‹form›» for hver entydig form av personen («Mara's death», «death of M. Quinn»). Store og små bokstaver spiller ingen rolle, som ellers i oppslaget.
 
-Alt annet nevner ingen: et tvetydig navn, et alias som ikke er innført, en enhet som er `secret`. **«Pat»:** personen heter «Pat (harborwalkerpat)», og navn med parentes er aldri med i oppslaget. Et naket «Pat» nevner derfor ingen, og kontoen @harborwalkerpat nevnes bare med brukernavnet.
+Alt annet nevner ingen: et tvetydig navn, et alias som ikke er innført, en enhet som er `secret`. **«Pat»:** personen heter «Pat (harborwalkerpat)», og navn med parentes er aldri med i oppslaget. Et naket «Pat» nevner derfor ingen, og kontoen @harborwalkerpat nevnes bare med brukernavnet. (Prototypen lot visningsnavnet «Pat» gi kontoen; det er rettet, og `tests/names.test.mjs` sjekker det.)
 
 Den samme funksjonen bør brukes for «About» i Casebook (`evidenceAbout`, `core/casebook.js:245`), slik at det spilleren ser og det Dana teller er det samme. Med alt lagret endrer det navnene for partene i påstandene i ni artefaktversjoner, og ingen mister et navn: B16 og B24 (+ Northgate), UF-2026-0004 og W-kestrel-0016 (+ Kestrel), A24 og A25 (+ Paul, «P. Navarro»), A28 (+ Mara, «M. Quinn»), og A17 og A32 (+ hendelsen, etter tekstendringene i 5). Meldinger fra personer der «Mara» står uten at `mentions` lister henne (for eksempel Owens «murder»-svar), nevner nå Mara.
 
@@ -247,3 +247,65 @@ Gjennomgangen fra første runde står ved lag og endres ikke i denne PR-en. Meka
 Regelen `D3b_brightline_alert_via_persona` er en forsinket ettbits tester, men fungerer som verdens reaksjon.
 
 Anders vil ha disse gjennomgått separat. Bare tillitsfabrikken (9) foreslås rettet for seg.
+
+## 12. Implementert (25.11.2026): endelige linjer, hjelp og målinger
+
+Anders' svar på spørsmålene i 10 (25.11.2026) står i DEVPLAN, Steg 5, «Punkt 9: implementert». Kort: tekstendring 1–3 gjort, 4–5 holdt tilbake (for å begrense innholdsendringene, ikke for å blokkere F1); gjensidige koblinger gir to opphav bare ved ulikt synlig opphav; kortformer avgjøres blant synlige kandidater; innførte kallenavn forklares på beviskortet; «About» viser bare egne navn; hjelpetekst for «Supports»; tall med ord.
+
+**Avvik fra forslaget:** et visningsnavn som bare er et fornavn («Pat», «Mike», «Lindsay», «Tom») nevner ingen (prototypen lot «Pat» gi kontoen @harborwalkerpat). Ellers som beskrevet i 2–4.
+
+### Danas linjer (endelige)
+
+Alle begynner med `"{claim}": `. `{n}` skrives med ord («two», «three»). Valg: egen avis → predikat (`paid`, `caused`) → stor påstand (`not_real`, `caused`) → generell. `none` = samlet dekning mangler; `one` = samlet dekning fra ett synlig opphav (kuttes); `several` = samlet dekning fra {n} ulike synlige opphav (går videre).
+
+**Generell (`v`)**
+- `none`: «"{claim}": what you've marked as supporting doesn't, taken together, cover who this is about. As it stands, it doesn't go forward.»
+- `one`: «"{claim}": taken together, what you've marked as supporting covers who this is about, but only from one visible origin. That's a lead, not enough to take forward. I need a second visible origin, and material that shows this, not just names them.»
+- `several`: «"{claim}": taken together, the material you've marked as supporting, with any connections you've made, covers who this is about, across {n} different visible origins. That's enough for me to take it to the desk, not to say it's true. Being named isn't being shown: check that each one shows this, and that they don't trace back to the same place.»
+
+**Stor påstand (`v.bold`)**
+- `none`: «"{claim}": that's a big claim, and what you've marked as supporting doesn't, taken together, cover who it's about. It doesn't go forward.»
+- `one`: «"{claim}": that's a big claim. Taken together, your material covers who it's about, but only from one visible origin. That's not enough to take forward.»
+- `several`: «"{claim}": a big claim. Taken together, the material you've marked as supporting, with any connections you've made, covers who it's about, across {n} different visible origins, so I'll take it to the desk. That doesn't make it true. Being named isn't being shown: what else could explain what you've found?»
+
+**Betaling (`v.predicate.paid`)**
+- `none`: «"{claim}": what you've marked as supporting doesn't, taken together, cover both parties, let alone show a payment. It doesn't go forward.»
+- `one`: «"{claim}": taken together, your material covers both parties, but only from one visible origin. That doesn't establish a payment, and one visible origin isn't enough to take forward.»
+- `several`: «"{claim}": taken together, the material you've marked as supporting, with any connections you've made, covers both parties, across {n} different visible origins. That's enough to take to the desk, but it doesn't establish a payment. For money I want the paper trail: an invoice, a contract, a transfer.»
+
+**Forårsaket (`v.predicate.caused`)**
+- `none`: «"{claim}": you want me to print that someone caused {object}? What you've marked as supporting doesn't, taken together, even cover both. It doesn't go forward.»
+- `one`: «"{claim}": taken together, your material covers both, but only from one visible origin. Covering both says nothing about what anyone did, and one visible origin isn't enough to take forward. Show me documents, and tell me what else could explain it.»
+- `several`: «"{claim}": taken together, the material you've marked as supporting, with any connections you've made, covers both, across {n} different visible origins, so I'll take it to the desk. That shows they turn up in the same story, not that one caused the other. I'd need documents that show what was done and by whom, and a reason the other explanations don't fit.»
+
+**Egen avis (`v.ownOutlet`)**
+- `none`: «"{claim}": first, that's my own paper, so I have a stake in this. What you've marked as supporting doesn't, taken together, cover both, so it stays out.»
+- `one`: «"{claim}": that's my own paper, so you should know I have a stake in this. Taken together, your material covers both, but only from one visible origin, and that isn't enough to take forward, for my paper or anyone's. Bring a second, and documents if you have them: a contract, an invoice, a payment.»
+- `several`: «"{claim}": that's my own paper, so you should know I have a stake in this. I'm holding it to the same rule as anyone: taken together, the material you've marked as supporting, with any connections you've made, covers both, across {n} different visible origins, so it goes to the desk. That shows a connection, not what it is. Bring documents, and tell me what else it could be.»
+
+Uendret: `noTrust` («I don't go through sources for people I don't know yet, so I won't review this. Show me you know something about this story first.») og `own.*`.
+
+### Hjelpetekster (Casebook → Help)
+
+- **Supporting links and Dana** (`supports_dana`): «Dana considers the supporting links you make between evidence added in support of the claim. The link is your assessment. It doesn't confirm that the evidence or the claim is correct.»
+- **Which way a supporting link points** (`supports_direction`): «“A supports B” means you think A backs up B. When Dana reviews a claim, A also counts as being about whoever B itself names. B gains nothing from A, and it goes only one step: A doesn't pick up names that B only has through another link. Only supporting links count. Your other connections are your own notes.»
+- **Short names and nicknames** (`aliases`): «Evidence counts as naming someone when it uses their full name or handle, or a short form that can only mean one of the people or things you can see. A first name on its own doesn't count. A nickname or abbreviation only counts once something you've saved introduces it, such as a full name followed by the short form in brackets. The evidence shows where it was introduced. Setting that evidence aside keeps the nickname; removing it from your Casebook drops it. Reports you have already published don't change.»
+- **Your count, visible origins and what is proven** (`sources`): «These are three different things. Your own count follows your own answers: source cards and “Same origin” connections. Visible origins are where each piece visibly comes from, such as the account that posted it, the person who sent it or the site. Neither says what is proven. Different visible origins can still trace back to the same place, and being named in something isn't being shown by it.»
+- **What Dana's review means** (`dana`): «Dana looks at two things: whether what you've marked as supporting, taken together, covers who a claim is about, and from how many different visible origins. With fewer than two, the claim is cut before publishing. A claim that goes forward isn't confirmed: Dana never says whether it is true and never calls your origins independent, and she tells you when the story touches her own paper.»
+
+I koblingsdialogen, når «Supports» er valgt: «Dana considers this connection when reviewing evidence linked as supporting your claim. It doesn't confirm that either item proves the claim.» med lenken «How supporting links work» til temaet om retning.
+
+På beviskortet, under «Short names»: «{alias} → {name}, introduced in {evidence}», for eksempel «NGD → Northgate Development, introduced in Brightline Client Portal — NGD / CSP-EF», med lenke til «Short names and nicknames».
+
+### Nye og endrede tips (universelle, nevner ingen personer, steder eller saker)
+
+- **Connections are yours** (`link`): «A connection records your own reading of how two pieces relate. Nothing checks it. An editor may take supporting links into account, but a link never confirms that either piece, or a claim, is right.»
+- **Short names** (`alias`): «A nickname or abbreviation only counts as naming someone once something you have saved introduces it. The evidence shows where it was introduced.»
+- **An editor's review** (`review`): «An editor looks at whether your supporting evidence, taken together, covers who a claim is about, and how many different visible origins it comes from. Going forward is not the same as being proven.»
+- **Theories** (`theory`): «A theory says who did what. Link evidence to it. The Casebook counts the different visible sources behind it. It cannot tell you whether you are right.»
+- Introduksjonen, punkt 2: «Save what you find to your Casebook. Build theories from it and see how many different visible sources back them.»
+- Settings: «Show intro tips again». Bekreftelse: «Tips you've seen will appear again, one at a time, when you next use each thing.» (tips av: «Tips you've seen are cleared. Turn on Show tips to see them again.»). Hint: «Tips appear one at a time, the first time you use something. Showing them again doesn't change your game. They never mention people, places or cases.»
+
+### Målinger
+
+`simulate.mjs` mot `main` (`20d2f49`): bare antall handlinger endres (design_as_clue 83→84, lights_out 59→60, who_paid_whom 72→76, portal_lie 71→72, too_late 64→65); dager, troverdighet, avslutninger og utforskerne er identiske. Node-tester 285/285, 0 `todo`; `validate.mjs` 0 feil, 0 advarsler; UI-testene hver for seg ved 390×844 (casebook 7/7, arkiv 3/3, tips 1/1).

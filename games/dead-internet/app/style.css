@@ -848,3 +848,15 @@ h2.np-head { font-size: 23px; }
 .unready-row .chev { color: var(--ink2); margin-left: auto; }
 .rep-row .snap-item { padding: 4px 0; }
 .rep-row .rep-snap-body .hint { padding: 0; }
+
+/* Casebook help, short names and the supporting-link help (punkt 9) */
+.bar-links { display: flex; gap: 2px; margin-left: auto; }
+.help p.muted { margin: 0 0 10px; font-size: 14px; line-height: 1.4; }
+.help-topic { border-radius: 12px; background: var(--paper2); margin: 0 0 8px; padding: 10px 12px; }
+.help-topic summary { cursor: pointer; font-size: 15px; }
+.help-topic p { margin: 8px 0 2px; font-size: 14px; line-height: 1.45; }
+.alias-rows { margin: 4px 0 6px; }
+.alias-row { font-size: 14px; line-height: 1.4; padding: 2px 0; }
+button.lnk.help-link { background: none; border: 0; padding: 4px 0; font: inherit; font-size: 13px; color: var(--accent); cursor: pointer; text-align: left; }
+.supports-help { padding: 8px 0 4px; }
+.supports-help button.lnk.help-link { font-size: inherit; padding: 0; line-height: inherit; }

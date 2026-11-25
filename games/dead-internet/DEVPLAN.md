@@ -460,7 +460,7 @@ Filer i justeringen: `core/sources.js` (kortet får `group[].direct`/`via`, `set
 _Implementert 25. november 2026 på greina `casebook-step-5` (PR #89). Justert samme dag etter Anders' gjennomgang. PR-en skal ikke merges før han sier ja, og punkt 9 må avklares først._
 - [ ] Strukturert publisering som også dekker manipulerte dokumenter og falske identiteter — **ikke gjort**: krever nye påstander med sannhet og poeng (scoring). Anders 25.11.2026: eksplisitt restoppgave til designavklaringen om publisering og saksavslutning, ikke automatisk del av F-1/F-2 (designvalg 8).
 - [ ] Bredere påstandstyper (den godkjente ambisjonen): fritekstteorier kan fortsatt ikke publiseres, og byggeren forklarer hva som mangler (designvalg 6). Gjenstår.
-- [ ] Punkt 9: Dana og Daily Record-kuttet leser skjulte `supports` og røper relevans. Undersøkt og dokumentert med probetest. Anders valgte alternativ B og svarte på de åtte spørsmålene 25.11.2026; revisjon 2 av forslaget (se «Punkt 9: synlig vurderingsregel (forslag)» under) venter på hans gjennomgang før implementering. **Må avklares før merge.**
+- [x] Punkt 9: Dana og Daily Record-kuttet leste skjulte `supports` og røpet relevans. Anders valgte alternativ B; revisjon 2 er implementert 25.11.2026 etter hans svar (se «Punkt 9: implementert» under). Lekkasjetesten er blokkerende. **PR-en merges fortsatt ikke før Anders sier ja.**
 - [x] For, mot og egne forbehold i rapportbyggeren. Rapporten lagrer et øyeblikksbilde. (25. nov 2026)
 - [x] Dana kommenterer spillerens egne forbehold, som råd før publisering (25. nov 2026)
 - [x] Anders' grenser fra 25.11.2026 er fulgt: (a) Danas vurdering *før* publisering (`review` og de nye `editorNotes`) er holdt atskilt fra verdens poengberegning *etterpå* (`publish`, uendret); (b) poengreglene er ikke endret; (c) de nye tallene i Timeline er merket «in your count».
@@ -528,7 +528,53 @@ Anders valgte alternativ B 25.11.2026 med fem bindende rammer: samme synlige gru
 
 I tillegg: «One source for the money» og lignende linjer som gjør navnetreff til bevis for handlingen, skrives om (for eksempel «One source names both parties. That doesn't establish a payment.»); lekkasjetesten blir blokkerende for vurdering, avslag og kutt; en ny test viser at usanne påstander passerer samme synlige regel som sanne. Tillitsfabrikken i `dana.evidence` får en egen, avgrenset retting; de andre personreaksjonene gjennomgås separat.
 
-**Revisjon 2 av forslaget** står i [docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md](docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md): synlig etablerte navn (fulle navn, brukernavn, entydige kortformer, kallenavn bare når de er innført i spillerens Casebook, hendelser ved navn), regel P med rettede «Supports»-koblinger og ett ledd, telling av ulike synlige opphav, alle linjene på engelsk, tre anbefalte og to valgfrie tekstendringer for hendelsesnavnet, ny måling av `simulate.mjs` (alle scenarioer består med samme avslutninger når skriptene gjør «Supports»-handlingen), den blokkerende testen med ni tvillinger, forslaget om tillitsfabrikken og åpne spørsmål. **Ikke implementert; venter på Anders' gjennomgang av regelen og tekstendringene.** Prototypen ligger utenfor repoet.
+**Revisjon 2 av forslaget** står i [docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md](docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md): synlig etablerte navn (fulle navn, brukernavn, entydige kortformer, kallenavn bare når de er innført i spillerens Casebook, hendelser ved navn), regel P med rettede «Supports»-koblinger og ett ledd, telling av ulike synlige opphav, alle linjene på engelsk, tre anbefalte og to valgfrie tekstendringer for hendelsesnavnet, ny måling av `simulate.mjs` (alle scenarioer består med samme avslutninger når skriptene gjør «Supports»-handlingen), den blokkerende testen med ni tvillinger, forslaget om tillitsfabrikken og åpne spørsmål. Implementert 25.11.2026, se under.
+
+#### Punkt 9: implementert (25.11.2026)
+_Implementert 25. november 2026 på `casebook-step-5` (PR #89) etter Anders' svar på de sju spørsmålene i forslaget. **Ikke merget; PR-en venter fortsatt på Anders.**_
+
+**Anders' svar (25.11.2026):**
+1. Tekstendring 1–3 gjøres (A17 «Stop using Mara's death for clicks.», A32 «I have mara's death certificate», Danas `mara`-svar «I wrote Mara's death notice in July.»); 4–5 holdes tilbake. Grunnen er å begrense innholdsendringene, ikke å blokkere F1 fordi vi vet at den er usann.
+2. Gjensidige «Supports»-koblinger gir to synlige opphav bare når dokumentene virkelig har ulikt synlig opphav. Koblinger lager ingen nye opphav og bekrefter ikke uavhengighet. Samme opphav telles én gang.
+3. «Forbokstav. Etternavn» er tillatt når formen er entydig blant **synlige** kandidater. Skjulte personer avgjør aldri tvetydighet. Lekkasjetvilling som legger til og fjerner en skjult person med samme forbokstav.
+4. Kallenavn innført gjennom lagrede bevis får en synlig forklaring i Casebook («NGD → Northgate Development, introduced in ‹tittel›»). «Set aside» beholder grunnlaget; sletting kan fjerne det. Publiserte øyeblikksbilder endres ikke (test).
+5. «About» i Casebook bruker samme navnefunksjon, men viser bare navn i selve beviset. Navn lånt gjennom «Supports» vises aldri der.
+6. Hjelpetekst for «Supports»: «Dana considers this connection when reviewing evidence linked as supporting your claim. It doesn't confirm that either item proves the claim.» Den utfyllende hjelpen forklarer retningen (X supports Y: X låner navnene til Y) og grensen på ett ledd. Kommentaren i `core/workbench.js` er oppdatert.
+7. Tall med ord i Danas linjer; sifre i oversikter og tellinger.
+
+I tillegg: alle linjene beskriver *samlet* dekning («taken together…»); nivået `none` betyr at samlet dekning mangler. Aldri bekrefte, aldri kalle opphav uavhengige, opplyse om egen avis, teksten stemmer med handlingen. Endelige linjer: [docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md](docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md) §12.
+
+**Beslutning om hjelp og tips (Anders, 25.11.2026):**
+- Hjelpetekster for «Supports»-koblinger, kallenavn, kildetelling og Dana skiller mellom spillerens egen vurdering, synlige opphav og hva som faktisk er bevist. Hovedteksten er Anders' egen: «Supporting links and Dana» / «Dana considers the supporting links you make between evidence added in support of the claim. The link is your assessment. It doesn't confirm that the evidence or the claim is correct.»
+- Innstillingen «Show intro tips again» nullstiller **bare** hvilke tips som er sett. Tipsene kommer igjen ett om gangen når spilleren bruker funksjonen; ingenting vises med en gang, og av/på endres ikke.
+- Et nytt spill starter med tips på. Å laste en lagring eller starte appen på nytt beholder innstillingen. Innstillingene ligger per enhet i `localStorage` (`ba_deadinternet_tips`), ikke i lagringen, så lagringsformatet er uendret (fortsatt v12, ingen ny migrering; eksisterende migreringer urørt). Ødelagte eller gamle verdier faller tilbake felt for felt.
+- «Help» i Casebook-linjen åpner hjelpetemaene når som helst, uten å nullstille eller vise tips.
+- Tips kommer ett om gangen (kø): et tips for samme skjerm venter til det forrige er lukket; et ventende tips for en skjerm spilleren har forlatt, droppes usett og kommer igjen neste gang.
+
+**Implementert:**
+- `core/provenance.js`: `namesIn`/`namesInDetail` (synlige navn: fulle navn, brukernavn, entydige kortformer blant synlige kandidater, «forbokstav. etternavn», kallenavn bare når innført i Casebook, hendelser ved navn; leser aldri `mentions`), `establishedAliasesOfEvidence`, hurtigbuffer for oppslag (`w._names`, spenn per tekst, Casebook-navn per bevisliste og signatur). Et visningsnavn som bare er et fornavn («Pat») nevner ingen.
+- `core/casebook.js`: `apparentSupportOf` er regel P (rettede «Supports», ett ledd, ulike synlige opphav); `reviewKey` (egen avis → predikat → stor påstand → generell); `numberWord`; `evidenceAbout` viser kallenavn med kilden. `review` og kuttet bruker samme funksjon.
+- Innhold: tekstendring 1–3; `outlet: "daily_record"` på kanalen; `review` og `bold` fjernet fra påstandene i `canon.json`; Danas linjer i `content/strings/en.json` (`review.dana.v.*`).
+- `tools/lib/validate-world.mjs`: en vurdert kanal må ha `requiresStrong: true`; `outlet` må være en enhet; alle linjenivåer kreves; påstander kan ikke ha `review` eller `bold`.
+- Gjennomspillingene (`tools/lib/scenarios.mjs`) og utforskeren (`tools/lib/explorer.mjs`) gjør uttrykkelige «Supports»-handlinger. `simulate.mjs` er uendret.
+- Lekkasjetesten er blokkerende (ingen `todo`): `tests/dana-probe.test.mjs` med alle tvillinger pluss skjult person lagt til og fjernet, for vurdering, avslag og kutt, og F2/S2-paritet. Nye `tests/names.test.mjs` og `tests/tips-help.test.mjs`.
+- Appen: kallenavnforklaring på beviskortet, «Supports»-hjelp i koblingsdialogen med lenke til utfyllende hjelp, «Help» i Casebook, lenke til «What Dana's review means» i rapportbyggeren, nye tips (`link`, `alias`, `review`), tipskø (`app/tips-state.js`, ny), «Show intro tips again», nytt spill med tips på (`app/main.js`). Ny UI-test `tools/test-tips-ui.mjs`.
+
+**`simulate.mjs` mot `main` (`20d2f49`), linje for linje (kjøretid fjernet):** alle 12 scenarioer består med samme dag, troverdighet og avslutninger; bare antall handlinger endres, fordi skriptene gjør «Supports»-handlingen (og i `who_paid_whom` åpner og lagrer profilen A09):
+
+| Scenario | main | greina |
+|---|---|---|
+| design_as_clue | 83 | 84 |
+| lights_out | 59 | 60 |
+| who_paid_whom | 72 | 76 |
+| portal_lie | 71 | 72 |
+| too_late | 64 | 65 |
+
+Resten (wrong_murder, ghost_story, silence, collateral_theo/owen/iris, juno) og begge utforskerne (cautious 236/456, 362 bevis; reckless 237/456, 463 bevis; begge `lights_out`) er identiske.
+
+**Tillitsfabrikken er ikke i denne PR-en.** Målt: scenarioene utløser `dana.evidence` 0 ganger, utforskerne 148 og 191 ganger. `once: true` ville begrense fabrikken (til én gang, og utforskerne når fortsatt `lights_out`), men fjerner ikke relevanslekkasjen fra reaksjonens skjulte utløser (`showSupports`). Den hører til den separate gjennomgangen av personreaksjoner.
+
+**Verifisering (25.11.2026, hver for seg, én nettleser om gangen):** node-tester 285, 285 bestått, 0 feilet, 0 `todo`; `validate.mjs` 456 artefakter, 0 feil, 0 advarsler; `simulate.mjs` som tabellen over; `test-casebook-ui.mjs` 7/7 PASS ved 390×844; `test-browser-archive-ui.mjs` 3/3 PASS; `test-tips-ui.mjs` 1/1 PASS ved 390×844. Skjermbilder: `cb5-dana`, `cb5-alias`, `cb5-supports-help`, `cb5-help-supports`, `cb5-help-topics`, `cb5-tips-one`, `cb5-tips-next`, `cb5-tips-settings`, pluss de oppdaterte `cb5-timeline`, `cb5-builder`, `cb5-published`, `cb5-reports`.
 
 ### Saksavslutning (veikart punkt 2, etter steg 5, bare etter diskusjon med Anders)
 - [ ] Rett F-1: `too_late` og `ghost_story` krever `vote_passed`, ikke `vote_held`, med scenario «hele historien på Connect før avstemningen»

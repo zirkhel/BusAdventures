@@ -7,7 +7,7 @@
 //          question {id}   (open questions live in Notes)
 //          compare {items, show?, zoom?} · link {a, b, id?, pick?, note?, swap?}   (comparison and the player's links)
 //          event {id} · eventEdit {id?, draft}   (Timeline: the player's own reconstruction)
-//          reports · report {case, channel?, hyps, events, review?} · reportDone {id, n0, e0}
+//          reports · report {case, channel?, hyps, events, review?} · reportDone {id, n0, e0} · help {topic?}
 // Items can belong to one, several or no cases (cases: [], unclassified by default). The filter
 // (desc.filter: undefined = all, "" = unclassified, or a case id) only narrows the lists.
 
@@ -162,6 +162,7 @@ export function casebookApp(phone) {
       h("button.btn.wide", { onclick: openCopy, disabled: !!view?.error }, e.message ? "Open original message" : e.image ? "Open image" : "Open saved copy"),
       e.artifact ? h("button.btn.wide", { onclick: () => phone.openArtifact(e.artifact, undefined, phone.appFor(e.artifact) === "casebook" ? "browser" : undefined) }, "Open original source") : null,
       sourceRow(g.evidenceAbout(e.id)?.source),
+      aliasRows(g.evidenceAbout(e.id)?.aliases || []),
       h("div.field-label", "My marks"), h("div.evidence-marks", mark("reviewed", "Reviewed"), mark("important", "Important"), mark("doubtful", "Doubtful")),
       h("label.field-label", "My comment"), note,
       casesRow("evidence", e),
@@ -178,6 +179,31 @@ export function casebookApp(phone) {
       e.shelf ? h("p.muted", `Set aside: ${e.shelf === "finished" ? "finished with it" : "irrelevant"} · day ${e.shelvedDay}`) : null,
       h("button.btn.wide", { onclick: () => e.shelf ? update({ shelf: null }) : shelve(e) }, e.shelf ? "Restore evidence" : "Set aside…"),
       h("button.btn.wide", { onclick: () => evMenu(e) }, "More actions…"));
+  }
+
+  /** Short names this item uses, and where a saved piece introduced each one. Only names in the item itself. */
+  function aliasRows(aliases) {
+    if (!aliases.length) return null;
+    const H = w.strings.help || {};
+    return h("div.alias-rows",
+      h("div.field-label", H.aliasHead),
+      aliases.map(a => {
+        const src = g.s.evidence.find(x => x.id === a.evidence);
+        return h("div.alias-row.muted", phone.fstr("help.aliasLine", { alias: a.text, name: a.name, evidence: src ? phone.evidenceTitle(src) : "" }));
+      }),
+      helpLink("aliases"));
+  }
+
+  /** A small link to one help topic. */
+  const helpLink = topic => h("button.lnk.help-link", { onclick: () => phone.push("casebook", { kind: "help", topic }) }, w.strings.help?.topics?.[topic]?.title || "Help");
+
+  /** Help topics: open any time; reading them never resets or shows tips. */
+  function helpScreen(desc) {
+    const H = w.strings.help || {}, topics = H.topics || {};
+    return h("div.help.pad",
+      h("p.muted", H.lead),
+      Object.entries(topics).map(([k, t]) => h("details.help-topic", { "data-topic": k, open: desc.topic === k || null },
+        h("summary", h("b", t.title)), h("p", t.text))));
   }
 
   function evMenu(e) {
@@ -511,6 +537,8 @@ export function casebookApp(phone) {
         h("div.link-arrow", { "aria-hidden": "true" }, "↓"),
         h("div.link-dir-row", h("span.cmp-letter", "B"), h("span", phone.evidenceTitle(ends[1])), h("span.muted.small", kind === "supports" ? "is supported" : "reference")),
         h("button.btn.wide", { onclick: () => phone.replaceTop({ ...desc, swap: !desc.swap, pick: kind, note: note.value }) }, "⇅ Swap A and B")) : null,
+      kind === "supports" ? h("div.hint.supports-help", w.strings.help?.supportsShort, " ",
+        h("button.lnk.help-link", { onclick: () => phone.push("casebook", { kind: "help", topic: "supports_direction" }) }, w.strings.help?.supportsMore)) : null,
       h("label.field-label", "Because"), note,
       h("div.hint.muted", "Your own reading. Nothing checks it."),
       h("button.btn.primary.wide", { disabled: !kind, onclick: save }, l ? "Save changes" : "Save connection"),
@@ -1072,6 +1100,7 @@ export function casebookApp(phone) {
       desc.review && desc.notes?.length ? h("div.review.review-own", h("div.review-who.review-own-head", `${reviewer}: what you've marked yourself`),
         desc.notes.map(l => h("p", { "data-kind": l.kind }, l.text))) : null,
       desc.review && reviewer ? h("div.hint.muted.review-sep", "These are my concerns, not a guarantee that your conclusions are right.") : null,
+      reviewer ? h("div.pad0", helpLink("dana")) : null,
       reviewer ? h("button.btn.wide", { disabled: !ready, onclick: ask }, icon("chat"), ` Ask ${reviewer} first`) : null,
       h("button.btn.primary.wide", { disabled: !ready, onclick: publish }, "Publish"));
   }
@@ -1110,8 +1139,11 @@ export function casebookApp(phone) {
       if (desc.kind === "reports") return [bar("Reports"), h("div.scroll", reportsScreen())];
       if (desc.kind === "report") return [bar("New report"), h("div.scroll", reportBuilder(desc))];
       if (desc.kind === "reportDone") return [bar("Published"), h("div.scroll", reportDone(desc))];
+      if (desc.kind === "help") return [bar(w.strings.help?.title || "Help"), h("div.scroll", helpScreen(desc))];
       const m = main(desc);
-      return [bar(phone.str("apps.casebook"), h("button.bar-link", { onclick: () => phone.push("casebook", { kind: "reports" }) }, "Reports")), m[0], h("div.scroll", m[1])];
+      return [bar(phone.str("apps.casebook"), h("div.bar-links",
+        h("button.bar-link.cb-help", { onclick: () => phone.push("casebook", { kind: "help" }) }, w.strings.help?.open || "Help"),
+        h("button.bar-link", { onclick: () => phone.push("casebook", { kind: "reports" }) }, "Reports"))), m[0], h("div.scroll", m[1])];
     },
   };
 }

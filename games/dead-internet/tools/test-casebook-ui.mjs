@@ -671,6 +671,11 @@ try {
     // The player then rewrites their Casebook (as saved, then reloaded): the historical report doesn't change.
     const edited = new Game(w, { seed: 7, state: await saved() });
     edited.investigate('theo');
+    // Punkt 9: a short name introduced by saved evidence (A24 has "Northgate Development (NGD)"), used by A23.
+    edited.s.loggedIn ??= {}; edited.s.loggedIn.brightline_portal = true;
+    const ngd = {};
+    edited.investigate('northgate');
+    for (const id of ['A24', 'A23']) { edited.s.artifacts[id] = { ...edited.s.artifacts[id], visible: true }; const o = edited.open(id); ngd[id] = edited.save({ artifact: id, version: o.view.versionId }).id; }
     for (const r of [edited.dispatch({ type: 'updateHypothesis', id: strong5, patch: { title: 'Not so sure', note: 'Changed' } }),
       edited.dispatch({ type: 'updateHypothesis', id: claim, patch: { subject: 'theo' } }), edited.editEvidence(ids5.A06, { note: 'Changed too' }),
       edited.dispatch({ type: 'updateEvent', id: t5, patch: { title: 'Renamed event' } }), edited.linkSources(S.A54.source, S.A55.source, false),
@@ -683,9 +688,28 @@ try {
     await p5.locator('.bar-link', { hasText: 'Reports' }).click();
     await p5.locator('.rep-snap summary').first().click();
     assert.equal(await p5.locator('.rep-row').first().innerText(), reportText, 'the report reads the same after the Casebook is edited and the game reloaded');
+    // Punkt 9: the evidence card explains a short name and where it was introduced.
+    const H = w.strings.help;
+    await p5.evaluate(id => window.deadInternet.phone.push('casebook', { kind: 'evidence', id }), ngd.A23);
+    await p5.locator('.alias-row').first().waitFor();
+    const introTitle = await p5.evaluate(id => window.deadInternet.phone.evidenceTitle(window.deadInternet.game.s.evidence.find(e => e.id === id)), ngd.A24);
+    assert.deepEqual(await p5.locator('.alias-row').allInnerTexts(), [`NGD → Northgate Development, introduced in ${introTitle}`]);
+    await p5.locator('.alias-rows').scrollIntoViewIfNeeded();
+    await shot5('cb5-alias.png');
+    await noOverflow5('alias explanation');
+    // A supporting link: the approved help text, and a way to the detailed help (direction, one step).
+    await p5.evaluate(({ a, b }) => window.deadInternet.phone.push('casebook', { kind: 'link', a, b, pick: 'supports' }), { a: ngd.A23, b: ngd.A24 });
+    await p5.locator('.supports-help').waitFor();
+    assert.equal(await p5.locator('.supports-help').innerText(), `${H.supportsShort} ${H.supportsMore}`);
+    await shot5('cb5-supports-help.png');
+    await noOverflow5('supports help');
+    await p5.locator('.supports-help .help-link').click();
+    await p5.locator('.help-topic[data-topic="supports_direction"][open]').waitFor();
+    assert.match(await p5.locator('.help-topic[data-topic="supports_direction"] p').innerText(), /B gains nothing from A, and it goes only one step/);
+    await shot5('cb5-help-supports.png');
     assert.deepEqual(errors, []);
     await p5.close();
-    console.log('PASS mobile 390×844 step 5: Timeline with "in your count", report builder with for/against, own count and reservations, theories in own words listed, Dana\'s comment and her notes on the player\'s marks in two separate boxes (asking changes nothing), Daily Record publish with one claim cut, snapshot with frozen wording, notes and reasons, published and cut apart, world as without it, report unchanged after the Casebook is edited and reloaded');
+    console.log('PASS mobile 390×844 step 5: Timeline with "in your count", report builder with for/against, own count and reservations, theories in own words listed, Dana\'s comment and her notes on the player\'s marks in two separate boxes (asking changes nothing), Daily Record publish with one claim cut, snapshot with frozen wording, notes and reasons, published and cut apart, world as without it, report unchanged after the Casebook is edited and reloaded, short-name explanation, supporting-link help and detailed help');
   }
 
   const snapshots = [];

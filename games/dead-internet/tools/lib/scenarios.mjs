@@ -77,6 +77,10 @@ export function gather(g) {
   const lobby = ev(g, { artifact: "A26" });
   const h2 = hyp(g, { subject: "brightline", predicate: "operates", object: "acc_maraquinn" }).id;
   [emails, dash, brief].forEach(e => g.link(h2, e));
+  // Point 9 (Anders, 25.11.2026): the player draws the bl-ops.net–Brightline inference themselves,
+  // from visible traces (the recovery address in Theo's emails, the portal address on Brightline's
+  // services page), as an explicit Supports link. Dana counts the emails through it.
+  g.addLink({ a: emails, b: brief, kind: "supports", note: "The recovery address is on bl-ops.net, Brightline's client portal domain (services page)." });
   const h3 = hyp(g, { subject: "northgate", predicate: "paid", object: "brightline" }).id;
   [invoice, lobby].forEach(e => g.link(h3, e));
   g.note("Theo's email: recovery address r…@bl-ops.net. bl-ops.net = Brightline client portal.");
@@ -132,6 +136,10 @@ function whoPaidWhom(g) {
   const reg = ev(g, { artifact: "A27" });
   const h7 = hyp(g, { subject: "calvin", predicate: "not_real" }).id;
   [team, stock, reg].forEach(e => g.link(h7, e));
+  // Point 9: the profile whose photo is the stock picture, saved and linked by the player. The
+  // stock page names no one, so Dana counts it only through the explicit Supports link.
+  const prof = ev(g, { artifact: "A09" }); g.link(h7, prof);
+  g.addLink({ a: stock, b: prof, kind: "supports", note: "Same face as the stock photo" });
   g.publish("daily_record", [h7]);
   g.sleep();
 }
@@ -207,6 +215,10 @@ function designAsClue(g) {
   const lobby = ev(g, { artifact: "A26" });
   const h2 = hyp(g, { subject: "brightline", predicate: "operates", object: "acc_maraquinn" }).id;
   [emails, dash, brief].forEach(e => g.link(h2, e));
+  // Point 9 (Anders, 25.11.2026): the player draws the bl-ops.net–Brightline inference themselves,
+  // from visible traces (the recovery address in Theo's emails, the portal address on Brightline's
+  // services page), as an explicit Supports link. Dana counts the emails through it.
+  g.addLink({ a: emails, b: brief, kind: "supports", note: "The recovery address is on bl-ops.net, Brightline's client portal domain (services page)." });
   const h3 = hyp(g, { subject: "northgate", predicate: "paid", object: "brightline" }).id;
   [invoice, lobby].forEach(e => g.link(h3, e));
   g.note("Theo's email: recovery address r…@bl-ops.net. bl-ops.net = Brightline client portal.");

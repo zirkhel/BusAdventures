@@ -730,6 +730,12 @@ export class Phone {
       : k === "results" ? "search"
       : k === "home" || k === "history" || k === "lookup" || k === "imageResults" ? null : "read";
     if (key) trigger(key);
+    // Further tips for the same screen wait their turn: one at a time (tips-state.js).
+    if (this.where === "casebook") {
+      if (k === "report") trigger("review");
+      if (k === "link") trigger("link");
+      if (k === "evidence" && this.g.evidenceAbout(desc.id)?.aliases?.length) trigger("alias");
+    }
   }
 
   #statusBar() {

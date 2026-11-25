@@ -39,16 +39,39 @@
  "review": {
   "dana": {
    "noTrust": "I don't go through sources for people I don't know yet, so I won't review this. Show me you know something about this story first.",
-   "strong": "\"{claim}\": two independent sources. I can stand behind that.",
-   "weak": "\"{claim}\": one source. That's a lead, not a story. Find me a second, independent one.",
-   "none": "\"{claim}\": nothing you've shown me backs this up. Cut it or find something.",
-   "bold": "\"{claim}\": that's a big claim. Big claims need more than this.",
    "own": {
     "rejected": "\"{claim}\": you've rejected this theory yourself. Why put it out under your name?",
     "against": "\"{claim}\": you've linked {against} against it yourself. I won't pick a side for you, but readers will want to see that you weighed it.",
     "ownCount": "\"{claim}\": you've marked some of these as the same origin yourself. By your own count that's {own}, not {visible}.",
     "notTrusted": "\"{claim}\": you told me you don't trust {notTrusted} behind it. If you don't, why should readers?",
     "notAuthentic": "\"{claim}\": you doubt {notAuthentic}. Don't lean on it until you know."
+   },
+   "v": {
+    "none": "\"{claim}\": what you've marked as supporting doesn't, taken together, cover who this is about. As it stands, it doesn't go forward.",
+    "one": "\"{claim}\": taken together, what you've marked as supporting covers who this is about, but only from one visible origin. That's a lead, not enough to take forward. I need a second visible origin, and material that shows this, not just names them.",
+    "several": "\"{claim}\": taken together, the material you've marked as supporting, with any connections you've made, covers who this is about, across {n} different visible origins. That's enough for me to take it to the desk, not to say it's true. Being named isn't being shown: check that each one shows this, and that they don't trace back to the same place.",
+    "bold": {
+     "none": "\"{claim}\": that's a big claim, and what you've marked as supporting doesn't, taken together, cover who it's about. It doesn't go forward.",
+     "one": "\"{claim}\": that's a big claim. Taken together, your material covers who it's about, but only from one visible origin. That's not enough to take forward.",
+     "several": "\"{claim}\": a big claim. Taken together, the material you've marked as supporting, with any connections you've made, covers who it's about, across {n} different visible origins, so I'll take it to the desk. That doesn't make it true. Being named isn't being shown: what else could explain what you've found?"
+    },
+    "predicate": {
+     "paid": {
+      "none": "\"{claim}\": what you've marked as supporting doesn't, taken together, cover both parties, let alone show a payment. It doesn't go forward.",
+      "one": "\"{claim}\": taken together, your material covers both parties, but only from one visible origin. That doesn't establish a payment, and one visible origin isn't enough to take forward.",
+      "several": "\"{claim}\": taken together, the material you've marked as supporting, with any connections you've made, covers both parties, across {n} different visible origins. That's enough to take to the desk, but it doesn't establish a payment. For money I want the paper trail: an invoice, a contract, a transfer."
+     },
+     "caused": {
+      "none": "\"{claim}\": you want me to print that someone caused {object}? What you've marked as supporting doesn't, taken together, even cover both. It doesn't go forward.",
+      "one": "\"{claim}\": taken together, your material covers both, but only from one visible origin. Covering both says nothing about what anyone did, and one visible origin isn't enough to take forward. Show me documents, and tell me what else could explain it.",
+      "several": "\"{claim}\": taken together, the material you've marked as supporting, with any connections you've made, covers both, across {n} different visible origins, so I'll take it to the desk. That shows they turn up in the same story, not that one caused the other. I'd need documents that show what was done and by whom, and a reason the other explanations don't fit."
+     }
+    },
+    "ownOutlet": {
+     "none": "\"{claim}\": first, that's my own paper, so I have a stake in this. What you've marked as supporting doesn't, taken together, cover both, so it stays out.",
+     "one": "\"{claim}\": that's my own paper, so you should know I have a stake in this. Taken together, your material covers both, but only from one visible origin, and that isn't enough to take forward, for my paper or anyone's. Bring a second, and documents if you have them: a contract, an invoice, a payment.",
+     "several": "\"{claim}\": that's my own paper, so you should know I have a stake in this. I'm holding it to the same rule as anyone: taken together, the material you've marked as supporting, with any connections you've made, covers both, across {n} different visible origins, so it goes to the desk. That shows a connection, not what it is. Bring documents, and tell me what else it could be."
+    }
    }
   }
  },
@@ -78,7 +101,7 @@
   "introLead": "Everything you find, you find here: the web, social media, messages and the news. Nobody will tell you what matters.",
   "introPoints": [
    "Tap a name, a word, a date or an image to see what you can do with it.",
-   "Save what you find to your Casebook. Build theories from it and see how many independent sources back them.",
+   "Save what you find to your Casebook. Build theories from it and see how many different visible sources back them.",
    "Message people, ask them about what you have looked into, and show them what you have saved.",
    "Time only moves when you sleep. Messages, news and pages can change overnight.",
    "When your sources hold, publish. Nobody tells you if you are right."
@@ -91,8 +114,8 @@
   "settingsShow": "Show tips",
   "settingsIntro": "Show the introduction again",
   "settingsAll": "Read all tips",
-  "settingsReset": "Show tips again from the start",
-  "settingsHint": "Tips appear once, the first time you use something. They never mention people, places or cases.",
+  "settingsReset": "Show intro tips again",
+  "settingsHint": "Tips appear one at a time, the first time you use something. Showing them again doesn't change your game. They never mention people, places or cases.",
   "list": {
    "read": {
     "title": "Everything can be tapped",
@@ -116,7 +139,7 @@
    },
    "theory": {
     "title": "Theories",
-    "text": "A theory says who did what. Link evidence to it. The Casebook counts your independent sources. It cannot tell you whether you are right."
+    "text": "A theory says who did what. Link evidence to it. The Casebook counts the different visible sources behind it. It cannot tell you whether you are right."
    },
    "compare": {
     "title": "Comparing",
@@ -133,7 +156,52 @@
    "outcome": {
     "title": "A turn in the case",
     "text": "Something you did has changed how the case stands. It is in the Casebook under Reports. You can keep investigating."
+   },
+   "link": {
+    "title": "Connections are yours",
+    "text": "A connection records your own reading of how two pieces relate. Nothing checks it. An editor may take supporting links into account, but a link never confirms that either piece, or a claim, is right."
+   },
+   "alias": {
+    "title": "Short names",
+    "text": "A nickname or abbreviation only counts as naming someone once something you have saved introduces it. The evidence shows where it was introduced."
+   },
+   "review": {
+    "title": "An editor's review",
+    "text": "An editor looks at whether your supporting evidence, taken together, covers who a claim is about, and how many different visible origins it comes from. Going forward is not the same as being proven."
    }
-  }
+  },
+  "settingsResetDone": "Tips you've seen will appear again, one at a time, when you next use each thing.",
+  "settingsResetOff": "Tips you've seen are cleared. Turn on Show tips to see them again."
+ },
+ "help": {
+  "title": "Help",
+  "lead": "How the Casebook and Dana's review work. Reading help doesn't change your tips or your game.",
+  "topics": {
+   "supports_dana": {
+    "title": "Supporting links and Dana",
+    "text": "Dana considers the supporting links you make between evidence added in support of the claim. The link is your assessment. It doesn't confirm that the evidence or the claim is correct."
+   },
+   "supports_direction": {
+    "title": "Which way a supporting link points",
+    "text": "“A supports B” means you think A backs up B. When Dana reviews a claim, A also counts as being about whoever B itself names. B gains nothing from A, and it goes only one step: A doesn't pick up names that B only has through another link. Only supporting links count. Your other connections are your own notes."
+   },
+   "aliases": {
+    "title": "Short names and nicknames",
+    "text": "Evidence counts as naming someone when it uses their full name or handle, or a short form that can only mean one of the people or things you can see. A first name on its own doesn't count. A nickname or abbreviation only counts once something you've saved introduces it, such as a full name followed by the short form in brackets. The evidence shows where it was introduced. Setting that evidence aside keeps the nickname; removing it from your Casebook drops it. Reports you have already published don't change."
+   },
+   "sources": {
+    "title": "Your count, visible origins and what is proven",
+    "text": "These are three different things. Your own count follows your own answers: source cards and “Same origin” connections. Visible origins are where each piece visibly comes from, such as the account that posted it, the person who sent it or the site. Neither says what is proven. Different visible origins can still trace back to the same place, and being named in something isn't being shown by it."
+   },
+   "dana": {
+    "title": "What Dana's review means",
+    "text": "Dana looks at two things: whether what you've marked as supporting, taken together, covers who a claim is about, and from how many different visible origins. With fewer than two, the claim is cut before publishing. A claim that goes forward isn't confirmed: Dana never says whether it is true and never calls your origins independent, and she tells you when the story touches her own paper."
+   }
+  },
+  "supportsShort": "Dana considers this connection when reviewing evidence linked as supporting your claim. It doesn't confirm that either item proves the claim.",
+  "supportsMore": "How supporting links work",
+  "open": "Help",
+  "aliasLine": "{alias} → {name}, introduced in {evidence}",
+  "aliasHead": "Short names"
  }
 }
