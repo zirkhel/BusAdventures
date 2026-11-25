@@ -19,7 +19,7 @@ async function fixture() {
 const world = g => structuredClone({ flags: g.s.flags, counters: g.s.counters, trust: g.s.trust, credibility: g.s.credibility,
   fired: g.s.fired, notifications: g.s.notifications, endings: g.s.endings, pending: g.s.pending, messages: g.s.messages, day: g.s.day });
 
-test("save format is version 9", () => assert.equal(SAVE_VERSION, 9));
+test("save format is at least version 9", () => assert.ok(SAVE_VERSION >= 9));
 
 test("a theory can be the player's own words, a structured claim, or both", async () => {
   const { g } = await fixture();
@@ -151,13 +151,14 @@ function older(s, version) {
   const o = structuredClone(s);
   o.saveVersion = version;
   delete o.questions;
+  delete o.links;
   for (const h of o.hypotheses) { delete h.title; delete h.against; delete h.status; delete h.statusLog; delete h.alternatives; }
   if (version < 8) delete o.browser;
   return o;
 }
 
 for (const version of [8, 7]) {
-  test(`a version ${version} save keeps theories, links, notes and evidence and opens as version 9`, async () => {
+  test(`a version ${version} save keeps theories, links, notes and evidence and opens as the current version`, async () => {
     const { w, g, ev } = await fixture();
     const h = g.hypothesize({ subject: "mara", predicate: "is_dead", evidence: [ev[0], ev[1]], note: "Check the date" }).id;
     g.note("My own note");
@@ -167,7 +168,7 @@ for (const version of [8, 7]) {
     assert.equal(JSON.parse(text).saveVersion, version);
     const { state, warnings } = deserialize(w, text);
     assert.deepEqual(warnings.filter(x => /dropped/.test(x)), []);
-    assert.equal(state.saveVersion, 9);
+    assert.equal(state.saveVersion, SAVE_VERSION);
     const t = state.hypotheses.find(x => x.id === h);
     assert.deepEqual([t.evidence, t.against, t.status, t.statusLog, t.alternatives, t.title, t.note, t.cases],
       [[ev[0], ev[1]], [], "open", [{ day: 1, status: "open" }], [], "", "Check the date", ["quiet_account"]]);

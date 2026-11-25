@@ -9,7 +9,8 @@ import { isVisible, isLive, accountActive, viewArtifact, mentionsOf } from "./ar
 import { search, searchImage, imageInfo } from "./search.js";
 import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
-import { updateEvidence, addQuestion, updateQuestion, linkQuestion, deleteQuestion } from "./workbench.js";
+import { updateEvidence, addQuestion, updateQuestion, linkQuestion, deleteQuestion, addLink, updateLink, removeLink } from "./workbench.js";
+import { compareView } from "./compare.js";
 import { savedArtifactView } from "./artifacts.js";
 import * as CB from "./casebook.js";
 import * as TL from "./timeline.js";
@@ -73,6 +74,9 @@ export class Game {
       case "updateQuestion": r = updateQuestion(this, a.id, a.patch); break;
       case "linkQuestion": r = linkQuestion(this, a.id, a.kind, a.ref, a.on ?? true); break;
       case "deleteQuestion": r = deleteQuestion(this, a.id); break;
+      case "addLink": r = addLink(this, a.link); break;
+      case "updateLink": r = updateLink(this, a.id, a.patch); break;
+      case "removeLink": r = removeLink(this, a.id); break;
       case "addNote": r = CB.addNote(this, a.text, a.from, a.about); break;
       case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
       case "deleteNote": r = CB.deleteNote(this, a.id); break;
@@ -125,6 +129,10 @@ export class Game {
   editQuestion(id, patch) { return this.dispatch({ type: "updateQuestion", id, patch }); }
   linkQuestion(id, kind, ref, on = true) { return this.dispatch({ type: "linkQuestion", id, kind, ref, on }); }
   deleteQuestion(id) { return this.dispatch({ type: "deleteQuestion", id }); }
+  /** Link evidence: link = { items: [evidence ids], kind: supports|contradicts|related|same_origin|manipulated|unrelated, note? }. */
+  addLink(link) { return this.dispatch({ type: "addLink", link }); }
+  editLink(id, patch) { return this.dispatch({ type: "updateLink", id, patch }); }
+  removeLink(id) { return this.dispatch({ type: "removeLink", id }); }
   /** Free note. `from` says where it was written (artifact/message), `about` what it names. */
   note(t, from, about) { return this.dispatch({ type: "addNote", text: t, ...(from ? { from } : {}), ...(about ? { about } : {}) }); }
   editNote(id, t) { return this.dispatch({ type: "updateNote", id, text: t }); }
@@ -314,6 +322,8 @@ export class Game {
   hypothesisLabel(h) { return CB.hypothesisLabel(this, h); }
   /** Visible sources among the saved evidence (key, label, count), for pickers. Never hidden origins. */
   visibleSources() { return CB.visibleSources(this); }
+  /** Items side by side: refs are {evidence} or reachable {artifact, version?, image?} / {message}. No state change. */
+  compare(refs) { return compareView(this, refs); }
   /** References (names, handles, addresses, dates, numbers) in a text, for tappable content. */
   scan(text) { return scanText(this.w, text); }
   /** Search suggestions from earlier searches and things already met. */

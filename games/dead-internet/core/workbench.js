@@ -114,3 +114,56 @@ export function migrateTheories(s) {
   }
   s.questions = Array.isArray(s.questions) ? s.questions : [];
 }
+
+// ── Links between evidence ──────────────────────────────────────────────────
+// The player's own claims about how two or more pieces of evidence relate. They are shown on
+// the evidence card, in comparisons and in theories. Nothing checks whether they are right,
+// and no rule, score or reviewer reads them.
+
+export const LINK_KINDS = ["supports", "contradicts", "related", "same_origin", "manipulated", "unrelated"];
+
+const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+
+/** Link pieces of evidence. The same set with the same kind is one link: the note is updated instead. */
+export function addLink(g, link = {}) {
+  const s = g.s;
+  const items = [...new Set(asArray(link.items))];
+  if (items.length < 2) return { error: "need_two" };
+  if (!items.every(id => s.evidence.some(e => e.id === id))) return { error: "unknown_evidence" };
+  if (!LINK_KINDS.includes(link.kind)) return { error: "bad_kind" };
+  const note = String(link.note ?? "").trim();
+  s.links ??= [];
+  const same = s.links.find(l => l.kind === link.kind && sameSet(l.items, items));
+  if (same) { if (note && note !== same.note) { same.note = note; same.edited = s.day; } return { ok: true, id: same.id, duplicate: true }; }
+  const l = { id: `L${s.nextId++}`, items, kind: link.kind, note, day: s.day };
+  s.links.push(l);
+  return { ok: true, id: l.id };
+}
+
+export function updateLink(g, id, patch = {}) {
+  const l = (g.s.links || []).find(x => x.id === id);
+  if (!l) return { error: "unknown_link" };
+  if ("kind" in patch && !LINK_KINDS.includes(patch.kind)) return { error: "bad_kind" };
+  if ("kind" in patch && patch.kind !== l.kind && g.s.links.some(x => x !== l && x.kind === patch.kind && sameSet(x.items, l.items))) return { error: "duplicate_link" };
+  const before = JSON.stringify([l.kind, l.note]);
+  if ("kind" in patch) l.kind = patch.kind;
+  if ("note" in patch) l.note = String(patch.note ?? "").trim();
+  if (JSON.stringify([l.kind, l.note]) !== before) l.edited = g.s.day;
+  return { ok: true };
+}
+
+export function removeLink(g, id) {
+  if (!(g.s.links || []).some(x => x.id === id)) return { error: "unknown_link" };
+  g.s.links = g.s.links.filter(x => x.id !== id);
+  return { ok: true };
+}
+
+/** A removed piece of evidence leaves its links; a link left with fewer than two items goes. */
+export function forgetInLinks(g, evId) {
+  if (!g.s.links) return;
+  for (const l of g.s.links) l.items = l.items.filter(x => x !== evId);
+  g.s.links = g.s.links.filter(l => l.items.length >= 2);
+}
+
+/** Save migration 9 → 10: links between evidence start empty. Nothing is inferred. */
+export function migrateLinks(s) { s.links = Array.isArray(s.links) ? s.links : []; }
