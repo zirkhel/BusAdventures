@@ -1,6 +1,6 @@
 # Casebook — funksjon og informasjonsgrenser
 
-Gjeldende for PR #89 ved `50d5643`, 25. november 2026. Steg 0–4 er merget; steg 5 nedenfor er implementert, men ikke merget. [Status og kontroller](PR89-REVIEW.md).
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 
 ## Arbeidsflaten
 
@@ -48,7 +48,7 @@ Hold disse tingene atskilt:
 
 Ingen av tallene bekrefter sannhet eller faktisk uavhengighet. Skjult opphav brukes bare i verdens vurdering, ikke på kortene.
 
-## Rapportering i PR #89
+## Rapportering
 
 Rapportbyggeren sier «marked as supporting by you», viser bevis mot og egne forbehold. Dana har to adskilte bokser: hennes synlige vurdering og det spilleren selv har markert. Bevis mot, forkastet teori, lavere egen opptelling og Nei på kildekortene er råd, ikke ekstra kuttregler. Lav tillit gir forklaring på hvorfor hun ikke gjennomgår materialet.
 
@@ -60,7 +60,7 @@ Timeline viser spillerens egen opptelling med «in your count». Verdens poengbe
 
 Help i Casebook og lenken fra rapportbyggeren åpner forklaringene når som helst. Å lese hjelp påvirker ikke hvilke tips som er sett. Tips kommer ett om gangen, ved riktig funksjon. Ventende tips for en skjerm spilleren har forlatt, droppes usett.
 
-Settings har av/på og «Show intro tips again». Sistnevnte nullstiller bare sett-listen; den slår ikke tips på hvis de er av. Nytt spill slår tips på og nullstiller introduksjonen. Lasting og omstart av appen beholder innstillingene på enheten (`ba_deadinternet_tips`). Spillagringen er v12 i PR #89, med migrering av eldre lagringer.
+Settings har av/på og «Show intro tips again». Sistnevnte nullstiller bare sett-listen; den slår ikke tips på hvis de er av. Nytt spill slår tips på og nullstiller introduksjonen. Lasting og omstart av appen beholder innstillingene på enheten (`ba_deadinternet_tips`). Spillagringen er v12, med migrering av eldre lagringer.
 
 ## Kontroller og videre arbeid
 

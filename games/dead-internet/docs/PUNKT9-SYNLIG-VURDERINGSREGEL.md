@@ -1,6 +1,6 @@
 # Dana — synlig vurderingsregel P
 
-Implementert i PR #89 ved `50d5643`, ikke merget. Oppdatert 25. november 2026. Dette er gjeldende implementasjonsbeskrivelse, ikke en ny designgodkjenning. Tidligere L/P-forslag, prototypemålinger og beslutningsreferater er [arkivert](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md).
+Implementert og merget gjennom PR #89 og #90; main ved `6a98828`. Oppdatert 25. november 2026. Dette er gjeldende implementasjonsbeskrivelse, ikke en ny designgodkjenning. Tidligere L/P-forslag, prototypemålinger og beslutningsreferater er [arkivert](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md).
 
 ## Grunnlag og grenser
 

@@ -1,6 +1,6 @@
 # Dokumentoversikt
 
-Gjennomgått 25. november 2026 mot PR #89 `50d5643`. Dokumentene inkluderer PR-en som implementert, ikke merget. Bare Anders kan godkjenne merge og nye designvalg.
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 
 ## Aktive dokumenter
 
@@ -15,7 +15,7 @@ Gjennomgått 25. november 2026 mot PR #89 `50d5643`. Dokumentene inkluderer PR-e
 | [Medier](MEDIA-APPS-PROPOSAL.md) | Implementerte medier vs senere TokTok |
 | [Saksavslutning](CASE-ENDINGS-REVIEW.md) | Eksisterende utfall og åpne funn, ikke nye vedtak |
 | [BACKLOG](BACKLOG.md) | Kjente problemer, videre oppgaver og forslag som trenger avklaring |
-| [PR #89-kontroll](PR89-REVIEW.md) | Kontrollert, rapportert og fortsatt uavklart |
+| [PR #89-kontroll](PR89-REVIEW.md) | Avsluttet gjennomgang og resultater |
 
 ## Bevarte spesialreferanser
 

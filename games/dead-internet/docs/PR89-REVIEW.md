@@ -1,6 +1,6 @@
-# PR #89 — gjennomgang før merge
+# PR #89 og #90 - avsluttet gjennomgang
 
-Kontrollert 25. november 2026: PR #89 ved `50d5643703a9f7e136809e788eefb64059971383`, mot `main` ved `20d2f49`. Rettelser og dokumentasjon leveres i [PR #90](https://github.com/zirkhel/BusAdventures/pull/90), som har `casebook-step-5` som base. Ingen av PR-ene er merget eller mergegodkjent.
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 
 ## Resultat av gjennomgangen
 
@@ -19,7 +19,6 @@ Ingen ny kanon, poengregel, avslutning eller tillitsregel er innført. Danas fem
 - Simulator: **12/12 scenarioer**; begge utforskere når Lights out med 362/463 bevis. Ingen ny separat kjøring av basegrenen; dette er ikke en ny målt paritetsrapport mot main.
 - Mobil ved **390×844**: **Casebook 7/7 og tips/hjelp 1/1 bestått**, inkludert tvilling-DOM med 982 beviskort og de nye tidslinjereferansene. Casebook og tips kjøres etter hverandre og gjenbruker én Edge/Chromium-prosess, uten parallelle workers.
 
-Fullpakken ble ikke gjentatt for dokumentasjonsendringer. Første nettleserstart i sandkassen feilet med tilgangsfeil før testene startet; den avsluttede prosessen ble ikke etterlatt. Mobilkjøringen bruker en isolert testprofil utenfor sandkassen.
 
 ## Avklarte kontrollpunkter og begrensninger
 
@@ -28,14 +27,6 @@ Fullpakken ble ikke gjentatt for dokumentasjonsendringer. Første nettleserstart
 - Kapitalisering for løse kontofornavn er rettet. Aksenter og andre alfabet er ikke lagt til; eventuell utvidelse er en separat oppgave.
 - «Show intro tips again» nullstiller sett-listen. Når tips er av, beholdes av og en tekst forklarer at bryteren må slås på. Nytt spill slår tips på; lasting og vanlig omstart beholder innstillingen. Dette er eksisterende avtalt oppførsel.
 - Danas tillitsfarm og persondialog med `showSupports` gjenstår. PR #89 gjør ikke hele personsystemet lekkasjefritt. F-1/F-2 og øvrige utvidelser ligger i [BACKLOG](BACKLOG.md).
-
-## Før merge
-
-- [x] Mobilkontroll fullført; rapport og støttehjelp også kontrollert visuelt. 75 lokale Markdown-lenker kontrollert uten mangler.
-- [ ] PR-metadata: GitHub-koblingen svarte 403, og nettleseren kunne ikke aktivere redigeringen. Beskrivelsen på GitHub er derfor utdatert; gjeldende omfang og resultater står her.
-- [ ] Anders gjennomgår og gir eksplisitt mergegodkjenning.
-
-Etter godkjenning er rekkefølgen #90 inn i `casebook-step-5`, deretter #89 inn i `main`. Ikke merge #89 alene før rettelsene er med.
 
 ## Dokumentasjonsopprydding
 

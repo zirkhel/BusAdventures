@@ -1,13 +1,13 @@
 # Dead Internet — status og videre arbeid
 
-Oppdatert 25. november 2026. Grunnlag: `main` ved `20d2f49` og **åpen PR #89 ved `50d5643`**. Dokumentasjonen tar med PR-en, men den er ikke merget eller mergegodkjent.
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 
 ## Overlevering
 
 - Fase 0–9, nettsteder W0–W8 og Casebook steg 0–4 er ferdige og merget.
-- Casebook steg 5, rapportering, synlig vurderingsregel P for Dana, hjelp og tips er implementert i [PR #89](https://github.com/zirkhel/BusAdventures/pull/89). Siste kodecommit `50d5643` presiserer avsenderidentitet og støttekoblinger i replikkene.
-- Lagringsformat: v11 på dette `main`-grunnlaget, v12 i PR #89. Tipsinnstillinger følger enheten, ikke lagringen.
-- Gjennomgangen av PR #89 er ferdig. PR #90 samler dokumentasjonsrydding og to rettelser: kapitalisering av løse kontofornavn og frosne bevisreferanser for rapportens tidslinjehendelser. 287/287 tester, validator, simulator og mobilkontroll er grønne. Neste steg er gjennomgang og eksplisitt mergegodkjenning fra Anders; deretter #90 inn i #89, så #89 inn i main. Se [kontrollisten](docs/PR89-REVIEW.md).
+- Casebook steg 0-5, Danas regel P, hjelp og tips er ferdige og merget.
+- Lagringsformat: v12. Eldre lagringer migreres. Tipsinnstillinger lagres separat.
+- Dokumentasjonsrydding og begge kontrollrettelser er med i main. Se [sluttrapporten](docs/PR89-REVIEW.md). Videre oppgaver finnes i [BACKLOG](docs/BACKLOG.md).
 - Danas tillitsfarm og andre personers relevanslekkasjer er **ikke rettet** i PR #89. F-1/F-2 og nye saksutfall er heller ikke rettet.
 
 ## Leserekkefølge
@@ -15,7 +15,7 @@ Oppdatert 25. november 2026. Grunnlag: `main` ved `20d2f49` og **åpen PR #89 ve
 1. [DESIGN.md](DESIGN.md): prinsipper, arkitektur og informasjonsgrenser.
 2. [Casebook](docs/CASEBOOK-DEDUCTION.md) og [Danas regel P](docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md): gjeldende funksjon inkludert PR #89.
 3. [Nettsteder](docs/WEBSITES.md) og [inventar](docs/WEBSITE-INVENTORY.md).
-4. [Restoppgaver og forslag](docs/BACKLOG.md), [kontrolliste for PR #89](docs/PR89-REVIEW.md).
+4. [Restoppgaver og forslag](docs/BACKLOG.md), [sluttrapport for PR #89](docs/PR89-REVIEW.md).
 5. Ved innholdsarbeid: [sakens forfattergrunnlag](docs/THE-QUIET-ACCOUNT.md), innholdsfilene og [saksavslutning](docs/CASE-ENDINGS-REVIEW.md).
 
 Full filoversikt og dokumentenes roller: [docs/README.md](docs/README.md). Gamle faseplaner og beslutningsreferater er [historikk](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/DEVPLAN.md), ikke neste oppgave.
