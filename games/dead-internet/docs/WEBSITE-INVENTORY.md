@@ -93,7 +93,7 @@ Approved new canon from this round: the Port Calder lighthouse was automated in 
 
 ## Legacy, personal, landing and background sites (W6)
 
-Implemented on `websites-w6` (not merged). New pages: Salty's 3, HarborDesk 2, Eastfield Community Garden 3, AIWriterPro 2, Harbor Dental 5, Calder Transit 6, Open Filings 1, Port Calder Public Library 8, Calder Power 6, Calder Credit Union 5, Walt's page 5, Harbor Public Affairs 1, portcalderjazz.com cache 3 (50 in total). Existing ids, URLs and wording are unchanged, except the approved rename of `corp-registries.example` to `openfilings.org`. Hidden pages stay hidden.
+Implemented in [PR #80](https://github.com/zirkhel/BusAdventures/pull/80) (not merged). New pages: Salty's 3, HarborDesk 2, Eastfield Community Garden 3, AIWriterPro 2, Harbor Dental 5, Calder Transit 6, Open Filings 1, Port Calder Public Library 8, Calder Power 6, Calder Credit Union 5, Walt's page 5, Harbor Public Affairs 1, portcalderjazz.com cache 3 (50 in total). Existing ids, URLs and wording are unchanged, except the approved rename of `corp-registries.example` to `openfilings.org`. Hidden pages stay hidden.
 
 New sites from the approved §4 list: `pclibrary.org`, `calderpower.com`, `caldercu.com`, `harborpa.com`, and Walt's page on the assigned free host `waltbrennan.calderweb.net`. The library staff page is the approved alternative path in: a 2024 cached version lists Mara Quinn and Priya Shah, with no new personal facts; the live 2026 page does not list Mara. Kestrel has a cached 2014 home and About (live wording unchanged). Salty's live design from 1 March 2026 shows a new banner tagline. The jazz domain remains parked when visited live.
 

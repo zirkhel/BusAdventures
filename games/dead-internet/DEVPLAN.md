@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W5 merget som PR #73–#79, `origin/main` `9b6ce40`; W6 på greinen `websites-w6`, ikke merget)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W5 merget som PR #73–#79, `origin/main` `9b6ce40`; W6 åpen som PR #80, ikke merget)._
 
 ## Overlevering (25. nov 2026)
 
@@ -17,7 +17,7 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 
 ### Nettstedsarbeid (W0–W6 og grafikk) — greiner og beslutninger
 
-W0–W5 og grafikksteget er merget til `main` som PR #73–#79 (`9b6ce40`). W6 implementeres på `websites-w6` fra den tippen og er ikke merget. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
+W0–W5 og grafikksteget er merget til `main` som PR #73–#79 (`9b6ce40`). W6 er åpen som [PR #80](https://github.com/zirkhel/BusAdventures/pull/80) fra den tippen og er ikke merget. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
 
 | Steg | Grein | Commit / PR | Hva |
 |---|---|---|---|
@@ -28,7 +28,7 @@ W0–W5 og grafikksteget er merget til `main` som PR #73–#79 (`9b6ce40`). W6 i
 | W3 | `websites-w3` | merget PR #77 · `2c6aa9f` | Frem-knapp, bokmerker adskilt fra Casebook, tekststørrelse, nettstedets 404 og vedlikehold, parkert-side, «This site can't be reached», lagring versjon 8, Seeker viser offisielt nettsted først ved merkenavn/domene. |
 | W4 | `websites-w4` | merget PR #78 · `24a20c3` | Bakgrunnssider runde 1 (122 nye sider, beholdt) for Northgate, City of Port Calder, Eastfield Notes, Kestrel og Brightline, pluss `universe/background-facts.json` med validator. Godkjent kanon: 10 nye rådsnavn + ordfører Denise Harlan; rådhuset 40 Civic Center, skranke 8:30–16:30. |
 | W5 | `websites-w5` | merget PR #79 · `9b6ce40` | Wiki, Forum, Document, Anonymous (og saas-Landing for Faceless). Calderpedia, Threadline, Docshare, SpillCheck og Faceless Stock flyttet over, med innhold. Godkjent kanon: fyret automatisert 1998, siste fyrmester Samuel Okoro; Harbor Festival-frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024). «Dennis» er bare en forum-påstand. |
-| W6 | `websites-w6` | på greinen, ikke merget | Legacy, Personal, øvrig Landing (`smallbiz`; parkert er fortsatt Browser-eid). Nye bakgrunnsnettsteder (bibliotek, Calder Power, Calder CU, Walts side, Harbor PA), cachet 2019-versjon av portcalderjazz.com, cachet Kestrel 2014, omdøping av `corp-registries.example` til `openfilings.org`. |
+| W6 | `websites-w6` | åpen PR #80, ikke merget | Legacy, Personal, øvrig Landing (`smallbiz`; parkert er fortsatt Browser-eid). Nye bakgrunnsnettsteder (bibliotek, Calder Power, Calder CU, Walts side, Harbor PA), cachet 2019-versjon av portcalderjazz.com, cachet Kestrel 2014, omdøping av `corp-registries.example` til `openfilings.org`. |
 
 **W0 — nye/endrede filer.** `core/site-view.js` (ny), `app/render.js`, `tests/sites.test.mjs`, oppdateringer i DEVPLAN, WEBSITES.md og DESIGN.md.
 
@@ -352,11 +352,11 @@ Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 
 - [x] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering) — merget PR #77
 - [x] W4 Bakgrunn runde 1 (122 sider, beholdt) og fil med bakgrunnsfakta — merget PR #78
 - [x] W5 Wiki, Forum, Document, Anonymous (og saas-Landing) — merget PR #79
-- [x] W6 Legacy, Personal, øvrig Landing og eldre design — på `websites-w6`, ikke merget
+- [x] W6 Legacy, Personal, øvrig Landing og eldre design — åpen PR #80 (`websites-w6`), ikke merget
 - [ ] W7 Spor i design (bare med Anders' ja), ny gjennomspillingstest
 - [ ] W8 «Compare with…» fra Archive (etter Casebook steg 3)
 - [ ] Grafikk WEB0001–WEB0024, de tolv viktigste først
-- [x] Bytt `corp-registries.example` til `openfilings.org`, med test for søk, gamle adresser og referanser — på `websites-w6`, ikke merget
+- [x] Bytt `corp-registries.example` til `openfilings.org`, med test for søk, gamle adresser og referanser — åpen PR #80 (`websites-w6`), ikke merget
 
 ### Deretter
 - [ ] Ekstern spilltest av hele etterforskningsopplevelsen, etter steg 5
