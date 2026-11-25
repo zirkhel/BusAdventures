@@ -54,6 +54,9 @@ export function indexSites(w, sites) {
   w.siteByPlatform = new Map();
   /** @type {Map<string, string>} */
   w.artifactByUrl = new Map();
+  /** Former addresses (artifact `urlAliases`) → artifact id. They redirect to the artifact's url. */
+  /** @type {Map<string, string>} */
+  w.urlAlias = new Map();
 
   /** @type {Map<string, string[]>} */
   const platforms = new Map();
@@ -81,7 +84,27 @@ export function indexSites(w, sites) {
       if (!w.artifactByUrl.has(key)) w.artifactByUrl.set(key, a.id);
     }
   }
+  // A page that moved keeps its id; its old addresses still open it (like a site's former `domains`).
+  for (const a of w.artifacts.values()) {
+    for (const old of a.urlAliases || []) {
+      const key = normUrl(old);
+      if (!key || w.artifactByUrl.has(key)) continue;
+      w.artifactByUrl.set(key, a.id);
+      w.urlAlias.set(key, a.id);
+    }
+  }
   return w;
+}
+
+/**
+ * The address to show and store for a URL: a former address becomes the page's current url.
+ * Anything else is only normalised.
+ * @param {any} w @param {string} url
+ */
+export function canonicalUrl(w, url) {
+  const key = normUrl(url);
+  const id = w.urlAlias?.get(key);
+  return id ? normUrl(w.artifacts.get(id)?.url || key) : key;
 }
 
 function domainsOf(s) {

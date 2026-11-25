@@ -428,7 +428,10 @@
   "page": "post",
   "type": "post",
   "platform": "eastfieldnotes",
-  "url": "eastfieldnotes.blog/2021/07/harbor-festival-dog-run",
+  "url": "eastfieldnotes.blog/2021/10/harbor-festival-dog-run",
+  "urlAliases": [
+    "eastfieldnotes.blog/2021/07/harbor-festival-dog-run"
+  ],
   "author": "acc_eastfieldnotes",
   "date": "2021-10-09",
   "title": "The dog run under Harbor Festival",
@@ -614,7 +617,10 @@
   "page": "post",
   "type": "post",
   "platform": "eastfieldnotes",
-  "url": "eastfieldnotes.blog/2022/07/festival-weekend",
+  "url": "eastfieldnotes.blog/2022/10/festival-weekend",
+  "urlAliases": [
+    "eastfieldnotes.blog/2022/07/festival-weekend"
+  ],
   "author": "acc_eastfieldnotes",
   "date": "2022-10-08",
   "title": "Festival weekend",
