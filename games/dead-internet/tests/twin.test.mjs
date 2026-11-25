@@ -213,6 +213,9 @@ test("the presentation layer and provenance never touch canon helpers", async ()
     const code = (await readFile(join(root, f), "utf8")).split("\n").filter(l => !/^\s*(\/\/|\*|\/\*)/.test(l)).join("\n");
     assert.doesNotMatch(code, banned, `${f} reads hidden canon`);
   }
+  // Step 4: the source cards read sources only through apparentSource, never a hidden field.
+  const cards = (await readFile(join(root, "core/sources.js"), "utf8")).split("\n").filter(l => !/^\s*(\/\/|\*|\/\*)/.test(l)).join("\n");
+  assert.doesNotMatch(cards, /\.(source|supports|mentions|truth)\b|\bw\.(artifacts|accounts|entities|claims|facts|images|characters)\b/, "core/sources.js reads hidden fields");
   // The Casebook views live next to scoring in core/casebook.js: each view function must stay clean.
   const cb = await readFile(join(root, "core/casebook.js"), "utf8");
   const views = ["evidenceAbout", "hypothesisLabel", "theoryLabel", "counts", "visibleSources", "casebookView", "alternativesOf", "isStructured",

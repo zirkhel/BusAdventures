@@ -805,3 +805,18 @@ h2.np-head { font-size: 23px; }
 .arch-same { font-size: 12px; white-space: nowrap; }
 .arch-why { margin-top: 4px; color: var(--ink2); }
 .arch-locked-link { display: flex; justify-content: center; padding: 12px 16px 20px; }
+/* Casebook step 4: source cards. One neutral colour for every answer: none says the player is right. */
+.select-start { display: flex; justify-content: space-between; gap: 12px; }
+.src-row .ico { width: 18px; height: 18px; color: var(--ink2); flex: none; }
+.src-row .chev { color: var(--ink2); margin-left: auto; }
+.src-head { display: flex; gap: 12px; align-items: center; }
+.src-head h2 { margin: 0; overflow-wrap: anywhere; }
+.src-q { margin: 6px 0 10px; }
+.src-q .field-label { margin: 0 0 2px; }
+.src-seg { margin: 4px 0; }
+.src-seg button.on { color: var(--ink); }
+.pad-x { padding-left: 16px; padding-right: 16px; }
+.sources.pad-x { display: flex; flex-wrap: wrap; gap: 6px; }
+.src-group { font-style: normal; }
+.own-count b { color: var(--ink); }
+.own-hint { margin-top: 2px; }
