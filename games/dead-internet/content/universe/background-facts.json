@@ -1,526 +1,541 @@
 [
- {
-  "id": "bf-foundry-lofts",
-  "introducedBy": "northgate",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Foundry Lofts, Old Town, completed 2017",
-  "entity": "foundry_lofts",
-  "name": "Foundry Lofts",
-  "subject": "foundry_lofts",
-  "predicate": "completed",
-  "object": "2017",
-  "places": [
-   "Old Town"
-  ],
-  "dates": [
-   "2017"
-  ]
- },
- {
-  "id": "bf-heights-commons",
-  "introducedBy": "northgate",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Heights Commons, the Heights, completed 2020",
-  "entity": "heights_commons",
-  "name": "Heights Commons",
-  "subject": "heights_commons",
-  "predicate": "completed",
-  "object": "2020",
-  "places": [
-   "the Heights"
-  ],
-  "dates": [
-   "2020"
-  ]
- },
- {
-  "id": "bf-northpoint-landing",
-  "introducedBy": "northgate",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Northpoint Landing, Northpoint, completed 2023",
-  "entity": "northpoint_landing",
-  "name": "Northpoint Landing",
-  "subject": "northpoint_landing",
-  "predicate": "completed",
-  "object": "2023",
-  "places": [
-   "Northpoint"
-  ],
-  "dates": [
-   "2023"
-  ]
- },
- {
-  "id": "bf-helen-march",
-  "introducedBy": "northgate",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Helen March is Chief Financial Officer at Northgate Development",
-  "entity": "helen_march",
-  "name": "Helen March",
-  "subject": "helen_march",
-  "predicate": "works_for",
-  "object": "northgate"
- },
- {
-  "id": "bf-marcus-veld",
-  "introducedBy": "northgate",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Marcus Veld is VP of Development at Northgate Development",
-  "entity": "marcus_veld",
-  "name": "Marcus Veld",
-  "subject": "marcus_veld",
-  "predicate": "works_for",
-  "object": "northgate"
- },
- {
-  "id": "bf-ng-pollinator",
-  "introducedBy": "northgate",
-  "binds": "none",
-  "status": "claim",
-  "label": "Northgate describes a pollinator garden that has not yet been planted",
-  "subject": "northgate",
-  "predicate": "claims_pollinator_garden"
- },
- {
-  "id": "bf-ng-netzero",
-  "introducedBy": "northgate",
-  "binds": "none",
-  "status": "claim",
-  "label": "Northgate describes new buildings as net-zero ready",
-  "subject": "northgate",
-  "predicate": "claims_net_zero_ready"
- },
- {
-  "id": "bf-city-hall-address",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "City Hall is at 40 Civic Center, Port Calder; public desk open weekdays 8:30–16:30",
-  "subject": "city_council",
-  "predicate": "office_address",
-  "object": "40 Civic Center, Port Calder"
- },
- {
-  "id": "bf-mayor-harlan",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Denise Harlan is Mayor of Port Calder",
-  "entity": "denise_harlan",
-  "name": "Denise Harlan",
-  "subject": "denise_harlan",
-  "predicate": "office",
-  "object": "mayor"
- },
- {
-  "id": "bf-cm-crowley",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Tom Crowley, councilmember for Old Town",
-  "entity": "tom_crowley",
-  "name": "Tom Crowley"
- },
- {
-  "id": "bf-cm-okonkwo",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Sandra Okonkwo, councilmember for Northpoint",
-  "entity": "sandra_okonkwo",
-  "name": "Sandra Okonkwo"
- },
- {
-  "id": "bf-cm-jiao",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Ben Jiao, councilmember for Harbor",
-  "entity": "ben_jiao",
-  "name": "Ben Jiao"
- },
- {
-  "id": "bf-cm-voss",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Elaine Voss, councilmember for the Heights",
-  "entity": "elaine_voss",
-  "name": "Elaine Voss"
- },
- {
-  "id": "bf-cm-rahman",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Farid Rahman, councilmember for Eastfield",
-  "entity": "farid_rahman",
-  "name": "Farid Rahman"
- },
- {
-  "id": "bf-cm-bloom",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Cathy Bloom, councilmember for Old Town",
-  "entity": "cathy_bloom",
-  "name": "Cathy Bloom"
- },
- {
-  "id": "bf-cm-strickland",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Neil Strickland, councilmember for Northpoint",
-  "entity": "neil_strickland",
-  "name": "Neil Strickland"
- },
- {
-  "id": "bf-cm-perez",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Joanne Perez, councilmember for Harbor",
-  "entity": "joanne_perez",
-  "name": "Joanne Perez"
- },
- {
-  "id": "bf-cm-cho",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Martin Cho, councilmember for the Heights",
-  "entity": "martin_cho",
-  "name": "Martin Cho"
- },
- {
-  "id": "bf-cm-kenner",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Ruth Kenner, at-large councilmember",
-  "entity": "ruth_kenner",
-  "name": "Ruth Kenner"
- },
- {
-  "id": "bf-water-main-2026",
-  "introducedBy": "city",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Harbor Street water-main work, 10–16 March 2026 (announced on the city portal)",
-  "subject": "evt_harbor_street_water",
-  "predicate": "date_range",
-  "object": "2026-03-10/2026-03-16"
- },
- {
-  "id": "bf-kestrel-trucks",
-  "introducedBy": "kestrel",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Kestrel operates two trucks in addition to its van fleet",
-  "subject": "kestrel",
-  "predicate": "truck_count",
-  "object": "2"
- },
- {
-  "id": "bf-kestrel-ev-pilot",
-  "introducedBy": "kestrel",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Kestrel is running a small electric-van pilot",
-  "subject": "kestrel",
-  "predicate": "ev_pilot",
-  "object": "true"
- },
- {
-  "id": "bf-bl-retention",
-  "introducedBy": "brightline",
-  "binds": "none",
-  "status": "claim",
-  "label": "Brightline claims 98% client retention and 2.4 million conversations started",
-  "subject": "brightline",
-  "predicate": "claims_retention",
-  "object": "98%"
- },
- {
-  "id": "bf-bl-cases",
-  "introducedBy": "brightline",
-  "binds": "none",
-  "status": "claim",
-  "label": "Brightline case studies cite large audience numbers; clients are not named",
-  "subject": "brightline",
-  "predicate": "claims_case_results"
- },
- {
-  "id": "bf-lighthouse-automated",
-  "introducedBy": "calderpedia",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Port Calder lighthouse was automated in 1998",
-  "entity": "port_calder_lighthouse",
-  "name": "Port Calder lighthouse",
-  "subject": "port_calder_lighthouse",
-  "predicate": "automated",
-  "object": "1998",
-  "dates": [
-   "1998"
-  ]
- },
- {
-  "id": "bf-samuel-okoro",
-  "introducedBy": "calderpedia",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Samuel Okoro was the last keeper of the Port Calder lighthouse",
-  "entity": "samuel_okoro",
-  "name": "Samuel Okoro",
-  "subject": "samuel_okoro",
-  "predicate": "role",
-  "object": "last keeper of the Port Calder lighthouse"
- },
- {
-  "id": "bf-festival-volunteers-1979",
-  "introducedBy": "calderpedia",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Harbor Festival has had volunteers since at least 1979",
-  "subject": "harbor_festival",
-  "predicate": "volunteers_since",
-  "object": "1979",
-  "dates": [
-   "1979"
-  ]
- },
- {
-  "id": "bf-breach-harborfit",
-  "introducedBy": "spillcheck",
-  "binds": "universe",
-  "status": "canon",
-  "label": "HarborFit member data appeared in a known breach, March 2021",
-  "entity": "harborfit",
-  "name": "HarborFit",
-  "subject": "harborfit",
-  "predicate": "breach_date",
-  "object": "2021-03",
-  "dates": [
-   "2021-03"
-  ]
- },
- {
-  "id": "bf-breach-slice",
-  "introducedBy": "spillcheck",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Slice of Calder loyalty-app data appeared in a known breach, November 2022",
-  "entity": "slice_of_calder",
-  "name": "Slice of Calder",
-  "subject": "slice_of_calder",
-  "predicate": "breach_date",
-  "object": "2022-11",
-  "dates": [
-   "2022-11"
-  ]
- },
- {
-  "id": "bf-breach-calderlearn",
-  "introducedBy": "spillcheck",
-  "binds": "universe",
-  "status": "canon",
-  "label": "CalderLearn, the Port Calder schools portal, appeared in a known breach, August 2024",
-  "entity": "calderlearn",
-  "name": "CalderLearn",
-  "subject": "calderlearn",
-  "predicate": "breach_date",
-  "object": "2024-08",
-  "dates": [
-   "2024-08"
-  ]
- },
- {
-  "id": "bf-library-hours-cut",
-  "introducedBy": "pclibrary",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Eastfield and Northpoint library branches closed Mondays and Tuesdays from October 2025, after the 18 August 2025 council vote",
-  "subject": "pclibrary",
-  "predicate": "hours_cut_from",
-  "object": "2025-10",
-  "dates": [
-   "2025-08-18",
-   "2025-10"
-  ]
- },
- {
-  "id": "bf-library-ereaders",
-  "introducedBy": "pclibrary",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Port Calder libraries lend e-readers for three weeks, each loaded with 40 classics and a charger",
-  "subject": "pclibrary",
-  "predicate": "e_reader_loan",
-  "object": "3 weeks, 40 classics"
- },
- {
-  "id": "bf-library-tax-help",
-  "introducedBy": "pclibrary",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Eastfield branch tax help desk, 10am to 2pm on Tuesdays until April 2026",
-  "subject": "pclibrary",
-  "predicate": "tax_help",
-  "object": "Eastfield, Tue 10:00-14:00 until 2026-04",
-  "dates": [
-   "2026-03"
-  ]
- },
- {
-  "id": "bf-walter-brennan",
-  "introducedBy": "walts",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Walter Brennan, Harbor Festival volunteer since 1979, ran the duck race for thirty years, died 31 October 2025 aged 81",
-  "entity": "walter_brennan",
-  "name": "Walter Brennan",
-  "subject": "walter_brennan",
-  "predicate": "died",
-  "object": "2025-10-31",
-  "dates": [
-   "1979",
-   "2025-10-31"
-  ]
- },
- {
-  "id": "bf-power-outage-2026-02-17",
-  "introducedBy": "calderpower",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Calder Power: failed transformer at Harbor Street substation on the evening of 17 February 2026; about 14,000 homes affected, later correction of the first statement",
-  "entity": "calder_power",
-  "name": "Calder Power",
-  "subject": "calder_power",
-  "predicate": "outage",
-  "object": "2026-02-17 Harbor Street substation",
-  "dates": [
-   "2026-02-17"
-  ]
- },
- {
-  "id": "bf-smart-meters-eastfield",
-  "introducedBy": "calderpower",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Calder Power fitted smart meters in about a third of Eastfield homes since December 2025; meters report every half hour and can switch a home off remotely",
-  "subject": "calder_power",
-  "predicate": "smart_meters",
-  "object": "about one third of Eastfield since 2025-12",
-  "dates": [
-   "2025-12"
-  ]
- },
- {
-  "id": "bf-cu-since-1952",
-  "introducedBy": "caldercu",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Calder Credit Union has served Port Calder since 1952 and has a branch on 4th Street in Eastfield",
-  "entity": "calder_cu",
-  "name": "Calder Credit Union",
-  "subject": "calder_cu",
-  "predicate": "founded",
-  "object": "1952",
-  "places": [
-   "4th Street",
-   "Eastfield"
-  ],
-  "dates": [
-   "1952"
-  ]
- },
- {
-  "id": "bf-jazz-anchor",
-  "introducedBy": "portcalderjazz",
-  "binds": "universe",
-  "status": "canon",
-  "label": "Port Calder Jazz was a Thursday night at the Anchor; Lou Benn is the pianist in the house band",
-  "entity": "lou_benn",
-  "name": "Lou Benn",
-  "subject": "lou_benn",
-  "predicate": "role",
-  "object": "pianist, Port Calder Jazz at the Anchor"
- },
- {
-  "id": "bf-library-open-hours",
-  "introducedBy": "pclibrary",
-  "binds": "universe",
-  "status": "claim",
-  "label": "Library site claim: Eastfield and Northpoint Wednesday to Friday 10:00–18:00, Saturday 10:00–16:00, closed Sunday",
-  "subject": "pclibrary",
-  "predicate": "weekday_hours",
-  "object": "Wed-Fri 10-18, Sat 10-16, Sun closed"
- },
- {
-  "id": "bf-library-staff-2026",
-  "introducedBy": "pclibrary",
-  "binds": "universe",
-  "status": "claim",
-  "label": "Library site lists Tomás Rinaldi (Eastfield), Helen Cho (Northpoint) and June Ellery (catalogue) as current staff, with Priya Shah still at Eastfield",
-  "subject": "pclibrary",
-  "predicate": "staff_listed",
-  "object": "Priya Shah, Tomás Rinaldi, Helen Cho, June Ellery"
- },
- {
-  "id": "bf-harbordental-team",
-  "introducedBy": "harbordental",
-  "binds": "universe",
-  "status": "claim",
-  "label": "Harbor Dental site lists Dr Nina Pell, Dr Omar Rahman and hygienist Chris Vale",
-  "subject": "harbor_dental",
-  "predicate": "team",
-  "object": "Nina Pell, Omar Rahman, Chris Vale"
- },
- {
-  "id": "bf-harbordental-hours",
-  "introducedBy": "harbordental",
-  "binds": "universe",
-  "status": "claim",
-  "label": "Harbor Dental site hours: Monday–Friday 8:00–17:00, Saturday 9:00–13:00, closed Sunday",
-  "subject": "harbor_dental",
-  "predicate": "hours",
-  "object": "Mon-Fri 8-17, Sat 9-13, Sun closed"
- },
- {
-  "id": "bf-harbordental-parking",
-  "introducedBy": "harbordental",
-  "binds": "universe",
-  "status": "claim",
-  "label": "Harbor Dental site: patient parking behind the surgery, off Harbor Street",
-  "subject": "harbor_dental",
-  "predicate": "parking",
-  "object": "behind the surgery, off Harbor Street"
- },
- {
-  "id": "bf-harbordesk-dock-road",
-  "introducedBy": "harbordesk",
-  "binds": "universe",
-  "status": "claim",
-  "label": "HarborDesk site: 18 Harbor Street is the virtual address; Dock Road has bookable rooms",
-  "subject": "harbordesk",
-  "predicate": "locations",
-  "object": "18 Harbor Street and Dock Road"
- },
- {
-  "id": "bf-harbordesk-price",
-  "introducedBy": "harbordesk",
-  "binds": "universe",
-  "status": "claim",
-  "label": "HarborDesk site prices: Standard $29, Plus $79, Studio $149 a month",
-  "subject": "harbordesk",
-  "predicate": "prices",
-  "object": "29/79/149"
- }
+  {
+    "id": "bf-foundry-lofts",
+    "introducedBy": "northgate",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Foundry Lofts, Old Town, completed 2017",
+    "entity": "foundry_lofts",
+    "name": "Foundry Lofts",
+    "subject": "foundry_lofts",
+    "predicate": "completed",
+    "object": "2017",
+    "places": [
+      "Old Town"
+    ],
+    "dates": [
+      "2017"
+    ]
+  },
+  {
+    "id": "bf-heights-commons",
+    "introducedBy": "northgate",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Heights Commons, the Heights, completed 2020",
+    "entity": "heights_commons",
+    "name": "Heights Commons",
+    "subject": "heights_commons",
+    "predicate": "completed",
+    "object": "2020",
+    "places": [
+      "the Heights"
+    ],
+    "dates": [
+      "2020"
+    ]
+  },
+  {
+    "id": "bf-northpoint-landing",
+    "introducedBy": "northgate",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Northpoint Landing, Northpoint, completed 2023",
+    "entity": "northpoint_landing",
+    "name": "Northpoint Landing",
+    "subject": "northpoint_landing",
+    "predicate": "completed",
+    "object": "2023",
+    "places": [
+      "Northpoint"
+    ],
+    "dates": [
+      "2023"
+    ]
+  },
+  {
+    "id": "bf-helen-march",
+    "introducedBy": "northgate",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Helen March is Chief Financial Officer at Northgate Development",
+    "entity": "helen_march",
+    "name": "Helen March",
+    "subject": "helen_march",
+    "predicate": "works_for",
+    "object": "northgate"
+  },
+  {
+    "id": "bf-marcus-veld",
+    "introducedBy": "northgate",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Marcus Veld is VP of Development at Northgate Development",
+    "entity": "marcus_veld",
+    "name": "Marcus Veld",
+    "subject": "marcus_veld",
+    "predicate": "works_for",
+    "object": "northgate"
+  },
+  {
+    "id": "bf-ng-pollinator",
+    "introducedBy": "northgate",
+    "binds": "none",
+    "status": "claim",
+    "label": "Northgate describes a pollinator garden that has not yet been planted",
+    "subject": "northgate",
+    "predicate": "claims_pollinator_garden"
+  },
+  {
+    "id": "bf-ng-netzero",
+    "introducedBy": "northgate",
+    "binds": "none",
+    "status": "claim",
+    "label": "Northgate describes new buildings as net-zero ready",
+    "subject": "northgate",
+    "predicate": "claims_net_zero_ready"
+  },
+  {
+    "id": "bf-city-hall-address",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "City Hall is at 40 Civic Center, Port Calder; public desk open weekdays 8:30–16:30",
+    "subject": "city_council",
+    "predicate": "office_address",
+    "object": "40 Civic Center, Port Calder"
+  },
+  {
+    "id": "bf-mayor-harlan",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Denise Harlan is Mayor of Port Calder",
+    "entity": "denise_harlan",
+    "name": "Denise Harlan",
+    "subject": "denise_harlan",
+    "predicate": "office",
+    "object": "mayor"
+  },
+  {
+    "id": "bf-cm-crowley",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Tom Crowley, councilmember for Old Town",
+    "entity": "tom_crowley",
+    "name": "Tom Crowley"
+  },
+  {
+    "id": "bf-cm-okonkwo",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Sandra Okonkwo, councilmember for Northpoint",
+    "entity": "sandra_okonkwo",
+    "name": "Sandra Okonkwo"
+  },
+  {
+    "id": "bf-cm-jiao",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Ben Jiao, councilmember for Harbor",
+    "entity": "ben_jiao",
+    "name": "Ben Jiao"
+  },
+  {
+    "id": "bf-cm-voss",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Elaine Voss, councilmember for the Heights",
+    "entity": "elaine_voss",
+    "name": "Elaine Voss"
+  },
+  {
+    "id": "bf-cm-rahman",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Farid Rahman, councilmember for Eastfield",
+    "entity": "farid_rahman",
+    "name": "Farid Rahman"
+  },
+  {
+    "id": "bf-cm-bloom",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Cathy Bloom, councilmember for Old Town",
+    "entity": "cathy_bloom",
+    "name": "Cathy Bloom"
+  },
+  {
+    "id": "bf-cm-strickland",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Neil Strickland, councilmember for Northpoint",
+    "entity": "neil_strickland",
+    "name": "Neil Strickland"
+  },
+  {
+    "id": "bf-cm-perez",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Joanne Perez, councilmember for Harbor",
+    "entity": "joanne_perez",
+    "name": "Joanne Perez"
+  },
+  {
+    "id": "bf-cm-cho",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Martin Cho, councilmember for the Heights",
+    "entity": "martin_cho",
+    "name": "Martin Cho"
+  },
+  {
+    "id": "bf-cm-kenner",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Ruth Kenner, at-large councilmember",
+    "entity": "ruth_kenner",
+    "name": "Ruth Kenner"
+  },
+  {
+    "id": "bf-water-main-2026",
+    "introducedBy": "city",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Harbor Street water-main work, 10–16 March 2026 (announced on the city portal)",
+    "subject": "evt_harbor_street_water",
+    "predicate": "date_range",
+    "object": "2026-03-10/2026-03-16"
+  },
+  {
+    "id": "bf-kestrel-trucks",
+    "introducedBy": "kestrel",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Kestrel operates two trucks in addition to its van fleet",
+    "subject": "kestrel",
+    "predicate": "truck_count",
+    "object": "2"
+  },
+  {
+    "id": "bf-kestrel-ev-pilot",
+    "introducedBy": "kestrel",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Kestrel is running a small electric-van pilot",
+    "subject": "kestrel",
+    "predicate": "ev_pilot",
+    "object": "true"
+  },
+  {
+    "id": "bf-bl-retention",
+    "introducedBy": "brightline",
+    "binds": "none",
+    "status": "claim",
+    "label": "Brightline claims 98% client retention and 2.4 million conversations started",
+    "subject": "brightline",
+    "predicate": "claims_retention",
+    "object": "98%"
+  },
+  {
+    "id": "bf-bl-cases",
+    "introducedBy": "brightline",
+    "binds": "none",
+    "status": "claim",
+    "label": "Brightline case studies cite large audience numbers; clients are not named",
+    "subject": "brightline",
+    "predicate": "claims_case_results"
+  },
+  {
+    "id": "bf-lighthouse-automated",
+    "introducedBy": "calderpedia",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Port Calder lighthouse was automated in 1998",
+    "entity": "port_calder_lighthouse",
+    "name": "Port Calder lighthouse",
+    "subject": "port_calder_lighthouse",
+    "predicate": "automated",
+    "object": "1998",
+    "dates": [
+      "1998"
+    ]
+  },
+  {
+    "id": "bf-samuel-okoro",
+    "introducedBy": "calderpedia",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Samuel Okoro was the last keeper of the Port Calder lighthouse",
+    "entity": "samuel_okoro",
+    "name": "Samuel Okoro",
+    "subject": "samuel_okoro",
+    "predicate": "role",
+    "object": "last keeper of the Port Calder lighthouse"
+  },
+  {
+    "id": "bf-festival-volunteers-1979",
+    "introducedBy": "calderpedia",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Harbor Festival has had volunteers since at least 1979",
+    "subject": "harbor_festival",
+    "predicate": "volunteers_since",
+    "object": "1979",
+    "dates": [
+      "1979"
+    ]
+  },
+  {
+    "id": "bf-breach-harborfit",
+    "introducedBy": "spillcheck",
+    "binds": "universe",
+    "status": "canon",
+    "label": "HarborFit member data appeared in a known breach, March 2021",
+    "entity": "harborfit",
+    "name": "HarborFit",
+    "subject": "harborfit",
+    "predicate": "breach_date",
+    "object": "2021-03",
+    "dates": [
+      "2021-03"
+    ]
+  },
+  {
+    "id": "bf-breach-slice",
+    "introducedBy": "spillcheck",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Slice of Calder loyalty-app data appeared in a known breach, November 2022",
+    "entity": "slice_of_calder",
+    "name": "Slice of Calder",
+    "subject": "slice_of_calder",
+    "predicate": "breach_date",
+    "object": "2022-11",
+    "dates": [
+      "2022-11"
+    ]
+  },
+  {
+    "id": "bf-breach-calderlearn",
+    "introducedBy": "spillcheck",
+    "binds": "universe",
+    "status": "canon",
+    "label": "CalderLearn, the Port Calder schools portal, appeared in a known breach, August 2024",
+    "entity": "calderlearn",
+    "name": "CalderLearn",
+    "subject": "calderlearn",
+    "predicate": "breach_date",
+    "object": "2024-08",
+    "dates": [
+      "2024-08"
+    ]
+  },
+  {
+    "id": "bf-library-hours-cut",
+    "introducedBy": "pclibrary",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Eastfield and Northpoint library branches closed Mondays and Tuesdays from October 2025, after the 18 August 2025 council vote",
+    "subject": "pclibrary",
+    "predicate": "hours_cut_from",
+    "object": "2025-10",
+    "dates": [
+      "2025-08-18",
+      "2025-10"
+    ]
+  },
+  {
+    "id": "bf-library-ereaders",
+    "introducedBy": "pclibrary",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Port Calder libraries lend e-readers for three weeks, each loaded with 40 classics and a charger",
+    "subject": "pclibrary",
+    "predicate": "e_reader_loan",
+    "object": "3 weeks, 40 classics"
+  },
+  {
+    "id": "bf-library-tax-help",
+    "introducedBy": "pclibrary",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Eastfield branch tax help desk, 10am to 2pm on Tuesdays until April 2026",
+    "subject": "pclibrary",
+    "predicate": "tax_help",
+    "object": "Eastfield, Tue 10:00-14:00 until 2026-04",
+    "dates": [
+      "2026-03"
+    ]
+  },
+  {
+    "id": "bf-walter-brennan",
+    "introducedBy": "walts",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Walter Brennan, Harbor Festival volunteer since 1979, ran the duck race for thirty years, died 31 October 2025 aged 81",
+    "entity": "walter_brennan",
+    "name": "Walter Brennan",
+    "subject": "walter_brennan",
+    "predicate": "died",
+    "object": "2025-10-31",
+    "dates": [
+      "1979",
+      "2025-10-31"
+    ]
+  },
+  {
+    "id": "bf-power-outage-2026-02-17",
+    "introducedBy": "calderpower",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Calder Power: failed transformer at Harbor Street substation on the evening of 17 February 2026; about 14,000 homes affected, later correction of the first statement",
+    "entity": "calder_power",
+    "name": "Calder Power",
+    "subject": "calder_power",
+    "predicate": "outage",
+    "object": "2026-02-17 Harbor Street substation",
+    "dates": [
+      "2026-02-17"
+    ]
+  },
+  {
+    "id": "bf-smart-meters-eastfield",
+    "introducedBy": "calderpower",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Calder Power fitted smart meters in about a third of Eastfield homes since December 2025; meters report every half hour and can switch a home off remotely",
+    "subject": "calder_power",
+    "predicate": "smart_meters",
+    "object": "about one third of Eastfield since 2025-12",
+    "dates": [
+      "2025-12"
+    ]
+  },
+  {
+    "id": "bf-cu-since-1952",
+    "introducedBy": "caldercu",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Calder Credit Union has served Port Calder since 1952 and has a branch on 4th Street in Eastfield",
+    "entity": "calder_cu",
+    "name": "Calder Credit Union",
+    "subject": "calder_cu",
+    "predicate": "founded",
+    "object": "1952",
+    "places": [
+      "4th Street",
+      "Eastfield"
+    ],
+    "dates": [
+      "1952"
+    ]
+  },
+  {
+    "id": "bf-jazz-anchor",
+    "introducedBy": "portcalderjazz",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Port Calder Jazz was a Thursday night at the Anchor; Lou Benn is the pianist in the house band",
+    "entity": "lou_benn",
+    "name": "Lou Benn",
+    "subject": "lou_benn",
+    "predicate": "role",
+    "object": "pianist, Port Calder Jazz at the Anchor"
+  },
+  {
+    "id": "bf-library-open-hours",
+    "introducedBy": "pclibrary",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Library site claim: Eastfield and Northpoint Wednesday to Friday 10:00–18:00, Saturday 10:00–16:00, closed Sunday",
+    "subject": "pclibrary",
+    "predicate": "weekday_hours",
+    "object": "Wed-Fri 10-18, Sat 10-16, Sun closed"
+  },
+  {
+    "id": "bf-library-staff-2026",
+    "introducedBy": "pclibrary",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Library site lists Tomás Rinaldi (Eastfield), Helen Cho (Northpoint) and June Ellery (catalogue) as current staff, with Priya Shah still at Eastfield",
+    "subject": "pclibrary",
+    "predicate": "staff_listed",
+    "object": "Priya Shah, Tomás Rinaldi, Helen Cho, June Ellery"
+  },
+  {
+    "id": "bf-harbordental-team",
+    "introducedBy": "harbordental",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Harbor Dental site lists Dr Nina Pell, Dr Omar Rahman and hygienist Chris Vale",
+    "subject": "harbor_dental",
+    "predicate": "team",
+    "object": "Nina Pell, Omar Rahman, Chris Vale"
+  },
+  {
+    "id": "bf-harbordental-hours",
+    "introducedBy": "harbordental",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Harbor Dental site hours: Monday–Friday 8:00–17:00, Saturday 9:00–13:00, closed Sunday",
+    "subject": "harbor_dental",
+    "predicate": "hours",
+    "object": "Mon-Fri 8-17, Sat 9-13, Sun closed"
+  },
+  {
+    "id": "bf-harbordental-parking",
+    "introducedBy": "harbordental",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Harbor Dental site: patient parking behind the surgery, off Harbor Street",
+    "subject": "harbor_dental",
+    "predicate": "parking",
+    "object": "behind the surgery, off Harbor Street"
+  },
+  {
+    "id": "bf-harbordesk-dock-road",
+    "introducedBy": "harbordesk",
+    "binds": "universe",
+    "status": "canon",
+    "label": "HarborDesk site: 18 Harbor Street is the virtual address; Dock Road has bookable rooms",
+    "subject": "harbordesk",
+    "predicate": "locations",
+    "object": "18 Harbor Street and Dock Road"
+  },
+  {
+    "id": "bf-harbordesk-price",
+    "introducedBy": "harbordesk",
+    "binds": "universe",
+    "status": "canon",
+    "label": "HarborDesk site prices: Standard $29, Plus $79, Studio $149 a month",
+    "subject": "harbordesk",
+    "predicate": "prices",
+    "object": "29/79/149"
+  },
+  {
+    "id": "bf-openfilings-domain",
+    "introducedBy": "corp_registries",
+    "binds": "universe",
+    "status": "canon",
+    "label": "The public company register for Port Calder is Open Filings at openfilings.org (formerly the placeholder corp-registries.example)",
+    "name": "Open Filings",
+    "subject": "corp_registries",
+    "predicate": "domain",
+    "object": "openfilings.org",
+    "places": [
+      "openfilings.org",
+      "corp-registries.example"
+    ]
+  }
 ]
