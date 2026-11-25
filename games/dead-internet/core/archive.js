@@ -10,9 +10,10 @@ const dateKey = d => String(d ?? "");
 
 /**
  * The Archive for an artifact the player has seen.
- * entries: { ref, kind: "cached"|"current"|"saved", version, date, title, saved: evidence ids }
- *   ref is what phone.compare() takes: {artifact, version} for a cached copy, {artifact} for the
- *   current page, {evidence} for a saved copy that is no longer available any other way.
+ * entries: { ref, kind: "cached"|"current"|"saved", version, date, title, evidence?, withCurrent, sameAsCurrent }
+ *   ref is what phone.compare() takes: {artifact, version} for Seeker's copy, {artifact} for the
+ *   current (live) page, {evidence} for the player's own saved copy.
+ * current: index of the live page, or -1; noCurrent: "locked"|"deleted"|"gone"|"unavailable"|null.
  * @param {any} g
  * @param {string} id
  */
@@ -25,7 +26,9 @@ export function archiveView(g, id) {
   const goneWithCopies = (now.error === "gone" || now.error === "deleted") && (now.cachedVersions || []).length > 0;
   if (s.seen[id] == null && !goneWithCopies) return { error: "not_seen" };
   const entries = [];
-  // A page behind a sign-in shows nothing of itself, not even how many copies Seeker kept.
+  // Locking or deleting blocks new content; it never takes away what the player already saved.
+  // A page behind a sign-in shows nothing of itself (not even how many copies Seeker kept), only
+  // the player's own saved copies.
   if (!now.locked) {
     for (const vid of now.cachedVersions || []) {
       const v = viewArtifact(g, id, { version: vid });
@@ -33,24 +36,33 @@ export function archiveView(g, id) {
     }
     if (!now.error) entries.push({ ref: { artifact: id }, kind: "current", version: now.versionId, date: now.date ?? null, title: now.title ?? "" });
   }
-  // The player's whole-page saved copies. A saved version that is still listed is only marked.
+  // The player's whole-page saved copies, always as their own rows: "Your saved copy" is never
+  // folded into Seeker's copy of the same version. Excerpts, images and messages stay in Casebook.
   for (const e of s.evidence) {
     if (e.artifact !== id || e.quote || e.image || e.message) continue;
-    const listed = entries.find(x => x.version === e.version);
-    if (listed) { (listed.saved ??= []).push(e.id); continue; }
     const v = savedArtifactView(g, e.id);
     if (v.error) continue;
-    entries.push({ ref: { evidence: e.id }, kind: "saved", version: e.version ?? v.versionId, date: v.date ?? null, title: v.title ?? "", saved: [e.id] });
+    entries.push({ ref: { evidence: e.id }, kind: "saved", version: e.version ?? v.versionId, date: v.date ?? null, title: v.title ?? "", evidence: e.id });
   }
-  for (const x of entries) x.saved ??= [];
-  const order = { saved: 0, cached: 1, current: 2 };
+  const order = { cached: 0, saved: 1, current: 2 };
   entries.sort((a, b) => dateKey(a.date).localeCompare(dateKey(b.date)) || order[a.kind] - order[b.kind]);
+  // "Compare with current" only from an older, different copy, and only when the current page can
+  // be read. Without one, nothing stands in for it: no other copy is ever offered as "current".
+  const current = entries.findIndex(x => x.kind === "current");
+  for (const [i, x] of entries.entries()) {
+    x.withCurrent = current >= 0 && i < current && x.version !== entries[current].version;
+    x.sameAsCurrent = current >= 0 && i !== current && x.version === entries[current].version;
+  }
   const latest = entries.at(-1);
+  const status = now.locked ? "locked" : now.error ?? "live";
   return {
     id, url: now.url ?? null, type: now.type,
     title: (!now.error && !now.locked ? now.title : latest?.title) || "",
-    status: now.locked ? "locked" : now.error ?? "live",
+    status,
     entries,
+    current,
+    // Why there is no "Compare with current": the page is locked, deleted or gone. Neutral, never why.
+    noCurrent: current >= 0 ? null : status === "live" ? "unavailable" : status,
     canCompare: entries.length >= 2,
   };
 }

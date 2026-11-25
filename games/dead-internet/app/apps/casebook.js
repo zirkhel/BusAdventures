@@ -562,6 +562,8 @@ export function casebookApp(phone) {
     const texts = ok.filter(x => x.text || x.attachments?.length);
     return h("div.compare",
       h("div.hint.muted", "Side by side. Rows marked • differ. What it means is up to you."),
+      // From the Archive (W8): only fields and text line up; pictures are compared on their own.
+      desc.textOnly ? h("div.hint.muted.cmp-textonly", "Text and details only. Pictures on these pages aren't compared here; save two pictures to Casebook to compare them side by side.") : null,
       missing ? h("div.hint.muted", `${missing} ${missing === 1 ? "item isn't" : "items aren't"} available to compare.`) : null,
       h("div.cmp-scroll", table),
       ok.length > 2 ? h("div.hint.muted", `Swipe the table sideways to see all ${ok.length}.`) : null,
@@ -959,7 +961,7 @@ export function casebookApp(phone) {
       if (desc.kind === "hyp") return [bar("Theory"), h("div.scroll", hypDetail(desc))];
       if (desc.kind === "builder") return [bar(desc.id ? "Edit theory" : desc.alternativeOf ? "Alternative" : "New theory"), h("div.scroll", builder(desc))];
       if (desc.kind === "question") return [bar("Question"), h("div.scroll", questionDetail(desc))];
-      if (desc.kind === "compare") return [bar("Compare"), h("div.scroll", compareScreen(desc))];
+      if (desc.kind === "compare") return [bar(desc.title || "Compare"), h("div.scroll", compareScreen(desc))];
       if (desc.kind === "link") return [bar(desc.id ? "Connection" : "New connection"), h("div.scroll", linkEditor(desc))];
       if (desc.kind === "event") return [bar("Event"), h("div.scroll", eventDetail(desc))];
       if (desc.kind === "eventEdit") return [bar(desc.id ? "Edit event" : "New event"), h("div.scroll", eventEditor(desc))];

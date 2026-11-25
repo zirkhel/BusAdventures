@@ -160,7 +160,7 @@ export class Phone {
     if (desc.kind === "results") return desc.title || `“${desc.q}”`;
     if (desc.kind === "hyp") return "Theory";
     if (desc.kind === "question") return "Question";
-    if (desc.kind === "compare") return "Compare";
+    if (desc.kind === "compare") return desc.title || "Compare";
     if (desc.kind === "link") return "Connection";
     if (desc.kind === "event") return this.g.s.timeline.find(e => e.id === desc.id)?.title || "Event";
     if (desc.kind === "eventEdit") return "Event";
@@ -330,6 +330,13 @@ export class Phone {
 
   /** Browser's Archive for one address (W8): every copy the player can open, and "Compare with…". */
   archive(id) { this.push("browser", { kind: "archive", id }); }
+  /** The way into the Archive from a page that is gone or locked, or null when it has nothing to show. */
+  archiveOpener(id) {
+    const ar = this.g.archive(id);
+    if (ar.error || !ar.entries.length) return null;
+    const mine = ar.entries.every(x => x.kind === "saved");
+    return { label: mine ? (ar.entries.length > 1 ? "Your saved copies in Archive" : "Your saved copy in Archive") : "All copies in Archive", run: () => this.archive(id) };
+  }
 
   /** The versions of a document the player can reach. A page they have seen opens in the Archive. */
   versions(id) {
@@ -349,7 +356,8 @@ export class Phone {
    * Compare items side by side in Casebook, from any app. refs: {evidence} or reachable
    * {artifact, version?, image?} / {message}. Browser's Archive ("Compare with…", W8) uses this.
    */
-  compare(refs) { this.push("casebook", { kind: "compare", items: refs.map(r => ({ ...r })) }); }
+  /** opts: {title, textOnly} — the Archive opens "Compare text and details" (W8). */
+  compare(refs, opts = {}) { this.push("casebook", { kind: "compare", items: refs.map(r => ({ ...r })), ...(opts.title ? { title: opts.title } : {}), ...(opts.textOnly ? { textOnly: true } : {}) }); }
 
   imageSearch(imageId, flip) {
     const r = this.g.searchImage(imageId, flip);

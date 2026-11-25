@@ -58,7 +58,7 @@ try {
   assert.equal(await page.getByRole('textbox', { name: 'My comment' }).inputValue(), 'My own reading, not a verdict.');
   assert.ok(Math.abs(await scroll.evaluate(el => el.scrollTop) - before) < 2, 'return restores card scroll');
   await page.getByRole('button', { name: 'Open saved copy', exact: true }).click();
-  await page.getByText('Saved copy', { exact: true }).waitFor();
+  await page.getByText('Your saved copy', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   await page.getByRole('button', { name: 'Reviewed', exact: true }).click();
   await page.getByRole('button', { name: 'Set aside…', exact: true }).click();

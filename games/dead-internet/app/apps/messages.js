@@ -140,7 +140,7 @@ export function messagesApp(phone) {
   function page(desc) {
     const v = desc.view;
     if (!v) return h("div.empty", "Nothing here.");
-    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"), () => phone.archive(desc.id));
+    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"), phone.archiveOpener(desc.id));
     return renderArtifact(phone, v);
   }
 

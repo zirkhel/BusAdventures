@@ -231,6 +231,7 @@ export function renderLogin(phone, v, onDone) {
 }
 
 /** Page that is gone, deleted or never existed. */
+/** onArchive: phone.archiveOpener(id), {label, run} or null. */
 export function renderGone(phone, v, onCached, onArchive) {
   v = publicView(v);
   const has = (v.cachedVersions || []).length > 0;
@@ -240,7 +241,7 @@ export function renderGone(phone, v, onCached, onArchive) {
   return h("article.page.k-gone",
     h("div.gone", icon("globe", "big"), h("h1", "Not available"), h("p", msg), v.url ? h("div.muted", v.url) : null,
       has ? h("button.btn", { onclick: () => onCached(v.cachedVersions[v.cachedVersions.length - 1]) }, "Seeker cached copy") : null,
-      has && onArchive ? h("button.btn", { onclick: onArchive }, "All copies in Archive") : null));
+      onArchive ? h("button.btn", { onclick: onArchive.run }, onArchive.label) : null));
 }
 
 export { onLongPress };

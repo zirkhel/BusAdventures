@@ -788,3 +788,20 @@ h2.np-head { font-size: 23px; }
 .arch-pick .sel-box { margin-right: 0; }
 .arch-row.picked .sel-box { background: var(--ink2); border-color: var(--ink2); color: #fff; }
 .arch-head .ico.big { width: 28px; height: 28px; color: var(--ink2); flex: none; margin-top: 2px; }
+/* W8: the player's own saved copy looks different from Seeker's archive copy and the live page. */
+.cache-banner.mine { background: #e8f0fd; color: #1d3f7a; border-bottom-color: #c5d6f5; }
+.cache-banner.mine .ico { width: 15px; height: 15px; vertical-align: -2px; margin-right: 4px; color: var(--accent); }
+.cache-banner.mine .banner-btn { border-color: #a9c1ee; background: #f6f9ff; color: #1d3f7a; }
+.banner-btn:disabled { opacity: .55; cursor: default; }
+.banner-why { align-self: center; font-size: 12px; }
+.arch-kind { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.arch-kind .ico { width: 14px; height: 14px; flex: none; }
+.arch-type { font-weight: 600; color: var(--ink); }
+.arch-sub { font-size: 12px; color: var(--ink2); margin-top: 1px; }
+.arch-row.k-saved { background: #eef3fd; box-shadow: inset 4px 0 0 var(--accent); }
+.arch-row.k-saved .arch-type, .arch-row.k-saved .ico { color: #1d3f7a; }
+.arch-row.k-saved.picked { background: #e1eafb; }
+.arch-row.k-current .arch-type { color: var(--ok); }
+.arch-same { font-size: 12px; white-space: nowrap; }
+.arch-why { margin-top: 4px; color: var(--ink2); }
+.arch-locked-link { display: flex; justify-content: center; padding: 12px 16px 20px; }

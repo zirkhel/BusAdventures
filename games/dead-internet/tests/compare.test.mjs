@@ -30,7 +30,7 @@ test("comparison lines up what is visible and says which fields differ", async (
   assert.equal(c.items.length, 2);
   for (const it of c.items) {
     assert.equal(it.kind, "page");
-    assert.equal(it.copy, "Saved copy");
+    assert.equal(it.copy, "Your saved copy");
     assert.ok(it.title && it.source && it.text !== undefined);
     for (const hidden of ["supports", "mentions", "operatedBy", "truth"]) assert.ok(!(hidden in it), `no ${hidden}`);
     assert.ok(!JSON.stringify(it).includes('"source":"garden"'), "no hidden source key");
@@ -47,7 +47,7 @@ test("two copies of the same page show paragraph changes; only reachable version
   const view = g.view(PAGE);
   const old = view.cachedVersions[0];
   const c = g.compare([{ artifact: PAGE, version: old }, { artifact: PAGE }]);
-  assert.deepEqual(c.items.map(x => x.copy), ["Cached copy", "Current page"]);
+  assert.deepEqual(c.items.map(x => x.copy), ["Archive copy", "Live page"]);
   assert.equal(c.samePage, true);
   assert.ok(c.changes.text.some(x => x.op !== "same"), "the 2014 copy differs from today's page");
   assert.equal(c.saved, false);

@@ -91,6 +91,11 @@ function play(w) {
   for (let i = 0; i + 1 < all.length; i += 2) g.addLink({ a: all[i], b: all[i + 1], kind: kinds[i / 2 % 6], note: i % 4 ? "Because" : "" });
   // Both directions of the directed kinds, and links seen from either end.
   for (let i = 0; i + 1 < all.length; i += 5) g.addLink({ a: all[i + 1], b: all[i], kind: ["supports", "manipulated"][i % 2] });
+  // W8: a saved page whose original is then locked (signed out), and one whose original is deleted.
+  const portal = g.logins().find(l => l.site === "brightline_portal");
+  g.login(portal.site, portal.user, portal.pass); g.open("A24"); g.save({ artifact: "A24" });
+  delete g.s.loggedIn[portal.site];
+  g.s.artifacts.A20 = { ...g.s.artifacts.A20, live: null };
   g.s.trust.dana = 99;
   return { g, hyps: [r.h2, r.h3, ...extra] };
 }
@@ -149,6 +154,10 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   assert.ok(a.casebook.links.length > 300 && a.casebook.links.some(l => l.directed) && a.compare.length > 250 && a.compare.some(c => c.samePage && c.changes?.text.some(x => x.op !== "same")), "step 3 links and comparisons are part of the comparison");
   assert.ok(a.archive.filter(x => x.ar.canCompare).length >= 12 && a.archive.some(x => x.ar.status === "deleted"), "W8 Archive views are part of the comparison");
   assert.deepEqual(a.archive.flatMap(x => x.pairs).filter(c => c.error || c.items.some(i => i.error)), [], "every Archive pair compares");
+  const at = id => a.archive.find(x => x.id === id).ar;
+  assert.ok(at("A24").status === "locked" && at("A24").entries.length && at("A24").entries.every(x => x.kind === "saved"), "a locked page lists only the player's saved copies");
+  assert.ok(at("A20").status === "deleted" && at("A20").entries.some(x => x.kind === "saved") && at("A20").current === -1, "a deleted page keeps the player's saved copy");
+  assert.ok(a.archive.every(({ ar }) => ar.error || (ar.current >= 0 ? ar.entries[ar.current].kind === "current" : ar.entries.every(x => !x.withCurrent))), "nothing stands in for a missing live page");
   assert.deepEqual(a.compare.filter(c => c.error || c.items.some(x => x.error)), [], "every comparison in the twin test is valid");
   assert.ok(a.compare.every(c => c.items.every(x => !("supports" in x) && !("mentions" in x) && !("source" in x && typeof x.source !== "string"))), "comparison items carry no hidden fields");
   assert.ok(a.casebook.questions.length > 20 && a.casebook.hypotheses.some(h => h.againstCount > 0 && !h.structured), "step 2 views are part of the comparison");

@@ -32,7 +32,14 @@ try {
   const errors = [];
   const w = await loadWorld(), g = new Game(w, { seed: 7 }); g.start();
   const ABOUT = 'W-kestrel-0005', TEAM = 'A20', DELETED = 'DR-2025-0418', STORY = 'DR-2025-0101';
-  for (const id of [ABOUT, TEAM, DELETED, STORY]) g.s.artifacts[id] = { ...g.s.artifacts[id], visible: true };
+  const LOCKED = 'A24', GONE = 'W-kestrel-0001';
+  for (const id of [ABOUT, TEAM, DELETED, STORY, LOCKED, GONE]) g.s.artifacts[id] = { ...g.s.artifacts[id], visible: true };
+  // Saved, then the original locked (signed out) or deleted: the player's own copy must still open.
+  const portal = g.logins().find(l => l.site === 'brightline_portal');
+  g.login(portal.site, portal.user, portal.pass); g.open(LOCKED); g.save({ artifact: LOCKED });
+  delete g.s.loggedIn[portal.site];
+  g.open(GONE); g.save({ artifact: GONE });
+  g.s.artifacts[GONE] = { ...g.s.artifacts[GONE], live: null };
   const url = id => w.artifacts.get(id).url;
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   page.on('pageerror', e => errors.push(e.message));
@@ -58,12 +65,12 @@ try {
   // The Archive: oldest first, each copy can be opened, ticked, or compared with the current page.
   await page.locator('.archive').waitFor();
   assert.equal(await page.locator('.arch-head h1').innerText(), 'Archive');
-  assert.deepEqual(await page.locator('.arch-kind').allInnerTexts(), ['Seeker cache', 'Current page']);
+  assert.deepEqual(await page.locator('.arch-type').allInnerTexts(), ['Archive copy', 'Live page']);
   const dates = await page.locator('.arch-date').allInnerTexts();
   assert.match(dates[0], /2014/);
   assert.equal(await page.locator('.arch-cmp').count(), 1, 'only the older copy offers "Compare with current"');
   assert.equal(await page.locator('.addr-tag').textContent(), 'archive');
-  await page.getByText('Tick two copies to compare them side by side.').waitFor();
+  await page.getByText('Tick two copies to compare their text and details.').waitFor();
   await page.locator('.arch-pick').nth(1).click();
   await page.getByText('Pick one more copy to compare.').waitFor();
   await page.locator('.arch-pick').nth(0).click();
@@ -71,10 +78,12 @@ try {
   await shot('w8-archive.png');
   await noOverflow('archive');
   // Ticked newest first, compared oldest first: "Changes from A to B" reads forwards.
-  await b('Compare these two').click();
+  await b('Compare text and details').click();
   await page.getByText('Changes from A to B', { exact: true }).waitFor();
+  assert.equal(await page.locator('.cb-bar .bar-title').last().innerText(), 'Compare text and details');
+  assert.match(await page.locator('.cmp-textonly').innerText(), /Text and details only\. Pictures .* compare them side by side/);
   const head = await page.locator('.cmp-row', { hasText: 'Copy' }).locator('.cmp-cell').allInnerTexts();
-  assert.deepEqual(head, ['Cached copy', 'Current page']);
+  assert.deepEqual(head, ['Archive copy', 'Live page']);
   const dateRow = await page.locator('.cmp-row', { hasText: 'Date' }).locator('.cmp-cell').allInnerTexts();
   assert.match(dateRow[0], /2014/);
   await page.getByText('Changes from A to B', { exact: true }).scrollIntoViewIfNeeded();
@@ -86,16 +95,22 @@ try {
   assert.equal(await page.locator('.link-sentence').innerText(), 'A may be manipulated, compared with B.');
   await b('Back').click();
   await b('Back').click();
-  // Back in the Archive, both copies now say they are in Casebook.
+  // Back in the Archive, both copies are now also listed as the player's own, set apart from Seeker's.
   await page.locator('.archive').waitFor();
-  assert.equal(await page.locator('.arch-saved').count(), 2, 'both copies are in Casebook now');
-  // Open the cached copy: its banner compares it with the current page in one tap.
-  await page.locator('.arch-open').first().click();
-  await page.getByText('Seeker cache', { exact: true }).waitFor();
-  await b('Compare with current page').waitFor();
+  assert.deepEqual(await page.locator('.arch-type').allInnerTexts(), ['Archive copy', 'Your saved copy', 'Your saved copy', 'Live page']);
+  assert.equal(await page.locator('.arch-row.k-saved').count(), 2, 'both copies are in Casebook now');
+  assert.equal(await page.locator('.arch-cmp').count(), 2, 'the two older copies compare with the live page');
+  assert.equal(await page.locator('.arch-same').count(), 1, 'the saved copy of the live version says so');
+  assert.notEqual(await page.locator('.arch-row.k-saved').first().evaluate(el => getComputedStyle(el).backgroundColor),
+    await page.locator('.arch-row.k-cached').evaluate(el => getComputedStyle(el).backgroundColor), 'the saved copy looks different');
+  await shot('w8-archive-saved.png');
+  // Open the archive copy: its banner compares it with the live page in one tap.
+  await page.locator('.arch-row.k-cached .arch-open').click();
+  await page.getByText('Archive copy', { exact: true }).waitFor();
+  await b('Compare with live page').waitFor();
   assert.equal(await page.locator('.archive-strip').count(), 0, 'the banner has "All copies"; no second way in');
   await shot('w8-cached.png');
-  await b('Compare with current page').click();
+  await b('Compare with live page').click();
   await page.getByText('Changes from A to B', { exact: true }).waitFor();
   await b('Back').click();
   await b('All copies').click();
@@ -124,10 +139,43 @@ try {
   // A Daily Record story that was updated: the Archive strip in Browser compares the two.
   await go(url(STORY));
   await page.locator('.archive-strip').click();
-  assert.deepEqual(await page.locator('.arch-kind').allInnerTexts(), ['Seeker cache', 'Current page']);
+  assert.deepEqual(await page.locator('.arch-type').allInnerTexts(), ['Archive copy', 'Live page']);
   await page.locator('.arch-cmp').click();
   await page.getByText('Changes from A to B', { exact: true }).waitFor();
   await shot('w8-story.png');
+  await b('Back').click();
+
+  // Saved, then signed out: the page is behind a sign-in again, but the player's copy still opens.
+  await go(url(LOCKED));
+  await b('Your saved copy in Archive').click();
+  await page.locator('.archive').waitFor();
+  await page.getByText('The page needs a sign-in. Only copies you saved are listed.').waitFor();
+  assert.deepEqual(await page.locator('.arch-type').allInnerTexts(), ['Your saved copy']);
+  assert.equal(await page.locator('.arch-cmp').count(), 0, 'no live page to compare with');
+  await shot('w8-locked-archive.png');
+  await page.locator('.arch-open').click();
+  await page.locator('.cache-banner.mine').waitFor();
+  assert.ok(await b('Compare with live page').isDisabled(), 'disabled, never swapped for another copy');
+  await page.getByText('The live page needs a sign-in.', { exact: true }).waitFor();
+  await shot('w8-locked-saved.png');
+  await noOverflow('saved copy of a locked page');
+  await b('Back').click();
+
+  // Saved, then deleted: Seeker's copies and the player's own; nothing stands in as "live".
+  await go(url(GONE));
+  await b('All copies in Archive').click();
+  await page.locator('.archive').waitFor();
+  await page.getByText('There is no live page to compare with.').waitFor();
+  const kinds = await page.locator('.arch-type').allInnerTexts();
+  assert.ok(kinds.includes('Your saved copy') && !kinds.includes('Live page'), kinds.join());
+  assert.equal(await page.locator('.arch-cmp').count(), 0);
+  await shot('w8-deleted-saved-archive.png');
+  await page.locator('.arch-row.k-saved .arch-open').click();
+  await page.locator('.cache-banner.mine').waitFor();
+  assert.ok(await b('Compare with live page').isDisabled());
+  await page.getByText('The live page has been deleted.', { exact: true }).waitFor();
+  await shot('w8-deleted-saved.png');
+  await b('Back').click();
 
   // Reload: the saved copies and the connection-less comparison survive; the Archive is rebuilt.
   await page.reload();
@@ -136,10 +184,10 @@ try {
   await page.locator('.dock button').nth(0).click();
   await go(url(ABOUT));
   await page.locator('.archive-strip').click();
-  assert.equal(await page.locator('.arch-saved').count(), 2, 'saved copies persist');
+  assert.equal(await page.locator('.arch-row.k-saved').count(), 2, 'saved copies persist');
   assert.deepEqual(errors, []);
   await page.close();
-  console.log('PASS mobile 390×844 W8: Archive strip, oldest first, tick two, compare oldest first, save both and open the connection editor, cached banner "Compare with current page", All copies, Brightline Team 2024, deleted story, updated Daily Record story, reload');
+  console.log('PASS mobile 390×844 W8: Archive strip, oldest first, tick two, "Compare text and details" oldest first, save both and open the connection editor, saved copies as their own rows, archive-copy banner "Compare with live page", All copies, Brightline Team 2024, deleted story, updated Daily Record story, saved copy after sign-out and after deletion (compare disabled with a reason), reload');
 
   // In the paper itself: "Other versions" in the share sheet opens the same Archive.
   {
@@ -161,7 +209,7 @@ try {
     await p.locator('[aria-label="Share"]').first().click();
     await p.locator('.ctx-item', { hasText: 'Other versions' }).click();
     await p.locator('.archive').waitFor();
-    assert.deepEqual(await p.locator('.arch-kind').allInnerTexts(), ['Seeker cache', 'Current page']);
+    assert.deepEqual(await p.locator('.arch-type').allInnerTexts(), ['Archive copy', 'Live page']);
     await p.getByRole('button', { name: 'Back', exact: true }).click();
     await p.locator('[aria-label="Share"]').first().waitFor();
     await p.close();
@@ -209,11 +257,18 @@ try {
         if (!o.ok || o.view.locked) continue;
         if (o.view.cachedVersions?.length) g.save({ artifact: a.id, version: o.view.cachedVersions[0] });
       }
+      // A locked page with nothing saved; then saved and locked again; and saved, then deleted.
+      const portal = g.logins().find(l => l.site === 'brightline_portal');
+      g.s.seen.A24 = 1;
+      const noneBefore = JSON.stringify(g.archive('A24'));
+      g.login(portal.site, portal.user, portal.pass); g.open('A24'); g.save({ artifact: 'A24' });
+      delete g.s.loggedIn[portal.site];
+      g.save({ artifact: 'A20' }); g.s.artifacts.A20 = { ...g.s.artifacts.A20, live: null };
       const phone = new Phone(document.getElementById('phone'), g, {});
       phone.openApp('browser');
       const dom = () => [...phone.screen.querySelectorAll('*')].map(el => [el.tagName, el.className?.baseVal ?? el.className, el.childElementCount ? null : el.textContent, el.value ?? null, el.getAttribute('aria-pressed')]);
       const screens = [];
-      let archives = 0, deleted = 0;
+      let archives = 0, deleted = 0, saved = 0;
       for (const id of Object.keys(g.s.seen).sort()) {
         const ar = g.archive(id);
         if (ar.error || !ar.entries.length) continue;
@@ -223,18 +278,21 @@ try {
         for (const x of ar.entries) {
           if (x.kind === 'cached') { const r = g.open(id, x.version); phone.replaceTop({ kind: 'page', id, version: x.version, view: r.view, url: r.view.url || '' }); screens.push(dom()); }
           if (x.kind === 'current') { phone.replaceTop({ kind: 'page', id, version: null, view: g.view(id), url: g.view(id).url || '' }); screens.push(dom()); }
+          if (x.kind === 'saved') { const view = g.evidenceView(x.evidence); phone.replaceTop({ kind: 'page', id, version: x.version, view: { ...view, saved: true, cached: false }, url: view.url || '' }); screens.push(dom()); saved++; }
         }
         if (ar.status !== 'live') { phone.replaceTop({ kind: 'page', id, version: null, view: g.view(id), url: ar.url || '' }); screens.push(dom()); }
       }
-      return { archives, deleted, screens };
+      return { archives, deleted, saved, noneBefore, screens };
     }, mode));
     await p.close();
   }
-  assert.ok(snapshots[0].archives >= 10 && snapshots[0].deleted > 0, 'Archive screens in the twin DOM test');
+  assert.ok(snapshots[0].archives >= 10 && snapshots[0].deleted > 0 && snapshots[0].saved > 10, 'Archive screens in the twin DOM test');
+  const none = JSON.parse(snapshots[0].noneBefore);
+  assert.ok(none.status === 'locked' && none.entries.length === 0 && none.title === '', 'a locked page with no saved copy shows nothing');
   assert.deepEqual(snapshots[1], snapshots[0], 'merged hidden origins must not change the Archive DOM');
   assert.deepEqual(snapshots[2], snapshots[0], 'split hidden origins must not change the Archive DOM');
   assert.deepEqual(errors, []);
-  console.log(`PASS twin DOM W8: ${snapshots[0].archives} Archive screens (${snapshots[0].deleted} for pages that are gone), ticked pairs, cached and current pages with strips and banners, identical in three twin worlds`);
+  console.log(`PASS twin DOM W8: ${snapshots[0].archives} Archive screens (${snapshots[0].deleted} for pages that are gone or locked), ${snapshots[0].saved} saved copies opened, ticked pairs, archive copies and live pages with strips and banners, a locked page with nothing saved shows nothing, identical in three twin worlds`);
 } finally {
   await browser?.close();
   server.close();
