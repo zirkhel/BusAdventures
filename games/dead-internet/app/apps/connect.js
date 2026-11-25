@@ -60,9 +60,9 @@ export function connectApp(phone) {
   function page(desc) {
     const v = desc.view;
     if (!v) return h("div.empty", "Nothing here.");
-    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"));
+    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"), phone.archiveOpener(desc.id));
     const art = renderArtifact(phone, v);
-    if (v.cached) art.prepend(h("div.cache-banner", h("b", "Seeker cache"), ` Copy from ${fmtDate(v.date)}.`));
+    if (v.cached) art.prepend(h("div.cache-banner", h("b", "Archive copy"), ` Copy from ${fmtDate(v.date)}.`));
     if (v.type === "profile" && !v.cached && v.author) {
       const posts = postsBy(v.author);
       if (posts.length) art.append(h("div.section-title", "Posts"), ...posts.map(p => postCard(p.id)));

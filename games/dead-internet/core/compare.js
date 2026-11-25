@@ -32,10 +32,10 @@ function authorOf(w, view) {
   return acc.displayName && acc.handle ? `${acc.displayName} (${acc.handle})` : acc.displayName || acc.handle || null;
 }
 
-/** Which copy this is, in the words the player sees elsewhere. */
+/** Which copy this is, in the words of Browser's Archive (W8): the player's own copy is never Seeker's. */
 function copyLabel(view, saved) {
-  if (saved) return "Saved copy";
-  return view.cached ? "Cached copy" : "Current page";
+  if (saved) return "Your saved copy";
+  return view.cached ? "Archive copy" : "Live page";
 }
 
 /**

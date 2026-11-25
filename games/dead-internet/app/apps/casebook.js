@@ -535,7 +535,9 @@ export function casebookApp(phone) {
     const ok = c.items.map((x, i) => ({ ...x, i })).filter(x => !x.error);
     const missing = c.items.filter(x => x.error).length;
     const KIND = { page: "Saved page", excerpt: "Excerpt", image: "Image", message: "Message" };
-    const rows = [["What", x => x.kind === "page" && x.evidence == null ? "Page" : KIND[x.kind], "kind"], ["Source", x => x.source, "source"], ["Platform", x => x.platform, "platform"],
+    // An unsaved page (from Browser's Archive, W8) is a "Page", not a "Saved page".
+    const what = x => x.kind === "page" && x.evidence == null ? "Page" : KIND[x.kind];
+    const rows = [["What", what, "kind"], ["Source", x => x.source, "source"], ["Platform", x => x.platform, "platform"],
       ["Address", x => x.url, "url"], ["Date", x => x.date ? fmtDate(x.date) : x.day != null && x.kind === "message" ? `Day ${x.day}` : null, "date"],
       ["Copy", x => x.copy, "copy"], ["Author", x => x.author, "author"],
       ["Saved", x => x.evidence ? `Day ${g.s.evidence.find(e => e.id === x.evidence)?.day}` : "Not saved", null]];
@@ -560,6 +562,8 @@ export function casebookApp(phone) {
     const texts = ok.filter(x => x.text || x.attachments?.length);
     return h("div.compare",
       h("div.hint.muted", "Side by side. Rows marked • differ. What it means is up to you."),
+      // From the Archive (W8): only fields and text line up; pictures are compared on their own.
+      desc.textOnly ? h("div.hint.muted.cmp-textonly", "Text and details only. Pictures on these pages aren't compared here; save two pictures to Casebook to compare them side by side.") : null,
       missing ? h("div.hint.muted", `${missing} ${missing === 1 ? "item isn't" : "items aren't"} available to compare.`) : null,
       h("div.cmp-scroll", table),
       ok.length > 2 ? h("div.hint.muted", `Swipe the table sideways to see all ${ok.length}.`) : null,
@@ -568,7 +572,7 @@ export function casebookApp(phone) {
         c.changes.title ? h("div.cmp-change.title", h("span.muted", "Title: "), h("s", c.changes.title[0]), " → ", c.changes.title[1]) : null,
         c.changes.text.every(x => x.op === "same") ? h("div.empty.muted.small", "The text is the same.") :
           c.changes.text.map(x => h("div.cmp-change", { class: `op-${x.op}` }, h("span.cmp-op", { "aria-label": x.op }, x.op === "removed" ? "−" : x.op === "added" ? "+" : ""), h("span", x.text)))] : null,
-      texts.map(x => [h("div.section-title", `${LETTERS[x.i]} · ${KIND[x.kind] || "Page"}`),
+      texts.map(x => [h("div.section-title", `${LETTERS[x.i]} · ${what(x) || "Page"}`),
         h("div.cmp-text", x.text ? richText(phone, x.text) : null, x.attachments?.length ? h("div.muted", `Attached: ${x.attachments.join(", ")}`) : null)]),
       h("div.section-title", `Your connections (${c.links.length})`),
       c.links.map(l => linkRow(l, null, id => { const i = c.items.findIndex(x => x.evidence === id); return i >= 0 ? LETTERS[i] : null; })),
@@ -957,7 +961,7 @@ export function casebookApp(phone) {
       if (desc.kind === "hyp") return [bar("Theory"), h("div.scroll", hypDetail(desc))];
       if (desc.kind === "builder") return [bar(desc.id ? "Edit theory" : desc.alternativeOf ? "Alternative" : "New theory"), h("div.scroll", builder(desc))];
       if (desc.kind === "question") return [bar("Question"), h("div.scroll", questionDetail(desc))];
-      if (desc.kind === "compare") return [bar("Compare"), h("div.scroll", compareScreen(desc))];
+      if (desc.kind === "compare") return [bar(desc.title || "Compare"), h("div.scroll", compareScreen(desc))];
       if (desc.kind === "link") return [bar(desc.id ? "Connection" : "New connection"), h("div.scroll", linkEditor(desc))];
       if (desc.kind === "event") return [bar("Event"), h("div.scroll", eventDetail(desc))];
       if (desc.kind === "eventEdit") return [bar(desc.id ? "Edit event" : "New event"), h("div.scroll", eventEditor(desc))];

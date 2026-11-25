@@ -1,6 +1,6 @@
 # Dead Internet: Et mer autentisk internett i Browser
 
-> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0–W7 og nettsidegrafikk er merget** (25. november 2026, PR #73–#81, `main` `9190200`). W8 venter på Casebook steg 3. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Katalog: [../graphics/GRAPHICS.md](../graphics/GRAPHICS.md).
+> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0–W7 og nettsidegrafikk er merget** (25. november 2026, PR #73–#81, `main` `9190200`). Casebook steg 3 er merget (PR #86 `5d64cbc`); W8 (Archive i Browser) er implementert 25.11.2026 på greina `websites-w8` (PR #87), rettet etter Anders' avgjørelser 25.11.2026 og venter på ja til merge. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Katalog: [../graphics/GRAPHICS.md](../graphics/GRAPHICS.md).
 
 ## 0. Beslutninger (Anders, 24. november 2026)
 
@@ -344,7 +344,7 @@ Vaktliste for Harbor Festival 2025, kakesalg i foreldreforeningen, bordkart til 
 | **URL-er fra andre apper** | Til vurdering (Anders 24.11): «Copy link» i kontekstmenyen i alle apper (Messages, Mail, Connect, avisene) legger adressen på et felles utklippstavle i spillet. Når adressefeltet i Browser får fokus, tilbyr det «Paste and go», slik ekte nettlesere gjør. Lenker i tekst kan fortsatt åpnes direkte fra kontekstmenyen. |
 | **Seeker** | Indekserer titler og blokktekst. `index: weak/none/exact` virker som før. Sider med `index: "none"` kan bare finnes ved å navigere, noe som gir «oppdagelse ved vanlig navigasjon» direkte. |
 | **Cache** | En cachet versjon vises med designet fra sin dato og cache-banneret som i dag. Automatiske lister i en cachet versjon viser bare sider fra før cache-datoen. |
-| **Archive** | Den planlagte Archive-funksjonen i Browser (App-plan) blir en liste over cachede datoer per URL. Dette er stedet å sammenligne versjoner fra (§9). |
+| **Archive** | **Levert i W8.** En skjerm i Browser per adresse med alle kopier spilleren kan åpne («Archive copy» fra Seeker, «Live page», og spillerens egne «Your saved copy» som egne, synlig adskilte rader), eldst først. Herfra sammenlignes tekst og detaljer (§9.1). En lagret kopi kan alltid åpnes, også når originalen er låst eller slettet. «View cached versions» per domene er uendret. |
 | **Nettstedets liv** | `parked`, `gone` og `maintenance` vises av Browser eller nettstedet etter hvem som eier meldingen i virkeligheten: «This site can't be reached» er nettleseren, «We'll be back soon» er nettstedet. |
 | **Innlogging** | Uendret (`access`, `loginSite`). Innloggingssiden tegnes i nettstedets eget design i stedet for det felles kortet. |
 | **Lagring** | Bokmerker og frem-stakk krever et nytt felt i lagringen og migrering fra dagens versjon. |
@@ -360,7 +360,7 @@ Vaktliste for Harbor Festival 2025, kakesalg i foreldreforeningen, bordkart til 
 | Lagre et bilde | Ja | Uendret |
 | Lagre et dokument | Ja (Docshare, e-post) | Uendret |
 | Lagre en bestemt versjon | Ja, beviset lagrer `version` | Designet følger versjonen, så det vises likt. |
-| Sammenligne gammel og ny versjon | Ja, i Casebook (steg 3, greina `casebook-step-3`) | Browser leverer en «Compare with…»-handling fra Archive (W8) som kaller `phone.compare()`. |
+| Sammenligne gammel og ny versjon | Ja: Archive i Browser (W8) → Casebook-sammenligningen (steg 3) | «Compare text and details» (to avkrysset) og «Compare with live» i Archive, og «Compare with live page» i banneret på en arkivkopi eller lagret kopi, kaller `phone.compare()`. «Compare with live» finnes bare fra en eldre kopi, og bare når den levende siden kan leses; ellers er knappen deaktivert med en nøytral grunn. Bilder sammenlignes separat i Casebook. |
 | Kommentere visuelle likheter | Nei | Bevisnotat i Casebook steg 1 (beviskortet). |
 | Knytte informasjon fra forskjellige nettsteder | Ja, koblinger mellom to bevis med seks typer, retning for «Supports» og «Possibly manipulated» (Casebook steg 3) | Uendret |
 | Åpne originalkilden | Ja | Uendret, men se under. |
@@ -368,12 +368,23 @@ Vaktliste for Harbor Festival 2025, kakesalg i foreldreforeningen, bordkart til 
 
 **Ingen ny Casebook-funksjonalitet i dette forslaget.** Det eneste jeg ber Casebook-tråden om, er at «åpne bevis» viser den lagrede versjonen selv om den ikke er cachet, og at sammenligningen i steg 3 kan ta to versjoner av samme side. Begge passer inn i deres steg 1 og 3.
 
-**Hva W8 trenger fra Casebook steg 3 (klart på greina `casebook-step-3`, 25. nov 2026):**
+**Hva W8 trenger fra Casebook steg 3 (merget PR #86 `5d64cbc`, 25. nov 2026):**
 - *Inngangen:* `phone.compare(refs)` åpner Casebooks sammenligning øverst i Casebook (med «tilbake» til Browser). For Archive: `[{ artifact, version: gammel }, { artifact, version: ny }]`, eller `{ artifact }` uten `version` for gjeldende side. Rekkefølgen bestemmer A og B; eldst først gir «Changes from A to B» i lesbar retning.
 - *Tilgang:* `compareView` slipper bare gjennom gjeldende versjon og versjoner i `cachedVersions` (samme regel som `viewArtifact`), og siden må være sett (`s.seen`). Browser trenger altså ingen egen sjekk, men knappen bør bare vises når minst to versjoner er tilgjengelige. Å åpne en versjon fra Archive markerer siden som sett.
 - *Lagring:* sammenligningen virker uten at noe er lagret. Før spilleren kan koble kopiene, står det «Save to Casebook to connect them», som lagrer akkurat de versjonene som vises.
 - *Lekkasjevern:* Browser skal ikke sende noe annet enn referanser. Alt som vises, kommer fra `compareView`, som tvillingtesten dekker.
-- *Test:* `tools/test-casebook-ui.mjs` har allerede en W8-test («PASS W8 hook») som kaller `phone.compare()` med to versjoner av Kestrels «About»-side. W8 trenger bare en Browser-test for selve knappen i Archive.
+- *Test:* `tools/test-casebook-ui.mjs` har en W8-test («PASS W8 hook») som kaller `phone.compare()` med to versjoner av Kestrels «About»-side. W8 la til `tools/test-browser-archive-ui.mjs` for selve Archive-skjermen.
+
+**Levert i W8 (25. nov 2026, greina `websites-w8`):** Archive-skjermen i Browser, `core/archive.js` (`archiveView`, `archivePair`), inngangene (stripe, banner, «All copies in Archive», «Other versions»), tester og tvillingdekning. Ingen ny kanon, ingen nye arkivkopier og ingen nye bilder: de eksisterende sidene med cache gir 12 sider med to kopier å sammenligne (Kestrel forside og «About» 2014, Brightline Team 2024, Eastfield Notes forside og «waterfront»-innlegget, bibliotekets ansattside og seks oppdaterte Daily Record-saker). Se DESIGN.md, «Archive i Browser (W8)».
+
+**Anders' avgjørelser for W8 (25.11.2026, etter gjennomgang av PR #87):**
+1. Archive per adresse i Browser: godkjent som det er.
+2. Hele lagrede sider står i Archive, tydelig skilt fra nettarkivets kopi: «Your saved copy» er alltid en egen rad med eget ikon, blå tone og kantstripe; arkivkopien heter «Archive copy» (Kept by Seeker). Utdrag og enkeltbilder hører hjemme i Casebook, ikke i Archive.
+3. Archive avslører aldri sider eller versjoner spilleren ikke har tilgang til, men en kopi spilleren allerede har lagret, kan alltid åpnes, også når originalen senere er låst eller slettet. Låsing stopper nytt innhold, ikke spillerens dokumentasjon. En låst side uten lagret kopi viser ingenting.
+4. Eldst først og høyst to avkrysset: godkjent. Hver rad viser dato og kopitype («Archive copy», «Live page», «Your saved copy»).
+5. «Compare with live» med ett trykk, men bare fra en bestemt eldre kopi og bare når den levende siden kan leses. Er originalen borte, slettet eller låst, er knappen skjult i radene og deaktivert i banneret med en kort, nøytral grunn. En annen arkivkopi settes aldri stille inn som «current».
+6. Ingen nye kopier nå. De 12 sidene holder for å levere mekanikken. **Flere historiske versjoner kommer gjennom et eget, godkjent innholdsarbeid**, ikke som del av W8.
+7. Bare felt og tekst sammenlignes i W8: knappen og skjermen heter «Compare text and details», og sammenligningen peker til den eksisterende bildesammenligningen i Casebook.
 
 ### 9.2 Nettsidedesign som spor (punkt 7)
 
@@ -447,7 +458,7 @@ Logoer: Kestrel 2014 og Northgate før 2024 kan være tekstlogoer. Nye nettstede
 | **W5** Fire maler til | **Ferdig og merget** (25. nov, PR #79 · `9b6ce40`). Wiki, Forum, Document, Anonymous, og saas-varianten av Landing (for Faceless; Harbor Dental og AIWriterPro deler chrome). Calderpedia (31 nye sider; 24 artikler inkl. B17/A66), Threadline (27), Docshare (8), SpillCheck (5), Faceless Stock (5). Eksisterende ordlyd/ID/URL urørt. Godkjent kanon: fyret automatisert 1998, siste fyrmester Samuel Okoro; Harbor Festival-frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024). «Dennis» er bare en forum-påstand. | `app/sites/wiki.js` m.fl., `sites-w5-*.json`, `tests/websites-w5.test.mjs` | W2 |
 | **W6** Historie | **Ferdig** (25. nov, PR #80 · `4e5bff8`). Legacy, Personal, Landing `smallbiz` (parkert live forblir Browser-eid). 50 nye sider: Salty's, HarborDesk, hagen, AIWriterPro, Harbor Dental, Calder Transit, biblioteket, Calder Power, Calder CU, Walt's side, Harbor PA, cachet jazz 2019, pluss Open Filings-hjem og Kestrel 2014-cache. `corp-registries.example` omdøpt til `openfilings.org` med alias og egen test. | `app/sites/legacy.js`, `personal.js`, `sites-w6-*.json`, `tests/websites-w6.test.mjs` | W5 |
 | **W7** Spor i design | **Ferdig og merget** (25. nov, PR #81 · `9190200`). 12 nye sider, cachet Team 2024, stockansikt på uavhengige sider, 18 Harbor Street, felles formuleringer, Lumen-blindvei, gjennomspilling `design_as_clue` (fortsatt `lights_out`). Godkjent kanon: HarborDesk-leietakerne, Haven Mutuals kontor, community leads 2024. | innhold, `tools/lib/scenarios.mjs`, `tests/websites-w7.test.mjs` | W6, ja 25.11.2026 |
-| **W8** Casebook-kobling | «Compare with…» fra Archive, som kaller `phone.compare()` (se §9.1). (At bevis åpner lagret versjon, tas i Casebook steg 1.) | `app/apps/browser.js` (Archive). Casebook-delen er levert i steg 3. | Casebook steg 3 |
+| **W8** Casebook-kobling | **Ferdig på greina `websites-w8`** (25. nov, PR #87, rettet etter Anders' avgjørelser 25.11.2026; venter på ja til merge). Archive i Browser med «Compare with…» som kaller `phone.compare()` (se §9.1). (At bevis åpner lagret versjon, tas i Casebook steg 1.) | `core/archive.js`, `core/game.js`, `app/apps/browser.js`, `app/phone.js`, `app/render.js` (+ «All copies in Archive» i `connect.js`, `messages.js`, `news.js`), `app/style.css`, `app/apps/casebook.js` (ulagret side heter «Page»; tittel «Compare text and details» og bildemerknad fra Archive), `core/compare.js` (kopiord), `tests/archive.test.mjs`, `tests/compare.test.mjs`, `tests/twin.test.mjs`, `tools/test-browser-archive-ui.mjs`, `tools/test-casebook-ui.mjs` (nytt ord) | Casebook steg 3 |
 
 Grafikk produseres parallelt fra W2, i den vanlige grafikktråden.
 
@@ -488,13 +499,15 @@ Avvik fra §11: W2-motoren gjelder alle nettsteder med de tre malnavnene, ikke b
 - Vinneranden i 2025 er nr. 3,117 i begge Daily Record-sakene (B06 er rettet fra #212).
 - Walts skann fra 1987 med skannedato 2007 er i orden.
 
-Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs`, `node games/dead-internet/tools/simulate.mjs`, og Playwright-røyktest `tools/test-casebook-ui.mjs` (390×844). Nettstedstester: `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. W4-tester: `tests/websites-w4.test.mjs`. W5-tester: `tests/websites-w5.test.mjs`. W6-tester: `tests/websites-w6.test.mjs`. W7-tester: `tests/websites-w7.test.mjs`. Skjermbilder: `/workspace/dead-internet-shots/w3-*.png`, `w4-*.png`, `w5-*.png`, `w6-*.png` og `w7-*.png`.
+Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs`, `node games/dead-internet/tools/simulate.mjs`, og Playwright-røyktest `tools/test-casebook-ui.mjs` (390×844). Nettstedstester: `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. W4-tester: `tests/websites-w4.test.mjs`. W5-tester: `tests/websites-w5.test.mjs`. W6-tester: `tests/websites-w6.test.mjs`. W7-tester: `tests/websites-w7.test.mjs`. W8-tester: `tests/archive.test.mjs` og Playwright `tools/test-browser-archive-ui.mjs` (390×844, kjøres for seg). Skjermbilder: `/workspace/dead-internet-shots/w3-*.png`, `w4-*.png`, `w5-*.png`, `w6-*.png`, `w7-*.png` og `w8-*.png`.
 
 **PR #72 lukket.** PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026 som en rest etter PR #71. Greina er beholdt.
 
-**Casebook steg 3 (25. nov 2026, greina `casebook-step-3`, PR venter på gjennomgang).** Sammenligning og koblinger er bygget, og inngangen W8 trenger (`phone.compare()` med versjonsreferanser) er klar og testet. Etter Anders’ gjennomgang 25.11.2026 er en kobling alltid mellom nøyaktig to bevis. For W8 betyr det bare at to versjoner fra Archive kan kobles direkte etter at de er lagret, for eksempel «A may be manipulated, compared with B». Se §9.1 og DESIGN.md, «Implementert steg 3».
+**Casebook steg 3 (25. nov 2026, merget PR #86 `5d64cbc`).** Sammenligning og koblinger er bygget, og inngangen W8 trenger (`phone.compare()` med versjonsreferanser) er klar og testet. Etter Anders’ gjennomgang 25.11.2026 er en kobling alltid mellom nøyaktig to bevis. For W8 betyr det bare at to versjoner fra Archive kan kobles direkte etter at de er lagret, for eksempel «A may be manipulated, compared with B». Se §9.1 og DESIGN.md, «Implementert steg 3».
 
-Neste steg: Casebook steg 2 er merget (PR #85 `d6dbb8c`). Steg 3 er implementert og venter på Anders' gjennomgang. Deretter W8 (Archive-kobling) og steg 4–5. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
+**W8 (25. nov 2026, greina `websites-w8`, PR #87).** Archive i Browser er bygget etter §8 og §9.1. Anders avgjorde designvalgene 25.11.2026 (se §9.1 og DEVPLAN under «W8»); rettelsene er lagt på samme PR, som venter på ja til merge.
+
+Neste steg: Casebook steg 2 og 3 er merget (PR #85 `d6dbb8c`, PR #86 `5d64cbc`). W8 er implementert og rettet etter Anders' avgjørelser 25.11.2026 (PR #87), og venter på ja til merge. Deretter Casebook steg 4–5. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
 
 
 
