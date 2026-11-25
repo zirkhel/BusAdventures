@@ -19,7 +19,8 @@
    "universe/pools/news-comments/dailyrecord-readers.json",
    "universe/pools/news-comments/unfiltered-readers.json",
    "universe/accounts-background.json",
-   "universe/accounts-background-w5.json"
+   "universe/accounts-background-w5.json",
+   "universe/accounts-background-w6.json"
   ],
   "images": [
    "universe/images.json",

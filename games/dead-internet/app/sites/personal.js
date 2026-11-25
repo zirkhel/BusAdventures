@@ -64,9 +64,16 @@ function comments(phone, v, page) {
     h("h2", "Guestbook"),
     items.map(c => h("div.site-comment",
       h("div.cm-head",
-        h("b", c.author || c.name || c.account || "A visitor"),
+        h("b", commentName(phone, c)),
         c.date ? h("span.muted", ` · ${fmtDate(c.date)}`) : null),
       h("div.cm-text", phone.ctx.text(c.text || "")))));
+}
+
+
+function commentName(phone, c) {
+  if (c.author || c.name) return c.author || c.name;
+  const acc = c.account ? phone.g.w.accounts.get(c.account) : null;
+  return acc?.displayName || acc?.handle || c.account || "A visitor";
 }
 
 function siteName(phone, site) {

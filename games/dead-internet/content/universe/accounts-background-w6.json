@@ -1,0 +1,26 @@
+[
+  {
+    "id": "acc_walts_dottie",
+    "platform": "walts",
+    "handle": "Dottie from Dock Road",
+    "displayName": "Dottie from Dock Road",
+    "created": "2007-08-19",
+    "pool": "walts-guestbook"
+  },
+  {
+    "id": "acc_walts_hank",
+    "platform": "walts",
+    "handle": "HarborHank",
+    "displayName": "HarborHank",
+    "created": "2008-09-02",
+    "pool": "walts-guestbook"
+  },
+  {
+    "id": "acc_walts_visitor",
+    "platform": "walts",
+    "handle": "A. visitor",
+    "displayName": "A. visitor",
+    "created": "2009-05-30",
+    "pool": "walts-guestbook"
+  }
+]
