@@ -10,16 +10,23 @@ import { renderCorporate } from "./corporate.js";
 import { renderGovernment } from "./government.js";
 import { renderBlog } from "./blog.js";
 import { renderSimple } from "./simple.js";
+import { renderWiki } from "./wiki.js";
+import { renderForum } from "./forum.js";
+import { renderDocument } from "./document.js";
+import { renderAnonymous } from "./anonymous.js";
+import { renderLanding } from "./landing.js";
 
 const TEMPLATES = {
   corporate: renderCorporate,
   government: renderGovernment,
   blog: renderBlog,
-  landing: renderSimple,
+  landing: renderLanding,
   legacy: renderSimple,
   personal: renderSimple,
-  wiki: renderSimple,
-  document: renderSimple,
+  wiki: renderWiki,
+  document: renderDocument,
+  forum: renderForum,
+  anonymous: renderAnonymous,
 };
 
 /**

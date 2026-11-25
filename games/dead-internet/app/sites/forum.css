@@ -1,0 +1,26 @@
+/* Forum template (W5), classic Threadline. */
+.tmpl-forum { background: #f6f6f7; color: #1a1a1b; }
+.tmpl-forum .site-head { background: #fff; border-bottom: 1px solid #edeff1; margin: 0; padding: 0; }
+.tmpl-forum .site-brand { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+.tmpl-forum .site-logo-img { display: block; height: 28px; width: auto; }
+.tmpl-forum .mast { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; text-transform: lowercase; color: #1a1a1b; }
+.tmpl-forum .site-nav { display: flex; flex-wrap: wrap; gap: 0; padding: 0 8px 8px; }
+.tmpl-forum .site-nav-link { border: 0; background: none; color: #0079d3; font-size: 13px; padding: 8px 8px; min-height: 44px; }
+.tmpl-forum h1 { font-size: 20px; margin: 12px 16px 6px; }
+.tmpl-forum .forum-crumb, .tmpl-forum .site-date { padding: 12px 16px 0; font-size: 13px; color: #7c7c7c; }
+.tmpl-forum .forum-crumb-link { border: 0; background: none; color: #0079d3; padding: 0; font-size: 13px; }
+.tmpl-forum .forum-boards, .tmpl-forum .forum-threads { margin: 8px 16px 16px; }
+.tmpl-forum .forum-board, .tmpl-forum .forum-thread {
+  display: block; width: 100%; text-align: left; border: 1px solid #edeff1; background: #fff;
+  padding: 12px; margin: 0 0 8px; min-height: 44px; border-radius: 4px;
+}
+.tmpl-forum .forum-board b, .tmpl-forum .forum-thread b { display: block; }
+.tmpl-forum .forum-pager { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 16px 16px; }
+.tmpl-forum .forum-page { border: 1px solid #edeff1; background: #fff; padding: 8px 12px; min-height: 44px; color: #0079d3; }
+.tmpl-forum .forum-page.on { font-weight: 700; border-color: #0079d3; }
+.tmpl-forum .forum-thread-body { padding: 8px 16px 16px; }
+.tmpl-forum .reply { background: #fff; border: 1px solid #edeff1; border-radius: 4px; padding: 10px 12px; margin: 0 0 8px; }
+.tmpl-forum .reply.op { border-left: 3px solid #0079d3; }
+.tmpl-forum .reply-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 13px; }
+.tmpl-forum .site-foot { padding: 16px; font-size: 12px; color: #7c7c7c; }
+.tmpl-forum h2 { font-size: 15px; margin: 16px 0 8px; }

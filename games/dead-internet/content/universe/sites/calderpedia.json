@@ -13,12 +13,24 @@
    },
    "nav": [
     {
+     "label": "Main page",
+     "href": "/"
+    },
+    {
      "label": "Port Calder",
      "href": "/Port_Calder"
     },
     {
      "label": "Calder Mill",
      "href": "/Calder_Mill"
+    },
+    {
+     "label": "Harbor Festival",
+     "href": "/Harbor_Festival"
+    },
+    {
+     "label": "The Daily Record",
+     "href": "/The_Daily_Record"
     }
    ]
   }

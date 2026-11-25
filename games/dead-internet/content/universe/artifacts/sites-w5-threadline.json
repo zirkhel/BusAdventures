@@ -1,0 +1,563 @@
+[
+ {
+  "id": "W-threadline-0001",
+  "site": "threadline",
+  "page": "index",
+  "type": "page",
+  "platform": "threadline",
+  "url": "threadline.net",
+  "date": "2026-03-01",
+  "title": "threadline",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Local boards for Port Calder and a few quieter corners. Be decent, or at least be specific.\n\nBoards are listed below. If a thread was removed, it was removed."
+   }
+  ]
+ },
+ {
+  "id": "W-threadline-0002",
+  "site": "threadline",
+  "page": "board",
+  "type": "page",
+  "platform": "threadline",
+  "url": "threadline.net/r/port-calder",
+  "date": "2026-03-01",
+  "title": "r/port-calder",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The city board: buses, stalls, weather, and arguments that have been running since before the software changed."
+   }
+  ]
+ },
+ {
+  "id": "W-threadline-0003",
+  "site": "threadline",
+  "page": "board",
+  "type": "page",
+  "platform": "threadline",
+  "url": "threadline.net/r/tech",
+  "date": "2026-03-01",
+  "title": "r/tech",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Cables, logins, and 'why is my printer doing that'."
+   }
+  ]
+ },
+ {
+  "id": "W-threadline-0004",
+  "site": "threadline",
+  "page": "board",
+  "type": "page",
+  "platform": "threadline",
+  "url": "threadline.net/r/transit",
+  "date": "2026-03-01",
+  "title": "r/transit",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Buses, the ferry, and the timetable as a literary form."
+   }
+  ]
+ },
+ {
+  "id": "W-threadline-0005",
+  "site": "threadline",
+  "page": "board",
+  "type": "page",
+  "platform": "threadline",
+  "url": "threadline.net/r/fishing",
+  "date": "2026-03-01",
+  "title": "r/fishing",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Where they are biting, and where they are not."
+   }
+  ]
+ },
+ {
+  "id": "W-threadline-0006",
+  "site": "threadline",
+  "page": "board",
+  "type": "page",
+  "platform": "threadline",
+  "url": "threadline.net/r/gaming",
+  "date": "2026-03-01",
+  "title": "r/gaming",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Games, sessions, and a surprisingly calm tone."
+   }
+  ]
+ },
+ {
+  "id": "W-threadline-0007",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/transit/is-the-610-ferry-captain-real",
+  "date": "2025-11-03",
+  "title": "Is the 6:10 ferry captain real?",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "earlyboat (OP): I have been on the 6:10 for a year and I have never seen the same face twice in the wheelhouse. Is there a captain or just a rota with a hat.\nharbor_hank: there is a captain. he is called Dennis and he is very real and very tired\nearlyboat: then why does the tannoy sound like a different person every week\nmillgirl_77: because they take turns, earlyboat\nquietreader: I saw Dennis buying a bun at six. He exists."
+   }
+  ],
+  "author": "acc_tl_ferry"
+ },
+ {
+  "id": "W-threadline-0008",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/transit/route-14-evening",
+  "date": "2026-01-19",
+  "title": "Route 14 after eight, is it a rumour",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "harbor_hank (OP): last three Thursday nights the 14 just didn't come. I walked. I am not a timetable.\nmillgirl_77: I caught the 20 past. It was late, not fictional\ncablekit: the display at the stop has been stuck on 4 min since Christmas\nharbor_hank: that display has been lying to this city for years"
+   }
+  ],
+  "author": "acc_tl_hank"
+ },
+ {
+  "id": "W-threadline-0009",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/fishing/where-in-the-creek",
+  "date": "2025-08-14",
+  "title": "Anyone still fishing the creek mouth",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "pier3rod (OP): going down this weekend. creek mouth or pier 3 if the wind is wrong. company welcome, advice more welcome\nharbor_hank: pier 3. the creek is a puddle in August\nearlyboat: I caught a boot in the creek in June. the boot had taste\npier3rod: I'll take the pier then"
+   }
+  ],
+  "author": "acc_tl_fish"
+ },
+ {
+  "id": "W-threadline-0010",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/fishing/mackerel-run",
+  "date": "2025-09-27",
+  "title": "Mackerel, or just wishful thinking",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "pier3rod (OP): someone at the wall said the mackerel are in. I am treating this as unverified.\nharbor_hank: I treated it as verified and I got two. come in the evening\nquietreader: photograph or it didn't happen\npier3rod: fine, I'll go, I'll take a picture, I won't post the picture if they're not there"
+   }
+  ],
+  "author": "acc_tl_fish"
+ },
+ {
+  "id": "W-threadline-0011",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/tech/wifi-on-the-14",
+  "date": "2025-12-05",
+  "title": "Has anyone actually got the bus wifi to work",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "cablekit (OP): I connected. I accepted a certificate I did not understand. I then loaded nothing. Is this a known state of affairs\ngabe_runs: yes\nsavingthrow: I used my phone. the wifi is a conversation starter, not a service\ncablekit: so I didn't fail, the thing failed. good."
+   }
+  ],
+  "author": "acc_tl_tech"
+ },
+ {
+  "id": "W-threadline-0012",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/tech/password-manager-recs",
+  "date": "2026-02-08",
+  "title": "Password manager that doesn't lecture me",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "cablekit (OP): I would like to store a password in a place that is not a sticky note. I would not like a lecture about my character. Recommendations, not sermons.\nquietreader: the one that just sits there. I can send you the name in a message\nharbor_hank: I use a book. the book has not been breached\ncablekit: the book is what I'm trying to get off, hank"
+   }
+  ],
+  "author": "acc_tl_tech"
+ },
+ {
+  "id": "W-threadline-0013",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/gaming/weeknight-session",
+  "date": "2026-01-11",
+  "title": "Weeknight session, east side, three seats",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "savingthrow (OP): we have a mid-week game with three seats going. no new systems, no one being weird about snacks. message me if that sounds like your idea of a good time\ngabe_runs: I might come if I can get off the 14 in time\nsavingthrow: we'll start at half past, not on the dot, because of the 14\n4thstreetbakes: I can bring cake. that is my entire contribution and I know it"
+   }
+  ],
+  "author": "acc_tl_game"
+ },
+ {
+  "id": "W-threadline-0014",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/gaming/something-short",
+  "date": "2025-10-18",
+  "title": "Anyone playing anything short at the moment",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "savingthrow (OP): I have an hour in the evenings and a long game is beating me. what are people actually finishing\ncablekit: a puzzle game I will not name because I am still on the third screen\ngabe_runs: I run. that is not a game. I still recommend it\nsavingthrow: noted, I will not run"
+   }
+  ],
+  "author": "acc_tl_game"
+ },
+ {
+  "id": "W-threadline-0015",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/port-calder/fog-horn-too-close",
+  "date": "2026-02-16",
+  "title": "Why is the horn so close this week",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "quietreader (OP): the ferry horn has been sitting on the bedroom wall for four mornings. is there work in the channel or is it just the weather\nearlyboat: fog, and they're sounding earlier\nharbor_hank: both. there's a barge as well. the barge is not shy\nmillgirl_77: I walked to the wall at seven and could not see the far cranes. that's all it is"
+   }
+  ],
+  "author": "acc_tl_quiet"
+ },
+ {
+  "id": "W-threadline-0016",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/port-calder/bulk-waste-day",
+  "date": "2026-03-02",
+  "title": "Bulk waste, did anyone actually get a slot",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "millgirl_77 (OP): I went for a slot for the old desk and the site said try again tomorrow, for three tomorrows. is the calendar real\nharbor_hank: I got Thursday. I refreshed at midnight like a fool and it worked\nquietreader: the city page says East side recycling is Tuesdays just now\nmillgirl_77: I know about the recycling. it's the desk I want gone"
+   }
+  ],
+  "author": "acc_tl_millgirl"
+ },
+ {
+  "id": "W-threadline-0017",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/port-calder/tips-for-the-market",
+  "date": "2026-03-04",
+  "title": "Spring market, any actual tips this year",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "4thstreetbakes (OP): Harbor Street will be a mess, we already know. if you are going for the market, what time is not a waste of a morning\nharbor_hank: before nine or not at all\npier3rod: I go late and I buy whatever is left. it is cheaper and I am calmer\n4thstreetbakes: I'll try before nine and complain anyway"
+   }
+  ],
+  "author": "acc_tl_bakes"
+ },
+ {
+  "id": "W-threadline-0018",
+  "site": "threadline",
+  "page": "thread",
+  "type": "thread",
+  "platform": "threadline",
+  "url": "threadline.net/t/transit/night-display",
+  "date": "2026-02-22",
+  "title": "Stop display stuck again, north dock",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "earlyboat (OP): north dock display says 6 min. it has said 6 min since I arrived, which was 20 minutes ago. do I walk\nharbor_hank: walk\ncablekit: I reported it last month and got a reference number. the number is very handsome\nearlyboat: I walked. the boat came as I left. of course it did"
+   }
+  ],
+  "author": "acc_tl_ferry"
+ },
+ {
+  "id": "W-threadline-0019",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/harbor_hank",
+  "date": "2018-03-11",
+  "title": "harbor_hank",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2018. Posts mostly in r/port-calder and r/transit. Has opinions about buses and vinegar."
+   }
+  ],
+  "author": "acc_tl_hank"
+ },
+ {
+  "id": "W-threadline-0020",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/millgirl_77",
+  "date": "2018-01-20",
+  "title": "millgirl_77",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2018. Eastfield, walks, and a long memory for signs."
+   }
+  ],
+  "author": "acc_tl_millgirl"
+ },
+ {
+  "id": "W-threadline-0021",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/quietreader",
+  "date": "2019-04-02",
+  "title": "quietreader",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2019. Asks the question other people were circling."
+   }
+  ],
+  "author": "acc_tl_quiet"
+ },
+ {
+  "id": "W-threadline-0022",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/truthseeker_88",
+  "date": "2016-06-06",
+  "title": "truthseeker_88",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2016. Posts often. Brings a theory, then another theory."
+   }
+  ],
+  "author": "acc_truthseeker"
+ },
+ {
+  "id": "W-threadline-0023",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/theo_q",
+  "date": "2026-01-25",
+  "title": "theo_q",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since January 2026. Doesn't post much."
+   }
+  ],
+  "author": "acc_theo_tl"
+ },
+ {
+  "id": "W-threadline-0024",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/earlyboat",
+  "date": "2019-11-01",
+  "title": "earlyboat",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2019. Catches the early boat and then tells everyone about it."
+   }
+  ],
+  "author": "acc_tl_ferry"
+ },
+ {
+  "id": "W-threadline-0025",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/pier3rod",
+  "date": "2017-06-18",
+  "title": "pier3rod",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2017. r/fishing, and sometimes the wall when the creek is low."
+   }
+  ],
+  "author": "acc_tl_fish"
+ },
+ {
+  "id": "W-threadline-0026",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/cablekit",
+  "date": "2018-09-30",
+  "title": "cablekit",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2018. r/tech. Will ask a practical question and ignore a sermon."
+   }
+  ],
+  "author": "acc_tl_tech"
+ },
+ {
+  "id": "W-threadline-0027",
+  "site": "threadline",
+  "page": "profile",
+  "type": "profile",
+  "platform": "threadline",
+  "url": "threadline.net/u/savingthrow",
+  "date": "2016-12-04",
+  "title": "savingthrow",
+  "filler": true,
+  "source": "misc-threadline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Member since 2016. r/gaming. Keeps a mid-week game going."
+   }
+  ],
+  "author": "acc_tl_game"
+ }
+]

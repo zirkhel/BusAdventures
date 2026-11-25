@@ -13,12 +13,28 @@
    },
    "nav": [
     {
+     "label": "Boards",
+     "href": "/"
+    },
+    {
      "label": "r/port-calder",
-     "href": "/t/port-calder/best-fish-and-chips"
+     "href": "/r/port-calder"
     },
     {
      "label": "r/tech",
-     "href": "/t/tech/dead-internet-theory"
+     "href": "/r/tech"
+    },
+    {
+     "label": "r/transit",
+     "href": "/r/transit"
+    },
+    {
+     "label": "r/fishing",
+     "href": "/r/fishing"
+    },
+    {
+     "label": "r/gaming",
+     "href": "/r/gaming"
     }
    ]
   }

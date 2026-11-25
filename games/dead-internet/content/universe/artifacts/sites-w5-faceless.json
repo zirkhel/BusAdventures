@@ -1,0 +1,102 @@
+[
+ {
+  "id": "W-faceless-0001",
+  "site": "facelessstock",
+  "page": "home",
+  "type": "page",
+  "platform": "facelessstock",
+  "url": "facelessstock.com",
+  "date": "2026-02-01",
+  "title": "Faceless Stock — faces that don't exist",
+  "filler": true,
+  "source": "facelessstock",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Synthetic portraits for when you need a person in the picture and there is no person.\n\nThis person does not exist. The licence is ordinary commercial use. You can see two public sample listings without an account:\n\nfacelessstock.com/portrait/44812 — #44812 'Executive, 40s, warm'\nfacelessstock.com/portrait/51007 — #51007 'Mom, 30s, friendly'\n\nThe rest of the library is behind a login. Pricing, the licence, and how a file is made are on their own pages."
+   }
+  ]
+ },
+ {
+  "id": "W-faceless-0002",
+  "site": "facelessstock",
+  "page": "page",
+  "type": "page",
+  "platform": "facelessstock",
+  "url": "facelessstock.com/pricing",
+  "date": "2026-02-01",
+  "title": "Pricing",
+  "filler": true,
+  "source": "facelessstock",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A single file is a one-off payment, and you keep the licence.\n\nA library login is a monthly plan if you need to browse more than the public samples. The plan does not include a person. There is no person.\n\nWe do not do \"exclusive faces\" as a special product. If a file has been purchased, that is noted on its page.\n\nThis page does not take a card. If you already have an account, sign in on the library page."
+   }
+  ]
+ },
+ {
+  "id": "W-faceless-0003",
+  "site": "facelessstock",
+  "page": "page",
+  "type": "page",
+  "platform": "facelessstock",
+  "url": "facelessstock.com/license",
+  "date": "2026-02-01",
+  "title": "License",
+  "filler": true,
+  "source": "facelessstock",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Unlimited commercial use of the file you paid for, in the usual sense: ads, sites, packaging, presentations.\n\nYou may not claim that the person exists, or that they endorse a product. You may not use a file as a substitute for someone's real identity.\n\nThe portraits are generated. They are not photographs of residents of this or any other city."
+   }
+  ]
+ },
+ {
+  "id": "W-faceless-0004",
+  "site": "facelessstock",
+  "page": "page",
+  "type": "page",
+  "platform": "facelessstock",
+  "url": "facelessstock.com/how-it-works",
+  "date": "2026-02-01",
+  "title": "How it works",
+  "filler": true,
+  "source": "facelessstock",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "You pick a file, you pay, you download. Tags (executive, friendly, outdoor) are a starting point, not a promise about anyone in particular.\n\nIf you want to see what a listing looks like before you have an account, the two public samples are still up:\n\nfacelessstock.com/portrait/44812\nfacelessstock.com/portrait/51007\n\nThe full library needs a login. We have not published a complete public grid of every face."
+   }
+  ]
+ },
+ {
+  "id": "W-faceless-0005",
+  "site": "facelessstock",
+  "page": "page",
+  "type": "page",
+  "platform": "facelessstock",
+  "url": "facelessstock.com/gallery",
+  "date": "2026-02-01",
+  "title": "Faceless Stock — Sign in to the library",
+  "filler": true,
+  "source": "facelessstock",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The library is for account holders.\n\nSign in to browse the full catalogue.\n\nPublic sample listings stay on their own pages and do not require a login:\n\nfacelessstock.com/portrait/44812\nfacelessstock.com/portrait/51007\n"
+   }
+  ]
+ }
+]

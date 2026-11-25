@@ -17,7 +17,28 @@
     },
     "font": "mono"
    },
-   "nav": []
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Breaches",
+     "href": "/breaches"
+    },
+    {
+     "label": "How we verify",
+     "href": "/how-we-verify"
+    },
+    {
+     "label": "FAQ",
+     "href": "/faq"
+    },
+    {
+     "label": "Privacy",
+     "href": "/privacy"
+    }
+   ]
   }
  ],
  "notFound": {

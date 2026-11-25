@@ -255,5 +255,90 @@
   "label": "Brightline case studies cite large audience numbers; clients are not named",
   "subject": "brightline",
   "predicate": "claims_case_results"
+ },
+ {
+  "id": "bf-lighthouse-automated",
+  "introducedBy": "calderpedia",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Port Calder lighthouse was automated in 1998",
+  "entity": "port_calder_lighthouse",
+  "name": "Port Calder lighthouse",
+  "subject": "port_calder_lighthouse",
+  "predicate": "automated",
+  "object": "1998",
+  "dates": [
+   "1998"
+  ]
+ },
+ {
+  "id": "bf-samuel-okoro",
+  "introducedBy": "calderpedia",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Samuel Okoro was the last keeper of the Port Calder lighthouse",
+  "entity": "samuel_okoro",
+  "name": "Samuel Okoro",
+  "subject": "samuel_okoro",
+  "predicate": "role",
+  "object": "last keeper of the Port Calder lighthouse"
+ },
+ {
+  "id": "bf-festival-volunteers-1979",
+  "introducedBy": "calderpedia",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Harbor Festival has had volunteers since at least 1979",
+  "subject": "harbor_festival",
+  "predicate": "volunteers_since",
+  "object": "1979",
+  "dates": [
+   "1979"
+  ]
+ },
+ {
+  "id": "bf-breach-harborfit",
+  "introducedBy": "spillcheck",
+  "binds": "universe",
+  "status": "canon",
+  "label": "HarborFit member data appeared in a known breach, March 2021",
+  "entity": "harborfit",
+  "name": "HarborFit",
+  "subject": "harborfit",
+  "predicate": "breach_date",
+  "object": "2021-03",
+  "dates": [
+   "2021-03"
+  ]
+ },
+ {
+  "id": "bf-breach-slice",
+  "introducedBy": "spillcheck",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Slice of Calder loyalty-app data appeared in a known breach, November 2022",
+  "entity": "slice_of_calder",
+  "name": "Slice of Calder",
+  "subject": "slice_of_calder",
+  "predicate": "breach_date",
+  "object": "2022-11",
+  "dates": [
+   "2022-11"
+  ]
+ },
+ {
+  "id": "bf-breach-calderlearn",
+  "introducedBy": "spillcheck",
+  "binds": "universe",
+  "status": "canon",
+  "label": "CalderLearn, the Port Calder schools portal, appeared in a known breach, August 2024",
+  "entity": "calderlearn",
+  "name": "CalderLearn",
+  "subject": "calderlearn",
+  "predicate": "breach_date",
+  "object": "2024-08",
+  "dates": [
+   "2024-08"
+  ]
  }
 ]

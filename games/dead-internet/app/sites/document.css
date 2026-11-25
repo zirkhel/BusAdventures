@@ -1,0 +1,10 @@
+/* Document viewer (W5). Slim bar already in simple.css. */
+.tmpl-document .doc-meta { padding: 12px 16px 0; font-size: 13px; }
+.tmpl-document .doc-file { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; color: #555; word-break: break-all; }
+.tmpl-document .doc-paper {
+  margin: 8px 16px 16px; padding: 16px; background: #fff; border: 1px solid #ddd;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; line-height: 1.5;
+}
+.tmpl-document .doc-expired { padding-bottom: 24px; }
+.tmpl-document .doc-expired h1 { color: #444; }
+.tmpl-document.var-viewer .page-body.p, .tmpl-document .doc-paper .p { font-family: inherit; }

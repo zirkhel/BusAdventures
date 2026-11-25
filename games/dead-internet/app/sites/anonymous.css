@@ -1,0 +1,14 @@
+/* Anonymous terminal (W5) — SpillCheck. */
+.tmpl-anonymous { background: var(--site-bg, #0b0b0b); color: var(--site-ink, #c8f0c8); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+.tmpl-anonymous .site-head { background: #050505; border-bottom: 1px solid #1d3a1d; margin: 0; padding: 0; }
+.tmpl-anonymous .site-brand { display: flex; align-items: center; gap: 10px; padding: 12px 16px; }
+.tmpl-anonymous .site-logo-img { display: block; height: 28px; width: auto; }
+.tmpl-anonymous .mast { font-size: 16px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--site-ink, #c8f0c8); }
+.tmpl-anonymous .site-tagline { font-size: 11px; color: #6a9a6a; }
+.tmpl-anonymous .site-nav { display: flex; flex-wrap: wrap; padding: 0 8px 8px; }
+.tmpl-anonymous .site-nav-link { border: 0; background: none; color: var(--site-accent, #ff4d4d); font-size: 12px; padding: 8px; min-height: 44px; font-family: inherit; }
+.tmpl-anonymous h1 { font-size: 18px; margin: 16px 16px 8px; font-weight: 600; color: #e8ffe8; font-family: inherit; }
+.tmpl-anonymous .site-date, .tmpl-anonymous .page-body, .tmpl-anonymous .site-foot { padding-left: 16px; padding-right: 16px; }
+.tmpl-anonymous .page-body { padding-bottom: 24px; }
+.tmpl-anonymous .site-foot { padding: 16px; font-size: 11px; color: #6a9a6a; border-top: 1px solid #1d3a1d; }
+.tmpl-anonymous .p { font-family: inherit; }

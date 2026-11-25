@@ -1,0 +1,107 @@
+[
+ {
+  "id": "W-spillcheck-0001",
+  "site": "spillcheck",
+  "page": "home",
+  "type": "page",
+  "platform": "spillcheck",
+  "url": "spillcheck.io",
+  "date": "2026-03-01",
+  "title": "SpillCheck",
+  "filler": true,
+  "source": "spillcheck",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "SpillCheck looks up an email or username against known, already-public data breaches.\n\nThis is a check. It is not a leak portal. We do not host dumps, we do not sell access to leaks, and we will not \"get you the file\".\n\nIf we have a result for an address, it has its own page. Paste an address in a client that can open a lookup URL, or use a link you were already given. A blank box on this page does not invent a result.\n\nFor a list of incidents we know about, see Breaches."
+   }
+  ]
+ },
+ {
+  "id": "W-spillcheck-0002",
+  "site": "spillcheck",
+  "page": "list",
+  "type": "page",
+  "platform": "spillcheck",
+  "url": "spillcheck.io/breaches",
+  "date": "2026-03-01",
+  "title": "Known breaches",
+  "filler": true,
+  "source": "spillcheck",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A partial list of incidents in our index. Names and dates only. We do not publish the records themselves.\n\nEastfield Neighbors forum — February 2023\nHarborFit — March 2021\nSlice of Calder (loyalty app) — November 2022\nCalderLearn (Port Calder schools portal) — August 2024\nNorth Dock Marina bookings — June 2019\nPortMart accounts — January 2020\nOld Town Gym — September 2020\nFerryLink tickets — February 2021\nHeights Book Club — March 2022\nPier Cafe loyalty — May 2022\nRidley Community Centre — August 2022\nDock Road Parkrun — October 2022\nNorthpoint Youth FC — June 2023\nCalder Creek Rowing — September 2023\nOld Harbor Inn reservations — December 2023\nEastfield Camera Club — May 2024\nThe Bun Shop — October 2024\nRoute 14 commuter group — April 2019\nHeights Tenants Association — August 2019\nFishmarket wholesale logins — February 2018\nWest Pier Chandlery — May 2018\nMill Street Bakery club card — August 2018\nLow Light Rowing Club — November 2018\nCrane View Apartments — March 2019\nBreakwater Swimming — July 2019\nSandside Allotments — October 2019\nPylon Coffee — December 2019\nNorth Quay Boot Sale — April 2020\nFoghorn Records (mailing list) — July 2020\n\nIf your address appeared, change the password, and do not reuse it. We will not email you first.\n"
+   }
+  ],
+  "mentions": [
+   "harborfit",
+   "slice_of_calder",
+   "calderlearn"
+  ]
+ },
+ {
+  "id": "W-spillcheck-0003",
+  "site": "spillcheck",
+  "page": "info",
+  "type": "page",
+  "platform": "spillcheck",
+  "url": "spillcheck.io/how-we-verify",
+  "date": "2026-01-15",
+  "title": "How we verify",
+  "filler": true,
+  "source": "spillcheck",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We add a breach when we can show, to our own satisfaction, that the records have already been made public and that the organisation and the date are correctly named.\n\nWe do not pay for dumps. We do not take \"exclusive\" files in a private message. We do not publish a download.\n\nA name on the Breaches page means we have indexed it. It does not mean we discuss how the file left the organisation, or who was at fault."
+   }
+  ]
+ },
+ {
+  "id": "W-spillcheck-0004",
+  "site": "spillcheck",
+  "page": "info",
+  "type": "page",
+  "platform": "spillcheck",
+  "url": "spillcheck.io/faq",
+  "date": "2026-01-15",
+  "title": "FAQ",
+  "filler": true,
+  "source": "spillcheck",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "What do you do?\nWe check addresses against known breaches. That is the whole service.\n\nWill you find a leak for me?\nNo. We are not a leak portal.\n\nWhy is there no search box that just works on this page?\nLookups that exist have their own pages. We do not run a live hunt from this site.\n\nI never used that forum / gym / school portal.\nThen someone used your address there, or the record is old, or you should still change the password.\n\nDo you email me if I appear?\nNo."
+   }
+  ]
+ },
+ {
+  "id": "W-spillcheck-0005",
+  "site": "spillcheck",
+  "page": "info",
+  "type": "page",
+  "platform": "spillcheck",
+  "url": "spillcheck.io/privacy",
+  "date": "2026-01-15",
+  "title": "Privacy",
+  "filler": true,
+  "source": "spillcheck",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We keep the minimum we need to run a lookup: the index of known breaches, and the pages that already exist for particular addresses.\n\nWe do not build a marketing list from checks. We do not sell \"your results\". If you opened a result page, that is a page, not a subscription."
+   }
+  ]
+ }
+]
