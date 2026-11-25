@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 24. november 2026 (overlevering: fase 9 ferdig, Casebook steg 0–5, saksavslutning og nettsteder dokumentert)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (Casebook steg 1 merget, W0 lekkasjevern for nettstedsvisning ferdig)._
 
 ## Overlevering (24. nov 2026)
 
@@ -8,11 +8,11 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 
 **Status**
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Alle 61 grafikkelementer er godkjent.
-- Casebook steg 0 (informasjonslekkasjer) er ferdig og merget (PR #68). Unfiltered-ikonet og B06-datoen er merget (PR #69).
+- Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2–5 gjenstår.
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
-- Nettstedene er godkjent som designretning ([docs/WEBSITES.md](docs/WEBSITES.md)), men skal ikke implementeres før veikartets punkt 5.
+- Nettsteder: W0 lekkasjevern er ferdig (PR #68 pluss hviteliste i `core/site-view.js` / `app/render.js`). W1–W8 gjenstår. Godkjent designretning: [docs/WEBSITES.md](docs/WEBSITES.md).
 
-**Neste steg på main:** Casebook steg 1. Implementert på `codex/casebook-step-1`, til gjennomgang; ikke merget. Etter godkjent merge kommer steg 2–5, så avklaring av saksavslutning, før den eksterne spilltesten.
+**Neste steg på main:** Casebook steg 2 (teorier og spørsmål), parallelt med nettsidearbeidet W1–W2 som er startet etter ønske om at nettstedene skal se ut som ekte nettsteder. Etter steg 5 og avklaring av saksavslutning: ekstern spilltest.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
@@ -270,7 +270,7 @@ Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 
 - [ ] Utfallsmatrise-test: påstander × kanal × før/etter frist gir alltid en milepæl eller en bevisst åpen tilstand
 
 ### Autentiske nettsteder (veikart punkt 5–7, se docs/WEBSITES.md §11)
-- [x] W0 Lekkasjevern: kanonfelt fjernet fra visningen (PR #68). Gjenstår: hviteliste i malene og DOM-test.
+- [x] W0 Lekkasjevern: kanonfelt fjernet fra visningen (PR #68). Hviteliste i `core/site-view.js` (`publicView`): malene og `renderArtifact` får bare visningsfelt. `filler`, `covers`, `pool` og øvrige forfatterfelt holdes utenfor. DOM-tvillingtesten forblir i Casebook-arbeidet (`tests/twin.test.mjs` røres ikke her).
 - [ ] W1 Nettstedsmodell (`core/sites.js`, `sites/*.json`, `site`/`page`/`blocks`, designvalg etter dato, 404, automatiske lister, validator)
 - [ ] W2 Malverk og tre maler (Corporate, Government, Blog)
 - [ ] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering)

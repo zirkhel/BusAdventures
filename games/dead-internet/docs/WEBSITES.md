@@ -1,6 +1,6 @@
 # Dead Internet: Et mer autentisk internett i Browser
 
-> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Ingenting implementeres før veikartets punkt 5 (W0–W8). Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0.
+> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0 er implementert** (25. november 2026): `publicView` i `core/site-view.js`, brukt av `app/render.js`. W1–W8 gjenstår.
 
 ## 0. Beslutninger (Anders, 24. november 2026)
 
@@ -429,7 +429,7 @@ Logoer: Kestrel 2014 og Northgate før 2024 kan være tekstlogoer. Nye nettstede
 
 | PR | Innhold | Filer | Avhenger av |
 |---|---|---|---|
-| **W0** Lekkasjevern | **Tatt i Casebook steg 0 (PR #68):** `media()` fjerner `source`, `supports` og `mentions`, og `tests/twin.test.mjs` er en permanent regresjonstest. DOM-testen kommer i Casebook-arbeidet. Gjenstår for nettstedene: malene får bare det rensede objektet, og nye felt (`filler`, `covers`, `pool`) holdes også utenfor. | `app/render.js`, test | Casebook steg 0 |
+| **W0** Lekkasjevern | **Ferdig.** PR #68: `media()` fjerner `source`, `supports` og `mentions`; `tests/twin.test.mjs` er permanent. 25. nov: `publicView` i `core/site-view.js` hvitelister visningsfelt (tittel, dato, body/blocks, bilder, forfatter, URL, versjon, cache-flagg og øvrige visningsfelt). `filler`, `covers`, `pool`, `hidden` og andre forfatterfelt sendes aldri til malene. `renderArtifact` / `renderLogin` / `renderGone` kjører visningen gjennom hvitelisten. DOM-tvillingtesten forblir i Casebook-arbeidet. | `core/site-view.js`, `app/render.js`, `tests/sites.test.mjs` | Casebook steg 0 |
 | **W1** Nettstedsmodell | `sites/*.json`, `site`/`page`/`blocks`, designvalg etter dato, lenkeoppslag, 404 per nettsted, automatiske lister, validatorregler. Ingen synlige endringer. | `core/sites.js` (ny), `core/content.js`, `tools/lib/validate-world.mjs`, tester | W0 |
 | **W2** Malverk + 3 maler | Rammeverk for maler, blokker og temaer. Corporate, Government, Blog. Northgate, bykommunen og Eastfield Notes flyttes over med dagens tekst. | `app/sites/*.js` (ny), `app/render.js`, `app/style.css` → `app/sites/*.css` | W1 |
 | **W3** Browser | Frem-knapp, bokmerker, tekststørrelse, nettstedets 404/vedlikehold/parkert, «can't be reached», lagringsmigrering | `app/apps/browser.js`, `app/phone.js`, `core/save.js` | W1 |

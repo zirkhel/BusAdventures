@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 24. november 2026, etter fase 9 og Anders' beslutninger om Casebook som deduksjonsverktøy og veikartet videre (se DEVPLAN.md)._
+_Oppdatert 25. november 2026, etter Casebook steg 1 og W0-hvitelisten for nettstedsvisning (se DEVPLAN.md)._
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md) (godkjent med justeringene i §0 der).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Casebook: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md). Nettsteder: [docs/WEBSITES.md](docs/WEBSITES.md). Saksavslutning: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
@@ -414,7 +414,7 @@ Full gjennomgang: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Pr
 
 **For fremtidige mysterier** (forslag): påstander er byggeklossene; tre lag avslutninger (milepæler, sidekonsekvenser, ettervirkninger); dimensjonene Accuracy, Evidence, Coverage, Impact, Collateral og Timing er en sjekkliste for forfatteren, aldri tall for spilleren; en utfallsmatrise-test publiserer kombinasjoner av påstander × kanal × før/etter frist.
 
-## Autentiske nettsteder (godkjent designretning 24. nov 2026, ikke implementert)
+## Autentiske nettsteder (godkjent designretning 24. nov 2026, W0 implementert)
 
 Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjelder foran resten av dokumentet. Implementeres i veikartets punkt 5 (W0–W8), ikke før.
 
@@ -422,7 +422,7 @@ Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjel
 - **Maler:** elleve gjenbrukbare maler (Corporate, Government, Blog, Wiki, Forum, News, Anonymous, Legacy, Personal, Landing, Document) med varianter og temaer. Ingen nye rammeverk, mobil først, bare systemfonter.
 - **Design versjoneres etter dato.** En cachet side vises med designet som gjaldt da.
 - **Lister bygger seg selv** fra synlige sider med samme `site`/`page`. Cachede versjoner viser bare sider fra før cache-datoen. `listed: false` holder en side utenfor.
-- **Malene får bare et hvitelistet offentlig visningsobjekt.** Aldri `supports`, `mentions`, `source`, `filler`, `hidden`, `covers` eller `pool`.
+- **Malene får bare et hvitelistet offentlig visningsobjekt.** `publicView()` i `core/site-view.js` (W0, 25. nov) brukes av `renderArtifact`. Aldri `supports`, `mentions`, `source`, `filler`, `hidden`, `covers` eller `pool`.
 - **Browser eier nettleseren** (tilbake/frem, bokmerker adskilt fra bevis, tekststørrelse, cache og Archive). Nettstedene eier sin presentasjon (404, innlogging i eget design).
 - **Samme mal er ikke samme opphav.** Uavhengige nettsteder kan dele et kommersielt tema. Malvalg skal aldri være en sikker indikator.
 - **Bakgrunnsinternett:** mål 140–170 sider i etapper, først Northgate, Brightline, bykommunen, Eastfield Notes, Kestrel, Calderpedia, Threadline, Faceless Stock, SpillCheck og Docshare. Nye fakta føres i en fil for bakgrunnsfakta med `status: canon | claim` og sjekkes mot kanon. Bakgrunnssider skal ha like god grafikk som sider med spor.
