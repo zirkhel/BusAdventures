@@ -245,7 +245,8 @@ export function namesInDetail(g, text) {
     if (!sp.alias) {
       // A loose first name in the text ("Pat") that is only an account's display name is not read as
       // that account. The sender's own identity is added by id elsewhere, never through this text.
-      if (sp.type === "account" && /^[A-Z][a-z]+$/.test(sp.text.trim())) continue;
+      // Classify the display name, not the matched spelling: pat/PAT are as ambiguous as Pat.
+      if (sp.type === "account" && /^[A-Z][a-z]+$/.test(String(g.w.accounts.get(sp.id)?.displayName ?? "").trim())) continue;
       // A full name shared by two visible entities names neither.
       const same = full.get(k);
       if (!same || same.size <= 1 || [...same].filter(id => visibleCandidate(g, cb, id)).length <= 1) ids.add(sp.id);
