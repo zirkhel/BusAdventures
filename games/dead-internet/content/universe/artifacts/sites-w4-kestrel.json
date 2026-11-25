@@ -22,7 +22,10 @@
     "id": "v2014",
     "date": "2014-08-01",
     "cached": true,
-    "body": "We know the way.\n\nKestrel has been a Port Calder delivery firm since 1998. We run vans across the city and the neighbouring towns.\n\nIf you are waiting on a parcel, call the office. We know the way."
+    "body": "We know the way.\n\nKestrel has been a Port Calder delivery firm since 1998. We run vans across the city and the neighbouring towns.\n\nIf you are waiting on a parcel, call the office. We know the way.",
+    "images": [
+     "WEB0009"
+    ]
    },
    {
     "id": "v1",
@@ -122,7 +125,10 @@
     "id": "v2014",
     "date": "2014-08-01",
     "cached": true,
-    "body": "Kestrel Logistics started in 1998 with a handful of vans and a rented yard. We have been a Port Calder company the whole way.\n\nThe slogan on the door is the same one on the vans: we know the way."
+    "body": "Kestrel Logistics started in 1998 with a handful of vans and a rented yard. We have been a Port Calder company the whole way.\n\nThe slogan on the door is the same one on the vans: we know the way.",
+    "images": [
+     "WEB0009"
+    ]
    },
    {
     "id": "v1",
@@ -184,6 +190,9 @@
   "url": "kestrel-logistics.com/careers/warehouse",
   "date": "2026-01-15",
   "title": "Job: Warehouse",
+  "images": [
+   "WEB0008"
+  ],
   "filler": true,
   "source": "kestrel",
   "index": "weak",
@@ -294,6 +303,9 @@
   "url": "kestrel-logistics.com/news/sixty-jobs",
   "date": "2025-07-22",
   "title": "Sixty jobs at Dock Road",
+  "images": [
+   "WEB0008"
+  ],
   "filler": true,
   "source": "kestrel",
   "index": "weak",
