@@ -18,6 +18,16 @@ export function messagesApp(phone) {
   const unreadIn = id => g.s.notifications.filter(n => !n.read && n.ref?.thread === id);
   const isCharacter = id => w.characters.has(id);
 
+  function contactAvatar(id, size) {
+    const acc = accountOf(id), image = w.accounts.get(acc)?.avatar;
+    const picture = avatar(w, acc, size);
+    if (!image) return picture;
+    return h("button.avatar-open.msg-avatar", {
+      "aria-label": `View profile picture: ${phone.contactName(id)}`,
+      onclick: () => phone.viewImage(image),
+    }, picture);
+  }
+
   function bar(title, extra, onTitle) {
     return h("div.topbar.msg-bar", phone.backButton(),
       onTitle ? h("button.bar-title", { onclick: onTitle }, title) : h("div.bar-title", title), extra || null);
@@ -31,11 +41,12 @@ export function messagesApp(phone) {
       const msgs = g.thread(id);
       const last = msgs[msgs.length - 1];
       const unread = unreadIn(id).length;
-      return h("button.thread-row", { class: unread ? "unread" : "", onclick: () => phone.push("messages", { kind: "thread", id }) },
-        avatar(w, accountOf(id), 46),
+      return h("div.thread-row", { class: unread ? "unread" : "" },
+        contactAvatar(id, 46),
+        h("button.tr-open", { onclick: () => phone.push("messages", { kind: "thread", id }) },
         h("div.tr-main", h("div.tr-head", h("b", phone.contactName(id)), h("span.muted", `Day ${last.day}`)),
           h("div.tr-last", last.from === "player" ? `You: ${last.text}` : last.text)),
-        unread ? h("span.dot") : null);
+        unread ? h("span.dot") : null));
     });
     return [h("button.new-msg", { onclick: newMessage }, icon("edit"), "New message"),
       rows.length ? rows : h("div.empty", h("b", "No messages."))];
@@ -150,7 +161,7 @@ export function messagesApp(phone) {
     render(desc) {
       if (desc.kind === "thread") {
         const acc = accountOf(desc.id);
-        return [bar(phone.contactName(desc.id), avatar(w, acc, 30), acc && w.profileOf.get(acc) ? () => phone.openAccount(acc) : null),
+        return [bar(phone.contactName(desc.id), contactAvatar(desc.id, 30), acc && w.profileOf.get(acc) ? () => phone.openAccount(acc) : null),
           h("div.scroll", thread(desc)), composer(desc)];
       }
       if (desc.kind === "page") {
