@@ -35,6 +35,7 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `caldertransit` | caldertransit.gov | live | W-caldertransit-0001 (minimal home) | Daily Record article on ghost buses refers to «the transit authority's website». Domain from the approved plan. The live map is not built |
 | `harbor_authority` | harbor.portcalder.gov | live | W-harbor-authority-0001 (minimal home) | Unfiltered comment: memo letterhead «matches the one on their site». **Domain is not named in canon**; this municipal host is assigned so the reference can resolve. Home text is only the authority's name |
 | `eastfield_neighbors` | eastfieldneighbors.net | **gone** since 2023-02-20 | none | Daily Record A60: the forum was breached and «has since shut down». **Domain is not named in canon**; assigned only so the gone site can be addressed. No invented pages or cache |
+| `portcalderjazz` | portcalderjazz.com | **parked** since 2022-01-01 | none | Already listed in WEBSITES.md §4 as a parked domain (changed hands in 2022, «This domain may be for sale»). Added in W3 so the parked state can be visited. No 2019 cache and no new story facts |
 
 ## Email-only domains (not websites)
 
@@ -66,7 +67,7 @@ Paul Navarro's fallback, «I'd refer you to our website,» points at the existin
 
 ## Coverage at W1
 
-25 site configs, 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. Thin chrome (not the full W5 templates) shows logo and hero on landing, legacy, personal, wiki and document sites. See [GRAPHICS.md](../graphics/GRAPHICS.md).
+26 site configs (25 from W1, plus parked `portcalderjazz.com` in W3), 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. Thin chrome (not the full W5 templates) shows logo and hero on landing, legacy, personal, wiki and document sites. See [GRAPHICS.md](../graphics/GRAPHICS.md).
 
 ## Test-only domains
 
@@ -79,3 +80,7 @@ Every site in this inventory now has a catalog logo (`theme.logo`, SVG). Wide wo
 Hero photographs and illustrations were attached to existing artifacts only, with no wording changes. Evidence photographs were not reused as decoration (in particular NIMG0003 and NIMG0005). Planned WEB0001–WEB0024 images that have no existing page to live on were left unproduced.
 
 Test-only `toktok.app` is described in the previous section; it is not a playable-universe site.
+
+## Parked domain (W3)
+
+`portcalderjazz.com` is registered so the Browser can show a parked state. The date and the «for sale» wording follow WEBSITES.md §4. The planned 2019 cached page is not authored here (that would be new content, for a later step). Because the domain changed hands, the parked view is a generic parking page, not a jazz-club theme, and the site has no catalog logo.

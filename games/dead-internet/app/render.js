@@ -6,6 +6,7 @@ import { h, icon, fmtDate, onLongPress } from "./ui.js";
 import { img, avatar } from "./media.js";
 import { publicView } from "../core/site-view.js";
 import { canRenderSite, renderSite } from "./sites/index.js";
+import { renderSiteLogin } from "./sites/status.js";
 
 const PHOTO_RE = /\[(?:photo|image|screenshot)[^\]]*\]/i;
 
@@ -224,9 +225,9 @@ export function renderLogin(phone, v, onDone) {
     if (r.error) { err.textContent = phone.str("errors.login_failed"); pass.value = ""; }
     else onDone();
   };
-  return h("article.page.k-login",
-    h("div.login-card", icon("lock", "big"), h("h1", v.title), h("div.muted", v.url || ""),
-      h("form", { onsubmit: submit }, user, pass, err, h("button.btn.primary", { type: "submit" }, "Sign in"))));
+  const form = h("div.login-card", icon("lock", "big"), h("h1", v.title), h("div.muted", v.url || ""),
+    h("form", { onsubmit: submit }, user, pass, err, h("button.btn.primary", { type: "submit" }, "Sign in")));
+  return renderSiteLogin(phone, v, form) || h("article.page.k-login", form);
 }
 
 /** Page that is gone, deleted or never existed. */

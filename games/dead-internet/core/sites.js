@@ -79,7 +79,7 @@ function domainsOf(s) {
   return out;
 }
 
-function normUrl(url) {
+export function normUrl(url) {
   return String(url || "").trim().replace(/^[a-z][a-z0-9+.-]*:\/\//i, "").replace(/\/$/, "").toLowerCase();
 }
 
@@ -206,4 +206,95 @@ export function blocksOf(version, artifact) {
   const body = v.body ?? artifact?.body ?? "";
   if (body) return [{ t: "text", text: body }];
   return [];
+}
+
+
+/** Lowercase folded form for matching a query to a site name or domain. */
+export function foldSiteText(s) {
+  return String(s || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+/**
+ * Names, aliases and domain labels a Seeker query can use to recognise this site.
+ * Built only from the site model, the platform, and the linked org entity.
+ * @param {any} w
+ * @param {any} site
+ * @returns {string[]}
+ */
+export function siteAliases(w, site) {
+  const out = [];
+  const add = v => {
+    const f = foldSiteText(v);
+    if (f && !out.includes(f)) out.push(f);
+  };
+  add(site.domain);
+  for (const d of site.domains || []) add(d);
+  const hosts = [site.domain, ...(site.domains || [])].filter(Boolean).map(d => String(d).toLowerCase());
+  for (const host of hosts) {
+    add(host);
+    const labels = host.split(".").filter(Boolean);
+    // Registrable name: "kestrel-logistics.com" → "kestrel logistics"; skip generic TLDs only.
+    if (labels.length >= 2) add(labels.slice(0, -1).join(" "));
+    const GENERIC_LABELS = new Set(["www", "app", "mail", "portal", "login", "ftp", "cdn", "api", "static", "dev", "staging", "test"]);
+    if (labels[0] && !GENERIC_LABELS.has(labels[0])) add(labels[0].replace(/-/g, " "));
+  }
+  const pf = site.platform && w.platforms.get(site.platform);
+  if (pf) {
+    add(pf.name);
+    add(pf.mast);
+    add(pf.short);
+    add(pf.domain);
+  }
+  const org = site.org && w.entities.get(site.org);
+  if (org) {
+    add(org.name);
+    const siteHost = foldSiteText(site.domain).replace(/ /g, "");
+    const officialHost = foldSiteText(org.website || "").replace(/ /g, "");
+    const isOrgHome = officialHost && (officialHost === siteHost || siteHost.endsWith(officialHost));
+    for (const a of org.aliases || []) {
+      const fa = foldSiteText(a);
+      // Short brand aliases belong to the organisation's public site, not a sibling portal.
+      if (isOrgHome || fa.includes(" ")) add(a);
+    }
+  }
+  return out;
+}
+
+
+/**
+ * Sites a query obviously names (name, alias, brand or domain).
+ * A single generic word that several sites share is not enough.
+ * @param {any} w
+ * @param {string} query
+ * @returns {{site:any, strength:number}[]}
+ */
+export function officialSitesForQuery(w, query) {
+  const q = foldSiteText(query);
+  if (!q) return [];
+  const qCompact = q.replace(/ /g, "");
+  const tokens = q.split(" ").filter(Boolean);
+
+  const hits = [];
+  for (const site of w.sites.values()) {
+    const aliases = siteAliases(w, site);
+    if (!aliases.length) continue;
+    let strength = 0;
+    for (const a of aliases) {
+      const aCompact = a.replace(/ /g, "");
+      if (a === q || aCompact === qCompact) strength = Math.max(strength, 3);
+      else if (tokens.length >= 2 && a.includes(q)) strength = Math.max(strength, 2);
+    }
+    if (strength) hits.push({ site, strength });
+  }
+  hits.sort((a, b) => b.strength - a.strength || String(a.site.domain).localeCompare(String(b.site.domain)));
+  return hits;
+}
+
+/** Display name for a site in Seeker, from the platform or the linked org, falling back to the domain. */
+export function siteDisplayName(w, site) {
+  const pf = site.platform && w.platforms.get(site.platform);
+  if (pf?.name) return pf.name;
+  const org = site.org && w.entities.get(site.org);
+  if (org?.name) return org.name;
+  return site.domain || site.id;
 }

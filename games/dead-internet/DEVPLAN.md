@@ -10,21 +10,22 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Katalogen har nå 83 ferdige grafikkelementer (61 fra før, pluss logoer og nettsidebilder fra grafikksteget 25. nov).
 - Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2–5 gjenstår.
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
-- Nettsteder: W0, W1, W2 og et grafikksteg på toppen av W2 er ferdige lokalt (ikke pushet, ingen PR). Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
+- Nettsteder: W0, W1, W2 og grafikksteget er merget (PR #73–#76, `origin/main` `dec0458`). W3 (Browser: frem, bokmerker, tekststørrelse, 404/parkert/vedlikehold/«can't be reached», lagringsmigrering til lagring versjon 8, Seeker-rangering av offisielt nettsted) er ferdig på greinen `websites-w3`. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
 - Åpen PR #72 (`codex/casebook-step-1`) er en etterlatt duplikat av merget PR #71 og skal lukkes, ikke merges.
 
-**Neste steg:** pushe og åpne PR-er for de stablede greinene når `gh` er innlogget og Anders sier ja. På innholdssiden: Casebook steg 2 (teorier og spørsmål), parallelt med W3–W8. `corp-registries.example` skal byttes med et troverdig domene (med egen test). Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest.
+**Neste steg:** W4 bakgrunnssider, deretter W5–W8. Casebook steg 2 (teorier og spørsmål) kan gå parallelt. `corp-registries.example` skal byttes med et troverdig domene (med egen test). Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest. W3-PR-en merges bare etter Anders' ja.
 
-### Nettstedsarbeid (W0–W2 og grafikk) — greiner og beslutninger
+### Nettstedsarbeid (W0–W3 og grafikk) — greiner og beslutninger
 
-Arbeidet ligger i `/workspace/BusAdventures`, stablet på `origin/main` `d7a9368` (PR #71). Ingenting er pushet. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
+W0–W2 og grafikksteget er merget til `main` som PR #73–#76 (`dec0458`). W3 ligger på `websites-w3` fra den tippen. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
 
-| Steg | Grein | Commit | Hva |
+| Steg | Grein | Commit / PR | Hva |
 |---|---|---|---|
-| W0 | `websites-w0` | `bc67d47` | Hviteliste `publicView()` i `core/site-view.js`. `renderArtifact` / login / gone sender bare visningsfelt til malene. |
-| W1 | `websites-w1` | `2611469` | Nettstedsmodell `core/sites.js`, 25 nettsteder i `content/universe/sites/`, inventar og `site-ref`-validator. Ingen synlig endring. |
-| W2 | `websites-w2` | `4f0200b` | Malverk Corporate, Government, Blog i `app/sites/`. Tekst uendret. |
-| Grafikk | `websites-w2-graphics` | `bd20641` | Logo/favicon på alle konfigurerte nettsteder, heltebilder på malte sider, tynn chrome for landing/legacy/personal/wiki/document. |
+| W0 | `websites-w0` | `bc67d47` · PR #73 | Hviteliste `publicView()` i `core/site-view.js`. `renderArtifact` / login / gone sender bare visningsfelt til malene. |
+| W1 | `websites-w1` | `2611469` · PR #74 | Nettstedsmodell `core/sites.js`, 25 nettsteder i `content/universe/sites/`, inventar og `site-ref`-validator. Ingen synlig endring. |
+| W2 | `websites-w2` | `4f0200b` · PR #75 | Malverk Corporate, Government, Blog i `app/sites/`. Tekst uendret. |
+| Grafikk | `websites-w2-graphics` | `bd20641` · PR #76 | Logo/favicon på alle konfigurerte nettsteder, heltebilder på malte sider, tynn chrome for landing/legacy/personal/wiki/document. |
+| W3 | `websites-w3` | denne greinen | Frem-knapp, bokmerker adskilt fra Casebook, tekststørrelse, nettstedets 404 og vedlikehold, parkert-side, «This site can't be reached», lagring versjon 8, Seeker viser offisielt nettsted først ved merkenavn/domene. |
 
 **W0 — nye/endrede filer.** `core/site-view.js` (ny), `app/render.js`, `tests/sites.test.mjs`, oppdateringer i DEVPLAN, WEBSITES.md og DESIGN.md.
 
@@ -38,6 +39,13 @@ Arbeidet ligger i `/workspace/BusAdventures`, stablet på `origin/main` `d7a9368
 
 **Grafikk (på `websites-w2-graphics`).** Hvert konfigurert nettsted har en SVG-logo i katalogen. Nettleserens adressefelt viser favicon (`theme.icon`, ellers kvadratisk logo) på sider. Heltebilder er festet til eksisterende artefakter uten å endre brødtekst: Brightline-kontor (WEB0005 / A19), Kestrel-biler (WEB0007 / A38, intakt lager — ikke NIMG0005), rådhuset (WEB0010 / B16), Harbor Dental (WEB0025), Calder Transit (WEB0026), Harbor Authority (WEB0027), Salty's 2008-front (WEB0020, tavlen er sløret så den ikke kan leses som meny). HarborDesk, hageforeningen og AIWriterPro fikk SVG-illustrasjoner (WEB0028–WEB0030). Northgate-vannfronten beholder IMG12; WEB0001–WEB0004 er ikke laget fordi det ikke finnes prosjektsider å henge dem på uten å dikte kanon. Bevisbilder (NIMG0003, NIMG0005, IMG02 osv.) er ikke gjenbrukt som pynt. ComfyUI kjører ikke på boksen; fotografiene er laget med GenerateImage etter GRAPHICS.md-stil (ingen tekst/merkevarer, litt korn, webp), logoene er håndtegnede SVG. En tynn chrome (`app/sites/simple.js`) gjør logo og helt synlig på landing/legacy/personal/wiki/document. Dette er ikke W5 (ingen full Wiki/Forum/Document/Anonymous-mal). `static.channel` forblir rå tekst, men har favicon. Eastfield Notes 2025 bruker typografisk minimal-logo; begge epoker deler mølle-ikonet som favicon.
 
+**W3 — nye/endrede filer.** `core/browser.js` (ny, uten DOM: `resolveBrowse`, bokmerker, tekststørrelse, frem/tilbake-stakk, `homeArtifact`), `core/state.js` (`SAVE_VERSION` 8, `s.browser`), `core/save.js` (migrering 7→8), `core/sites.js` (`normUrl` eksportert, `officialSitesForQuery` / `siteAliases`), `core/search.js` (offisielt nettsted først i Seeker), `app/phone.js` (browse via oppslaget, frem-stakk, stjerne og A−/A+), `app/apps/browser.js`, `app/sites/status.js` (ny), `app/render.js` (innlogging i nettstedsramme når nettstedet er kjent), `app/ui.js` (frem- og stjerneikon), `app/style.css`, `content/universe/sites/portcalderjazz.json` og manifest, `tests/browser.test.mjs`, evidenstestens versjonsassert, dokumenter og inventar.
+
+**W3 — designbeslutninger.** En kjent vert med ukjent sti er nettstedets egen 404, ikke et Seeker-søk. Ukjent vert er søk, som før. Et bart domene åpner hjemmesiden hvis den finnes; ellers en tom nettstedshjem (logo, ev. tagline, nav) uten diktert brødtekst. `gone` er en Browser-eid feilside («This site can't be reached») med knapp til Seeker-cache, ikke det gamle nettstedets chrome. `parked` er en generisk «This domain may be for sale»-side, ikke det gamle merket, fordi domenet har byttet eier. `maintenance` og 404 vises i nettstedets gjeldende chrome. Innlogging vises i samme chrome når nettstedet er kjent. Bokmerker (stjerne i adressefeltet) er lagret i `s.browser.bookmarks` og er atskilt fra «Save as evidence» (bok-ikon, Casebook). Tekststørrelse A−/A+ skalerer sideinnholdet (`zoom` på `.app-browser .scroll`) i trinnene 0,85 / 1 / 1,15 / 1,3, og lagres. Frem-stakken er bare i økten (overlever ikke en reload til låseskjermen). `portcalderjazz.com` er lagt inn som parkert fra 2022, slik WEBSITES.md §4 allerede beskriver; ingen cachet 2019-side og ingen nye jazz-fakta. Ingen forfattet nettside står i `maintenance` på startdatoen 9. mars 2026; tilstanden er dekket av tester med en liten fiktiv verden. Ingen asfaltert jazz-logo: parkerte/kun-borte-domener trenger ikke kataloglogo.
+
+**W3 — Seeker-rangering.** Når spørringen tydelig navngir et nettsted (merkenavn, alias, plattformnavn eller domene fra W1-modellen), kommer det nettstedets offisielle landing alltid først, foran avisartikler og sosiale innlegg. Landing er hjemmesiden hvis den er synlig, ellers en tom nettstedshjem (bare chrome) på domenet. `gone`/`parked`/`maintenance` vises fortsatt som treff og åpnes etter status. Treffet bruker bare eksisterende navn, ingen ny kanon. En generell eller blandet spørring («eastfield», «calder», «kestrel warehouse») blir ikke behandlet som merkenavn. Søk inne i en app (Daily Record, Connect) er uendret. Skjulte sider (f.eks. A41) vises ikke. Oppslag som bare gir et parkert/borte-treff endrer ikke undersøkelsesstatus.
+
+
 **Slik testes det** (fra repo-roten, etter deloppgave og før PR):
 
 ```text
@@ -47,9 +55,9 @@ node games/dead-internet/tools/simulate.mjs
 PLAYWRIGHT_MODULE=/path/to/playwright node games/dead-internet/tools/test-casebook-ui.mjs
 ```
 
-Nettstedstester ligger i `tests/sites.test.mjs`. Etter katalogendringer: `node games/dead-internet/tools/graphics-report.mjs` og `node games/dead-internet/tools/make-placeholders.mjs` (bare nye plassholdere skal sjekkes inn). Ny-spill i Playwright: case-menypunkt → `form.intro-form` submit → «Swipe up to unlock» → ev. `.it-notips` → Browser i docken → `form.addr-form`. Skjermbilder 390×844: `/workspace/dead-internet-shots/`.
+Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. Etter katalogendringer: `node games/dead-internet/tools/graphics-report.mjs` og `node games/dead-internet/tools/make-placeholders.mjs` (bare nye plassholdere skal sjekkes inn). Ny-spill i Playwright: case-menypunkt → `form.intro-form` submit → «Swipe up to unlock» → ev. `.it-notips` → Browser i docken → `form.addr-form`. Skjermbilder 390×844: `/workspace/dead-internet-shots/`.
 
-**Gjenstår etter denne bunten.** W3 (Browser: frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering). W4 bakgrunnssider. W5 fulle maler for Wiki, Forum, Document, Anonymous. W6–W8. Gjenstående WEB-bilder i listen WEB0001–WEB0024 som ikke har en eksisterende side (Foundry Lofts, Heights Commons, Northpoint Landing, lobby, bibliotek, Calderpedia-fyr, Eastfield Notes-mobilbilder, osv.). Omdøping av `corp-registries.example`. Lukke PR #72. Casebook steg 2–5.
+**Gjenstår etter denne bunten.** W4 bakgrunnssider. W5 fulle maler for Wiki, Forum, Document, Anonymous. W6–W8. Cachet 2019-versjon av portcalderjazz.com (nevnt i WEBSITES.md, ikke funnet opp i W3). Gjenstående WEB-bilder i listen WEB0001–WEB0024 som ikke har en eksisterende side (Foundry Lofts, Heights Commons, Northpoint Landing, lobby, bibliotek, Calderpedia-fyr, Eastfield Notes-mobilbilder, osv.). Omdøping av `corp-registries.example`. Lukke PR #72. Casebook steg 2–5.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.

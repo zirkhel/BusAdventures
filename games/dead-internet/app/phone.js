@@ -13,6 +13,7 @@ import { settingsApp } from "./apps/settings.js";
 import { newsApp } from "./apps/news.js";
 import { Tips } from "./tips.js";
 import { ContextSystem, registerDefaultActions } from "./context.js";
+import { resolveBrowse, toggleBookmark, isBookmarked, stepTextSize, migrateBrowser } from "../core/browser.js";
 
 export class Phone {
   /**
@@ -44,6 +45,8 @@ export class Phone {
     }
     /** @type {Record<string, any[]>} */
     this.stacks = {};
+    /** Browser screens popped by Back, session-only (not saved). */
+    this.browserForward = [];
     /** "lock" | "home" | app id */
     this.where = "lock";
 
@@ -96,9 +99,10 @@ export class Phone {
    * where it came from, so Back (and the link in the status bar) returns straight there with
    * that app's page and scroll position intact.
    */
-  push(appId, desc) {
+  push(appId, desc, opts = {}) {
     if (!this.stacks[appId]?.length) this.stacks[appId] = [this.apps[appId].root()];
     if (appId !== this.where && this.apps[this.where] && this.top) desc.returnTo = { app: this.where, title: this.titleOf(this.where, this.top) };
+    if (appId === "browser" && !opts.keepForward) this.browserForward = [];
     this.stacks[appId].push(desc);
     this.#remember(appId, desc);
     this.where = appId;
@@ -108,6 +112,7 @@ export class Phone {
 
   /** Replace the top screen of the current app (used after a sign-in or a search). */
   replaceTop(desc) {
+    if (this.where === "browser") this.browserForward = [];
     const st = this.stacks[this.where];
     if (st?.length) {
       const old = st[st.length - 1];
@@ -126,9 +131,22 @@ export class Phone {
     if (!st) { if (this.where === "lock") this.unlock(); return; }
     const ret = this.top?.returnTo;
     if (ret && this.stacks[ret.app]?.length) { st.pop(); this.where = ret.app; this.#render(false, true); return; }
-    if (st.length > 1) { st.pop(); this.#render(false, true); }
+    if (st.length > 1) {
+      const popped = st.pop();
+      if (this.where === "browser") this.browserForward.push(popped);
+      this.#render(false, true);
+    }
     else this.goHome();
   }
+
+  /** Browser forward: restore a screen popped by Back. No-op in other apps. */
+  forward() {
+    if (!this.canForward()) return;
+    const desc = this.browserForward.pop();
+    this.push("browser", desc, { keepForward: true });
+  }
+
+  canForward() { return this.where === "browser" && this.browserForward.length > 0; }
 
   /** Short title of a screen, for the "return to" link and the recent list. */
   titleOf(appId, desc) {
@@ -213,14 +231,50 @@ export class Phone {
 
   accountByHandle(handle) { return this.handles.get(String(handle).toLowerCase()) || null; }
 
-  /** Address bar / tapped link: open a known address, otherwise search Seeker for it. */
+  /** Address bar / tapped link: open a known address, a site-status page, or search Seeker. */
   browse(text) {
     let t = String(text || "").trim();
     if (!t) return;
     if (t.includes("•") && t.includes("@")) t = t.split("@").pop() || t; // masked email: follow the domain
-    const id = this.urls.get(normUrl(t));
-    if (id) { this.openArtifact(id, undefined, this.appFor(id) === "connect" ? "connect" : "browser"); return; }
-    this.search(t);
+    const date = String(this.g.date || "").slice(0, 10);
+    const r = resolveBrowse(this.g.w, t, date);
+    if (r.kind === "empty") return;
+    if (r.kind === "page") {
+      this.openArtifact(r.artifact, undefined, this.appFor(r.artifact) === "connect" ? "connect" : "browser");
+      return;
+    }
+    if (r.kind === "search") { this.search(r.q); return; }
+    this.push("browser", { kind: r.kind, site: r.site, url: r.url });
+  }
+
+  /** Bookmark the current Browser address (separate from saving evidence to the Casebook). */
+  toggleBookmark(desc) {
+    if (!this.g.s.browser) migrateBrowser(this.g.s);
+    const url = bookmarkUrlOf(desc);
+    if (!url) return false;
+    const on = toggleBookmark(this.g.s, {
+      url,
+      title: desc.view?.title || desc.title || url,
+      artifact: desc.id || desc.artifact || null,
+      version: desc.view?.versionId ?? desc.version ?? null,
+      day: this.g.s.day,
+    });
+    this.g.emit("state", { action: "bookmark" });
+    this.toast(on ? "Bookmarked." : "Bookmark removed.");
+    this.refresh();
+    return on;
+  }
+
+  isBookmarked(desc) {
+    const url = bookmarkUrlOf(desc);
+    return url ? isBookmarked(this.g.s, url) : false;
+  }
+
+  stepTextSize(delta) {
+    if (!this.g.s.browser) migrateBrowser(this.g.s);
+    stepTextSize(this.g.s, delta);
+    this.g.emit("state", { action: "textSize" });
+    this.refresh();
   }
 
   search(q, appId = "browser") {
@@ -786,6 +840,10 @@ export class Phone {
 
 export function normUrl(u) {
   return String(u).trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/+$/, "");
+}
+
+function bookmarkUrlOf(desc) {
+  return desc?.url || desc?.view?.url || "";
 }
 
 /** Pinch, double tap and drag to zoom an image inside a stage. */

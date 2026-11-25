@@ -1,0 +1,25 @@
+{
+ "id": "portcalderjazz",
+ "domain": "portcalderjazz.com",
+ "designs": [
+  {
+   "id": "d1",
+   "from": "2010-01-01",
+   "template": "landing",
+   "variant": "parked",
+   "theme": {},
+   "nav": []
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "Nothing is published at this address."
+ },
+ "status": [
+  {
+   "from": "2022-01-01",
+   "state": "parked"
+  }
+ ],
+ "notes": "Listed in WEBSITES.md as a parked domain (changed hands in 2022). Added in W3 so the parked state can be visited. No 2019 cache and no new story facts."
+}

@@ -11,13 +11,15 @@
 // Forgiving like a real engine, and only that: light stemming (plural, -ing, -ed), small typos
 // in longer words, and a partial-match fallback when no page has enough of the words. Typos and
 // the fallback only reach "full" pages that the exact words would find anyway, so they never
-// surface a hidden page or a name the player has not spelt. Ranking never knows what matters.
+// surface a hidden page or a name the player has not spelt. Ranking never knows what matters to a case. When a query obviously names a website (site name, brand or domain from the W1 model), that site's official page is always listed first, like a real engine.
 // opts.platform limits a search to one app (TokTok search, a newspaper's own search).
 
 import { asArray } from "./util.js";
 import { isVisible, liveVersionId, cachedVersions, resolveVersion, getVersion, transcriptOf, shownDate } from "./artifacts.js";
 import { imageRoot, mirrorParity, videoImages } from "./world.js";
 import { check } from "./conditions.js";
+import { officialSitesForQuery, siteDisplayName, siteStatus } from "./sites.js";
+import { homeArtifact } from "./browser.js";
 
 const STOP = new Set(("a an the and or of in on at to for is are was were be been it its this that with by from as " +
   "about into how what who why when where which does did do i you he she they we my your his her their our " +
@@ -132,9 +134,8 @@ function snippet(body, terms) {
 export function search(g, query, opts = {}) {
   const limit = opts.limit ?? 12;
   const strict = run(g, query, opts, false);
-  if (strict.length || opts.noFallback) return strict.slice(0, limit);
-  // Nothing has enough of the words: show pages that have some of them, and say so.
-  return run(g, query, opts, true).slice(0, limit);
+  const base = (strict.length || opts.noFallback) ? strict : run(g, query, opts, true);
+  return applyOfficialRank(g, query, opts, base).slice(0, limit);
 }
 
 /** Does a term (one of its stems) nearly match a word in the set? Typos only, never on short words. */
@@ -278,4 +279,81 @@ export function imageInfo(g, imageId) {
   const img = g.w.images.get(imageId);
   if (!img) return null;
   return { id: img.id, kind: img.kind, caption: img.caption ?? "", meta: img.meta ?? null };
+}
+
+
+const OFFICIAL_SCORE = 10000;
+
+const STATUS_SNIPPET = {
+  gone: "This site can't be reached",
+  parked: "This domain may be for sale",
+  maintenance: "We'll be back soon",
+};
+
+/**
+ * When the query clearly names a website, put that site's official landing first.
+ * In-app searches (a newspaper, Connect) are left alone. Hidden pages stay hidden.
+ * Gone and parked sites still appear, and opening them follows the site status.
+ * @param {any} g
+ * @param {string} query
+ * @param {{platform?:string|string[]}} opts
+ * @param {any[]} results
+ */
+function applyOfficialRank(g, query, opts, results) {
+  if (opts.platform) return results;
+  const matches = officialSitesForQuery(g.w, query);
+  if (!matches.length) return results;
+  const promoted = [];
+  const used = new Set();
+  for (const { site, strength } of matches) {
+    const land = officialLanding(g, site);
+    if (!land) continue;
+    land.score = OFFICIAL_SCORE + strength * 10;
+    if (land.artifact) {
+      const existing = results.find(r => r.artifact === land.artifact && !r.cached);
+      if (existing) {
+        existing.score = land.score;
+        existing.official = true;
+        existing.site = site.id;
+        promoted.push(existing);
+        used.add(existing);
+        continue;
+      }
+    }
+    promoted.push(land);
+  }
+  const rest = results.filter(r => !used.has(r));
+  return [...promoted, ...rest];
+}
+
+function officialLanding(g, site) {
+  const date = String(g.date || "").slice(0, 10);
+  const st = siteStatus(site, date);
+  const title = siteDisplayName(g.w, site);
+  const url = site.domain;
+  if (st.state === "gone" || st.state === "parked" || st.state === "maintenance") {
+    return {
+      official: true, kind: st.state, site: site.id, artifact: null,
+      title, snippet: STATUS_SNIPPET[st.state], url,
+      platform: site.platform || null, date: st.from || null,
+      cached: false, versionId: null, locked: false,
+    };
+  }
+  const home = homeArtifact(g.w, site);
+  if (home && isVisible(g, home)) {
+    const a = g.w.artifacts.get(home);
+    const locked = !!(a.access && !check(a.access, g.ctx));
+    const vid = locked ? null : liveVersionId(g, a);
+    return {
+      official: true, kind: "page", site: site.id, artifact: home,
+      title: locked ? (a.lockedTitle || a.title || title) : (a.title || title),
+      snippet: a.url || url, url: a.url || url, platform: a.platform,
+      date: a.date, cached: false, versionId: vid, locked,
+    };
+  }
+  return {
+    official: true, kind: "sitehome", site: site.id, artifact: null,
+    title, snippet: url, url, platform: site.platform || null,
+    date: null, cached: false, versionId: null, locked: false,
+  };
 }

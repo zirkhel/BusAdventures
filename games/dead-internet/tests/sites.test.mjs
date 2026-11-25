@@ -126,8 +126,11 @@ test("W2 templates handle Northgate, the city portal and Eastfield Notes", () =>
   assert.equal(canRenderSite(phone, viewArtifact(g, news.id)), false);
 });
 
-test("every site design has a catalog logo or icon", () => {
+test("every live site design has a catalog logo or icon", () => {
   for (const site of world.sites.values()) {
+    const rows = site.status || [];
+    const everLive = !rows.length || rows.some(s => !s.state || s.state === "live" || s.state === "maintenance");
+    if (!everLive) continue; // parked/gone-only domains have no brand to show
     for (const d of site.designs || []) {
       const logo = d.theme?.logo;
       assert.ok(logo && !String(logo).startsWith("text:"), `${site.id} ${d.id} needs a catalog logo`);
