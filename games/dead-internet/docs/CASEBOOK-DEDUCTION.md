@@ -1,6 +1,6 @@
 # Dead Internet: Casebook som deduksjonsverktøy
 
-_Forslag til diskusjon, 24. november 2026. Ingenting er implementert. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
+_Status 25. november 2026: steg 0 og 1 er merget, steg 2 er implementert på greina `casebook-step-2` (se DESIGN.md, «Implementert steg 2», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
 
 ## Kort fortalt
 

@@ -485,7 +485,7 @@ Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.
 
 **PR #72 lukket.** PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026 som en rest etter PR #71. Greina er beholdt.
 
-Neste steg: Casebook steg 2 (påbegynt 25. nov 2026 med Anders' ja), deretter steg 3–5. W8 (Archive-kobling) venter på Casebook steg 3. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
+Neste steg: Casebook steg 2 er implementert 25. nov 2026 med Anders' ja på greina `casebook-step-2` (PR, ikke merget). Deretter steg 3–5. W8 (Archive-kobling) venter på Casebook steg 3. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
 
 
 
