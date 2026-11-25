@@ -106,7 +106,7 @@ W6 invented names, hours and prices were approved on 25 November 2026 and are no
 
 ## Design as a clue (W7)
 
-Implemented on `websites-w7` (not merged). Anders approved the step on 25 November 2026. New pages: HarborDesk 2, Haven Mutual 3, Quay Ledger 2, North Lamp Studio 2, Brightline Insights 1, two Garden persona posts (12 in total). Existing ids, URLs and live wording are unchanged, including A20 v1, B18, A31 and A34 v2. Hidden pages stay hidden.
+Implemented on `websites-w7` as open PR #81 (not merged). Anders approved the step on 25 November 2026. New pages: HarborDesk 2, Haven Mutual 3, Quay Ledger 2, North Lamp Studio 2, Brightline Insights 1, two Garden persona posts (12 in total). Existing ids, URLs and live wording are unchanged, including A20 v1, B18, A31 and A34 v2. Hidden pages stay hidden.
 
 New independent sites: `havenmutual.com` (corporate / `agency`, so that variant is not unique to Brightline), `quayledger.com` and `northlamp.studio`. Two further 18 Harbor Street firms, Amber Fern Tutoring and Gull Wing Surveys, are named on HarborDesk without a URL. Brightline remains at Suite 400.
 

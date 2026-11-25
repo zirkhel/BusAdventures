@@ -13,11 +13,11 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Nettsteder: W0–W6 og grafikksteget er merget til `main` som PR #73–#80 (`origin/main` `4e5bff8`): #73 W0 `a3b3a63`, #74 W1 `7193fa7`, #75 W2 `05493e9`, #76 grafikk `dec0458`, #77 W3 `2c6aa9f`, #78 W4 `24a20c3`, #79 W5 `9b6ce40`, #80 W6 `4e5bff8`. De 122 bakgrunnssidene fra W4 beholdes (når de først er skrevet, tar vi dem ikke bort). Godkjent ny kanon fra W4: ordfører Denise Harlan og 11 rådsmedlemmer (Ana Ruiz pluss 10 nye navn); rådhuset 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30. Godkjent ny kanon fra W5: fyret automatisert i 1998, siste fyrmester Samuel Okoro; Harbor Festival har hatt frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024) er universfakta. 6:10-fergekapteinen «Dennis» er bare en forum-påstand. Godkjent ny kanon fra W6: bibliotekets hverdagsåpningstider (ons–fre 10–18, lør 10–16, stengt søn) og de øvrige ansatte Tomás Rinaldi, Helen Cho og June Ellery (Priya Shah er fortsatt på Eastfield); Harbor Dental-teamet Dr Nina Pell, Dr Omar Rahman og hygieniker Chris Vale, åpningstider man–fre 8–17, lør 9–13, stengt søn, og parkering bak praksisen av Harbor Street; HarborDesk-rom på Dock Road og prisene Plus $79 / Studio $149; domenet `openfilings.org` og navnet Open Filings. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
 - Åpen PR #72 (`codex/casebook-step-1`) er en etterlatt duplikat av merget PR #71 og skal lukkes, ikke merges.
 
-**Neste steg:** W7 er implementert på `websites-w7` (Anders sa ja 25. november 2026) og er ikke merget. Deretter W8 (Archive-kobling). Casebook steg 2 (teorier og spørsmål) kan gå parallelt. Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest. Nye nettside-PR-er merges bare etter Anders' ja.
+**Neste steg:** W7 er implementert på `websites-w7` som åpen PR #81 (Anders sa ja 25. november 2026) og er ikke merget. Deretter W8 (Archive-kobling). Casebook steg 2 (teorier og spørsmål) kan gå parallelt. Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest. Nye nettside-PR-er merges bare etter Anders' ja.
 
 ### Nettstedsarbeid (W0–W7 og grafikk) — greiner og beslutninger
 
-W0–W6 og grafikksteget er merget til `main` som PR #73–#80 (`4e5bff8`). W7 er implementert på `websites-w7` (Anders sa ja 25. november 2026) og er ikke merget. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
+W0–W6 og grafikksteget er merget til `main` som PR #73–#80 (`4e5bff8`). W7 er implementert på `websites-w7` som åpen PR #81 (Anders sa ja 25. november 2026) og er ikke merget. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
 
 | Steg | Grein | Commit / PR | Hva |
 |---|---|---|---|
@@ -29,7 +29,7 @@ W0–W6 og grafikksteget er merget til `main` som PR #73–#80 (`4e5bff8`). W7 e
 | W4 | `websites-w4` | merget PR #78 · `24a20c3` | Bakgrunnssider runde 1 (122 nye sider, beholdt) for Northgate, City of Port Calder, Eastfield Notes, Kestrel og Brightline, pluss `universe/background-facts.json` med validator. Godkjent kanon: 10 nye rådsnavn + ordfører Denise Harlan; rådhuset 40 Civic Center, skranke 8:30–16:30. |
 | W5 | `websites-w5` | merget PR #79 · `9b6ce40` | Wiki, Forum, Document, Anonymous (og saas-Landing for Faceless). Calderpedia, Threadline, Docshare, SpillCheck og Faceless Stock flyttet over, med innhold. Godkjent kanon: fyret automatisert 1998, siste fyrmester Samuel Okoro; Harbor Festival-frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024). «Dennis» er bare en forum-påstand. |
 | W6 | `websites-w6` | merget PR #80 · `4e5bff8` | Legacy, Personal, øvrig Landing (`smallbiz`; parkert er fortsatt Browser-eid). Nye bakgrunnsnettsteder (bibliotek, Calder Power, Calder CU, Walts side, Harbor PA), cachet 2019-versjon av portcalderjazz.com, cachet Kestrel 2014, omdøping av `corp-registries.example` til `openfilings.org`. |
-| W7 | `websites-w7` | på greinen, ikke merget | Spor i design som innhold (§9.2–§9.3). Anders sa ja 25. november 2026. Calvins ansikt på uavhengige sider, 18 Harbor Street med fire uskyldige firmaer, cachet Team 2024, felles formuleringer, Lumen som blindvei, ny gjennomspilling `design_as_clue`. |
+| W7 | `websites-w7` | åpen PR #81, ikke merget | Spor i design som innhold (§9.2–§9.3). Anders sa ja 25. november 2026. Calvins ansikt på uavhengige sider, 18 Harbor Street med fire uskyldige firmaer, cachet Team 2024, felles formuleringer, Lumen som blindvei, ny gjennomspilling `design_as_clue`. |
 
 **W0 — nye/endrede filer.** `core/site-view.js` (ny), `app/render.js`, `tests/sites.test.mjs`, oppdateringer i DEVPLAN, WEBSITES.md og DESIGN.md.
 
@@ -365,7 +365,7 @@ Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 
 - [x] W4 Bakgrunn runde 1 (122 sider, beholdt) og fil med bakgrunnsfakta — merget PR #78
 - [x] W5 Wiki, Forum, Document, Anonymous (og saas-Landing) — merget PR #79
 - [x] W6 Legacy, Personal, øvrig Landing og eldre design — merget PR #80 · `4e5bff8`
-- [x] W7 Spor i design (Anders sa ja 25. november 2026), ny gjennomspillingstest — på `websites-w7`, ikke merget
+- [x] W7 Spor i design (Anders sa ja 25. november 2026), ny gjennomspillingstest — åpen PR #81, ikke merget
 - [ ] W8 «Compare with…» fra Archive (etter Casebook steg 3)
 - [ ] Grafikk WEB0001–WEB0024, de tolv viktigste først
 - [x] Bytt `corp-registries.example` til `openfilings.org`, med test for søk, gamle adresser og referanser — merget PR #80 · `4e5bff8`
