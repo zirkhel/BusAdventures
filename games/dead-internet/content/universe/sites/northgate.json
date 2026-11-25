@@ -23,8 +23,36 @@
    },
    "nav": [
     {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Projects",
+     "href": "/projects"
+    },
+    {
      "label": "Eastfield Waterfront",
      "href": "/waterfront"
+    },
+    {
+     "label": "About",
+     "href": "/about"
+    },
+    {
+     "label": "Sustainability",
+     "href": "/sustainability"
+    },
+    {
+     "label": "Investors",
+     "href": "/investors"
+    },
+    {
+     "label": "News",
+     "href": "/news"
+    },
+    {
+     "label": "Contact",
+     "href": "/contact"
     }
    ],
    "footer": {

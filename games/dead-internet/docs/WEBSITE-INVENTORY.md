@@ -15,12 +15,12 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `threadline` | threadline.net | live | existing threads | Forum URLs |
 | `dailyrecord` | dailyrecord-pc.com | live | articles + archive (news app) | Newspaper URLs |
 | `unfiltered` | unfiltered.news | live | articles (news app) | Newspaper URLs |
-| `eastfieldnotes` | eastfieldnotes.blog | live | A14 front (2 versions), A15, A33, A34, A36 | Mara's blog; theme change 22 Oct 2025 |
-| `brightline` | brightlinemedia.co | live | A19, A20, A21, A42 | Agency site |
+| `eastfieldnotes` | eastfieldnotes.blog | live | A14 front (2 versions), A15 (cache-only), A33, A34, A36, About + 36 W4 posts (`W-eastfieldnotes-*`) | Mara's blog; theme change 22 Oct 2025. New posts are single-version; last post remains A33 (14 May 2025) |
+| `brightline` | brightlinemedia.co | live | A19, A20, A21, A42 (hidden), plus 19 W4 pages in the mystery pack (`W-brightline-*`) | Agency site. Public nav omits Statement. Case studies stay anonymous |
 | `brightline_portal` | portal.bl-ops.net | live (login) | A24 | Client portal |
-| `northgate` | northgatedev.com | live | A40 project, A41 statement (hidden until shown) | Paul's «our website»; project + statement |
-| `kestrel` | kestrel-logistics.com | live | A38 | Client list |
-| `city` | portcalder.gov | live | A53, B16, BG-CITY-01, A26, A27, A28 | City portal |
+| `northgate` | northgatedev.com | live | A40 project, A41 statement (hidden until shown), plus 18 W4 pages (`W-northgate-*`) | Paul's «our website». Projects, leadership, newsroom, sustainability, investors |
+| `kestrel` | kestrel-logistics.com | live | A38 plus 16 W4 pages (`W-kestrel-*`) | Client list, fleet, careers, news (Biscuit retold, late-delivery note without a fire cause). Lou Adair is never named |
+| `city` | portcalder.gov | live | A53, B16, BG-CITY-01, A26, A27, A28, plus 32 W4 pages (`W-city-*`) | City portal. City Hall at 40 Civic Center; Mayor Denise Harlan and 11 members (Ana Ruiz kept on her existing page) |
 | `spillcheck` | spillcheck.io | live | A30 + lookup | Breach checker |
 | `facelessstock` | facelessstock.com | live | A31, A31B | Stock portraits |
 | `docshare` | docshare.link | live | existing shared documents | File links |
@@ -68,6 +68,12 @@ Paul Navarro's fallback, «I'd refer you to our website,» points at the existin
 ## Coverage at W1
 
 26 site configs (25 from W1, plus parked `portcalderjazz.com` in W3), 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. Thin chrome (not the full W5 templates) shows logo and hero on landing, legacy, personal, wiki and document sites. See [GRAPHICS.md](../graphics/GRAPHICS.md).
+
+## Background pages (W4)
+
+Round 1 adds about 122 new pages on five sites, plus `content/universe/background-facts.json` (24 entries, `status: canon | claim`, checked by the validator). Existing page ids, URLs and wording are unchanged. A15 stays off the live blog; A41 and A42 stay hidden. Brightline background lives in the Quiet Account mystery pack. New Eastfield Notes posts are the same in cache and live; comments (0–6) use light neighbour accounts, occasionally Priya, and two spam accounts. No `pclibrary.org` domain was invented. No new photographs: official homes reuse IMG12, WEB0010, WEB0005 and WEB0007. Evidence photos were not used as decoration.
+
+New facts that bind the universe include the three completed Northgate projects, Helen March and Marcus Veld, City Hall's address and hours, Mayor Denise Harlan, the ten new councilmembers, Kestrel's two trucks and EV pilot, and the Harbor Street water-main dates. Brightline homepage statistics and case-study figures are registered as `claim`, not canon.
 
 ## Test-only domains
 

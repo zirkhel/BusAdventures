@@ -483,6 +483,7 @@ export function validateWorld(raw, opts = {}) {
     }
   }
   checkSites(w, raw, err, warn);
+  checkBackgroundFacts(w, raw, err, warn);
   return { issues, runs: allRuns[[...w.mysteries.values()].find(x => x.testing)?.id] };
 }
 
@@ -538,3 +539,47 @@ function checkSites(w, raw, err, warn) {
   }
 }
 
+
+
+const QA_PEOPLE = new Set(["mara", "theo", "dana", "owen", "iris", "calvin", "renee", "juno", "paul", "hal", "gerald", "lou", "ana", "priya", "mike_p", "pat_p", "lindsay"]);
+
+/**
+ * New names, dates and figures in background content are registered in
+ * universe/background-facts.json. Only status:canon is treated as world fact.
+ * Entries must not contradict existing canon triples, and must not invent new
+ * facts about the people of The Quiet Account.
+ */
+function checkBackgroundFacts(w, raw, err, warn) {
+  const facts = raw.backgroundFacts || [];
+  const canon = [];
+  for (const f of (raw.canon && raw.canon.facts) || []) {
+    canon.push(`${f.subject}\t${f.predicate}\t${f.object ?? ""}`);
+  }
+  const canonBySP = new Map();
+  for (const f of (raw.canon && raw.canon.facts) || []) {
+    canonBySP.set(`${f.subject}\t${f.predicate}`, f.object ?? "");
+  }
+  const seen = new Set();
+  for (const f of facts) {
+    const where = `background-fact ${f.id || "?"}`;
+    if (!f.id) { err("background-facts", "entry without id"); continue; }
+    if (seen.has(f.id)) err(where, "duplicate id");
+    seen.add(f.id);
+    if (!f.introducedBy || !w.sites.has(f.introducedBy)) err(where, `introducedBy is not a registered site (${f.introducedBy || "missing"})`);
+    if (f.binds !== "none" && f.binds !== "universe") err(where, `binds must be "none" or "universe"`);
+    if (f.status !== "canon" && f.status !== "claim") err(where, `status must be "canon" or "claim"`);
+    if (f.entity && !w.entities.has(f.entity)) err(where, `unknown entity ${f.entity}`);
+    if (f.entity && f.name && w.entities.get(f.entity).name !== f.name) {
+      err(where, `name "${f.name}" does not match entity ${f.entity} (${w.entities.get(f.entity).name})`);
+    }
+    if (f.status === "canon" && f.subject && f.predicate) {
+      const key = `${f.subject}\t${f.predicate}`;
+      if (canonBySP.has(key) && (canonBySP.get(key) ?? "") !== (f.object ?? "")) {
+        err(where, `contradicts canon: ${f.subject} ${f.predicate} ${canonBySP.get(key)} vs ${f.object ?? ""}`);
+      }
+      if (QA_PEOPLE.has(f.subject) && !canonBySP.has(key)) {
+        err(where, `new canon fact about Quiet Account person ${f.subject} is not allowed`);
+      }
+    }
+  }
+}

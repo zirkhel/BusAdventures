@@ -19,8 +19,16 @@
    },
    "nav": [
     {
+     "label": "Home",
+     "href": "/"
+    },
+    {
      "label": "Services",
      "href": "/services"
+    },
+    {
+     "label": "Work",
+     "href": "/work"
     },
     {
      "label": "Team",
@@ -28,11 +36,15 @@
     },
     {
      "label": "Careers",
-     "href": "/careers/community-writer"
+     "href": "/careers"
     },
     {
-     "label": "Statement",
-     "href": "/statement"
+     "label": "Insights",
+     "href": "/insights"
+    },
+    {
+     "label": "Contact",
+     "href": "/contact"
     }
    ]
   }

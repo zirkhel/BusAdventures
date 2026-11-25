@@ -1,0 +1,400 @@
+[
+ {
+  "id": "W-brightline-0001",
+  "site": "brightline",
+  "page": "home",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co",
+  "date": "2026-01-10",
+  "title": "Brightline Media",
+  "filler": true,
+  "source": "brightline",
+  "index": "full",
+  "images": [
+   "WEB0005"
+  ],
+  "mentions": [
+   "brightline"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Audience continuity. Community engagement. A voice that stays in the room.\n\n2.4M conversations started. 98% client retention. 24/7 community care.\n\nWe help organisations stay present in the places they care about, with people who sound like they belong there. Look at our work, or go straight to the client portal if you already have a login.\n\nBrightline Media, Suite 400, 18 Harbor Street, Port Calder."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0002",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/work",
+  "date": "2026-01-10",
+  "title": "Work",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "mentions": [
+   "brightline"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A few recent programmes, written the way we show them to other clients: the brief, the numbers, and no names. Every organisation on this page asked not to be identified, and we agreed.\n\nbrightlinemedia.co/work/regional-credit-union\nbrightlinemedia.co/work/dental-group\nbrightlinemedia.co/work/craft-brewery\nbrightlinemedia.co/work/transit-pitch\nbrightlinemedia.co/work/wellness-brand\nbrightlinemedia.co/work/real-estate-client\n\nIf you want a conversation about your own brief, use the contact page."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0003",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/work/regional-credit-union",
+  "date": "2025-06-12",
+  "title": "Case: a regional credit union",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A regional credit union wanted younger members to talk about ordinary banking as if it were a local habit, not a chore.\n\nWe built a year of community presence and a modest live-events calendar. Share of voice in the relevant neighbourhood conversations: +38%. The client remains a client.\n\nThe institution is not named here."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0004",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/work/dental-group",
+  "date": "2025-04-02",
+  "title": "Case: a dental group",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A dental group needed to sound like a neighbourhood practice, even as it grew.\n\nWe wrote in the first person, kept the jokes small, and never mentioned prices in a comment thread. 2.1M impressions across the year, mostly from posts that did not look like ads.\n\nThe practice is not named here."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0005",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/work/craft-brewery",
+  "date": "2024-11-20",
+  "title": "Case: a craft brewery",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A craft brewery wanted festival-season conversation that did not collapse into discount codes.\n\nWe ran a short, loud summer and a quieter winter. Engagement stayed high after the tents came down. The client came back the following year.\n\nThe brewery is not named here."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0006",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/work/transit-pitch",
+  "date": "2025-08-08",
+  "title": "Case: a municipal transit campaign (pitch)",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We pitched a municipal transit campaign: how to talk about delayed buses without talking down to the people who ride them.\n\nThe pitch is on this page as a sample of tone, not as a claim that the work was commissioned. We did not name a city in the deck, and we will not name one here."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0007",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/work/wellness-brand",
+  "date": "2025-02-18",
+  "title": "Case: a wellness brand",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A wellness brand wanted comments that sounded like neighbours, not like a catalogue.\n\nWe kept the language plain and the promises smaller than the brief first asked for. Sentiment on the accounts we were asked to watch moved the right way. 24/7 coverage was part of the contract.\n\nThe brand is not named here."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0008",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/work/real-estate-client",
+  "date": "2025-09-30",
+  "title": "Case: a real estate client",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A real estate client asked us to keep a neighbourhood conversation warm while a planning process ran its course.\n\nWe reported the numbers we were asked to report. The work was quiet, consistent, and signed off at each stage by the client. Details of the site are not on this page.\n\nThe client is not named here."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0009",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/careers",
+  "date": "2026-01-10",
+  "title": "Careers",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "mentions": [
+   "brightline"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Brightline hires people who can write like a neighbour and still hit a deadline.\n\nOpen roles:\nbrightlinemedia.co/careers/community-writer\nbrightlinemedia.co/careers/account-manager\nbrightlinemedia.co/careers/paid-social-specialist\nbrightlinemedia.co/careers/data-analyst-sentiment\n\nWe will not ask you to supply a writing sample about a real person you know. If a recruiter messages you from a free email address, it is not us.\n\nSuite 400, 18 Harbor Street, Port Calder."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0010",
+  "site": "brightline",
+  "page": "job",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/careers/account-manager",
+  "date": "2025-11-01",
+  "title": "Careers: Account Manager",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Account Manager. You hold the relationship, the calendar, and the awkward emails. You do not have to be a writer, but you do have to read the work before the client does.\n\nBased in Port Calder, with some late nights when a programme is live. Apply with a short letter, not a deck."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0011",
+  "site": "brightline",
+  "page": "job",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/careers/paid-social-specialist",
+  "date": "2025-11-01",
+  "title": "Careers: Paid Social Specialist",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Paid Social Specialist. You know the difference between a boost and a campaign, and you can explain a spend without hiding it.\n\nThis is not a community-writing role. You will work next to people who write. Port Calder office, hybrid after the first month."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0012",
+  "site": "brightline",
+  "page": "job",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/careers/data-analyst-sentiment",
+  "date": "2025-11-01",
+  "title": "Careers: Data Analyst (Sentiment)",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Data Analyst (Sentiment). You turn large, messy comment streams into something a client can read in one sitting, without pretending the numbers are a feeling.\n\nExperience with ordinary social metrics is enough to start. We will teach you our internal tools. Port Calder."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0013",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/insights",
+  "date": "2026-01-10",
+  "title": "Insights",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "mentions": [
+   "brightline"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Notes from the team on authentic community, and on what that phrase is doing in a proposal this year. These are our views, not a client's.\n\nbrightlinemedia.co/insights/what-authentic-means-now\nbrightlinemedia.co/insights/the-neighbour-test\nbrightlinemedia.co/insights/coverage-is-not-care\nbrightlinemedia.co/insights/measuring-the-room\nbrightlinemedia.co/insights/after-the-brief"
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0014",
+  "site": "brightline",
+  "page": "post",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/insights/what-authentic-means-now",
+  "date": "2025-03-04",
+  "title": "What 'authentic' means now",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Everyone asks for authentic community. Few people want to say what they will not do to get it.\n\nWe take the word seriously, which is why we use it sparingly in a brief. If a comment could only have been written by the organisation, it should go out under the organisation's name."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0015",
+  "site": "brightline",
+  "page": "post",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/insights/the-neighbour-test",
+  "date": "2025-05-19",
+  "title": "The neighbour test",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Before we file a piece of community work, we ask a simple question: would a neighbour say this over a fence, or only in a meeting room?\n\nIf the answer is the meeting room, we rewrite. It takes longer. It reads shorter."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0016",
+  "site": "brightline",
+  "page": "post",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/insights/coverage-is-not-care",
+  "date": "2025-08-14",
+  "title": "Coverage is not care",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Twenty-four-hour coverage is a staffing fact, not a moral one. A community does not feel 'cared for' because someone was awake at 2am. They feel it when the reply is specific, and when it still makes sense in the morning."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0017",
+  "site": "brightline",
+  "page": "post",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/insights/measuring-the-room",
+  "date": "2025-10-02",
+  "title": "Measuring the room",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Sentiment scores are a thermometer, not a diagnosis. We report them because clients ask, and because a swing can tell you to look again. We do not pretend a number is the same thing as trust."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0018",
+  "site": "brightline",
+  "page": "post",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/insights/after-the-brief",
+  "date": "2026-01-08",
+  "title": "After the brief",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The brief is the start of the argument, not the end of it. Our best work, the work clients stay for, is the work that came back once and said: this line is too smooth, try again.\n\nIf you want a vendor who never argues, we are probably the wrong room."
+   }
+  ]
+ },
+ {
+  "id": "W-brightline-0019",
+  "site": "brightline",
+  "page": "page",
+  "type": "page",
+  "platform": "brightline_site",
+  "url": "brightlinemedia.co/contact",
+  "date": "2026-01-10",
+  "title": "Contact",
+  "filler": true,
+  "source": "brightline",
+  "index": "weak",
+  "mentions": [
+   "brightline"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Brightline Media, Suite 400, 18 Harbor Street, Port Calder.\n\nFor new work, use the form on this page. For an existing programme, sign in at the client portal: portal.bl-ops.net.\n\nWe read new enquiries on weekdays. We do not take walk-ins on the fourth floor without an appointment."
+   }
+  ]
+ }
+]

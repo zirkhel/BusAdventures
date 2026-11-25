@@ -34,9 +34,30 @@ export function renderBlog(phone, o) {
       h("div.site-main",
         h("h1", phone.ctx.text(v.title)),
         v.date ? h("div.muted.site-date", fmtDate(v.date)) : null,
-        h("div.page-body", body)),
+        h("div.page-body", body),
+        page === "post" ? commentList(phone, v) : null),
       archive),
     footerOf(design, "Eastfield Notes"));
+}
+
+/** Blog comment field: name, date, text. No avatars — period-typical for a 2012 theme. */
+function commentList(phone, v) {
+  const comments = v.comments || [];
+  if (!comments.length) {
+    return h("section.site-comments", h("div.muted", "No comments yet."));
+  }
+  const w = phone.g.w;
+  return h("section.site-comments",
+    h("h2", `${comments.length} comment${comments.length === 1 ? "" : "s"}`),
+    comments.map(c => {
+      const acc = w.accounts.get(c.account);
+      const name = acc?.displayName || acc?.handle || c.account;
+      return h("div.site-comment",
+        h("div.cm-head",
+          acc ? h("b", phone.ctx.span(name, { type: "handle", id: c.account })) : h("b", name),
+          c.date ? h("span.muted", ` · ${fmtDate(c.date)}`) : null),
+        h("div.cm-text", phone.ctx.text(c.text || "")));
+    }));
 }
 
 function archiveList(phone, site, posts) {

@@ -1,0 +1,58 @@
+[
+ {
+  "id": "acc_en_helenk",
+  "platform": "eastfieldnotes",
+  "handle": "Helen K.",
+  "displayName": "Helen K.",
+  "created": "2019-06-02",
+  "pool": "eastfieldnotes-comments"
+ },
+ {
+  "id": "acc_en_davep7",
+  "platform": "eastfieldnotes",
+  "handle": "Dave (plot 7)",
+  "displayName": "Dave (plot 7)",
+  "created": "2020-04-11",
+  "pool": "eastfieldnotes-comments"
+ },
+ {
+  "id": "acc_en_june",
+  "platform": "eastfieldnotes",
+  "handle": "June",
+  "displayName": "June",
+  "created": "2019-08-20",
+  "pool": "eastfieldnotes-comments"
+ },
+ {
+  "id": "acc_en_nando",
+  "platform": "eastfieldnotes",
+  "handle": "Nando",
+  "displayName": "Nando",
+  "created": "2021-03-03",
+  "pool": "eastfieldnotes-comments"
+ },
+ {
+  "id": "acc_en_ritab",
+  "platform": "eastfieldnotes",
+  "handle": "Rita B.",
+  "displayName": "Rita B.",
+  "created": "2022-01-15",
+  "pool": "eastfieldnotes-comments"
+ },
+ {
+  "id": "acc_en_spam1",
+  "platform": "eastfieldnotes",
+  "handle": "BrandBoost99",
+  "displayName": "BrandBoost99",
+  "created": "2024-11-02",
+  "pool": "eastfieldnotes-comments"
+ },
+ {
+  "id": "acc_en_spam2",
+  "platform": "eastfieldnotes",
+  "handle": "CheapMeds_now",
+  "displayName": "CheapMeds_now",
+  "created": "2023-07-19",
+  "pool": "eastfieldnotes-comments"
+ }
+]

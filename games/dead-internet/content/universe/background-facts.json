@@ -1,0 +1,259 @@
+[
+ {
+  "id": "bf-foundry-lofts",
+  "introducedBy": "northgate",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Foundry Lofts, Old Town, completed 2017",
+  "entity": "foundry_lofts",
+  "name": "Foundry Lofts",
+  "subject": "foundry_lofts",
+  "predicate": "completed",
+  "object": "2017",
+  "places": [
+   "Old Town"
+  ],
+  "dates": [
+   "2017"
+  ]
+ },
+ {
+  "id": "bf-heights-commons",
+  "introducedBy": "northgate",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Heights Commons, the Heights, completed 2020",
+  "entity": "heights_commons",
+  "name": "Heights Commons",
+  "subject": "heights_commons",
+  "predicate": "completed",
+  "object": "2020",
+  "places": [
+   "the Heights"
+  ],
+  "dates": [
+   "2020"
+  ]
+ },
+ {
+  "id": "bf-northpoint-landing",
+  "introducedBy": "northgate",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Northpoint Landing, Northpoint, completed 2023",
+  "entity": "northpoint_landing",
+  "name": "Northpoint Landing",
+  "subject": "northpoint_landing",
+  "predicate": "completed",
+  "object": "2023",
+  "places": [
+   "Northpoint"
+  ],
+  "dates": [
+   "2023"
+  ]
+ },
+ {
+  "id": "bf-helen-march",
+  "introducedBy": "northgate",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Helen March is Chief Financial Officer at Northgate Development",
+  "entity": "helen_march",
+  "name": "Helen March",
+  "subject": "helen_march",
+  "predicate": "works_for",
+  "object": "northgate"
+ },
+ {
+  "id": "bf-marcus-veld",
+  "introducedBy": "northgate",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Marcus Veld is VP of Development at Northgate Development",
+  "entity": "marcus_veld",
+  "name": "Marcus Veld",
+  "subject": "marcus_veld",
+  "predicate": "works_for",
+  "object": "northgate"
+ },
+ {
+  "id": "bf-ng-pollinator",
+  "introducedBy": "northgate",
+  "binds": "none",
+  "status": "claim",
+  "label": "Northgate describes a pollinator garden that has not yet been planted",
+  "subject": "northgate",
+  "predicate": "claims_pollinator_garden"
+ },
+ {
+  "id": "bf-ng-netzero",
+  "introducedBy": "northgate",
+  "binds": "none",
+  "status": "claim",
+  "label": "Northgate describes new buildings as net-zero ready",
+  "subject": "northgate",
+  "predicate": "claims_net_zero_ready"
+ },
+ {
+  "id": "bf-city-hall-address",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "City Hall is at 40 Civic Center, Port Calder; public desk open weekdays 8:30–16:30",
+  "subject": "city_council",
+  "predicate": "office_address",
+  "object": "40 Civic Center, Port Calder"
+ },
+ {
+  "id": "bf-mayor-harlan",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Denise Harlan is Mayor of Port Calder",
+  "entity": "denise_harlan",
+  "name": "Denise Harlan",
+  "subject": "denise_harlan",
+  "predicate": "office",
+  "object": "mayor"
+ },
+ {
+  "id": "bf-cm-crowley",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Tom Crowley, councilmember for Old Town",
+  "entity": "tom_crowley",
+  "name": "Tom Crowley"
+ },
+ {
+  "id": "bf-cm-okonkwo",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Sandra Okonkwo, councilmember for Northpoint",
+  "entity": "sandra_okonkwo",
+  "name": "Sandra Okonkwo"
+ },
+ {
+  "id": "bf-cm-jiao",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Ben Jiao, councilmember for Harbor",
+  "entity": "ben_jiao",
+  "name": "Ben Jiao"
+ },
+ {
+  "id": "bf-cm-voss",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Elaine Voss, councilmember for the Heights",
+  "entity": "elaine_voss",
+  "name": "Elaine Voss"
+ },
+ {
+  "id": "bf-cm-rahman",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Farid Rahman, councilmember for Eastfield",
+  "entity": "farid_rahman",
+  "name": "Farid Rahman"
+ },
+ {
+  "id": "bf-cm-bloom",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Cathy Bloom, councilmember for Old Town",
+  "entity": "cathy_bloom",
+  "name": "Cathy Bloom"
+ },
+ {
+  "id": "bf-cm-strickland",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Neil Strickland, councilmember for Northpoint",
+  "entity": "neil_strickland",
+  "name": "Neil Strickland"
+ },
+ {
+  "id": "bf-cm-perez",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Joanne Perez, councilmember for Harbor",
+  "entity": "joanne_perez",
+  "name": "Joanne Perez"
+ },
+ {
+  "id": "bf-cm-cho",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Martin Cho, councilmember for the Heights",
+  "entity": "martin_cho",
+  "name": "Martin Cho"
+ },
+ {
+  "id": "bf-cm-kenner",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Ruth Kenner, at-large councilmember",
+  "entity": "ruth_kenner",
+  "name": "Ruth Kenner"
+ },
+ {
+  "id": "bf-water-main-2026",
+  "introducedBy": "city",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Harbor Street water-main work, 10–16 March 2026 (announced on the city portal)",
+  "subject": "evt_harbor_street_water",
+  "predicate": "date_range",
+  "object": "2026-03-10/2026-03-16"
+ },
+ {
+  "id": "bf-kestrel-trucks",
+  "introducedBy": "kestrel",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Kestrel operates two trucks in addition to its van fleet",
+  "subject": "kestrel",
+  "predicate": "truck_count",
+  "object": "2"
+ },
+ {
+  "id": "bf-kestrel-ev-pilot",
+  "introducedBy": "kestrel",
+  "binds": "universe",
+  "status": "canon",
+  "label": "Kestrel is running a small electric-van pilot",
+  "subject": "kestrel",
+  "predicate": "ev_pilot",
+  "object": "true"
+ },
+ {
+  "id": "bf-bl-retention",
+  "introducedBy": "brightline",
+  "binds": "none",
+  "status": "claim",
+  "label": "Brightline claims 98% client retention and 2.4 million conversations started",
+  "subject": "brightline",
+  "predicate": "claims_retention",
+  "object": "98%"
+ },
+ {
+  "id": "bf-bl-cases",
+  "introducedBy": "brightline",
+  "binds": "none",
+  "status": "claim",
+  "label": "Brightline case studies cite large audience numbers; clients are not named",
+  "subject": "brightline",
+  "predicate": "claims_case_results"
+ }
+]

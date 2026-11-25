@@ -1,0 +1,726 @@
+[
+ {
+  "id": "W-city-0001",
+  "site": "city",
+  "page": "home",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov",
+  "date": "2026-03-01",
+  "title": "Port Calder City Portal",
+  "filler": true,
+  "source": "city",
+  "index": "full",
+  "images": [
+   "WEB0010"
+  ],
+  "mentions": [
+   "city_council"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Welcome to the City of Port Calder.\n\nThis is the civic website for residents, businesses and visitors. Pay a parking ticket, report a hole in the road, read this month's council agenda, or look up a public record.\n\nMost visited: waste collection, parking, the council calendar, and CalderFix.\n\nCity Hall is at 40 Civic Center, Port Calder. The public desk is open weekdays from 8:30 to 16:30."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0002",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents",
+  "date": "2026-03-01",
+  "title": "Residents",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Services for people who live here.\n\nWaste and recycling: portcalder.gov/residents/waste\nParking: portcalder.gov/residents/parking\nThe public library: portcalder.gov/residents/library\nCalderFix, for holes in the road, broken lights and the rest of the small things that should not wait for a meeting: portcalder.gov/residents/calderfix\n\nFor council business, use the Council section. For records, use Records."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0003",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents/waste",
+  "date": "2026-03-08",
+  "title": "Waste and recycling",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Recycling pickup moves to Tuesday on the east side while the new trucks are fitted. West and central routes are unchanged.\n\nPut the recycling box out by 7am. Glass goes in the box, not the bag. Food waste is collected weekly on your rubbish day.\n\nA map of routes and a reminder of holiday changes is on the collection calendar."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0004",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents/waste/collection",
+  "date": "2026-03-01",
+  "title": "Collection calendar",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Ordinary weeks: rubbish and food waste on your usual day; recycling as marked on the map.\n\nEast side recycling: Tuesdays, starting the week of 9 March 2026, until the new trucks are in service. We will put a notice here when the Monday run returns.\n\nChristmas and New Year dates are published in December. If a public holiday falls on your day, collection moves to the next working day."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0005",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents/waste/bulk",
+  "date": "2025-11-01",
+  "title": "Bulk waste",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Sofas, fridges and other large items are not collected with ordinary rubbish.\n\nBook a bulk collection online, or call the public desk. There is no charge for two items a year from a household. Extra items are charged at the rate on the booking form.\n\nLeave items at the kerb the evening before, not in the alley, and not blocking a bike lane."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0006",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents/parking",
+  "date": "2026-03-01",
+  "title": "Parking",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder has numbered parking zones. A resident permit is valid only in the zone printed on it.\n\nPay at the meter, in the city parking app, or at the desk in City Hall. The app takes the same tariffs as the meter.\n\nHarbor Street has temporary restrictions while the spring market is set up. See the notice on that page."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0007",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents/parking/harbor-street",
+  "date": "2026-03-08",
+  "title": "Harbor Street parking restrictions",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Harbor Street parking restrictions begin on Wednesday, 11 March 2026, for the spring market setup.\n\nNo parking on the market side between 2nd and 5th, 8pm Tuesday until 8pm Sunday, for the weeks of the market. Loading bays stay loading bays.\n\nVehicles left in a closed bay will be moved. The market office can tell you where they have gone."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0008",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents/library",
+  "date": "2026-03-01",
+  "title": "Library",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "eastfield"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder Public Library is a city service with its own website, catalogue and opening times.\n\nThe Eastfield branch continues to offer a tax help desk this spring, 10am to 2pm on Tuesdays until April, as advertised in the local paper.\n\nFor fines, holds and e-readers, please use the library's own site. This portal does not take those payments."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0009",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/residents/calderfix",
+  "date": "2025-11-17",
+  "title": "CalderFix",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "CalderFix is how you report a hole in the road, a dead street light, a blocked drain, or graffiti on city property.\n\nFill in the form, add a photograph if you have one, and give the nearest crossing or a lamp-post number. You will get a reference. Most reports are seen within five working days.\n\nCalderFix is not for emergencies. Gas, fire and injury go to the usual numbers.\n\nA short guide was also summarised in the Daily Record on 17 November 2025."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0010",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council",
+  "date": "2026-03-02",
+  "title": "City Council",
+  "filler": true,
+  "source": "city",
+  "index": "full",
+  "mentions": [
+   "city_council",
+   "ana",
+   "denise_harlan"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Port Calder City Council is the mayor and eleven voting members.\n\nDenise Harlan is Mayor: portcalder.gov/council/mayor. The members, by district, are listed below. Each sitting member has a short page; the Eastfield page for Councilmember Ana Ruiz is kept with the others: portcalder.gov/council/ana-ruiz.\n\nOld Town: Tom Crowley (portcalder.gov/council/tom-crowley), Cathy Bloom (portcalder.gov/council/cathy-bloom). Northpoint: Sandra Okonkwo (portcalder.gov/council/sandra-okonkwo), Neil Strickland (portcalder.gov/council/neil-strickland). Harbor: Ben Jiao (portcalder.gov/council/ben-jiao), Joanne Perez (portcalder.gov/council/joanne-perez). The Heights: Elaine Voss (portcalder.gov/council/elaine-voss), Martin Cho (portcalder.gov/council/martin-cho). Eastfield: Ana Ruiz, Farid Rahman (portcalder.gov/council/farid-rahman). At-large: Ruth Kenner (portcalder.gov/council/ruth-kenner).\n\nThe meeting calendar is at portcalder.gov/council/calendar. Agendas: portcalder.gov/council/agendas. Minutes: portcalder.gov/council/minutes. Ordinances: portcalder.gov/council/ordinances.\n\nMeetings are open and are streamed from this site."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0011",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/mayor",
+  "date": "2026-03-02",
+  "title": "Mayor Denise Harlan",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "denise_harlan",
+   "city_council"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Denise Harlan is the Mayor of Port Calder.\n\nThe mayor chairs the council, represents the city, and oversees the civic offices. Surgery times are published on the calendar. Write to the mayor's office at City Hall, 40 Civic Center, or use the contact form.\n\nThis page is a civic listing. It is not a campaign site."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0012",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/tom-crowley",
+  "date": "2026-03-02",
+  "title": "Councilmember Tom Crowley — Old Town",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "tom_crowley"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Tom Crowley represents Old Town on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0013",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/sandra-okonkwo",
+  "date": "2026-03-02",
+  "title": "Councilmember Sandra Okonkwo — Northpoint",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "sandra_okonkwo"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Sandra Okonkwo represents Northpoint on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0014",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/ben-jiao",
+  "date": "2026-03-02",
+  "title": "Councilmember Ben Jiao — Harbor",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "ben_jiao"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Ben Jiao represents Harbor on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0015",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/elaine-voss",
+  "date": "2026-03-02",
+  "title": "Councilmember Elaine Voss — the Heights",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "elaine_voss"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Elaine Voss represents the Heights on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0016",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/farid-rahman",
+  "date": "2026-03-02",
+  "title": "Councilmember Farid Rahman — Eastfield",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "farid_rahman"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Farid Rahman represents Eastfield on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0017",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/cathy-bloom",
+  "date": "2026-03-02",
+  "title": "Councilmember Cathy Bloom — Old Town",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "cathy_bloom"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Cathy Bloom represents Old Town on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0018",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/neil-strickland",
+  "date": "2026-03-02",
+  "title": "Councilmember Neil Strickland — Northpoint",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "neil_strickland"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Neil Strickland represents Northpoint on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0019",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/joanne-perez",
+  "date": "2026-03-02",
+  "title": "Councilmember Joanne Perez — Harbor",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "joanne_perez"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Joanne Perez represents Harbor on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0020",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/martin-cho",
+  "date": "2026-03-02",
+  "title": "Councilmember Martin Cho — the Heights",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "martin_cho"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Martin Cho represents the Heights on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0021",
+  "site": "city",
+  "page": "person",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/ruth-kenner",
+  "date": "2026-03-02",
+  "title": "Councilmember Ruth Kenner — At-large",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "ruth_kenner"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Ruth Kenner represents the city at large on the Port Calder City Council.\n\nWrite to the member in care of City Hall, 40 Civic Center, or speak during public comment at an ordinary meeting. Individual casework is handled through the member's office, not through this page.\n\nThis is a civic listing."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0022",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/agendas",
+  "date": "2026-03-01",
+  "title": "Agendas",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "evt_vote",
+   "waterfront"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Agendas are posted before each ordinary meeting. The most recent pack is for Monday, 16 March 2026, 6pm, Council Chamber.\n\nItems on that agenda include the sidewalk repair budget, a new lease for the harbor kiosk, and Ordinance 26-031, the Eastfield Waterfront rezoning.\n\nOlder agendas are kept as a list of documents. They are not minutes; minutes have their own page."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0023",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/agendas/2026-03-16",
+  "date": "2026-03-09",
+  "title": "Agenda: 16 March 2026",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "evt_vote",
+   "waterfront"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder City Council. Ordinary meeting, Monday 16 March 2026, 6pm, Council Chamber, 40 Civic Center. Open to the public. Streamed on this site.\n\n1. Apologies and declarations.\n2. Minutes of the previous meeting.\n3. Public comment (three minutes each, register with the clerk).\n4. Sidewalk repair budget, 2026–27.\n5. Lease of the harbor kiosk.\n6. Ordinance 26-031, Eastfield Waterfront rezoning — first consideration.\n7. Any other ordinary business.\n\nPapers for item 6 are with the ordinance page."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0024",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/minutes",
+  "date": "2026-03-01",
+  "title": "Minutes",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Minutes are published after the council approves them, usually at the following ordinary meeting.\n\nThe most recent approved set is from 16 February 2026. Minutes are a record of decisions, not a transcript.\n\nIf you asked a question in public comment and do not see it here, that is normal. Comments are noted; they are not always written out."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0025",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/minutes/2026-02-16",
+  "date": "2026-03-02",
+  "title": "Minutes: 16 February 2026",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Approved minutes, ordinary meeting of 16 February 2026.\n\nPresent: the Mayor and ten members. One apology.\n\nThe minutes of January were agreed. The sidewalk programme was deferred to March so that costings could be revised. A report on the spring market was noted. No ordinance was moved.\n\nPublic comment: four speakers, on buses, on parking, and two on the condition of the Northpoint ferry path.\n\nThe meeting closed at 8:10pm."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0026",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/council/ordinances",
+  "date": "2026-03-01",
+  "title": "Ordinances",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council",
+   "waterfront"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Ordinances are the city's local laws. Drafts and adopted texts are posted here when the clerk releases them.\n\nCurrently before the council: Ordinance 26-031, the Eastfield Waterfront rezoning. The staff report summary is at portcalder.gov/council/ordinances/26-031.\n\nAdopted ordinances from the last five years can be requested from the clerk if they are not yet scanned."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0027",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/notices",
+  "date": "2026-03-09",
+  "title": "Notices",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Official notices to residents: works on the highway, hearings, and civic programmes.\n\nCurrent: Harbor Street water-main work (10–16 March), a hearing on sidewalk repairs, and summer jobs for young people."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0028",
+  "site": "city",
+  "page": "notice",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/notices/harbor-street-water",
+  "date": "2026-03-03",
+  "title": "Harbor Street water-main work, 10–16 March",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The city will replace a section of water main on Harbor Street between 2nd and 4th, from Tuesday 10 March to Monday 16 March 2026.\n\nExpect lane closures, noisy work in the early morning, and short interruptions to water in the immediately adjoining blocks. We will put boards out the day before each shut-off.\n\nBusinesses on the street should take the usual precautions. The works desk is 40 Civic Center, weekdays 8:30–16:30."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0029",
+  "site": "city",
+  "page": "notice",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/notices/sidewalk-hearing",
+  "date": "2026-02-24",
+  "title": "Public hearing: sidewalk repair budget",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A public hearing on the 2026–27 sidewalk repair budget will be held in the Council Chamber at 6pm on 16 March 2026, as part of the ordinary meeting.\n\nThe papers describe which streets are proposed for the first year of work. Written comments may be sent to the clerk until noon on the day of the meeting."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0030",
+  "site": "city",
+  "page": "notice",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/notices/summer-jobs",
+  "date": "2026-02-16",
+  "title": "Summer jobs for young people",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The city will again offer paid summer work for residents aged 16 to 22: parks, the library's book packing, and the festival site crew.\n\nApplications open on 1 April 2026 and close on 30 April. The form will be on this page. You must live in Port Calder and be able to work July and August.\n\nThis is a civic programme, not a private placement."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0031",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/records",
+  "date": "2026-03-01",
+  "title": "Records",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Public records held by the city.\n\nYou can already look up a business registration (portcalder.gov/business/brightline-media-llc), a lobbying disclosure (portcalder.gov/lobbying/2025/northgate), and certain police reports that have been released (portcalder.gov/records/pd-2025-07-0211). Register searches stay on their own pages and keep the same layout as the clerk's system.\n\nFor a record that is not online, write to the clerk and name the document as precisely as you can. Some records are redacted. Some are refused. The clerk will say which, and why."
+   }
+  ]
+ },
+ {
+  "id": "W-city-0032",
+  "site": "city",
+  "page": "page",
+  "type": "page",
+  "platform": "cityportal",
+  "url": "portcalder.gov/contact",
+  "date": "2026-03-01",
+  "title": "Contact",
+  "filler": true,
+  "source": "city",
+  "index": "weak",
+  "mentions": [
+   "city_council"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "City Hall, 40 Civic Center, Port Calder.\n\nThe public desk is open Monday to Friday, 8:30 to 16:30, closed on public holidays. The council chamber is on the first floor.\n\nSwitchboard and general enquiries go through the desk. CalderFix is for street reports. The clerk handles records and agendas.\n\nPlease do not send the same question to every member of the council. It does not make an answer arrive sooner."
+   }
+  ]
+ }
+]
