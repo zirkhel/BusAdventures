@@ -93,13 +93,13 @@ Approved new canon from this round: the Port Calder lighthouse was automated in 
 
 ## Legacy, personal, landing and background sites (W6)
 
-Implemented in [PR #80](https://github.com/zirkhel/BusAdventures/pull/80) (not merged). New pages: Salty's 3, HarborDesk 2, Eastfield Community Garden 3, AIWriterPro 2, Harbor Dental 5, Calder Transit 6, Open Filings 1, Port Calder Public Library 8, Calder Power 6, Calder Credit Union 5, Walt's page 5, Harbor Public Affairs 1, portcalderjazz.com cache 3 (50 in total). Existing ids, URLs and wording are unchanged, except the approved rename of `corp-registries.example` to `openfilings.org`. Hidden pages stay hidden.
+Merged as [PR #80](https://github.com/zirkhel/BusAdventures/pull/80) (`4e5bff8`). New pages: Salty's 3, HarborDesk 2, Eastfield Community Garden 3, AIWriterPro 2, Harbor Dental 5, Calder Transit 6, Open Filings 1, Port Calder Public Library 8, Calder Power 6, Calder Credit Union 5, Walt's page 5, Harbor Public Affairs 1, portcalderjazz.com cache 3 (50 in total). Existing ids, URLs and wording are unchanged, except the approved rename of `corp-registries.example` to `openfilings.org`. Hidden pages stay hidden.
 
 New sites from the approved §4 list: `pclibrary.org`, `calderpower.com`, `caldercu.com`, `harborpa.com`, and Walt's page on the assigned free host `waltbrennan.calderweb.net`. The library staff page is the approved alternative path in: a 2024 cached version lists Mara Quinn and Priya Shah, with no new personal facts; the live 2026 page does not list Mara. Kestrel has a cached 2014 home and About (live wording unchanged). Salty's live design from 1 March 2026 shows a new banner tagline. The jazz domain remains parked when visited live.
 
 `corp-registries.example` is now an alias of `openfilings.org`. Typing or searching the old host still opens Open Filings / A63. Meridian is not linked from the public nav.
 
-New invented names, hours and prices are recorded as `claim` in `background-facts.json` and wait on Anders' confirmation. Facts already in the papers (library cut, e-readers, tax help, the February outage, smart meters, the credit union since 1952, Walter Brennan's death, Lou Benn) are recorded as `canon`.
+W6 invented names, hours and prices were approved on 25 November 2026 and are now canon: library weekday hours and additional staff (Tomás Rinaldi, Helen Cho, June Ellery), the Harbor Dental team, hours and parking, HarborDesk Dock Road rooms and Plus/Studio prices, and the Open Filings domain. Facts already in the papers (library cut, e-readers, tax help, the February outage, smart meters, the credit union since 1952, Walter Brennan's death, Lou Benn) were already recorded as `canon`.
 
 ## Test-only domains
 
