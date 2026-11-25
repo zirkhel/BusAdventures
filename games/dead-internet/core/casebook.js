@@ -15,6 +15,7 @@ import { applyEffects, fire } from "./rules.js";
 import { nameOf, str } from "./world.js";
 import { isCase, soleCase } from "./cases.js";
 import { apparentSource, visibleRefsOfEvidence } from "./provenance.js";
+import { forgetInQuestions } from "./workbench.js";
 
 // ── Evidence ────────────────────────────────────────────────────────────────
 
@@ -63,7 +64,8 @@ export function saveEvidence(g, ref) {
 export function removeEvidence(g, id) {
   const s = g.s;
   s.evidence = s.evidence.filter(e => e.id !== id);
-  for (const h of s.hypotheses) h.evidence = h.evidence.filter(x => x !== id);
+  for (const h of s.hypotheses) { h.evidence = h.evidence.filter(x => x !== id); h.against = asArray(h.against).filter(x => x !== id); }
+  forgetInQuestions(g, "evidence", id);
   return { ok: true };
 }
 
@@ -102,35 +104,102 @@ function checkTriple(g, h) {
   return null;
 }
 
+// A theory is the player's own words (`title`) and/or a structured claim
+// [subject] [predicate] [object]. Only a structured claim can be published (see publish).
+// `evidence` is the evidence the player counts FOR it (unchanged from earlier saves, and the
+// only list scoring reads); `against` is evidence the player counts against it. Status,
+// its history and alternatives are the player's own judgments: no rule or score reads them.
+
+export const THEORY_STATUSES = ["open", "convinced", "rejected"];
+
+/** Whether a theory has a structured claim (and so can be published). */
+export function isStructured(h) { return !!(h && h.predicate); }
+
+const wantsTriple = h => h.subject != null || h.predicate != null || h.object != null;
+
 export function createHypothesis(g, h) {
-  const p = g.w.predicates.get(h.predicate);
-  const hyp = { id: `H${g.s.nextId++}`, subject: h.subject, predicate: h.predicate, object: p?.arity === 2 ? h.object : null,
-    evidence: [], note: h.note ?? "", day: g.s.day, cases: [] };
-  const err = checkTriple(g, hyp);
+  const title = String(h.title ?? "").trim();
+  const structured = wantsTriple(h);
+  const p = structured ? g.w.predicates.get(h.predicate) : null;
+  const hyp = { id: `H${g.s.nextId++}`, title, subject: structured ? h.subject ?? null : null, predicate: structured ? h.predicate ?? null : null,
+    object: p?.arity === 2 ? h.object : null, evidence: [], against: [], note: h.note ?? "", day: g.s.day, cases: [],
+    status: "open", statusLog: [{ day: g.s.day, status: "open" }], alternatives: [] };
+  if (!structured && !title) return { error: "empty_theory" };
+  const err = structured ? checkTriple(g, hyp) : null;
   if (err) return { error: err };
-  for (const id of asArray(h.evidence)) if (g.s.evidence.some(e => e.id === id)) hyp.evidence.push(id);
+  for (const id of asArray(h.evidence)) if (g.s.evidence.some(e => e.id === id) && !hyp.evidence.includes(id)) hyp.evidence.push(id);
+  for (const id of asArray(h.against)) if (g.s.evidence.some(e => e.id === id) && !hyp.evidence.includes(id) && !hyp.against.includes(id)) hyp.against.push(id);
   g.s.hypotheses.push(hyp);
   return { ok: true, id: hyp.id };
 }
 
+/**
+ * Edit the player's words, note or structured claim. `predicate: null` removes the structured
+ * claim (only if the theory has its own words). Evidence, status and alternatives have their own actions.
+ */
 export function updateHypothesis(g, id, patch) {
   const h = g.s.hypotheses.find(h => h.id === id);
   if (!h) return { error: "unknown_hypothesis" };
-  const next = { ...h, ...patch };
-  const err = checkTriple(g, next);
+  const next = { ...h };
+  if ("title" in patch) next.title = String(patch.title ?? "").trim();
+  if ("note" in patch) next.note = String(patch.note ?? "");
+  if ("predicate" in patch && patch.predicate == null) { next.subject = null; next.predicate = null; next.object = null; }
+  else for (const k of ["subject", "predicate", "object"]) if (k in patch) next[k] = patch[k] ?? null;
+  if (isStructured(next) && g.w.predicates.get(next.predicate)?.arity !== 2) next.object = null;
+  if (!isStructured(next) && (next.subject != null || next.object != null)) return { error: "unknown_predicate" };
+  if (!isStructured(next) && !next.title) return { error: "empty_theory" };
+  const err = isStructured(next) ? checkTriple(g, next) : null;
   if (err) return { error: err };
   Object.assign(h, next);
   return { ok: true };
 }
 
-export function deleteHypothesis(g, id) { g.s.hypotheses = g.s.hypotheses.filter(h => h.id !== id); return { ok: true }; }
+export function deleteHypothesis(g, id) {
+  g.s.hypotheses = g.s.hypotheses.filter(h => h.id !== id);
+  for (const h of g.s.hypotheses) h.alternatives = asArray(h.alternatives).filter(x => x !== id);
+  forgetInQuestions(g, "theories", id);
+  return { ok: true };
+}
 
-export function linkEvidence(g, hypId, evId, on = true) {
+/**
+ * Link evidence to a theory for or against it (or unlink with on=false). A piece of evidence is
+ * either for or against one theory, never both: linking it one way removes the other.
+ */
+export function linkEvidence(g, hypId, evId, on = true, stance = "supports") {
   const h = g.s.hypotheses.find(h => h.id === hypId);
   if (!h || !g.s.evidence.some(e => e.id === evId)) return { error: "unknown" };
+  if (on && stance !== "supports" && stance !== "contradicts") return { error: "bad_stance" };
   h.evidence = h.evidence.filter(x => x !== evId);
-  if (on) h.evidence.push(evId);
+  h.against = asArray(h.against).filter(x => x !== evId);
+  if (on) (stance === "contradicts" ? h.against : h.evidence).push(evId);
   return { ok: true };
+}
+
+/** The player's own status for a theory. Every change is logged with the day. */
+export function setTheoryStatus(g, id, status) {
+  const h = g.s.hypotheses.find(h => h.id === id);
+  if (!h) return { error: "unknown_hypothesis" };
+  if (!THEORY_STATUSES.includes(status)) return { error: "bad_status" };
+  if (h.status === status) return { ok: true, unchanged: true };
+  h.status = status;
+  h.statusLog.push({ day: g.s.day, status });
+  return { ok: true };
+}
+
+/** Mark two theories as alternative explanations of each other (stored once, shown on both). */
+export function linkAlternative(g, aId, bId, on = true) {
+  const a = g.s.hypotheses.find(h => h.id === aId), b = g.s.hypotheses.find(h => h.id === bId);
+  if (!a || !b || a === b) return { error: "unknown_hypothesis" };
+  a.alternatives = a.alternatives.filter(x => x !== bId);
+  b.alternatives = b.alternatives.filter(x => x !== aId);
+  if (on) a.alternatives.push(bId);
+  return { ok: true };
+}
+
+/** Alternatives of a theory, in both directions. */
+function alternativesOf(g, h) {
+  return [...new Set([...asArray(h.alternatives), ...g.s.hypotheses.filter(x => asArray(x.alternatives).includes(h.id)).map(x => x.id)])]
+    .filter(id => g.s.hypotheses.some(x => x.id === id));
 }
 
 export function addNote(g, text, from, about) {
@@ -177,9 +246,31 @@ export function evidenceAbout(g, e) {
   return { about, source: src.key, sourceLabel: src.label };
 }
 
+/** The structured claim as a sentence. A theory without one falls back to the player's words. */
 export function hypothesisLabel(g, h) {
+  if (!isStructured(h)) return String(h.title || "");
   const p = g.w.predicates.get(h.predicate);
   return fill(p?.template ?? "{subject} {predicate} {object}", { subject: nameOf(g.w, h.subject), object: nameOf(g.w, h.object), predicate: p?.label ?? h.predicate });
+}
+
+/** How a theory reads in the Casebook: the player's words first, otherwise the structured claim. */
+export function theoryLabel(g, h) { return h.title || hypothesisLabel(g, h); }
+
+/** Evidence count and visibly distinct sources for a list of evidence ids. */
+function counts(g, ids) {
+  const items = asArray(ids).map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
+  return { n: items.length, sources: new Set(items.map(e => apparentSource(g, e).key)).size };
+}
+
+/** Every visible source among the saved evidence, for pickers: key, label, how much evidence. */
+export function visibleSources(g) {
+  const by = new Map();
+  for (const e of g.s.evidence) {
+    const src = apparentSource(g, e);
+    if (!by.has(src.key)) by.set(src.key, { key: src.key, label: src.label, count: 0 });
+    by.get(src.key).count++;
+  }
+  return [...by.values()];
 }
 
 /** What the casebook shows: counts only, never an assessment. */
@@ -188,10 +279,13 @@ export function casebookView(g) {
     evidence: g.s.evidence.map(e => ({ ...e })),
     notes: g.s.notes.map(n => ({ ...n })),
     hypotheses: g.s.hypotheses.map(h => {
-      const items = h.evidence.map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
-      const sources = new Set(items.map(e => apparentSource(g, e).key));
-      return { ...h, label: hypothesisLabel(g, h), evidenceCount: items.length, sourceCount: sources.size };
+      const forC = counts(g, h.evidence), against = counts(g, h.against);
+      return { ...h, label: theoryLabel(g, h), structured: isStructured(h), claimLabel: isStructured(h) ? hypothesisLabel(g, h) : null,
+        evidenceCount: forC.n, sourceCount: forC.sources, againstCount: against.n, againstSourceCount: against.sources,
+        alternatives: alternativesOf(g, h), statusLog: h.statusLog.map(x => ({ ...x })) };
     }),
+    // The player's own questions (core/workbench.js). Only ever written by the player.
+    questions: (g.s.questions || []).map(q => ({ ...q, links: structuredClone(q.links), statusLog: q.statusLog.map(x => ({ ...x })) })),
     // The player's own timeline, for reports later. Events carry only what the player entered.
     timeline: (g.s.timeline || []).map(e => ({ ...e })),
     reports: g.s.reports.map(r => ({ id: r.id, day: r.day, case: r.case, channel: r.channel, items: r.items.map(i => ({ label: i.label })),
@@ -311,7 +405,7 @@ export function review(g, channelId, hypIds, opts = {}) {
   const lines = [];
   for (const id of hypIds) {
     const h = g.s.hypotheses.find(h => h.id === id);
-    if (!h) continue;
+    if (!h || !isStructured(h)) continue;
     const sup = apparentSupportOf(g, h, caseId);
     const c = sup.claim ? g.w.claims.get(sup.claim) : null;
     const pred = g.w.predicates.get(h.predicate);
@@ -348,7 +442,8 @@ export function publish(g, channelId, hypIds, opts = {}) {
   if (!caseId) return { error: "no_case" };
   if (!isCase(g, caseId)) return { error: "unknown_case" };
   if ((ch.case && ch.case !== caseId) || (ch.if && !g.check(ch.if))) return { error: "channel_unavailable" };
-  const hyps = asArray(hypIds).map(id => s.hypotheses.find(h => h.id === id)).filter(Boolean);
+  // Only theories with a structured claim can be published; the player's own words stay in the Casebook.
+  const hyps = asArray(hypIds).map(id => s.hypotheses.find(h => h.id === id)).filter(isStructured);
   const evs = asArray(opts.events).map(id => s.timeline.find(e => e.id === id)).filter(Boolean);
   if (!hyps.length) return { error: "empty_report" };
   if (ch.reviewer && (s.trust[ch.reviewer] ?? 0) < (ch.minTrust ?? 0)) return { refused: true, lines: [{ text: str(w, `review.${ch.reviewer}.noTrust`) }] };

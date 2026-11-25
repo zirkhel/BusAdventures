@@ -3,7 +3,7 @@
 // Saves are plain JSON with a format tag and a version number, so they can be exported,
 // imported and migrated when the state shape or the content changes.
 
-import { migrateEvidence } from "./workbench.js";
+import { migrateEvidence, migrateTheories, QUESTION_LINKS } from "./workbench.js";
 import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
 import { migrateCases, migrateCaseStates } from "./cases.js";
@@ -26,6 +26,8 @@ const MIGRATIONS = {
   6: (s, w) => { migrateEvidence(s, w); s.saveVersion = 7; return s; },
   // 7 → 8: Browser bookmarks and text size. Forward is session-only and starts empty.
   7: s => { migrateBrowser(s); s.saveVersion = 8; return s; },
+  // 8 → 9: theories for/against with status history and alternatives; questions in Notes.
+  8: s => { migrateTheories(s); s.saveVersion = 9; return s; },
   // 5 → 6: media. No follows, likes or "not interested" yet.
   5: s => { migrateMedia(s); s.saveVersion = 6; return s; },
 };
@@ -60,18 +62,28 @@ export function deserialize(w, text) {
     if (!ok) drop("evidence", e.id);
     return ok;
   });
-  for (const h of s.hypotheses) h.evidence = h.evidence.filter(id => s.evidence.some(e => e.id === id));
+  const hasEv = id => s.evidence.some(e => e.id === id);
+  for (const h of s.hypotheses) { h.evidence = h.evidence.filter(hasEv); h.against = h.against.filter(hasEv); }
   s.hypotheses = s.hypotheses.filter(h => {
-    const ok = w.predicates.has(h.predicate);
-    if (!ok) drop("hypothesis", h.id);
-    return ok;
+    if (!h.predicate || w.predicates.has(h.predicate)) return true;
+    // A relation that no longer exists: keep the player's own words, drop the structured claim.
+    if (h.title) { h.subject = null; h.predicate = null; h.object = null; warnings.push(`unstructured hypothesis ${h.id}`); return true; }
+    drop("hypothesis", h.id);
+    return false;
   });
+  for (const h of s.hypotheses) h.alternatives = h.alternatives.filter(id => id !== h.id && s.hypotheses.some(x => x.id === id));
+  for (const q of s.questions) {
+    for (const k of QUESTION_LINKS) q.links[k] = Array.isArray(q.links?.[k]) ? q.links[k] : [];
+    q.links.evidence = q.links.evidence.filter(hasEv);
+    q.links.theories = q.links.theories.filter(id => s.hypotheses.some(h => h.id === id));
+    q.links.topics = q.links.topics.filter(id => w.entities.has(id) || w.accounts.has(id));
+  }
   for (const ev of s.timeline || []) {
     ev.evidence = ev.evidence.filter(x => s.evidence.some(e => e.id === x.id));
     ev.theories = ev.theories.filter(id => s.hypotheses.some(h => h.id === id));
     ev.about = ev.about.filter(id => w.entities.has(id) || w.accounts.has(id));
   }
-  for (const k of ["evidence", "hypotheses", "notes", "timeline"])
+  for (const k of ["evidence", "hypotheses", "notes", "timeline", "questions"])
     for (const x of s[k] || []) x.cases = (Array.isArray(x.cases) ? x.cases : []).filter(id => w.mysteries.has(id));
   for (const [k, ok] of [["follows", id => w.accounts.has(id)], ["likes", id => w.artifacts.has(id)], ["notInterested", id => w.artifacts.has(id)]])
     for (const id of Object.keys(s.media[k])) if (!ok(id)) { delete s.media[k][id]; drop(k, id); }

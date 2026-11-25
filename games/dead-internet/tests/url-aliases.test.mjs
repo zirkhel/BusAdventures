@@ -43,7 +43,9 @@ test("a version 8 save with a bookmark and evidence on the old address still ope
   g.s.browser.bookmarks.push({ url: oldUrl, title: "Festival weekend", artifact: id, version: opened.versionId, day: 1 });
   g.s.browser.bookmarks.push({ url: MOVED["W-eastfieldnotes-0016"][0], title: "The dog run under Harbor Festival", day: 1 });
   g.s.browser.bookmarks.push({ url: newUrl, title: "Festival weekend (twice)", artifact: id, day: 1 });
-  const text = serialize(g.s);
+  // Written as the version 8 format (before theory status and questions, save v9).
+  const s8 = structuredClone(g.s); s8.saveVersion = 8; delete s8.questions;
+  const text = serialize(s8);
   assert.equal(JSON.parse(text).saveVersion, 8);
   const { state, warnings } = deserialize(world, text);
   assert.deepEqual(warnings.filter(w => /dropped/.test(w)), []);
