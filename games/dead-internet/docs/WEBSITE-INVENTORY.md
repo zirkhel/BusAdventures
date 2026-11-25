@@ -16,7 +16,7 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `dailyrecord` | dailyrecord-pc.com | live | articles + archive (news app) | Newspaper URLs |
 | `unfiltered` | unfiltered.news | live | articles (news app) | Newspaper URLs |
 | `eastfieldnotes` | eastfieldnotes.blog | live | A14 front (2 versions), A15 (cache-only), A33, A34, A36, About + 36 W4 posts (`W-eastfieldnotes-*`) | Mara's blog; theme change 22 Oct 2025. New posts are single-version; last post remains A33 (14 May 2025) |
-| `brightline` | brightlinemedia.co | live | A19, A20, A21, A42 (hidden), plus 19 W4 pages in the mystery pack (`W-brightline-*`) | Agency site. Public nav omits Statement. Case studies stay anonymous |
+| `brightline` | brightlinemedia.co | live | A19, A20, A21, A42 (hidden), 19 W4 pages plus W7 Insights post (`W-brightline-0020`). A20 has a 2024 cached team list | Agency site (`corporate` / `agency`). Footer credits Lumen by Pixelfold. Case studies stay anonymous. No cache before 2023 |
 | `brightline_portal` | portal.bl-ops.net | live (login) | A24 | Client portal |
 | `northgate` | northgatedev.com | live | A40 project, A41 statement (hidden until shown), plus 18 W4 pages (`W-northgate-*`) | Paul's «our website». Projects, leadership, newsroom, sustainability, investors |
 | `kestrel` | kestrel-logistics.com | live | A38 plus 16 W4 pages (`W-kestrel-*`) | Client list, fleet, careers, news (Biscuit retold, late-delivery note without a fire cause). Lou Adair is never named |
@@ -25,7 +25,7 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `facelessstock` | facelessstock.com | live | A31, A31B (public samples) plus W5 home, pricing, license, how it works, library wall (`W-faceless-*`) | Synthetic portraits. Template `landing` / `saas`. Library is a sign-in wall without `meta.logins` |
 | `docshare` | docshare.link | live | existing documents (A18, A22, DS-UF-*, DS-UF-02 hidden) plus W5 marketing home, 4 public filler docs, 3 expired links (`W-docshare-*`) | File links. Template `document` / `viewer`. Home does not catalogue evidence/leaks |
 | `calderpedia` | calderpedia.org | live | B17, A66 plus W5 main page, 22 new articles, 5 history, 3 talk (`W-calderpedia-*`; 24 articles in total) | Wiki. Template `wiki` / `standard`. British spelling. No IMG02 |
-| `harbordesk` | harbordesk.co | live | B18 plus W6 Pricing and Locations (`W-harbordesk-*`) | Virtual office. Template `landing` / `smallbiz`. Locations: 18 Harbor Street and Dock Road |
+| `harbordesk` | harbordesk.co | live | B18 plus W6 Pricing and Locations, W7 Testimonials and Who's here (`W-harbordesk-*`) | Virtual office. Testimonials use stock portrait IMG06A (Faceless #44812). Who's here lists four innocent firms at 18 Harbor Street |
 | `saltys` | saltys-portcalder.com | live | B19 plus W6 Menu, Hours, Our story (`W-saltys-*`) | Fish bar. Template `legacy` / `2008`. New banner tagline from 1 March 2026; B19 wording unchanged |
 | `eastfieldgarden` | eastfieldgarden.org | live | B20 plus W6 Plots, Work days, Committee (`W-eastfieldgarden-*`) | Garden. Template `personal` / `club`. IMG05O on the plots page |
 | `aiwriterpro` | aiwriterpro.app | live | B23 plus W6 Pricing and FAQ (`W-aiwriterpro-*`) | Landing. Template `landing` / `saas` |
@@ -42,6 +42,9 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `caldercu` | caldercu.com | live | W6 home, about, 4th Street, accounts, contact (`W-caldercu-*`) | Credit union since 1952, Eastfield branch on 4th Street (already in a sponsored article). Template `corporate` / `classic-2015` |
 | `walts` | waltbrennan.calderweb.net | live (last updated 2009) | W6 home, guestbook, duck race, Festival 2008, links (`W-walts-*`) | Walt Brennan's Harbor Festival page on an assigned free host. Template `personal` / `geocities`. Frozen 12 June 2009. Does not mention his 2025 death |
 | `harborpa` | harborpa.com | live | W6 home (`W-harborpa-0001`) | Harbor Public Affairs, named in the lobby register. Template `corporate` / `consultancy`. One simple page, no client list |
+| `havenmutual` | havenmutual.com | live | W7 home, cover, contact (`W-havenmutual-*`) | Insurance firm in Old Town. Template `corporate` / `agency`. Leaflet uses stock portrait IMG06B (Faceless #44812). Office at 9 Market Row is a `claim` |
+| `quayledger` | quayledger.com | live | W7 home, contact (`W-quayledger-*`) | Bookkeeping firm, Suite 110, 18 Harbor Street. Template `landing` / `smallbiz`. Tenant listing is a `claim` |
+| `northlamp` | northlamp.studio | live | W7 home, work (`W-northlamp-*`) | Sign and type studio, Suite 210, 18 Harbor Street. Template `landing` / `smallbiz`. Footer credits Lumen by Pixelfold. Tenant listing is a `claim` |
 
 ## Email-only domains (not websites)
 
@@ -100,6 +103,16 @@ New sites from the approved §4 list: `pclibrary.org`, `calderpower.com`, `calde
 `corp-registries.example` is now an alias of `openfilings.org`. Typing or searching the old host still opens Open Filings / A63. Meridian is not linked from the public nav.
 
 W6 invented names, hours and prices were approved on 25 November 2026 and are now canon: library weekday hours and additional staff (Tomás Rinaldi, Helen Cho, June Ellery), the Harbor Dental team, hours and parking, HarborDesk Dock Road rooms and Plus/Studio prices, and the Open Filings domain. Facts already in the papers (library cut, e-readers, tax help, the February outage, smart meters, the credit union since 1952, Walter Brennan's death, Lou Benn) were already recorded as `canon`.
+
+## Design as a clue (W7)
+
+Implemented on `websites-w7` (not merged). Anders approved the step on 25 November 2026. New pages: HarborDesk 2, Haven Mutual 3, Quay Ledger 2, North Lamp Studio 2, Brightline Insights 1, two Garden persona posts (12 in total). Existing ids, URLs and live wording are unchanged, including A20 v1, B18, A31 and A34 v2. Hidden pages stay hidden.
+
+New independent sites: `havenmutual.com` (corporate / `agency`, so that variant is not unique to Brightline), `quayledger.com` and `northlamp.studio`. Two further 18 Harbor Street firms, Amber Fern Tutoring and Gull Wing Surveys, are named on HarborDesk without a URL. Brightline remains at Suite 400.
+
+IMG06A and IMG06B are purchased copies of IMG06S. Image search from the HarborDesk testimonial reaches Faceless #44812, Haven Mutual and Calvin's profile. IMG01/IMG02 image search is unchanged. The mill photograph on Calderpedia stays deferred. Brightline customer cases stay anonymous.
+
+New invented names and addresses are `claim` pending approval. The Lumen footer is the approved red herring from §9.3.
 
 ## Test-only domains
 
