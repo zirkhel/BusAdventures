@@ -57,5 +57,11 @@
   { "id": "WEB0027", "kind": "photo", "caption": "Harbor Authority offices on the quay", "source": "harbor-authority", "meta": null },
   { "id": "WEB0028", "kind": "ui", "caption": "A Harbour Street office window", "source": "harbordesk", "meta": null },
   { "id": "WEB0029", "kind": "ui", "caption": "Plots at Eastfield Community Garden", "depicts": ["eastfield"], "source": "garden-org", "meta": null },
-  { "id": "WEB0030", "kind": "ui", "caption": "The AIWriterPro dashboard", "source": "aiwriterpro", "meta": null }
+  { "id": "WEB0030", "kind": "ui", "caption": "The AIWriterPro dashboard", "source": "aiwriterpro", "meta": null },
+  { "id": "WEB0031", "kind": "ui", "caption": "Reading room at Port Calder Public Library", "source": "pclibrary", "meta": null },
+  { "id": "WEB0032", "kind": "ui", "caption": "Pylons and a meter cabinet, outskirts of Port Calder", "source": "calderpower", "meta": null },
+  { "id": "WEB0033", "kind": "ui", "caption": "Calder Credit Union, 4th Street branch", "depicts": ["calder_cu"], "source": "caldercu", "meta": null },
+  { "id": "WEB0034", "kind": "ui", "caption": "A faded Harbor Festival picture from Walt Brennan's page", "source": "walts", "meta": null },
+  { "id": "WEB0035", "kind": "ui", "caption": "A plain consultancy desk", "source": "harborpa", "meta": null }
 ]
+

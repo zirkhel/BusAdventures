@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+ <rect width="256" height="256" fill="#ffff80"/>
+ <polygon points="128,20 152,90 228,90 166,134 190,210 128,166 66,210 90,134 28,90 104,90" fill="#ff40a0"/>
+ <text x="128" y="246" text-anchor="middle" font-family="Comic Sans MS, Trebuchet MS, sans-serif" font-size="28" fill="#000080">WALT</text>
+</svg>
