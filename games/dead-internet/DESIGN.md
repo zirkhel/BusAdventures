@@ -159,7 +159,7 @@ En **hypotese** er `[subjekt] [predikat] [objekt]` med koblede bevis og et fritt
 - **Troverdighet** endres etter tabellen i `meta.publishing.scoring`, vektet per kanal.
 - Sanne påstander med støtte registreres i `state.exposed`, alle publiserte i `state.published`. Avslutninger og regler leser disse.
 
-Dana (kanalen `daily_record`) har en `reviewer`: hun kommenterer kildestyrke og dristighet, aldri sannhet, og kutter påstander som ser svakt støttet ut før publisering. Hun ser bare synlige kilder.
+Dana (kanalen `daily_record`) har en `reviewer`: hun kommenterer kildestyrke og dristighet, aldri sannhet, og kutter påstander som ser svakt støttet ut før publisering. Hun ser bare synlige kilder. Fra steg 5 kommenterer hun også det spilleren selv har merket (bevis mot, egen kildetelling, kilder spilleren ikke stoler på), som råd før publisering; det endrer ikke kuttet eller verdens poeng (se «Implementert steg 5»).
 
 ## Søk
 
@@ -473,6 +473,43 @@ Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node g
 **Lekkasjevern.** `core/sources.js` står i forbudstesten og har i tillegg en strengere sjekk: den leser ingen `.source`, `.supports`, `.mentions` eller `.truth` og slår ikke opp i `w.artifacts`, `w.accounts` eller andre verdensdata; alt går gjennom `apparentSource`. Tvillingverden-testen fyller ut kildekort for alle synlige kilder (alle svar, kommentarer, «same as»-kjeder) og sammenligner kildelisten, alle kortene og teorienes egne tellinger i tre verdener. DOM-testen gjør det samme for Sources-listen, alle kildekortene, velgeren «Same origin as…», teoriene og beviskortene. En bevisst lekkasje (bevisets skjulte `source` i kildekortet, og som CSS-klasse i Sources-listen) ble fanget av tvillingtesten, forbudstesten og DOM-testen, og er fjernet. Etter gjennomgangen dekker testene også indirekte grupper, kilder der alle bevis er lagt bort, og koblingsredigereren åpnet fra kildekortet; en ny bevisst lekkasje («direct» lest fra skjult opphav) ble fanget av tvillingtesten og forbudstesten.
 
 **Anders' beslutninger 25.11.2026.** Punkt 1–6 godkjent med justeringene over («Unsure» som aktivt svar; koblingene som slår sammen vises og kan åpnes fra kortet, og overskriver aldri kortets svar; «via» for indirekte grupper og ny beregning ved fjerning; manglende tillit trekker ikke fra, fordi troverdighet og uavhengighet er forskjellige spørsmål; «Set aside» er ikke fjerning; stabil kilde-ID). Punkt 7 er en planendring: Dana og rapportene samles i steg 5, med disse grensene: Danas vurdering før publisering holdes atskilt fra verdens poengberegning etterpå; at Dana leser spillerens forbehold, gir ikke i seg selv grunnlag for å endre poengreglene; nye tall i Timeline merkes som spillerens egen opptelling.
+
+### Implementert steg 5 (25. november 2026, greina `casebook-step-5`, venter på PR-gjennomgang)
+
+Rapportering med spillerens egne vurderinger, innenfor grensene Anders satte 25.11.2026: Danas vurdering *før* publisering holdes atskilt fra verdens poengberegning *etterpå*; at hun leser spillerens forbehold, endrer ikke poengreglene; nye tall i Timeline er merket som spillerens egen opptelling. Alt spilleren vurderer forblir spillerens; spillet bekrefter det aldri.
+
+**Tre lag, holdt fra hverandre.**
+
+| Lag | Funksjon | Leser | Endrer |
+|---|---|---|---|
+| Danas kommentar til kildene | `review()` (uendret) | synlige kilder som støtter påstanden (`apparentSupportOf`) | ingenting |
+| Danas notater om spillerens egne merker | `editorNotes()` (ny, `core/reporting.js`) | bare spillerlaget: bevis mot, egen telling, kildekortenes «No», teoristatus | ingenting (ren spørring, ikke i loggen) |
+| Verdens reaksjon | `publish()` (uendret) | kanon: `supportOf`, `truthOf`, scoring; kuttet etter `apparentSupportOf` | troverdighet, flagg, hendelser, avslutninger |
+
+`publish()` leser verken notatene eller kildekortene. Testene sjekker at publisering gir nøyaktig samme verden med og uten spillerens forbehold, at `review()` gir samme tekst, og at det å spørre Dana ikke endrer noe.
+
+**Danas notater.** Under hennes vanlige kommentar, i samme boks, med overskriften «On what you've marked yourself:». Én linje per merke, i hennes stemme, og bare når spilleren selv har merket det:
+- `rejected`: «you've rejected this theory yourself. Why put it out under your name?»
+- `against`: «you've linked 1 piece of evidence against it yourself. Tell me why that doesn't sink it before it goes out.»
+- `ownCount` (egen telling lavere enn synlig): «By your own count that's 1 source, not 3.»
+- `notTrusted` («No» på tillit): «you told me you don't trust 1 of the sources behind it. If you don't, why should readers?»
+- `notAuthentic` («No» på «who it claims to be»): «you doubt 1 source is who it claims to be. Don't lean on it until you know.»
+
+«Unsure» kommenteres ikke. Tekstene ligger i `strings.review.dana.own`; en reviewer uten slike tekster sier ingenting om spillerens merker. Under boksen: «Dana Reyes's advice before you publish. It doesn't decide what happens: once it's out, the world reacts to what you published.»
+
+**Rapportbyggeren.** Hver påstand viser «3 for · 1 against · 3 sources · 1 in your count» og spillerens forbehold i kursiv («You don't trust 1 · You doubt 1 is who it claims to be», «You rejected this theory»). Teorier med bare egne ord står i en egen liste med tellingene og «add a claim to publish it»; et trykk åpner teorien. Hendelser viser «3 supporting · 3 sources · 1 in your count · 1 contradicting».
+
+**Øyeblikksbilde.** `publish` i `core/game.js` tar `reportBasis` rett før publisering og lagrer det som `report.snapshot = { day, theories: [...], events: [...], cut }` når rapporten går ut. Det vises under «Your Casebook when you published» etter publisering og som utfellbar del i rapportlisten, og endres ikke når teoriene revideres. `publish()` i `core/casebook.js` og alt verden lagrer om rapporten er uendret.
+
+**Timeline.** `timelineView` gir `supportSources`/`ownSupportSources` og `contradictSources`/`ownContradictSources` (samme telling som teoriene, `ownCount` fra steg 4). Listen og hendelsen viser spillerens telling bare når den er en annen, alltid merket «in your count».
+
+**Tips.** «Comparing» vises første gang Compare åpnes (universell tekst, nevner ingen sak).
+
+**Lagring v12.** Migrering 11→12 (`migrateReports`): eksisterende rapporter får `snapshot: null`; ingenting gjettes. v10, v9, v8 og v7 går gjennom kjeden. Et ødelagt øyeblikksbilde blir `null` ved lasting (`cleanReports`).
+
+**Lekkasjevern.** `core/reporting.js` står i forbudstesten og har en strengere sjekk (ingen `.source`, `.supports`, `.mentions`, `.truth`, `operatedBy`, `isHuman`, ingen `w.artifacts`/`w.accounts`/`w.claims`/…, ingen `supportOf`/`truthOf`/`matchClaim`/`evidenceFacts`). Tvillingverden-testen sammenligner Danas notater for alle teorier, `reportBasis` for alle teorier og hendelser, Timeline-tallene og øyeblikksbildet som lagres ved publisering (Daily Record og Connect) i tre verdener. DOM-testen sammenligner rapportbyggeren med alle påstander og hendelser, Danas boks med notater, Timeline, hendelsene og øyeblikksbildet etter publisering. To bevisste lekkasjer (skjult opphav i `editorNotes`, og som CSS-klasse i rapportbyggeren) ble fanget av tvillingtesten og forbudstesten, og av DOM-testen, og er fjernet.
+
+**Ikke gjort (trenger Anders):** strukturert publisering for manipulerte dokumenter (nytt predikat med sannhet og poeng), at kuttet følger spillerens egen telling, at bevis mot svekker Danas vurdering, nøytral saksstatus og kanalbeskrivelse. Se DEVPLAN «Steg 5», designvalg 3, 4 og 8.
 
 ## Saksavslutning og konsekvenser (gjennomgang 24. nov 2026, ikke diskutert ennå)
 

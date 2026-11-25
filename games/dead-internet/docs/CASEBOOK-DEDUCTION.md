@@ -1,6 +1,6 @@
 # Dead Internet: Casebook som deduksjonsverktøy
 
-_Status 25. november 2026: steg 0–2 er merget (steg 2 som PR #85 `d6dbb8c`), steg 3 (sammenligning og koblinger) er merget som PR #86 `5d64cbc`, W8 (Archive i Browser) som PR #87 `50f65fb`, steg 4 (kildevurdering) er merget som PR #88 `20d2f49` med Anders' beslutninger 25.11.2026 (se DESIGN.md, «Implementert steg 4»), og steg 5 (rapportering) er startet 25.11.2026 på greina `casebook-step-5`. Anders bestemte 25.11.2026 at en kobling alltid er mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (se DESIGN.md, «Implementert steg 2» og «Implementert steg 3», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
+_Status 25. november 2026: steg 0–2 er merget (steg 2 som PR #85 `d6dbb8c`), steg 3 (sammenligning og koblinger) er merget som PR #86 `5d64cbc`, W8 (Archive i Browser) som PR #87 `50f65fb`, steg 4 (kildevurdering) er merget som PR #88 `20d2f49` med Anders' beslutninger 25.11.2026 (se DESIGN.md, «Implementert steg 4»), og steg 5 (rapportering) er implementert 25.11.2026 på greina `casebook-step-5` (venter på PR-gjennomgang; se DESIGN.md, «Implementert steg 5»). Anders bestemte 25.11.2026 at en kobling alltid er mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (se DESIGN.md, «Implementert steg 2» og «Implementert steg 3», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
 
 ## Kort fortalt
 
@@ -158,6 +158,8 @@ Min vurdering   …
 ### G. Rapport
 Som i dag, men hver påstand viser *for / mot / kilder etter dine koblinger*. Spillerens egne forbehold vises i byggeren, så spilleren ser at hen publiserer noe hen selv har merket som tvilsomt. Rapporten lagrer et øyeblikksbilde av teksten, så den ikke endres når teorien revideres senere.
 
+> **Implementert i steg 5 (25.11.2026):** hver påstand i byggeren viser «3 for · 1 against · 3 sources · 1 in your count» og spillerens egne forbehold; teorier med bare egne ord står i en egen liste. Rapporten lagrer `snapshot = { day, theories, events, cut }` med spillerens tellinger og forbehold. Dana kommenterer spillerens egne merker (bevis mot, egen telling, «No» på kildekortene, forkastet teori) i en egen del av vurderingen, som råd. Innenfor Anders' grenser 25.11.2026: `review()` og `publish()` er uendret, poengreglene er ikke endret, og Timeline-tallene er merket «in your count». Strukturert publisering for manipulerte dokumenter er ikke gjort, fordi den krever nye poengregler (forslag i DEVPLAN, «Steg 5», designvalg 8).
+
 ### Hva skjer med «Save» på et ord?
 I dag lager det et notat. Forslag: et lagret sitat blir et **bevis av typen sitat** (kilde + utdrag) og havner i triagen. Notes blir bare spillerens egne tanker. Det fjerner den største dupliseringen.
 
@@ -205,7 +207,7 @@ hypotheses[i]: evidence: [{ id, stance: "supports"|"contradicts" }]   // migreri
 2. **Ny modul `core/workbench.js`** for spillerlaget: merker, legg bort, koblinger, kildekort, teoristatus, spørsmål. Alt går gjennom `dispatch`, så replay og logg virker som før.
 3. **Spillerlaget er usynlig for reglene.** Ingen betingelser i `conditions.js` leser `marks`, `links` eller `sourceViews` (samme regel som for følg og like i media). Da kan verden aldri «belønne» en riktig kobling og dermed røpe fasit.
 4. **Gruppering etter hvem det handler om** bygges fra navn som faktisk står i teksten (`scanText`) og spillerens egne valg, ikke fra `mentions`.
-5. **Dana** vurderer ut fra `apparentSource`, spillerens egne `sameAs`, og bevis spilleren selv har koblet som *mot*. Scoring og konsekvenser bruker fortsatt kanon.
+5. **Dana** vurderer ut fra `apparentSource`, spillerens egne `sameAs`, og bevis spilleren selv har koblet som *mot*. Scoring og konsekvenser bruker fortsatt kanon. _Implementert i steg 5 som et eget lag (`editorNotes`): hennes kommentar til kildene (`review`) og kuttet er uendret, og spillerens forbehold kommer som råd ved siden av._
 6. **Teorier utenfor trippelen:** jeg foreslår at en teori får en valgfri fri tittel («Nekrologen er konstruert»). Trippelen kreves først når teorien skal publiseres. Det beholder strukturerte hypoteser som det som kan vurderes, men lar spilleren tenke fritt.
 
 ### Lagene fra punkt 9, og hvor de bor
@@ -232,7 +234,7 @@ Hvert steg er én liten PR med egne tester og kan stoppes etter.
 | 2 | Teorier: for/mot, status med logg, åpne spørsmål, alternativer, fri tittel. Velger med søk erstatter «Other evidence». | |
 | 3 | Sammenligning og koblinger (valgmodus, sammenligningsskjerm, seks koblingstyper). | |
 | 4 | Kildekort og spillerens egen uavhengighetstelling. ~~Dana bruker spillerens forbehold.~~ | Merget som PR #88 `20d2f49`. Dana-delen er flyttet til steg 5: planendring godkjent av Anders 25.11.2026. |
-| 5 | Rapport: for/mot/egne forbehold i byggeren, øyeblikksbilde. Ett tips om sammenligning i tips-systemet. Dana bruker spillerens forbehold (flyttet fra steg 4). | Grenser fra Anders 25.11.2026: Danas vurdering før publisering holdes atskilt fra verdens poengberegning etterpå; at Dana leser spillerens forbehold, gir ikke i seg selv grunnlag for å endre poengreglene; nye tall i Timeline merkes som spillerens egen opptelling. |
+| 5 | Rapport: for/mot/egne forbehold i byggeren, øyeblikksbilde. Ett tips om sammenligning i tips-systemet. Dana bruker spillerens forbehold (flyttet fra steg 4). | Grenser fra Anders 25.11.2026: Danas vurdering før publisering holdes atskilt fra verdens poengberegning etterpå; at Dana leser spillerens forbehold, gir ikke i seg selv grunnlag for å endre poengreglene; nye tall i Timeline merkes som spillerens egen opptelling. Implementert 25.11.2026 (greina `casebook-step-5`) innenfor disse grensene; tipset om sammenligning er med. |
 | 6 | Innhold: vise koblinger og teorier til karakterer. Forfatterveiledning: hvert mysterium skal ha motsigelser og «ekkokamre» (mange kilder, ett opphav). | Med neste mysterium |
 
 Steg 1–5 er rundt 600–900 linjer i `app/apps/casebook.js` og to nye kjernemoduler. Rekkefølgen kan justeres etter spilltesten. Viser testen at triage er nok, kan 3 og 4 vente.
