@@ -9,11 +9,17 @@ import { getVersion } from "../../core/artifacts.js";
 import { renderCorporate } from "./corporate.js";
 import { renderGovernment } from "./government.js";
 import { renderBlog } from "./blog.js";
+import { renderSimple } from "./simple.js";
 
 const TEMPLATES = {
   corporate: renderCorporate,
   government: renderGovernment,
   blog: renderBlog,
+  landing: renderSimple,
+  legacy: renderSimple,
+  personal: renderSimple,
+  wiki: renderSimple,
+  document: renderSimple,
 };
 
 /**

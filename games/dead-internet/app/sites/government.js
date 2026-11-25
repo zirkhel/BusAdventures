@@ -5,7 +5,7 @@
 
 import { h, fmtDate } from "../ui.js";
 import { renderBlock } from "./blocks.js";
-import { logoOf, navItems, navLink, footerOf, leftoverImages } from "./chrome.js";
+import { logoOf, navItems, navLink, footerOf, leftoverImages, takeHero } from "./chrome.js";
 
 /**
  * @param {any} phone
@@ -22,7 +22,10 @@ export function renderGovernment(phone, o) {
     h("nav.site-nav.site-nav-full", items.map(it => navLink(phone, it))));
 
   const used = { ...ctx, images: [...(ctx.images || [])] };
-  const body = blocks.map(b => renderBlock(phone, b, used));
+  const body = [];
+  const hero = !blocks.some(b => b.t === "hero") ? takeHero(design, used, page) : null;
+  if (hero) body.push(renderBlock(phone, { t: "hero", image: hero }, used));
+  for (const b of blocks) body.push(renderBlock(phone, b, used));
   body.push(...leftoverImages(phone, used));
 
   return h("div.site-shell", { class: `kind-${page}` },

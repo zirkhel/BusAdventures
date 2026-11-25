@@ -105,6 +105,8 @@ a.lnk:active { opacity: .6; }
 .addr-form { flex: 1; display: flex; align-items: center; gap: 6px; background: var(--paper2); border-radius: 12px; padding: 0 10px; height: 40px; min-width: 0; }
 .addr { flex: 1; min-width: 0; border: 0; background: none; outline: none; font-size: 16px; color: var(--ink); }
 .addr-ico { width: 18px; height: 18px; opacity: .55; }
+.addr-favicon { display: flex; align-items: center; flex: none; }
+.addr-favicon-img { width: 18px; height: 18px; object-fit: contain; border-radius: 4px; background: #fff; }
 .addr-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; background: #f0b429; color: #3a2a00; padding: 2px 6px; border-radius: 6px; }
 .seek-home { padding: 64px 18px 0; }
 .seek-logo { font-size: 40px; font-weight: 700; letter-spacing: -1px; color: var(--seeker); text-align: center; margin-bottom: 22px; font-family: Georgia, "Times New Roman", serif; }

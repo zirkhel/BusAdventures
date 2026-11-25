@@ -8,7 +8,7 @@
    "from": "2000-01-01",
    "template": "none",
    "variant": "raw",
-   "theme": {},
+   "theme": { "logo": "LOGO_STATIC" },
    "nav": []
   }
  ],

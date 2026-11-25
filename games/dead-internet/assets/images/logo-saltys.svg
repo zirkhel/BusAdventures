@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+ <rect width="256" height="256" rx="16" fill="#c41200"/>
+ <path d="M40 118 C70 86 120 86 150 108 C170 80 210 86 224 112 C200 108 176 118 168 136 C150 168 96 172 64 150 C48 168 28 160 32 140 C34 132 36 124 40 118 Z" fill="#fff8f0"/>
+ <circle cx="72" cy="120" r="6" fill="#c41200"/>
+ <path d="M150 108 L198 70 L186 118 Z" fill="#fff8f0"/>
+ <text x="128" y="220" text-anchor="middle" font-family="Impact, 'Arial Black', sans-serif" font-size="36" letter-spacing="2" fill="#fff8f0">SALTY'S</text>
+</svg>

@@ -47,5 +47,15 @@
   { "id": "UFP01", "kind": "profile", "caption": "Unfiltered", "source": "unfiltered", "meta": null },
   { "id": "UFP02", "kind": "profile", "caption": "Unfiltered", "source": "unfiltered", "meta": null },
   { "id": "UFP03", "kind": "profile", "caption": "Unfiltered", "source": "unfiltered", "meta": null },
-  { "id": "UFP04", "kind": "profile", "caption": "Unfiltered", "source": "unfiltered", "meta": null }
+  { "id": "UFP04", "kind": "profile", "caption": "Unfiltered", "source": "unfiltered", "meta": null },
+  { "id": "WEB0005", "kind": "photo", "caption": "Brightline office, empty desks", "depicts": ["brightline"], "source": "brightline-public", "meta": null },
+  { "id": "WEB0007", "kind": "photo", "caption": "Kestrel vans at the Dock Road depot", "depicts": ["kestrel"], "source": "kestrel", "meta": null },
+  { "id": "WEB0010", "kind": "photo", "caption": "City Hall, Port Calder", "depicts": ["city_council"], "source": "city", "meta": null },
+  { "id": "WEB0020", "kind": "photo", "caption": "Salty's Fish Bar, the front", "source": "saltys", "meta": null },
+  { "id": "WEB0025", "kind": "photo", "caption": "Harbor Dental, the shopfront", "depicts": ["harbor_dental"], "source": "harbordental", "meta": null },
+  { "id": "WEB0026", "kind": "photo", "caption": "A Calder Transit bus at the harbour", "source": "caldertransit", "meta": null },
+  { "id": "WEB0027", "kind": "photo", "caption": "Harbor Authority offices on the quay", "source": "harbor-authority", "meta": null },
+  { "id": "WEB0028", "kind": "ui", "caption": "A Harbour Street office window", "source": "harbordesk", "meta": null },
+  { "id": "WEB0029", "kind": "ui", "caption": "Plots at Eastfield Community Garden", "depicts": ["eastfield"], "source": "garden-org", "meta": null },
+  { "id": "WEB0030", "kind": "ui", "caption": "The AIWriterPro dashboard", "source": "aiwriterpro", "meta": null }
 ]

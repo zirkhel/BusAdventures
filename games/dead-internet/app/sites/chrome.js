@@ -43,3 +43,25 @@ export function footerOf(design, fallback) {
 export function leftoverImages(phone, ctx) {
   return (ctx.images || []).map(id => figure(phone, id, ctx));
 }
+
+/** Pages that may promote the first (or theme.hero) image to a banner. */
+const HERO_PAGES = new Set(["project", "about", "services", "home", "calendar", "page"]);
+
+/**
+ * Pull a hero image out of `used.images` so it is not also rendered as a leftover figure.
+ * @param {any} design
+ * @param {{images?: string[]}} used
+ * @param {string} page
+ * @returns {string|null}
+ */
+export function takeHero(design, used, page) {
+  if (!HERO_PAGES.has(page)) return null;
+  const imgs = used.images || [];
+  const preferred = design.theme?.hero;
+  if (preferred) {
+    const i = imgs.indexOf(preferred);
+    if (i >= 0) imgs.splice(i, 1);
+    return preferred;
+  }
+  return imgs.length ? imgs.shift() : null;
+}

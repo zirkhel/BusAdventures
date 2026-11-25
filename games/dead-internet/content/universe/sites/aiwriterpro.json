@@ -9,7 +9,7 @@
    "template": "landing",
    "variant": "saas",
    "theme": {
-    "logo": "text:AIWriterPro"
+    "logo": "LOGO_AIWRITERPRO"
    },
    "nav": [
     {

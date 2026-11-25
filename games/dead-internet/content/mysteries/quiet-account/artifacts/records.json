@@ -31,7 +31,7 @@
     "title": "Invoice CSP-EF-Q1 (anonymous tip)", "source": "dana-tip", "images": ["IMG10"], "keywords": ["CSP-EF"],
     "mentions": ["brightline", "northgate"], "supports": ["S3"],
     "versions": [{ "id": "v1", "body": "BRIGHTLINE MEDIA LLC — INVOICE CSP-EF-Q1\nBill to: Northgate Development, attn. P. Navarro\nCommunity Sentiment Program — Eastfield, Q1 2026: $21,000\nPayable to: Meridian Holdings Ltd (settlement account)" }] },
-  { "id": "A38", "site": "kestrel", "page": "about", "type": "page", "platform": "kestrel_site", "url": "kestrel-logistics.com/clients", "date": "2025-01-01",
+  { "id": "A38", "site": "kestrel", "page": "about", "images": ["WEB0007"], "type": "page", "platform": "kestrel_site", "url": "kestrel-logistics.com/clients", "date": "2025-01-01",
     "title": "Kestrel Logistics — Who we deliver for", "source": "kestrel", "mentions": ["kestrel", "northgate"], "supports": ["F1"],
     "versions": [{ "id": "v1", "cached": true, "body": "Delivering for Port Calder since 1998. Proud partners: City of Port Calder, Harbor Foods, Calder General Hospital, Northgate Development, Eastfield Library, PortMart, and 300+ local businesses. 140 vans on the road every day." }] }
 ]
