@@ -403,7 +403,7 @@ Migrering v6→v7 beholder alle eksisterende referanser og kommentarer og fyller
 
 Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node games/dead-internet/tools/test-casebook-ui.mjs`. Den bruker installert `playwright`, eller en pakke angitt med `PLAYWRIGHT_MODULE`; `PLAYWRIGHT_CHANNEL` kan velge en installert nettleser. Den starter en lokal server, tester 390×844 og sammenligner tekst, CSS-klasser og kontrollverdier i tvillingverdenene. Skjermbildet lagres lokalt i `test-results/`.
 
-### Implementert steg 2 (25. november 2026, venter på PR-gjennomgang)
+### Implementert steg 2 (25. november 2026, merget PR #85 · `d6dbb8c`)
 
 **Teorier.** En teori er spillerens egne ord (`title`) og/eller en strukturert påstand `[subject] [predicate] [object]`. Minst én av dem må finnes. Casebook viser egne ord først (`theoryLabel`); en teori med begge viser påstanden under som «As a claim: …». Bare teorier med strukturert påstand kan vurderes av Dana og publiseres (`isStructured`). `review()` hopper over de andre, `publish()` filtrerer dem bort, og rapportbyggeren viser bare påstandene og sier hvor mange teorier som bare står med egne ord. Steg 5 bygger den strukturerte publiseringen videre (manipulerte dokumenter, falske identiteter); modellen hindrer ikke det.
 
