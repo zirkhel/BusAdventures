@@ -14,6 +14,7 @@ import { newsApp } from "./apps/news.js";
 import { Tips } from "./tips.js";
 import { ContextSystem, registerDefaultActions } from "./context.js";
 import { resolveBrowse, toggleBookmark, isBookmarked, stepTextSize, migrateBrowser } from "../core/browser.js";
+import { canonicalUrl } from "../core/sites.js";
 
 export class Phone {
   /**
@@ -29,6 +30,7 @@ export class Phone {
     /** url (lowercase, no protocol) → artifact id */
     this.urls = new Map();
     for (const a of w.artifacts.values()) if (a.url) this.urls.set(normUrl(a.url), a.id);
+    for (const [old, id] of w.urlAlias || []) if (!this.urls.has(old)) this.urls.set(old, id);
     /** handle (lowercase, with and without @) → account id */
     this.handles = new Map();
     for (const acc of w.accounts.values()) {
@@ -317,7 +319,7 @@ export class Phone {
 
   /** Seeker's cached copies of pages at an address. Found the same way a search finds them. */
   cachedFor(text) {
-    const addr = normUrl(text);
+    const addr = canonicalUrl(this.g.w, text);
     const r = this.g.search(addr);
     const results = (r.results || []).filter(x => x.cached && normUrl(x.url || "").startsWith(addr));
     this.push("browser", { kind: "results", q: addr, results, title: `Cached: ${addr}`, cacheOnly: true });

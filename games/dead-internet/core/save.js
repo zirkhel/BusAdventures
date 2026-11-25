@@ -9,6 +9,7 @@ import { migrateDiscovery } from "./discovery.js";
 import { migrateCases, migrateCaseStates } from "./cases.js";
 import { migrateMedia } from "./feed.js";
 import { migrateBrowser } from "./browser.js";
+import { normUrl, canonicalUrl } from "./sites.js";
 
 export const SAVE_FORMAT = "dead-internet-save";
 
@@ -80,8 +81,13 @@ export function deserialize(w, text) {
     s.browser.bookmarks = s.browser.bookmarks.filter(b => {
       if (!b?.url) return false;
       if (b.artifact && !w.artifacts.has(b.artifact)) { delete b.artifact; delete b.version; }
+      // A bookmark on a former address follows the page to its current address.
+      const moved = w.urlAlias?.get(normUrl(b.url));
+      if (moved) { b.url = canonicalUrl(w, b.url); b.artifact = b.artifact || moved; }
       return true;
     });
+    const seenUrl = new Set();
+    s.browser.bookmarks = s.browser.bookmarks.filter(b => { const k = normUrl(b.url); if (seenUrl.has(k)) return false; seenUrl.add(k); return true; });
   }
   if (s.contentVersion !== w.meta.contentVersion) warnings.push(`content ${s.contentVersion} → ${w.meta.contentVersion}`);
   s.contentVersion = w.meta.contentVersion;

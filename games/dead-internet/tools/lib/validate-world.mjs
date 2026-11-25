@@ -5,7 +5,7 @@
 // INFO = worth a look.
 
 import { buildWorld, imageRoot } from "../../core/world.js";
-import { hostOf, siteIdOf, resolveHref, NAV_STATES, EMAIL_ONLY_DOMAINS } from "../../core/sites.js";
+import { hostOf, siteIdOf, resolveHref, normUrl, NAV_STATES, EMAIL_ONLY_DOMAINS } from "../../core/sites.js";
 import { CONDITION_KEYS } from "../../core/conditions.js";
 import { EFFECT_KEYS } from "../../core/rules.js";
 import { explore } from "./explorer.mjs";
@@ -310,6 +310,14 @@ export function validateWorld(raw, opts = {}) {
     }
     layerOk(where, a.layer, w.packOf.get(a.id), sup);
     if ((a.index || "full") === "exact" && !arr(a.keywords).length) err(where, "index exact needs keywords");
+    // Former addresses redirect to the page; they must not belong to another page or another site.
+    for (const old of arr(a.urlAliases)) {
+      const key = normUrl(old), owner = w.artifactByUrl.get(key);
+      if (!a.url) err(where, "urlAliases without a url");
+      else if (key === normUrl(a.url)) err(where, `url alias ${old} is its own url`);
+      else if (hostOf(old) !== hostOf(a.url)) err(where, `url alias ${old} is on another host than ${a.url}`);
+      if (owner && owner !== a.id) err(where, `url alias ${old} is already the address of ${owner}`);
+    }
     // Timeline
     const dates = a.versions.map(v => v.date).filter(Boolean);
     for (let i = 1; i < dates.length; i++) if (dates[i] < dates[i - 1]) err(where, `versions out of date order (${dates[i - 1]} → ${dates[i]})`);

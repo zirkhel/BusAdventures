@@ -583,5 +583,72 @@
     "subject": "brightline",
     "predicate": "community_leads_2024",
     "object": "Samira Holt, Jonah Ellison, Tamsin Roe"
+  },
+  {
+    "id": "bf-device-orrin-d7",
+    "introducedBy": "northgate",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Orrin D7 is a professional camera; Northgate's project and lobby photos carry it in their Image info (WEB0001–WEB0004, 2017–2026)",
+    "subject": "orrin_d7",
+    "predicate": "device_kind",
+    "object": "professional camera",
+    "dates": [
+      "2017",
+      "2026"
+    ]
+  },
+  {
+    "id": "bf-device-orrin-s20",
+    "introducedBy": "kestrel",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Orrin S20 is a compact camera; Kestrel's 2014 yard photo carries it (WEB0009, May 2014)",
+    "subject": "orrin_s20",
+    "predicate": "device_kind",
+    "object": "compact camera",
+    "dates": [
+      "2014"
+    ]
+  },
+  {
+    "id": "bf-device-orrin-s5",
+    "introducedBy": "walts",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Orrin S5 is a compact digital camera; Walt Brennan's 2008 festival photo carries it (WEB0034, July 2008)",
+    "subject": "orrin_s5",
+    "predicate": "device_kind",
+    "object": "compact camera",
+    "dates": [
+      "2008"
+    ]
+  },
+  {
+    "id": "bf-device-halden-photoscan-2400",
+    "introducedBy": "walts",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Halden PhotoScan 2400 is home scanner software; Walt Brennan's 1987 festival print was scanned with it in November 2007 (WEB0023)",
+    "subject": "halden_photoscan_2400",
+    "predicate": "device_kind",
+    "object": "scanner software",
+    "dates": [
+      "1987",
+      "2007"
+    ]
+  },
+  {
+    "id": "bf-device-lumen-6",
+    "introducedBy": "calderpedia",
+    "binds": "universe",
+    "status": "canon",
+    "label": "Lumen 6 is a phone model; a Calderpedia contributor's 2025 photos carry it (WEB0013–WEB0015), as does Salty's front (WEB0020)",
+    "subject": "lumen_6",
+    "predicate": "device_kind",
+    "object": "phone",
+    "dates": [
+      "2025"
+    ]
   }
 ]

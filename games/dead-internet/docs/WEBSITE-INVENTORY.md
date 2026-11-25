@@ -126,10 +126,24 @@ Hero photographs and illustrations were attached to existing artifacts only, wit
 
 Test-only `toktok.app` is described in the previous section; it is not a playable-universe site.
 
-### Website photos (PR #83, `websites-photos`)
+### Website photos (PR #83, `websites-photos`, merged `b2a7f76`)
 
 The 20 remaining planned photos from WEBSITES.md §10 now exist (WEB0001–WEB0004, WEB0006, WEB0008, WEB0009, WEB0011–WEB0019, WEB0021–WEB0024), and the SVG stand-in heroes WEB0028, WEB0029, WEB0031–WEB0035, WEB0037 and WEB0038 are photographs under the same ids. WEB0030 (AIWriterPro dashboard) and WEB0036 (Faceless abstract) stay SVG. They were made with the image generator, not ComfyUI, from one shared style prompt (`graphics/sources/web-photos/STYLE.md`) with the existing photos as references. Only `images` fields changed: no ids, URLs or wording. New pictures sit on background pages of Northgate (three project pages, two news items, About), Brightline (Work), Kestrel (Warehouse job, Sixty jobs, and the cached 2014 home and About only), the library (Eastfield branch, Hours), the city (Waste), Calderpedia (lighthouse, Old Town, Calder Creek), Eastfield Notes (four posts 2019–2022), Calder CU (4th Street), Calder Power (Smart meters), Walt's page (home and Festival 2008) and Faceless (How it works). Every new image is its own original, so image search from IMG01, IMG02, IMG06S and the other evidence photos finds nothing new. Northgate's home and A40 keep IMG12. No new canon.
 
 ## Parked domain (W3)
 
 `portcalderjazz.com` is registered so the Browser can show a parked state. The date and the «for sale» wording follow WEBSITES.md §4. W6 adds a cached 2019 site (home, calendar, about), with `live: null`. Because the domain changed hands, the live parked view is still a generic parking page, not a jazz-club theme, and the live parked design has no catalog logo. The 2019 design uses a text wordmark.
+
+### Fixes after the photos (PR #84, `fixes-after-photos`, not merged)
+
+- **Threadline:** profiles (`threadline.net/u/*`) show the account name and "Threads started" again. truthseeker_88 lists A16 and A62.
+- **Approved device names, now canon in `background-facts.json`:**
+  - Orrin D7, a professional camera (Northgate WEB0001–WEB0004)
+  - Orrin S20 (Kestrel 2014, WEB0009)
+  - Orrin S5 (Walt 2008, WEB0034)
+  - Halden PhotoScan 2400 (Walt's 1987 scan, scanned 2007, WEB0023)
+  - Lumen 6 (Calderpedia WEB0013–WEB0015, Salty's WEB0020)
+- **Mara's Lumen 5 (2019–2022):** approved, but recorded only in image meta and the handover, because no new background canon may be about a Quiet Account person.
+- **Harbor Festival is in October (decided):** Eastfield Notes `W-eastfieldnotes-0016` is now dated 9 Oct 2021 and `W-eastfieldnotes-0022` 8 Oct 2022, each with its comments. WEB0018 is now taken 8 Oct 2022 and WEB0034 11 Oct 2008. Their canonical URLs are now `eastfieldnotes.blog/2021/10/harbor-festival-dog-run` and `eastfieldnotes.blog/2022/10/festival-weekend`, with the same ids. The old `/2021/07/` and `/2022/07/` addresses are kept in the new artifact field `urlAliases` and redirect to the new ones, like a site's former `domains`. Old bookmarks move to the new address when a save loads. No text describes a move.
+- **2025 duck race:** won by duck number 3,117 (Mila from Northpoint) in both B06 and DR-2025-0322.
+- **Intended crack:** Walter Brennan is quoted in DR-2026-0051 (12 Feb 2026) after his death on 31 Oct 2025. Keep it.
