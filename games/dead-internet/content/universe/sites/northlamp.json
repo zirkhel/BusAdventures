@@ -1,0 +1,44 @@
+{
+  "id": "northlamp",
+  "platform": "northlamp",
+  "domain": "northlamp.studio",
+  "org": "north_lamp",
+  "designs": [
+    {
+      "id": "d2023",
+      "from": "2023-02-14",
+      "template": "landing",
+      "variant": "smallbiz",
+      "theme": {
+        "logo": "LOGO_NORTHLAMP",
+        "palette": {
+          "bg": "#f4f2ec",
+          "ink": "#1a1c28",
+          "accent": "#c49a2a"
+        }
+      },
+      "nav": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "Work",
+          "href": "/work"
+        }
+      ],
+      "header": {
+        "mast": "North Lamp Studio",
+        "tagline": "Signs, type, and a lamp in the window."
+      },
+      "footer": {
+        "text": "North Lamp Studio · Suite 210, 18 Harbor Street, Port Calder. Theme: Lumen by Pixelfold."
+      }
+    }
+  ],
+  "notFound": {
+    "title": "Not found",
+    "text": "There is no page at that address."
+  },
+  "status": []
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "haven_mutual",
+    "kind": "org",
+    "name": "Haven Mutual",
+    "aliases": [
+      "Haven Mutual"
+    ],
+    "isHuman": false,
+    "bio": "A small insurer in Old Town, Port Calder, with an office on Market Row.",
+    "relations": []
+  },
+  {
+    "id": "quay_ledger",
+    "kind": "org",
+    "name": "Quay Ledger",
+    "aliases": [
+      "Quay Ledger"
+    ],
+    "isHuman": false,
+    "bio": "A bookkeeping firm that uses a HarborDesk address at 18 Harbor Street.",
+    "relations": []
+  },
+  {
+    "id": "north_lamp",
+    "kind": "org",
+    "name": "North Lamp Studio",
+    "aliases": [
+      "North Lamp Studio",
+      "North Lamp"
+    ],
+    "isHuman": false,
+    "bio": "A small sign and typography studio in Port Calder, with a virtual address at 18 Harbor Street.",
+    "relations": []
+  },
+  {
+    "id": "amber_fern",
+    "kind": "org",
+    "name": "Amber Fern Tutoring",
+    "aliases": [
+      "Amber Fern Tutoring"
+    ],
+    "isHuman": false,
+    "bio": "A tutoring practice that collects mail at 18 Harbor Street. It does not have a website.",
+    "relations": []
+  },
+  {
+    "id": "gull_wing",
+    "kind": "org",
+    "name": "Gull Wing Surveys",
+    "aliases": [
+      "Gull Wing Surveys"
+    ],
+    "isHuman": false,
+    "bio": "A marine survey firm that collects mail at 18 Harbor Street.",
+    "relations": []
+  },
+  {
+    "id": "samira_holt",
+    "kind": "person",
+    "name": "Samira Holt",
+    "aliases": [
+      "Samira Holt"
+    ],
+    "isHuman": true,
+    "bio": "Named as a community lead on a 2024 cached copy of Brightline's team page. She is not listed there today.",
+    "relations": []
+  },
+  {
+    "id": "jonah_ellison",
+    "kind": "person",
+    "name": "Jonah Ellison",
+    "aliases": [
+      "Jonah Ellison"
+    ],
+    "isHuman": true,
+    "bio": "Named as a community lead on a 2024 cached copy of Brightline's team page. He is not listed there today.",
+    "relations": []
+  },
+  {
+    "id": "tamsin_roe",
+    "kind": "person",
+    "name": "Tamsin Roe",
+    "aliases": [
+      "Tamsin Roe"
+    ],
+    "isHuman": true,
+    "bio": "Named as a community lead on a 2024 cached copy of Brightline's team page. She is not listed there today.",
+    "relations": []
+  },
+  {
+    "id": "d_chen",
+    "kind": "person",
+    "name": "D. Chen",
+    "aliases": [
+      "D. Chen"
+    ],
+    "isHuman": true,
+    "bio": "Named in a HarborDesk testimonial as a person at Haven Mutual.",
+    "relations": []
+  }
+]

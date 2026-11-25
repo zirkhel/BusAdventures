@@ -62,6 +62,11 @@
   { "id": "WEB0032", "kind": "ui", "caption": "Pylons and a meter cabinet, outskirts of Port Calder", "source": "calderpower", "meta": null },
   { "id": "WEB0033", "kind": "ui", "caption": "Calder Credit Union, 4th Street branch", "depicts": ["calder_cu"], "source": "caldercu", "meta": null },
   { "id": "WEB0034", "kind": "ui", "caption": "A faded Harbor Festival picture from Walt Brennan's page", "source": "walts", "meta": null },
-  { "id": "WEB0035", "kind": "ui", "caption": "A plain consultancy desk", "source": "harborpa", "meta": null }
+  { "id": "WEB0035", "kind": "ui", "caption": "A plain consultancy desk", "source": "harborpa", "meta": null },
+  { "id": "WEB0036", "kind": "ui", "caption": "Abstract circles on a pale violet ground", "source": "facelessstock", "meta": null },
+  { "id": "WEB0037", "kind": "ui", "caption": "Fog over the harbour, no people", "source": "mara-blog", "meta": null },
+  { "id": "WEB0038", "kind": "ui", "caption": "A quiet harbour front in Old Town", "source": "havenmutual", "meta": null },
+  { "id": "IMG06A", "kind": "portrait", "caption": "A stock portrait used on a HarborDesk testimonial", "derivedFrom": "IMG06S", "transforms": [], "depicts": [], "source": "harbordesk", "meta": { "software": "Faceless Stock generator v4" } },
+  { "id": "IMG06B", "kind": "portrait", "caption": "A stock portrait used on a Haven Mutual leaflet", "derivedFrom": "IMG06S", "transforms": [], "depicts": [], "source": "havenmutual", "meta": { "software": "Faceless Stock generator v4" } }
 ]
 

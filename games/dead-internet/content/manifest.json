@@ -10,7 +10,8 @@
    "universe/pools/news/entities.json",
    "universe/entities-background.json",
    "universe/entities-background-w5.json",
-   "universe/entities-background-w6.json"
+   "universe/entities-background-w6.json",
+   "universe/entities-background-w7.json"
   ],
   "accounts": [
    "universe/accounts.json",
@@ -54,7 +55,11 @@
    "universe/artifacts/sites-w6-caldercu.json",
    "universe/artifacts/sites-w6-walts.json",
    "universe/artifacts/sites-w6-harborpa.json",
-   "universe/artifacts/sites-w6-portcalderjazz.json"
+   "universe/artifacts/sites-w6-portcalderjazz.json",
+   "universe/artifacts/sites-w7-harbordesk.json",
+   "universe/artifacts/sites-w7-havenmutual.json",
+   "universe/artifacts/sites-w7-quayledger.json",
+   "universe/artifacts/sites-w7-northlamp.json"
   ],
   "characters": "universe/characters.json",
   "canon": "universe/canon.json",
@@ -94,7 +99,10 @@
    "universe/sites/static_channel.json",
    "universe/sites/threadline.json",
    "universe/sites/unfiltered.json",
-   "universe/sites/walts.json"
+   "universe/sites/walts.json",
+   "universe/sites/havenmutual.json",
+   "universe/sites/quayledger.json",
+   "universe/sites/northlamp.json"
   ],
   "backgroundFacts": "universe/background-facts.json"
  },

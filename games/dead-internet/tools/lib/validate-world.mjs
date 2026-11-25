@@ -483,6 +483,7 @@ export function validateWorld(raw, opts = {}) {
     }
   }
   checkSites(w, raw, err, warn);
+  checkClueImageShare(w, warn);
   checkBackgroundFacts(w, raw, err, warn);
   return { issues, runs: allRuns[[...w.mysteries.values()].find(x => x.testing)?.id] };
 }
@@ -549,6 +550,40 @@ const QA_PEOPLE = new Set(["mara", "theo", "dana", "owen", "iris", "calvin", "re
  * Entries must not contradict existing canon triples, and must not invent new
  * facts about the people of The Quiet Account.
  */
+
+/**
+ * A site must not put images only on its clue pages. Background pages on the
+ * same site should also carry pictures, or the images become a tell.
+ */
+function checkClueImageShare(w, warn) {
+  const pages = new Map();
+  for (const a of w.artifacts.values()) {
+    if (!a.site || a.hidden) continue;
+    if (a.type && !["page", "post", "article", "job"].includes(a.type) && a.type !== undefined) {
+      // still count typical site pages; skip profiles/threads without a site home
+    }
+    if (!pages.has(a.site)) pages.set(a.site, []);
+    const imgs = [...(a.images || [])];
+    for (const v of a.versions || []) for (const id of v.images || []) imgs.push(id);
+    pages.get(a.site).push({
+      id: a.id,
+      clue: Array.isArray(a.supports) && a.supports.length > 0,
+      background: a.filler === true,
+      hasImage: imgs.length > 0,
+    });
+  }
+  for (const [site, list] of pages) {
+    const clue = list.filter(p => p.clue);
+    const bg = list.filter(p => p.background);
+    if (!clue.length || bg.length < 2) continue;
+    const clueWith = clue.filter(p => p.hasImage).length;
+    const bgWith = bg.filter(p => p.hasImage).length;
+    if (clueWith > 0 && bgWith === 0) {
+      warn(`site ${site}`, `images appear on clue pages (${clue.filter(p => p.hasImage).map(p => p.id).join(", ")}) but on none of ${bg.length} background pages`);
+    }
+  }
+}
+
 function checkBackgroundFacts(w, raw, err, warn) {
   const facts = raw.backgroundFacts || [];
   const canon = [];

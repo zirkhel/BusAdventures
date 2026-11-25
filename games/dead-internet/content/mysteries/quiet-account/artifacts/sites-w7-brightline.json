@@ -1,0 +1,25 @@
+[
+  {
+    "id": "W-brightline-0020",
+    "site": "brightline",
+    "page": "post",
+    "type": "page",
+    "platform": "brightline_site",
+    "url": "brightlinemedia.co/insights/when-change-shows-up",
+    "date": "2025-10-28",
+    "title": "When change shows up",
+    "filler": true,
+    "source": "brightline",
+    "index": "full",
+    "versions": [
+      {
+        "id": "v1",
+        "cached": true,
+        "body": "A brief will sometimes ask for urgency. A community will sometimes ask for time.\n\nWe think we owe it to each other to keep listening. Change can be scary, but it can also be good — and a programme that forgets the second half of that sentence usually shows it.\n\nThis is not a promise about any one client. It is how we try to write when the room is tense."
+      }
+    ],
+    "mentions": [
+      "brightline"
+    ]
+  }
+]

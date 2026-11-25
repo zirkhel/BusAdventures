@@ -28,6 +28,14 @@
     {
      "label": "Locations",
      "href": "/locations"
+    },
+    {
+     "label": "Testimonials",
+     "href": "/testimonials"
+    },
+    {
+     "label": "Who's here",
+     "href": "/who"
     }
    ],
    "header": {

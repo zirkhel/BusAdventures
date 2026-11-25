@@ -1,0 +1,66 @@
+[
+  {
+    "id": "W-havenmutual-0001",
+    "site": "havenmutual",
+    "page": "home",
+    "type": "page",
+    "platform": "havenmutual",
+    "url": "havenmutual.com",
+    "date": "2025-09-04",
+    "title": "Haven Mutual",
+    "filler": true,
+    "source": "havenmutual",
+    "index": "full",
+    "versions": [
+      {
+        "id": "v1",
+        "cached": true,
+        "body": "Haven Mutual writes cover for boats, shops, and the ordinary risks of a harbour town.\n\nWe have been in Old Town since 2009. The office is on Market Row, above the stationer's. You can knock. Someone will be there.\n\n“They settled a claim I had almost talked myself out of making. I still keep the policy.”\n— a shop owner in Eastfield\n\nThe face in the photograph is one we use on leaflets. It is a stock portrait. It is not a member of staff."
+      }
+    ],
+    "images": [
+      "WEB0038",
+      "IMG06B"
+    ]
+  },
+  {
+    "id": "W-havenmutual-0002",
+    "site": "havenmutual",
+    "page": "page",
+    "type": "page",
+    "platform": "havenmutual",
+    "url": "havenmutual.com/cover",
+    "date": "2025-09-04",
+    "title": "Cover",
+    "filler": true,
+    "source": "havenmutual",
+    "index": "weak",
+    "versions": [
+      {
+        "id": "v1",
+        "cached": true,
+        "body": "We write small commercial policies, personal belongings, and a modest marine line for skippers who keep a boat in the harbour.\n\nThis is not a national brand. If you want a call-centre quote in two minutes, we will probably disappoint you. If you want someone to read the claim, come to Market Row."
+      }
+    ]
+  },
+  {
+    "id": "W-havenmutual-0003",
+    "site": "havenmutual",
+    "page": "page",
+    "type": "page",
+    "platform": "havenmutual",
+    "url": "havenmutual.com/contact",
+    "date": "2025-09-04",
+    "title": "Contact",
+    "filler": true,
+    "source": "havenmutual",
+    "index": "weak",
+    "versions": [
+      {
+        "id": "v1",
+        "cached": true,
+        "body": "Haven Mutual\n9 Market Row, Old Town\nPort Calder\n\nWeekdays 9:00–16:30. Closed Saturdays in winter, open Saturday mornings from May to September.\n\nThe office is not at 18 Harbor Street. If a letter goes there, it is not ours."
+      }
+    ]
+  }
+]

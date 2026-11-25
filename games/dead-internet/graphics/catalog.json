@@ -115,6 +115,115 @@
     {"id": "WEB0032", "file": "assets/images/web0032-calderpower-hero.svg", "width": 1600, "height": 900, "kind": "ui", "status": "final", "usedIn": ["W-calderpower-0001"], "priority": "optional", "brief": "Utility illustration: three pylons on a grey shore, a small meter cabinet, no lettering and not the blackout-gate photograph."},
     {"id": "WEB0033", "file": "assets/images/web0033-caldercu-hero.svg", "width": 1600, "height": 900, "kind": "ui", "status": "final", "usedIn": ["W-caldercu-0001", "W-caldercu-0003"], "priority": "optional", "brief": "Credit union branch illustration: a modest facade with two counters, no lettering."},
     {"id": "WEB0034", "file": "assets/images/web0034-walts-hero.svg", "width": 1600, "height": 900, "kind": "ui", "status": "final", "usedIn": ["W-walts-0001"], "priority": "optional", "brief": "A faded, scanned-looking Harbor Festival illustration on warm paper, no readable lettering."},
-    {"id": "WEB0035", "file": "assets/images/web0035-harborpa-hero.svg", "width": 1600, "height": 900, "kind": "ui", "status": "final", "usedIn": ["W-harborpa-0001"], "priority": "optional", "brief": "Consultancy illustration: a dark header and a plain desk, no lettering."}
+    {"id": "WEB0035", "file": "assets/images/web0035-harborpa-hero.svg", "width": 1600, "height": 900, "kind": "ui", "status": "final", "usedIn": ["W-harborpa-0001"], "priority": "optional", "brief": "Consultancy illustration: a dark header and a plain desk, no lettering."},
+    {
+      "id": "IMG06A",
+      "file": "assets/images/img06a-harbordesk.webp",
+      "width": 1024,
+      "height": 1024,
+      "kind": "portrait",
+      "status": "final",
+      "usedIn": [
+        "W-harbordesk-0003"
+      ],
+      "derivedFrom": "IMG06S",
+      "transform": "none: identical file, used as a purchased stock portrait on HarborDesk",
+      "brief": "Not generated: same file as IMG06S, a purchased copy of synthetic portrait #44812.",
+      "priority": "required"
+    },
+    {
+      "id": "IMG06B",
+      "file": "assets/images/img06b-havenmutual.webp",
+      "width": 1024,
+      "height": 1024,
+      "kind": "portrait",
+      "status": "final",
+      "usedIn": [
+        "W-havenmutual-0001"
+      ],
+      "derivedFrom": "IMG06S",
+      "transform": "none: identical file, used as a purchased stock portrait on Haven Mutual",
+      "brief": "Not generated: same file as IMG06S, a purchased copy of synthetic portrait #44812.",
+      "priority": "required"
+    },
+    {
+      "id": "LOGO_HAVENMUTUAL",
+      "file": "assets/images/logo-havenmutual.svg",
+      "width": 256,
+      "height": 256,
+      "kind": "logo",
+      "status": "final",
+      "usedIn": [
+        "site:havenmutual"
+      ],
+      "priority": "required",
+      "brief": "Haven Mutual: a pale shield on dark teal with a simple cross."
+    },
+    {
+      "id": "LOGO_QUAYLEDGER",
+      "file": "assets/images/logo-quayledger.svg",
+      "width": 256,
+      "height": 256,
+      "kind": "logo",
+      "status": "final",
+      "usedIn": [
+        "site:quayledger"
+      ],
+      "priority": "required",
+      "brief": "Quay Ledger: an open book outline on dark brown."
+    },
+    {
+      "id": "LOGO_NORTHLAMP",
+      "file": "assets/images/logo-northlamp.svg",
+      "width": 256,
+      "height": 256,
+      "kind": "logo",
+      "status": "final",
+      "usedIn": [
+        "site:northlamp"
+      ],
+      "priority": "required",
+      "brief": "North Lamp Studio: a yellow lamp on a dark ground."
+    },
+    {
+      "id": "WEB0036",
+      "file": "assets/images/web0036-faceless-hero.svg",
+      "width": 1600,
+      "height": 900,
+      "kind": "ui",
+      "status": "final",
+      "usedIn": [
+        "W-faceless-0001"
+      ],
+      "priority": "optional",
+      "brief": "Abstract violet circles on a pale ground, no faces and no lettering."
+    },
+    {
+      "id": "WEB0037",
+      "file": "assets/images/web0037-notes-fog.svg",
+      "width": 1600,
+      "height": 900,
+      "kind": "ui",
+      "status": "final",
+      "usedIn": [
+        "W-eastfieldnotes-0004"
+      ],
+      "priority": "optional",
+      "brief": "Fog over a harbour shoreline, no people and no lettering."
+    },
+    {
+      "id": "WEB0038",
+      "file": "assets/images/web0038-haven-hero.svg",
+      "width": 1600,
+      "height": 900,
+      "kind": "ui",
+      "status": "final",
+      "usedIn": [
+        "W-havenmutual-0001"
+      ],
+      "priority": "optional",
+      "brief": "A quiet harbour front of blocky buildings, no lettering."
+    }
   ]
 }
+

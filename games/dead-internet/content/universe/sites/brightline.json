@@ -46,7 +46,10 @@
      "label": "Contact",
      "href": "/contact"
     }
-   ]
+   ],
+   "footer": {
+    "text": "Brightline Media · Suite 400, 18 Harbor Street, Port Calder. Theme: Lumen by Pixelfold."
+   }
   }
  ],
  "notFound": {
