@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 25. november 2026, etter Casebook steg 1, nettsidesteg W0–W2 og nettsidegrafikk (se DEVPLAN.md)._
+_Oppdatert 25. november 2026, etter Casebook steg 1, nettsidesteg W0–W3 og nettsidegrafikk (se DEVPLAN.md)._
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md) (godkjent med justeringene i §0 der).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Casebook: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md). Nettsteder: [docs/WEBSITES.md](docs/WEBSITES.md). Saksavslutning: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
@@ -33,7 +33,7 @@ games/dead-internet/
   index.html  manifest.json egen PWA (start_url /games/dead-internet/)
   app/                      telefonen (DOM): main.js, phone.js, render.js, context.js, suggest.js, media.js, ui.js, style.css
     apps/                   browser, connect, messages, casebook, settings, news (mal for aviser)
-    sites/                  nettstedsmaler (W2): index, chrome, blocks, corporate, government, blog + CSS
+    sites/                  nettstedsmaler (W2) og statussider (W3): index, chrome, blocks, corporate, government, blog, simple, status + CSS
   core/                     spillmotoren (ingen DOM, ingen I/O)
     game.js                 fasade: Game, dispatch, spørringer, replay()
     world.js                buildWorld(): indekser over innholdet
@@ -41,7 +41,7 @@ games/dead-internet/
     conditions.js           betingelsesspråket
     rules.js                regler, effekter, planlagte effekter
     artifacts.js            synlighet, versjoner, cache, tilgang
-    search.js               Seeker: fritekst (også i én app), bildesøk (også nøkkelbilder), bildeinfo
+    search.js               Seeker: fritekst (også i én app), offisielt nettsted først (W3), bildesøk (også nøkkelbilder), bildeinfo
     feed.js                 feeder: deterministisk rangering, følg, lik, «Not interested»
     refs.js                 referanser i tekst (leksikon, mønstre) og søkeforslag
     discovery.js            oppdagelsestilstander og kunnskapsgrenser
@@ -50,7 +50,10 @@ games/dead-internet/
     dialogue.js             skriptede samtaler, tillit, svaralternativer
     casebook.js             bevis, hypoteser, notater, vurdering, publisering
     provenance.js           synlig opphav og synlige navn for bevis (aldri kanon)
-    save.js                 lagring, versjonering, migrering, eksport/import
+    sites.js                nettstedsmodell: status, design, lenker, 404 (W1)
+    site-view.js            publicView(): hvitelistet visning til malene (W0)
+    browser.js              adresseoppslag, bokmerker, tekststørrelse, frem/tilbake (W3, ingen DOM)
+    save.js                 lagring, versjonering, migrering, eksport/import (SAVE_VERSION 8)
     content.js              laster content/manifest.json (fetch eller fs injiseres)
     util.js
   content/
@@ -416,7 +419,7 @@ Full gjennomgang: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Pr
 
 **For fremtidige mysterier** (forslag): påstander er byggeklossene; tre lag avslutninger (milepæler, sidekonsekvenser, ettervirkninger); dimensjonene Accuracy, Evidence, Coverage, Impact, Collateral og Timing er en sjekkliste for forfatteren, aldri tall for spilleren; en utfallsmatrise-test publiserer kombinasjoner av påstander × kanal × før/etter frist.
 
-## Autentiske nettsteder (godkjent designretning 24. nov 2026, W0–W2 og grafikk implementert)
+## Autentiske nettsteder (godkjent designretning 24. nov 2026, W0–W3 og grafikk implementert)
 
 Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjelder foran resten av dokumentet. Implementeres i veikartets punkt 5 (W0–W8), ikke før.
 
@@ -425,7 +428,7 @@ Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjel
 - **Design versjoneres etter dato.** En cachet side vises med designet som gjaldt da.
 - **Lister bygger seg selv** fra synlige sider med samme `site`/`page`. Cachede versjoner viser bare sider fra før cache-datoen. `listed: false` holder en side utenfor.
 - **Malene får bare et hvitelistet offentlig visningsobjekt.** `publicView()` i `core/site-view.js` (W0, 25. nov) brukes av `renderArtifact`. Aldri `supports`, `mentions`, `source`, `filler`, `hidden`, `covers` eller `pool`.
-- **Browser eier nettleseren** (tilbake/frem, bokmerker adskilt fra bevis, tekststørrelse, cache og Archive). Nettstedene eier sin presentasjon (404, innlogging i eget design).
+- **Browser eier nettleseren** (tilbake/frem, bokmerker adskilt fra bevis, tekststørrelse, cache og Archive). Nettstedene eier sin presentasjon (404, innlogging i eget design). **W3** (25. nov, `core/browser.js`, `core/search.js`, `app/apps/browser.js`, `app/sites/status.js`, lagring versjon 8): frem-knapp (økt-stakk, ikke lagret), stjernebokmerker atskilt fra Casebook (bok-ikon), A−/A+, 404 og vedlikehold i nettstedets chrome, parkert «This domain may be for sale», «This site can't be reached» for `gone`. `portcalderjazz.com` er parkert fra 2022, uten cachet 2019-side. Seeker setter offisielt nettsted først når spørringen tydelig navngir et nettsted i W1-modellen (f.eks. «kestrel», «northgate», «brightline», «port calder», «eastfield notes»); `gone`/`parked` vises som treff og følger status. Rangeringen vet fortsatt ikke hva som betyr noe for en sak.
 - **Samme mal er ikke samme opphav.** Uavhengige nettsteder kan dele et kommersielt tema. Malvalg skal aldri være en sikker indikator.
 - **Bakgrunnsinternett:** mål 140–170 sider i etapper, først Northgate, Brightline, bykommunen, Eastfield Notes, Kestrel, Calderpedia, Threadline, Faceless Stock, SpillCheck og Docshare. Nye fakta føres i en fil for bakgrunnsfakta med `status: canon | claim` og sjekkes mot kanon. Bakgrunnssider skal ha like god grafikk som sider med spor.
 - **Avklaringer:** SpillCheck beholder rollen. Eastfield Notes er fra 2019, med gammelt tema fra ca. 2012, og Brightline byttet design samtidig med innholdet i oktober 2025. `corp-registries.example` byttes med et troverdig domene, med egen test. En cachet personalside fra 2024 på biblioteket lister Mara og Priya, uten nye personopplysninger. Calvins stockfoto kan ha flere uavhengige treff. Maras møllebilde brukes ikke på Calderpedia nå. Brightlines kundecaser forblir anonyme.
@@ -434,7 +437,7 @@ Full beskrivelse og beslutninger: [docs/WEBSITES.md](docs/WEBSITES.md), §0 gjel
 
 | App | Status | Hva som finnes i dag |
 |---|---|---|
-| Browser | ferdig | Seeker, nettsteder, cachede kopier, historikk |
+| Browser | ferdig | Seeker (offisielt nettsted først ved merkenavn/domene), nettsteder, cachede kopier, historikk, frem-knapp, bokmerker, tekststørrelse, 404/parkert/vedlikehold/«can't be reached» (W3) |
 | Connect | ferdig | profiler, innlegg, søk |
 | Messages | ferdig | emnebaserte samtaler, vis bevis, svarvalg |
 | Casebook | ferdig | Evidence, Theories, Notes, Timeline (bygd av spilleren, uten fasit) |

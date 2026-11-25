@@ -1,6 +1,6 @@
 # Dead Internet: Et mer autentisk internett i Browser
 
-> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0–W2 og nettsidegrafikk er implementert** (25. november 2026, lokale greiner, ikke pushet). W3–W8 gjenstår. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Katalog: [../graphics/GRAPHICS.md](../graphics/GRAPHICS.md).
+> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0–W2 og nettsidegrafikk er implementert** (25. november 2026, merget som PR #73–#76). **W3 er implementert** (25. november 2026, grein `websites-w3`, inkl. Seeker-rangering av offisielt nettsted). W4–W8 gjenstår. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Katalog: [../graphics/GRAPHICS.md](../graphics/GRAPHICS.md).
 
 ## 0. Beslutninger (Anders, 24. november 2026)
 
@@ -433,7 +433,7 @@ Logoer: Kestrel 2014 og Northgate før 2024 kan være tekstlogoer. Nye nettstede
 | **W1** Nettstedsmodell | **Ferdig** (25. nov). `content/universe/sites/*.json` for alle refererte nettsteder, `site`/`page` på eksisterende sider, `core/sites.js` (design etter dato, lenkeoppslag, status, 404-data, `listedPages`). Validatoren avslår nav-lenker som ikke løses, og `site-ref` avslår domenereferanser uten nettsted (e-postdomener unntatt). Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Ingen synlige endringer. | `core/sites.js`, `core/content.js`, `core/world.js`, `tools/lib/validate-world.mjs`, `content/universe/sites/`, tester | W0 |
 | **W2** Malverk + 3 maler | **Ferdig** (25. nov, `websites-w2` `4f0200b`). `app/sites/` med blokker og malene Corporate, Government og Blog. Northgate, Port Calder City Portal og Eastfield Notes viser dagens tekst i de nye malene (Eastfield Notes bytter til `minimal` på den levende siden etter 22. okt 2025; cachete versjoner beholder `classic`). Motoren brukes også av andre nettsteder som allerede hadde disse malnavnene (Brightline, Kestrel, Calder Transit, Harbor Authority, `corp-registries.example`). CSS ligger i `app/sites/*.css`. | `app/sites/`, `app/render.js`, `index.html` | W1 |
 | **Grafikk** Logoer, favicon, heltebilder | **Ferdig** (25. nov, grein `websites-w2-graphics`). Alle 25 konfigurerte nettsteder har SVG-logo. Adressefeltet viser favicon. Heltebilder på malte sider (nye WEB-fotografier og SVG-illustrasjoner, registrert i `graphics/catalog.json`). Tynn chrome for landing/legacy/personal/wiki/document slik at merke og bilde synes; dette er ikke W5. Bevisbilder er ikke gjenbrukt som pynt. Gjenstående WEB0001–WEB0024 uten eksisterende side er ikke produsert. | `assets/images/`, `graphics/catalog.json`, `app/apps/browser.js`, `app/sites/simple.js` | W2 |
-| **W3** Browser | Frem-knapp, bokmerker, tekststørrelse, nettstedets 404/vedlikehold/parkert, «can't be reached», lagringsmigrering | `app/apps/browser.js`, `app/phone.js`, `core/save.js` | W1 |
+| **W3** Browser | **Ferdig** (25. nov, grein `websites-w3`). Frem-knapp, bokmerker (stjerne, atskilt fra Casebook-lagring), tekststørrelse A−/A+, nettstedets 404 og vedlikehold i nettstedets chrome, parkert «This domain may be for sale», Browser-eid «This site can't be reached», lagring versjon 8 så gamle spill lastes. Seeker viser offisielt nettsted først når spørringen er merkenavn, alias eller domene (W1-modellen), også for `gone`/`parked`. `portcalderjazz.com` er lagt inn som parkert fra 2022 (allerede i §4); ingen cachet 2019-side. | `core/browser.js`, `core/search.js`, `core/sites.js`, `app/apps/browser.js`, `app/phone.js`, `core/save.js`, `app/sites/status.js` | W1 |
 | **W4** Bakgrunn, runde 1 | Innhold til Northgate, bykommunen, Eastfield Notes, Kestrel, Brightline (ca. 110 sider) + fil med bakgrunnsfakta | `content/universe/sites/`, mysteriefiler for Brightline-sidene | W2 |
 | **W5** Fire maler til | Wiki, Forum, Document, Anonymous. Calderpedia, Threadline, Docshare, SpillCheck og Faceless flyttes over, med innhold. | `app/sites/`, innhold | W2 |
 | **W6** Historie | Legacy, Personal, Landing (inkl. `parked`). Nye bakgrunnsnettsteder. Cachede eldre design. | `app/sites/`, innhold | W5 |
@@ -444,20 +444,21 @@ Grafikk produseres parallelt fra W2, i den vanlige grafikktråden.
 
 ## Implementeringslogg (25. november 2026)
 
-Lokale, stablede greiner på `origin/main` `d7a9368`. Ikke pushet. Ingen PR.
+W0–W2 og grafikk er merget til `main` som PR #73–#76 (`dec0458`). W3 er implementert på `websites-w3` fra den tippen.
 
-| Steg | Grein | Commit |
+| Steg | Grein | Commit / PR |
 |---|---|---|
-| W0 Lekkasjevern | `websites-w0` | `bc67d47` |
-| W1 Nettstedsmodell og inventar | `websites-w1` | `2611469` |
-| W2 Corporate, Government, Blog | `websites-w2` | `4f0200b` |
-| Logoer, favicon og heltebilder | `websites-w2-graphics` | `bd20641` |
+| W0 Lekkasjevern | `websites-w0` | `bc67d47` · PR #73 |
+| W1 Nettstedsmodell og inventar | `websites-w1` | `2611469` · PR #74 |
+| W2 Corporate, Government, Blog | `websites-w2` | `4f0200b` · PR #75 |
+| Logoer, favicon og heltebilder | `websites-w2-graphics` | `bd20641` · PR #76 |
+| W3 Browser-verktøy og nettstedstilstander | `websites-w3` | denne greinen |
 
-Avvik fra §11: W2-motoren gjelder alle nettsteder med de tre malnavnene, ikke bare Northgate, bykommunen og Eastfield Notes. Grafikksteget innførte en tynn chrome for fem andre malnavn slik at logo og helt synes; fulle maler for Wiki/Forum/Document/Anonymous er fortsatt W5. To domener er tildelt fordi kanon ikke navngir dem: `harbor.portcalder.gov`, `eastfieldneighbors.net`. `corp-registries.example` er ikke omdøpt.
+Avvik fra §11: W2-motoren gjelder alle nettsteder med de tre malnavnene, ikke bare Northgate, bykommunen og Eastfield Notes. Grafikksteget innførte en tynn chrome for fem andre malnavn slik at logo og helt synes; fulle maler for Wiki/Forum/Document/Anonymous er fortsatt W5. To domener er tildelt fordi kanon ikke navngir dem: `harbor.portcalder.gov`, `eastfieldneighbors.net`. `corp-registries.example` er ikke omdøpt. `portcalderjazz.com` er lagt til i W3 som parkert fra 2022, slik §4 allerede beskriver; den cachete 2019-versjonen er ikke skrevet (ingen nye jazz-fakta). Ingen forfattet nettside står i `maintenance` på startdatoen; tilstanden er dekket av tester. Frem-stakken er økt-only og overlever ikke reload til låseskjermen. Lagring versjon 8 tar vare på bokmerker og tekststørrelse. Seeker rangerer offisielt nettsted først ved tydelig merkenavn/domene; app-søk og skjulte sider er uendret, og blandede spørringer behandles ikke som merkenavn.
 
-Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs`, `node games/dead-internet/tools/simulate.mjs`, og Playwright-røyktest `tools/test-casebook-ui.mjs` (390×844). Nettstedstester: `tests/sites.test.mjs`.
+Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs`, `node games/dead-internet/tools/simulate.mjs`, og Playwright-røyktest `tools/test-casebook-ui.mjs` (390×844). Nettstedstester: `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. Skjermbilder: `/workspace/dead-internet-shots/w3-*.png`.
 
-Neste steg: W3 (Browser-verktøy og nettstedstilstander), deretter W4–W8, omdøping av `corp-registries.example`, lukke etterlatt PR #72.
+Neste steg: W4 bakgrunnssider, deretter W5–W8, omdøping av `corp-registries.example`, lukke etterlatt PR #72.
 
 
 
