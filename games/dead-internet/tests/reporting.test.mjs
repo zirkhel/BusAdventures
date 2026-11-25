@@ -132,6 +132,7 @@ test("historical reports never change when the player later edits the Casebook; 
   assert.deepEqual(theory(h).reasons.find(x => x.evidence === ev[0]).stance, "against");
   assert.deepEqual(theory(h).connections, [{ kind: "related", a: ev[1], b: ev[2], note: "Same wording" }]);
   assert.equal(snap.events[0].description, "What the friends wrote");
+  assert.deepEqual(snap.events[0].reasons, [{ evidence: ev[1], stance: "for", title: g.evidenceView(ev[1]).title, note: "Mike sounds sure" }]);
   assert.deepEqual(before.items.map(i => i.label), ["Mara Quinn is dead"]);
   assert.deepEqual(before.cut, ["Mara Quinn is dead"]);
   // Now the player rewrites everything behind it.
@@ -150,6 +151,10 @@ test("historical reports never change when the player later edits the Casebook; 
   ]) assert.ok(res.ok, `fixture: ${what} (${JSON.stringify(res)})`);
   assert.equal(g.s.hypotheses.find(x => x.id === strong).title, "Not so sure");
   assert.deepEqual(g.casebook().reports.at(-1), before, "the report reads exactly as it did when it went out");
+  assert.ok(g.dispatch({ type: "removeEvidence", id: ev[1] }).ok);
+  assert.deepEqual(g.casebook().reports.at(-1), before, "removing event evidence preserves its frozen reference and note");
+  const restored = new Game(g.w, { state: deserialize(g.w, serialize(g.s)).state });
+  assert.deepEqual(restored.casebook().reports.at(-1), before, "event evidence survives save and reload");
 });
 
 test("timeline events show the player's own count next to the visible sources", async () => {

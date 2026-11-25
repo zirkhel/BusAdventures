@@ -649,6 +649,9 @@ try {
     await p5.locator('.report-done').waitFor();
     const snap = p5.locator('.report-done .rep-snap-body');
     const snapText = await snap.innerText();
+    const eventSnapshot = snap.locator('.snap-item').filter({ has: p5.getByText('The friends post about Mara', { exact: true }) });
+    assert.equal(await eventSnapshot.locator('.snap-reasons li[data-stance="for"]').count(), 3, 'published timeline keeps supporting evidence');
+    assert.equal(await eventSnapshot.locator('.snap-reasons li[data-stance="against"]').count(), 1, 'published timeline keeps contradicting evidence');
     assert.match(snapText, new RegExp(`^Published\\n“${claimLabel}”\\n2 marked as supporting by you · 0 marked against · 2 sources\\nIn your words: “The death notice is real”\\nYour note: “Dana wrote it herself”\\nFor: .* · your note: “Signed by the paper”`));
     assert.match(snapText, /Timeline events published\nThe friends post about Mara\n.* · 3 supporting · 3 sources · 1 in your count · 1 contradicting/);
     assert.match(snapText, new RegExp(`Cut by Dana Reyes, not published\\n“${claimLabel}”\\n3 marked as supporting by you · 1 marked against · 3 sources · 1 in your count\\nYou don't trust 1 · You doubt 1 is who it claims to be`));

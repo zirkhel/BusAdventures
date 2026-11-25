@@ -52,7 +52,7 @@ Ingen av tallene bekrefter sannhet eller faktisk uavhengighet. Skjult opphav bru
 
 Rapportbyggeren sier «marked as supporting by you», viser bevis mot og egne forbehold. Dana har to adskilte bokser: hennes synlige vurdering og det spilleren selv har markert. Bevis mot, forkastet teori, lavere egen opptelling og Nei på kildekortene er råd, ikke ekstra kuttregler. Lav tillit gir forklaring på hvorfor hun ikke gjennomgår materialet.
 
-Ved publisering fryses `report.snapshot`: påstandsordlyd, egne ord, notater, bevis med begrunnelser og koblinger, tellinger, forbehold, hendelser og hva Dana kuttet. Publisert innhold og kutt vises hver for seg. Senere redigering eller sletting i Casebook omskriver ikke øyeblikksbildet. Gamle rapporter uten snapshot får ikke konstruert historiske data ved migrering.
+Ved publisering fryses `report.snapshot`: påstandsordlyd, egne ord, notater, bevis med begrunnelser og koblinger, tellinger, forbehold, hendelser og hva Dana kuttet. PR #90 retter en mangel: også hendelsenes bevisreferanser, for/mot og beviskommentarer fryses og vises. Publisert innhold og kutt vises hver for seg. Senere redigering eller sletting i Casebook omskriver ikke øyeblikksbildet. Gamle rapporter uten snapshot eller hendelsesreferanser får ikke konstruert historiske data ved migrering. Feltet er valgfritt, og lagringsformatet forblir v12.
 
 Timeline viser spillerens egen opptelling med «in your count». Verdens poengberegning og avslutningsregler bruker fortsatt publisert innhold og kanon. Supports endrer hva som kan slippe gjennom redaksjonen; kildekort og personlige forbehold endrer ikke verdens poengregel.
 

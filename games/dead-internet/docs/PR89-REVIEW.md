@@ -1,43 +1,42 @@
-# PR #89 — kontroll før merge
+# PR #89 — gjennomgang før merge
 
-Kontrollgrunnlag 25. november 2026: [PR #89](https://github.com/zirkhel/BusAdventures/pull/89), head `50d5643703a9f7e136809e788eefb64059971383`, base `20d2f49`. PR-en er åpen og ikke merget. Denne dokumentasjonsgrenen bygger på head og endrer ingen spillkode.
+Kontrollert 25. november 2026: PR #89 ved `50d5643703a9f7e136809e788eefb64059971383`, mot `main` ved `20d2f49`. Rettelser og dokumentasjon leveres i [PR #90](https://github.com/zirkhel/BusAdventures/pull/90), som har `casebook-step-5` som base. Ingen av PR-ene er merget eller mergegodkjent.
 
-## Bekreftet ved egen kontroll
+## Resultat av gjennomgangen
 
-- [x] `21fc5a1` implementerer regel P, hjelp og tips. `50d5643` er pushet etter denne og inneholder den siste avtalte presiseringen; Groks arbeid ble ikke stående bare i chatten.
-- [x] Synlig avsender beholdes: @harborwalkerpat har kontoens opphav og navngis som konto, ikke som personen. Løse Pat/Mike/Lindsay/Tom i annen tekst blir ikke automatisk disse kontoene. Tilsvarende tester dekker Mike, Lindsay og Toms kommentar.
-- [x] Alle fem berørte Dana-replikker sier «with the supporting connections you've made».
-- [x] `review()` og publiseringskuttet bruker `apparentSupportOf`; regel P bruker bare for-listen, synlige navn, rettede Supports, ett ledd og ulike synlige opphav.
-- [x] Navne-, Dana-probe- og tvillingtestene kjørt sekvensielt: **30 bestått**, ingen feil eller todo.
-- [x] `tips-help.test.mjs`: **6 bestått**. Nytt spill, omstart/lasting, reset, kø og hjelpetekst dekket.
-- [x] Full `validate.mjs`: **456 artefakter, 8 karakterer, 85 bilder; 0 feil, 0 advarsler**.
-- [x] Tillitsfarmen er fortsatt til stede og er ikke skjult som «fikset» av denne PR-en.
+Samlet diff er gjennomgått: navneoppslag og regel P, rapportgrunnlag, migrering, UI, hjelp/tips, innhold, scenarioer, validator og tester. To konkrete mangler er rettet i #90:
 
-- [x] Under dokumentasjonsoppryddingen: hele Node-pakken kjørt én gang med `--test-concurrency=1`: **287/287 bestått**, 0 feil, 0 hoppet over, 0 todo (ca. 96 sekunder).
-- [x] `simulate.mjs` kjørt etter testpakken: **12/12 scenarioer består**; begge utforskere når Lights out (362/463 bevis). Kode og innhold er identisk med `50d5643`. Det er ikke kjørt en ny simulator på basegrenen for separat differanseberegning.
+1. **Store/små bokstaver:** `Pat` ble ignorert riktig, men `pat` og `PAT` ble tolket som kontoen. Parseren klassifiserer nå kontoens visningsnavn, ikke skrivemåten i teksten. Pat/Mike/Lindsay/Tom testes i tre varianter. Synlig avsender og @brukernavn beholder konto-ID og opphav; konto blir ikke person.
+2. **Tidslinjebevis i rapporten:** Øyeblikksbildet lagret hendelsens tellinger, men manglet bevisreferansene. Nye rapporter fryser og viser referanse, for/mot og spillerens beviskommentar. De overlever endring, sletting og lasting. Eldre rapporter får ikke rekonstruert referanser. Feltet er valgfritt; formatet er fortsatt v12.
 
-## Tidligere rapport og gjenværende UI-kontroll
+Ingen ny kanon, poengregel, avslutning eller tillitsregel er innført. Danas fem relevante replikker inneholder allerede «with the supporting connections you've made» i `50d5643`; Groks siste endring var pushet.
 
-DEVPLAN ved `50d5643` rapporterer 287/287 Node-tester, validator uten feil/advarsler, simulator med samme dager, troverdighet og avslutninger som base, samt Casebook UI 7/7, Archive UI 3/3 og tips UI 1/1 ved 390×844. PR-beskrivelsen og regelbeskrivelsens gamle måleavsnitt viste fortsatt 285. Dette var forskjellige dokumenterte måletidspunkter. Den nye Node-kjøringen ovenfor bekrefter nå 287. UI-resultatene er fortsatt tidligere rapporterte resultater.
+## Kontroller på rettet kode
 
-Simulatorens rapporterte forskjell er antall handlinger: +1 i design_as_clue, lights_out, portal_lie og too_late; +4 i who_paid_whom. Skriptene lager nå uttrykkelige støttekoblinger og sistnevnte lagrer også A09. Uendret simulatorutfall beviser ikke i seg selv at informasjon ikke lekker.
+- Navnetester: **10/10**, rapporttester: **13/13**.
+- Hele Node-pakken kjørt én gang med `--test-concurrency=1`: **287/287**, ingen feil, hoppet over eller todo. Inkluderer blokkerende Dana-prober og tvillingverden.
+- Full validator: **456 artefakter, 8 karakterer, 85 bilder; 0 feil, 0 advarsler**.
+- Simulator: **12/12 scenarioer**; begge utforskere når Lights out med 362/463 bevis. Ingen ny separat kjøring av basegrenen; dette er ikke en ny målt paritetsrapport mot main.
+- Mobil ved **390×844**: **Casebook 7/7 og tips/hjelp 1/1 bestått**, inkludert tvilling-DOM med 982 beviskort og de nye tidslinjereferansene. Casebook og tips kjøres etter hverandre og gjenbruker én Edge/Chromium-prosess, uten parallelle workers.
 
-## Sjekk eller avklar før merge
+Fullpakken ble ikke gjentatt for dokumentasjonsendringer. Første nettleserstart i sandkassen feilet med tilgangsfeil før testene startet; den avsluttede prosessen ble ikke etterlatt. Mobilkjøringen bruker en isolert testprofil utenfor sandkassen.
 
-- [ ] Full gjennomgang av PR-ens samlede diff, utover de siste navne-/replikkendringene. Den smale kontrollen ovenfor er ikke en full revisjon av alle rapport-, migrerings- og UI-endringene.
-- [ ] Verifiser mobilflyten på head: støtteretning, aliasforklaring, Help uten tipspåvirkning, kø, reset når tips er av/på, lasting og Start over. Tidligere skjermbilder fra en annen arbeidsmaskin er ikke lokalt kontrollert.
-- [ ] Knytt fullpakke, simulator og UI-resultater til commit som faktisk skal merges. Fullpakke og simulator er nå kjørt på uendret runtime fra `50d5643`; UI gjenstår som egen kontroll. Gjenbruk dokumenterte kjøringer når tilstrekkelig; ved kodeendring kjøres nødvendige kontroller sekvensielt etter DEVPLAN, ikke kontinuerlig.
-- [ ] Avklar avgrensningen av navneoppslaget: hva betyr «synlig kandidat» sammenlignet med «allerede møtt»? Ikke legg inn en ny oppdagelsesregel i dokumentasjonen alene.
-- [ ] Vurder om den engelske bokstavtesten for løse fornavn også skal håndtere annen kapitalisering og aksenter. Ingen utvidelse av navneparseren er gjort her.
-- [ ] Bekreft UX for «Show intro tips again» når tips er av: den nullstiller sett-listen, men bryteren må fortsatt slås på separat. Dette er implementert oppførsel, ikke en ny anbefaling.
-- [ ] Registrer at gjenværende dialogreaksjoner på `showSupports` og tillitsfarmen tas separat. Ikke omtale hele Dana/personsystemet som lekkasjefritt.
-- [ ] Oppdater PR-beskrivelsen med presis navneregel og verifiseringsgrunnlag før godkjenning.
-- [ ] Anders gjennomgår og gir eksplisitt mergegodkjenning. Assistentanbefalinger i tidligere referater er ikke denne godkjenningen.
+## Avklarte kontrollpunkter og begrensninger
 
-## Utenfor PR #89
+- Både Danas tekst og Daily Record-kuttet bruker `apparentSupportOf`: bare for-listen, synlige navn/opphav og rettede Supports, ett ledd. Kildekort og Same origin påvirker bare spillerens egen opptelling.
+- «Synlig kandidat» betyr i eksisterende kode et undersøkt emne (`known`) eller fullt navn i lagret bevis. Skjult `mentions` eller bare registrert møte er ikke nok. Forfatterdefinerte kortformer har en eier med mindre en annen synlig kandidat passer. Dokumentasjonen beskriver denne oppførselen; ingen ny oppdagelsesregel er innført.
+- Kapitalisering for løse kontofornavn er rettet. Aksenter og andre alfabet er ikke lagt til; eventuell utvidelse er en separat oppgave.
+- «Show intro tips again» nullstiller sett-listen. Når tips er av, beholdes av og en tekst forklarer at bryteren må slås på. Nytt spill slår tips på; lasting og vanlig omstart beholder innstillingen. Dette er eksisterende avtalt oppførsel.
+- Danas tillitsfarm og persondialog med `showSupports` gjenstår. PR #89 gjør ikke hele personsystemet lekkasjefritt. F-1/F-2 og øvrige utvidelser ligger i [BACKLOG](BACKLOG.md).
 
-Tillitsfarm, øvrig persondialog, F-1/F-2, nye avslutninger, nye påstandstyper og nye apper. Se [BACKLOG](BACKLOG.md). Disse skal ikke snikes inn for å få kontrollisten grønn.
+## Før merge
 
-## Dokumentasjonsopprydding i PR #90
+- [x] Mobilkontroll fullført; rapport og støttehjelp også kontrollert visuelt. 75 lokale Markdown-lenker kontrollert uten mangler.
+- [ ] PR-metadata: GitHub-koblingen svarte 403, og nettleseren kunne ikke aktivere redigeringen. Beskrivelsen på GitHub er derfor utdatert; gjeldende omfang og resultater står her.
+- [ ] Anders gjennomgår og gir eksplisitt mergegodkjenning.
 
-PR #90 bygger på #89 og samler gjeldende beskrivelse, restoppgaver og denne kontrollisten. Historiske fullkopier er erstattet av lenker til `50d5643`. Ingen spillkode eller tester er endret. De registrerte 287 testene, validatoren og simulatoren gjenbrukes; dokumentasjonsoppfølgingen kontrollerer lenker og diff uten å starte spilltestene på nytt. Åpne punkter ovenfor er ikke dermed godkjent.
+Etter godkjenning er rekkefølgen #90 inn i `casebook-step-5`, deretter #89 inn i `main`. Ikke merge #89 alene før rettelsene er med.
+
+## Dokumentasjonsopprydding
+
+#90 samler gjeldende funksjon, restoppgaver og forslag. Redundante historiske fullkopier er erstattet med lenker til `50d5643`. Kanon og forfattergrunnlag er bevart. Dokumentasjonen gjør ikke tidligere assistentforslag til designgodkjenninger. #90 inneholder nå også de to kontrollrettelsene ovenfor og er derfor ikke lenger en ren dokumentasjons-PR.

@@ -1000,6 +1000,8 @@ export function casebookApp(phone) {
   /** A frozen evidence reference from a snapshot, as text. Only fixed content: a title, a quote, a conversation, a picture. */
   const refTitle = r => r.quote != null ? `“${r.quote}”` : r.thread !== undefined ? `Message from ${phone.contactName(r.thread)}` :
     r.image ? (g.w.images.get(r.image)?.caption || "Image") : (r.title || "Evidence");
+  const snapReasons = reasons => asList(reasons).length ? h("ul.snap-reasons", reasons.map(r => h("li.small", { "data-stance": r.stance },
+    `${r.stance === "against" ? "Against" : "For"}: ${refTitle(r)}`, r.note ? h("span.muted", ` · your note: “${r.note}”`) : null))) : null;
   /** One theory in a snapshot: the claim as worded then, the player's words, note, reasons and connections. */
   function snapTheory(t) {
     const reasons = asList(t.reasons), conns = asList(t.connections);
@@ -1008,8 +1010,7 @@ export function casebookApp(phone) {
       reservations(t) ? h("div.muted.small.snap-res", reservations(t)) : null,
       t.words && t.words !== t.claimLabel ? h("div.small.snap-words", `In your words: “${t.words}”`) : null,
       t.note ? h("div.small.snap-note", `Your note: “${t.note}”`) : null,
-      reasons.length ? h("ul.snap-reasons", reasons.map(r => h("li.small", { "data-stance": r.stance }, `${r.stance === "against" ? "Against" : "For"}: ${refTitle(r)}`,
-        r.note ? h("span.muted", ` · your note: “${r.note}”`) : null))) : null,
+      snapReasons(reasons),
       conns.length ? h("ul.snap-conns", conns.map(c => h("li.small", linkSentence(c.kind, titleOf(c.a), titleOf(c.b)), c.note ? h("span.muted", ` · “${c.note}”`) : null))) : null);
   }
   const asList = x => Array.isArray(x) ? x : [];
@@ -1024,7 +1025,7 @@ export function casebookApp(phone) {
     return h("div.rep-snap-body",
       out.length ? [h("div.field-label.sub.snap-head", "Published"), out.map(snapTheory)] : null,
       snap.events.length ? [h("div.field-label.sub.snap-head", "Timeline events published"), snap.events.map(e => h("div.snap-item", h("b", e.title),
-        h("div.muted.small", `${fmtEventDate(e.date)} · ${eventLine(e)}`), e.description ? h("div.small.snap-note", e.description) : null))] : null,
+        h("div.muted.small", `${fmtEventDate(e.date)} · ${eventLine(e)}`), e.description ? h("div.small.snap-note", e.description) : null, snapReasons(e.reasons)))] : null,
       dropped.length ? h("div.snap-cut", h("div.field-label.sub.snap-head", `Cut by ${ed ? phone.contactName(ed) : "the editor"}, not published`), dropped.map(snapTheory)) : null,
       h("div.hint.muted", `Your own counts, words and reservations on day ${snap.day}. They stay as they were, whatever you change in your Casebook later.`));
   }
@@ -1068,7 +1069,8 @@ export function casebookApp(phone) {
     const reviewer = ch?.reviewer ? phone.contactName(ch.reviewer) : null;
     const ready = !!ch && desc.hyps.length > 0;
     // Dana's comment on how the sources look (review), and her notes on what the player has marked
-    // themselves (editorNotes). Both are advice before publishing; neither decides what publishing does.
+    // themselves (editorNotes). Review uses the same visible rule as the editor's cut; own notes
+    // do not change the cut or the world's assessment after publishing.
     const ask = () => { const r = g.review(ch.id, desc.hyps, { case: cid }); const n = g.editorNotes(ch.id, desc.hyps);
       phone.replaceTop({ ...desc, review: r.lines || [], notes: n.notes || [] }); };
     const publish = () => phone.sheet(`Publish ${desc.hyps.length} ${desc.hyps.length === 1 ? "claim" : "claims"} through ${ch.name}? You can't take it back.`, [{ label: "Publish", run: () => {

@@ -80,7 +80,11 @@ export function reportBasis(g, hypIds, eventIds = []) {
   const hyps = asArray(hypIds).map(id => g.s.hypotheses.find(h => h.id === id)).filter(isStructured);
   const evs = asArray(eventIds).map(id => (g.s.timeline || []).find(e => e.id === id)).filter(Boolean);
   return { day: g.s.day, theories: hyps.map(h => ({ ...theoryBasis(g, h), ...theoryWords(g, h) })),
-    events: evs.map(ev => ({ ...eventBasis(g, ev), description: String(ev.description ?? "") })) };
+    events: evs.map(ev => ({ ...eventBasis(g, ev), description: String(ev.description ?? ""),
+      reasons: asArray(ev.evidence).filter(x => has(g, x.id)).map(x => {
+        const e = g.s.evidence.find(e => e.id === x.id);
+        return { evidence: e.id, stance: x.stance === "contradicts" ? "against" : "for", ...evidenceRef(g, e), note: String(e.note ?? "") };
+      }) })) };
 }
 
 /**

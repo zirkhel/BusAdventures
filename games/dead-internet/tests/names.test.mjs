@@ -146,7 +146,7 @@ test("sender identity is kept: posts by Pat, Mike and Lindsay, and Tom's comment
 
 test("a loose first name in another item's text is not read as an account or person", async () => {
   const { g } = await game();
-  for (const name of ["Pat", "Mike", "Lindsay", "Tom"]) {
+  for (const name of ["Pat", "Mike", "Lindsay", "Tom"].flatMap(name => [name, name.toLowerCase(), name.toUpperCase()])) {
     const ids = namesIn(g, `I talked to ${name} yesterday. ${name} said it was fine.`);
     for (const id of ["acc_pat", "pat_p", "acc_mike", "acc_lindsay", "acc_drc_tidepool_tom"]) assert.ok(!ids.has(id), `${name} in text is not ${id}`);
   }
