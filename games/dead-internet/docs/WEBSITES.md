@@ -362,7 +362,7 @@ Vaktliste for Harbor Festival 2025, kakesalg i foreldreforeningen, bordkart til 
 | Lagre en bestemt versjon | Ja, beviset lagrer `version` | Designet følger versjonen, så det vises likt. |
 | Sammenligne gammel og ny versjon | Ja, i Casebook (steg 3, greina `casebook-step-3`) | Browser leverer en «Compare with…»-handling fra Archive (W8) som kaller `phone.compare()`. |
 | Kommentere visuelle likheter | Nei | Bevisnotat i Casebook steg 1 (beviskortet). |
-| Knytte informasjon fra forskjellige nettsteder | Ja, koblinger med seks typer (Casebook steg 3) | Uendret |
+| Knytte informasjon fra forskjellige nettsteder | Ja, koblinger mellom to bevis med seks typer, retning for «Supports» og «Possibly manipulated» (Casebook steg 3) | Uendret |
 | Åpne originalkilden | Ja | Uendret, men se under. |
 | Bevis endres ikke etterpå | **Nei, ikke alltid** | Ny regel: beviset åpner alltid spillerens lagrede kopi. Se §13.3. |
 
@@ -492,7 +492,7 @@ Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.
 
 **PR #72 lukket.** PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026 som en rest etter PR #71. Greina er beholdt.
 
-**Casebook steg 3 (25. nov 2026, greina `casebook-step-3`, PR venter på gjennomgang).** Sammenligning og koblinger er bygget, og inngangen W8 trenger (`phone.compare()` med versjonsreferanser) er klar og testet. Se §9.1 og DESIGN.md, «Implementert steg 3».
+**Casebook steg 3 (25. nov 2026, greina `casebook-step-3`, PR venter på gjennomgang).** Sammenligning og koblinger er bygget, og inngangen W8 trenger (`phone.compare()` med versjonsreferanser) er klar og testet. Etter Anders’ gjennomgang 25.11.2026 er en kobling alltid mellom nøyaktig to bevis. For W8 betyr det bare at to versjoner fra Archive kan kobles direkte etter at de er lagret, for eksempel «A may be manipulated, compared with B». Se §9.1 og DESIGN.md, «Implementert steg 3».
 
 Neste steg: Casebook steg 2 er merget (PR #85 `d6dbb8c`). Steg 3 er implementert og venter på Anders' gjennomgang. Deretter W8 (Archive-kobling) og steg 4–5. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
 

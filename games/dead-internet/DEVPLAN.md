@@ -15,7 +15,7 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Rettelser etter fotografiene: PR #84 (`fixes-after-photos`) er merget til `main` (`48191f7`). Threadline-profiler viser navn og «Threads started» (`accountByHandle()` gir en id; `app/sites/forum.js` slår nå opp kontoen). Walter Brennan-sitatet etter hans død er et tilsiktet spor og har test. Godkjent enhetskanon er registrert. Harbor Festival er i oktober alle år, og de to Eastfield Notes-innleggene har oktober-URL-er med videresending fra de gamle juli-adressene (`urlAliases`). Vinneranden i 2025 er nr. 3,117. Se «Rettelser etter fotografiene» under.
 - PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026. Den var en etterlatt rest av merget PR #71 (Casebook-filene var identiske med `main`). Greina `codex/casebook-step-1` er beholdt.
 
-**Neste steg:** Anders ser gjennom PR-en for Casebook steg 3 og designvalgene der. Deretter W8 (Archive-kobling, se docs/WEBSITES.md §9.1 for hva den trenger fra steg 3) og steg 4–5. Ekstern spilltest etter steg 5 og avklaring av saksavslutning. Ingen andre åpne PR-er. Nye PR-er merges bare etter Anders' ja.
+**Neste steg:** Anders ser over endringen av koblinger i PR #86 (Casebook steg 3; alltid to bevis, retning for «Supports» og «Possibly manipulated», 25.11.2026; punkt 2–8 er godkjent). Deretter W8 (Archive-kobling, se docs/WEBSITES.md §9.1 for hva den trenger fra steg 3) og steg 4–5. Ekstern spilltest etter steg 5 og avklaring av saksavslutning. Ingen andre åpne PR-er. Nye PR-er merges bare etter Anders' ja.
 
 ### Nettstedsarbeid (W0–W7 og grafikk) — greiner og beslutninger
 
@@ -385,19 +385,30 @@ Verifisering av steg 2: 208 kjernetester (`node --test --test-concurrency=1`), v
 6. *Notes-fanens tall* teller notater pluss åpne spørsmål.
 
 ### Steg 3 — Sammenligning og koblinger
-_Implementert 25. november 2026 på greina `casebook-step-3`, venter på PR-gjennomgang. Skal ikke merges før Anders sier ja._
+_Implementert 25. november 2026 på greina `casebook-step-3` (PR #86), venter på PR-gjennomgang. Skal ikke merges før Anders sier ja. Anders gikk gjennom PR-en 25.11.2026: koblinger er endret til alltid to bevis (se designvalg 1), punkt 2–8 er godkjent som de er._
 - [x] Valgmodus (langt trykk) og sammenligning av bilder, dokumenter, meldinger, artikler og versjoner (25. nov 2026)
 - [x] Bytte mellom to bilder og zoom (25. nov 2026)
-- [x] Seks koblingstyper med kort, valgfri begrunnelse (25. nov 2026)
+- [x] Seks koblingstyper med kort, valgfri begrunnelse (25. nov 2026). En kobling er alltid mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (Anders, 25.11.2026)
 - [x] Inngangen W8 trenger: `phone.compare(refs)` tar to versjoner av samme side (25. nov 2026)
 - [x] Lagring v10 med migrering fra v9, v8 og v7; tvillingverden-test, forbudstest og DOM-test utvidet
 
-Filer: `core/compare.js` (ny: `compareView`, `textChanges`), `core/workbench.js` (koblinger: `LINK_KINDS`, `addLink`, `updateLink`, `removeLink`, `forgetInLinks`, migrering 9→10), `core/game.js` (handlingene `addLink`, `updateLink`, `removeLink` og spørringen `compare`), `core/state.js` (`SAVE_VERSION` 10, `links`), `core/save.js` (migrering og rensing av koblinger), `core/casebook.js` (`casebookView` med `links`; `removeEvidence` fjerner beviset fra koblinger), `app/apps/casebook.js`, `app/phone.js` (`compare()`, `imageInfoRows()` flyttet ut fra bildevisningen), `app/style.css`, `tests/compare.test.mjs` (ny), `tests/twin.test.mjs`, `tests/theories.test.mjs` og `tests/url-aliases.test.mjs` (eldre lagringer uten `links`; versjonstesten tåler v10), `tools/test-casebook-ui.mjs`. `core/provenance.js` og `core/artifacts.js` er ikke endret.
+Filer: `core/compare.js` (ny: `compareView`, `textChanges`), `core/workbench.js` (koblinger: `LINK_KINDS`, `DIRECTED_LINKS`, `isDirected`, `sameLink`, `addLink`, `updateLink`, `removeLink`, `forgetInLinks`, migrering 9→10), `core/game.js` (handlingene `addLink`, `updateLink`, `removeLink` og spørringen `compare`), `core/state.js` (`SAVE_VERSION` 10, `links`), `core/save.js` (migrering og rensing av koblinger), `core/casebook.js` (`casebookView` med `links`; `removeEvidence` fjerner beviset fra koblinger), `app/apps/casebook.js`, `app/phone.js` (`compare()`, `imageInfoRows()` flyttet ut fra bildevisningen), `app/style.css`, `tests/compare.test.mjs` (ny), `tests/twin.test.mjs`, `tests/theories.test.mjs` og `tests/url-aliases.test.mjs` (eldre lagringer uten `links`; versjonstesten tåler v10), `tools/test-casebook-ui.mjs`. `core/provenance.js` og `core/artifacts.js` er ikke endret.
 
-Verifisering av steg 3: 218 kjernetester (`node --test --test-concurrency=1`), validator (0 feil/advarsler), alle 12 scenarioer og begge automatiske spillere med identisk utskrift som `main` `d6dbb8c` (26 linjer, sammenlignet linje for linje). Playwright på 390×844: langt trykk starter valgmodus, tre bevis sammenlignes, seks koblingstyper, kobling med begrunnelse, redigert fra beviskortet, to kopier av samme side med endringer, to bilder med bytte og zoom, flere lagt bort samtidig, koblinger på teorikortet, ny lasting. W8-inngangen testes for seg: `phone.compare()` med to versjoner, endringer vises, begge kopiene lagres før de kan kobles. DOM-tvillingtesten sammenligner også 61 koblinger, 29 sammenligninger (6 sidepar), koblingsredigereren og valgmodus i tre tvillingverdener. En bevisst lekkasje (skjult `sourceOf` i `compareView`, vist i Source-raden) ble fanget av tvillingtesten, forbudstesten og DOM-testen, og er fjernet. Skjermbilder: `/workspace/dead-internet-shots/cb3-*.png`.
+Verifisering av steg 3: 218 kjernetester (`node --test --test-concurrency=1`), validator (0 feil/advarsler), alle 12 scenarioer og begge automatiske spillere med identisk utskrift som `main` `d6dbb8c` (26 linjer, sammenlignet linje for linje). Playwright på 390×844: langt trykk starter valgmodus, tre bevis sammenlignes, spilleren velger to av de tre for en kobling, seks koblingstyper, kobling med begrunnelse, «Supports» med «Swap A and B», samme kobling igjen gir «already connected», retningen leses riktig fra begge ender, redigert fra beviskortet, to kopier av samme side med endringer, to bilder med bytte og zoom, flere lagt bort samtidig, koblinger på teorikortet, ny lasting. W8-inngangen testes for seg: `phone.compare()` med to versjoner, endringer vises, begge kopiene lagres før de kan kobles. DOM-tvillingtesten sammenligner også 72 koblinger (begge retninger for de rettede typene), 29 sammenligninger (6 sidepar), koblingsredigereren for alle typer med og uten bytte, og valgmodus i tre tvillingverdener. En bevisst lekkasje (skjult `sourceOf` i `compareView`, vist i Source-raden) ble fanget av tvillingtesten, forbudstesten og DOM-testen, og er fjernet. Skjermbilder: `/workspace/dead-internet-shots/cb3-*.png`.
 
-**Designvalg (venter på Anders):**
-1. *Én kobling per sett og type.* Samme sett med bevis kan ha flere typer (f.eks. «Related» og «Same origin»), men ikke samme type to ganger. En kobling kan ha to eller flere bevis og har ingen retning, heller ikke «Possibly manipulated».
+**Designvalg (Anders’ gjennomgang 25.11.2026: punkt 1 endret, punkt 2–8 godkjent som de er):**
+1. *En kobling er alltid mellom nøyaktig to bevis* (Anders’ beslutning 25.11.2026, erstatter «én kobling per sett og type» med to eller flere bevis). Spilleren kan fortsatt sammenligne mange bevis samtidig, men velger to når en kobling opprettes. Det gjør betydningen tydelig og unngår at en gruppekobling sier noe om alle par.
+
+   | Type | Betydning | Retning |
+   |---|---|---|
+   | Supports | A støtter B | Ja, nødvendig |
+   | Contradicts | A og B motsier hverandre | Nei |
+   | Related | A og B henger sammen | Nei |
+   | Same origin | Spilleren mener A og B har samme opphav | Nei |
+   | Possibly manipulated | Spilleren mistenker A, med B som sammenligningsgrunnlag | Ja |
+   | Unrelated | Spilleren mener A og B ikke henger sammen | Nei |
+
+   Valgfri begrunnelse beholdes. Én kobling per par, type og eventuell retning: for typer uten retning er A–B og B–A samme kobling; «A supports B» og «B supports A» er to ulike koblinger. Alt er spillerens vurdering, og spillet bekrefter aldri at en kobling er riktig.
 2. *Sammenligning uten lagring, kobling bare mellom lagrede bevis.* Sammenligningen tar også det spilleren har sett, men ikke lagret (det W8 trenger). Før spilleren kan koble, står det «Save to Casebook to connect them», som lagrer nøyaktig kopiene som vises.
 3. *Endringer per avsnitt, bare for to kopier av samme side.* Fjernede avsnitt strykes over, nye får +. Ingen ord-for-ord-diff og ingen diff mellom ulike sider.
 4. *«•» markerer rader som er forskjellige* (kilde, plattform, adresse, dato, kopi, forfatter). Nøytralt; spillet sier aldri hva forskjellen betyr.

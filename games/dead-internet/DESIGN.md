@@ -430,13 +430,27 @@ Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node g
 - **To bilder:** ett om gangen, med «Show A / Show B», zoom (100–500 %) og dra for å flytte. Zoom og posisjon er felles, så spilleren kan bytte og se samme utsnitt.
 - **Innganger:** valgmodus i Evidence-fanen (langt trykk på et bevis eller «Select»; fast linje øverst med «Compare», «Link», «Set aside» og «Done»), «Compare with…» på beviskortet og i bevismenyen (søkevelgeren), «Compare all» på teorikortet, og `phone.compare(refs)` for andre apper (W8).
 
-**Koblinger.** `s.links` er spillerens egne koblinger mellom lagrede bevis: `{id, items, kind, note, day, edited?}`. Seks typer (`LINK_KINDS`): `supports` («Supports»), `contradicts` («Contradicts»), `related` («Related»), `same_origin` («Same origin»), `manipulated` («Possibly manipulated») og `unrelated` («Unrelated»). Begrunnelsen («Because») er valgfri. En kobling har to eller flere bevis og ingen retning. Samme sett med samme type er én kobling (å lagre igjen oppdaterer begrunnelsen), men samme sett kan ha flere typer. Koblingene vises på beviskortet («Connections»), i sammenligningen og på teorikortet (koblinger mellom teoriens bevis). Fjernes et bevis, forsvinner det fra koblingene, og en kobling med færre enn to bevis slettes.
+**Koblinger** (Anders, 25.11.2026). `s.links` er spillerens egne koblinger, alltid mellom nøyaktig to lagrede bevis: `{id, a, b, kind, note, day, edited?}`. Seks typer (`LINK_KINDS`), to av dem med retning (`DIRECTED_LINKS`):
+
+| Type | Tekst i spillet | Retning |
+|---|---|---|
+| `supports` («Supports») | «A supports B» | Ja: A støtter B |
+| `contradicts` («Contradicts») | «A and B contradict each other» | Nei |
+| `related` («Related») | «A and B are connected» | Nei |
+| `same_origin` («Same origin») | «A and B have the same origin» | Nei |
+| `manipulated` («Possibly manipulated») | «A may be manipulated, compared with B» | Ja: A er mistenkt, B er grunnlaget |
+| `unrelated` («Unrelated») | «A and B are not connected» | Nei |
+
+- **Én per par, type og retning** (`sameLink`): for typer uten retning er A–B og B–A samme kobling; for de rettede er «A supports B» og «B supports A» to koblinger. Å lagre en kobling som finnes, gir «You already connected these that way» og oppdaterer bare begrunnelsen. `updateLink` endrer type, begrunnelse og retning (`swap`), aldri paret, og nekter (`duplicate_link`) hvis resultatet finnes fra før. `addLink` godtar bare `{a, b}`: ingen gruppekoblinger, ikke et bevis med seg selv.
+- **Opprettelse:** fra sammenligningen av to («How are they connected?»), fra valgmodus med to valgt («Link»), og når flere er sammenlignet eller valgt, velger spilleren først det ene og så det andre («Connect two of these»). Redigereren viser setningen («A supports B.»), og for de rettede typene A og B under hverandre med pil og «⇅ Swap A and B». Begrunnelsen («Because») er valgfri, og under står «Your own reading. Nothing checks it.».
+- **Visning fra hver side:** beviskortet viser koblingen som en setning der kortets eget bevis er «this»: på A-kortet «This supports Lindsay», på B-kortet «Mike supports this». Koblinger uten retning leses fra kortets side («This and Pat have the same origin» på begge). Sammenligningen bruker bokstavene (A · …), og teorikortet viser begge titler i lagret rekkefølge.
+- Fjernes et bevis, forsvinner koblingene det inngår i.
 
 **Spillerlaget er usynlig for reglene.** `addLink`, `updateLink`, `removeLink` og `compare` fyrer ingen hendelser og leses ikke av betingelser, scoring, Dana eller avslutningene. «Same origin» endrer ikke kildetellingen på teorikortet; spillerens egen telling hører til steg 4. En fuzz-test i `tests/compare.test.mjs` sjekker at 300 tilfeldige koblinger og sammenligninger ikke endrer verden, og at koblinger spilles likt av fra handlingsloggen.
 
-**Lagring v10.** Migrering 9→10 (`migrateLinks`): `s.links = []`. v8 og v7 går gjennom kjeden. `deserialize` beholder bare kjente typer, fjerner doble og ukjente bevis og sletter koblinger med færre enn to bevis (med advarsel).
+**Lagring v10.** Migrering 9→10 (`migrateLinks`): `s.links = []`. v8 og v7 går gjennom kjeden. Formen `{a, b}` erstattet `{items}` før v10 ble merget, så ingen lagret v10-form trenger egen migrering. `deserialize` beholder bare koblinger med kjent type og to ulike, eksisterende bevis, og fjerner doble (samme par, type og retning) og alt med `items` (med advarsel).
 
-**Lekkasjevern.** Tvillingverden-testen legger til koblinger av alle typer (også mellom de tre «vennene» med én skjult kilde) og sammenligner over 300 sammenligninger: beviser parvis, bilder, meldinger, tre bevis og alle bufrede versjoner mot gjeldende side. Forbudstesten dekker `core/compare.js`. DOM-testen sammenligner sammenligningsskjermer (også bildebytte og sidepar), koblingsredigereren, beviskort med koblinger og valgmodus i tre tvillingverdener. En bevisst lekkasje ble fanget av alle tre og fjernet.
+**Lekkasjevern.** Tvillingverden-testen legger til koblinger av alle typer, begge retninger for de rettede (også mellom de tre «vennene» med én skjult kilde), og sammenligner over 300 sammenligninger: beviser parvis, bilder, meldinger, tre bevis og alle bufrede versjoner mot gjeldende side. Forbudstesten dekker `core/compare.js`. DOM-testen sammenligner sammenligningsskjermer (også bildebytte og sidepar), koblingsredigereren, beviskort med koblinger og valgmodus i tre tvillingverdener. En bevisst lekkasje ble fanget av alle tre og fjernet.
 
 **For W8.** Browser Archive kaller `phone.compare([{ artifact, version: a }, { artifact, version: b }])` (eller uten `version` for gjeldende side). Casebook sjekker selv at versjonene er tilgjengelige og sett, viser endringene og lar spilleren lagre begge kopiene før de kobles. Se docs/WEBSITES.md §9.1.
 
