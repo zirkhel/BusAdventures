@@ -24,7 +24,7 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `spillcheck` | spillcheck.io | live | A30 (exact lookup, unlinked from home/nav) plus W5 home, breaches, how we verify, FAQ, privacy (`W-spillcheck-*`) | Breach *checker*, not a leak portal. Template `anonymous` / `terminal` |
 | `facelessstock` | facelessstock.com | live | A31, A31B (public samples) plus W5 home, pricing, license, how it works, library wall (`W-faceless-*`) | Synthetic portraits. Template `landing` / `saas`. Library is a sign-in wall without `meta.logins` |
 | `docshare` | docshare.link | live | existing documents (A18, A22, DS-UF-*, DS-UF-02 hidden) plus W5 marketing home, 4 public filler docs, 3 expired links (`W-docshare-*`) | File links. Template `document` / `viewer`. Home does not catalogue evidence/leaks |
-| `calderpedia` | calderpedia.org | live | B17, A66 plus W5 main page, 23 new articles, 5 history, 3 talk (`W-calderpedia-*`; 25 articles in total) | Wiki. Template `wiki` / `standard`. British spelling. No IMG02 |
+| `calderpedia` | calderpedia.org | live | B17, A66 plus W5 main page, 22 new articles, 5 history, 3 talk (`W-calderpedia-*`; 24 articles in total) | Wiki. Template `wiki` / `standard`. British spelling. No IMG02 |
 | `harbordesk` | harbordesk.co | live | B18 | Virtual office page |
 | `saltys` | saltys-portcalder.com | live | B19 | Fish bar page |
 | `eastfieldgarden` | eastfieldgarden.org | live | B20 | Garden page |
