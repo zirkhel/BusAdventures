@@ -117,8 +117,11 @@ export function migrateTheories(s) {
 
 // ── Links between evidence ──────────────────────────────────────────────────
 // The player's own claims about how two or more pieces of evidence relate. They are shown on
-// the evidence card, in comparisons and in theories. Nothing checks whether they are right,
-// and no rule, score or reviewer reads them.
+// the evidence card, in comparisons and in theories. Nothing checks whether they are right.
+// One rule reads one kind: when Dana reviews a claim, a "supports" link from X to Y lets X count
+// with the names Y itself has (X borrows Y's names, one step; Y gains nothing). It never creates
+// a visible origin and never confirms anything (casebook.js apparentSupportOf). Same-origin links
+// only change the player's own count. No other kind is read by any rule, score or reviewer.
 
 export const LINK_KINDS = ["supports", "contradicts", "related", "same_origin", "manipulated", "unrelated"];
 /** Kinds with a direction: "a supports b", and "a may be manipulated, with b as the reference". */

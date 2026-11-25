@@ -5,6 +5,7 @@
 
 import { migrateEvidence, migrateTheories, migrateLinks, QUESTION_LINKS, LINK_KINDS, sameLink } from "./workbench.js";
 import { migrateSources, cleanSources } from "./sources.js";
+import { migrateReports, cleanReports } from "./reporting.js";
 import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
 import { migrateCases, migrateCaseStates } from "./cases.js";
@@ -33,6 +34,8 @@ const MIGRATIONS = {
   9: s => { migrateLinks(s); s.saveVersion = 10; return s; },
   // 10 → 11: the player's source cards (source assessment, Casebook step 4). Start empty.
   10: s => { migrateSources(s); s.saveVersion = 11; return s; },
+  // 11 → 12: reports keep a snapshot of the player's Casebook (Casebook step 5). Older reports have none.
+  11: s => { migrateReports(s); s.saveVersion = 12; return s; },
   // 5 → 6: media. No follows, likes or "not interested" yet.
   5: s => { migrateMedia(s); s.saveVersion = 6; return s; },
 };
@@ -88,6 +91,8 @@ export function deserialize(w, text) {
   // Source cards are the player's own and stay even when the evidence that showed the source is
   // removed (it shows again when the source does). Only known answers, both directions of "same as".
   cleanSources(s);
+  // A report's snapshot of the player's Casebook when it went out, or nothing (older reports).
+  cleanReports(s);
   for (const q of s.questions) {
     for (const k of QUESTION_LINKS) q.links[k] = Array.isArray(q.links?.[k]) ? q.links[k] : [];
     q.links.evidence = q.links.evidence.filter(hasEv);

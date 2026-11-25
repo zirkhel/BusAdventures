@@ -725,11 +725,17 @@ export class Phone {
     if (this.where === "home") { if (this.tips.p.seen.length) trigger("sleep"); return; }
     const k = desc?.kind;
     const key = this.where === "messages" ? (k === "thread" ? "message" : null)
-      : this.where === "casebook" ? (k === "builder" ? "theory" : k === "report" ? "report" : null)
+      : this.where === "casebook" ? (k === "builder" ? "theory" : k === "report" ? "report" : k === "compare" ? "compare" : null)
       : this.where === "settings" ? null
       : k === "results" ? "search"
       : k === "home" || k === "history" || k === "lookup" || k === "imageResults" ? null : "read";
     if (key) trigger(key);
+    // Further tips for the same screen wait their turn: one at a time (tips-state.js).
+    if (this.where === "casebook") {
+      if (k === "report") trigger("review");
+      if (k === "link") trigger("link");
+      if (k === "evidence" && this.g.evidenceAbout(desc.id)?.aliases?.length) trigger("alias");
+    }
   }
 
   #statusBar() {

@@ -825,3 +825,38 @@ h2.np-head { font-size: 23px; }
 .src-via { margin: 4px 0 8px; }
 .src-via > .src-chip { margin: 0 16px 4px; }
 .src-members .src-chip.indirect { background: transparent; border: 1px dashed var(--ink2); }
+
+/* Casebook step 5: the player's own basis in the report builder and in a report's snapshot. */
+.check-row .basis, .check-row .basis-res { display: block; }
+.check-row .basis-res { color: var(--ink2); font-style: italic; }
+.review-own { margin-top: 8px; background: #f1f4f8; border-left: 3px solid var(--line); }
+.review-own-head { margin-bottom: 4px; font-weight: 600; }
+.review-sep { margin-top: 6px; }
+.rep-snap { margin-top: 6px; }
+.rep-snap summary { cursor: pointer; font-size: 13px; color: var(--ink2); }
+.rep-snap-body { padding: 4px 0; }
+.snap-item { padding: 6px 16px; }
+.report-done .rep-snap-body .hint { padding: 0 16px; }
+.snap-res { font-style: italic; }
+.snap-head { padding: 8px 16px 0; }
+.rep-row .snap-head { padding: 6px 0 0; }
+.snap-words, .snap-note { margin-top: 2px; }
+.snap-reasons, .snap-conns { margin: 4px 0 0; padding-left: 18px; }
+.snap-reasons li, .snap-conns li { margin: 2px 0; }
+.snap-cut { margin-top: 6px; border-top: 1px dashed var(--line); opacity: .85; }
+.unready-row .ico { width: 18px; height: 18px; color: var(--ink2); flex: none; }
+.unready-row .chev { color: var(--ink2); margin-left: auto; }
+.rep-row .snap-item { padding: 4px 0; }
+.rep-row .rep-snap-body .hint { padding: 0; }
+
+/* Casebook help, short names and the supporting-link help (punkt 9) */
+.bar-links { display: flex; gap: 2px; margin-left: auto; }
+.help p.muted { margin: 0 0 10px; font-size: 14px; line-height: 1.4; }
+.help-topic { border-radius: 12px; background: var(--paper2); margin: 0 0 8px; padding: 10px 12px; }
+.help-topic summary { cursor: pointer; font-size: 15px; }
+.help-topic p { margin: 8px 0 2px; font-size: 14px; line-height: 1.45; }
+.alias-rows { margin: 4px 0 6px; }
+.alias-row { font-size: 14px; line-height: 1.4; padding: 2px 0; }
+button.lnk.help-link { background: none; border: 0; padding: 4px 0; font: inherit; font-size: 13px; color: var(--accent); cursor: pointer; text-align: left; }
+.supports-help { padding: 8px 0 4px; }
+.supports-help button.lnk.help-link { font-size: inherit; padding: 0; line-height: inherit; }

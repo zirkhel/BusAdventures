@@ -563,6 +563,158 @@ try {
     console.log('PASS mobile 390×844 step 4: Sources list, source card ("Unsure" an answer, not "Not answered"; taking it back), same origin as with search, comment, questions on the card, the connections that join a card shown and removed from it (answer kept, count recomputed), indirect group "via", set-aside evidence keeps the card, theory "3 sources · 1 in your count", source chip and evidence Source row open the card, removing "same as", reload, world unchanged');
   }
 
+  // ── Step 5: reporting with the player's own judgements ─────────────────────
+  {
+    const g5 = new Game(w, { seed: 7 }); g5.start();
+    const ids5 = {};
+    for (const id of ['A16', 'A54', 'A55', 'A56', 'A06', 'A17']) { g5.s.artifacts[id] = { ...g5.s.artifacts[id], visible: true }; const o = g5.open(id); ids5[id] = g5.save({ artifact: id, version: o.view.versionId }).id; }
+    const S = Object.fromEntries(Object.entries(ids5).map(([k, id]) => [k, g5.evidenceAbout(id)]));
+    g5.investigate('mara');
+    const claim = g5.hypothesize({ subject: 'mara', predicate: 'is_dead', evidence: [ids5.A54, ids5.A55, ids5.A56] }).id;
+    // A second claim with two other sources: The Daily Record publishes it and cuts the first one.
+    const strong5 = g5.hypothesize({ subject: 'mara', predicate: 'is_dead', title: 'The death notice is real', note: 'Dana wrote it herself', evidence: [ids5.A06, ids5.A17] }).id;
+    g5.editEvidence(ids5.A06, { note: 'Signed by the paper' });
+    g5.link(claim, ids5.A16, true, 'contradicts');
+    g5.hypothesize({ title: 'The three friends are one voice', evidence: [ids5.A54, ids5.A55, ids5.A56] });
+    g5.linkSources(S.A54.source, S.A55.source);
+    g5.addLink({ a: ids5.A55, b: ids5.A56, kind: 'same_origin', note: 'Same garden photo' });
+    g5.assessSource(S.A54.source, { trust: 'no', authentic: 'no' });
+    const t5 = g5.addEvent({ title: 'The friends post about Mara', date: { kind: 'exact', value: '2026-03-01' },
+      evidence: [{ id: ids5.A54, stance: 'supports' }, { id: ids5.A55, stance: 'supports' }, { id: ids5.A56, stance: 'supports' }, { id: ids5.A16, stance: 'contradicts' }] }).id;
+    g5.s.trust.dana = 10;
+    const claimLabel = g5.casebook().hypotheses.find(x => x.id === claim).claimLabel;
+    const p5 = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    p5.on('pageerror', e => errors.push(e.message));
+    await p5.goto(base + '/__fixture');
+    await p5.evaluate(({ key, save }) => localStorage.setItem(key, save), { key: saveKey(w), save: serialize(g5.s) });
+    const b5 = name => p5.getByRole('button', { name, exact: true });
+    const shot5 = async name => { await p5.waitForFunction(() => !document.querySelector('.toast') && !document.querySelector('.banners .banner'), null, { timeout: 8000 }); await p5.waitForTimeout(350); await p5.screenshot({ path: resolve(shots, name) }); };
+    const noOverflow5 = async what => assert.ok(await p5.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `no horizontal overflow: ${what}`);
+    const saved = () => p5.evaluate(() => JSON.parse(Object.entries(localStorage).find(([k]) => k.startsWith('ba_deadinternet_'))[1]).state);
+    await p5.goto(base + '/games/dead-internet/');
+    await p5.getByRole('button', { name: 'Continue investigation' }).click();
+    await p5.getByText('Swipe up to unlock').click();
+    await p5.locator('.it-notips').click();
+    await p5.locator('.dock button').nth(3).click();
+    // Timeline: the player's own count next to the visible sources, labelled as theirs.
+    await p5.locator('.seg.tabs button', { hasText: 'Timeline' }).click();
+    const tl = p5.locator('.tl-row', { hasText: 'The friends post about Mara' });
+    assert.equal(await tl.locator('.tl-counts').innerText(), '3 supporting · 3 sources · 1 in your count · 1 contradicting');
+    await shot5('cb5-timeline.png');
+    await tl.click();
+    await p5.locator('.tl-own').waitFor();
+    assert.equal(await p5.locator('.tl-own').innerText(), '3 sources · 1 in your count (after your “same origin” answers and connections)');
+    await b5('Back').click();
+    // The report builder: for, against, the player's own count and their reservations; theories in own words listed.
+    await p5.locator('.bar-link', { hasText: 'Reports' }).click();
+    await p5.getByRole('button', { name: /New report/ }).first().click();
+    const crow = p5.locator('.check-row', { hasText: '3 marked as supporting by you' });
+    assert.equal(await crow.locator('.basis').innerText(), '3 marked as supporting by you · 1 marked against · 3 sources · 1 in your count');
+    assert.equal(await crow.locator('.basis-res').innerText(), "You don't trust 1 · You doubt 1 is who it claims to be");
+    const srow = p5.locator('.check-row', { hasText: '2 marked as supporting by you' });
+    assert.equal(await srow.locator('.basis').innerText(), '2 marked as supporting by you · 0 marked against · 2 sources');
+    await p5.locator('.unready-row', { hasText: 'The three friends are one voice' }).waitFor();
+    assert.match(await p5.locator('.unready-row').innerText(), /needs a claim to publish/);
+    assert.match(await p5.locator('.unready-why').innerText(), /A report publishes claims, and these theories don't have one/);
+    await crow.click();
+    await srow.click();
+    await p5.locator('.check-row', { hasText: 'The friends post about Mara' }).click();
+    await p5.locator('.builder .chip', { hasText: 'Daily Record' }).click();
+    await shot5('cb5-builder.png');
+    await noOverflow5('report builder');
+    // Ask Dana: her comment on how the sources look, then her notes on what the player marked themselves.
+    const before = await saved();
+    await p5.getByRole('button', { name: /Ask .* first/ }).click();
+    await p5.locator('.review-hers').waitFor();
+    const reviewRef = g5.review('daily_record', [claim, strong5]).lines.map(l => l.text);
+    assert.deepEqual(await p5.locator('.review-hers > p').allInnerTexts(), reviewRef, "her comment is review() unchanged");
+    // Her own read and what she reads back from the player's marks are two separate boxes.
+    assert.equal(await p5.locator('.review-hers .review-own').count(), 0, 'not nested');
+    assert.match(await p5.locator('.review-hers .review-who').innerText(), /how your sources look to me/);
+    assert.match(await p5.locator('.review-own .review-who').innerText(), /what you've marked yourself/);
+    assert.deepEqual(await p5.locator('.review-own p').evaluateAll(ps => ps.map(p => p.dataset.kind)), ['against', 'ownCount', 'notTrusted', 'notAuthentic']);
+    assert.match(await p5.locator('.review-own').innerText(), /By your own count that's 1 source, not 3\./);
+    assert.match(await p5.locator('.review-own').innerText(), /I won't pick a side for you/);
+    await p5.locator('.review-sep').waitFor();
+    assert.equal(await p5.locator('.review-sep').innerText(), "These are my concerns, not a guarantee that your conclusions are right.");
+    const after = await saved();
+    for (const k of ['credibility', 'trust', 'flags', 'endings', 'notifications', 'reports', 'published', 'exposed']) assert.deepEqual(after[k], before[k], `asking Dana changes no ${k}`);
+    await p5.evaluate(() => document.querySelector('.review').scrollIntoView({ block: 'start' }));
+    await shot5('cb5-dana.png');
+    await noOverflow5('Dana');
+    // Publish through The Daily Record: she cuts the weak claim, the other goes out. The report keeps a
+    // snapshot of the player's Casebook, published and cut apart. The world reacts as without it.
+    await b5('Publish').click();
+    await p5.locator('.sheet-item', { hasText: 'Publish' }).click();
+    await p5.locator('.report-done').waitFor();
+    const snap = p5.locator('.report-done .rep-snap-body');
+    const snapText = await snap.innerText();
+    const eventSnapshot = snap.locator('.snap-item').filter({ has: p5.getByText('The friends post about Mara', { exact: true }) });
+    assert.equal(await eventSnapshot.locator('.snap-reasons li[data-stance="for"]').count(), 3, 'published timeline keeps supporting evidence');
+    assert.equal(await eventSnapshot.locator('.snap-reasons li[data-stance="against"]').count(), 1, 'published timeline keeps contradicting evidence');
+    assert.match(snapText, new RegExp(`^Published\\n“${claimLabel}”\\n2 marked as supporting by you · 0 marked against · 2 sources\\nIn your words: “The death notice is real”\\nYour note: “Dana wrote it herself”\\nFor: .* · your note: “Signed by the paper”`));
+    assert.match(snapText, /Timeline events published\nThe friends post about Mara\n.* · 3 supporting · 3 sources · 1 in your count · 1 contradicting/);
+    assert.match(snapText, new RegExp(`Cut by Dana Reyes, not published\\n“${claimLabel}”\\n3 marked as supporting by you · 1 marked against · 3 sources · 1 in your count\\nYou don't trust 1 · You doubt 1 is who it claims to be`));
+    assert.match(snapText, /have the same origin · “Same garden photo”/);
+    assert.equal(await p5.locator('.report-done .snap-cut').count(), 1, 'cut claims in their own block');
+    await p5.locator('.report-done .section-title', { hasText: 'Your Casebook when you published' }).scrollIntoViewIfNeeded();
+    await shot5('cb5-published.png');
+    await noOverflow5('published report');
+    const ref = new Game(w, { seed: 7, state: structuredClone(g5.s) });
+    ref.publish('daily_record', [claim, strong5], { case: 'quiet_account', events: [t5] });
+    const pub = await saved();
+    for (const k of ['credibility', 'trust', 'flags', 'endings', 'published', 'exposed']) assert.deepEqual(pub[k], JSON.parse(JSON.stringify(ref.s[k])), `the world after publishing: ${k}`);
+    assert.deepEqual(pub.reports.at(-1).snapshot, JSON.parse(JSON.stringify(ref.s.reports.at(-1).snapshot)));
+    // Revising afterwards doesn't rewrite the report: the snapshot still shows the old count.
+    await b5('Done').click();
+    await p5.locator('.rep-snap summary').first().click();
+    await p5.locator('.rep-row .rep-snap-body').first().waitFor();
+    await shot5('cb5-reports.png');
+    const reportText = await p5.locator('.rep-row').first().innerText();
+    // The player then rewrites their Casebook (as saved, then reloaded): the historical report doesn't change.
+    const edited = new Game(w, { seed: 7, state: await saved() });
+    edited.investigate('theo');
+    // Punkt 9: a short name introduced by saved evidence (A24 has "Northgate Development (NGD)"), used by A23.
+    edited.s.loggedIn ??= {}; edited.s.loggedIn.brightline_portal = true;
+    const ngd = {};
+    edited.investigate('northgate');
+    for (const id of ['A24', 'A23']) { edited.s.artifacts[id] = { ...edited.s.artifacts[id], visible: true }; const o = edited.open(id); ngd[id] = edited.save({ artifact: id, version: o.view.versionId }).id; }
+    for (const r of [edited.dispatch({ type: 'updateHypothesis', id: strong5, patch: { title: 'Not so sure', note: 'Changed' } }),
+      edited.dispatch({ type: 'updateHypothesis', id: claim, patch: { subject: 'theo' } }), edited.editEvidence(ids5.A06, { note: 'Changed too' }),
+      edited.dispatch({ type: 'updateEvent', id: t5, patch: { title: 'Renamed event' } }), edited.linkSources(S.A54.source, S.A55.source, false),
+      edited.dispatch({ type: 'deleteHypothesis', id: claim })]) assert.ok(r.ok, JSON.stringify(r));
+    await p5.evaluate(({ key, save }) => localStorage.setItem(key, save), { key: saveKey(w), save: serialize(edited.s) });
+    await p5.reload();
+    await p5.getByRole('button', { name: 'Continue investigation' }).click();
+    await p5.getByText('Swipe up to unlock').click();
+    await p5.locator('.dock button').nth(3).click();
+    await p5.locator('.bar-link', { hasText: 'Reports' }).click();
+    await p5.locator('.rep-snap summary').first().click();
+    assert.equal(await p5.locator('.rep-row').first().innerText(), reportText, 'the report reads the same after the Casebook is edited and the game reloaded');
+    // Punkt 9: the evidence card explains a short name and where it was introduced.
+    const H = w.strings.help;
+    await p5.evaluate(id => window.deadInternet.phone.push('casebook', { kind: 'evidence', id }), ngd.A23);
+    await p5.locator('.alias-row').first().waitFor();
+    const introTitle = await p5.evaluate(id => window.deadInternet.phone.evidenceTitle(window.deadInternet.game.s.evidence.find(e => e.id === id)), ngd.A24);
+    assert.deepEqual(await p5.locator('.alias-row').allInnerTexts(), [`NGD → Northgate Development, introduced in ${introTitle}`]);
+    await p5.locator('.alias-rows').scrollIntoViewIfNeeded();
+    await shot5('cb5-alias.png');
+    await noOverflow5('alias explanation');
+    // A supporting link: the approved help text, and a way to the detailed help (direction, one step).
+    await p5.evaluate(({ a, b }) => window.deadInternet.phone.push('casebook', { kind: 'link', a, b, pick: 'supports' }), { a: ngd.A23, b: ngd.A24 });
+    await p5.locator('.supports-help').waitFor();
+    assert.equal(await p5.locator('.supports-help').innerText(), `${H.supportsShort} ${H.supportsMore}`);
+    await shot5('cb5-supports-help.png');
+    await noOverflow5('supports help');
+    await p5.locator('.supports-help .help-link').click();
+    await p5.locator('.help-topic[data-topic="supports_direction"][open]').waitFor();
+    assert.match(await p5.locator('.help-topic[data-topic="supports_direction"] p').innerText(), /B gains nothing from A, and it goes only one step/);
+    await shot5('cb5-help-supports.png');
+    assert.deepEqual(errors, []);
+    await p5.close();
+    console.log('PASS mobile 390×844 step 5: Timeline with "in your count", report builder with for/against, own count and reservations, theories in own words listed, Dana\'s comment and her notes on the player\'s marks in two separate boxes (asking changes nothing), Daily Record publish with one claim cut, snapshot with frozen wording, notes and reasons, published and cut apart, world as without it, report unchanged after the Casebook is edited and reloaded, short-name explanation, supporting-link help and detailed help');
+  }
+
   const snapshots = [];
   for (const mode of ['base', 'merged', 'split']) {
     const p = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -682,6 +834,28 @@ try {
       const cards = g.sources();
       result.step4 = [vis.length, cards.filter(c => c.group.length).length, g.casebook().hypotheses.filter(h => h.ownSourceCount !== h.sourceCount).length,
         cards.filter(c => c.group.some(x => !x.direct)).length, merged.length, cards.filter(c => c.setAside && c.setAside === c.evidence.length).length];
+      // Step 5: the report builder with every claim and event, Dana's comment and her notes on what the
+      // player marked themselves, the Timeline with the player's own counts, and a published report's snapshot.
+      g.s.trust.dana = 10;
+      const t5 = [0, 1, 2].map(i => g.addEvent({ title: `Event ${i}`, date: { kind: 'unknown' }, evidence: ev.slice(i * 4, i * 4 + 4).map((id, k) => ({ id, stance: k % 3 ? 'supports' : 'contradicts' })) }).id);
+      const claims = g.casebook().hypotheses.filter(x => x.structured).map(x => x.id);
+      phone.replaceTop({ kind: 'report', case: 'quiet_account', channel: 'daily_record', hyps: claims, events: t5 }); result.screens.push(dom());
+      [...phone.screen.querySelectorAll('button')].find(b => /^\s*Ask .* first$/.test(b.textContent)).click(); result.screens.push(dom());
+      const notes5 = phone.screen.querySelectorAll('.review-own p').length;
+      phone.replaceTop({ kind: 'main', tab: 'timeline' }); result.screens.push(dom());
+      for (const id of t5) { phone.replaceTop({ kind: 'event', id }); result.screens.push(dom()); }
+      // Publishing changes the world differently in each twin; only the player's snapshot is compared.
+      const r5 = g.publish('connect', claims, { case: 'quiet_account', events: t5 });
+      phone.replaceTop({ kind: 'reportDone', id: r5.report.id });
+      const snapDom = () => JSON.stringify([...phone.screen.querySelectorAll('.rep-snap-body *')].map(el => [el.tagName, el.className, el.childElementCount ? null : el.textContent]));
+      const snap5 = snapDom();
+      result.screens.push(snap5);
+      // Editing the Casebook afterwards leaves the published report as it was.
+      for (const hy of g.s.hypotheses.slice(0, 3)) g.dispatch({ type: 'updateHypothesis', id: hy.id, patch: { title: `Rewritten ${hy.id}`, note: 'Rewritten' } });
+      g.dispatch({ type: 'deleteHypothesis', id: claims[0] });
+      phone.replaceTop({ kind: 'reportDone', id: r5.report.id });
+      result.step5 = [claims.length, notes5, g.s.reports.at(-1).snapshot?.theories.length ?? 0, snapDom() === snap5,
+        phone.screen.querySelectorAll('.rep-snap-body .snap-reasons li').length];
       // The same Save action used by text selection must produce evidence, not a note.
       const e = g.s.evidence.find(e => e.artifact && !e.quote && !e.image);
       const notes = g.s.notes.length;
@@ -696,9 +870,10 @@ try {
   assert.ok(snapshots[0].step3[0] > 50 && snapshots[0].step3[2] > 0, 'connections and page versions in the twin DOM test');
   assert.ok(snapshots[0].step4[0] > 20 && snapshots[0].step4[1] > 0 && snapshots[0].step4[2] > 0, 'source cards, groups and own counts in the twin DOM test');
   assert.ok(snapshots[0].step4[3] > 0 && snapshots[0].step4[4] > 0 && snapshots[0].step4[5] > 0, `indirect groups, joining connections and set-aside sources in the twin DOM test: ${snapshots[0].step4}`);
+  assert.ok(snapshots[0].step5[0] > 1 && snapshots[0].step5[1] > 3 && snapshots[0].step5[2] === snapshots[0].step5[0] && snapshots[0].step5[3] === true && snapshots[0].step5[4] > 10, `report builder, Dana's notes and the report snapshot in the twin DOM test: ${snapshots[0].step5}`);
   assert.ok(snapshots.every(s => s.quoteSaved));
   assert.deepEqual(snapshots[1], snapshots[0], 'merged hidden origins must not change DOM');
   assert.deepEqual(snapshots[2], snapshots[0], 'split hidden origins must not change DOM');
   assert.deepEqual(errors, []);
-  console.log(`PASS twin DOM: ${snapshots[0].count} evidence cards plus every filter/group, ${snapshots[0].step2[0]} theories, ${snapshots[0].step2[1]} questions and their search pickers, ${snapshots[0].step3[0]} connections, ${snapshots[0].step3[1]} comparisons (${snapshots[0].step3[2]} page versions), ${snapshots[0].step4[0]} source cards (${snapshots[0].step4[1]} in a group of your own, ${snapshots[0].step4[3]} indirectly, ${snapshots[0].step4[4]} joined by connections opened from the card, ${snapshots[0].step4[5]} with all evidence set aside) and the Sources picker, identical text, CSS classes, controls`);
+  console.log(`PASS twin DOM: ${snapshots[0].count} evidence cards plus every filter/group, ${snapshots[0].step2[0]} theories, ${snapshots[0].step2[1]} questions and their search pickers, ${snapshots[0].step3[0]} connections, ${snapshots[0].step3[1]} comparisons (${snapshots[0].step3[2]} page versions), ${snapshots[0].step4[0]} source cards (${snapshots[0].step4[1]} in a group of your own, ${snapshots[0].step4[3]} indirectly, ${snapshots[0].step4[4]} joined by connections opened from the card, ${snapshots[0].step4[5]} with all evidence set aside) and the Sources picker, the report builder with ${snapshots[0].step5[0]} claims and ${snapshots[0].step5[1]} notes from Dana on the player's own marks, the Timeline and a report's snapshot (${snapshots[0].step5[4]} frozen reasons, unchanged after editing the Casebook), identical text, CSS classes, controls`);
 } finally { await browser?.close(); await new Promise(r => server.close(r)); }

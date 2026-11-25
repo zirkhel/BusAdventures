@@ -19,7 +19,8 @@ function miniRaw() {
       testing: { seedQueries: ["Ann"], coreClaims: ["C1"], maxDays: 3 },
     },
     strings: { messages: { ask: "About {name}?", show: "See {title}" },
-      review: { ed: { noTrust: "Who?", strong: "Solid: {claim}", weak: "Thin: {claim}", none: "Nothing: {claim}", bold: "Bold: {claim}" } } },
+      review: { ed: { noTrust: "Who?", v: { none: "Nothing: {claim}", one: "Thin: {claim}", several: "Solid: {claim} ({n})",
+        bold: { none: "Bold, nothing: {claim}", one: "Bold, thin: {claim}", several: "Bold: {claim} ({n})" } } } } },
     predicates: [
       { id: "is_dead", arity: 1, label: "is dead", template: "{subject} is dead", subjectKinds: ["person"], truth: "facts" },
       { id: "operates", arity: 2, label: "operates", template: "{subject} operates {object}", subjectKinds: ["person", "org"], objectKinds: ["account"], truth: "operatedBy" },
@@ -170,7 +171,12 @@ test("casebook shows counts only; truth and support are used when publishing", (
   g.open("N1"); g.search("death record"); g.open("N2"); g.open("P1");
   const e1 = g.save({ artifact: "N1" }).id, e2 = g.save({ artifact: "N2" }).id, e3 = g.save({ artifact: "P1" }).id;
   assert.equal(g.save({ artifact: "N1" }).duplicate, true);
-  const h = g.hypothesize({ subject: "ann", predicate: "is_dead", evidence: [e1, e3] }).id;
+  const h = g.hypothesize({ subject: "ann", predicate: "is_dead", evidence: [e1] }).id;
+  // Dana's review reads only what is visible (punkt 9): N1 alone names Ann from one visible origin.
+  g.s.trust.ed = 1;
+  assert.match(g.review("paper", [h]).lines[0].text, /^Thin/);
+  g.s.trust.ed = 0;
+  g.link(h, e3);
   const view = g.casebook().hypotheses[0];
   assert.deepEqual([view.evidenceCount, view.sourceCount, view.label], [2, 2, "Ann Lee is dead"]);
   assert.equal("truth" in view, false);
@@ -181,7 +187,8 @@ test("casebook shows counts only; truth and support are used when publishing", (
   // Reviewer needs trust and comments on sources, not truth
   assert.equal(g.review("paper", [h]).lines[0].text, "Who?");
   g.s.trust.ed = 1;
-  assert.match(g.review("paper", [h]).lines[0].text, /^Thin/);   // P1 does not back C1: one source
+  // P1 names Ann too, from a second visible origin. Whether P1 really backs C1 is hidden and never read.
+  assert.match(g.review("paper", [h]).lines[0].text, /^Solid: Ann Lee is dead \(two\)$/);
   g.link(h, e2);
   assert.match(g.review("paper", [h]).lines[0].text, /^Solid/);
 

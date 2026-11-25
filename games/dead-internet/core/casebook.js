@@ -14,7 +14,7 @@ import { viewArtifact, savedArtifactView, supportsOf, mentionsOf, sourceOf } fro
 import { applyEffects, fire } from "./rules.js";
 import { nameOf, str } from "./world.js";
 import { isCase, soleCase } from "./cases.js";
-import { apparentSource, visibleRefsOfEvidence } from "./provenance.js";
+import { apparentSource, visibleRefsOfEvidence, establishedAliasesOfEvidence } from "./provenance.js";
 import { forgetInQuestions, forgetInLinks, isDirected } from "./workbench.js";
 import { ownCount } from "./sources.js";
 
@@ -239,13 +239,17 @@ export function kindOfId(g, id) { return kindOf(g, id); }
 /**
  * Evidence as the casebook shows it: who and what is visibly named in it (known, non-secret
  * ids only) and where it visibly comes from. Never its hidden source, mentions or claims.
- * @returns {{about:string[], source:string, sourceLabel:string}}
+ * @returns {{about:string[], source:string, sourceLabel:string, aliases:{text:string, id:string, name:string, evidence:string}[]}}
  */
 export function evidenceAbout(g, e) {
   const about = visibleRefsOfEvidence(g, e).filter(id => id && g.s.known[id] && !g.w.entities.get(id)?.secret &&
     (g.w.entities.has(id) || g.w.accounts.has(id)));
   const src = apparentSource(g, e);
-  return { about, source: src.key, sourceLabel: src.label };
+  // Nicknames this item uses that another saved piece introduced, shown so the player can see why
+  // it counts as naming them. Only names in the item itself: never names borrowed through a link.
+  const aliases = establishedAliasesOfEvidence(g, e).filter(x => about.includes(x.id))
+    .map(x => ({ text: x.text, id: x.id, name: nameOf(g.w, x.id), evidence: x.evidence }));
+  return { about, source: src.key, sourceLabel: src.label, aliases };
 }
 
 /** The structured claim as a sentence. A theory without one falls back to the player's words. */
@@ -296,8 +300,12 @@ export function casebookView(g) {
     // The player's own timeline, for reports later. Events carry only what the player entered.
     timeline: (g.s.timeline || []).map(e => ({ ...e })),
     reports: g.s.reports.map(r => ({ id: r.id, day: r.day, case: r.case, channel: r.channel, items: r.items.map(i => ({ label: i.label })),
-      cut: asArray(r.cut).map(id => { const h = g.s.hypotheses.find(x => x.id === id); return h ? hypothesisLabel(g, h) : null; }).filter(Boolean),
-      events: asArray(r.events).map(e => ({ id: e.id, title: e.title, date: e.date })) })),
+      // With a snapshot (step 5) the cut claims read as they were worded then; older reports fall back to the theory now.
+      cut: asArray(r.cut).map(id => { const t = r.snapshot?.theories?.find(x => x.hypothesis === id); if (t) return t.claimLabel;
+        const h = g.s.hypotheses.find(x => x.id === id); return h ? hypothesisLabel(g, h) : null; }).filter(Boolean),
+      events: asArray(r.events).map(e => ({ id: e.id, title: e.title, date: e.date })),
+      // The player's own Casebook when the report went out (step 5): counts and reservations, never truth.
+      snapshot: r.snapshot ? structuredClone(r.snapshot) : null })),
   };
 }
 
@@ -379,26 +387,50 @@ export function supportOf(g, h, caseId = null) {
 }
 
 /**
- * Support as a person sees it: like supportOf, but sources are counted as they visibly
- * appear, and "about" means visibly named. Used by reviewers and by everything the player
- * sees. Three accounts run by one operator count as three sources here.
+ * The visible basis for a claim, as a reviewer sees it (point 9, Anders 25.11.2026). Never
+ * hidden canon: no supports, truth, mentions, claim list or hidden origin.
+ *
+ * A piece in the claim's for-list counts when the names visibly established in it cover every
+ * party (subject, and object if there is one), or when the player linked it "X supports Y" to
+ * another piece in the for-list and the two together cover every party. X, the supporting
+ * piece, borrows Y's own names for this claim; Y gains nothing, and names Y borrowed itself are
+ * not passed on (one hop). Only "supports" links count. A link adds no origin and confirms no
+ * independence: n is the number of distinct visible origins among the pieces that count.
+ * @returns {{claim:null, sources:string[], n:number, strength:"strong"|"weak"|"none", counted:string[]}}
  */
 export function apparentSupportOf(g, h, caseId = null) {
-  const c = matchClaim(g, h, caseId);
-  const sources = new Set();
-  for (const id of h.evidence) {
-    const e = g.s.evidence.find(e => e.id === id);
-    if (!e) continue;
-    let backs;
-    if (c) backs = evidenceFacts(g, e).supports.includes(c.id);
-    else { const refs = visibleRefsOfEvidence(g, e); backs = refs.includes(h.subject) && (h.object == null || refs.includes(h.object)); }
-    if (backs) sources.add(apparentSource(g, e).key);
-  }
+  const parties = [h.subject, h.object].filter(x => x != null);
+  const linked = asArray(h.evidence).map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
+  const refs = new Map(linked.map(e => [e.id, visibleRefsOfEvidence(g, e)]));
+  const covers = (...ids) => parties.every(p => ids.some(id => refs.get(id).includes(p)));
+  const counted = new Set(linked.filter(e => covers(e.id)).map(e => e.id));
+  for (const l of asArray(g.s.links)) if (l.kind === "supports" && refs.has(l.a) && refs.has(l.b) && covers(l.a, l.b)) counted.add(l.a);
+  const sources = new Set(linked.filter(e => counted.has(e.id)).map(e => apparentSource(g, e).key));
   const n = sources.size;
-  return { claim: c?.id ?? null, sources: [...sources], strength: n >= 2 ? "strong" : n === 1 ? "weak" : "none" };
+  return { claim: null, sources: [...sources], n, strength: n >= 2 ? "strong" : n === 1 ? "weak" : "none", counted: [...counted] };
 }
 
+const NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+/** Numbers as words in what a character says ("two different visible origins"); digits stay in overviews. */
+export const numberWord = n => NUMBER_WORDS[n] ?? String(n);
+
 // ── Review and publishing ───────────────────────────────────────────────────
+
+/**
+ * Which line a reviewer uses: about her own outlet (the channel's visible `outlet`), then the
+ * predicate's own lines, then big claims (the predicate's `bold`), then the usual ones. Only the
+ * relation the player chose and the channel decide; never whether the claim is predefined.
+ * none and one go with a cut, several with going forward (reviewed channels require strong).
+ */
+export function reviewKey(g, ch, h, n) {
+  const level = n >= 2 ? "several" : n === 1 ? "one" : "none";
+  const R = `review.${ch.reviewer}.v`;
+  const has = k => typeof str(g.w, k) === "string" && !str(g.w, k).startsWith("[");
+  if (ch.outlet && (h.subject === ch.outlet || h.object === ch.outlet)) return `${R}.ownOutlet.${level}`;
+  if (has(`${R}.predicate.${h.predicate}.${level}`)) return `${R}.predicate.${h.predicate}.${level}`;
+  if (g.w.predicates.get(h.predicate)?.bold) return `${R}.bold.${level}`;
+  return `${R}.${level}`;
+}
 
 /**
  * A reviewer's journalistic comment on source strength. Never on truth. The reviewer only
@@ -414,12 +446,7 @@ export function review(g, channelId, hypIds, opts = {}) {
     const h = g.s.hypotheses.find(h => h.id === id);
     if (!h || !isStructured(h)) continue;
     const sup = apparentSupportOf(g, h, caseId);
-    const c = sup.claim ? g.w.claims.get(sup.claim) : null;
-    const pred = g.w.predicates.get(h.predicate);
-    const bold = !!(c?.bold ?? pred?.bold);
-    const custom = c?.review?.[sup.strength];
-    const key = custom ? null : bold && sup.strength !== "strong" ? "bold" : sup.strength;
-    lines.push({ hypothesis: id, text: fill(custom ?? str(g.w, `review.${ch.reviewer}.${key}`), { claim: hypothesisLabel(g, h) }) });
+    lines.push({ hypothesis: id, text: fill(str(g.w, reviewKey(g, ch, h, sup.n)), { claim: hypothesisLabel(g, h), n: numberWord(sup.n), object: nameOf(g.w, h.object) }) });
   }
   return { ok: true, lines };
 }

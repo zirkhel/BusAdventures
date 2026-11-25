@@ -82,6 +82,7 @@
     "reviewer": "dana",
     "minTrust": 3,
     "requiresStrong": true,
+    "outlet": "daily_record",
     "credibilityWeight": 1.0
    }
   ]

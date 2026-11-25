@@ -1,259 +1,69 @@
-# Dead Internet: Casebook som deduksjonsverktøy
+# Casebook — funksjon og informasjonsgrenser
 
-_Status 25. november 2026: steg 0–2 er merget (steg 2 som PR #85 `d6dbb8c`), steg 3 (sammenligning og koblinger) er merget som PR #86 `5d64cbc`, W8 (Archive i Browser) som PR #87 `50f65fb`, og steg 4 (kildevurdering) er implementert 25.11.2026 som PR #88 og justert etter Anders' beslutninger samme dag (venter på merge; se DESIGN.md, «Implementert steg 4»). Anders bestemte 25.11.2026 at en kobling alltid er mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (se DESIGN.md, «Implementert steg 2» og «Implementert steg 3», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
+Gjeldende for PR #89 ved `50d5643`, 25. november 2026. Steg 0–4 er merget; steg 5 nedenfor er implementert, men ikke merget. [Status og kontroller](PR89-REVIEW.md).
 
-## Kort fortalt
+## Arbeidsflaten
 
-- Casebook har allerede et godt fundament: bevis, strukturerte teorier, notater, en spillerbygd Timeline, saker per element og rapporter med Dana som redaktør. Skillet mellom kanon og spillerkunnskap er stort sett holdt.
-- **Jeg fant én reell lekkasje.** Tallet «uavhengige kilder» på en teori regnes ut fra bevisets skjulte opphav i kanon, ikke fra det spilleren kan se. Lenker spilleren profilene til Mike, Pat og Lindsay til samme teori, viser Casebook «3 evidence · 1 source» og en kildebrikke «Mike ×3». Det avslører at de tre «vennene» har samme opphav, som er nettopp det spilleren skal finne ut selv. Det samme skjer med @owenpike58 og truthseeker_88. Jeg har kjørt dette mot motoren og fått bekreftet det. Jeg foreslår at dette rettes før den eksterne spilltesten (steg 0).
-- Det som mangler er spillerens egne vurderinger: markeringer, arkiv, sammenligning, koblinger mellom bevis, kildevurdering, bevis *mot* en teori og teoriens status. Uten disse blir Casebook en voksende liste.
-- Forslaget legger til et tynt «spillerlag» i datamodellen som spillmotoren aldri leser når den avgjør utfall, og en kort mobilflyt: **sorter → sammenlign → koble → vurder kilde → teori for/mot → rapport**.
-- Rekkefølge: steg 0 (lekkasjen) nå, så ekstern spilltest på dagens Casebook, og deretter steg 1–5 i små PR-er, styrt av det testspillerne faktisk sliter med.
+Casebook er spillerens hukommelse og arbeidsflate, ikke en fasit. Evidence, Theories, Timeline og Notes har ulike oppgaver. Reports er publiserte rapporter og utviklingen i saken; sammenligning, koblinger og kildekort åpnes fra arbeidsflaten, ikke som nye faner.
 
----
-
-## 1. Hva som allerede er implementert
-
-| Funksjon | Hvor | Status i dag |
+| Del | Funksjon | Kjernemodul |
 |---|---|---|
-| Bevis (Evidence) | `core/casebook.js`, `app/apps/casebook.js` | Lagre side, versjon (cache), bilde eller melding. Duplikater stoppes. Gruppert «etter hvem det handler om» eller «nyeste først». Menyen har: koble til teori, vis til noen, sak, legg i Timeline, fest til hendelse, fjern. |
-| Teorier (Theories) | samme | `[hvem] [relasjon] [hvem/hva]` med 8 relasjoner. Bevis kan kobles til (bare «støtter», ingen «mot»). Ett notatfelt. Redigere og slette. Viser «n evidence · n sources». |
-| Notater (Notes) | samme | Fritekst, redigere/slette, sak. «Save» på et ord eller en markering i kontekstmenyen lager også et notat (med `about` og opphavslenke). |
-| Timeline | `core/timeline.js` | Spillerbygd, med eksakt, omtrentlig, intervall eller ukjent dato. Bevis festes som *supports* eller *contradicts*. Kobles til teorier. Datoforslag hentes fra kilden, men spilleren velger. Ingenting sjekkes mot kanon. |
-| Saker | `core/cases.js` | Alle elementer har `cases: []`, uklassifisert som standard. Filter: alle, per sak, uklassifisert. |
-| Rapport | `publish()`, Casebook → Reports | Kanal, teorier som påstander, valgfrie hendelser, Danas gjennomgang. Konsekvenser kommer som varsler, meldinger og avslutninger. Casebook viser aldri sannhet eller poeng. |
-| Kontekstmenyer | `app/context.js` | Ett felles system. Trykk på ord eller navn, markering av tekst, bilder og dokumenter. Ingen visuell markering av referanser. |
-| Søkehistorikk | Seeker og Browser | «Recent searches» (8 siste) i Seeker og «History» i Browser. Ligger riktig nok utenfor Casebook. |
-| Oppdagelsestilstander | `core/discovery.js` | unknown → encountered → investigated → saved. Velgere viser bare investigated/saved. |
+| Bevis | Lagrede sideversjoner, utdrag, bilder og meldinger; egne merker, notat og «Legg bort» | `casebook.js`, `workbench.js`, `provenance.js` |
+| Teorier | Strukturert påstand eller egne ord; bevis for/mot, statuslogg, spørsmål og alternativer | `casebook.js`, `workbench.js` |
+| Sammenligning | Synlige felt, tekst og bilder uten tolkning | `compare.js` |
+| Koblinger | Spillerens uttrykkelige tolkning mellom to lagrede bevis | `workbench.js` |
+| Kilder | Tillit, identitet, samme opphav, kommentar og egen opptelling | `sources.js` |
+| Timeline | Spillerens dateringer, beskrivelser og bevis for/mot | `timeline.js` |
+| Rapportering | Bygger, forbehold, frosset rapportgrunnlag | `reporting.js`, `casebook.js`, `game.js` |
 
-## 2. Hva som mangler
+## Bevis og teorier
 
-Målt mot punktene i bestillingen:
+Lagrede sider åpner den lagrede versjonen selv når originalen senere endres, låses eller slettes. Bokmerker i Browser er navigasjon og er adskilt fra bevis. Utdrag beholder kildehenvisningen; Notes er spillerens egne tanker.
 
-| Ønsket | Finnes? |
-|---|---|
-| Markere bevis som gjennomgått, viktig, tvilsomt, irrelevant | Nei |
-| Arkivere og gjenopprette | Nei. Bare permanent «Remove». |
-| Egen kommentar på bevis | Feltet `evidence.note` finnes i datamodellen, men kan ikke redigeres i UI. |
-| Knytte bevis til teorier | Ja, men bare som støtte. |
-| Knytte bevis til andre bevis | Nei |
-| Knytte til saker | Ja |
-| Velge to eller flere bevis og sammenligne | Nei |
-| Sammenhenger (supports, contradicts, related, same origin, possibly manipulated, unrelated) | Bare *supports/contradicts* mellom bevis og tidslinjehendelse |
-| Kildevurdering (troverdighet, autentisitet, uavhengighet) | Nei. Kildetelling finnes, men er automatisk og bygger på kanon (se lekkasjen). |
-| Teori: motstridende bevis, åpne spørsmål, alternativer, forkaste og gjenopprette | Nei. Bare notat og sletting. |
-| Teorier som ikke passer i en trippel («nekrologen kan være falsk») | Nei. Relasjonene handler om personer, kontoer og organisasjoner, ikke om dokumenter. |
-| Filtrering etter egne vurderinger, skjule arkivert | Nei. Bare filter per sak. |
+Merker og «Legg bort» er spillerens organisering. Å legge bort er ikke sletting. About viser synlige navn i selve beviset, inkludert synlig avsender; den låner ikke navn gjennom støttekoblinger. Et kortnavn kan forklares med beviset som introduserte det.
 
-## 3. Hvor dagens løsning kan gi informasjonsoverbelastning
+Teorier kan ha egne ord uten en strukturert påstand, men kan da ikke publiseres. For/mot, forkastet/overbevist og spørsmål er spillerens vurderinger. De avslører ikke om teorien stemmer.
 
-1. **Bevislisten bare vokser.** Ingen markering av hva som er lest, ingen arkiv. Etter en full gjennomspilling ligger 20–40 bevis i samme liste.
-2. **Teorivisningen lister alle andre bevis.** Under «Other evidence» står hele Casebook for å kunne trykke +. Med fem teorier ser spilleren samme liste fem ganger.
-3. **Velgere viser alt.** «Attach evidence» på en hendelse og «Link to theory» viser alt uten filter eller søk.
-4. **Notater blandes med sitater.** «Save» på et ord lager et notat. Notes-fanen blir en blanding av navn spilleren har lagret og egne tanker.
-5. **Ingen beviskort.** Å trykke på et bevis åpner originalen. Det finnes ikke et sted som samler «hva mener jeg om dette beviset».
-6. **Teorier har ingen status.** Gamle og forkastede teorier ligger side om side med de aktive, eller blir slettet med koblingene sine.
-7. **Rapportbyggeren** viser alle teorier og hendelser i tre grupper. Det holder nå, men ikke når universet har flere saker.
+## Sammenligning og koblinger
 
-### Lekkasjer funnet i gjennomgangen
+- To eller flere elementer kan sammenlignes, også ulagrede sider. Bare lagrede bevis kan kobles.
+- Forskjeller markeres nøytralt. To versjoner av samme side får avsnittsvis endringsvisning. Bilder sammenlignes ett om gangen med sammenhengende zoom på mobil.
+- En kobling har nøyaktig to bevis. Supports og Possibly manipulated har retning. Contradicts, Related, Same origin og Unrelated er symmetriske. Begrunnelse er valgfri.
+- «Sammenlign alle» fra en teori tar med bevis både for og mot.
+- Supports kan påvirke Danas dekning og dermed publiseringskuttet gjennom [regel P](PUNKT9-SYNLIG-VURDERINGSREGEL.md). Andre koblingstyper gir ikke slik dekning.
 
-| # | Hva | Alvor |
-|---|---|---|
-| L1 | `sourceCount` og kildebrikkene i teorivisningen og rapportbyggeren grupperer etter skjult `source` i kanon. Mike/Pat/Lindsay = 1 kilde (`garden`). @owenpike58 + truthseeker_88 = 1 kilde (`owen`). Brightlines Connect-konto + nettsider = 1 kilde. | Høy. Avslører «samme opphav», som er kjernen i punkt 4. |
-| L2 | «Etter hvem det handler om»-grupperingen bruker forfattet `mentions`. 69 artikler har mentions som ikke står i teksten. De fleste er harmløse (bydel, bystyret), men mekanismen kan legge et bevis under en person spilleren ikke har sett nevnt. | Middels |
-| L3 | Danas vurdering («strong/weak») teller samme skjulte kilder. Tre personakontoer gir «weak», og det er et hint fra UI-en forkledd som en karakter. | Middels. Hun er en karakter, men hun skal bare vite det hun kan vite. |
-| L4 | Kildenavnet for dokumenter uten forfatter slås opp via «hvem har samme source-nøkkel». I dag gir det riktige navn, men et dokument spilleren fant selv kan få en karakter som avsender. | Lav, men skjør |
+## Kildekort og tre ulike opptellinger
 
-Scoring ved publisering *skal* bruke kanon, fordi konsekvensene i verden er spillet. Feilen er bare at de samme tallene vises i Casebook.
+Ett kort per stabil synlig kilde-ID, ikke per navn. Like navn slår ikke sammen to kilder. Spørsmålene er tillit og om kilden er den den utgir seg for: Ja, Usikker, Nei eller ubesvart. Usikker er et eget svar, ikke det samme som ubesvart. Svarene har nøytral visning.
 
-## 4. Hvordan deduksjon kan bli en naturlig del av spillet
+Spillerens «Samme opphav som» og Same origin-koblinger mellom bevis grupperer kildene transitivt. Indirekte forbindelser vises med «via», og koblingene kan åpnes og endres. Avledede koblinger overskriver ikke kortets egne svar. Opptellingen beregnes på nytt når grunnlaget endres. Nei på tillit trekker ikke kilden ut av antallet.
 
-Prinsippet: **UI-en viser fakta side om side og husker spillerens vurderinger. Verden reagerer på det spilleren publiserer eller viser til andre. Ingenting i grensesnittet sier om spilleren har rett.**
+Å legge bort et bevis skjuler ikke kildekortet. Når alle kildebevis slettes, skjules kortet, men vurderingene beholdes under kilde-ID-en.
 
-1. **Sammenligning gjør arbeidet.** Når to bevis ligger side om side med de synlige feltene (dato, avsender, plattform, metadata, bildetekst), ser spilleren selv at nekrologen er fra juli 2025 og innlegget fra mars 2026. Skjermen konkluderer ikke, men sammenligningen gjør det lett å se.
-2. **Koblinger er påstander, ikke fasit.** «Same origin» mellom Mikes og Pats profiler er spillerens mening. Den teller i spillerens egen kildetelling («3 kilder, 2 etter dine koblinger»), men motoren sier aldri om den stemmer.
-3. **Kildevurdering er på kilden, ikke på hvert bevis.** Mistror spilleren @maraquinn, gjelder det alle innleggene derfra. Det gir mindre administrasjon og er riktigere journalistikk.
-4. **Bevis mot teller like mye som bevis for.** En teori med to for og to mot er et bedre arbeidsdokument enn en med fire for.
-5. **Tilbakemelding kommer fra verden, ikke fra UI.** Dana vurderer ut fra synlige kilder og spillerens *egne* forbehold («Du har selv merket denne kilden som tvilsom»). Hun kan altså bli lurt av tre personakontoer, akkurat som spilleren. Konsekvensen kommer etter publisering, i verden. Det passer premisset: også journalisten tror på kilder som kanskje ikke finnes.
-6. **Senere (innhold, ikke motor):** spilleren kan vise en kobling eller teori til en karakter, og karakteren svarer ut fra sin egen kunnskap og tro (lag 2 i punkt 9), som kan være feil.
+Hold disse tingene atskilt:
 
-## 5. Brukerflyt på mobil
+1. Synlige opphav blant bevisene spilleren har koblet til teorien.
+2. Spillerens egen opptelling etter grupperingen ovenfor.
+3. Danas antall kvalifiserende synlige opphav etter regel P. Det kan avvike fra begge de andre.
 
-Alt er én hånd: korte trykk, bunnark (`actionSheet`) og samme kontekstmeny som ellers. Ingen sveiping, fordi sveip fra venstre kant allerede betyr «tilbake».
+Ingen av tallene bekrefter sannhet eller faktisk uavhengighet. Skjult opphav brukes bare i verdens vurdering, ikke på kortene.
 
-### A. Samle (uendret, litt raskere)
-Bokmerke eller «Save as evidence» fra kontekstmenyen. Toasten får to valg: **Angre** og **Kommentar**. Kommentar er én linje og valgfri.
+## Rapportering i PR #89
 
-### B. Evidence-fanen: triage øverst
-```
-[ Aktive ▾ ]  [ Alle saker ▾ ]                  ← én rad, to nedtrekk
-Ikke gjennomgått (4)
-  ▢ Obituary: Mara Quinn          Daily Record · dag 1
-  ▢ @maraquinn: I've been away    @maraquinn · dag 1
-Resten (12)  · gruppert etter kilde / nyeste
-  ★ Invoice NGD-0114              Dana · dag 2
-  ? Garden dashboard              Iris · dag 3
-```
-- Første nedtrekk: Aktive · Ikke gjennomgått · Viktige · Tvilsomme · Lagt bort. Andre: sakene (som i dag).
-- **Trykk** åpner beviskortet (C). **⋯** gir hurtigmenyen: Gjennomgått · Viktig · Tvilsom · Legg bort · Sammenlign med… · Koble til teori… · Kommentar.
-- **Langt trykk** gir valgmodus. Avkrysning, og en bunnlinje: «Sammenlign (2) · Koble · Legg bort».
-- «Gjennomgått» settes også når spilleren åpner kortet. Det er spillerens egen handling, ikke kanon, og fjerner administrasjon.
-- Ikonene ★ og ? er spillerens egne markeringer og vises i samme nøytrale farge. Ingen farger som kan forveksles med en vurdering fra spillet.
+Rapportbyggeren sier «marked as supporting by you», viser bevis mot og egne forbehold. Dana har to adskilte bokser: hennes synlige vurdering og det spilleren selv har markert. Bevis mot, forkastet teori, lavere egen opptelling og Nei på kildekortene er råd, ikke ekstra kuttregler. Lav tillit gir forklaring på hvorfor hun ikke gjennomgår materialet.
 
-### C. Beviskortet (ny skjerm)
-```
-[miniatyr]  Obituary: Mara Quinn
-            The Daily Record · publisert 2025-07-04
-[ Åpne original ]                    ← tilbake gir samme rulleposisjon
-Mine merker:  (✓ Gjennomgått) (★ Viktig) (? Tvilsom)
-Min kommentar: «Dato stemmer ikke med innlegget i mars»
-Kilde: The Daily Record ›             ← kildekortet (E)
-Koblinger (2)      Motsier → @maraquinn: I've been away
-                   Samme opphav? → Funeral notice, Calder Chapel
-Teorier (1)        FOR  Brightline operates @maraquinn
-Tidslinje (1)      2025-07-02  Mara dør
-Saker              The Quiet Account
-[ Legg bort ]  [ Fjern helt ]
-```
+Ved publisering fryses `report.snapshot`: påstandsordlyd, egne ord, notater, bevis med begrunnelser og koblinger, tellinger, forbehold, hendelser og hva Dana kuttet. PR #90 retter en mangel: også hendelsenes bevisreferanser, for/mot og beviskommentarer fryses og vises. Publisert innhold og kutt vises hver for seg. Senere redigering eller sletting i Casebook omskriver ikke øyeblikksbildet. Gamle rapporter uten snapshot eller hendelsesreferanser får ikke konstruert historiske data ved migrering. Feltet er valgfritt, og lagringsformatet forblir v12.
 
-### D. Sammenligne og koble
-1. Valgmodus, kryss av 2 eller flere, trykk **Sammenlign**.
-2. Kortene stables over hverandre, og hvert kort kan rulles. Synlige felter står på linje: dato, kilde, plattform, metadata (bilder), forfatter.
-3. Bunnknappen **Hvordan henger de sammen?** gir et bunnark med seks valg: *Støtter · Motsier · Relatert · Samme opphav · Mulig manipulert · Urelatert*.
-4. Valgfri linje: «Fordi …». Lagre.
-5. Herfra kan spilleren også trykke **Ny teori fra dette** eller **Ny hendelse**, med bevisene ferdig festet.
+Timeline viser spillerens egen opptelling med «in your count». Verdens poengberegning og avslutningsregler bruker fortsatt publisert innhold og kanon. Supports endrer hva som kan slippe gjennom redaksjonen; kildekort og personlige forbehold endrer ikke verdens poengregel.
 
-Koblinger er ikke en egen fane. De ligger på beviskortet, i teoriene og i sammenligningen.
+## Hjelp, tips og lagring
 
-### E. Kildekortet
-Én side per *synlig* kilde (konto, nettsted, avsender av en melding eller et vedlegg):
-```
-@harborwalkerpat på Connect          3 bevis
-Stoler jeg på kilden?      ( Ja | Usikker | Nei )
-Er den den den utgir seg for? ( Ja | Usikker | Nei )
-Samme opphav som …  [+ Velg kilde]     → @eastfield_dad_mike, @lindsay.on.4th
-Kommentar: «Alle tre poster bare reposter …»
-```
-Alle tre spørsmålene står tomme til spilleren svarer.
+Help i Casebook og lenken fra rapportbyggeren åpner forklaringene når som helst. Å lese hjelp påvirker ikke hvilke tips som er sett. Tips kommer ett om gangen, ved riktig funksjon. Ventende tips for en skjerm spilleren har forlatt, droppes usett.
 
-> **Implementert i steg 4 (25.11.2026):** kortet har de to spørsmålene (Yes / Unsure / No, et nytt trykk tar svaret tilbake), «Same origin as …» med søk, kommentar, kildens bevis og spørsmålene fra steg 2 som er koblet til kilden. Kildenøklene er de samme som spørsmålene bruker. Spillerens egen telling slår sammen kilder etter «Same origin as» på kortene og «Same origin»-koblinger mellom bevis, og teorikortet viser «3 sources · 1 in your count». Dana og rapportbyggeren leser ikke kortene ennå; det hører til steg 5.
->
-> **Anders' beslutninger 25.11.2026:** punkt 1–6 godkjent med justeringer. «Unsure» er et aktivt svar, forskjellig fra ubesvart i data og på skjermen. Kortet viser nøyaktig hvilke «Same origin»-koblinger som slår det sammen, og de kan åpnes, endres og fjernes derfra; kortets egne svar overskrives aldri. Kjeder gir én gruppe, og en indirekte gruppering vises som «via Pat»; opptellingen beregnes på nytt når en kobling, et svar eller et bevis fjernes. Manglende tillit trekker ikke fra kilden: troverdighet og uavhengighet er forskjellige spørsmål. Tomme kort skjules bare når alle bevis faktisk er fjernet; «Set aside» er ikke fjerning. Svarene er knyttet til en stabil kilde-ID (`sourceViews[nøkkel]`), ikke visningsnavnet. Formuleringen «3 sources · 1 in your count» beholdes.
+Settings har av/på og «Show intro tips again». Sistnevnte nullstiller bare sett-listen; den slår ikke tips på hvis de er av. Nytt spill slår tips på og nullstiller introduksjonen. Lasting og omstart av appen beholder innstillingene på enheten (`ba_deadinternet_tips`). Spillagringen er v12 i PR #89, med migrering av eldre lagringer.
 
-### F. Teori som arbeidsdokument
-```
-Brightline operates @maraquinn          [ Arbeidsteori ▾ ]
-FOR (3 bevis · 3 kilder, 2 etter dine koblinger)
-MOT (1)
-Åpne spørsmål   ▢ Hvem betalte for kontoen?   [+ ]
-Alternativer    Theo operates @maraquinn (forkastet dag 2)
-Min vurdering   …
-[ + For ]  [ + Mot ]  [ Rediger ]
-```
-- Status: *Arbeidsteori · Overbevist · Forkastet*. Endringer logges med dag. Forkastede teorier skjules i en sammenfoldet gruppe, og alle koblinger beholdes.
-- **+ For / + Mot** åpner en velger som viser viktige og ikke-bortlagte bevis først, og som har søk. Den lange «Other evidence»-listen forsvinner.
-- Åpne spørsmål er korte linjer som kan krysses av.
-- Alternativer er bare en kobling til en annen teori. Konkurrerende teorier står side om side.
+## Kontroller og videre arbeid
 
-### G. Rapport
-Som i dag, men hver påstand viser *for / mot / kilder etter dine koblinger*. Spillerens egne forbehold vises i byggeren, så spilleren ser at hen publiserer noe hen selv har merket som tvilsomt. Rapporten lagrer et øyeblikksbilde av teksten, så den ikke endres når teorien revideres senere.
+Tvillingverdener skal gi identisk synlig informasjon, Dana-vurdering, avslag og kutt når bare skjult kanon endres. Bare verdens konsekvenser etter publisering kan avvike. Se [PR-kontroller](PR89-REVIEW.md) og [restoppgaver](BACKLOG.md).
 
-### Hva skjer med «Save» på et ord?
-I dag lager det et notat. Forslag: et lagret sitat blir et **bevis av typen sitat** (kilde + utdrag) og havner i triagen. Notes blir bare spillerens egne tanker. Det fjerner den største dupliseringen.
-
-## 6. Skillet mellom funksjonene
-
-| Funksjon | Spørsmål | Hvor | Eier dataene |
-|---|---|---|---|
-| Search History | Hva har jeg søkt etter? | Seeker/Browser (finnes) | `s.searches` |
-| Evidence | Hva har jeg valgt å samle? | Casebook-fane | `s.evidence` |
-| Notes | Hva tenker jeg? | Casebook-fane (frie notater) + én kommentar på hvert element | `s.notes`, `item.note` |
-| Timeline | Når mener jeg det skjedde? | Casebook-fane (finnes) | `s.timeline` |
-| Theories | Hva tror jeg har skjedd? | Casebook-fane | `s.hypotheses` |
-| Connections | Hvordan henger det sammen? | Beviskort, sammenligning, teori (ingen fane) | `s.links` |
-| Sources | Hvem stoler jeg på? | Kildekort (ingen fane) | `s.sourceViews` |
-| Report | Hva kan jeg stå for offentlig? | Casebook → Reports (finnes) | `s.reports` |
-
-Regel mot duplisering: **hver opplysning lagres ett sted og vises ved referanse.** En kommentar på et bevis kopieres ikke inn i Notes. Søket i Notes kan likevel finne kommentarer og vise dem som lenker.
-
-Fanene er fortsatt fire: Evidence, Theories, Timeline og Notes.
-
-## 7. Endringer i datamodell og spillmotor
-
-### Lagring (SAVE_VERSION 6 → 7, med migrering)
-
-```js
-evidence[i] += {
-  marks: { reviewed: day|null, important: bool, doubtful: bool },
-  shelf: null | "irrelevant" | "archived", shelvedDay?,
-  note,                         // finnes, blir redigerbar
-  via?: { message } ,           // hvordan spilleren fikk den (vedlegg fra hvem)
-  quote?: { text },             // nytt: lagret utdrag
-}
-links: [{ id: "L…", items: [evidenceId, …], kind: "supports"|"contradicts"|"related"|"same_origin"|"manipulated"|"unrelated", note, day, edited? }]
-sourceViews: { [synligKildenøkkel]: { trust: null|"yes"|"unsure"|"no", authentic: null|"yes"|"unsure"|"no", sameAs: [nøkler], note } }
-hypotheses[i]: evidence: [{ id, stance: "supports"|"contradicts" }]   // migrering: alt → supports
-             += status: "open"|"convinced"|"rejected", statusLog: [{ day, status }],
-                questions: [{ id, text, done }], alternatives: [hypId], title?: string
-```
-
-`irrelevant` og arkiv er slått sammen til én handling, «Legg bort», med en grunn. Det gir én ting å lære og ett filter. Det er et valg du må ta (se under).
-
-### Motor
-
-1. **Ny modul `core/provenance.js`:** `apparentSource(g, e)` gir kildenøkkel og navn bare fra synlige felt: melding → kontakt, innlegg → kontoens handle, dokument fått som vedlegg → avsender, ellers domenet. All Casebook-telling bruker denne. `evidenceFacts().source` (kanon) brukes bare i scoring.
-2. **Ny modul `core/workbench.js`** for spillerlaget: merker, legg bort, koblinger, kildekort, teoristatus, spørsmål. Alt går gjennom `dispatch`, så replay og logg virker som før.
-3. **Spillerlaget er usynlig for reglene.** Ingen betingelser i `conditions.js` leser `marks`, `links` eller `sourceViews` (samme regel som for følg og like i media). Da kan verden aldri «belønne» en riktig kobling og dermed røpe fasit.
-4. **Gruppering etter hvem det handler om** bygges fra navn som faktisk står i teksten (`scanText`) og spillerens egne valg, ikke fra `mentions`.
-5. **Dana** vurderer ut fra `apparentSource`, spillerens egne `sameAs`, og bevis spilleren selv har koblet som *mot*. Scoring og konsekvenser bruker fortsatt kanon.
-6. **Teorier utenfor trippelen:** jeg foreslår at en teori får en valgfri fri tittel («Nekrologen er konstruert»). Trippelen kreves først når teorien skal publiseres. Det beholder strukturerte hypoteser som det som kan vurderes, men lar spilleren tenke fritt.
-
-### Lagene fra punkt 9, og hvor de bor
-
-| Lag | Hva | Hvor | Kan Casebook lese det? |
-|---|---|---|---|
-| 0 Kanon | Hva som er sant | `canon.json`, `facts`, `claims`, `accounts.operatedBy`, `source`, `supports` | Nei. Bare scoring og regler. |
-| 1 Karakterenes tro | Hva Dana, Theo, Owen tror | dialog og karakterdata | Nei, bare gjennom meldingene |
-| 2 Kildenes påstand | Hva teksten sier | artikkelens synlige tekst, dato og metadata | Ja, det som står på skjermen |
-| 3 Spillerens oppdagelser | Sett, møtt, undersøkt, lagret | `seen`, `encountered`, `known`, `saved` | Ja |
-| 4 Spillerens slutninger | Merker, koblinger, kilder, teorier | Casebook-tilstanden | Ja, det er spillerens egne data |
-
-En avsluttet sak låser ingenting. Teorier er universets, ikke sakens. «Overbevist» kan endres senere, og loggen viser at spilleren har skiftet mening.
-
-## 8. Implementeringsrekkefølge
-
-Hvert steg er én liten PR med egne tester og kan stoppes etter.
-
-| Steg | Innhold | Når |
-|---|---|---|
-| **0** | Rett L1–L4: `apparentSource`, grupper etter synlige navn, Dana teller synlige kilder. Tvillingverden-test (punkt 9). Ingen ny UI. | **Før ekstern spilltest**, fordi en testspiller ellers kan få fasit fra kildetallet |
-| — | Ekstern spilltest på dagens Casebook. Observer: hvor mange bevis, hva spilleren leter etter, om noen prøver å sammenligne. | Som planlagt |
-| 1 | Triage: beviskort, merker, kommentar, «Legg bort», filternedtrekk, «Ikke gjennomgått» øverst. Sitat som bevis. Lagring v7. | Etter testen |
-| 2 | Teorier: for/mot, status med logg, åpne spørsmål, alternativer, fri tittel. Velger med søk erstatter «Other evidence». | |
-| 3 | Sammenligning og koblinger (valgmodus, sammenligningsskjerm, seks koblingstyper). | |
-| 4 | Kildekort og spillerens egen uavhengighetstelling. ~~Dana bruker spillerens forbehold.~~ | Implementert 25.11.2026 (PR #88). Dana-delen er flyttet til steg 5: planendring godkjent av Anders 25.11.2026. |
-| 5 | Rapport: for/mot/egne forbehold i byggeren, øyeblikksbilde. Ett tips om sammenligning i tips-systemet. Dana bruker spillerens forbehold (flyttet fra steg 4). | Grenser fra Anders 25.11.2026: Danas vurdering før publisering holdes atskilt fra verdens poengberegning etterpå; at Dana leser spillerens forbehold, gir ikke i seg selv grunnlag for å endre poengreglene; nye tall i Timeline merkes som spillerens egen opptelling. |
-| 6 | Innhold: vise koblinger og teorier til karakterer. Forfatterveiledning: hvert mysterium skal ha motsigelser og «ekkokamre» (mange kilder, ett opphav). | Med neste mysterium |
-
-Steg 1–5 er rundt 600–900 linjer i `app/apps/casebook.js` og to nye kjernemoduler. Rekkefølgen kan justeres etter spilltesten. Viser testen at triage er nok, kan 3 og 4 vente.
-
-## 9. Testing uten informasjonslekkasje
-
-1. **Tvillingverden-test (den viktigste).** Bygg verden to ganger. I den andre endres bare skjulte felt: `source`-nøkler deles opp eller slås sammen, `operatedBy`, `isHuman`, `facts`, `claims.truth`, `supports`. Kjør samme spillerskript i begge. Alle Casebook-visninger (`casebookView`, beviskort, sammenligning, kildekort, teorier, Danas tekst) skal være *identiske*. Bare publiseringsresultat og konsekvenser får avvike. Testen ville feilet på dagens kode, og det er poenget.
-2. **Importgrense.** En test leser kildekoden og sjekker at `workbench.js`, `provenance.js` og `app/apps/casebook.js` ikke importerer `truthOf`, `supportOf`, `matchClaim`, `supportsOf`, `sourceOf` eller leser `w.claims`/`w.facts`.
-3. **Spillerlaget endrer ikke verden.** Tilfeldige sekvenser av merker, koblinger og statusendringer (fuzz) skal ikke endre `flags`, `counters`, `trust`, `credibility`, `fired`, `notifications` eller `endings`.
-4. **Ingen nye regelbetingelser.** Validatoren avviser innhold som leser spillerlaget i `if`/`when`.
-5. **Innholdslint.** Validatoren varsler om `mentions` som ikke står i teksten, og om dokumenter der kildenavnet ville hentes fra en karakter spilleren ikke har fått det fra.
-6. **DOM-test i Playwright.** Samme skript i begge tvillingverdener, og sammenlign tekst og CSS-klasser i Casebook. Det fanger farger og ikoner som avslører noe.
-7. **Migrering v6 → v7.** Gamle lagringer åpnes, alle teorikoblinger blir «for», ingenting forsvinner.
-8. **Spilltest.** Spør testspilleren hva de tror et ikon eller tall betyr. Tror noen at ✓ betyr «riktig», er det en ordlyd- eller ikonfeil.
-
-## Det du må ta stilling til
-
-1. **Rette kildelekkasjen (steg 0) før den eksterne spilltesten?** Jeg anbefaler ja. Det er lite arbeid, og det er en fasitlekkasje.
-2. **Skal Dana kunne bli lurt?** Jeg anbefaler at hun bare teller synlige kilder og spillerens egne forbehold. Konsekvensen kommer i verden etterpå.
-3. **Fri tittel på teorier, trippel bare ved publisering?** Jeg anbefaler ja. Det lar spilleren tvile på dokumenter, ikke bare på personer.
-4. **Slå sammen «irrelevant» og «arkiv» til «Legg bort» med grunn?** Jeg anbefaler ja, for én handling og ett filter.
-5. **Bygge steg 1–5 etter spilltesten, styrt av observasjonene?** Jeg anbefaler ja, i tråd med at fase 9 avsluttes med grafikk og test før noe nytt.
-
-Designprinsippet ditt passer godt med modellen: jo flere kilder spilleren vurderer selv, desto bedre forstår hen den konkrete saken. Samtidig avslører ikke systemet hvilke kilder som har samme opphav, og da kan spilleren aldri være helt sikker på hvordan verden henger sammen.
+Den opprinnelige trinnplanen, gamle datamodellskisser og tidligere vurderinger ligger i [historikk](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/CASEBOOK-DEDUCTION.md). De er ikke gjeldende API eller oppgaver.

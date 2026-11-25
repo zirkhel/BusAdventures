@@ -12,6 +12,7 @@ import { Game } from "../../core/game.js";
 import { truthOf } from "../../core/casebook.js";
 // The explorer is an authoring tool and reads hidden canon on purpose. Player views never carry it.
 import { supportsOf, sourceOf } from "../../core/artifacts.js";
+import { visibleRefsOfEvidence } from "../../core/provenance.js";
 
 const CODE_RE = /[A-Za-z0-9]+(?:[._@-][A-Za-z0-9]+)+/g;
 
@@ -163,6 +164,25 @@ export function hypothesisFor(g, claimId) {
     else if (e.image) supports = g.w.images.get(e.image)?.supports || [];
     else { const v = g.view(e.artifact, e.version ?? undefined); supports = supportsOf(g, e.artifact, v.versionId ?? e.version ?? undefined); }
     if (supports.includes(claimId)) g.link(r.id, e.id);
+  }
+  // Point 9 (Anders, 25.11.2026): what a careful player does so Dana can count the visible basis.
+  // Only visible names and the same explicit Supports action a player has. (1) If no linked piece
+  // names a party, add a saved piece that does (most parties first). (2) Link each piece that does
+  // not name every party as supporting one that, together with it, does.
+  {
+    const h = g.s.hypotheses.find(x => x.id === r.id);
+    const parties = [h.subject, h.object].filter(Boolean);
+    const refs = id => visibleRefsOfEvidence(g, g.s.evidence.find(x => x.id === id));
+    const covers = (...ids) => parties.every(p => ids.some(id => refs(id).includes(p)));
+    for (const p of parties) if (!h.evidence.some(id => refs(id).includes(p))) {
+      const score = e => parties.filter(q => visibleRefsOfEvidence(g, e).includes(q)).length;
+      const pick = g.s.evidence.filter(e => !h.evidence.includes(e.id) && visibleRefsOfEvidence(g, e).includes(p)).sort((x, y) => score(y) - score(x))[0];
+      if (pick) g.link(r.id, pick.id);
+    }
+    for (const id of h.evidence) if (!covers(id)) {
+      const other = h.evidence.find(y => y !== id && covers(y)) ?? h.evidence.find(y => y !== id && covers(id, y));
+      if (other && covers(id, other)) g.addLink({ a: id, b: other, kind: "supports" });
+    }
   }
   return r.id;
 }

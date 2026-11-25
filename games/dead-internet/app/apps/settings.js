@@ -3,7 +3,7 @@
 
 import { h, icon } from "../ui.js";
 
-/** Tips: on/off, the introduction again, all tips in one list, and a reset. */
+/** Tips: on/off, the introduction again, all tips in one list, and \"Show intro tips again\". */
 function tipsGroup(phone) {
   const T = phone.tips, S = phone.g.w.strings.tips || {};
   const toggle = /** @type {HTMLInputElement} */ (h("input.set-switch", { type: "checkbox", "aria-label": S.settingsShow }));
@@ -14,7 +14,8 @@ function tipsGroup(phone) {
       h("label.set-row", h("span", S.settingsShow), toggle),
       h("button.set-row.btnrow", { onclick: () => T.intro(true) }, h("span", S.settingsIntro), icon("back", "rot")),
       h("button.set-row.btnrow", { onclick: () => T.all() }, h("span", S.settingsAll), icon("back", "rot")),
-      h("button.set-row.btnrow", { onclick: () => { T.reset(); phone.toast("Tips will show again."); phone.refresh(); } }, h("span", S.settingsReset))),
+      // Only forgets which tips were seen: nothing is shown now, and on/off stays as it is.
+      h("button.set-row.btnrow.tips-reset", { onclick: () => { T.reset(); phone.toast(T.on ? S.settingsResetDone : S.settingsResetOff); } }, h("span", S.settingsReset))),
     h("div.set-hint.muted", S.settingsHint)];
 }
 

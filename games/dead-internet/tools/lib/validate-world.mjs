@@ -141,7 +141,22 @@ export function validateWorld(raw, opts = {}) {
   };
   for (const ch of w.channels.values()) {
     if (ch.reviewer && !w.characters.has(ch.reviewer)) err(`channel ${ch.id}`, `unknown reviewer ${ch.reviewer}`);
-    if (ch.reviewer) for (const k of ["noTrust", "strong", "weak", "none", "bold"]) if (w.strings?.review?.[ch.reviewer]?.[k] == null) err(`channel ${ch.id}`, `missing string review.${ch.reviewer}.${k}`);
+    if (ch.reviewer) {
+      // Point 9 (Anders, 25.11.2026): a reviewer's lines say "goes forward" only at two visible
+      // origins, so a reviewed channel must cut below that, or text and action would disagree.
+      if (ch.requiresStrong !== true) err(`channel ${ch.id}`, `reviewed by ${ch.reviewer} but requiresStrong is not true`);
+      if (ch.outlet != null && !w.entities.has(ch.outlet)) err(`channel ${ch.id}`, `unknown outlet ${ch.outlet}`);
+      const R = w.strings?.review?.[ch.reviewer];
+      const levels = ["none", "one", "several"];
+      if (R?.noTrust == null) err(`channel ${ch.id}`, `missing string review.${ch.reviewer}.noTrust`);
+      for (const grp of [[], ["bold"], ...(ch.outlet ? [["ownOutlet"]] : [])]) for (const l of levels) {
+        if ([...grp, l].reduce((o, k) => o?.[k], R?.v) == null) err(`channel ${ch.id}`, `missing string review.${ch.reviewer}.v.${[...grp, l].join(".")}`);
+      }
+      for (const [pred, lines] of Object.entries(R?.v?.predicate ?? {})) {
+        if (!w.predicates.has(pred)) err(`channel ${ch.id}`, `review lines for unknown predicate ${pred}`);
+        for (const l of levels) if (lines?.[l] == null) err(`channel ${ch.id}`, `missing string review.${ch.reviewer}.v.predicate.${pred}.${l}`);
+      }
+    }
     checkCond(`channel ${ch.id}`, ch.if); checkEffects(`channel ${ch.id}`, ch.onPublish); collectReveals(ch.onPublish);
   }
   for (const k of ["ask", "show"]) if (w.strings?.messages?.[k] == null) err("strings", `missing messages.${k}`);
@@ -161,6 +176,8 @@ export function validateWorld(raw, opts = {}) {
   for (const c of w.claims.values()) {
     if (!["true", "false", "partial"].includes(c.truth)) err(`claim ${c.id}`, `truth must be "true", "false" or "partial"`);
     arr(c.match || c).forEach(t => checkTriple(`claim ${c.id}`, t));
+    // Point 9: reviewers treat every claim alike, so a predefined claim carries no wording or weight of its own.
+    for (const k of ["review", "bold"]) if (k in c) err(`claim ${c.id}`, `"${k}" is not allowed: reviewers judge the relation, not the predefined claim`);
   }
   w.facts.forEach((f, i) => checkTriple(`fact #${i}`, f));
   // A claim marked true must not contradict a derived truth, and vice versa.

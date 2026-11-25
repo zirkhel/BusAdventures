@@ -5,6 +5,7 @@ import { loadContent } from "../core/content.js";
 import { buildWorld } from "../core/world.js";
 import { Game } from "../core/game.js";
 import { serialize, deserialize, saveTo, loadFrom, clearSave } from "../core/save.js";
+import { savePrefs, newGamePrefs } from "./tips-state.js";
 import { loadCatalog } from "./media.js";
 import { Phone } from "./phone.js";
 import { h } from "./ui.js";
@@ -93,6 +94,9 @@ function intro(m) {
 }
 
 function run(game, fresh) {
+  // A new game starts with tips on and none seen. Loading a save or reloading keeps the player's
+  // tip preferences (they are per device, not in the save).
+  if (fresh) savePrefs(store, newGamePrefs());
   game.on("state", () => saveTo(store, world, game.s));
   saveTo(store, world, game.s);
   phone = new Phone(root, game, {

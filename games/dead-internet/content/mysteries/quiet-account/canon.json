@@ -36,10 +36,7 @@
      "predicate": "paid",
      "object": "brightline"
     }
-   ],
-   "review": {
-    "weak": "One source for the money isn't enough for a story about money. Find me a second, independent one."
-   }
+   ]
   },
   {
    "id": "S4",
@@ -72,7 +69,6 @@
    "id": "S6",
    "label": "Paul Navarro knew Mara was dead",
    "truth": "true",
-   "bold": true,
    "match": [
     {
      "subject": "paul",
@@ -90,7 +86,6 @@
    "id": "S7",
    "label": "Calvin Marsh is not a real person",
    "truth": "true",
-   "bold": true,
    "match": [
     {
      "subject": "calvin",
@@ -117,7 +112,6 @@
    "id": "F1",
    "label": "Mara was killed on purpose",
    "truth": "false",
-   "bold": true,
    "match": [
     {
      "subject": "northgate",
@@ -144,11 +138,7 @@
      "predicate": "caused",
      "object": "evt_mara_death"
     }
-   ],
-   "review": {
-    "weak": "You want me to print that someone killed her? Based on what, a bowling league?",
-    "strong": "A client list and a Threadline thread. That's a delivery route, not a motive. If we print this, we'd better be very sure."
-   }
+   ]
   },
   {
    "id": "F2",
@@ -184,10 +174,7 @@
      "predicate": "paid",
      "object": "daily_record"
     }
-   ],
-   "review": {
-    "weak": "Advertising isn't a bribe, and I'd know. Leave my paper out of it unless you have a cheque."
-   }
+   ]
   },
   {
    "id": "F5",

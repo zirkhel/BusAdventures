@@ -24,7 +24,7 @@ const world = g => structuredClone({ flags: g.s.flags, counters: g.s.counters, t
   fired: g.s.fired, notifications: g.s.notifications, endings: g.s.endings, pending: g.s.pending, messages: g.s.messages, day: g.s.day,
   evidence: g.s.evidence, hypotheses: g.s.hypotheses, links: g.s.links, questions: g.s.questions, known: g.s.known });
 
-test("save format is version 11", () => assert.equal(SAVE_VERSION, 11));
+test("save format is version 11 or later (step 4 added source cards)", () => assert.ok(SAVE_VERSION >= 11));
 
 test("a source card starts empty, and only the player fills it in", async () => {
   const { g, ev } = await fixture();
@@ -132,14 +132,14 @@ function older(s, version) {
 }
 
 for (const version of [10, 9, 8, 7]) {
-  test(`a version ${version} save opens as version 11 with empty source cards and everything else intact`, async () => {
+  test(`a version ${version} save opens at the current version with empty source cards and everything else intact`, async () => {
     const { w, g, ev } = await fixture();
     if (version >= 10) g.addLink({ a: ev[1], b: ev[2], kind: "same_origin" });
     g.editEvidence(ev[1], { important: true, note: "Same wording" });
     const before = JSON.parse(JSON.stringify(g.s));
     const { state, warnings } = deserialize(w, serialize(older(g.s, version)));
     assert.deepEqual(warnings.filter(x => /dropped/.test(x)), []);
-    assert.equal(state.saveVersion, 11);
+    assert.equal(state.saveVersion, SAVE_VERSION);
     assert.deepEqual(state.sourceViews, {});
     assert.deepEqual(state.evidence, before.evidence);
     if (version >= 10) assert.deepEqual(state.links, before.links);
