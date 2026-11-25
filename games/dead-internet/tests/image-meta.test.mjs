@@ -72,3 +72,28 @@ test("the validator rejects a missing meta and a photo dated after its page", as
   assert.ok(msgs.some(m => m.includes("WEB0016 taken 2019-06-19")), msgs.join("\n"));
   assert.ok(msgs.some(m => m.includes("WEB0009 taken 2015-01-01")), msgs.join("\n"));
 });
+
+test("the approved camera and scanner names are canon background facts; Mara's Lumen 5 is not", async () => {
+  const raw = await loadRaw();
+  const byId = new Map((raw.backgroundFacts || []).map(f => [f.id, f]));
+  const want = {
+    "bf-device-orrin-d7": ["northgate", "Orrin D7", ["WEB0001", "WEB0002", "WEB0003", "WEB0004"]],
+    "bf-device-orrin-s20": ["kestrel", "Orrin S20", ["WEB0009"]],
+    "bf-device-orrin-s5": ["walts", "Orrin S5", ["WEB0034"]],
+    "bf-device-halden-photoscan-2400": ["walts", "Halden PhotoScan 2400", ["WEB0023"]],
+    "bf-device-lumen-6": ["calderpedia", "Lumen 6", ["WEB0013", "WEB0014", "WEB0015", "WEB0020"]],
+  };
+  for (const [id, [site, name, images]] of Object.entries(want)) {
+    const f = byId.get(id);
+    assert.ok(f, id);
+    assert.equal(f.status, "canon", id);
+    assert.equal(f.introducedBy, site, id);
+    assert.ok(f.label.includes(name), id);
+    for (const im of images) {
+      const m = world.images.get(im).meta;
+      assert.ok(m.device === name || m.software === name, `${im} uses ${name}`);
+    }
+  }
+  // QA_PEOPLE: no new canon about Mara. Her Lumen 5 stays in the image meta and the handover docs.
+  assert.ok(![...byId.values()].some(f => f.subject === "mara" || /Lumen 5/.test(f.label)));
+});
