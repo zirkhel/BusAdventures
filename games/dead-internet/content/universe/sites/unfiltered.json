@@ -10,7 +10,8 @@
    "template": "news",
    "variant": "unfiltered",
    "theme": {
-    "logo": "LOGO_UNFILTERED"
+    "logo": "LOGO_UNFILTERED",
+    "icon": "LOGO_UNFILTERED_ICON"
    },
    "nav": []
   }

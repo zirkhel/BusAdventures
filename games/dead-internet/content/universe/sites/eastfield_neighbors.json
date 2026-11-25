@@ -10,7 +10,7 @@
    "template": "forum",
    "variant": "classic",
    "theme": {
-    "logo": "text:Eastfield Neighbors"
+    "logo": "LOGO_EASTFIELDNEIGHBORS"
    },
    "nav": []
   }

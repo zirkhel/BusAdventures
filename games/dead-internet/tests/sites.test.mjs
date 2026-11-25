@@ -125,3 +125,24 @@ test("W2 templates handle Northgate, the city portal and Eastfield Notes", () =>
   assert.ok(news);
   assert.equal(canRenderSite(phone, viewArtifact(g, news.id)), false);
 });
+
+test("every site design has a catalog logo or icon", () => {
+  for (const site of world.sites.values()) {
+    for (const d of site.designs || []) {
+      const logo = d.theme?.logo;
+      assert.ok(logo && !String(logo).startsWith("text:"), `${site.id} ${d.id} needs a catalog logo`);
+    }
+  }
+});
+
+test("landing, legacy, wiki and document pages use the thin site chrome", () => {
+  const g = new Game(world, { seed: 1 });
+  g.start();
+  const phone = { g };
+  for (const id of ["W-harbordental-0001", "B19", "B17", "B18", "B23", "A18"]) {
+    assert.equal(canRenderSite(phone, viewArtifact(g, id)), true, id);
+  }
+  // Raw static.channel and forum threads stay on the existing renderer.
+  assert.equal(canRenderSite(phone, viewArtifact(g, "A44")), false);
+  assert.equal(canRenderSite(phone, viewArtifact(g, "A16")), false);
+});

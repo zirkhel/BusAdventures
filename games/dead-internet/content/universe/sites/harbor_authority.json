@@ -9,7 +9,7 @@
    "template": "government",
    "variant": "municipal",
    "theme": {
-    "logo": "text:Port Calder Harbor Authority"
+    "logo": "LOGO_HARBORAUTHORITY"
    },
    "nav": [
     {

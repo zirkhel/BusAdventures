@@ -11,7 +11,8 @@
    "template": "news",
    "variant": "record",
    "theme": {
-    "logo": "LOGO_DAILYRECORD"
+    "logo": "LOGO_DAILYRECORD",
+    "icon": "LOGO_DAILYRECORD_ICON"
    },
    "nav": []
   }

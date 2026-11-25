@@ -1,18 +1,55 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (Casebook steg 1 merget, W0–W2 ferdig)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (Casebook steg 1 merget, W0–W2 og nettsidegrafikk ferdig, ikke pushet)._
 
-## Overlevering (24. nov 2026)
+## Overlevering (25. nov 2026)
 
 Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «Veikart» under, `DESIGN.md` (særlig «Prinsipper», «Kanon, påstander og spillerens tro», «Casebook som deduksjonsverktøy», «Saksavslutning og konsekvenser», «Autentiske nettsteder» og «Teststrategi») og dokumentene i `docs/`.
 
 **Status**
-- Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Alle 61 grafikkelementer er godkjent.
+- Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Katalogen har nå 83 ferdige grafikkelementer (61 fra før, pluss logoer og nettsidebilder fra grafikksteget 25. nov).
 - Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2–5 gjenstår.
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
-- Nettsteder: W0–W2 er ferdige. W2: malverk i `app/sites/` (Corporate, Government, Blog). Northgate, Port Calder City Portal og Eastfield Notes er flyttet over med uendret tekst. Andre nettsteder med disse malnavnene (bl.a. Brightline, Kestrel, Calder Transit) bruker også motoren. W3–W8 gjenstår. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md).
+- Nettsteder: W0, W1, W2 og et grafikksteg på toppen av W2 er ferdige lokalt (ikke pushet, ingen PR). Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
+- Åpen PR #72 (`codex/casebook-step-1`) er en etterlatt duplikat av merget PR #71 og skal lukkes, ikke merges.
 
-**Neste steg på main:** Casebook steg 2 (teorier og spørsmål), parallelt med videre nettsidearbeid (W3–W8). W0–W2 er ferdige. Etter steg 5 og avklaring av saksavslutning: ekstern spilltest.
+**Neste steg:** pushe og åpne PR-er for de stablede greinene når `gh` er innlogget og Anders sier ja. På innholdssiden: Casebook steg 2 (teorier og spørsmål), parallelt med W3–W8. `corp-registries.example` skal byttes med et troverdig domene (med egen test). Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest.
+
+### Nettstedsarbeid (W0–W2 og grafikk) — greiner og beslutninger
+
+Arbeidet ligger i `/workspace/BusAdventures`, stablet på `origin/main` `d7a9368` (PR #71). Ingenting er pushet. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
+
+| Steg | Grein | Commit | Hva |
+|---|---|---|---|
+| W0 | `websites-w0` | `bc67d47` | Hviteliste `publicView()` i `core/site-view.js`. `renderArtifact` / login / gone sender bare visningsfelt til malene. |
+| W1 | `websites-w1` | `2611469` | Nettstedsmodell `core/sites.js`, 25 nettsteder i `content/universe/sites/`, inventar og `site-ref`-validator. Ingen synlig endring. |
+| W2 | `websites-w2` | `4f0200b` | Malverk Corporate, Government, Blog i `app/sites/`. Tekst uendret. |
+| Grafikk | `websites-w2-graphics` | `bd20641` | Logo/favicon på alle konfigurerte nettsteder, heltebilder på malte sider, tynn chrome for landing/legacy/personal/wiki/document. |
+
+**W0 — nye/endrede filer.** `core/site-view.js` (ny), `app/render.js`, `tests/sites.test.mjs`, oppdateringer i DEVPLAN, WEBSITES.md og DESIGN.md.
+
+**W1 — nye/endrede filer.** `core/sites.js` (ny), `core/content.js`, `core/world.js`, `tools/lib/validate-world.mjs`, `content/manifest.json`, `content/universe/sites/*.json` (25), `content/universe/artifacts/referenced-sites.json`, kirurgiske `site`/`page`-felt på eksisterende artefakter, fem plattformer i `platforms.json`, `docs/WEBSITE-INVENTORY.md`, tester og dokumenter.
+
+**W1 — designbeslutninger.** Hvert referert nettsted finnes i modellen, eller har eksistert (`gone`/`parked`/`maintenance`). E-postdomener `calder-mail.com` og `bl-ops.net` er unntatt (portalen `portal.bl-ops.net` er et eget nettsted). `harbordental.com` og `caldertransit.gov` følger allerede godkjente navn i WEBSITES.md, med minimale hjemmesider uten ny kanon. `harbor.portcalder.gov` og `eastfieldneighbors.net` er tildelte domener fordi kanon aldri navngir dem; de kan døpes om uten å endre historien. Eastfield Neighbors er `gone` fra 20. feb 2023, uten sider. Friends of Eastfield, «the site» på Calderpedia (mølleområdet) og Harbor Public Affairs (organisasjonsnavn, `harborpa.com` kommer senere) er ikke nettsteder. `corp-registries.example` er ikke omdøpt i W1. Medietestens virtuelle `toktok.app` er ikke i spilluniverset, men testpoolen registrerer et nettsted slik at `site-ref` fortsatt holder.
+
+**W2 — nye/endrede filer.** `app/sites/` (index, chrome, blocks, corporate, government, blog + CSS), krok i `app/render.js`, CSS-lenker i `index.html`, tester, dokumenter. Etterkontrollen av hele testpakken avslørte at medietestpoolen måtte registrere `toktok.app`; det er tatt med i W2-committen (W1-oppfølging, ikke kanon).
+
+**W2 — designbeslutninger.** `designFor` bruker spilldatoen på levende sider og versjonsdatoen (eller låst design) på cachete visninger: Eastfield Notes bytter til `minimal` på den levende siden etter 22. okt 2025, mens cachete kopier beholder `classic`. Registeroppslag (`page: record`) er monospaced; person- og kalendersider er det ikke. Motoren gjelder alle nettsteder som allerede hadde `template: corporate|government|blog`, ikke bare de tre navngitte (Brightline, Kestrel, Calder Transit, Harbor Authority, `corp-registries.example`). Det er en bevisst, liten utvidelse; ordlyden er uendret. Forum, nyheter og apper beholdt sine eksisterende visninger.
+
+**Grafikk (på `websites-w2-graphics`).** Hvert konfigurert nettsted har en SVG-logo i katalogen. Nettleserens adressefelt viser favicon (`theme.icon`, ellers kvadratisk logo) på sider. Heltebilder er festet til eksisterende artefakter uten å endre brødtekst: Brightline-kontor (WEB0005 / A19), Kestrel-biler (WEB0007 / A38, intakt lager — ikke NIMG0005), rådhuset (WEB0010 / B16), Harbor Dental (WEB0025), Calder Transit (WEB0026), Harbor Authority (WEB0027), Salty's 2008-front (WEB0020, tavlen er sløret så den ikke kan leses som meny). HarborDesk, hageforeningen og AIWriterPro fikk SVG-illustrasjoner (WEB0028–WEB0030). Northgate-vannfronten beholder IMG12; WEB0001–WEB0004 er ikke laget fordi det ikke finnes prosjektsider å henge dem på uten å dikte kanon. Bevisbilder (NIMG0003, NIMG0005, IMG02 osv.) er ikke gjenbrukt som pynt. ComfyUI kjører ikke på boksen; fotografiene er laget med GenerateImage etter GRAPHICS.md-stil (ingen tekst/merkevarer, litt korn, webp), logoene er håndtegnede SVG. En tynn chrome (`app/sites/simple.js`) gjør logo og helt synlig på landing/legacy/personal/wiki/document. Dette er ikke W5 (ingen full Wiki/Forum/Document/Anonymous-mal). `static.channel` forblir rå tekst, men har favicon. Eastfield Notes 2025 bruker typografisk minimal-logo; begge epoker deler mølle-ikonet som favicon.
+
+**Slik testes det** (fra repo-roten, etter deloppgave og før PR):
+
+```text
+node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs
+node games/dead-internet/tools/validate.mjs
+node games/dead-internet/tools/simulate.mjs
+PLAYWRIGHT_MODULE=/path/to/playwright node games/dead-internet/tools/test-casebook-ui.mjs
+```
+
+Nettstedstester ligger i `tests/sites.test.mjs`. Etter katalogendringer: `node games/dead-internet/tools/graphics-report.mjs` og `node games/dead-internet/tools/make-placeholders.mjs` (bare nye plassholdere skal sjekkes inn). Ny-spill i Playwright: case-menypunkt → `form.intro-form` submit → «Swipe up to unlock» → ev. `.it-notips` → Browser i docken → `form.addr-form`. Skjermbilder 390×844: `/workspace/dead-internet-shots/`.
+
+**Gjenstår etter denne bunten.** W3 (Browser: frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering). W4 bakgrunnssider. W5 fulle maler for Wiki, Forum, Document, Anonymous. W6–W8. Gjenstående WEB-bilder i listen WEB0001–WEB0024 som ikke har en eksisterende side (Foundry Lofts, Heights Commons, Northpoint Landing, lobby, bibliotek, Calderpedia-fyr, Eastfield Notes-mobilbilder, osv.). Omdøping av `corp-registries.example`. Lukke PR #72. Casebook steg 2–5.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
@@ -101,7 +138,7 @@ _Implementert 24. november 2026. Testet i Playwright (iPhone 13, Pixel 7, deskto
 - [x] Revisjon av Browser, Connect, Messages, Casebook, søkeforslag og kontekstmenyen for lekkasjer, med automatiske tester
 
 ## Veikart (Anders, 24. nov kveld, samlede beslutninger)
-Fase 9 er ferdig, og alle 61 grafikkelementer er godkjent (eksisterende Cora-bilde beholdes). Forbedringen av Unfiltered-ikonet kan gjennomføres. Små, avgrensede PR-er, og DESIGN.md og DEVPLAN.md oppdateres fortløpende.
+Fase 9 er ferdig. Katalogen har 83 ferdige filer etter nettsidegrafikken 25. nov (eksisterende Cora-bilde beholdes). Forbedringen av Unfiltered-ikonet kan gjennomføres. Små, avgrensede PR-er, og DESIGN.md og DEVPLAN.md oppdateres fortløpende.
 1. Fullfør Casebook steg 0–5 (under). Lekkasjene L1–L4 har førsteprioritet. Røyktest i nettleser før merge.
 2. Avklar og eventuelt kompletter mekanikken for saksavslutning og konsekvenser. Gjennomgangen gjøres i egen tråd først. Ingen nye avslutningsmekanismer før den er diskutert.
 3. Ekstern spilltest av The Quiet Account.
@@ -272,7 +309,8 @@ Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 
 ### Autentiske nettsteder (veikart punkt 5–7, se docs/WEBSITES.md §11)
 - [x] W0 Lekkasjevern: kanonfelt fjernet fra visningen (PR #68). Hviteliste i `core/site-view.js` (`publicView`): malene og `renderArtifact` får bare visningsfelt. `filler`, `covers`, `pool` og øvrige forfatterfelt holdes utenfor. DOM-tvillingtesten forblir i Casebook-arbeidet (`tests/twin.test.mjs` røres ikke her).
 - [x] W1 Nettstedsmodell (`core/sites.js`, `content/universe/sites/*.json`, `site`/`page`/`blocks`, designvalg etter dato, 404-data, automatiske lister, validator og inventar). Ingen synlige endringer i Browser ennå.
-- [x] W2 Malverk og tre maler (Corporate, Government, Blog). Northgate (`glossy`), bykommunen (`municipal`, monospace bare på registeroppslag) og Eastfield Notes (`classic` / `minimal` etter 22. okt 2025) er flyttet over. Eksisterende tekst er uendret.
+- [x] W2 Malverk og tre maler (Corporate, Government, Blog). Northgate (`glossy`), bykommunen (`municipal`, monospace bare på registeroppslag) og Eastfield Notes (`classic` / `minimal` etter 22. okt 2025) er flyttet over. Eksisterende tekst er uendret. Motoren brukes også av andre nettsteder med de samme malnavnene.
+- [x] Logo, favicon og heltebilder på konfigurerte nettsteder (grein `websites-w2-graphics`). Tynn chrome for landing/legacy/personal/wiki/document slik at merke og bilde synes. Katalogen er oppdatert; GRAPHICS.md er generert. Dette er ikke W3 eller W5.
 - [ ] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering)
 - [ ] W4 Bakgrunn runde 1 (ca. 110 sider) og fil med bakgrunnsfakta
 - [ ] W5 Wiki, Forum, Document, Anonymous

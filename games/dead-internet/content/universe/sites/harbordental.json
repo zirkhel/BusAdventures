@@ -9,7 +9,7 @@
    "template": "landing",
    "variant": "saas",
    "theme": {
-    "logo": "text:Harbor Dental"
+    "logo": "LOGO_HARBORDENTAL"
    },
    "nav": [
     {

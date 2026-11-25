@@ -9,7 +9,7 @@
    "template": "landing",
    "variant": "smallbiz",
    "theme": {
-    "logo": "text:HarborDesk"
+    "logo": "LOGO_HARBORDESK"
    },
    "nav": [
     {

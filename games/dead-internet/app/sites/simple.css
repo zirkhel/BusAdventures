@@ -1,0 +1,77 @@
+/* Thin chrome for landing, legacy, personal, wiki and document sites. */
+
+.tmpl-landing, .tmpl-legacy, .tmpl-personal, .tmpl-wiki, .tmpl-document {
+  background: var(--site-bg, #fff);
+  color: var(--site-ink, #1a1a1a);
+}
+.tmpl-landing .site-head, .tmpl-legacy .site-head, .tmpl-personal .site-head,
+.tmpl-wiki .site-head, .tmpl-document .site-head {
+  margin: 0; padding: 0; border-bottom: 0;
+}
+.tmpl-landing .site-brand, .tmpl-legacy .site-brand, .tmpl-personal .site-brand,
+.tmpl-wiki .site-brand, .tmpl-document .site-brand {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+}
+.tmpl-landing .site-logo-img, .tmpl-legacy .site-logo-img, .tmpl-personal .site-logo-img,
+.tmpl-wiki .site-logo-img, .tmpl-document .site-logo-img {
+  display: block; height: 40px; width: auto; max-width: 120px; object-fit: contain; flex: none;
+}
+.tmpl-landing .mast, .tmpl-legacy .mast, .tmpl-personal .mast,
+.tmpl-wiki .mast, .tmpl-document .mast {
+  font-size: 17px; font-weight: 700; letter-spacing: 0; text-transform: none; color: inherit;
+}
+.tmpl-landing .site-tagline, .tmpl-legacy .site-tagline, .tmpl-personal .site-tagline {
+  display: block; font-size: 11px; font-weight: 400; color: inherit; opacity: .7;
+}
+.tmpl-landing .site-nav, .tmpl-legacy .site-nav, .tmpl-personal .site-nav,
+.tmpl-wiki .site-nav, .tmpl-document .site-nav {
+  display: flex; flex-wrap: wrap; gap: 0; padding: 0 8px;
+}
+.tmpl-landing .site-nav-link, .tmpl-legacy .site-nav-link, .tmpl-personal .site-nav-link,
+.tmpl-wiki .site-nav-link, .tmpl-document .site-nav-link {
+  border: 0; background: none; color: inherit; font-size: 13px; padding: 10px 8px; min-height: 44px;
+}
+.tmpl-landing h1, .tmpl-legacy h1, .tmpl-personal h1, .tmpl-wiki h1, .tmpl-document h1 {
+  font-size: 22px; margin: 16px 16px 8px; font-weight: 700;
+}
+.tmpl-landing .site-date, .tmpl-legacy .site-date, .tmpl-personal .site-date,
+.tmpl-wiki .site-date, .tmpl-document .site-date { padding: 0 16px 10px; }
+.tmpl-landing .page-body, .tmpl-legacy .page-body, .tmpl-personal .page-body,
+.tmpl-wiki .page-body, .tmpl-document .page-body { padding: 0 16px 16px; }
+.tmpl-landing .site-hero, .tmpl-legacy .site-hero, .tmpl-personal .site-hero,
+.tmpl-wiki .site-hero, .tmpl-document .site-hero,
+.tmpl-government .site-hero { margin: 0 0 16px; }
+.tmpl-landing .site-hero .fig, .tmpl-legacy .site-hero .fig, .tmpl-personal .site-hero .fig,
+.tmpl-wiki .site-hero .fig, .tmpl-document .site-hero .fig,
+.tmpl-government .site-hero .fig { margin: 0; max-height: none; }
+.tmpl-landing .site-hero img, .tmpl-legacy .site-hero img, .tmpl-personal .site-hero img,
+.tmpl-wiki .site-hero img, .tmpl-document .site-hero img,
+.tmpl-government .site-hero img { width: 100%; height: auto; max-height: 52vh; object-fit: cover; }
+.tmpl-landing .site-foot, .tmpl-legacy .site-foot, .tmpl-personal .site-foot,
+.tmpl-wiki .site-foot, .tmpl-document .site-foot {
+  padding: 16px; font-size: 12px; opacity: .7; border-top: 1px solid rgba(0,0,0,.08); margin: 16px 0 0;
+}
+
+/* Landing: airy SaaS / shop header */
+.tmpl-landing .site-head { background: var(--site-bg, #fff); border-bottom: 1px solid rgba(0,0,0,.08); }
+.tmpl-landing .mast { font-family: -apple-system, "Segoe UI", sans-serif; }
+
+/* Legacy ~2008: warm paper, accent bar */
+.tmpl-legacy .site-head { background: var(--site-accent, #c41200); color: #fff8f0; }
+.tmpl-legacy .mast { font-family: Georgia, "Times New Roman", serif; color: #fff8f0; }
+.tmpl-legacy .site-nav-link { color: #fff8f0; }
+.tmpl-legacy .site-logo-img { background: #fff8f0; border-radius: 4px; padding: 2px; }
+
+/* Personal / club */
+.tmpl-personal .site-head { background: var(--site-accent, #3d6b3a); color: #f4f8f0; }
+.tmpl-personal .mast, .tmpl-personal .site-nav-link { color: #f4f8f0; }
+.tmpl-personal .site-logo-img { background: #fff; border-radius: 50%; padding: 2px; }
+
+/* Wiki: pale bar, boxed logo */
+.tmpl-wiki .site-head { background: #e8ebee; border-bottom: 1px solid #b6c0c8; }
+.tmpl-wiki .mast { font-family: "Linux Libertine", Georgia, serif; font-weight: 400; }
+.tmpl-wiki .site-logo-img { height: 44px; }
+
+/* Document viewer: slim file-host bar */
+.tmpl-document .site-head { background: #fafafa; border-bottom: 1px solid #ddd; }
+.tmpl-document .mast { font-family: -apple-system, "Segoe UI", sans-serif; font-size: 14px; font-weight: 600; }

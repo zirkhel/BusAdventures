@@ -66,8 +66,16 @@ Paul Navarro's fallback, «I'd refer you to our website,» points at the existin
 
 ## Coverage at W1
 
-25 site configs, 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes is updated in W2; other templates come in later steps.
+25 site configs, 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. Thin chrome (not the full W5 templates) shows logo and hero on landing, legacy, personal, wiki and document sites. See [GRAPHICS.md](../graphics/GRAPHICS.md).
 
 ## Test-only domains
 
 The media test pool in `tests/media.test.mjs` injects a virtual TokTok app (`toktok.app`). It is not part of the playable universe. The pool registers a site config so the site-reference validator still holds when that pool is loaded on top of the real world.
+
+## Logos and images (25 November 2026)
+
+Every site in this inventory now has a catalog logo (`theme.logo`, SVG). Wide wordmarks (Daily Record, Unfiltered, Eastfield Notes) also have a square `theme.icon` for the Browser address bar; other sites reuse the square mark as the favicon.
+
+Hero photographs and illustrations were attached to existing artifacts only, with no wording changes. Evidence photographs were not reused as decoration (in particular NIMG0003 and NIMG0005). Planned WEB0001–WEB0024 images that have no existing page to live on were left unproduced.
+
+Test-only `toktok.app` is described in the previous section; it is not a playable-universe site.

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="128" viewBox="0 0 512 128">
+ <rect width="512" height="128" fill="#f7f5f0"/>
+ <text x="256" y="76" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="600" font-size="36" letter-spacing="1.5" fill="#1c1c1c">eastfield notes</text>
+ <path d="M140 92 H372" fill="none" stroke="#3d6b4f" stroke-width="2" stroke-linecap="round"/>
+</svg>

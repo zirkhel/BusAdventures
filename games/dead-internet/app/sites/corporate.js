@@ -3,7 +3,7 @@
 
 import { h, fmtDate } from "../ui.js";
 import { renderBlock } from "./blocks.js";
-import { logoOf, navItems, navLink, footerOf, leftoverImages } from "./chrome.js";
+import { logoOf, navItems, navLink, footerOf, leftoverImages, takeHero } from "./chrome.js";
 
 /**
  * @param {any} phone
@@ -24,13 +24,11 @@ export function renderCorporate(phone, o) {
       design.header?.tagline ? h("div.site-tagline", design.header.tagline) : null)),
     toggle, nav);
 
-  // Project pages: first image becomes a hero, then the original text, so wording stays.
+  // First image (or theme.hero) becomes a banner on marketing pages; wording stays.
   const used = { ...ctx, images: [...(ctx.images || [])] };
   const body = [];
-  if (page === "project" && used.images.length && !blocks.some(b => b.t === "hero")) {
-    const image = used.images.shift();
-    body.push(renderBlock(phone, { t: "hero", image }, used));
-  }
+  const hero = !blocks.some(b => b.t === "hero") ? takeHero(design, used, page) : null;
+  if (hero) body.push(renderBlock(phone, { t: "hero", image: hero }, used));
   for (const b of blocks) body.push(renderBlock(phone, b, used));
   body.push(...leftoverImages(phone, used));
 

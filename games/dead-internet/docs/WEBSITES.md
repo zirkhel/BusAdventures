@@ -1,6 +1,6 @@
 # Dead Internet: Et mer autentisk internett i Browser
 
-> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0–W2 er implementert** (25. november 2026). W3–W8 gjenstår. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md).
+> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0–W2 og nettsidegrafikk er implementert** (25. november 2026, lokale greiner, ikke pushet). W3–W8 gjenstår. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Katalog: [../graphics/GRAPHICS.md](../graphics/GRAPHICS.md).
 
 ## 0. Beslutninger (Anders, 24. november 2026)
 
@@ -431,7 +431,8 @@ Logoer: Kestrel 2014 og Northgate før 2024 kan være tekstlogoer. Nye nettstede
 |---|---|---|---|
 | **W0** Lekkasjevern | **Ferdig.** PR #68: `media()` fjerner `source`, `supports` og `mentions`; `tests/twin.test.mjs` er permanent. 25. nov: `publicView` i `core/site-view.js` hvitelister visningsfelt (tittel, dato, body/blocks, bilder, forfatter, URL, versjon, cache-flagg og øvrige visningsfelt). `filler`, `covers`, `pool`, `hidden` og andre forfatterfelt sendes aldri til malene. `renderArtifact` / `renderLogin` / `renderGone` kjører visningen gjennom hvitelisten. DOM-tvillingtesten forblir i Casebook-arbeidet. | `core/site-view.js`, `app/render.js`, `tests/sites.test.mjs` | Casebook steg 0 |
 | **W1** Nettstedsmodell | **Ferdig** (25. nov). `content/universe/sites/*.json` for alle refererte nettsteder, `site`/`page` på eksisterende sider, `core/sites.js` (design etter dato, lenkeoppslag, status, 404-data, `listedPages`). Validatoren avslår nav-lenker som ikke løses, og `site-ref` avslår domenereferanser uten nettsted (e-postdomener unntatt). Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Ingen synlige endringer. | `core/sites.js`, `core/content.js`, `core/world.js`, `tools/lib/validate-world.mjs`, `content/universe/sites/`, tester | W0 |
-| **W2** Malverk + 3 maler | **Ferdig** (25. nov). `app/sites/` med blokker og malene Corporate, Government og Blog. Northgate, Port Calder City Portal og Eastfield Notes viser dagens tekst i de nye malene (Eastfield Notes bytter til `minimal` på den levende siden etter 22. okt 2025; cachete versjoner beholder `classic`). CSS ligger i `app/sites/*.css`. | `app/sites/`, `app/render.js`, `index.html` | W1 |
+| **W2** Malverk + 3 maler | **Ferdig** (25. nov, `websites-w2` `4f0200b`). `app/sites/` med blokker og malene Corporate, Government og Blog. Northgate, Port Calder City Portal og Eastfield Notes viser dagens tekst i de nye malene (Eastfield Notes bytter til `minimal` på den levende siden etter 22. okt 2025; cachete versjoner beholder `classic`). Motoren brukes også av andre nettsteder som allerede hadde disse malnavnene (Brightline, Kestrel, Calder Transit, Harbor Authority, `corp-registries.example`). CSS ligger i `app/sites/*.css`. | `app/sites/`, `app/render.js`, `index.html` | W1 |
+| **Grafikk** Logoer, favicon, heltebilder | **Ferdig** (25. nov, grein `websites-w2-graphics`). Alle 25 konfigurerte nettsteder har SVG-logo. Adressefeltet viser favicon. Heltebilder på malte sider (nye WEB-fotografier og SVG-illustrasjoner, registrert i `graphics/catalog.json`). Tynn chrome for landing/legacy/personal/wiki/document slik at merke og bilde synes; dette er ikke W5. Bevisbilder er ikke gjenbrukt som pynt. Gjenstående WEB0001–WEB0024 uten eksisterende side er ikke produsert. | `assets/images/`, `graphics/catalog.json`, `app/apps/browser.js`, `app/sites/simple.js` | W2 |
 | **W3** Browser | Frem-knapp, bokmerker, tekststørrelse, nettstedets 404/vedlikehold/parkert, «can't be reached», lagringsmigrering | `app/apps/browser.js`, `app/phone.js`, `core/save.js` | W1 |
 | **W4** Bakgrunn, runde 1 | Innhold til Northgate, bykommunen, Eastfield Notes, Kestrel, Brightline (ca. 110 sider) + fil med bakgrunnsfakta | `content/universe/sites/`, mysteriefiler for Brightline-sidene | W2 |
 | **W5** Fire maler til | Wiki, Forum, Document, Anonymous. Calderpedia, Threadline, Docshare, SpillCheck og Faceless flyttes over, med innhold. | `app/sites/`, innhold | W2 |
@@ -440,6 +441,25 @@ Logoer: Kestrel 2014 og Northgate før 2024 kan være tekstlogoer. Nye nettstede
 | **W8** Casebook-kobling | «Compare with…» fra Archive. (At bevis åpner lagret versjon, tas i Casebook steg 1.) | `app/apps/casebook.js` (via Casebook-tråden) | Casebook steg 3 |
 
 Grafikk produseres parallelt fra W2, i den vanlige grafikktråden.
+
+## Implementeringslogg (25. november 2026)
+
+Lokale, stablede greiner på `origin/main` `d7a9368`. Ikke pushet. Ingen PR.
+
+| Steg | Grein | Commit |
+|---|---|---|
+| W0 Lekkasjevern | `websites-w0` | `bc67d47` |
+| W1 Nettstedsmodell og inventar | `websites-w1` | `2611469` |
+| W2 Corporate, Government, Blog | `websites-w2` | `4f0200b` |
+| Logoer, favicon og heltebilder | `websites-w2-graphics` | `bd20641` |
+
+Avvik fra §11: W2-motoren gjelder alle nettsteder med de tre malnavnene, ikke bare Northgate, bykommunen og Eastfield Notes. Grafikksteget innførte en tynn chrome for fem andre malnavn slik at logo og helt synes; fulle maler for Wiki/Forum/Document/Anonymous er fortsatt W5. To domener er tildelt fordi kanon ikke navngir dem: `harbor.portcalder.gov`, `eastfieldneighbors.net`. `corp-registries.example` er ikke omdøpt.
+
+Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs`, `node games/dead-internet/tools/simulate.mjs`, og Playwright-røyktest `tools/test-casebook-ui.mjs` (390×844). Nettstedstester: `tests/sites.test.mjs`.
+
+Neste steg: W3 (Browser-verktøy og nettstedstilstander), deretter W4–W8, omdøping av `corp-registries.example`, lukke etterlatt PR #72.
+
+
 
 ### 11.1 Forhold til Casebook-planen
 

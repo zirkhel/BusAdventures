@@ -9,7 +9,7 @@
    "template": "government",
    "variant": "transit",
    "theme": {
-    "logo": "text:Calder Transit"
+    "logo": "LOGO_CALDERTRANSIT"
    },
    "nav": [
     {

@@ -1,5 +1,5 @@
 [
-  { "id": "A19", "site": "brightline", "page": "services", "type": "page", "platform": "brightline_site", "url": "brightlinemedia.co/services", "date": "2026-01-10",
+  { "id": "A19", "site": "brightline", "page": "services", "images": ["WEB0005"], "type": "page", "platform": "brightline_site", "url": "brightlinemedia.co/services", "date": "2026-01-10",
     "title": "Brightline Media — Services", "source": "brightline-public", "mentions": ["brightline", "acc_brightline"], "keywords": ["bl-ops.net", "portal.bl-ops.net"],
     "versions": [{ "id": "v1", "cached": true, "body": "Brightline Media: audience continuity and community engagement.\n\nCommunity Voices — Local conversations need local voices. We help them speak up.\nLegacy Presence — Keep long-running accounts warm and consistent, even when the original team has moved on.\nSentiment Programs — Measurable shifts in how communities feel about the things that matter to you.\n\nSuite 400, 18 Harbor Street, Port Calder · Client portal: portal.bl-ops.net" }] },
   { "id": "A20", "site": "brightline", "page": "team", "type": "page", "platform": "brightline_site", "url": "brightlinemedia.co/team", "date": "2025-11-01",

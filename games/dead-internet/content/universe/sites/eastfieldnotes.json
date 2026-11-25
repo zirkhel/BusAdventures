@@ -10,6 +10,7 @@
    "variant": "classic",
    "theme": {
     "logo": "LOGO_EASTFIELDNOTES",
+    "icon": "LOGO_EASTFIELDNOTES_ICON",
     "palette": {
      "bg": "#fdfaf3",
      "ink": "#2a2418",
@@ -36,7 +37,8 @@
    "template": "blog",
    "variant": "minimal",
    "theme": {
-    "logo": "text:Eastfield Notes",
+    "logo": "LOGO_EASTFIELDNOTES_MINIMAL",
+    "icon": "LOGO_EASTFIELDNOTES_ICON",
     "palette": {
      "bg": "#f7f5f0",
      "ink": "#1c1c1c",

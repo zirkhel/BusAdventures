@@ -9,7 +9,7 @@
    "template": "government",
    "variant": "registry",
    "theme": {
-    "logo": "text:Corporate Registries"
+    "logo": "LOGO_CORPREGISTRIES"
    },
    "nav": [
     {

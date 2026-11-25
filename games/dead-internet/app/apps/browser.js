@@ -7,6 +7,7 @@ import { h, icon, fmtDate } from "../ui.js";
 import { suggestBox } from "../suggest.js";
 import { img } from "../media.js";
 import { renderArtifact, renderLogin, renderGone } from "../render.js";
+import { hostOf, designFor } from "../../core/sites.js";
 
 export function browserApp(phone) {
   const g = phone.g;
@@ -16,13 +17,36 @@ export function browserApp(phone) {
       placeholder: "Search Seeker or type an address", value: desc.kind === "page" ? desc.url || "" : desc.kind === "results" ? desc.q : desc.kind === "lookup" ? desc.url : "" }));
     input.addEventListener("focus", () => input.select());
     const form = h("form.addr-form", { onsubmit: e => { e.preventDefault(); input.blur(); phone.browse(input.value); } },
-      desc.kind === "page" && desc.view?.cached ? h("span.addr-tag", "cached") : desc.kind === "page" && desc.view?.locked ? icon("lock", "addr-ico") : icon("search", "addr-ico"),
+      leadIcon(desc),
       input);
     suggestBox(phone, input, form, q => { input.blur(); phone.browse(q); }, desc.kind === "page" ? desc.url : desc.kind === "results" ? desc.q : "");
     return h("div.topbar.browser-bar",
       phone.backButton(),
       form,
       desc.kind === "page" ? saveButton(desc) : null);
+  }
+
+
+  function leadIcon(desc) {
+    if (desc.kind === "page" && desc.view?.cached) return h("span.addr-tag", "cached");
+    if (desc.kind === "page" && desc.view?.locked) return icon("lock", "addr-ico");
+    if (desc.kind === "page") {
+      const fav = faviconOf(desc);
+      if (fav) return fav;
+    }
+    return icon("search", "addr-ico");
+  }
+
+  function faviconOf(desc) {
+    const host = hostOf(desc.url || desc.view?.url || "");
+    const siteId = host && g.w.siteByDomain.get(host);
+    const site = siteId && g.w.sites.get(siteId);
+    if (!site) return null;
+    const asOf = String(g.date || "").slice(0, 10);
+    const design = designFor(site, desc.view || {}, desc.view?.cached ? undefined : asOf);
+    const raw = design?.theme?.icon || design?.theme?.logo;
+    if (!raw || String(raw).startsWith("text:")) return null;
+    return h("span.addr-favicon", img(raw, { cls: "addr-favicon-img", alt: "", eager: true }));
   }
 
   function saveButton(desc) {
