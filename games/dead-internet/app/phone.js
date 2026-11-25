@@ -160,6 +160,8 @@ export class Phone {
     if (desc.kind === "results") return desc.title || `“${desc.q}”`;
     if (desc.kind === "hyp") return "Theory";
     if (desc.kind === "question") return "Question";
+    if (desc.kind === "compare") return "Compare";
+    if (desc.kind === "link") return "Connection";
     if (desc.kind === "event") return this.g.s.timeline.find(e => e.id === desc.id)?.title || "Event";
     if (desc.kind === "eventEdit") return "Event";
     if (desc.kind === "reports" || desc.kind === "report" || desc.kind === "reportDone") return "Reports";
@@ -338,6 +340,12 @@ export class Phone {
     if (!items.length) { this.toast("No versions are available."); return; }
     this.actionSheet(v.title || this.g.w.artifacts.get(id)?.title || "Versions", items);
   }
+
+  /**
+   * Compare items side by side in Casebook, from any app. refs: {evidence} or reachable
+   * {artifact, version?, image?} / {message}. Browser's Archive ("Compare with…", W8) uses this.
+   */
+  compare(refs) { this.push("casebook", { kind: "compare", items: refs.map(r => ({ ...r })) }); }
 
   imageSearch(imageId, flip) {
     const r = this.g.searchImage(imageId, flip);
@@ -519,16 +527,7 @@ export class Phone {
         ctx?.artifact ? saveBtn : null));
     const toggleInfo = () => {
       if (info.childElementCount) { info.replaceChildren(); return; }
-      const d = g.imageInfo(imageId);
-      let hash = 7; for (const c of imageId) hash = (hash * 131 + c.charCodeAt(0)) % 9000;
-      const rows = [["File", `IMG_${1000 + hash}.jpg`]];
-      const m = d?.meta || {};
-      if (m.taken) rows.push(["Taken", m.taken]);
-      if (m.device) rows.push(["Camera", m.device]);
-      if ("location" in m) rows.push(["Location", m.location || "—"]);
-      if (m.software) rows.push(["Software", m.software]);
-      if (m.note) rows.push(["Note", m.note]);
-      if (!d?.meta) rows.push(["Metadata", "None. It was stripped from this copy."]);
+      const rows = imageInfoRows(g.imageInfo(imageId), imageId);
       info.replaceChildren(h("dl", rows.map(([k, v]) => [h("dt", k), h("dd", v)])));
     };
     zoomable(stage, im);
@@ -848,6 +847,20 @@ export function normUrl(u) {
 
 function bookmarkUrlOf(desc) {
   return desc?.url || desc?.view?.url || "";
+}
+
+/** "Image info" rows: the made-up file name and whatever metadata the copy still has. */
+export function imageInfoRows(d, imageId) {
+  let hash = 7; for (const c of imageId) hash = (hash * 131 + c.charCodeAt(0)) % 9000;
+  const rows = [["File", `IMG_${1000 + hash}.jpg`]];
+  const m = d?.meta || {};
+  if (m.taken) rows.push(["Taken", m.taken]);
+  if (m.device) rows.push(["Camera", m.device]);
+  if ("location" in m) rows.push(["Location", m.location || "—"]);
+  if (m.software) rows.push(["Software", m.software]);
+  if (m.note) rows.push(["Note", m.note]);
+  if (!d?.meta) rows.push(["Metadata", "None. It was stripped from this copy."]);
+  return rows;
 }
 
 /** Pinch, double tap and drag to zoom an image inside a stage. */

@@ -6,7 +6,7 @@ import { initCases } from "./cases.js";
 import { initMedia } from "./feed.js";
 import { emptyBrowserState } from "./browser.js";
 
-export const SAVE_VERSION = 9;
+export const SAVE_VERSION = 10;
 
 /**
  * @param {any} w world from buildWorld()
@@ -61,6 +61,8 @@ export function createState(w, opts = {}) {
     notes: [],
     /** the player's own open questions (core/workbench.js), shown in Notes. Never read by rules */
     questions: [],
+    /** the player's own links between evidence (core/workbench.js): { id, items, kind, note, day }. Never read by rules */
+    links: [],
     /** the player's own timeline of events (core/timeline.js) */
     timeline: [],
     /** published reports, each about exactly one case */

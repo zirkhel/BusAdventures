@@ -360,13 +360,20 @@ Vaktliste for Harbor Festival 2025, kakesalg i foreldreforeningen, bordkart til 
 | Lagre et bilde | Ja | Uendret |
 | Lagre et dokument | Ja (Docshare, e-post) | Uendret |
 | Lagre en bestemt versjon | Ja, beviset lagrer `version` | Designet følger versjonen, så det vises likt. |
-| Sammenligne gammel og ny versjon | Nei | Casebook steg 3 (sammenligning). Browser leverer en «Compare with…»-handling fra Archive som åpner Casebooks sammenligning. |
+| Sammenligne gammel og ny versjon | Ja, i Casebook (steg 3, greina `casebook-step-3`) | Browser leverer en «Compare with…»-handling fra Archive (W8) som kaller `phone.compare()`. |
 | Kommentere visuelle likheter | Nei | Bevisnotat i Casebook steg 1 (beviskortet). |
-| Knytte informasjon fra forskjellige nettsteder | Delvis (teorier) | Casebook steg 3 (koblinger). |
+| Knytte informasjon fra forskjellige nettsteder | Ja, koblinger mellom to bevis med seks typer, retning for «Supports» og «Possibly manipulated» (Casebook steg 3) | Uendret |
 | Åpne originalkilden | Ja | Uendret, men se under. |
 | Bevis endres ikke etterpå | **Nei, ikke alltid** | Ny regel: beviset åpner alltid spillerens lagrede kopi. Se §13.3. |
 
 **Ingen ny Casebook-funksjonalitet i dette forslaget.** Det eneste jeg ber Casebook-tråden om, er at «åpne bevis» viser den lagrede versjonen selv om den ikke er cachet, og at sammenligningen i steg 3 kan ta to versjoner av samme side. Begge passer inn i deres steg 1 og 3.
+
+**Hva W8 trenger fra Casebook steg 3 (klart på greina `casebook-step-3`, 25. nov 2026):**
+- *Inngangen:* `phone.compare(refs)` åpner Casebooks sammenligning øverst i Casebook (med «tilbake» til Browser). For Archive: `[{ artifact, version: gammel }, { artifact, version: ny }]`, eller `{ artifact }` uten `version` for gjeldende side. Rekkefølgen bestemmer A og B; eldst først gir «Changes from A to B» i lesbar retning.
+- *Tilgang:* `compareView` slipper bare gjennom gjeldende versjon og versjoner i `cachedVersions` (samme regel som `viewArtifact`), og siden må være sett (`s.seen`). Browser trenger altså ingen egen sjekk, men knappen bør bare vises når minst to versjoner er tilgjengelige. Å åpne en versjon fra Archive markerer siden som sett.
+- *Lagring:* sammenligningen virker uten at noe er lagret. Før spilleren kan koble kopiene, står det «Save to Casebook to connect them», som lagrer akkurat de versjonene som vises.
+- *Lekkasjevern:* Browser skal ikke sende noe annet enn referanser. Alt som vises, kommer fra `compareView`, som tvillingtesten dekker.
+- *Test:* `tools/test-casebook-ui.mjs` har allerede en W8-test («PASS W8 hook») som kaller `phone.compare()` med to versjoner av Kestrels «About»-side. W8 trenger bare en Browser-test for selve knappen i Archive.
 
 ### 9.2 Nettsidedesign som spor (punkt 7)
 
@@ -440,7 +447,7 @@ Logoer: Kestrel 2014 og Northgate før 2024 kan være tekstlogoer. Nye nettstede
 | **W5** Fire maler til | **Ferdig og merget** (25. nov, PR #79 · `9b6ce40`). Wiki, Forum, Document, Anonymous, og saas-varianten av Landing (for Faceless; Harbor Dental og AIWriterPro deler chrome). Calderpedia (31 nye sider; 24 artikler inkl. B17/A66), Threadline (27), Docshare (8), SpillCheck (5), Faceless Stock (5). Eksisterende ordlyd/ID/URL urørt. Godkjent kanon: fyret automatisert 1998, siste fyrmester Samuel Okoro; Harbor Festival-frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024). «Dennis» er bare en forum-påstand. | `app/sites/wiki.js` m.fl., `sites-w5-*.json`, `tests/websites-w5.test.mjs` | W2 |
 | **W6** Historie | **Ferdig** (25. nov, PR #80 · `4e5bff8`). Legacy, Personal, Landing `smallbiz` (parkert live forblir Browser-eid). 50 nye sider: Salty's, HarborDesk, hagen, AIWriterPro, Harbor Dental, Calder Transit, biblioteket, Calder Power, Calder CU, Walt's side, Harbor PA, cachet jazz 2019, pluss Open Filings-hjem og Kestrel 2014-cache. `corp-registries.example` omdøpt til `openfilings.org` med alias og egen test. | `app/sites/legacy.js`, `personal.js`, `sites-w6-*.json`, `tests/websites-w6.test.mjs` | W5 |
 | **W7** Spor i design | **Ferdig og merget** (25. nov, PR #81 · `9190200`). 12 nye sider, cachet Team 2024, stockansikt på uavhengige sider, 18 Harbor Street, felles formuleringer, Lumen-blindvei, gjennomspilling `design_as_clue` (fortsatt `lights_out`). Godkjent kanon: HarborDesk-leietakerne, Haven Mutuals kontor, community leads 2024. | innhold, `tools/lib/scenarios.mjs`, `tests/websites-w7.test.mjs` | W6, ja 25.11.2026 |
-| **W8** Casebook-kobling | «Compare with…» fra Archive. (At bevis åpner lagret versjon, tas i Casebook steg 1.) | `app/apps/casebook.js` (via Casebook-tråden) | Casebook steg 3 |
+| **W8** Casebook-kobling | «Compare with…» fra Archive, som kaller `phone.compare()` (se §9.1). (At bevis åpner lagret versjon, tas i Casebook steg 1.) | `app/apps/browser.js` (Archive). Casebook-delen er levert i steg 3. | Casebook steg 3 |
 
 Grafikk produseres parallelt fra W2, i den vanlige grafikktråden.
 
@@ -485,7 +492,9 @@ Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.
 
 **PR #72 lukket.** PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026 som en rest etter PR #71. Greina er beholdt.
 
-Neste steg: Casebook steg 2 er implementert 25. nov 2026 med Anders' ja på greina `casebook-step-2` (PR, ikke merget). Deretter steg 3–5. W8 (Archive-kobling) venter på Casebook steg 3. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
+**Casebook steg 3 (25. nov 2026, greina `casebook-step-3`, PR venter på gjennomgang).** Sammenligning og koblinger er bygget, og inngangen W8 trenger (`phone.compare()` med versjonsreferanser) er klar og testet. Etter Anders’ gjennomgang 25.11.2026 er en kobling alltid mellom nøyaktig to bevis. For W8 betyr det bare at to versjoner fra Archive kan kobles direkte etter at de er lagret, for eksempel «A may be manipulated, compared with B». Se §9.1 og DESIGN.md, «Implementert steg 3».
+
+Neste steg: Casebook steg 2 er merget (PR #85 `d6dbb8c`). Steg 3 er implementert og venter på Anders' gjennomgang. Deretter W8 (Archive-kobling) og steg 4–5. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
 
 
 

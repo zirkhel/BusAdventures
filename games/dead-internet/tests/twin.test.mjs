@@ -83,8 +83,30 @@ function play(w) {
   g.visibleSources().forEach((s, k) => g.addQuestion({ text: `Who is behind ${s.label}?`,
     links: { sources: [s.key], evidence: [all[k % all.length]], topics: ["mara", "calvin", "owen"].slice(0, 1 + k % 3), theories: [own[k % 2], extra[k % 4]] } }));
   g.s.questions.forEach((q, k) => g.editQuestion(q.id, { status: ["open", "answered", "dropped"][k % 3], answer: k % 3 === 1 ? "My answer" : "" }));
+  // Step 3: connections of every kind between two pieces of evidence, including the three "friends" (one hidden source).
+  const kinds = ["supports", "contradicts", "related", "same_origin", "manipulated", "unrelated"];
+  for (let i = 0; i + 1 < all.length; i += 2) g.addLink({ a: all[i], b: all[i + 1], kind: kinds[i / 2 % 6], note: i % 4 ? "Because" : "" });
+  // Both directions of the directed kinds, and links seen from either end.
+  for (let i = 0; i + 1 < all.length; i += 5) g.addLink({ a: all[i + 1], b: all[i], kind: ["supports", "manipulated"][i % 2] });
   g.s.trust.dana = 99;
   return { g, hyps: [r.h2, r.h3, ...extra] };
+}
+
+/** Step 3: comparisons of evidence pairs, images, messages, three items, and two copies of the same page. */
+function comparisons(g) {
+  const ev = g.s.evidence;
+  const refs = [];
+  for (let i = 0; i + 1 < ev.length; i += 3) refs.push([{ evidence: ev[i].id }, { evidence: ev[i + 1].id }]);
+  const imgs = ev.filter(e => e.image), msgs = ev.filter(e => e.message);
+  for (let i = 0; i + 1 < imgs.length; i += 2) refs.push([{ evidence: imgs[i].id }, { evidence: imgs[i + 1].id }]);
+  for (let i = 0; i < msgs.length; i++) refs.push([{ evidence: msgs[i].id }, { evidence: ev[i * 5 % ev.length].id }]);
+  for (let i = 0; i + 2 < ev.length; i += 11) refs.push(ev.slice(i, i + 3).map(e => ({ evidence: e.id })));
+  for (const id of Object.keys(g.s.seen)) {
+    const v = g.view(id); if (!v?.cachedVersions?.length) continue;
+    for (const ver of v.cachedVersions) refs.push([{ artifact: id, version: ver }, { artifact: id }]);
+  }
+  for (const m of g.s.messages.filter(m => m.from !== "player").slice(0, 10)) refs.push([{ message: m.id }, { evidence: ev[0].id }]);
+  return refs.map(r => g.compare(r));
 }
 
 /** Everything the player can see in the Casebook, plus the reviewer. */
@@ -98,6 +120,7 @@ function snapshot({ g, hyps }) {
     topics: g.topics(),
     sources: g.visibleSources(),
     review: g.review("daily_record", hyps),
+    compare: comparisons(g),
     _hiddenInViews: g.s.evidence.filter(e => e.artifact).map(e => g.view(e.artifact, e.version ?? undefined))
       .filter(v => JSON.stringify(v) !== JSON.stringify(strip(v))).map(v => v.id),
   };
@@ -110,6 +133,9 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   const a = snapshot(base), b = snapshot(merged), c = snapshot(split);
   assert.deepEqual(a._hiddenInViews, [], "artifact views carry no hidden source, supports or mentions");
   assert.ok(a.evidence.length > 100, "the player saved enough to make the comparison meaningful");
+  assert.ok(a.casebook.links.length > 300 && a.casebook.links.some(l => l.directed) && a.compare.length > 250 && a.compare.some(c => c.samePage && c.changes?.text.some(x => x.op !== "same")), "step 3 links and comparisons are part of the comparison");
+  assert.deepEqual(a.compare.filter(c => c.error || c.items.some(x => x.error)), [], "every comparison in the twin test is valid");
+  assert.ok(a.compare.every(c => c.items.every(x => !("supports" in x) && !("mentions" in x) && !("source" in x && typeof x.source !== "string"))), "comparison items carry no hidden fields");
   assert.ok(a.casebook.questions.length > 20 && a.casebook.hypotheses.some(h => h.againstCount > 0 && !h.structured), "step 2 views are part of the comparison");
   assert.deepEqual(b, a, "a world where everything has one hidden source looks the same");
   assert.deepEqual(c, a, "a world where everything has its own hidden source looks the same");
@@ -146,7 +172,7 @@ test("the presentation layer and provenance never touch canon helpers", async ()
   const { join, dirname } = await import("node:path");
   const { fileURLToPath } = await import("node:url");
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const files = ["core/provenance.js", "core/workbench.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
+  const files = ["core/provenance.js", "core/workbench.js", "core/compare.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
     ...(await readdir(join(root, "app/apps"))).filter(f => f.endsWith(".js")).map(f => `app/apps/${f}`)];
   const banned = /\b(supportOf|truthOf|matchClaim|evidenceFacts|supportsOf|operatedBy|isHuman)\b|\.(claims|facts)\b|import[^;]*\bsourceOf\b/;
   for (const f of files) {

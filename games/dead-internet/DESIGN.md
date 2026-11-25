@@ -184,7 +184,7 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 
 ## Lagring
 
-`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 9: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»), 6→7 beviskort med tomme egne vurderinger og lagret visningskopi, 7→8 Browser-bokmerker og tekststørrelse, 8→9 teorier med «mot», status med logg og alternativer, og tomme spørsmål (se «Implementert steg 2»).
+`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 10: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»), 6→7 beviskort med tomme egne vurderinger og lagret visningskopi, 7→8 Browser-bokmerker og tekststørrelse, 8→9 teorier med «mot», status med logg og alternativer, og tomme spørsmål (se «Implementert steg 2»), 9→10 tomme koblinger mellom bevis (se «Implementert steg 3»).
 
 ## Teststrategi (Anders, 24. nov)
 
@@ -403,7 +403,7 @@ Migrering v6→v7 beholder alle eksisterende referanser og kommentarer og fyller
 
 Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node games/dead-internet/tools/test-casebook-ui.mjs`. Den bruker installert `playwright`, eller en pakke angitt med `PLAYWRIGHT_MODULE`; `PLAYWRIGHT_CHANNEL` kan velge en installert nettleser. Den starter en lokal server, tester 390×844 og sammenligner tekst, CSS-klasser og kontrollverdier i tvillingverdenene. Skjermbildet lagres lokalt i `test-results/`.
 
-### Implementert steg 2 (25. november 2026, venter på PR-gjennomgang)
+### Implementert steg 2 (25. november 2026, merget PR #85 · `d6dbb8c`)
 
 **Teorier.** En teori er spillerens egne ord (`title`) og/eller en strukturert påstand `[subject] [predicate] [object]`. Minst én av dem må finnes. Casebook viser egne ord først (`theoryLabel`); en teori med begge viser påstanden under som «As a claim: …». Bare teorier med strukturert påstand kan vurderes av Dana og publiseres (`isStructured`). `review()` hopper over de andre, `publish()` filtrerer dem bort, og rapportbyggeren viser bare påstandene og sier hvor mange teorier som bare står med egne ord. Steg 5 bygger den strukturerte publiseringen videre (manipulerte dokumenter, falske identiteter); modellen hindrer ikke det.
 
@@ -421,6 +421,38 @@ Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node g
 **Lagring v9.** Migrering 8→9 (`migrateTheories` i `core/workbench.js`): alle eksisterende koblinger blir «for», `against: []`, `status: "open"` med én loggrad fra teoriens dag, `alternatives: []`, `title: ""` og `s.questions = []`. Ingenting utledes. v7-lagringer går 7→8→9. `deserialize` beholder en teori med egne ord selv om relasjonen er borte fra innholdet (påstanden fjernes, med advarsel), og renser `against`, `alternatives` og spørsmålskoblinger.
 
 **Lekkasjevern.** Tvillingverden-testen spiller også teorier med egne ord, bevis mot, status, alternativer og spørsmål koblet til bevis, personer, kilder og teorier, og sammenligner `casebookView` (nå med `questions`) og `visibleSources()`. Forbudstesten dekker nå også `core/workbench.js`, og hver visningsfunksjon i `core/casebook.js` (`casebookView`, `theoryLabel`, `visibleSources`, `alternativesOf` med flere) sjekkes for kanonhjelpere og `.source`. DOM-testen i Playwright sammenligner Theories-fanen, alle teorikort, byggeren, Questions-listen, alle spørsmålskort, rapportbyggeren og innholdet i søkevelgerne i tre tvillingverdener.
+
+### Implementert steg 3 (25. november 2026, greina `casebook-step-3`, venter på PR-gjennomgang)
+
+**Sammenligning.** `compareView(g, refs)` i `core/compare.js` stiller opp to eller flere ting side om side. En ref er et lagret bevis (`{evidence}`), en side eller et bilde spilleren har sett (`{artifact, version?, image?}`), eller en melding (`{message}`). Hvert element får bare synlige felt: type, tittel, synlig kilde (`apparentSource`), plattform, adresse, dato, kopi («Saved copy», «Cached copy», «Current page», «Saved message»), forfatter, tekst, vedlegg, bilde og bildeinfo (samme rader som i bildevisningen, også «Metadata: None»). `differs` sier hvilke av disse som er ulike; spillet tolker aldri forskjellen. To kopier av samme side gir `changes`: tittelendring og avsnitt som er like, fjernet eller lagt til (LCS per avsnitt, `textChanges`). Tilgang følger `viewArtifact`: bare gjeldende versjon og versjoner i `cachedVersions`, og siden må være sett (`s.seen`). Et lagret bevis viser alltid den lagrede kopien (`savedArtifactView`). Meldinger fra spilleren selv kan ikke sammenlignes. Spørringen endrer ingen tilstand.
+
+- **Skjermen** («Compare»): rutenett med bokstav og tittel per element og radene What, Source, Platform, Address, Date, Copy, Author og Saved, pluss bildeinfo. Rader som er forskjellige får «•». Med tre eller flere elementer kan tabellen rulles sideveis. Under: bildene, «Changes from A to B», teksten til hvert element, «Your connections» mellom dem, og handlingene «How are they connected?», «New theory from this» og «New event from this». Er noe ulagret, står det i stedet «Save to Casebook to connect them», som lagrer nøyaktig kopiene som vises.
+- **To bilder:** ett om gangen, med «Show A / Show B», zoom (100–500 %) og dra for å flytte. Zoom og posisjon er felles, så spilleren kan bytte og se samme utsnitt.
+- **Innganger:** valgmodus i Evidence-fanen (langt trykk på et bevis eller «Select»; fast linje øverst med «Compare», «Link», «Set aside» og «Done»), «Compare with…» på beviskortet og i bevismenyen (søkevelgeren), «Compare all» på teorikortet, og `phone.compare(refs)` for andre apper (W8).
+
+**Koblinger** (Anders, 25.11.2026). `s.links` er spillerens egne koblinger, alltid mellom nøyaktig to lagrede bevis: `{id, a, b, kind, note, day, edited?}`. Seks typer (`LINK_KINDS`), to av dem med retning (`DIRECTED_LINKS`):
+
+| Type | Tekst i spillet | Retning |
+|---|---|---|
+| `supports` («Supports») | «A supports B» | Ja: A støtter B |
+| `contradicts` («Contradicts») | «A and B contradict each other» | Nei |
+| `related` («Related») | «A and B are connected» | Nei |
+| `same_origin` («Same origin») | «A and B have the same origin» | Nei |
+| `manipulated` («Possibly manipulated») | «A may be manipulated, compared with B» | Ja: A er mistenkt, B er grunnlaget |
+| `unrelated` («Unrelated») | «A and B are not connected» | Nei |
+
+- **Én per par, type og retning** (`sameLink`): for typer uten retning er A–B og B–A samme kobling; for de rettede er «A supports B» og «B supports A» to koblinger. Å lagre en kobling som finnes, gir «You already connected these that way» og oppdaterer bare begrunnelsen. `updateLink` endrer type, begrunnelse og retning (`swap`), aldri paret, og nekter (`duplicate_link`) hvis resultatet finnes fra før. `addLink` godtar bare `{a, b}`: ingen gruppekoblinger, ikke et bevis med seg selv.
+- **Opprettelse:** fra sammenligningen av to («How are they connected?»), fra valgmodus med to valgt («Link»), og når flere er sammenlignet eller valgt, velger spilleren først det ene og så det andre («Connect two of these»). Redigereren viser setningen («A supports B.»), og for de rettede typene A og B under hverandre med pil og «⇅ Swap A and B». Begrunnelsen («Because») er valgfri, og under står «Your own reading. Nothing checks it.».
+- **Visning fra hver side:** beviskortet viser koblingen som en setning der kortets eget bevis er «this»: på A-kortet «This supports Lindsay», på B-kortet «Mike supports this». Koblinger uten retning leses fra kortets side («This and Pat have the same origin» på begge). Sammenligningen bruker bokstavene (A · …), og teorikortet viser begge titler i lagret rekkefølge.
+- Fjernes et bevis, forsvinner koblingene det inngår i.
+
+**Spillerlaget er usynlig for reglene.** `addLink`, `updateLink`, `removeLink` og `compare` fyrer ingen hendelser og leses ikke av betingelser, scoring, Dana eller avslutningene. «Same origin» endrer ikke kildetellingen på teorikortet; spillerens egen telling hører til steg 4. En fuzz-test i `tests/compare.test.mjs` sjekker at 300 tilfeldige koblinger og sammenligninger ikke endrer verden, og at koblinger spilles likt av fra handlingsloggen.
+
+**Lagring v10.** Migrering 9→10 (`migrateLinks`): `s.links = []`. v8 og v7 går gjennom kjeden. Formen `{a, b}` erstattet `{items}` før v10 ble merget, så ingen lagret v10-form trenger egen migrering. `deserialize` beholder bare koblinger med kjent type og to ulike, eksisterende bevis, og fjerner doble (samme par, type og retning) og alt med `items` (med advarsel).
+
+**Lekkasjevern.** Tvillingverden-testen legger til koblinger av alle typer, begge retninger for de rettede (også mellom de tre «vennene» med én skjult kilde), og sammenligner over 300 sammenligninger: beviser parvis, bilder, meldinger, tre bevis og alle bufrede versjoner mot gjeldende side. Forbudstesten dekker `core/compare.js`. DOM-testen sammenligner sammenligningsskjermer (også bildebytte og sidepar), koblingsredigereren, beviskort med koblinger og valgmodus i tre tvillingverdener. En bevisst lekkasje ble fanget av alle tre og fjernet.
+
+**For W8.** Browser Archive kaller `phone.compare([{ artifact, version: a }, { artifact, version: b }])` (eller uten `version` for gjeldende side). Casebook sjekker selv at versjonene er tilgjengelige og sett, viser endringene og lar spilleren lagre begge kopiene før de kobles. Se docs/WEBSITES.md §9.1.
 
 ## Saksavslutning og konsekvenser (gjennomgang 24. nov 2026, ikke diskutert ennå)
 

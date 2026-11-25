@@ -708,3 +708,55 @@ h2.np-head { font-size: 23px; }
 .q-links { padding: 4px 0 0; }
 .q-links .chip .ico { opacity: .7; }
 .question-detail .danger-btn { margin-top: 20px; display: inline-flex; justify-content: center; align-items: center; gap: 4px; }
+
+/* Casebook step 3: selection mode, comparison and connections. Neutral colours only: a
+   difference or a connection must never look like a verdict from the game. */
+.select-start { display: flex; justify-content: flex-end; padding: 0 16px; }
+.select-bar { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 16px; background: var(--paper); border-bottom: 1px solid var(--line); }
+.select-bar b { margin-right: auto; font-size: 14px; }
+.select-bar .chip { margin: 0; padding: 6px 10px; font-size: 13px; }
+.select-bar .chip:disabled { opacity: .45; }
+.sel-box { flex: none; width: 26px; height: 26px; margin-right: 14px; border-radius: 7px; border: 1.5px solid var(--line); display: inline-flex; align-items: center; justify-content: center; }
+.ev-item.selected .sel-box { background: var(--ink2); border-color: var(--ink2); color: #fff; }
+.sel-box .ico { width: 16px; height: 16px; }
+.compare { padding-bottom: 24px; }
+.cmp-scroll { overflow-x: auto; padding: 0 16px; }
+.cmp-table { display: grid; min-width: calc(72px + var(--cols) * 128px); font-size: 13px; }
+.cmp-row { display: grid; grid-template-columns: 64px repeat(var(--cols), minmax(120px, 1fr)); gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.cmp-row.head .cmp-cell { display: flex; gap: 6px; align-items: flex-start; }
+.cmp-row.head b { font-weight: 600; line-height: 1.3; }
+.cmp-label { color: var(--ink2); font-weight: 600; }
+.cmp-row.differs .cmp-label::after { content: " •"; }
+.cmp-cell { min-width: 0; overflow-wrap: anywhere; }
+.cmp-letter { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--paper2); font-size: 11px; font-weight: 700; color: var(--ink2); }
+.cmp-name { display: flex; gap: 8px; align-items: center; padding: 6px 0; }
+.cmp-images { padding: 0 16px; }
+.cmp-stage { overflow: hidden; border-radius: 12px; background: #111; height: 260px; display: flex; align-items: center; justify-content: center; touch-action: none; }
+.cmp-img { max-width: 100%; max-height: 100%; transform-origin: center; }
+.cmp-img-cap { font-size: 12px; padding: 6px 0; }
+.cmp-img-tools { display: flex; align-items: center; gap: 6px; }
+.cmp-img-tools .seg { flex: 1; margin: 0; }
+.cmp-img-tools .icon-btn { font-size: 20px; width: 36px; height: 36px; border: 1.5px solid var(--line); }
+.cmp-zoom { font-size: 12px; min-width: 40px; text-align: center; }
+.cmp-change { display: flex; gap: 8px; padding: 6px 16px; font-size: 14px; line-height: 1.4; }
+.cmp-op { flex: none; width: 12px; color: var(--ink2); font-weight: 700; }
+.cmp-change.op-same { color: var(--ink2); }
+.cmp-change.op-removed span:last-child { text-decoration: line-through; color: var(--ink2); }
+.cmp-change.op-added span:last-child { text-decoration: underline; text-decoration-color: var(--line); }
+.cmp-op { flex: none; width: 14px; font-weight: 700; color: var(--ink2); }
+.cmp-change.title { display: block; }
+.cmp-text { padding: 0 16px; max-height: 220px; overflow-y: auto; font-size: 14px; line-height: 1.45; white-space: pre-wrap; }
+.link-row + .btn, .link-row + .pad { margin-top: 12px; }
+.cmp-actions { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; }
+.link-editor .chip { margin-bottom: 6px; }
+.link-editor .btn { margin-top: 10px; }
+.link-row .stance { min-width: 92px; }
+
+/* Connections have two ends; "Supports" and "Possibly manipulated" read A → B. */
+.link-sentence { margin: 14px 0 4px; padding: 10px 12px; border-radius: 12px; background: var(--paper2); font-size: 15px; line-height: 1.4; }
+.link-direction { display: flex; flex-direction: column; gap: 4px; margin: 8px 0 4px; }
+.link-dir-row { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: center; font-weight: 600; }
+.link-arrow { padding-left: 4px; color: var(--ink2); font-size: 16px; line-height: 1; }
+.link-direction .btn { margin-top: 8px; }
+.link-text { line-height: 1.35; }
+.link-text b { display: inline; font-weight: 600; }

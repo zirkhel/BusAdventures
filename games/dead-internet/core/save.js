@@ -3,7 +3,7 @@
 // Saves are plain JSON with a format tag and a version number, so they can be exported,
 // imported and migrated when the state shape or the content changes.
 
-import { migrateEvidence, migrateTheories, QUESTION_LINKS } from "./workbench.js";
+import { migrateEvidence, migrateTheories, migrateLinks, QUESTION_LINKS, LINK_KINDS, sameLink } from "./workbench.js";
 import { SAVE_VERSION } from "./state.js";
 import { migrateDiscovery } from "./discovery.js";
 import { migrateCases, migrateCaseStates } from "./cases.js";
@@ -28,6 +28,8 @@ const MIGRATIONS = {
   7: s => { migrateBrowser(s); s.saveVersion = 8; return s; },
   // 8 → 9: theories for/against with status history and alternatives; questions in Notes.
   8: s => { migrateTheories(s); s.saveVersion = 9; return s; },
+  // 9 → 10: the player's links between evidence (comparison, Casebook step 3). Start empty.
+  9: s => { migrateLinks(s); s.saveVersion = 10; return s; },
   // 5 → 6: media. No follows, likes or "not interested" yet.
   5: s => { migrateMedia(s); s.saveVersion = 6; return s; },
 };
@@ -72,6 +74,14 @@ export function deserialize(w, text) {
     return false;
   });
   for (const h of s.hypotheses) h.alternatives = h.alternatives.filter(id => id !== h.id && s.hypotheses.some(x => x.id === id));
+  // A link is always exactly two existing pieces of evidence, and one per pair, kind and direction.
+  const links = [];
+  for (const l of s.links) {
+    const ok = l && LINK_KINDS.includes(l.kind) && l.a !== l.b && hasEv(l.a) && hasEv(l.b) && !("items" in l);
+    if (!ok || links.some(x => sameLink(x, l.kind, l.a, l.b))) { drop("link", l?.id); continue; }
+    links.push(l);
+  }
+  s.links = links;
   for (const q of s.questions) {
     for (const k of QUESTION_LINKS) q.links[k] = Array.isArray(q.links?.[k]) ? q.links[k] : [];
     q.links.evidence = q.links.evidence.filter(hasEv);
