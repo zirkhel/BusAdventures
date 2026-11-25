@@ -93,8 +93,12 @@ function visibleText(g, a, r) {
 
 // ── Names the player can see (point 9, Anders 25.11.2026) ───────────────────────────────
 // A name in visible text counts for an entity only when it is visibly established:
-//   1. a full name, or a handle or display name for an account (refs.js); a display name that is
-//      just a first name ("Pat", "Mike") stays ambiguous and names no one;
+//   1. a full name, or a handle or display name for an account (refs.js). A loose first name in
+//      running text ("Pat", "Mike", "Lindsay", "Tom") is not read as the account that uses it as
+//      its display name. Visible account identity is kept apart from this: the sender, author,
+//      byline and comment authors are added by account id (visibleRefsOfArtifact/-Message), and
+//      the visible origin comes from apparentSource, so a post by @harborwalkerpat still has that
+//      account as its origin and still names that account (the account, never the person);
 //   2. a short form of a full name: an authored alias that is a run of the name's words
 //      (optionally after "the") or contains the whole name, or "Initial. Surname" for a person;
 //   3. a nickname (any other authored alias) once a saved piece of evidence introduces it as
@@ -239,7 +243,8 @@ export function namesInDetail(g, text) {
     if (!sp.id) continue;
     const k = lower(sp.text);
     if (!sp.alias) {
-      // A display name that is just a first name ("Pat", "Mike") is not a full name: it names no one.
+      // A loose first name in the text ("Pat") that is only an account's display name is not read as
+      // that account. The sender's own identity is added by id elsewhere, never through this text.
       if (sp.type === "account" && /^[A-Z][a-z]+$/.test(sp.text.trim())) continue;
       // A full name shared by two visible entities names neither.
       const same = full.get(k);

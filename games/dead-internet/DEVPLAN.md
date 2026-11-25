@@ -542,6 +542,8 @@ _Implementert 25. november 2026 på `casebook-step-5` (PR #89) etter Anders' sva
 6. Hjelpetekst for «Supports»: «Dana considers this connection when reviewing evidence linked as supporting your claim. It doesn't confirm that either item proves the claim.» Den utfyllende hjelpen forklarer retningen (X supports Y: X låner navnene til Y) og grensen på ett ledd. Kommentaren i `core/workbench.js` er oppdatert.
 7. Tall med ord i Danas linjer; sifre i oversikter og tellinger.
 
+Presisert samme dag (Anders): fornavnsregelen er ikke en generell regel. Synlig kontoidentitet (avsender og brukernavn) beholdes; et løst fornavn tolkes ikke som en konto (Anders, 25.11.2026). Danas linjer sier «with the supporting connections you've made» (ikke «with any connections»), siden andre koblingstyper ikke teller.
+
 I tillegg: alle linjene beskriver *samlet* dekning («taken together…»); nivået `none` betyr at samlet dekning mangler. Aldri bekrefte, aldri kalle opphav uavhengige, opplyse om egen avis, teksten stemmer med handlingen. Endelige linjer: [docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md](docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md) §12.
 
 **Beslutning om hjelp og tips (Anders, 25.11.2026):**
@@ -552,7 +554,7 @@ I tillegg: alle linjene beskriver *samlet* dekning («taken together…»); niv�
 - Tips kommer ett om gangen (kø): et tips for samme skjerm venter til det forrige er lukket; et ventende tips for en skjerm spilleren har forlatt, droppes usett og kommer igjen neste gang.
 
 **Implementert:**
-- `core/provenance.js`: `namesIn`/`namesInDetail` (synlige navn: fulle navn, brukernavn, entydige kortformer blant synlige kandidater, «forbokstav. etternavn», kallenavn bare når innført i Casebook, hendelser ved navn; leser aldri `mentions`), `establishedAliasesOfEvidence`, hurtigbuffer for oppslag (`w._names`, spenn per tekst, Casebook-navn per bevisliste og signatur). Et visningsnavn som bare er et fornavn («Pat») nevner ingen.
+- `core/provenance.js`: `namesIn`/`namesInDetail` (synlige navn: fulle navn, brukernavn, entydige kortformer blant synlige kandidater, «forbokstav. etternavn», kallenavn bare når innført i Casebook, hendelser ved navn; leser aldri `mentions`), `establishedAliasesOfEvidence`, hurtigbuffer for oppslag (`w._names`, spenn per tekst, Casebook-navn per bevisliste og signatur). Synlig kontoidentitet (avsender og brukernavn) beholdes; et løst fornavn tolkes ikke som en konto (Anders, 25.11.2026). Avsender, forfatter, byline og kommentarforfattere legges til med konto-id og gir fortsatt synlig opphav; bare et løst fornavn i teksten («Pat», «Mike», «Lindsay», «Tom») tolkes ikke som kontoen.
 - `core/casebook.js`: `apparentSupportOf` er regel P (rettede «Supports», ett ledd, ulike synlige opphav); `reviewKey` (egen avis → predikat → stor påstand → generell); `numberWord`; `evidenceAbout` viser kallenavn med kilden. `review` og kuttet bruker samme funksjon.
 - Innhold: tekstendring 1–3; `outlet: "daily_record"` på kanalen; `review` og `bold` fjernet fra påstandene i `canon.json`; Danas linjer i `content/strings/en.json` (`review.dana.v.*`).
 - `tools/lib/validate-world.mjs`: en vurdert kanal må ha `requiresStrong: true`; `outlet` må være en enhet; alle linjenivåer kreves; påstander kan ikke ha `review` eller `bold`.
@@ -574,7 +576,7 @@ Resten (wrong_murder, ghost_story, silence, collateral_theo/owen/iris, juno) og 
 
 **Tillitsfabrikken er ikke i denne PR-en.** Målt: scenarioene utløser `dana.evidence` 0 ganger, utforskerne 148 og 191 ganger. `once: true` ville begrense fabrikken (til én gang, og utforskerne når fortsatt `lights_out`), men fjerner ikke relevanslekkasjen fra reaksjonens skjulte utløser (`showSupports`). Den hører til den separate gjennomgangen av personreaksjoner.
 
-**Verifisering (25.11.2026, hver for seg, én nettleser om gangen):** node-tester 285, 285 bestått, 0 feilet, 0 `todo`; `validate.mjs` 456 artefakter, 0 feil, 0 advarsler; `simulate.mjs` som tabellen over; `test-casebook-ui.mjs` 7/7 PASS ved 390×844; `test-browser-archive-ui.mjs` 3/3 PASS; `test-tips-ui.mjs` 1/1 PASS ved 390×844. Skjermbilder: `cb5-dana`, `cb5-alias`, `cb5-supports-help`, `cb5-help-supports`, `cb5-help-topics`, `cb5-tips-one`, `cb5-tips-next`, `cb5-tips-settings`, pluss de oppdaterte `cb5-timeline`, `cb5-builder`, `cb5-published`, `cb5-reports`.
+**Verifisering (25.11.2026, hver for seg, én nettleser om gangen):** node-tester (én fil om gangen) 287, 287 bestått, 0 feilet, 0 `todo`; `validate.mjs` 456 artefakter, 0 feil, 0 advarsler; `simulate.mjs` som tabellen over; `test-casebook-ui.mjs` 7/7 PASS ved 390×844; `test-browser-archive-ui.mjs` 3/3 PASS; `test-tips-ui.mjs` 1/1 PASS ved 390×844. Skjermbilder: `cb5-dana`, `cb5-alias`, `cb5-supports-help`, `cb5-help-supports`, `cb5-help-topics`, `cb5-tips-one`, `cb5-tips-next`, `cb5-tips-settings`, pluss de oppdaterte `cb5-timeline`, `cb5-builder`, `cb5-published`, `cb5-reports`.
 
 ### Saksavslutning (veikart punkt 2, etter steg 5, bare etter diskusjon med Anders)
 - [ ] Rett F-1: `too_late` og `ghost_story` krever `vote_passed`, ikke `vote_held`, med scenario «hele historien på Connect før avstemningen»

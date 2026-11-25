@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadWorld } from "../tools/lib/node-world.mjs";
 import { Game } from "../core/game.js";
-import { namesIn } from "../core/provenance.js";
+import { namesIn, visibleRefsOfArtifact, apparentSource } from "../core/provenance.js";
 
 async function game() {
   const w = await loadWorld();
@@ -17,7 +17,7 @@ async function game() {
 const save = (g, a) => { g.s.artifacts[a] = { ...g.s.artifacts[a], visible: true }; const o = g.open(a); g.save({ artifact: a, version: o.view?.versionId }); return g.s.evidence.at(-1).id; };
 const fresh = w => { delete w._names; delete w._lexicon; delete w._handles; };
 
-test("full names, handles and unambiguous short forms count; a bare 'Pat' names nobody", async () => {
+test("full names, handles and unambiguous short forms count; a loose 'Pat' in text is not read as the account", async () => {
   const { g } = await game();
   assert.deepEqual([...namesIn(g, "Mara Quinn and @maraquinn")].sort(), ["acc_maraquinn", "mara"]);
   assert.ok(namesIn(g, "Brightline said so").has("brightline"));
@@ -121,4 +121,38 @@ test("only Supports links let a piece borrow names, one hop, supporting piece on
   assert.ok(!apparentSupportOf(g, h()).counted.includes(emails), "one hop: what services borrowed is not passed on");
   g.addLink({ a: post, b: services, kind: "supports" });
   assert.equal(apparentSupportOf(g, h()).n, 2, "mutual links: two different visible origins");
+});
+
+// Anders 25.11.2026: sender identity and a mention in the text are different things. A post visibly
+// posted by @harborwalkerpat (display name "Pat") keeps that account as its visible origin and
+// names the account (never the person). A loose first name in running text is not read as it.
+test("sender identity is kept: posts by Pat, Mike and Lindsay, and Tom's comment, name their account", async () => {
+  const { g } = await game();
+  for (const [art, acc, person] of [["A55", "acc_pat", "pat_p"], ["A54", "acc_mike", null], ["W-garden-0002", "acc_mike", null], ["A56", "acc_lindsay", null]]) {
+    assert.equal(g.w.artifacts.get(art).author, acc, art);
+    assert.equal(apparentSource(g, { artifact: art }).key, `account:${acc}`, `${art}: the account is the visible origin`);
+    const refs = visibleRefsOfArtifact(g, art);
+    assert.ok(refs.includes(acc), `${art} names ${acc} through its visible sender`);
+    if (person) assert.ok(!refs.includes(person), `${art} names the account, not the person`);
+  }
+  // A comment visibly posted by @tidepool_tom (display name "Tom") names that account too.
+  assert.ok(visibleRefsOfArtifact(g, "DR-2025-0101").includes("acc_drc_tidepool_tom"));
+  // In a Casebook item the sender counts toward Dana's coverage of the account.
+  const e = save(g, "A55");
+  g.investigate("acc_pat");
+  assert.ok(g.evidenceAbout(e).about.includes("acc_pat"));
+  assert.equal(g.evidenceAbout(e).source, "account:acc_pat");
+});
+
+test("a loose first name in another item's text is not read as an account or person", async () => {
+  const { g } = await game();
+  for (const name of ["Pat", "Mike", "Lindsay", "Tom"]) {
+    const ids = namesIn(g, `I talked to ${name} yesterday. ${name} said it was fine.`);
+    for (const id of ["acc_pat", "pat_p", "acc_mike", "acc_lindsay", "acc_drc_tidepool_tom"]) assert.ok(!ids.has(id), `${name} in text is not ${id}`);
+  }
+  // Tom in a council page is not the commenter @tidepool_tom.
+  assert.ok(!visibleRefsOfArtifact(g, "W-city-0010").includes("acc_drc_tidepool_tom"));
+  // The handles still name the accounts.
+  for (const [h, acc] of [["@harborwalkerpat", "acc_pat"], ["@eastfield_dad_mike", "acc_mike"], ["@lindsay.on.4th", "acc_lindsay"], ["@tidepool_tom", "acc_drc_tidepool_tom"]])
+    assert.ok(namesIn(g, `posted by ${h}`).has(acc), h);
 });
