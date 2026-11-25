@@ -78,11 +78,11 @@ Approved new canon from this round: Mayor Denise Harlan and 11 council members (
 
 ## Wiki, forum, documents and anonymous sites (W5)
 
-Implemented on `websites-w5` (not merged). New pages: Calderpedia 31, Threadline 27, Docshare 8, SpillCheck 5, Faceless Stock 5 (76 in total). Existing ids, URLs and wording are unchanged, including A16/A17, A18/A22, A30, A31/A31B, B17, A66 and the DS-UF / BG-THR set. Hidden pages stay hidden.
+Merged as PR #79 (`9b6ce40`). New pages: Calderpedia 31, Threadline 27, Docshare 8, SpillCheck 5, Faceless Stock 5 (76 in total). Existing ids, URLs and wording are unchanged, including A16/A17, A18/A22, A30, A31/A31B, B17, A66 and the DS-UF / BG-THR set. Hidden pages stay hidden.
 
 Calderpedia has a main page, table of contents, infobox/tools, numbered references, history on five articles (path suffix `/Title/history`), talk on three (including «Is the chowder claim sourced?»), and a Random article button. Threadline lists boards and threads (page 4 of A16 is paginated, not listed as a separate first page). Docshare viewer chrome shows the filename, «Shared via link · View only», and an expired state; evidence documents are reachable only by URL. SpillCheck is terminal-styled and is not a leak portal. Faceless Stock is a saas landing; the library is a sign-in wall with no working login, and the two public sample listings remain the practical path.
 
-Six new universe-binding facts were appended (lighthouse automated 1998 and last keeper Samuel Okoro; Harbor Festival volunteers since at least 1979; HarborFit / Slice of Calder / CalderLearn breach dates). They wait on Anders' confirmation, as the W4 council and City Hall facts did before they were accepted.
+Approved new canon from this round: the Port Calder lighthouse was automated in 1998 and its last keeper was Samuel Okoro; Harbor Festival has had volunteers since at least 1979; the breaches HarborFit (March 2021), Slice of Calder (November 2022) and CalderLearn (August 2024) are universe fact, in addition to the already canonical Eastfield Neighbors breach (February 2023). A Threadline post names the 6:10 ferry captain «Dennis»; that remains a forum claim, not canon.
 
 ## Test-only domains
 
