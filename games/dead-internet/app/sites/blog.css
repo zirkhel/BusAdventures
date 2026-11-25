@@ -31,3 +31,10 @@
 .tmpl-blog.var-minimal .site-side h2 { color: var(--site-accent, #3d6b4f); }
 .tmpl-blog.var-minimal .site-arch-link { text-decoration: none; color: #1c1c1c; }
 .tmpl-blog.var-minimal .site-foot { border-top: 0; color: #8a8a8a; }
+
+.tmpl-blog .site-comments { margin: 8px 16px 0; padding: 16px 0 8px; border-top: 1px solid #e0d3b4; }
+.tmpl-blog .site-comments h2 { font-size: 15px; font-weight: 600; margin: 0 0 10px; }
+.tmpl-blog .site-comment { margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px dotted #e0d3b4; }
+.tmpl-blog .site-comment:last-child { border-bottom: 0; }
+.tmpl-blog.var-minimal .site-comments { border-top-color: #e6e1d6; }
+.tmpl-blog.var-minimal .site-comment { border-bottom-style: solid; border-bottom-color: #eeeae2; }

@@ -1,0 +1,423 @@
+[
+ {
+  "id": "W-northgate-0001",
+  "site": "northgate",
+  "page": "home",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com",
+  "date": "2026-02-01",
+  "title": "Northgate Development",
+  "filler": true,
+  "source": "northgate",
+  "index": "full",
+  "images": [
+   "IMG12"
+  ],
+  "mentions": [
+   "northgate",
+   "paul",
+   "waterfront"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Homes for the next generation.\n\nFor forty years Northgate has built places people actually live: streets you can walk, rooms with light, and a front door that still feels like one. From Old Town to Northpoint, our finished work is already part of the city.\n\nEastfield Waterfront is our next chapter. We are planning 1,200 homes beside the mill, with public paths to the water. Plans are on our projects page. For press, contact Paul Navarro, VP Communications."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0002",
+  "site": "northgate",
+  "page": "projects",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/projects",
+  "date": "2026-02-01",
+  "title": "Projects",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A short list of the work we are proudest of.\n\nCompleted: Foundry Lofts, Old Town (2017) — northgatedev.com/projects/foundry-lofts. Heights Commons, the Heights (2020) — northgatedev.com/projects/heights-commons. Northpoint Landing, Northpoint (2023) — northgatedev.com/projects/northpoint-landing.\n\nIn planning: Eastfield Waterfront, a neighbourhood of new homes beside Calder Mill — northgatedev.com/waterfront.\n\nEach project has its own page, with the facts as they stand today."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0003",
+  "site": "northgate",
+  "page": "project",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/projects/foundry-lofts",
+  "date": "2017-09-12",
+  "title": "Foundry Lofts",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Foundry Lofts sits on a former metalworks yard in Old Town. The first residents moved in during 2017.\n\nThe building keeps the brick shell and the high windows. Inside are 86 apartments, a small courtyard, and bike storage that people actually use. It is a five-minute walk to the 14 bus and the Saturday market.\n\nThe project is complete. Sales are closed. For a reference, please write to us through the contact page."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0004",
+  "site": "northgate",
+  "page": "project",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/projects/heights-commons",
+  "date": "2020-06-18",
+  "title": "Heights Commons",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Heights Commons opened in 2020 on a sloping site above the harbour road. It is a quieter building than our Old Town work: 64 apartments, a shared garden on the south side, and a room on the ground floor that the residents' association books for meetings.\n\nThe Heights wanted housing that did not look like a campus. We agreed. The project is complete."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0005",
+  "site": "northgate",
+  "page": "project",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/projects/northpoint-landing",
+  "date": "2023-11-02",
+  "title": "Northpoint Landing",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Northpoint Landing was finished in 2023, a short walk from the ferry and the old cannery row. 110 apartments in two buildings share a courtyard that opens toward the water.\n\nIn 2024 the project received a regional design mention for its reuse of the site. We were glad of that, and gladder still of the waiting list of people who wanted to live there.\n\nThe project is complete. A small number of rentals are managed by our on-site office."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0006",
+  "site": "northgate",
+  "page": "about",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/about",
+  "date": "2026-01-15",
+  "title": "About Northgate",
+  "filler": true,
+  "source": "northgate",
+  "index": "full",
+  "mentions": [
+   "northgate",
+   "gerald"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Northgate Development is a Port Calder company. We plan, build and look after homes in this city and nowhere else.\n\nGerald Whitcombe is our Chief Executive. The office is in Port Calder. We do not publish a staff directory of every trade on a site, but the people who speak for the company are on the leadership page: northgatedev.com/about/leadership.\n\nIf you live in one of our buildings and need the building manager, use the number on your welcome letter, not the press desk."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0007",
+  "site": "northgate",
+  "page": "about",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/about/leadership",
+  "date": "2026-01-15",
+  "title": "Leadership",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate",
+   "gerald",
+   "paul"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Gerald Whitcombe, Chief Executive. Gerald has led Northgate through its last three neighbourhoods and still reads every planning note himself.\n\nPaul Navarro, Vice President, Communications. Paul is the first call for press and for public meetings. He would rather hand you a fact sheet than a slogan.\n\nHelen March, Chief Financial Officer. Helen looks after the numbers and the lenders.\n\nMarcus Veld, Vice President, Development. Marcus works with the architects and the city on what a site can honestly hold.\n\nPhotographs of the wider office are not published here."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0008",
+  "site": "northgate",
+  "page": "page",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/sustainability",
+  "date": "2025-09-01",
+  "title": "Sustainability",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate",
+   "waterfront"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We design to be net-zero ready: roofs that can take solar, heating that can switch, and rain gardens that keep water on the site.\n\nAt Heights Commons the rain beds are already in. At Eastfield Waterfront we have set aside a strip for a pollinator garden. It has not been planted yet. We would rather say that plainly than show a drawing of flowers that are not there.\n\nA short note on materials and waste is available from the development office on request."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0009",
+  "site": "northgate",
+  "page": "page",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/investors",
+  "date": "2026-01-15",
+  "title": "Investors",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Investor relations: by appointment.\n\nThe annual report is not posted on this site. Registered investors may request a copy from the finance office. We do not take cold enquiries through the public contact form.\n\nIf you already have a letter of introduction, write to the finance office and we will arrange a time."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0010",
+  "site": "northgate",
+  "page": "newsroom",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/news",
+  "date": "2026-02-01",
+  "title": "Newsroom",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "paul",
+   "northgate"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "News and statements from Northgate Development, newest first.\n\nRecent releases:\nnorthgatedev.com/news/appointments-march-2026\nnorthgatedev.com/news/building-eastfields-next-hundred-years\nnorthgatedev.com/news/harbor-festival-2025\nnorthgatedev.com/news/northpoint-landing-design-mention\nnorthgatedev.com/news/foundry-lofts-five-years\nnorthgatedev.com/news/heights-commons-opens\n\nOlder notes are kept by the communications office. For press, write to Paul Navarro."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0011",
+  "site": "northgate",
+  "page": "article",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/news/northpoint-landing-design-mention",
+  "date": "2024-03-28",
+  "title": "Northpoint Landing receives regional design mention",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate",
+   "paul"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We are pleased to share that Northpoint Landing has received a regional design mention for the reuse of its waterfront site.\n\nThe two buildings opened in 2023. The courtyard, the brick, and the path through to the ferry were the parts the jury picked out. We thank the residents who already treat the courtyard as their own.\n\nMedia contact: Paul Navarro."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0012",
+  "site": "northgate",
+  "page": "article",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/news/harbor-festival-2025",
+  "date": "2025-09-15",
+  "title": "Northgate is proud to sponsor Harbor Festival 2025",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate",
+   "paul"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Northgate Development is a sponsor of Harbor Festival 2025. We have supported the festival for several years, and we are glad to do so again.\n\nThe festival is one of the good things about this city: music, chowder, and a long evening on the pier. We will have a small stall with a map of our finished work, and no speeches.\n\nMedia contact: Paul Navarro."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0013",
+  "site": "northgate",
+  "page": "article",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/news/building-eastfields-next-hundred-years",
+  "date": "2025-10-21",
+  "title": "Building Eastfield's next hundred years",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate",
+   "waterfront",
+   "eastfield"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder was built by people who weren't afraid of the future. Northgate Development is proud to invest in Eastfield: new homes, new jobs and a waterfront everyone can enjoy."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0014",
+  "site": "northgate",
+  "page": "article",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/news/foundry-lofts-five-years",
+  "date": "2022-09-12",
+  "title": "Five years at Foundry Lofts",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This month Foundry Lofts turns five. Eighty-six households, a courtyard that finally has shade, and a noticeboard that is always full.\n\nWe asked two early residents if we could quote them. They said yes, so long as we did not make it sound like an advert. 'The bins work, the neighbour is quiet, the bus is late. That's a good building,' one of them said.\n\nWe will take that."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0015",
+  "site": "northgate",
+  "page": "article",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/news/heights-commons-opens",
+  "date": "2020-06-18",
+  "title": "Heights Commons welcomes its first residents",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Heights Commons is open. The first residents collected their keys this week.\n\nThe building sits above the harbour road, with a shared garden on the south side. If you applied for a home and have not heard from us, please wait for the letter. We will not discuss individual applications on the phone."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0016",
+  "site": "northgate",
+  "page": "article",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/news/appointments-march-2026",
+  "date": "2026-03-02",
+  "title": "Development office appointments, March 2026",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "northgate",
+   "waterfront"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The development office will take public appointments on Tuesdays and Thursdays in March, 10am to 1pm, by booking only.\n\nThese slots are for questions about completed buildings and about the Eastfield Waterfront planning documents already on file. We cannot comment on individual council votes.\n\nTo book, use the contact page."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0017",
+  "site": "northgate",
+  "page": "page",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/contact",
+  "date": "2026-01-15",
+  "title": "Contact",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "mentions": [
+   "paul",
+   "northgate"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Northgate Development, Port Calder.\n\nPress and public enquiries: Paul Navarro, VP Communications, through this form. Please tell us whether you are a resident, a reporter, or a neighbour with a question about a site.\n\nWe read everything. We do not always reply the same day.\n\nFor a building you already live in, call the number on your welcome letter."
+   }
+  ]
+ },
+ {
+  "id": "W-northgate-0018",
+  "site": "northgate",
+  "page": "page",
+  "type": "page",
+  "platform": "northgate_site",
+  "url": "northgatedev.com/privacy",
+  "date": "2024-01-15",
+  "title": "Privacy",
+  "filler": true,
+  "source": "northgate",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This site collects only what you type into a form, and the usual server logs. We do not sell lists. We do not place marketing cookies.\n\nIf you send us an email, we keep it for as long as the conversation needs, then in the ordinary archive of the office.\n\nTo ask what we hold about you, write to the contact address and put 'privacy' in the subject line."
+   }
+  ]
+ }
+]

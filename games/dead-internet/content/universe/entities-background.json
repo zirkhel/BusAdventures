@@ -1,0 +1,214 @@
+[
+ {
+  "id": "denise_harlan",
+  "kind": "person",
+  "name": "Denise Harlan",
+  "aliases": [
+   "Denise Harlan",
+   "Mayor Harlan"
+  ],
+  "isHuman": true,
+  "bio": "Mayor of Port Calder.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "tom_crowley",
+  "kind": "person",
+  "name": "Tom Crowley",
+  "isHuman": true,
+  "bio": "City councilmember for Old Town.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "sandra_okonkwo",
+  "kind": "person",
+  "name": "Sandra Okonkwo",
+  "isHuman": true,
+  "bio": "City councilmember for Northpoint.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "ben_jiao",
+  "kind": "person",
+  "name": "Ben Jiao",
+  "isHuman": true,
+  "bio": "City councilmember for Harbor.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "elaine_voss",
+  "kind": "person",
+  "name": "Elaine Voss",
+  "isHuman": true,
+  "bio": "City councilmember for the Heights.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "farid_rahman",
+  "kind": "person",
+  "name": "Farid Rahman",
+  "isHuman": true,
+  "bio": "City councilmember for Eastfield.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "cathy_bloom",
+  "kind": "person",
+  "name": "Cathy Bloom",
+  "isHuman": true,
+  "bio": "City councilmember for Old Town.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "neil_strickland",
+  "kind": "person",
+  "name": "Neil Strickland",
+  "isHuman": true,
+  "bio": "City councilmember for Northpoint.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "joanne_perez",
+  "kind": "person",
+  "name": "Joanne Perez",
+  "isHuman": true,
+  "bio": "City councilmember for Harbor.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "martin_cho",
+  "kind": "person",
+  "name": "Martin Cho",
+  "isHuman": true,
+  "bio": "City councilmember for the Heights.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "ruth_kenner",
+  "kind": "person",
+  "name": "Ruth Kenner",
+  "isHuman": true,
+  "bio": "At-large city councilmember.",
+  "relations": [
+   {
+    "type": "member_of",
+    "to": "city_council"
+   }
+  ]
+ },
+ {
+  "id": "helen_march",
+  "kind": "person",
+  "name": "Helen March",
+  "isHuman": true,
+  "bio": "Chief Financial Officer at Northgate Development.",
+  "relations": [
+   {
+    "type": "works_for",
+    "to": "northgate"
+   }
+  ]
+ },
+ {
+  "id": "marcus_veld",
+  "kind": "person",
+  "name": "Marcus Veld",
+  "isHuman": true,
+  "bio": "VP of Development at Northgate Development.",
+  "relations": [
+   {
+    "type": "works_for",
+    "to": "northgate"
+   }
+  ]
+ },
+ {
+  "id": "foundry_lofts",
+  "kind": "org",
+  "name": "Foundry Lofts",
+  "isHuman": null,
+  "bio": "Northgate apartment building in Old Town, completed 2017.",
+  "relations": [
+   {
+    "type": "developed_by",
+    "to": "northgate"
+   }
+  ]
+ },
+ {
+  "id": "heights_commons",
+  "kind": "org",
+  "name": "Heights Commons",
+  "isHuman": null,
+  "bio": "Northgate apartment building in the Heights, completed 2020.",
+  "relations": [
+   {
+    "type": "developed_by",
+    "to": "northgate"
+   }
+  ]
+ },
+ {
+  "id": "northpoint_landing",
+  "kind": "org",
+  "name": "Northpoint Landing",
+  "isHuman": null,
+  "bio": "Northgate apartment building at Northpoint, completed 2023.",
+  "relations": [
+   {
+    "type": "developed_by",
+    "to": "northgate"
+   }
+  ]
+ }
+]

@@ -23,28 +23,28 @@
    },
    "nav": [
     {
-     "label": "Council calendar",
-     "href": "/council/calendar"
+     "label": "Home",
+     "href": "/"
     },
     {
-     "label": "Ana Ruiz",
-     "href": "/council/ana-ruiz"
+     "label": "Residents",
+     "href": "/residents"
     },
     {
-     "label": "Ordinance 26-031",
-     "href": "/council/ordinances/26-031"
+     "label": "Council",
+     "href": "/council"
     },
     {
-     "label": "Business registry",
-     "href": "/business/brightline-media-llc"
-    },
-    {
-     "label": "Lobbying disclosures",
-     "href": "/lobbying/2025/northgate"
+     "label": "Notices",
+     "href": "/notices"
     },
     {
      "label": "Records",
-     "href": "/records/pd-2025-07-0211"
+     "href": "/records"
+    },
+    {
+     "label": "Contact",
+     "href": "/contact"
     }
    ]
   }

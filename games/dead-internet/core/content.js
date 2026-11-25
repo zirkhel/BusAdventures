@@ -23,7 +23,7 @@ export async function loadContent(readJson) {
   const raw = { meta: null, strings: {}, entities: [], accounts: [], platforms: [], images: [], videos: [], scripts: [], artifacts: [],
     characters: [], rules: [], predicates: [], canon: { claims: [], facts: [] }, mysteries: [], terms: [], sites: [],
     /** artifact id → "universe" or the mystery that brought it */
-    packOf: {} };
+    packOf: {}, backgroundFacts: [] };
   const extensions = [];
   const add = (key, data, pack) => {
     if (key === "meta") raw.meta = data;
@@ -33,6 +33,7 @@ export async function loadContent(readJson) {
     else if (key === "rules") raw.rules.push(...data.map(r => (pack === "universe" ? r : { ...r, case: pack })));
     else if (key === "artifacts") { for (const a of data) raw.packOf[a.id] = pack; raw.artifacts.push(...data); }
     else if (key === "sites") raw.sites.push(...(Array.isArray(data) ? data : [data]));
+    else if (key === "backgroundFacts") raw.backgroundFacts.push(...(Array.isArray(data) ? data : data.facts || []));
     else if (SECTIONS.includes(key)) raw[key].push(...data);
     else throw new Error(`manifest: unknown section "${key}"`);
   };

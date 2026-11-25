@@ -1,0 +1,1190 @@
+[
+ {
+  "id": "W-eastfieldnotes-0001",
+  "site": "eastfieldnotes",
+  "page": "about",
+  "type": "page",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/about",
+  "author": "acc_eastfieldnotes",
+  "date": "2019-05-12",
+  "title": "About",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "mentions": [
+   "eastfield"
+  ],
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "I work at the library in Eastfield, and I started this blog in 2019 because I wanted a place to write about the neighbourhood and the old girl without waiting for a meeting to start.\n\nMost weeks it is just notes: the garden, the weather, a book someone left on the returns trolley. I am not a newspaper.\n\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0002",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2019/05/why-i-started",
+  "author": "acc_eastfieldnotes",
+  "date": "2019-05-12",
+  "title": "Why I started this blog",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "I have been talking about Eastfield in meetings for long enough. I wanted a quieter page of my own, for the old girl and for the neighbours who do not stand up at the microphone.\n\nIf you found this, hello. I will write when I have something to say, not because a calendar told me to.\n— M."
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_helenk",
+    "date": "2019-06-03",
+    "text": "Glad you're doing this. I'll read.",
+    "likes": 2
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0003",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2019/06/reading-circle-june",
+  "author": "acc_eastfieldnotes",
+  "date": "2019-06-18",
+  "title": "Reading circle, June",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Eight of us in the back room, windows open because the fan is still broken. We finished the novel and argued, kindly, about the last chapter. Next month is short stories. Tea provided; biscuits if someone remembers.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_june",
+    "date": "2019-08-21",
+    "text": "I should come. Do you still meet on Thursdays?"
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_helenk",
+    "date": "2019-08-21",
+    "text": "Thursdays, 6:30, back room. Bring a mug if you can."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0004",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2019/08/fog-this-morning",
+  "author": "acc_eastfieldnotes",
+  "date": "2019-08-03",
+  "title": "Fog this morning",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The harbour vanished and the ferry horn sounded closer than it was. I walked to work along the wall and could not see the far cranes. By ten the sun had burned it off, as it always does. I still stop and look.\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0005",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2019/09/returns-trolley",
+  "author": "acc_eastfieldnotes",
+  "date": "2019-09-22",
+  "title": "The returns trolley",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Someone left a cookbook with a bus ticket as a bookmark, and a note in the margin: try less salt. I shelved it and smiled all morning. The library is like that, if you let it be.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_helenk",
+    "date": "2019-09-23",
+    "text": "That sounds like my aunt. She annotates everything."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0006",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2019/11/early-dark",
+  "author": "acc_eastfieldnotes",
+  "date": "2019-11-10",
+  "title": "Early dark",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The lights on the mill come on before I leave the desk now. I used to mind the short days. This year I just button my coat and walk the long way home, past the sign, so I can see she is still there.\n— M."
+   }
+  ],
+  "mentions": [
+   "calder_mill"
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0008",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2020/02/seed-catalogues",
+  "author": "acc_eastfieldnotes",
+  "date": "2020-02-09",
+  "title": "Seed catalogues",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The first catalogues have arrived at the garden shed, slightly damp. We passed them around like news. I have promised myself I will not over-order again. I will, of course, over-order again.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_helenk",
+    "date": "2020-02-10",
+    "text": "Put me down for calendula if there is any left."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_june",
+    "date": "2020-02-11",
+    "text": "I still have last year's beans. They came up. I'll bring a handful."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0009",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2020/04/book-bus-holidays",
+  "author": "acc_eastfieldnotes",
+  "date": "2020-04-26",
+  "title": "Book bus in the holidays",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The book bus will be in the school yard Tuesday and Thursday mornings this holiday, weather allowing. We have picture books, a box of comics, and no fines for anything returned by the end of April. Tell the children.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_davep7",
+    "date": "2020-04-27",
+    "text": "We'll come Tuesday if it isn't raining."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_june",
+    "date": "2020-04-27",
+    "text": "Thank you for doing this. It makes a long week shorter."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0010",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2020/06/longest-day",
+  "author": "acc_eastfieldnotes",
+  "date": "2020-06-21",
+  "title": "Longest day",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Finished work and walked down to the water. A few people had brought chairs. Nobody was making a speech. The light lasted and lasted, and then it didn't, and we all went home at more or less the same time.\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0011",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2020/08/roadworks-again",
+  "author": "acc_eastfieldnotes",
+  "date": "2020-08-15",
+  "title": "Roadworks, again",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "They have opened the same stretch of the hill for the third time this year. I am not a civil engineer, but I am a person who walks to work, and I would like, just once, for the temporary lights to agree with each other.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_helenk",
+    "date": "2020-08-16",
+    "text": "The southbound one has been stuck on red since Tuesday. I timed it.",
+    "likes": 3
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_june",
+    "date": "2020-08-16",
+    "text": "I wrote to the city and got a reference number. That was two weeks ago."
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_davep7",
+    "date": "2020-08-17",
+    "text": "At least we can still get a wheelbarrow through to the garden. Narrowly."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0012",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2020/10/reading-circle-autumn",
+  "author": "acc_eastfieldnotes",
+  "date": "2020-10-04",
+  "title": "Reading circle, autumn",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We are back in the back room. Jumpers on, kettle loud, a book none of us had heard of until June put it on the table. That is the best kind. New people are welcome; we do not have a waiting list, only chairs.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_june",
+    "date": "2020-10-04",
+    "text": "I still can't believe you all agreed to my choice."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_helenk",
+    "date": "2020-10-05",
+    "text": "I haven't agreed yet. I've agreed to try."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0013",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2020/12/quiet-tuesday",
+  "author": "acc_eastfieldnotes",
+  "date": "2020-12-08",
+  "title": "A quiet Tuesday",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Four people in the library all morning, and the rain making the windows look older than they are. I mended a spine, found a reserved book that had gone to the wrong trolley, and ate my lunch looking at the mill through the wet glass.\n— M."
+   }
+  ],
+  "mentions": [
+   "calder_mill"
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0014",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2021/03/plots-opening",
+  "author": "acc_eastfieldnotes",
+  "date": "2021-03-14",
+  "title": "Plots opening",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The locks are off the shed and the paths are still soft. Plot numbers have not moved, however much some of us hoped. If you are on the waitlist, I do not have news, only compost and a list of Saturday mornings.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_davep7",
+    "date": "2021-03-14",
+    "text": "Plot 7 reporting. The soil is a mud pie. I'll be there Saturday."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_nando",
+    "date": "2021-03-15",
+    "text": "First year for me. Do I bring my own tools?"
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_davep7",
+    "date": "2021-03-15",
+    "text": "Bring gloves. Tools we can share."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0015",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2021/05/fog-again",
+  "author": "acc_eastfieldnotes",
+  "date": "2021-05-09",
+  "title": "Fog, again",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A low one, the kind that sits on the creek and makes the far bank look like a rumour. I took the long way and was late by six minutes. Nobody minded. Some mornings you should be late.\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0016",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2021/07/harbor-festival-dog-run",
+  "author": "acc_eastfieldnotes",
+  "date": "2021-07-02",
+  "title": "The dog run under Harbor Festival",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "They have put the temporary dog run in the usual corner, behind the food stalls, which means every second person arrives with a paper plate and a lead. I stayed twenty minutes. A terrier stole a chip and was not sorry. Neither was I.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_nando",
+    "date": "2021-07-02",
+    "text": "That was my terrier. I was sorry. A bit.",
+    "likes": 4
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_june",
+    "date": "2021-07-03",
+    "text": "The run is always in the worst place and I go every year anyway."
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_helenk",
+    "date": "2021-07-03",
+    "text": "If you go at ten it's quieter, and the chip stall isn't open yet."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0018",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2021/11/early-closing",
+  "author": "acc_eastfieldnotes",
+  "date": "2021-11-20",
+  "title": "Early closing",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The branch will close at four next Wednesday for staff training. I put the sign in the door myself, very straight, and then I straightened it again. Come earlier in the day if you need us.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_helenk",
+    "date": "2021-11-21",
+    "text": "Noted. I'll come Tuesday."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0019",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2022/01/old-photos-of-the-mill",
+  "author": "acc_eastfieldnotes",
+  "date": "2022-01-16",
+  "title": "Old photographs of the mill",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A reader brought in a folder of prints from the 1970s: the sign, the yard, a man whose name we do not know leaning on a barrow. We will scan what we can and keep the folder at the desk. Come and look, if you like that sort of thing. I do.\n— M."
+   }
+  ],
+  "mentions": [
+   "calder_mill"
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_ritab",
+    "date": "2022-01-17",
+    "text": "I'll come in this week. My father worked a season there, I think."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_june",
+    "date": "2022-01-17",
+    "text": "Is it all right to take a phone picture of the prints?"
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_helenk",
+    "date": "2022-01-18",
+    "text": "Ask at the desk. I was told yes, no flash."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0020",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2022/03/reading-circle-spring",
+  "author": "acc_eastfieldnotes",
+  "date": "2022-03-27",
+  "title": "Reading circle, spring",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We have picked a thinner book on purpose, because last winter we were ambitious and then we were tired. Thursdays, still, 6:30. If you have been meaning to come, this is a good month to start. We will not make you talk in the first week.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_priya",
+    "date": "2022-03-28",
+    "text": "I might come if work lets me out on time. Don't save me a chair until I actually do."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_june",
+    "date": "2022-03-28",
+    "text": "We'll save one anyway."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0021",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2022/05/first-tomatoes",
+  "author": "acc_eastfieldnotes",
+  "date": "2022-05-08",
+  "title": "First tomatoes in",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Not ripe. Not even close. But they are in, and Dave has already built a frame that looks like it could survive a gale. The rest of us have canes and optimism. I will write again when there is something red to boast about.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_davep7",
+    "date": "2022-05-08",
+    "text": "The frame is just pallets. Don't give me a reputation.",
+    "likes": 2
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_nando",
+    "date": "2022-05-09",
+    "text": "My canes are already leaning. I'll come look at your pallets."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0022",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2022/07/festival-weekend",
+  "author": "acc_eastfieldnotes",
+  "date": "2022-07-16",
+  "title": "Festival weekend",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The harbour is loud and I am working Saturday anyway. If you need a quiet half hour, the library is open, the fans are on, and I have put the chairs back from the wall. Dogs can wait in the shade by the side door; I will bring water.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_nando",
+    "date": "2022-07-16",
+    "text": "Thank you for the water bowl. We used it."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0023",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2022/09/school-term-book-bus",
+  "author": "acc_eastfieldnotes",
+  "date": "2022-09-04",
+  "title": "Book bus, back to school",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Last holiday stop is Wednesday in the school yard, nine to twelve. After that the bus goes back to its ordinary route. If you have a stack on the dresser, this is a kind week to bring it in. No speech, no shame, just the box.\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0024",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2022/11/the-heating-again",
+  "author": "acc_eastfieldnotes",
+  "date": "2022-11-13",
+  "title": "The heating, again",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "I would write something more high-minded, but the radiator in the workroom has been clanking since Monday and I have started answering it. We have requested a visit. In the meantime, the reading room is warmer, and I am sitting there with a scarf and a sense of proportion.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_ritab",
+    "date": "2022-11-14",
+    "text": "Take a flask. I used to work in a building like that."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_helenk",
+    "date": "2022-11-14",
+    "text": "Can we bring a spare heater or is that against a rule?"
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0025",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2023/02/hard-frost",
+  "author": "acc_eastfieldnotes",
+  "date": "2023-02-05",
+  "title": "Hard frost",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The creek had a skin on it this morning and the garden paths sounded like sugar. I checked the shed, which was fine, and my fingers, which were not. A short walk. A long kettle.\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0026",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2023/04/waitlist-Saturday",
+  "author": "acc_eastfieldnotes",
+  "date": "2023-04-16",
+  "title": "Saturday on the waitlist",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Two plots came free. Two names came off the list. The rest of us drank tea and pretended not to watch. If you are still waiting: I see you, and I do not have a way to make the ground larger.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_davep7",
+    "date": "2023-04-16",
+    "text": "We'll share seedlings with the new plots. That's the deal."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_nando",
+    "date": "2023-04-17",
+    "text": "I remember being on that list. I'll bring extra trays."
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_june",
+    "date": "2023-04-17",
+    "text": "Well done, whoever got a key today."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0027",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2023/06/reading-circle-outdoors",
+  "author": "acc_eastfieldnotes",
+  "date": "2023-06-11",
+  "title": "Reading circle, outdoors",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Once, and only if it stays fine: we will sit on the low wall behind the library instead of in the back room. Same book, same Thursday, slightly more breeze. Bring something to sit on. If it rains, we do what we always do, and go inside.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_priya",
+    "date": "2023-06-11",
+    "text": "I'll try to come for this one. Outdoor Thursdays I can actually leave work for."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_helenk",
+    "date": "2023-06-12",
+    "text": "I have a blanket that can take three people if they don't mind being three people."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0028",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2023/08/roadworks-the-hill",
+  "author": "acc_eastfieldnotes",
+  "date": "2023-08-06",
+  "title": "The hill, still",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "They have closed one lane again, with a sign that says 'temporary' in a font I no longer believe. I am trying to be a cheerful person about this and I am failing in a small, local way. If you have a better route to the library, I will take it.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_june",
+    "date": "2023-08-07",
+    "text": "I use the back lane and add five minutes. It is quieter, at least."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_ritab",
+    "date": "2023-08-07",
+    "text": "Cheerful is optional. Showing up is enough."
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_spam2",
+    "date": "2023-08-20",
+    "text": "CHEAP MEDS ONLINE — best price same day delivery click here!!!"
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0030",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2023/12/christmas-hours",
+  "author": "acc_eastfieldnotes",
+  "date": "2023-12-10",
+  "title": "Christmas hours",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We close at three on the 24th and stay closed until the 27th. The returns slot will still take your books, and I will still be pleased to see the trolley full when we come back. Seasonal opening times are on the door, written in my most careful capitals.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_helenk",
+    "date": "2023-12-10",
+    "text": "Thank you. I'll come on the 23rd with my stack."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0031",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2024/01/fog-and-the-sign",
+  "author": "acc_eastfieldnotes",
+  "date": "2024-01-21",
+  "title": "Fog and the sign",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "I could hear the water and I could not see it. The mill sign appeared all at once when I was almost under it, as if it had taken a step forward. I stood a minute, then went in and unlocked, and put the kettle on for anyone else who had walked through that.\n— M."
+   }
+  ],
+  "mentions": [
+   "calder_mill"
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0032",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2024/03/seed-swap",
+  "author": "acc_eastfieldnotes",
+  "date": "2024-03-03",
+  "title": "Seed swap",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Saturday, ten until twelve, in the shed if it rains and on the benches if it does not. Label what you bring. Take what you will actually plant. Priya has promised to paint a sign if we remember to ask her before Friday.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_priya",
+    "date": "2024-03-03",
+    "text": "You did remember to ask. I'll bring the sign Saturday morning, still slightly wet."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_davep7",
+    "date": "2024-03-04",
+    "text": "I have too many courgette seeds and no shame."
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_nando",
+    "date": "2024-03-04",
+    "text": "I'll take some of those, then. Fair warning: last year I planted them all."
+   },
+   {
+    "id": "c4",
+    "account": "acc_en_june",
+    "date": "2024-03-05",
+    "text": "See you there with envelopes and a pen that works."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0033",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2024/05/book-bus-may",
+  "author": "acc_eastfieldnotes",
+  "date": "2024-05-11",
+  "title": "Book bus, May half-term",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Tuesday and Thursday, school yard, nine to twelve. Comics, picture books, and a crate of 'you might like this' that I packed myself. If the weather is unkind we will sit in the entrance and make the best of it.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_june",
+    "date": "2024-05-11",
+    "text": "We'll come Tuesday. They've already chosen shoes."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0034",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2024/07/midsummer-weeds",
+  "author": "acc_eastfieldnotes",
+  "date": "2024-07-20",
+  "title": "Midsummer weeds",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The paths have disappeared again, which means we have been lucky with the rain and lazy with the hoe. Saturday is a work morning, not a crisis. Bring water. I will bring cake, which is not a bribe, except that it is.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_davep7",
+    "date": "2024-07-20",
+    "text": "I'll be there. Plot 7 is a jungle and I accept my part in that."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_ritab",
+    "date": "2024-07-21",
+    "text": "What kind of cake? This is a serious question."
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_nando",
+    "date": "2024-07-21",
+    "text": "Any cake. I'll weed for any cake."
+   },
+   {
+    "id": "c4",
+    "account": "acc_en_helenk",
+    "date": "2024-07-21",
+    "text": "I can do an hour before the market."
+   },
+   {
+    "id": "c5",
+    "account": "acc_en_spam2",
+    "date": "2024-07-28",
+    "text": "CheapMeds_now: pain relief ships discreet, ignore your doctor, visit our site"
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0035",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2024/09/reading-circle-new-year-of-it",
+  "author": "acc_eastfieldnotes",
+  "date": "2024-09-08",
+  "title": "Reading circle, a new year of it",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We start again this Thursday. No programme, just a stack and a kettle. If you came once and felt shy, come twice. If you have a book you want us to try, write the title on the slip on the desk. I read every one of those slips.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_priya",
+    "date": "2024-09-09",
+    "text": "I still owe you a Thursday. This might be the one I actually keep."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_helenk",
+    "date": "2024-09-09",
+    "text": "I'll be there with the usual mug."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0036",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2024/11/the-lights-on-early",
+  "author": "acc_eastfieldnotes",
+  "date": "2024-11-17",
+  "title": "The lights on early",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We put the Christmas lights up on the counter a little sooner than is dignified, because the afternoons have gone and I am not too proud. If you object on principle, I will listen, and then I will plug them in anyway.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_ritab",
+    "date": "2024-11-17",
+    "text": "No objection. They looked nice when I came in for the paper."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_spam1",
+    "date": "2024-11-18",
+    "text": "Boost your brand FAST with BrandBoost99 — authentic local engagement packages!!!"
+   },
+   {
+    "id": "c3",
+    "account": "acc_en_june",
+    "date": "2024-11-18",
+    "text": "Ignore the advert above me. The lights are lovely."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0037",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2025/01/a-brother-and-a-box-of-books",
+  "author": "acc_eastfieldnotes",
+  "date": "2025-01-19",
+  "title": "A box of books",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "My brother dropped off a box of paperbacks he had already read, with a note that said I would know who needed them. I did, more or less. They are on the donation shelf, and I have sent him a photograph of the empty box, which is my way of saying thank you.\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0038",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2025/03/mud-season",
+  "author": "acc_eastfieldnotes",
+  "date": "2025-03-02",
+  "title": "Mud season",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The garden is a well-meant swamp. We have laid planks, which have already sunk a little, and we have agreed not to pretend otherwise. If you come down, wear the shoes you do not mind, and do not apologise for the state of them.\n— M."
+   }
+  ],
+  "comments": [
+   {
+    "id": "c1",
+    "account": "acc_en_davep7",
+    "date": "2025-03-02",
+    "text": "The planks were my idea and I am only slightly sorry."
+   },
+   {
+    "id": "c2",
+    "account": "acc_en_nando",
+    "date": "2025-03-03",
+    "text": "I'll bring another board if I can get it down the path."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0039",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2025/04/spring-shelves",
+  "author": "acc_eastfieldnotes",
+  "date": "2025-04-13",
+  "title": "Spring shelves",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "I spent an hour turning the displays toward the light. It is not a professional technique. It is just easier to want a book when you can see the cover. If you have a recommendation, the slip on the desk is still there, and I am still reading them.\n— M."
+   }
+  ]
+ },
+ {
+  "id": "W-eastfieldnotes-0040",
+  "site": "eastfieldnotes",
+  "page": "post",
+  "type": "post",
+  "platform": "eastfieldnotes",
+  "url": "eastfieldnotes.blog/2025/05/before-the-light-changes",
+  "author": "acc_eastfieldnotes",
+  "date": "2025-05-04",
+  "title": "Before the light changes",
+  "filler": true,
+  "source": "mara-blog",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "I have been leaving the house earlier, just to see the mill in that first pale hour, before the traffic remembers itself. Nothing to announce. Only that she is still there, and I am still looking, and I wanted to say so.\n— M."
+   }
+  ],
+  "mentions": [
+   "calder_mill"
+  ]
+ }
+]

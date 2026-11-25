@@ -7,14 +7,16 @@
   "platforms": "universe/platforms.json",
   "entities": [
    "universe/entities.json",
-   "universe/pools/news/entities.json"
+   "universe/pools/news/entities.json",
+   "universe/entities-background.json"
   ],
   "accounts": [
    "universe/accounts.json",
    "universe/pools/news-dailyrecord/authors.json",
    "universe/pools/news-unfiltered/authors.json",
    "universe/pools/news-comments/dailyrecord-readers.json",
-   "universe/pools/news-comments/unfiltered-readers.json"
+   "universe/pools/news-comments/unfiltered-readers.json",
+   "universe/accounts-background.json"
   ],
   "images": [
    "universe/images.json",
@@ -26,7 +28,11 @@
    "universe/pools/news-unfiltered/articles.json",
    "universe/pools/news-unfiltered/documents.json",
    "universe/pools/background-qa/articles.json",
-   "universe/artifacts/referenced-sites.json"
+   "universe/artifacts/referenced-sites.json",
+   "universe/artifacts/sites-w4-northgate.json",
+   "universe/artifacts/sites-w4-city.json",
+   "universe/artifacts/sites-w4-kestrel.json",
+   "universe/artifacts/sites-w4-eastfieldnotes.json"
   ],
   "characters": "universe/characters.json",
   "canon": "universe/canon.json",
@@ -62,7 +68,8 @@
    "universe/sites/static_channel.json",
    "universe/sites/threadline.json",
    "universe/sites/unfiltered.json"
-  ]
+  ],
+  "backgroundFacts": "universe/background-facts.json"
  },
  "mysteries": [
   "mysteries/quiet-account/mystery.json"
