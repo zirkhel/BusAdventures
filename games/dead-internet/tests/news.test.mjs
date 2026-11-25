@@ -3,7 +3,8 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadWorld } from "../tools/lib/node-world.mjs";
+import { loadWorld, loadRaw } from "../tools/lib/node-world.mjs";
+import { validateWorld } from "../tools/lib/validate-world.mjs";
 import { Game } from "../core/game.js";
 import { mediaReport } from "../tools/lib/media.mjs";
 import { fire } from "../core/rules.js";
@@ -153,4 +154,22 @@ test("the papers report what the player caused, dated the day it happened", () =
   assert.ok(g.s.flags.vote_passed);
   assert.ok(g.news("dailyrecord", { limit: 5 }).items.includes("A68") && !g.view("A67").title);
   assert.equal(g.view("A68").date.slice(0, 10), g.date);
+});
+
+// Intended crack (DEVPLAN, layers 4–5): a festival volunteer who died is quoted months later.
+// Keep it. Do not "fix" the date, the quote or the obituary.
+test("intended crack: Walter Brennan is quoted in February 2026, after his death", async () => {
+  const a = world.artifacts.get("DR-2026-0051");
+  assert.ok(a, "the planning article exists");
+  assert.equal(a.layer, 5);
+  assert.equal(a.date, "2026-02-12");
+  const body = a.versions.map(v => v.body || "").join("\n");
+  assert.match(body, /Walter Brennan/);
+  assert.match(body, /Five thousand ducks/);
+  const walt = world.entities.get("walter_brennan");
+  assert.equal(walt.died, "2025-10-31");
+  assert.ok(a.date > walt.died, "quoted after his death");
+  const issues = validateWorld(await loadRaw(), { reachability: false, knockout: false }).issues
+    .filter(i => i.level !== "INFO" && /DR-2026-0051|walter_brennan|bf-walter-brennan/.test(`${i.where} ${i.msg}`));
+  assert.deepEqual(issues, [], "the validator does not flag the crack");
 });
