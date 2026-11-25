@@ -160,6 +160,8 @@ export class Phone {
     if (desc.kind === "results") return desc.title || `“${desc.q}”`;
     if (desc.kind === "hyp") return "Theory";
     if (desc.kind === "question") return "Question";
+    if (desc.kind === "source") return this.g.sourceCard(desc.key)?.label || "Source";
+    if (desc.kind === "sources") return "Sources";
     if (desc.kind === "compare") return desc.title || "Compare";
     if (desc.kind === "link") return "Connection";
     if (desc.kind === "event") return this.g.s.timeline.find(e => e.id === desc.id)?.title || "Event";

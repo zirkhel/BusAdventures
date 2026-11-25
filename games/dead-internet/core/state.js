@@ -6,7 +6,7 @@ import { initCases } from "./cases.js";
 import { initMedia } from "./feed.js";
 import { emptyBrowserState } from "./browser.js";
 
-export const SAVE_VERSION = 10;
+export const SAVE_VERSION = 11;
 
 /**
  * @param {any} w world from buildWorld()
@@ -63,6 +63,8 @@ export function createState(w, opts = {}) {
     questions: [],
     /** the player's own links between evidence (core/workbench.js): { id, items, kind, note, day }. Never read by rules */
     links: [],
+    /** the player's own source cards (core/sources.js): visible source key → { trust, authentic, sameAs, note, day }. Never read by rules */
+    sourceViews: {},
     /** the player's own timeline of events (core/timeline.js) */
     timeline: [],
     /** published reports, each about exactly one case */
