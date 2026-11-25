@@ -134,7 +134,7 @@ The 20 remaining planned photos from WEBSITES.md §10 now exist (WEB0001–WEB00
 
 `portcalderjazz.com` is registered so the Browser can show a parked state. The date and the «for sale» wording follow WEBSITES.md §4. W6 adds a cached 2019 site (home, calendar, about), with `live: null`. Because the domain changed hands, the live parked view is still a generic parking page, not a jazz-club theme, and the live parked design has no catalog logo. The 2019 design uses a text wordmark.
 
-### Fixes after the photos (PR #84, `fixes-after-photos`, not merged)
+### Fixes after the photos (PR #84, `fixes-after-photos`, merged `48191f7`)
 
 - **Threadline:** profiles (`threadline.net/u/*`) show the account name and "Threads started" again. truthseeker_88 lists A16 and A62.
 - **Approved device names, now canon in `background-facts.json`:**

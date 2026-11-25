@@ -470,7 +470,7 @@ Avvik fra §11: W2-motoren gjelder alle nettsteder med de tre malnavnene, ikke b
 
 **Bildeinfo (PR #83).** WEB0001–WEB0038 følger nå EXIF-konvensjonen fra DESIGN.md §Image: Northgate (Orrin D7), Kestrel 2014 (Orrin S20), Calderpedia og Salty's (Lumen 6), Maras innlegg (Lumen 5, datert ved innleggene), Walts skann 2007 og digitalkamera 2008 (Orrin S5), Faceless-arket som stockprodukt; resten er fjernet (`meta: null`), også Brightline. Validatorregel og `tests/image-meta.test.mjs`: alle bilder har et `meta`-valg, og `taken` er aldri senere enn første versjon som viser bildet. Detaljer og ny kanon til godkjenning i DEVPLAN («Fotografier — bildeinfo»).
 
-**Rettelser etter fotografiene (PR #84, ikke merget).**
+**Rettelser etter fotografiene (PR #84, merget `48191f7`).**
 - Threadline-profiler viser navn og «Threads started» igjen. Feilen var at `accountByHandle()` gir en id.
 - Walt-sitatet i DR-2026-0051 etter hans død er et tilsiktet spor, med test.
 - Enhetsnavnene Orrin D7/S5/S20, Halden PhotoScan 2400 og Lumen 6 er kanon i `background-facts.json`. Maras Lumen 5 står bare i bildeinfo og i dokumentasjonen.
@@ -483,7 +483,9 @@ Avvik fra §11: W2-motoren gjelder alle nettsteder med de tre malnavnene, ikke b
 
 Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs`, `node games/dead-internet/tools/simulate.mjs`, og Playwright-røyktest `tools/test-casebook-ui.mjs` (390×844). Nettstedstester: `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. W4-tester: `tests/websites-w4.test.mjs`. W5-tester: `tests/websites-w5.test.mjs`. W6-tester: `tests/websites-w6.test.mjs`. W7-tester: `tests/websites-w7.test.mjs`. Skjermbilder: `/workspace/dead-internet-shots/w3-*.png`, `w4-*.png`, `w5-*.png`, `w6-*.png` og `w7-*.png`.
 
-Neste steg: W8 (Archive-kobling, venter på Casebook steg 3). Gjenstår: lukke etterlatt PR #72, de planlagte WEB-fotografiene, Casebook steg 2–5, og ekstern spilltest etter steg 5. Nye nettside-PR-er merges bare etter Anders' ja.
+**PR #72 lukket.** PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026 som en rest etter PR #71. Greina er beholdt.
+
+Neste steg: Casebook steg 2 (påbegynt 25. nov 2026 med Anders' ja), deretter steg 3–5. W8 (Archive-kobling) venter på Casebook steg 3. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
 
 
 
