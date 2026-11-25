@@ -164,3 +164,120 @@ test("a version 11 save round-trips source cards; bad answers and one-sided 'sam
   assert.deepEqual(state.sourceViews[KESTREL].sameAs, [TRUTH], "'same as' is mended to go both ways");
   assert.equal("junk" in state.sourceViews, false);
 });
+
+// ── Review adjustments (Anders, 25.11.2026) ─────────────────────────────────
+
+test("'Unsure' is an answer of its own, different from not answered, and survives a save", async () => {
+  const { w, g } = await fixture();
+  const blank = g.sourceCard(MIKE);
+  g.assessSource(MIKE, { trust: "unsure" });
+  const unsure = g.sourceCard(MIKE);
+  assert.deepEqual([blank.trust, blank.assessed], [null, false]);
+  assert.deepEqual([unsure.trust, unsure.assessed], ["unsure", true], "unsure is stored as an answer");
+  assert.equal(g.s.sourceViews[MIKE].trust, "unsure");
+  const { state } = deserialize(w, serialize(g.s));
+  assert.equal(state.sourceViews[MIKE].trust, "unsure", "unsure is kept through a save, not turned into 'not answered'");
+  // Tapping Unsure again takes the answer back: not answered.
+  g.assessSource(MIKE, { trust: null });
+  assert.deepEqual([g.sourceCard(MIKE).trust, g.sourceCard(MIKE).assessed], [null, false]);
+});
+
+async function friends() {
+  const f = await fixture();
+  const { g } = f;
+  g.s.artifacts.A56 = { ...g.s.artifacts.A56, visible: true }; g.open("A56");
+  f.ev.push(g.save({ artifact: "A56" }).id);
+  const LINDSAY = g.sources().find(s => s.label.startsWith("Lindsay")).key;
+  const h = g.hypothesize({ title: "The friends are one voice", evidence: [f.ev[1], f.ev[2], f.ev[4]] }).id;
+  const own = () => g.casebook().hypotheses.find(x => x.id === h).ownSourceCount;
+  return { ...f, LINDSAY, own };
+}
+
+test("the card lists exactly the 'Same origin' links that merge it, and links never write its own answers", async () => {
+  const { g, ev, LINDSAY } = await friends();
+  g.linkSources(MIKE, PAT);
+  const answers = JSON.stringify(g.s.sourceViews);
+  const l1 = g.addLink({ a: ev[2], b: ev[4], kind: "same_origin", note: "Same photos" }).id;
+  g.addLink({ a: ev[1], b: ev[2], kind: "related" });
+  g.addLink({ a: ev[1], b: ev[2], kind: "same_origin" });
+  const l2 = g.s.links.find(l => l.kind === "same_origin" && l.a === ev[1]).id;
+  assert.equal(JSON.stringify(g.s.sourceViews), answers, "adding links writes nothing to source cards");
+  const pat = g.sourceCard(PAT);
+  assert.deepEqual(pat.viaLinks, [{ key: LINDSAY, label: g.sourceCard(LINDSAY).label, links: [l1] }, { key: MIKE, label: "Mike", links: [l2] }], "sorted by name");
+  assert.deepEqual(pat.sameAs.map(x => x.key), [MIKE], "the card's own answer stays next to the link");
+  // Editing a link to another kind, or removing it, drops it from the card; the answers stay.
+  assert.ok(g.editLink(l2, { kind: "contradicts" }).ok);
+  assert.deepEqual(g.sourceCard(PAT).viaLinks.map(x => x.key), [LINDSAY]);
+  g.removeLink(l1);
+  assert.deepEqual(g.sourceCard(PAT).viaLinks, []);
+  assert.equal(JSON.stringify(g.s.sourceViews), answers, "removing links writes nothing to source cards");
+  assert.deepEqual(g.sourceCard(PAT).sameAs.map(x => x.key), [MIKE]);
+});
+
+test("a group that goes through a third source is shown as indirect, and the count is recomputed on removal", async () => {
+  const { g, ev, LINDSAY, own } = await friends();
+  assert.equal(own(), 3);
+  g.linkSources(MIKE, PAT);
+  const l = g.addLink({ a: ev[2], b: ev[4], kind: "same_origin" }).id; // Pat ~ Lindsay
+  assert.equal(own(), 1, "Mike ~ Pat ~ Lindsay is one source in the player's count");
+  const mike = g.sourceCard(MIKE).group;
+  assert.deepEqual(mike.map(x => [x.key, x.direct, x.via.map(v => v.key)]),
+    [[LINDSAY, false, [PAT]], [PAT, true, []]].sort((a, b) => a[0].localeCompare(b[0])), "Lindsay is joined to Mike via Pat");
+  assert.deepEqual(g.sourceCard(PAT).group.every(x => x.direct), true);
+  // A direct answer makes it direct.
+  g.linkSources(MIKE, LINDSAY);
+  assert.equal(g.sourceCard(MIKE).group.find(x => x.key === LINDSAY).direct, true);
+  g.linkSources(MIKE, LINDSAY, false);
+  // Remove the link: Lindsay leaves the group, the count goes back up.
+  g.removeLink(l);
+  assert.equal(own(), 2);
+  assert.deepEqual(g.sourceCard(MIKE).group.map(x => x.key), [PAT]);
+  assert.deepEqual(g.sourceCard(LINDSAY).group, []);
+  // Remove the answer: three again.
+  g.linkSources(PAT, MIKE, false);
+  assert.equal(own(), 3);
+  // Removing the evidence in the middle breaks the chain too: a source the player can't see joins nothing.
+  g.linkSources(MIKE, PAT); g.addLink({ a: ev[2], b: ev[4], kind: "same_origin" });
+  assert.equal(own(), 1);
+  g.dispatch({ type: "removeEvidence", id: ev[2] });
+  assert.deepEqual(g.sourceCard(MIKE).group, []);
+  assert.equal(g.casebook().hypotheses[0].ownSourceCount, 2, "Mike and Lindsay, no longer joined through Pat");
+});
+
+test("setting evidence aside is not removal: the card and its answers stay", async () => {
+  const { g, ev } = await fixture();
+  g.assessSource(PAT, { trust: "unsure", note: "Reposts" });
+  g.linkSources(PAT, MIKE);
+  g.editEvidence(ev[2], { shelf: "irrelevant" });
+  const c = g.sourceCard(PAT);
+  assert.equal(c.error, undefined, "a source whose only evidence is set aside keeps its card");
+  assert.deepEqual([c.trust, c.note, c.setAside, c.evidence, c.sameAs.map(x => x.key)], ["unsure", "Reposts", 1, [ev[2]], [MIKE]]);
+  assert.ok(g.sources().some(s => s.key === PAT));
+  assert.deepEqual(g.sourceCard(MIKE).group.map(x => x.key), [PAT], "and it still counts in the player's groups");
+  g.editEvidence(ev[2], { shelf: null });
+  assert.equal(g.sourceCard(PAT).setAside, 0);
+  // Actual removal hides it; the answers are kept.
+  g.dispatch({ type: "removeEvidence", id: ev[2] });
+  assert.equal(g.sourceCard(PAT).error, "unknown_source");
+  assert.equal(g.s.sourceViews[PAT].trust, "unsure");
+});
+
+test("answers are keyed to the source id, not its name: a new name or two sources with one name", async () => {
+  const { w, g } = await fixture();
+  g.assessSource(MIKE, { trust: "no", note: "Only reposts" });
+  g.assessSource(PAT, { trust: "yes" });
+  const mike = w.accounts.get("acc_mike"), pat = w.accounts.get("acc_pat");
+  const names = [mike.displayName, pat.displayName];
+  try {
+    // The account changes its display name: same card, same answers, the new name shown.
+    mike.displayName = "Michael R.";
+    assert.deepEqual([g.sourceCard(MIKE).label, g.sourceCard(MIKE).trust, g.sourceCard(MIKE).note], ["Michael R.", "no", "Only reposts"]);
+    assert.deepEqual(Object.keys(g.s.sourceViews).sort(), [MIKE, PAT].sort(), "stored by id; no name in the keys");
+    // Two different accounts with the same name stay two cards with their own answers.
+    pat.displayName = "Michael R.";
+    const both = g.sources().filter(s => s.label === "Michael R.");
+    assert.deepEqual(both.map(s => [s.key, s.trust]).sort(), [[MIKE, "no"], [PAT, "yes"]].sort());
+    const h = g.hypothesize({ title: "x", evidence: g.s.evidence.slice(1, 3).map(e => e.id) }).id;
+    assert.equal(g.casebook().hypotheses.find(x => x.id === h).ownSourceCount, 2, "one name is not one source");
+  } finally { [mike.displayName, pat.displayName] = names; }
+});

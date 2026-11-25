@@ -102,6 +102,8 @@ function play(w) {
   vis.forEach((key, k) => g.assessSource(key, { trust: answers[k % 4], authentic: answers[(k + 1) % 4], note: k % 3 ? `My read ${k}` : "" }));
   for (let k = 0; k + 1 < vis.length; k += 3) g.linkSources(vis[k], vis[k + 1]);
   for (let k = 0; k + 2 < vis.length; k += 7) g.linkSources(vis[k + 1], vis[k + 2]);
+  // Set aside every piece of evidence from a few sources: their cards stay.
+  for (const key of vis.filter((_, k) => k % 11 === 5)) for (const e of g.s.evidence) if (g.evidenceAbout(e.id)?.source === key) g.editEvidence(e.id, { shelf: "finished" });
   g.s.trust.dana = 99;
   return { g, hyps: [r.h2, r.h3, ...extra] };
 }
@@ -168,7 +170,8 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   assert.deepEqual(a.compare.filter(c => c.error || c.items.some(x => x.error)), [], "every comparison in the twin test is valid");
   assert.ok(a.compare.every(c => c.items.every(x => !("supports" in x) && !("mentions" in x) && !("source" in x && typeof x.source !== "string"))), "comparison items carry no hidden fields");
   assert.ok(a.casebook.questions.length > 20 && a.casebook.hypotheses.some(h => h.againstCount > 0 && !h.structured), "step 2 views are part of the comparison");
-  assert.ok(a.sources.length > 20 && a.sources.some(x => x.group.length > 1) && a.sources.some(x => x.viaLinks.length) && a.sources.every(x => x.assessed || x.trust === null),
+  assert.ok(a.sources.length > 20 && a.sources.some(x => x.group.length > 1) && a.sources.some(x => x.viaLinks.length) && a.sources.every(x => x.assessed || x.trust === null)
+    && a.sources.some(x => x.group.some(y => !y.direct && y.via.length)) && a.sources.some(x => x.setAside && x.setAside === x.evidence.length),
     "step 4 source cards are part of the comparison");
   assert.ok(a.casebook.hypotheses.some(h => h.ownSourceCount < h.sourceCount), "the player's own source count is part of the comparison");
   assert.deepEqual(b, a, "a world where everything has one hidden source looks the same");

@@ -290,7 +290,7 @@ export function casebookApp(phone) {
   const theoryExample = () => g.cases().map(c => w.mysteries.get(c.id)?.strings?.theoryExample).find(Boolean) || "Someone operates an account";
 
   const counts = hy => [STATUS[hy.status] || STATUS.open, `${hy.evidenceCount} for`, `${hy.againstCount} against`,
-    `${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"}${hy.ownSourceCount !== hy.sourceCount ? ` (${hy.ownSourceCount} in your count)` : ""}`,
+    `${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"}${hy.ownSourceCount !== hy.sourceCount ? ` · ${hy.ownSourceCount} in your count` : ""}`,
     hy.structured ? "" : "own words", hy.note ? "note" : ""].filter(Boolean).join(" · ");
   const hypRow = hy => h("button.hyp-row", { onclick: () => phone.push("casebook", { kind: "hyp", id: hy.id }) },
     h("div.hyp-label", hy.label), h("div.muted.hyp-counts", counts(hy)));
@@ -350,7 +350,7 @@ export function casebookApp(phone) {
         hy.ownSourceCount !== hy.sourceCount ? h("div.own-count", h("b", String(hy.ownSourceCount)), h("span", "in your count")) : null,
         h("div", h("b", String(hy.againstCount)), h("span", "against"))),
       sources.size ? h("div.sources", [...sources].map(([key, s]) => h("button.chip.src-chip", { onclick: () => openSource(key) }, `${s.label}${s.n > 1 ? ` ×${s.n}` : ""}`))) : null,
-      hy.ownSourceCount !== hy.sourceCount ? h("div.hint.muted.own-hint", `Your count: ${hy.ownSourceCount} after your “same origin” answers and connections.`) : null,
+      hy.ownSourceCount !== hy.sourceCount ? h("div.hint.muted.own-hint", h("b", `${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"} · ${hy.ownSourceCount} in your count`), " Your count follows your “same origin” answers and connections.") : null,
       hy.notTrustedFor || hy.notAuthenticFor ? h("div.hint.muted.own-hint", [hy.notTrustedFor ? `You don't trust ${hy.notTrustedFor} of these sources.` : "",
         hy.notAuthenticFor ? `You doubt ${hy.notAuthenticFor} ${hy.notAuthenticFor === 1 ? "is" : "are"} who ${hy.notAuthenticFor === 1 ? "it claims" : "they claim"} to be.` : ""].filter(Boolean).join(" ")) : null,
       h("div.hint.muted", "The Casebook counts your evidence and where it comes from. It can't tell you whether you're right."),
@@ -603,6 +603,8 @@ export function casebookApp(phone) {
   const answerLine = c => [c.trust ? `Trust: ${ANSWERS[c.trust]}` : "", c.authentic ? `Who it claims: ${ANSWERS[c.authentic]}` : "",
     c.sameAs.length ? `Same origin as ${c.sameAs.length}` : "", c.note ? "Comment" : ""].filter(Boolean).join(" · ") || "Not assessed";
 
+  const evCount = c => `${kindOf(c.key)} · ${c.evidence.length} evidence${c.setAside ? ` (${c.setAside} set aside)` : ""}`;
+
   function sourceRow(key) {
     const c = key ? g.sourceCard(key) : null;
     if (!c || c.error) return null;
@@ -615,14 +617,16 @@ export function casebookApp(phone) {
     if (!list.length) return h("div.empty", h("b", "No sources yet."), h("div.muted", "Sources appear when you save evidence."));
     return [h("div.hint.muted.pad", "Where your evidence visibly comes from. Your answers are your own; the Casebook never says whether you're right."),
       list.map(c => h("button.hist-row.src-row", { onclick: () => openSource(c.key) }, icon("globe"),
-        h("div.pi-main", h("b", c.label), h("div.muted", `${kindOf(c.key)} · ${c.evidence.length} evidence · ${answerLine(c)}`)), h("span.chev", "›")))];
+        h("div.pi-main", h("b", c.label), h("div.muted", `${evCount(c)} · ${answerLine(c)}`)), h("span.chev", "›")))];
   }
 
   function sourceDetail(desc) {
     const c = g.sourceCard(desc.key);
     if (c.error) return h("div.empty", h("b", "This source isn't in your Casebook now."), h("div.muted", "Your answers are kept and show again when you save evidence from it."));
     const set = patch => { g.assessSource(c.key, patch); phone.refresh(); };
-    const question = (key, label) => h("div.src-q", h("div.field-label", label),
+    // "Unsure" is an answer like Yes and No; "Not answered" is the empty state, shown in words.
+    const question = (key, label) => h("div.src-q", { "data-answer": c[key] ?? "none" },
+      h("div.src-q-head", h("span.field-label", label), h("span.muted.small.src-state", c[key] ? `Your answer: ${ANSWERS[c[key]]}` : "Not answered")),
       h("div.seg.src-seg", { role: "group", "aria-label": label }, Object.entries(ANSWERS).map(([v, l]) =>
         h("button", { class: c[key] === v ? "on" : "", "aria-pressed": String(c[key] === v), onclick: () => set({ [key]: c[key] === v ? null : v }) }, l))));
     const note = /** @type {HTMLTextAreaElement} */ (h("textarea.note-input", { rows: 3, "aria-label": "My comment on this source", placeholder: "What makes you trust or doubt it…" }));
@@ -636,16 +640,23 @@ export function casebookApp(phone) {
     const qIn = /** @type {HTMLInputElement} */ (h("input.text-input", { type: "text", "aria-label": "Question about this source", placeholder: "A question about this source…" }));
     const ask = () => { const r = g.addQuestion({ text: qIn.value, links: { sources: [c.key] } }); if (r.error) { phone.toast("Write the question first."); return; } phone.refresh(); };
     const evs = c.evidence.map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
+    const links = g.casebook().links, nLinks = c.viaLinks.reduce((n, x) => n + x.links.length, 0);
     return h("div.source-detail",
-      h("div.src-head.pad", h("span.ev-ico", icon("globe")), h("div.pi-main", h("h2", c.label), h("div.muted", `${kindOf(c.key)} · ${c.evidence.length} evidence`))),
+      h("div.src-head.pad", h("span.ev-ico", icon("globe")), h("div.pi-main", h("h2", c.label), h("div.muted", evCount(c)))),
       h("div.hint.muted.pad", "Your own assessment. The Casebook never says whether you're right."),
       h("div.pad", question("trust", "Do I trust this source?"), question("authentic", "Is it who it claims to be?")),
       h("div.section-title", `Same origin as (${c.sameAs.length})`),
       h("div.sources.pad-x", c.sameAs.map(x => h("button.chip.removable", { "aria-label": `Remove ${x.label}`, onclick: () => { g.linkSources(c.key, x.key, false); phone.refresh(); } }, x.label, " ×")),
         h("button.chip", { onclick: pickSame, disabled: !others.length }, icon("plus"), "Choose source")),
-      c.viaLinks.length ? [h("div.hint.muted.pad", `Your “Same origin” connections between evidence also tie this source to:`),
-        h("div.sources.pad-x", c.viaLinks.map(x => h("button.chip.src-chip", { onclick: () => openSource(x.key) }, `${x.label} · ${x.links.length} ${x.links.length === 1 ? "connection" : "connections"}`)))] : null,
-      c.group.length ? h("div.hint.muted.pad.src-group", `In your own count of independent sources, this is one source together with ${c.group.map(x => x.label).join(", ")}.`) : null,
+      c.viaLinks.length ? [h("div.section-title", `Connections that join it (${nLinks})`),
+        h("div.hint.muted.pad", "Your “Same origin” connections between evidence join this source with another in your count. Open one to change or remove it. They never change your answers above."),
+        c.viaLinks.map(x => h("div.src-via", { "data-source": x.key },
+          h("button.chip.src-chip", { onclick: () => openSource(x.key) }, `With ${x.label} · ${x.links.length} ${x.links.length === 1 ? "connection" : "connections"}`),
+          x.links.map(id => links.find(l => l.id === id)).filter(Boolean).map(l => linkRow(l))))] : null,
+      c.group.length ? [h("div.hint.muted.pad.src-group", "In your own count of independent sources, this is one source together with:"),
+        h("div.sources.pad-x.src-members", c.group.map(x => h("button.chip.src-chip", { class: x.direct ? "direct" : "indirect", onclick: () => openSource(x.key) },
+          x.direct ? x.label : `${x.label} · via ${x.via.map(v => v.label).join(", ")}`))),
+        c.group.some(x => !x.direct) ? h("div.hint.muted.pad.src-indirect", "“via” means you joined them through another source, not to this one directly.") : null] : null,
       h("label.field-label.pad-x", "My comment"), h("div.pad", note),
       h("div.section-title", `Evidence (${evs.length})`), evs.map(e => evItem(e)),
       h("div.section-title", `Questions (${questions.length})`), questions.map(q => questionRow(q)),

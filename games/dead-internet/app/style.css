@@ -820,3 +820,8 @@ h2.np-head { font-size: 23px; }
 .src-group { font-style: normal; }
 .own-count b { color: var(--ink); }
 .own-hint { margin-top: 2px; }
+.src-q-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.src-state { white-space: nowrap; }
+.src-via { margin: 4px 0 8px; }
+.src-via > .src-chip { margin: 0 16px 4px; }
+.src-members .src-chip.indirect { background: transparent; border: 1px dashed var(--ink2); }

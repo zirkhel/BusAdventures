@@ -408,7 +408,8 @@ try {
     const ids4 = {};
     for (const id of ['A16', 'A54', 'A55', 'A56']) { g4.s.artifacts[id] = { ...g4.s.artifacts[id], visible: true }; const o = g4.open(id); ids4[id] = g4.save({ artifact: id, version: o.view.versionId }).id; }
     const src4 = Object.fromEntries(Object.entries(ids4).map(([k, id]) => [k, g4.evidenceAbout(id)]));
-    const MIKE = src4.A54, PAT = src4.A55, LIN = src4.A56;
+    const MIKE = src4.A54, PAT = src4.A55, LIN = src4.A56, TRUTH = src4.A16;
+    g4.editEvidence(ids4.A16, { shelf: 'finished' }); // set aside, not removed: the card stays
     g4.hypothesize({ title: 'The three friends are one voice', evidence: [ids4.A54, ids4.A55, ids4.A56] });
     // Step 3 and step 2 already in the save: a "Same origin" connection, and a question about a source.
     g4.addLink({ a: ids4.A55, b: ids4.A56, kind: 'same_origin', note: 'Same garden photo' });
@@ -440,13 +441,21 @@ try {
     await p4.locator('.source-detail').waitFor();
     await p4.getByText("Your own assessment. The Casebook never says whether you're right.").waitFor();
     const seg = label => p4.getByRole('group', { name: label });
+    const state = label => p4.locator('.src-q', { has: seg(label) });
     assert.equal(await seg('Do I trust this source?').locator('[aria-pressed="true"]').count(), 0);
+    assert.equal(await state('Do I trust this source?').locator('.src-state').innerText(), 'Not answered');
+    // "Unsure" is an answer: pressed, said in words, and stored as "unsure", not as empty.
     await seg('Do I trust this source?').getByRole('button', { name: 'Unsure' }).click();
+    assert.equal(await seg('Do I trust this source?').getByRole('button', { name: 'Unsure' }).getAttribute('aria-pressed'), 'true');
+    assert.equal(await state('Do I trust this source?').locator('.src-state').innerText(), 'Your answer: Unsure');
+    assert.equal(await state('Do I trust this source?').getAttribute('data-answer'), 'unsure');
     await seg('Is it who it claims to be?').getByRole('button', { name: 'No' }).click();
     assert.equal(await seg('Is it who it claims to be?').getByRole('button', { name: 'No' }).getAttribute('aria-pressed'), 'true');
-    // Tapping an answer again takes it back.
+    // Tapping an answer again takes it back: "Not answered", different from Unsure.
     await seg('Do I trust this source?').getByRole('button', { name: 'Unsure' }).click();
     assert.equal(await seg('Do I trust this source?').locator('[aria-pressed="true"]').count(), 0, 'answer taken back');
+    assert.equal(await state('Do I trust this source?').locator('.src-state').innerText(), 'Not answered');
+    assert.equal(await state('Do I trust this source?').getAttribute('data-answer'), 'none');
     await seg('Do I trust this source?').getByRole('button', { name: 'Unsure' }).click();
     // Same origin as Pat, picked with search.
     await b4('Choose source').click();
@@ -459,54 +468,99 @@ try {
     await p4.getByRole('textbox', { name: 'Question about this source' }).fill('When was the account made?');
     await b4('Ask').click();
     await p4.locator('.q-row', { hasText: 'When was the account made?' }).waitFor();
+    // The group: Pat directly (Mike's own answer), Lindsay only through Pat (Pat's connection).
     await p4.locator('.src-group').waitFor();
-    assert.match(await p4.locator('.src-group').innerText(), new RegExp(`one source together with .*${PAT.sourceLabel}`));
+    assert.equal(await p4.locator('.src-members .src-chip.direct').innerText(), PAT.sourceLabel);
+    assert.equal(await p4.locator('.src-members .src-chip.indirect').innerText(), `${LIN.sourceLabel} · via ${PAT.sourceLabel}`);
+    await p4.locator('.src-indirect').waitFor();
+    assert.equal(await p4.locator('.src-via').count(), 0, 'Mike has no connection of its own');
     await p4.locator('.source-detail .src-head').scrollIntoViewIfNeeded();
     await shot4('cb4-card.png');
     await noOverflow4('source card');
-    // Lindsay's card: tied to Pat only by the player's "Same origin" connection between evidence.
+    await p4.locator('.src-members').scrollIntoViewIfNeeded();
+    await p4.evaluate(() => document.querySelector('.src-group').scrollIntoView({ block: 'start' }));
+    await shot4('cb4-indirect.png');
+    // Back in the list: Unsure is shown as an answer; Truthseeker's only evidence is set aside, and the card stays.
     await b4('Back').click();
     await p4.locator('.src-row', { hasText: MIKE.sourceLabel }).getByText(/Trust: Unsure · Who it claims: No · Same origin as 1 · Comment/).waitFor();
+    await p4.locator('.src-row', { hasText: TRUTH.sourceLabel }).getByText(/1 evidence \(1 set aside\) · Not assessed/).waitFor();
+    // Pat's card: exactly which connection joins it with Lindsay, next to its own answer (Mike).
+    await p4.locator('.src-row', { hasText: PAT.sourceLabel }).click();
+    await p4.locator('.section-title', { hasText: 'Connections that join it (1)' }).waitFor();
+    await p4.locator('.src-via .src-chip', { hasText: `With ${LIN.sourceLabel} · 1 connection` }).waitFor();
+    assert.match(await p4.locator('.src-via .link-row').innerText(), /have the same origin/);
+    assert.match(await p4.locator('.src-via .link-row').innerText(), /Same garden photo/);
+    assert.equal(await p4.locator('.chip.removable').innerText(), `${MIKE.sourceLabel} ×`, "the card's own answer is separate from the connection");
+    await p4.locator('.section-title', { hasText: 'Connections that join it' }).scrollIntoViewIfNeeded();
+    await p4.evaluate(() => [...document.querySelectorAll('.section-title')].find(x => x.textContent.startsWith('Connections that join it')).scrollIntoView({ block: 'start' }));
+    await shot4('cb4-merge-links.png');
+    await noOverflow4('connections on a source card');
+    // Lindsay's card shows the same connection from the other side.
+    await b4('Back').click();
     await p4.locator('.src-row', { hasText: LIN.sourceLabel }).click();
-    await p4.locator('.src-chip', { hasText: `${PAT.sourceLabel} · 1 connection` }).waitFor();
+    await p4.locator('.src-via .src-chip', { hasText: `With ${PAT.sourceLabel} · 1 connection` }).waitFor();
+    assert.equal(await p4.locator('.src-members .src-chip.indirect').innerText(), `${MIKE.sourceLabel} · via ${PAT.sourceLabel}`);
     await shot4('cb4-linked.png');
     await b4('Back').click(); await b4('Back').click();
     // The theory: 3 visible sources, 1 in the player's own count.
     await p4.locator('.seg.tabs button', { hasText: 'Theories' }).click();
-    assert.match(await theoryCounts(), /3 sources \(1 in your count\)/);
+    assert.match(await theoryCounts(), /3 sources · 1 in your count/);
     await p4.locator('.hyp-row', { hasText: 'The three friends are one voice' }).click();
     assert.equal(await p4.locator('.own-count b').innerText(), '1');
-    await p4.getByText('Your count: 1 after your “same origin” answers and connections.').waitFor();
+    assert.match(await p4.locator('.own-hint').first().innerText(), /^3 sources · 1 in your count Your count follows your “same origin” answers and connections\.$/);
     await p4.getByText(/You doubt 1 is who it claims to be\./).waitFor();
     await shot4('cb4-theory.png');
     await noOverflow4('theory');
     // A source chip on the theory opens the card; the evidence card has a Source row too.
-    await p4.locator('.src-chip', { hasText: MIKE.sourceLabel }).click();
+    await p4.locator('.hyp-detail .src-chip', { hasText: MIKE.sourceLabel }).click();
     await p4.locator('.source-detail h2', { hasText: MIKE.sourceLabel }).waitFor();
     await p4.locator('.source-detail .ev-open').first().click();
     await p4.locator('.src-row', { hasText: `Source: ${MIKE.sourceLabel}` }).waitFor();
     await shot4('cb4-evidence.png');
-    // Remove "same as" from the card: the count follows.
-    await p4.locator('.src-row', { hasText: `Source: ${MIKE.sourceLabel}` }).click();
+    await b4('Back').click(); await b4('Back').click();
+    // Open the connection from Pat's card and remove it there: the group and count are recomputed,
+    // and the card's own "same origin as" answer stays.
+    await p4.locator('.hyp-detail .src-chip', { hasText: PAT.sourceLabel }).click();
+    await p4.locator('.src-via .link-row').click();
+    await p4.locator('.link-editor').waitFor();
+    await p4.getByRole('button', { name: /Remove connection/ }).click();
+    await p4.locator('.sheet button, .action-sheet button', { hasText: 'Remove connection' }).last().click();
+    await p4.locator('.source-detail h2', { hasText: PAT.sourceLabel }).waitFor();
+    assert.equal(await p4.locator('.src-via').count(), 0, 'the removed connection is gone from the card');
+    assert.equal(await p4.locator('.chip.removable').innerText(), `${MIKE.sourceLabel} ×`, 'the answer stays');
+    assert.equal(await p4.locator('.src-members .src-chip').count(), 1);
+    assert.equal(await p4.locator('.src-members .src-chip.direct').innerText(), MIKE.sourceLabel);
+    await b4('Back').click();
+    await p4.locator('.hyp-detail').waitFor();
+    assert.equal(await p4.locator('.own-count b').innerText(), '2', 'the count is recomputed');
+    // Remove "same as" from Mike's card: both counts are 3 again, so no own count is shown.
+    await p4.locator('.hyp-detail .src-chip', { hasText: MIKE.sourceLabel }).click();
     await p4.locator('.chip.removable', { hasText: PAT.sourceLabel }).click();
     assert.equal(await p4.locator('.chip.removable').count(), 0);
+    assert.equal(await p4.locator('.src-group').count(), 0);
+    await b4('Back').click();
+    assert.equal(await p4.locator('.own-count').count(), 0);
     // Reload: the player's answers and comment are kept.
     await p4.reload();
     await open4(false);
     await p4.locator('.seg.tabs button', { hasText: 'Theories' }).click();
-    assert.match(await theoryCounts(), /3 sources \(2 in your count\)/, 'only the connection is left');
+    assert.doesNotMatch(await theoryCounts(), /in your count/, 'nothing joins them any more');
     await p4.locator('.seg.tabs button', { hasText: 'Evidence' }).click();
     await b4('Sources').click();
     await p4.locator('.src-row', { hasText: MIKE.sourceLabel }).click();
     assert.equal(await seg('Do I trust this source?').getByRole('button', { name: 'Unsure' }).getAttribute('aria-pressed'), 'true');
+    assert.equal(await state('Do I trust this source?').locator('.src-state').innerText(), 'Your answer: Unsure');
     assert.equal(await p4.getByRole('textbox', { name: 'My comment on this source' }).inputValue(), 'Only reposts, same photos as Pat.');
-    // Nothing the world does changed: no notification, no trust or credibility change.
+    // Nothing the world does changed: no notification, no trust or credibility change. Unsure is stored as "unsure".
     const world4 = await p4.evaluate(() => { const s = JSON.parse(Object.entries(localStorage).find(([k]) => k.startsWith('ba_deadinternet_'))[1]).state;
-      return { cred: s.credibility, trust: s.trust, notes: s.notifications.length, flags: s.flags, endings: s.endings }; });
+      return { cred: s.credibility, trust: s.trust, notes: s.notifications.length, flags: s.flags, endings: s.endings, views: s.sourceViews }; });
+    assert.equal(world4.views[MIKE.source].trust, 'unsure');
+    assert.equal(world4.views[TRUTH.source], undefined, 'a set-aside source was never written to');
+    delete world4.views;
     assert.deepEqual(world4, { cred: g4.s.credibility, trust: g4.s.trust, notes: g4.s.notifications.length, flags: g4.s.flags, endings: g4.s.endings });
     assert.deepEqual(errors, []);
     await p4.close();
-    console.log('PASS mobile 390×844 step 4: Sources list, source card (trust, who it claims, taking an answer back), same origin as with search, comment, questions on the card, connection ties shown, theory "3 sources (1 in your count)", source chip and evidence Source row open the card, removing "same as", reload, world unchanged');
+    console.log('PASS mobile 390×844 step 4: Sources list, source card ("Unsure" an answer, not "Not answered"; taking it back), same origin as with search, comment, questions on the card, the connections that join a card shown and removed from it (answer kept, count recomputed), indirect group "via", set-aside evidence keeps the card, theory "3 sources · 1 in your count", source chip and evidence Source row open the card, removing "same as", reload, world unchanged');
   }
 
   const snapshots = [];
@@ -610,13 +664,21 @@ try {
       const answers = ['yes', 'unsure', 'no', null];
       vis.forEach((key, i) => g.assessSource(key, { trust: answers[i % 4], authentic: answers[(i + 1) % 4], note: i % 3 ? 'My read' : '' }));
       for (let i = 0; i + 1 < vis.length; i += 3) g.linkSources(vis[i], vis[i + 1]);
+      for (let i = 0; i + 2 < vis.length; i += 7) g.linkSources(vis[i + 1], vis[i + 2]);
+      // Set aside all evidence from a few sources: their cards stay.
+      for (const key of vis.filter((_, i) => i % 11 === 5)) for (const e of g.s.evidence) if (g.evidenceAbout(e.id)?.source === key) g.editEvidence(e.id, { shelf: 'finished' });
       phone.replaceTop({ kind: 'sources' }); result.screens.push(dom());
       for (const key of vis) { phone.replaceTop({ kind: 'source', key }); result.screens.push(dom()); }
       phone.replaceTop({ kind: 'source', key: vis[0] }); click('Choose source'); result.screens.push(overlay()); phone.closeOverlay();
+      // The connections that join a card open in the connection editor from the card.
+      const merged = g.sources().filter(c => c.viaLinks.length);
+      for (const c of merged.slice(0, 10)) { phone.replaceTop({ kind: 'source', key: c.key }); document.querySelector('.src-via .link-row').click(); result.screens.push(dom()); }
       phone.replaceTop({ kind: 'main', tab: 'theories', showRejected: true }); result.screens.push(dom());
       for (const hy of g.s.hypotheses) { phone.replaceTop({ kind: 'hyp', id: hy.id }); result.screens.push(dom()); }
       for (const id of ev.slice(0, 30)) { phone.replaceTop({ kind: 'evidence', id }); result.screens.push(dom()); }
-      result.step4 = [vis.length, g.sources().filter(c => c.group.length).length, g.casebook().hypotheses.filter(h => h.ownSourceCount !== h.sourceCount).length];
+      const cards = g.sources();
+      result.step4 = [vis.length, cards.filter(c => c.group.length).length, g.casebook().hypotheses.filter(h => h.ownSourceCount !== h.sourceCount).length,
+        cards.filter(c => c.group.some(x => !x.direct)).length, merged.length, cards.filter(c => c.setAside && c.setAside === c.evidence.length).length];
       // The same Save action used by text selection must produce evidence, not a note.
       const e = g.s.evidence.find(e => e.artifact && !e.quote && !e.image);
       const notes = g.s.notes.length;
@@ -630,9 +692,10 @@ try {
   assert.ok(snapshots[0].step2[1] > 10, 'questions in the twin DOM test');
   assert.ok(snapshots[0].step3[0] > 50 && snapshots[0].step3[2] > 0, 'connections and page versions in the twin DOM test');
   assert.ok(snapshots[0].step4[0] > 20 && snapshots[0].step4[1] > 0 && snapshots[0].step4[2] > 0, 'source cards, groups and own counts in the twin DOM test');
+  assert.ok(snapshots[0].step4[3] > 0 && snapshots[0].step4[4] > 0 && snapshots[0].step4[5] > 0, 'indirect groups, joining connections and set-aside sources in the twin DOM test');
   assert.ok(snapshots.every(s => s.quoteSaved));
   assert.deepEqual(snapshots[1], snapshots[0], 'merged hidden origins must not change DOM');
   assert.deepEqual(snapshots[2], snapshots[0], 'split hidden origins must not change DOM');
   assert.deepEqual(errors, []);
-  console.log(`PASS twin DOM: ${snapshots[0].count} evidence cards plus every filter/group, ${snapshots[0].step2[0]} theories, ${snapshots[0].step2[1]} questions and their search pickers, ${snapshots[0].step3[0]} connections, ${snapshots[0].step3[1]} comparisons (${snapshots[0].step3[2]} page versions), ${snapshots[0].step4[0]} source cards (${snapshots[0].step4[1]} in a group of your own) and the Sources picker, identical text, CSS classes, controls`);
+  console.log(`PASS twin DOM: ${snapshots[0].count} evidence cards plus every filter/group, ${snapshots[0].step2[0]} theories, ${snapshots[0].step2[1]} questions and their search pickers, ${snapshots[0].step3[0]} connections, ${snapshots[0].step3[1]} comparisons (${snapshots[0].step3[2]} page versions), ${snapshots[0].step4[0]} source cards (${snapshots[0].step4[1]} in a group of your own, ${snapshots[0].step4[3]} indirectly, ${snapshots[0].step4[4]} joined by connections opened from the card, ${snapshots[0].step4[5]} with all evidence set aside) and the Sources picker, identical text, CSS classes, controls`);
 } finally { await browser?.close(); await new Promise(r => server.close(r)); }

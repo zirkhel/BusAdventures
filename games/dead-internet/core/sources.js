@@ -103,40 +103,60 @@ export function ownCount(g, ids) {
 /** One source card: what the player sees and what they said. Only for a visible source. */
 export function sourceCard(g, key) { return card(g, key, context(g)); }
 
-/** What every card needs once: visible sources, the player's groups, each evidence's source. */
+/**
+ * What every card needs once: visible sources, each evidence's source, and the player's own
+ * "same origin" graph between visible sources, with where each edge comes from: the card
+ * answers (`sameAs`) or "Same origin" links between evidence (`links`, by link id).
+ */
 function context(g) {
   const vis = visible(g);
   const srcOf = new Map();
   for (const x of vis.values()) for (const id of x.evidence) srcOf.set(id, x.key);
-  return { vis, groups: playerGroups(g, vis), srcOf };
+  /** @type {Map<string, Map<string, {sameAs:boolean, links:string[]}>>} */
+  const edges = new Map([...vis.keys()].map(k => [k, new Map()]));
+  const edge = (a, b) => {
+    if (!vis.has(a) || !vis.has(b) || a === b) return null;
+    for (const [x, y] of [[a, b], [b, a]]) if (!edges.get(x).has(y)) edges.get(x).set(y, { sameAs: false, links: [] });
+    return [edges.get(a).get(b), edges.get(b).get(a)];
+  };
+  for (const [key, v] of Object.entries(g.s.sourceViews || {})) for (const other of asArray(v.sameAs)) edge(key, other)?.forEach(e => { e.sameAs = true; });
+  for (const l of g.s.links || []) if (l.kind === "same_origin") edge(srcOf.get(l.a), srcOf.get(l.b))?.forEach(e => { if (!e.links.includes(l.id)) e.links.push(l.id); });
+  return { vis, groups: playerGroups(g, vis), srcOf, edges };
 }
 
-function card(g, key, { vis, groups, srcOf }) {
+/** Shortest path from `key` to every source in its group: the sources it goes through. */
+function pathsFrom(edges, key) {
+  const via = new Map([[key, []]]);
+  const queue = [key];
+  while (queue.length) {
+    const k = /** @type {string} */ (queue.shift());
+    for (const n of [...edges.get(k).keys()].sort()) if (!via.has(n)) { via.set(n, k === key ? [] : [...via.get(k), k]); queue.push(n); }
+  }
+  return via;
+}
+
+function card(g, key, { vis, groups, edges }) {
   const src = vis.get(key);
   if (!src) return { error: "unknown_source" };
   const v = viewOf(g, key) ?? blank();
   const label = k => vis.get(k)?.label ?? null;
-  // "Same origin" links between this source's evidence and another source's evidence.
-  const viaLinks = new Map();
-  for (const l of g.s.links || []) {
-    if (l.kind !== "same_origin") continue;
-    const ends = [l.a, l.b].map(id => srcOf.get(id) ?? null);
-    const i = ends.indexOf(key);
-    if (i < 0) continue;
-    const other = ends[1 - i];
-    if (!other || other === key) continue;
-    if (!viaLinks.has(other)) viaLinks.set(other, []);
-    viaLinks.get(other).push(l.id);
-  }
+  const mine = edges.get(key);
+  // "Same origin" links between this source's evidence and another source's evidence. They
+  // join the two in the player's count, but never write to the card's own "same origin as".
+  const viaLinks = [...mine].filter(([, e]) => e.links.length).map(([k, e]) => ({ key: k, label: label(k), links: [...e.links] }))
+    .sort((a, b) => String(a.label).localeCompare(String(b.label)) || a.key.localeCompare(b.key));
+  const via = pathsFrom(edges, key);
   const group = [...vis.keys()].filter(k => k !== key && groups.get(k) === groups.get(key)).sort();
+  const setAside = src.evidence.filter(id => g.s.evidence.find(e => e.id === id)?.shelf).length;
   return {
-    key, label: src.label, evidence: [...src.evidence],
+    key, label: src.label, evidence: [...src.evidence], setAside,
     trust: v.trust ?? null, authentic: v.authentic ?? null, note: v.note ?? "",
     day: v.day ?? null, edited: v.edited ?? null,
     sameAs: asArray(v.sameAs).filter(k => vis.has(k)).map(k => ({ key: k, label: label(k) })),
-    viaLinks: [...viaLinks].map(([k, links]) => ({ key: k, label: label(k), links })),
-    // Everything the player's answers and links put in one group with this source.
-    group: group.map(k => ({ key: k, label: label(k) })),
+    viaLinks,
+    // Everything the player's answers and links put in one group with this source. A source
+    // that is only joined through others is indirect, and `via` names the sources between.
+    group: group.map(k => { const p = via.get(k) ?? []; return { key: k, label: label(k), direct: mine.has(k), via: p.map(x => ({ key: x, label: label(x) })) }; }),
     questions: (g.s.questions || []).filter(q => asArray(q.links?.sources).includes(key)).map(q => q.id),
     assessed: !!(v.trust || v.authentic || v.note || asArray(v.sameAs).length),
   };
