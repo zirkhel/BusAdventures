@@ -825,3 +825,20 @@ h2.np-head { font-size: 23px; }
 .src-via { margin: 4px 0 8px; }
 .src-via > .src-chip { margin: 0 16px 4px; }
 .src-members .src-chip.indirect { background: transparent; border: 1px dashed var(--ink2); }
+
+/* Casebook step 5: the player's own basis in the report builder and in a report's snapshot. */
+.check-row .basis, .check-row .basis-res { display: block; }
+.check-row .basis-res { color: var(--ink2); font-style: italic; }
+.review-own { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+.review-own-head { margin-bottom: 4px; }
+.review-sep { margin-top: 6px; }
+.rep-snap { margin-top: 6px; }
+.rep-snap summary { cursor: pointer; font-size: 13px; color: var(--ink2); }
+.rep-snap-body { padding: 4px 0; }
+.snap-item { padding: 6px 16px; }
+.report-done .rep-snap-body .hint { padding: 0 16px; }
+.snap-res { font-style: italic; }
+.unready-row .ico { width: 18px; height: 18px; color: var(--ink2); flex: none; }
+.unready-row .chev { color: var(--ink2); margin-left: auto; }
+.rep-row .snap-item { padding: 4px 0; }
+.rep-row .rep-snap-body .hint { padding: 0; }

@@ -802,7 +802,7 @@ export function casebookApp(phone) {
       h("div.tl-date", fmtEventDate(ev.date)),
       h("div.tl-dot", { class: ev.date.kind }),
       h("div.tl-main", h("b", ev.title),
-        h("div.muted.tl-counts", [ev.supports ? `${ev.supports} supporting` : "", ev.contradicts ? `${ev.contradicts} contradicting` : "",
+        h("div.muted.tl-counts", [ev.supports ? `${ev.supports} supporting · ${plural(ev.supportSources, "source", "sources")}${ownPart(ev.supportSources, ev.ownSupportSources)}` : "", ev.contradicts ? `${ev.contradicts} contradicting` : "",
           ev.theories.length ? `${ev.theories.length} ${ev.theories.length === 1 ? "theory" : "theories"}` : ""].filter(Boolean).join(" · ") || "No evidence attached")));
     return [h("button.new-msg", { onclick: () => phone.newEvent({}) }, icon("plus"), "New event"),
       list.length ? [h("div.tl", dated.map(row)), undated.length ? [h("div.section-title", "No date"), h("div.tl.undated", undated.map(row))] : null] :
@@ -847,6 +847,7 @@ export function casebookApp(phone) {
       ev.source ? sourceLink(ev.source) : null,
       h("div.hint.muted", "Your reconstruction. Nothing here is checked against what really happened."),
       h("div.section-title", `Supporting evidence (${sup.length})`),
+      sup.length ? h("div.hint.muted.tl-own", `${plural(ev.supportSources, "source", "sources")}${ownPart(ev.supportSources, ev.ownSupportSources)}${ev.ownSupportSources !== ev.supportSources ? " (after your “same origin” answers and connections)" : ""}`) : null,
       sup.length ? sup.map(e => evItem(e, { toggle: stanceMenu(e) })) : null,
       h("div.section-title", `Contradicting evidence (${con.length})`),
       con.length ? con.map(e => evItem(e, { toggle: stanceMenu(e) })) : null,
@@ -955,6 +956,28 @@ export function casebookApp(phone) {
   // Endings are developments in the case, not a "game over": each shows the day it happened.
   const epilogue = e => h("div.epilogue", h("div.muted.small", e.day ? `Day ${e.day}` : ""), h("b", e.title || "A development"), e.epilogue ? h("p", e.epilogue) : null);
 
+  // ── The player's own basis for a claim (step 5) ────────────────────────
+  // Counts and the player's own reservations, never an assessment. Used in the report builder, in a
+  // published report's snapshot and in the Timeline. "in your count" always marks the player's own count.
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const ownPart = (visible, own) => own !== visible ? ` · ${own} in your count` : "";
+  const basisOf = hy => ({ evidence: hy.evidenceCount, against: hy.againstCount, sources: hy.sourceCount, own: hy.ownSourceCount,
+    notTrusted: hy.notTrustedFor, notAuthentic: hy.notAuthenticFor, status: hy.status });
+  const basisLine = b => `${b.evidence} for · ${b.against} against · ${plural(b.sources, "source", "sources")}${ownPart(b.sources, b.own)}`;
+  const reservations = b => [b.status === "rejected" ? "You rejected this theory" : "", b.notTrusted ? `You don't trust ${b.notTrusted}` : "",
+    b.notAuthentic ? `You doubt ${b.notAuthentic} ${b.notAuthentic === 1 ? "is" : "are"} who ${b.notAuthentic === 1 ? "it claims" : "they claim"} to be` : ""].filter(Boolean).join(" · ");
+  const eventLine = e => [`${e.supporting ?? e.supports} supporting`, `${plural(e.supportSources, "source", "sources")}${ownPart(e.supportSources, e.ownSupportSources)}`,
+    (e.contradicting ?? e.contradicts) ? `${e.contradicting ?? e.contradicts} contradicting` : ""].filter(Boolean).join(" · ");
+  /** A report's snapshot of the player's Casebook when it went out. Older reports have none. */
+  function snapshotBlock(snap) {
+    if (!snap) return h("div.muted.small.pad", "Published before reports kept your Casebook's counts.");
+    return h("div.rep-snap-body",
+      snap.theories.map(t => h("div.snap-item", h("b", `“${t.claimLabel}”`), h("div.muted.small", basisLine(t)),
+        reservations(t) ? h("div.muted.small.snap-res", reservations(t)) : null, snap.cut.includes(t.hypothesis) ? h("div.muted.small", "Cut before publishing") : null)),
+      snap.events.map(e => h("div.snap-item", h("b", e.title), h("div.muted.small", `${fmtEventDate(e.date)} · ${eventLine(e)}`))),
+      h("div.hint.muted", `Your own counts and reservations on day ${snap.day}. They stay as they were when you revise your theories.`));
+  }
+
   function reportsScreen() {
     const ends = g.endings(), reps = g.casebook().reports;
     return [
@@ -973,7 +996,8 @@ export function casebookApp(phone) {
         h("div.muted.small", `Day ${r.day} · ${chName(r.channel)} · ${caseTitle(r.case)}`),
         r.items.map(i => h("div.rep-item", `“${i.label}”`)),
         r.events.length ? h("div.muted.small", `${r.events.length} timeline ${r.events.length === 1 ? "event" : "events"}`) : null,
-        r.cut.length ? h("div.muted.small", `Cut before publishing: ${r.cut.join("; ")}`) : null)) :
+        r.cut.length ? h("div.muted.small", `Cut before publishing: ${r.cut.join("; ")}`) : null,
+        h("details.rep-snap", h("summary", "Your Casebook when you published"), snapshotBlock(r.snapshot)))) :
         h("div.empty.muted", "Nothing published yet. A report goes out under your name, and people will react to it.")];
   }
 
@@ -981,7 +1005,7 @@ export function casebookApp(phone) {
     const cid = desc.case;
     const chans = g.channels(cid);
     const ch = chans.find(c => c.id === desc.channel);
-    const set = patch => phone.replaceTop({ ...desc, review: null, ...patch });
+    const set = patch => phone.replaceTop({ ...desc, review: null, notes: null, ...patch });
     // Grouped by the player's own classification. Every item can be picked, classified or not.
     const group = items => [[`In ${caseTitle(cid)}`, items.filter(x => (x.cases || []).includes(cid))], ["Unclassified", items.filter(x => !(x.cases || []).length)],
       ["Other cases", items.filter(x => (x.cases || []).length && !x.cases.includes(cid))]].filter(([, l]) => l.length);
@@ -989,15 +1013,18 @@ export function casebookApp(phone) {
       h("span.box", on ? icon("check") : null), h("div.pi-main", h("b", label), sub ? h("div.muted", sub) : null));
     const tog = (key, id) => set({ [key]: desc[key].includes(id) ? desc[key].filter(x => x !== id) : [...desc[key], id] });
     // Only theories with a claim can be published. Theories in the player's own words stay in the Casebook.
-    const all = g.casebook().hypotheses, hyps = all.filter(hy => hy.structured), unready = all.length - hyps.length, evs = g.timeline();
+    const all = g.casebook().hypotheses, hyps = all.filter(hy => hy.structured), unready = all.filter(hy => !hy.structured), evs = g.timeline();
     const reviewer = ch?.reviewer ? phone.contactName(ch.reviewer) : null;
     const ready = !!ch && desc.hyps.length > 0;
-    const ask = () => { const r = g.review(ch.id, desc.hyps, { case: cid }); phone.replaceTop({ ...desc, review: r.lines || [] }); };
+    // Dana's comment on how the sources look (review), and her notes on what the player has marked
+    // themselves (editorNotes). Both are advice before publishing; neither decides what publishing does.
+    const ask = () => { const r = g.review(ch.id, desc.hyps, { case: cid }); const n = g.editorNotes(ch.id, desc.hyps);
+      phone.replaceTop({ ...desc, review: r.lines || [], notes: n.notes || [] }); };
     const publish = () => phone.sheet(`Publish ${desc.hyps.length} ${desc.hyps.length === 1 ? "claim" : "claims"} through ${ch.name}? You can't take it back.`, [{ label: "Publish", run: () => {
       const n0 = g.s.notifications.length, e0 = g.s.endings.length;
       const r = g.publish(ch.id, desc.hyps, { case: cid, events: desc.events });
       if (r.error) { phone.toast(REPORT_ERRORS[r.error] || r.error); return; }
-      if (r.refused) { phone.replaceTop({ ...desc, review: r.lines }); phone.toast("Nothing was published."); return; }
+      if (r.refused) { phone.replaceTop({ ...desc, review: r.lines, notes: null }); phone.toast("Nothing was published."); return; }
       phone.replaceTop({ kind: "reportDone", id: r.report.id, n0, e0 });
     } }]);
     return h("div.builder.report",
@@ -1005,14 +1032,19 @@ export function casebookApp(phone) {
       h("label.field-label", "Where"),
       h("div.sources", chans.map(c => h("button.chip", { class: c.id === desc.channel ? "on" : "", onclick: () => set({ channel: c.id }) }, c.name))),
       h("label.field-label", `Claims (${desc.hyps.length})`),
-      hyps.length ? group(hyps).map(([t, l]) => [h("div.field-label.sub", t), l.map(hy => row(desc.hyps.includes(hy.id), hy.claimLabel,
-        `${hy.evidenceCount} evidence · ${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"}`, () => tog("hyps", hy.id)))]) :
+      hyps.length ? group(hyps).map(([t, l]) => [h("div.field-label.sub", t), l.map(hy => { const b = basisOf(hy), res = reservations(b);
+        return row(desc.hyps.includes(hy.id), hy.claimLabel, [h("span.basis", basisLine(b)), res ? h("span.basis-res", res) : null], () => tog("hyps", hy.id)); })]) :
         h("div.muted.small", "Build a theory with a claim first. Each theory you pick becomes a claim."),
-      unready ? h("div.muted.small", `${unready} ${unready === 1 ? "theory is" : "theories are"} only in your own words. Add a claim to publish ${unready === 1 ? "it" : "them"}.`) : null,
+      hyps.length ? h("div.hint.muted", "Your own counts and doubts, from your Casebook. Nobody checks them, and they go with the report as a snapshot.") : null,
+      unready.length ? [h("div.field-label.sub", `In your own words only (${unready.length})`),
+        unready.map(hy => h("button.hist-row.unready-row", { onclick: () => phone.push("casebook", { kind: "hyp", id: hy.id }) }, icon("book"),
+          h("div.pi-main", h("b", hy.label), h("div.muted", `${basisLine(basisOf(hy))} · add a claim to publish it`)), h("span.chev", "›")))] : null,
       h("label.field-label", `Timeline events (${desc.events.length})`),
-      evs.length ? group(evs).map(([t, l]) => [h("div.field-label.sub", t), l.map(ev => row(desc.events.includes(ev.id), ev.title, fmtEventDate(ev.date), () => tog("events", ev.id)))]) :
+      evs.length ? group(evs).map(([t, l]) => [h("div.field-label.sub", t), l.map(ev => row(desc.events.includes(ev.id), ev.title, `${fmtEventDate(ev.date)} · ${eventLine(ev)}`, () => tog("events", ev.id)))]) :
         h("div.muted.small", "Optional. Events you pick go in as you wrote them."),
-      desc.review ? h("div.review", h("div.review-who", `${reviewer || "Review"}:`), desc.review.map(l => h("p", l.text))) : null,
+      desc.review ? h("div.review", h("div.review-who", `${reviewer || "Review"}:`), desc.review.map(l => h("p", l.text)),
+        desc.notes?.length ? h("div.review-own", h("div.muted.small.review-own-head", "On what you've marked yourself:"), desc.notes.map(l => h("p", { "data-kind": l.kind }, l.text))) : null) : null,
+      desc.review && reviewer ? h("div.hint.muted.review-sep", `${reviewer}'s advice before you publish. It doesn't decide what happens: once it's out, the world reacts to what you published.`) : null,
       reviewer ? h("button.btn.wide", { disabled: !ready, onclick: ask }, icon("chat"), ` Ask ${reviewer} first`) : null,
       h("button.btn.primary.wide", { disabled: !ready, onclick: publish }, "Publish"));
   }
@@ -1027,6 +1059,7 @@ export function casebookApp(phone) {
       h("div.section-title", "Claims"), r.items.map(i => h("div.rep-item.pad", `“${i.label}”`)),
       r.cut.length ? [h("div.section-title", "Cut before publishing"), r.cut.map(l => h("div.rep-item.pad.muted", `“${l}”`))] : null,
       r.events.length ? [h("div.section-title", "Timeline events"), r.events.map(e => h("div.rep-item.pad", `${fmtEventDate(e.date)} · ${e.title}`))] : null,
+      h("div.section-title", "Your Casebook when you published"), snapshotBlock(r.snapshot),
       h("div.section-title", "Reactions"),
       reactions.length ? reactions.map(n => h("div.reaction", n.text)) : h("div.muted.pad", "Nothing yet. Reactions can take a day."),
       ends.map(epilogue),
