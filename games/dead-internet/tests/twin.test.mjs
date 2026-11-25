@@ -147,7 +147,7 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   assert.deepEqual(a._hiddenInViews, [], "artifact views carry no hidden source, supports or mentions");
   assert.ok(a.evidence.length > 100, "the player saved enough to make the comparison meaningful");
   assert.ok(a.casebook.links.length > 300 && a.casebook.links.some(l => l.directed) && a.compare.length > 250 && a.compare.some(c => c.samePage && c.changes?.text.some(x => x.op !== "same")), "step 3 links and comparisons are part of the comparison");
-  assert.ok(a.archive.filter(x => x.ar.canCompare).length >= 10 && a.archive.some(x => x.ar.status === "deleted"), "W8 Archive views are part of the comparison");
+  assert.ok(a.archive.filter(x => x.ar.canCompare).length >= 12 && a.archive.some(x => x.ar.status === "deleted"), "W8 Archive views are part of the comparison");
   assert.deepEqual(a.archive.flatMap(x => x.pairs).filter(c => c.error || c.items.some(i => i.error)), [], "every Archive pair compares");
   assert.deepEqual(a.compare.filter(c => c.error || c.items.some(x => x.error)), [], "every comparison in the twin test is valid");
   assert.ok(a.compare.every(c => c.items.every(x => !("supports" in x) && !("mentions" in x) && !("source" in x && typeof x.source !== "string"))), "comparison items carry no hidden fields");

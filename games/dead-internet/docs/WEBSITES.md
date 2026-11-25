@@ -375,7 +375,7 @@ Vaktliste for Harbor Festival 2025, kakesalg i foreldreforeningen, bordkart til 
 - *Lekkasjevern:* Browser skal ikke sende noe annet enn referanser. Alt som vises, kommer fra `compareView`, som tvillingtesten dekker.
 - *Test:* `tools/test-casebook-ui.mjs` har en W8-test («PASS W8 hook») som kaller `phone.compare()` med to versjoner av Kestrels «About»-side. W8 la til `tools/test-browser-archive-ui.mjs` for selve Archive-skjermen.
 
-**Levert i W8 (25. nov 2026, greina `websites-w8`):** Archive-skjermen i Browser, `core/archive.js` (`archiveView`, `archivePair`), inngangene (stripe, banner, «All copies in Archive», «Other versions»), tester og tvillingdekning. Ingen ny kanon, ingen nye arkivkopier og ingen nye bilder: de eksisterende sidene med cache gir 14 sider med to kopier å sammenligne (bl.a. Kestrel forside og «About» 2014, Brightline Team 2024, Eastfield Notes forside og «waterfront»-innlegget, bibliotekets ansattside, fem oppdaterte Daily Record-saker). Se DESIGN.md, «Archive i Browser (W8)».
+**Levert i W8 (25. nov 2026, greina `websites-w8`):** Archive-skjermen i Browser, `core/archive.js` (`archiveView`, `archivePair`), inngangene (stripe, banner, «All copies in Archive», «Other versions»), tester og tvillingdekning. Ingen ny kanon, ingen nye arkivkopier og ingen nye bilder: de eksisterende sidene med cache gir 12 sider med to kopier å sammenligne (Kestrel forside og «About» 2014, Brightline Team 2024, Eastfield Notes forside og «waterfront»-innlegget, bibliotekets ansattside og seks oppdaterte Daily Record-saker). Se DESIGN.md, «Archive i Browser (W8)».
 
 ### 9.2 Nettsidedesign som spor (punkt 7)
 
