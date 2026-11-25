@@ -38,14 +38,14 @@
  },
  "review": {
   "dana": {
-   "noTrust": "I don't know you. Show me you know something first.",
+   "noTrust": "I don't go through sources for people I don't know yet, so I won't review this. Show me you know something about this story first.",
    "strong": "\"{claim}\": two independent sources. I can stand behind that.",
    "weak": "\"{claim}\": one source. That's a lead, not a story. Find me a second, independent one.",
    "none": "\"{claim}\": nothing you've shown me backs this up. Cut it or find something.",
    "bold": "\"{claim}\": that's a big claim. Big claims need more than this.",
    "own": {
     "rejected": "\"{claim}\": you've rejected this theory yourself. Why put it out under your name?",
-    "against": "\"{claim}\": you've linked {against} against it yourself. Tell me why that doesn't sink it before it goes out.",
+    "against": "\"{claim}\": you've linked {against} against it yourself. I won't pick a side for you, but readers will want to see that you weighed it.",
     "ownCount": "\"{claim}\": you've marked some of these as the same origin yourself. By your own count that's {own}, not {visible}.",
     "notTrusted": "\"{claim}\": you told me you don't trust {notTrusted} behind it. If you don't, why should readers?",
     "notAuthentic": "\"{claim}\": you doubt {notAuthentic}. Don't lean on it until you know."
@@ -120,7 +120,7 @@
    },
    "compare": {
     "title": "Comparing",
-    "text": "Put two or three things side by side. The differences are shown; what they mean is up to you. Connect two pieces when you see how they relate."
+    "text": "Compare text, details or images. Differences are shown without judging what they mean. Any connections you add record your own interpretation."
    },
    "report": {
     "title": "Publishing",

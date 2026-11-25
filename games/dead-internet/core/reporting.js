@@ -21,6 +21,7 @@ import { asArray, fill } from "./util.js";
 import { str } from "./world.js";
 import { ownCount } from "./sources.js";
 import { isStructured, theoryLabel, hypothesisLabel } from "./casebook.js";
+import { savedArtifactView } from "./artifacts.js";
 
 const has = (g, id) => g.s.evidence.some(e => e.id === id);
 const n = (k, one, many) => k === 1 ? one : many.replace("{n}", String(k));
@@ -46,11 +47,40 @@ export function eventBasis(g, ev) {
     supportSources: s.sources, ownSupportSources: s.own, contradictSources: c.sources, ownContradictSources: c.own };
 }
 
+/**
+ * What a piece of evidence was, frozen as the player saw it: the saved page's title, the quote
+ * they picked, or which conversation or picture it is (both fixed content). Visible fields only.
+ */
+function evidenceRef(g, e) {
+  if (e.quote) return { quote: String(e.quote.text ?? "") };
+  if (e.message) { const m = g.s.messages.find(x => x.id === e.message); return { thread: m?.thread ?? null }; }
+  if (e.image) return { image: e.image };
+  const v = savedArtifactView(g, e.id);
+  return { title: v.error ? String(e.artifact) : String(v.title ?? e.artifact) };
+}
+
+/**
+ * The player's own words behind a theory, frozen: what they wrote, their note, and for each piece
+ * of evidence they linked, which way, what it was and their note on it, plus the connections they
+ * drew between those pieces with their reasons (Anders, 25.11.2026: the snapshot freezes wording,
+ * comments and reasons, so a historical report never changes when the Casebook is edited later).
+ */
+function theoryWords(g, h) {
+  const linked = [...asArray(h.evidence).map(id => [id, "for"]), ...asArray(h.against).map(id => [id, "against"])]
+    .map(([id, stance]) => [g.s.evidence.find(e => e.id === id), stance]).filter(([e]) => e);
+  const ids = new Set(linked.map(([e]) => e.id));
+  return { words: String(h.title ?? ""), note: String(h.note ?? ""),
+    reasons: linked.map(([e, stance]) => ({ evidence: e.id, stance, ...evidenceRef(g, e), note: String(e.note ?? "") })),
+    connections: asArray(g.s.links).filter(l => ids.has(l.a) && ids.has(l.b))
+      .map(l => ({ kind: l.kind, a: l.a, b: l.b, note: String(l.note ?? "") })) };
+}
+
 /** What the player's Casebook said about a report's claims and events. Stored with the report. */
 export function reportBasis(g, hypIds, eventIds = []) {
   const hyps = asArray(hypIds).map(id => g.s.hypotheses.find(h => h.id === id)).filter(isStructured);
   const evs = asArray(eventIds).map(id => (g.s.timeline || []).find(e => e.id === id)).filter(Boolean);
-  return { day: g.s.day, theories: hyps.map(h => theoryBasis(g, h)), events: evs.map(ev => eventBasis(g, ev)) };
+  return { day: g.s.day, theories: hyps.map(h => ({ ...theoryBasis(g, h), ...theoryWords(g, h) })),
+    events: evs.map(ev => ({ ...eventBasis(g, ev), description: String(ev.description ?? "") })) };
 }
 
 /**

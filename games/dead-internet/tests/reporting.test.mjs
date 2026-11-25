@@ -95,7 +95,10 @@ test("a report keeps a snapshot of the player's Casebook, and it doesn't change 
   const snap = rep.snapshot;
   assert.deepEqual({ ...snap, cut: undefined }, { ...preview, cut: undefined }, "the builder shows what the report will store");
   assert.deepEqual(snap.theories[0], { hypothesis: h, label: "Mara Quinn is dead", claimLabel: "Mara Quinn is dead", status: "open",
-    evidence: 3, against: 1, sources: 3, own: 2, againstSources: 1, ownAgainst: 1, notTrusted: 1, notAuthentic: 0 });
+    evidence: 3, against: 1, sources: 3, own: 2, againstSources: 1, ownAgainst: 1, notTrusted: 1, notAuthentic: 0,
+    words: "", note: "", connections: [],
+    reasons: [ev[1], ev[2], ev[3], ev[0]].map((id, k) => ({ evidence: id, stance: k < 3 ? "for" : "against", title: g.evidenceView(id).title, note: "" })) });
+  assert.equal(snap.events[0].description, "");
   assert.deepEqual([snap.events[0].supporting, snap.events[0].supportSources, snap.events[0].ownSupportSources, snap.events[0].contradicting], [2, 2, 1, 1]);
   assert.deepEqual(snap.cut, []);
   // Revising the theory and the source cards afterwards doesn't rewrite the report.
@@ -104,6 +107,49 @@ test("a report keeps a snapshot of the player's Casebook, and it doesn't change 
   assert.deepEqual(g.casebook().reports.at(-1).snapshot, snap);
   // And it replays exactly.
   assert.deepEqual(replay(g.w, { seed: 7 }, g.s.log).s.reports, g.s.reports);
+});
+
+test("historical reports never change when the player later edits the Casebook; published and cut are kept apart", async () => {
+  const { g, ev, h } = await fixture();
+  // A second claim on Mara with two other visible sources, so The Daily Record publishes one and cuts the other.
+  const more = ["A06", "A17"].map(id => { g.s.artifacts[id] = { ...g.s.artifacts[id], visible: true }; g.open(id); return g.save({ artifact: id }).id; });
+  const strong = g.hypothesize({ subject: "mara", predicate: "is_dead", title: "The death notice is real", note: "Dana wrote it herself", evidence: more }).id;
+  g.dispatch({ type: "updateHypothesis", id: h, patch: { title: "The friends say so", note: "Three friends, same week" } });
+  g.editEvidence(ev[1], { note: "Mike sounds sure" });
+  g.addLink({ a: ev[1], b: ev[2], kind: "related", note: "Same wording" });
+  g.link(h, ev[0], true, "contradicts");
+  const t = g.addEvent({ title: "The post", description: "What the friends wrote", date: { kind: "exact", value: "2025-07-02" }, evidence: [{ id: ev[1], stance: "supports" }] });
+  const r = g.publish("daily_record", [strong, h], { events: [t.id] });
+  assert.ok(r.ok, "one claim gets through");
+  assert.deepEqual(r.report.cut, [h], "the other is cut by the editor");
+  const before = structuredClone(g.casebook().reports.at(-1));
+  const snap = before.snapshot;
+  const theory = id => snap.theories.find(x => x.hypothesis === id);
+  assert.deepEqual(snap.cut, [h]);
+  assert.deepEqual([theory(strong).words, theory(strong).note, theory(h).words, theory(h).note],
+    ["The death notice is real", "Dana wrote it herself", "The friends say so", "Three friends, same week"]);
+  assert.equal(theory(h).reasons.find(x => x.evidence === ev[1]).note, "Mike sounds sure");
+  assert.deepEqual(theory(h).reasons.find(x => x.evidence === ev[0]).stance, "against");
+  assert.deepEqual(theory(h).connections, [{ kind: "related", a: ev[1], b: ev[2], note: "Same wording" }]);
+  assert.equal(snap.events[0].description, "What the friends wrote");
+  assert.deepEqual(before.items.map(i => i.label), ["Mara Quinn is dead"]);
+  assert.deepEqual(before.cut, ["Mara Quinn is dead"]);
+  // Now the player rewrites everything behind it.
+  g.investigate("theo");
+  const l = g.s.links.find(x => x.a === ev[1] && x.b === ev[2]);
+  for (const [what, res] of [
+    ["reword", g.dispatch({ type: "updateHypothesis", id: strong, patch: { title: "Not so sure", note: "" } })],
+    ["change the claim", g.dispatch({ type: "updateHypothesis", id: h, patch: { subject: "theo", predicate: "is_dead" } })],
+    ["evidence note", g.editEvidence(ev[1], { note: "Changed" })],
+    ["connection", g.dispatch({ type: "updateLink", id: l.id, patch: { note: "Never mind", kind: "unrelated" } })],
+    ["event", g.dispatch({ type: "updateEvent", id: t.id, patch: { title: "Renamed", description: "Rewritten" } })],
+    ["status", g.setTheoryStatus(strong, "rejected")],
+    ["source card", g.assessSource(MIKE, { trust: "no" })],
+    ["unlink", g.link(strong, more[0], false)],
+    ["delete", g.dispatch({ type: "deleteHypothesis", id: h })],
+  ]) assert.ok(res.ok, `fixture: ${what} (${JSON.stringify(res)})`);
+  assert.equal(g.s.hypotheses.find(x => x.id === strong).title, "Not so sure");
+  assert.deepEqual(g.casebook().reports.at(-1), before, "the report reads exactly as it did when it went out");
 });
 
 test("timeline events show the player's own count next to the visible sources", async () => {

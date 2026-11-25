@@ -963,19 +963,42 @@ export function casebookApp(phone) {
   const ownPart = (visible, own) => own !== visible ? ` · ${own} in your count` : "";
   const basisOf = hy => ({ evidence: hy.evidenceCount, against: hy.againstCount, sources: hy.sourceCount, own: hy.ownSourceCount,
     notTrusted: hy.notTrustedFor, notAuthentic: hy.notAuthenticFor, status: hy.status });
-  const basisLine = b => `${b.evidence} for · ${b.against} against · ${plural(b.sources, "source", "sources")}${ownPart(b.sources, b.own)}`;
+  // "marked as supporting by you": the player's own linking, not anyone's judgement (Anders, 25.11.2026, point 9).
+  const basisLine = b => `${b.evidence} marked as supporting by you · ${b.against} marked against · ${plural(b.sources, "source", "sources")}${ownPart(b.sources, b.own)}`;
   const reservations = b => [b.status === "rejected" ? "You rejected this theory" : "", b.notTrusted ? `You don't trust ${b.notTrusted}` : "",
     b.notAuthentic ? `You doubt ${b.notAuthentic} ${b.notAuthentic === 1 ? "is" : "are"} who ${b.notAuthentic === 1 ? "it claims" : "they claim"} to be` : ""].filter(Boolean).join(" · ");
   const eventLine = e => [`${e.supporting ?? e.supports} supporting`, `${plural(e.supportSources, "source", "sources")}${ownPart(e.supportSources, e.ownSupportSources)}`,
     (e.contradicting ?? e.contradicts) ? `${e.contradicting ?? e.contradicts} contradicting` : ""].filter(Boolean).join(" · ");
-  /** A report's snapshot of the player's Casebook when it went out. Older reports have none. */
-  function snapshotBlock(snap) {
+  /** A frozen evidence reference from a snapshot, as text. Only fixed content: a title, a quote, a conversation, a picture. */
+  const refTitle = r => r.quote != null ? `“${r.quote}”` : r.thread !== undefined ? `Message from ${phone.contactName(r.thread)}` :
+    r.image ? (g.w.images.get(r.image)?.caption || "Image") : (r.title || "Evidence");
+  /** One theory in a snapshot: the claim as worded then, the player's words, note, reasons and connections. */
+  function snapTheory(t) {
+    const reasons = asList(t.reasons), conns = asList(t.connections);
+    const titleOf = id => { const r = reasons.find(x => x.evidence === id); return r ? refTitle(r) : "—"; };
+    return h("div.snap-item", h("b", `“${t.claimLabel}”`), h("div.muted.small", basisLine(t)),
+      reservations(t) ? h("div.muted.small.snap-res", reservations(t)) : null,
+      t.words && t.words !== t.claimLabel ? h("div.small.snap-words", `In your words: “${t.words}”`) : null,
+      t.note ? h("div.small.snap-note", `Your note: “${t.note}”`) : null,
+      reasons.length ? h("ul.snap-reasons", reasons.map(r => h("li.small", { "data-stance": r.stance }, `${r.stance === "against" ? "Against" : "For"}: ${refTitle(r)}`,
+        r.note ? h("span.muted", ` · your note: “${r.note}”`) : null))) : null,
+      conns.length ? h("ul.snap-conns", conns.map(c => h("li.small", linkSentence(c.kind, titleOf(c.a), titleOf(c.b)), c.note ? h("span.muted", ` · “${c.note}”`) : null))) : null);
+  }
+  const asList = x => Array.isArray(x) ? x : [];
+  /**
+   * A report's snapshot of the player's Casebook when it went out: what was published, and apart from
+   * it what the editor cut. Wording, notes and reasons are frozen there. Older reports have none.
+   */
+  function snapshotBlock(snap, channel) {
     if (!snap) return h("div.muted.small.pad", "Published before reports kept your Casebook's counts.");
+    const cut = new Set(asList(snap.cut)), ed = w.channels.get(channel)?.reviewer;
+    const out = snap.theories.filter(t => !cut.has(t.hypothesis)), dropped = snap.theories.filter(t => cut.has(t.hypothesis));
     return h("div.rep-snap-body",
-      snap.theories.map(t => h("div.snap-item", h("b", `“${t.claimLabel}”`), h("div.muted.small", basisLine(t)),
-        reservations(t) ? h("div.muted.small.snap-res", reservations(t)) : null, snap.cut.includes(t.hypothesis) ? h("div.muted.small", "Cut before publishing") : null)),
-      snap.events.map(e => h("div.snap-item", h("b", e.title), h("div.muted.small", `${fmtEventDate(e.date)} · ${eventLine(e)}`))),
-      h("div.hint.muted", `Your own counts and reservations on day ${snap.day}. They stay as they were when you revise your theories.`));
+      out.length ? [h("div.field-label.sub.snap-head", "Published"), out.map(snapTheory)] : null,
+      snap.events.length ? [h("div.field-label.sub.snap-head", "Timeline events published"), snap.events.map(e => h("div.snap-item", h("b", e.title),
+        h("div.muted.small", `${fmtEventDate(e.date)} · ${eventLine(e)}`), e.description ? h("div.small.snap-note", e.description) : null))] : null,
+      dropped.length ? h("div.snap-cut", h("div.field-label.sub.snap-head", `Cut by ${ed ? phone.contactName(ed) : "the editor"}, not published`), dropped.map(snapTheory)) : null,
+      h("div.hint.muted", `Your own counts, words and reservations on day ${snap.day}. They stay as they were, whatever you change in your Casebook later.`));
   }
 
   function reportsScreen() {
@@ -997,7 +1020,7 @@ export function casebookApp(phone) {
         r.items.map(i => h("div.rep-item", `“${i.label}”`)),
         r.events.length ? h("div.muted.small", `${r.events.length} timeline ${r.events.length === 1 ? "event" : "events"}`) : null,
         r.cut.length ? h("div.muted.small", `Cut before publishing: ${r.cut.join("; ")}`) : null,
-        h("details.rep-snap", h("summary", "Your Casebook when you published"), snapshotBlock(r.snapshot)))) :
+        h("details.rep-snap", h("summary", "Your Casebook when you published"), snapshotBlock(r.snapshot, r.channel)))) :
         h("div.empty.muted", "Nothing published yet. A report goes out under your name, and people will react to it.")];
   }
 
@@ -1037,14 +1060,18 @@ export function casebookApp(phone) {
         h("div.muted.small", "Build a theory with a claim first. Each theory you pick becomes a claim."),
       hyps.length ? h("div.hint.muted", "Your own counts and doubts, from your Casebook. Nobody checks them, and they go with the report as a snapshot.") : null,
       unready.length ? [h("div.field-label.sub", `In your own words only (${unready.length})`),
+        h("div.hint.muted.unready-why", "These can't go in a report yet. A report publishes claims, and these theories don't have one: add who, the relation and what to a theory to publish it."),
         unready.map(hy => h("button.hist-row.unready-row", { onclick: () => phone.push("casebook", { kind: "hyp", id: hy.id }) }, icon("book"),
-          h("div.pi-main", h("b", hy.label), h("div.muted", `${basisLine(basisOf(hy))} · add a claim to publish it`)), h("span.chev", "›")))] : null,
+          h("div.pi-main", h("b", hy.label), h("div.muted", `${basisLine(basisOf(hy))} · needs a claim to publish`)), h("span.chev", "›")))] : null,
       h("label.field-label", `Timeline events (${desc.events.length})`),
       evs.length ? group(evs).map(([t, l]) => [h("div.field-label.sub", t), l.map(ev => row(desc.events.includes(ev.id), ev.title, `${fmtEventDate(ev.date)} · ${eventLine(ev)}`, () => tog("events", ev.id)))]) :
         h("div.muted.small", "Optional. Events you pick go in as you wrote them."),
-      desc.review ? h("div.review", h("div.review-who", `${reviewer || "Review"}:`), desc.review.map(l => h("p", l.text)),
-        desc.notes?.length ? h("div.review-own", h("div.muted.small.review-own-head", "On what you've marked yourself:"), desc.notes.map(l => h("p", { "data-kind": l.kind }, l.text))) : null) : null,
-      desc.review && reviewer ? h("div.hint.muted.review-sep", `${reviewer}'s advice before you publish. It doesn't decide what happens: once it's out, the world reacts to what you published.`) : null,
+      // Two boxes, kept visibly apart (Anders, 25.11.2026): her own read of the sources, and what she reads
+      // back from the player's own marks. Neither one is a verdict.
+      desc.review ? h("div.review.review-hers", h("div.review-who", `${reviewer || "Review"}: how your sources look to me`), desc.review.map(l => h("p", l.text))) : null,
+      desc.review && desc.notes?.length ? h("div.review.review-own", h("div.review-who.review-own-head", `${reviewer}: what you've marked yourself`),
+        desc.notes.map(l => h("p", { "data-kind": l.kind }, l.text))) : null,
+      desc.review && reviewer ? h("div.hint.muted.review-sep", "These are my concerns, not a guarantee that your conclusions are right.") : null,
       reviewer ? h("button.btn.wide", { disabled: !ready, onclick: ask }, icon("chat"), ` Ask ${reviewer} first`) : null,
       h("button.btn.primary.wide", { disabled: !ready, onclick: publish }, "Publish"));
   }
@@ -1059,7 +1086,7 @@ export function casebookApp(phone) {
       h("div.section-title", "Claims"), r.items.map(i => h("div.rep-item.pad", `“${i.label}”`)),
       r.cut.length ? [h("div.section-title", "Cut before publishing"), r.cut.map(l => h("div.rep-item.pad.muted", `“${l}”`))] : null,
       r.events.length ? [h("div.section-title", "Timeline events"), r.events.map(e => h("div.rep-item.pad", `${fmtEventDate(e.date)} · ${e.title}`))] : null,
-      h("div.section-title", "Your Casebook when you published"), snapshotBlock(r.snapshot),
+      h("div.section-title", "Your Casebook when you published"), snapshotBlock(r.snapshot, r.channel),
       h("div.section-title", "Reactions"),
       reactions.length ? reactions.map(n => h("div.reaction", n.text)) : h("div.muted.pad", "Nothing yet. Reactions can take a day."),
       ends.map(epilogue),

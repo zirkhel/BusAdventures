@@ -296,7 +296,9 @@ export function casebookView(g) {
     // The player's own timeline, for reports later. Events carry only what the player entered.
     timeline: (g.s.timeline || []).map(e => ({ ...e })),
     reports: g.s.reports.map(r => ({ id: r.id, day: r.day, case: r.case, channel: r.channel, items: r.items.map(i => ({ label: i.label })),
-      cut: asArray(r.cut).map(id => { const h = g.s.hypotheses.find(x => x.id === id); return h ? hypothesisLabel(g, h) : null; }).filter(Boolean),
+      // With a snapshot (step 5) the cut claims read as they were worded then; older reports fall back to the theory now.
+      cut: asArray(r.cut).map(id => { const t = r.snapshot?.theories?.find(x => x.hypothesis === id); if (t) return t.claimLabel;
+        const h = g.s.hypotheses.find(x => x.id === id); return h ? hypothesisLabel(g, h) : null; }).filter(Boolean),
       events: asArray(r.events).map(e => ({ id: e.id, title: e.title, date: e.date })),
       // The player's own Casebook when the report went out (step 5): counts and reservations, never truth.
       snapshot: r.snapshot ? structuredClone(r.snapshot) : null })),
