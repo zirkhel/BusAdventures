@@ -10,7 +10,7 @@ Gjennomgangen av PR #89 er avsluttet. Se [sluttrapporten](PR89-REVIEW.md). Velg 
 
 | Sak | Status og neste handling |
 |---|---|
-| Danas tillitsfarm | `dana.evidence` gir +1 hver gang uten `once`. Bekreftet i koden ved `50d5643`. Forslaget er én gang totalt, separat retting. Må avklares; fjerner ikke alene relevanslekkasjen. |
+| Danas tillitsfarm | Rettet på `codex/dana-trust-once`: `dana.evidence` bruker `once`, én reaksjon og +1 tillit totalt. Godkjent omfang 25. november 2026. Gamle lagringer beholder opptjent tillit; registrert reaksjon hindrer ny belønning. Leveres til PR-gjennomgang. Relevanslekkasjen er en separat oppgave. |
 | Reaksjoner på skjulte relevansmerker | `showSupports` brukes fortsatt i dialogen. Gjennomgå persona-Mara, Dana ved lav tillit, Dana evidence og Pauls gjentatte juridiske svar. Theo proof, Dana invoice og Owen agency må vurderes mot synlig innhold og personens dokumenterte kunnskap. Ikke erstatt alle karakterreaksjoner automatisk. |
 | Danas dialog vs redaksjon | Bevisreplikken sier fortsatt «two independent sources» og bruker skjult utløser. PR #89 retter redaksjonens gjennomgang/kutt, ikke hele dialogsystemet. Samordne ordlyden i den separate rettingen. |
 | F-1: motstridende avslutning | `vote_held` kan gi Too late selv når avstemningen utsettes. Reproduser på PR #89 før endring; forslag er å kreve `vote_passed`. |

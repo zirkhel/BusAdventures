@@ -8,7 +8,7 @@ Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98
 - Casebook steg 0-5, Danas regel P, hjelp og tips er ferdige og merget.
 - Lagringsformat: v12. Eldre lagringer migreres. Tipsinnstillinger lagres separat.
 - Dokumentasjonsrydding og begge kontrollrettelser er med i main. Se [sluttrapporten](docs/PR89-REVIEW.md). Videre oppgaver finnes i [BACKLOG](docs/BACKLOG.md).
-- Danas tillitsfarm og andre personers relevanslekkasjer er **ikke rettet** i PR #89. F-1/F-2 og nye saksutfall er heller ikke rettet.
+- Oppfølging: tillitsfarmen er rettet på `codex/dana-trust-once` for PR-gjennomgang. Andre personers relevanslekkasjer, F-1/F-2 og nye saksutfall gjenstår. Se BACKLOG.
 
 ## Leserekkefølge
 
