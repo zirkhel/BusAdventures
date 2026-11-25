@@ -47,3 +47,10 @@
 .tmpl-government.kind-record .page-body p { margin-bottom: 0; }
 .tmpl-government.page-person h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 600; }
 .tmpl-government.page-calendar .page-body { border-left: 4px solid var(--site-accent, #1f3b5a); margin: 0 16px; padding-left: 14px; }
+
+.tmpl-government.var-library .site-head { background: var(--site-accent, #4a3b28); }
+.tmpl-government.var-library .site-nav-full { background: #3a2e20; }
+.tmpl-government.var-library .mast { font-family: Georgia, "Times New Roman", serif; }
+.tmpl-government.var-transit .site-head { background: var(--site-accent, #163a5f); }
+.tmpl-government.var-transit .site-nav-full { background: #0f2a46; }
+.tmpl-government.var-registry .page-body { font-family: ui-monospace, Menlo, Consolas, monospace; }

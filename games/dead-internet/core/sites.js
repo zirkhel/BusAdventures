@@ -67,7 +67,19 @@ export function indexSites(w, sites) {
   }
   for (const [p, ids] of platforms) if (ids.length === 1) w.siteByPlatform.set(p, ids[0]);
   for (const a of w.artifacts.values()) {
-    if (a.url) w.artifactByUrl.set(normUrl(a.url), a.id);
+    if (!a.url) continue;
+    w.artifactByUrl.set(normUrl(a.url), a.id);
+    const site = a.site && w.sites.get(a.site);
+    if (!site) continue;
+    const host = hostOf(a.url);
+    const aliases = domainsOf(site);
+    if (!host || !aliases.includes(host)) continue;
+    const path = pathOf(a.url);
+    for (const d of aliases) {
+      const aliasUrl = path === "/" ? d : `${d}${path}`;
+      const key = normUrl(aliasUrl);
+      if (!w.artifactByUrl.has(key)) w.artifactByUrl.set(key, a.id);
+    }
   }
   return w;
 }

@@ -1,9 +1,10 @@
 // @ts-check
-// Thin chrome for templates that are not yet fully designed (legacy, personal,
-// and landing variants other than saas). Logo, optional nav, a hero image,
-// then the original page text. Wiki, forum, document, anonymous and saas
-// landing have their own templates (W5). News, app and static.channel stay
-// on their existing renderers.
+// Thin chrome for landing variants that are not yet fully designed (parked
+// pages if they are ever rendered as a site, rather than as the Browser-owned
+// parked state). Logo, optional nav, a hero image, then the original page
+// text. Legacy, personal, wiki, forum, document, anonymous and saas/smallbiz
+// landing have their own templates. News, app and static.channel stay on
+// their existing renderers.
 
 import { h, fmtDate } from "../ui.js";
 import { renderBlock } from "./blocks.js";
