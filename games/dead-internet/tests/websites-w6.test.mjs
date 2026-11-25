@@ -18,7 +18,8 @@ const textOf = a =>
 const ofSite = site => [...world.artifacts.values()].filter(a => a.site === site || (a.url && a.url.split("/")[0] === world.sites.get(site)?.domain));
 const prefix = site => `W-${site === "corp_registries" ? "corpregistries" : site}-`;
 const preexisting = new Set(["W-harbordental-0001", "W-caldertransit-0001"]);
-const newOf = site => ofSite(site).filter(a => String(a.id).startsWith(prefix(site)) && !preexisting.has(a.id));
+const laterThanW6 = new Set(["W-harbordesk-0003", "W-harbordesk-0004"]);
+const newOf = site => ofSite(site).filter(a => String(a.id).startsWith(prefix(site)) && !preexisting.has(a.id) && !laterThanW6.has(a.id));
 
 test("existing Quiet Account wording, ids and thin-site homes are unchanged", () => {
   const expect = {
