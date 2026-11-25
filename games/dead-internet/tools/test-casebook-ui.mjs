@@ -311,7 +311,7 @@ try {
   await row3(t3.A54).locator('.ev-open').click();
   await p3.getByText('Connections (2)', { exact: true }).waitFor();
   assert.deepEqual((await p3.locator('.link-row .link-text').allInnerTexts()).sort(), [`This and ${t3.A55} have the same origin`, `This supports ${t3.A56}`].sort());
-  await p3.locator('.link-row').last().scrollIntoViewIfNeeded();
+  await p3.locator('.link-row').last().evaluate(el => el.scrollIntoView({ block: 'center' }));
   await shot3('cb3-card.png');
   await b3('Back').click();
   // On the other end of an undirected connection it reads from that side; edit it there.
