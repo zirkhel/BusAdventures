@@ -507,7 +507,7 @@ try {
     assert.match(await theoryCounts(), /3 sources · 1 in your count/);
     await p4.locator('.hyp-row', { hasText: 'The three friends are one voice' }).click();
     assert.equal(await p4.locator('.own-count b').innerText(), '1');
-    assert.match(await p4.locator('.own-hint').first().innerText(), /^3 sources · 1 in your count Your count follows your “same origin” answers and connections\.$/);
+    assert.match(await p4.locator('.own-hint').first().innerText(), /^3 sources · 1 in your count\. Your count follows your “same origin” answers and connections\.$/);
     await p4.getByText(/You doubt 1 is who it claims to be\./).waitFor();
     await shot4('cb4-theory.png');
     await noOverflow4('theory');
@@ -665,6 +665,9 @@ try {
       vis.forEach((key, i) => g.assessSource(key, { trust: answers[i % 4], authentic: answers[(i + 1) % 4], note: i % 3 ? 'My read' : '' }));
       for (let i = 0; i + 1 < vis.length; i += 3) g.linkSources(vis[i], vis[i + 1]);
       for (let i = 0; i + 2 < vis.length; i += 7) g.linkSources(vis[i + 1], vis[i + 2]);
+      // "Same origin" connections between evidence from two different sources: they join the cards.
+      const firstOf = key => g.s.evidence.find(e => g.evidenceAbout(e.id)?.source === key)?.id;
+      for (let i = 2; i + 5 < vis.length; i += 9) g.addLink({ a: firstOf(vis[i]), b: firstOf(vis[i + 5]), kind: 'same_origin', note: 'Same wording' });
       // Set aside all evidence from a few sources: their cards stay.
       for (const key of vis.filter((_, i) => i % 11 === 5)) for (const e of g.s.evidence) if (g.evidenceAbout(e.id)?.source === key) g.editEvidence(e.id, { shelf: 'finished' });
       phone.replaceTop({ kind: 'sources' }); result.screens.push(dom());
@@ -692,7 +695,7 @@ try {
   assert.ok(snapshots[0].step2[1] > 10, 'questions in the twin DOM test');
   assert.ok(snapshots[0].step3[0] > 50 && snapshots[0].step3[2] > 0, 'connections and page versions in the twin DOM test');
   assert.ok(snapshots[0].step4[0] > 20 && snapshots[0].step4[1] > 0 && snapshots[0].step4[2] > 0, 'source cards, groups and own counts in the twin DOM test');
-  assert.ok(snapshots[0].step4[3] > 0 && snapshots[0].step4[4] > 0 && snapshots[0].step4[5] > 0, 'indirect groups, joining connections and set-aside sources in the twin DOM test');
+  assert.ok(snapshots[0].step4[3] > 0 && snapshots[0].step4[4] > 0 && snapshots[0].step4[5] > 0, `indirect groups, joining connections and set-aside sources in the twin DOM test: ${snapshots[0].step4}`);
   assert.ok(snapshots.every(s => s.quoteSaved));
   assert.deepEqual(snapshots[1], snapshots[0], 'merged hidden origins must not change DOM');
   assert.deepEqual(snapshots[2], snapshots[0], 'split hidden origins must not change DOM');

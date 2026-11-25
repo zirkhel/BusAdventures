@@ -350,7 +350,7 @@ export function casebookApp(phone) {
         hy.ownSourceCount !== hy.sourceCount ? h("div.own-count", h("b", String(hy.ownSourceCount)), h("span", "in your count")) : null,
         h("div", h("b", String(hy.againstCount)), h("span", "against"))),
       sources.size ? h("div.sources", [...sources].map(([key, s]) => h("button.chip.src-chip", { onclick: () => openSource(key) }, `${s.label}${s.n > 1 ? ` ×${s.n}` : ""}`))) : null,
-      hy.ownSourceCount !== hy.sourceCount ? h("div.hint.muted.own-hint", h("b", `${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"} · ${hy.ownSourceCount} in your count`), " Your count follows your “same origin” answers and connections.") : null,
+      hy.ownSourceCount !== hy.sourceCount ? h("div.hint.muted.own-hint", h("b", `${hy.sourceCount} ${hy.sourceCount === 1 ? "source" : "sources"} · ${hy.ownSourceCount} in your count`), ". Your count follows your “same origin” answers and connections.") : null,
       hy.notTrustedFor || hy.notAuthenticFor ? h("div.hint.muted.own-hint", [hy.notTrustedFor ? `You don't trust ${hy.notTrustedFor} of these sources.` : "",
         hy.notAuthenticFor ? `You doubt ${hy.notAuthenticFor} ${hy.notAuthenticFor === 1 ? "is" : "are"} who ${hy.notAuthenticFor === 1 ? "it claims" : "they claim"} to be.` : ""].filter(Boolean).join(" ")) : null,
       h("div.hint.muted", "The Casebook counts your evidence and where it comes from. It can't tell you whether you're right."),
