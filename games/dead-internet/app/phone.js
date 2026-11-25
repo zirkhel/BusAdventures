@@ -159,6 +159,7 @@ export class Phone {
     if (desc.kind === "thread") return this.contactName(desc.id);
     if (desc.kind === "results") return desc.title || `“${desc.q}”`;
     if (desc.kind === "hyp") return "Theory";
+    if (desc.kind === "question") return "Question";
     if (desc.kind === "event") return this.g.s.timeline.find(e => e.id === desc.id)?.title || "Event";
     if (desc.kind === "eventEdit") return "Event";
     if (desc.kind === "reports" || desc.kind === "report" || desc.kind === "reportDone") return "Reports";
@@ -571,14 +572,15 @@ export class Phone {
 
   /**
    * Full-height list picker with search.
-   * @param {{title:string, groups:{title:string, items:{id:string, label:string, sub?:string, thumb?:Node}[]}[], empty?:string, onPick:(id:string)=>void}} o
+   * search: always show the search field (otherwise only for more than 7 items). keywords: extra searchable text.
+   * @param {{title:string, groups:{title:string, items:{id:string, label:string, sub?:string, keywords?:string, thumb?:Node}[]}[], empty?:string, note?:string, search?:boolean, searchLabel?:string, onPick:(id:string)=>void}} o
    */
   picker(o) {
-    const q = /** @type {HTMLInputElement} */ (h("input.seek-input", { type: "search", placeholder: "Filter", autocapitalize: "off", autocomplete: "off" }));
+    const q = /** @type {HTMLInputElement} */ (h("input.seek-input", { type: "search", placeholder: o.search ? "Search" : "Filter", "aria-label": o.searchLabel || "Filter", autocapitalize: "off", autocomplete: "off" }));
     const list = h("div.picker-list");
     const draw = () => {
       const f = q.value.trim().toLowerCase();
-      const groups = o.groups.map(g => ({ ...g, items: g.items.filter(i => !f || `${i.label} ${i.sub || ""}`.toLowerCase().includes(f)) })).filter(g => g.items.length);
+      const groups = o.groups.map(g => ({ ...g, items: g.items.filter(i => !f || `${i.label} ${i.sub || ""} ${i.keywords || ""}`.toLowerCase().includes(f)) })).filter(g => g.items.length);
       list.replaceChildren(...(groups.length ? groups.map(g => h("div.picker-group", g.title ? h("div.section-title", g.title) : null,
         g.items.map(i => h("button.picker-item", { onclick: () => { this.closeOverlay(); o.onPick(i.id); } }, i.thumb || null,
           h("div.pi-main", h("b", i.label), i.sub ? h("div.muted", i.sub) : null))))) : [h("div.empty.muted", o.empty || "Nothing here yet.")]));
@@ -588,7 +590,7 @@ export class Phone {
     const total = o.groups.reduce((n, g) => n + g.items.length, 0);
     const panel = h("div.picker",
       h("div.picker-head", h("div.bar-title", o.title), h("button.icon-btn", { "aria-label": "Close", onclick: () => this.closeOverlay() }, icon("close"))),
-      total > 7 ? h("div.picker-search", q) : null, h("div.scroll", list, o.note ? h("div.picker-note.muted", o.note) : null));
+      o.search || total > 7 ? h("div.picker-search", q) : null, h("div.scroll", list, o.note ? h("div.picker-note.muted", o.note) : null));
     const bg = h("div.sheet-bg.picker-bg", { onclick: e => { if (e.target === bg) this.closeOverlay(); } }, panel);
     this.overlay.replaceChildren(bg);
     this.overlay.classList.add("open");
