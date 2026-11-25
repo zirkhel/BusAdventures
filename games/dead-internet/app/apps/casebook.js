@@ -535,7 +535,9 @@ export function casebookApp(phone) {
     const ok = c.items.map((x, i) => ({ ...x, i })).filter(x => !x.error);
     const missing = c.items.filter(x => x.error).length;
     const KIND = { page: "Saved page", excerpt: "Excerpt", image: "Image", message: "Message" };
-    const rows = [["What", x => x.kind === "page" && x.evidence == null ? "Page" : KIND[x.kind], "kind"], ["Source", x => x.source, "source"], ["Platform", x => x.platform, "platform"],
+    // An unsaved page (from Browser's Archive, W8) is a "Page", not a "Saved page".
+    const what = x => x.kind === "page" && x.evidence == null ? "Page" : KIND[x.kind];
+    const rows = [["What", what, "kind"], ["Source", x => x.source, "source"], ["Platform", x => x.platform, "platform"],
       ["Address", x => x.url, "url"], ["Date", x => x.date ? fmtDate(x.date) : x.day != null && x.kind === "message" ? `Day ${x.day}` : null, "date"],
       ["Copy", x => x.copy, "copy"], ["Author", x => x.author, "author"],
       ["Saved", x => x.evidence ? `Day ${g.s.evidence.find(e => e.id === x.evidence)?.day}` : "Not saved", null]];
@@ -568,7 +570,7 @@ export function casebookApp(phone) {
         c.changes.title ? h("div.cmp-change.title", h("span.muted", "Title: "), h("s", c.changes.title[0]), " → ", c.changes.title[1]) : null,
         c.changes.text.every(x => x.op === "same") ? h("div.empty.muted.small", "The text is the same.") :
           c.changes.text.map(x => h("div.cmp-change", { class: `op-${x.op}` }, h("span.cmp-op", { "aria-label": x.op }, x.op === "removed" ? "−" : x.op === "added" ? "+" : ""), h("span", x.text)))] : null,
-      texts.map(x => [h("div.section-title", `${LETTERS[x.i]} · ${KIND[x.kind] || "Page"}`),
+      texts.map(x => [h("div.section-title", `${LETTERS[x.i]} · ${what(x) || "Page"}`),
         h("div.cmp-text", x.text ? richText(phone, x.text) : null, x.attachments?.length ? h("div.muted", `Attached: ${x.attachments.join(", ")}`) : null)]),
       h("div.section-title", `Your connections (${c.links.length})`),
       c.links.map(l => linkRow(l, null, id => { const i = c.items.findIndex(x => x.evidence === id); return i >= 0 ? LETTERS[i] : null; })),

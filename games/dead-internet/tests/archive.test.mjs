@@ -77,7 +77,8 @@ test("a deleted page keeps its copies; a page behind a sign-in shows none", asyn
   const { g, show } = await game();
   show(DELETED);
   const vid = g.view(DELETED).cachedVersions[0];
-  g.open(DELETED, vid);
+  // The "not available" page already offers Seeker's copy, so its Archive opens before any copy is read.
+  assert.deepEqual(g.archive(DELETED).entries.map(x => x.version), [vid]);
   const ar = g.archive(DELETED);
   assert.equal(ar.status, "deleted");
   assert.deepEqual(ar.entries.map(x => x.kind), ["cached"]);

@@ -200,7 +200,9 @@ export function browserApp(phone) {
     const art = renderArtifact(phone, v);
     const ar = g.archive(desc.id);
     const current = !ar.error && ar.entries.find(x => x.kind === "current");
-    if (!ar.error && ar.entries.length >= 2) art.prepend(archiveStrip(desc, ar));
+    // The strip leads to the Archive; a cached or saved copy's banner already has "All copies".
+    const bannerActions = current && (v.cached || (v.saved && current.version !== v.versionId && savedRef(desc.id, v.versionId)));
+    if (!ar.error && ar.entries.length >= 2 && !bannerActions) art.prepend(archiveStrip(desc, ar));
     if (v.saved) art.prepend(h("div.cache-banner", h("b", "Saved copy"), " This is the version you saved to Casebook.",
       current && current.version !== v.versionId ? compareCurrent(desc, v, current) : null));
     if (v.cached) art.prepend(h("div.cache-banner", h("b", "Seeker cache"), ` This is a copy of ${v.url || "the page"} as it appeared on ${fmtDate(v.date)}. The current page may have changed or been removed.`,

@@ -19,8 +19,11 @@ const dateKey = d => String(d ?? "");
 export function archiveView(g, id) {
   const s = g.s;
   if (!g.w.artifacts.has(id)) return { error: "unknown" };
-  if (s.seen[id] == null) return { error: "not_seen" };
   const now = viewArtifact(g, id);
+  // A page the player has opened, or a gone page whose "not available" screen already offers
+  // Seeker's copies. Anything else stays unknown: the Archive is not a way to discover pages.
+  const goneWithCopies = (now.error === "gone" || now.error === "deleted") && (now.cachedVersions || []).length > 0;
+  if (s.seen[id] == null && !goneWithCopies) return { error: "not_seen" };
   const entries = [];
   // A page behind a sign-in shows nothing of itself, not even how many copies Seeker kept.
   if (!now.locked) {
