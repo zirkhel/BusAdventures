@@ -25,17 +25,23 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `facelessstock` | facelessstock.com | live | A31, A31B (public samples) plus W5 home, pricing, license, how it works, library wall (`W-faceless-*`) | Synthetic portraits. Template `landing` / `saas`. Library is a sign-in wall without `meta.logins` |
 | `docshare` | docshare.link | live | existing documents (A18, A22, DS-UF-*, DS-UF-02 hidden) plus W5 marketing home, 4 public filler docs, 3 expired links (`W-docshare-*`) | File links. Template `document` / `viewer`. Home does not catalogue evidence/leaks |
 | `calderpedia` | calderpedia.org | live | B17, A66 plus W5 main page, 22 new articles, 5 history, 3 talk (`W-calderpedia-*`; 24 articles in total) | Wiki. Template `wiki` / `standard`. British spelling. No IMG02 |
-| `harbordesk` | harbordesk.co | live | B18 | Virtual office page |
-| `saltys` | saltys-portcalder.com | live | B19 | Fish bar page |
-| `eastfieldgarden` | eastfieldgarden.org | live | B20 | Garden page |
-| `aiwriterpro` | aiwriterpro.app | live | B23 | Landing page |
+| `harbordesk` | harbordesk.co | live | B18 plus W6 Pricing and Locations (`W-harbordesk-*`) | Virtual office. Template `landing` / `smallbiz`. Locations: 18 Harbor Street and Dock Road |
+| `saltys` | saltys-portcalder.com | live | B19 plus W6 Menu, Hours, Our story (`W-saltys-*`) | Fish bar. Template `legacy` / `2008`. New banner tagline from 1 March 2026; B19 wording unchanged |
+| `eastfieldgarden` | eastfieldgarden.org | live | B20 plus W6 Plots, Work days, Committee (`W-eastfieldgarden-*`) | Garden. Template `personal` / `club`. IMG05O on the plots page |
+| `aiwriterpro` | aiwriterpro.app | live | B23 plus W6 Pricing and FAQ (`W-aiwriterpro-*`) | Landing. Template `landing` / `saas` |
 | `static_channel` | static.channel | live | A44 | Raw text, no template |
-| `corp_registries` | corp-registries.example | live | A63 | Placeholder domain (not renamed in W1) |
-| `harbordental` | harbordental.com | live | W-harbordental-0001 (minimal home) | Connect post BG-CON-01: «New website is live». Domain from the approved websites plan. No new team or parking facts |
-| `caldertransit` | caldertransit.gov | live | W-caldertransit-0001 (minimal home) | Daily Record article on ghost buses refers to «the transit authority's website». Domain from the approved plan. The live map is not built |
+| `corp_registries` | openfilings.org (alias: corp-registries.example) | live | A63 plus W6 home (`W-corpregistries-0001`) | Renamed in W6 from the placeholder domain. Old host still resolves. Template `government` / `registry`. Meridian is not in the public nav |
+| `harbordental` | harbordental.com | live | W-harbordental-0001 plus W6 Services, Team, Hours, Parking, Contact (`W-harbordental-0002`–`0006`) | Connect post promised team and parking. Template `landing` / `saas`. Footer credits «Lumen by Pixelfold». Team names and hours are `claim` pending approval |
+| `caldertransit` | caldertransit.gov | live | W-caldertransit-0001 plus W6 Routes, Route 14, Fares, Alerts, About, Live map (`W-caldertransit-0002`–`0007`) | Government / `transit`. The live map page is «temporarily unavailable», not a working map. No brake-fault leak on the official site |
 | `harbor_authority` | harbor.portcalder.gov | live | W-harbor-authority-0001 (minimal home) | Unfiltered comment: memo letterhead «matches the one on their site». **Domain is not named in canon**; this municipal host is assigned so the reference can resolve. Home text is only the authority's name |
 | `eastfield_neighbors` | eastfieldneighbors.net | **gone** since 2023-02-20 | none | Daily Record A60: the forum was breached and «has since shut down». **Domain is not named in canon**; assigned only so the gone site can be addressed. No invented pages or cache |
-| `portcalderjazz` | portcalderjazz.com | **parked** since 2022-01-01 | none | Already listed in WEBSITES.md §4 as a parked domain (changed hands in 2022, «This domain may be for sale»). Added in W3 so the parked state can be visited. No 2019 cache and no new story facts |
+| `portcalderjazz` | portcalderjazz.com | **parked** since 2022-01-01 | W6 cached 2019 home, calendar, about (`W-portcalderjazz-*`, `live: null`) | Live address still shows the generic parking page. Cached 2019 site: Thursday nights at the Anchor, pianist Lou Benn |
+
+| `pclibrary` | pclibrary.org | live | W6 home, hours, branches, Eastfield, Northpoint, e-readers, tax help, staff (`W-pclibrary-*`; staff has a 2024 cached version) | Port Calder Public Library. Template `government` / `library`. Cached 2024 staff lists Mara Quinn and Priya Shah; the live page does not. Domain from the approved plan |
+| `calderpower` | calderpower.com | live | W6 home, outages, 17 Feb incident, smart meters, billing, about (`W-calderpower-*`) | Utility. Template `corporate` / `utility`. February 2026 outage follows the Daily Record correction (transformer, about 14,000 homes). NIMG0004 is not used. The 14 March outage is after game start and is not on the live site |
+| `caldercu` | caldercu.com | live | W6 home, about, 4th Street, accounts, contact (`W-caldercu-*`) | Credit union since 1952, Eastfield branch on 4th Street (already in a sponsored article). Template `corporate` / `classic-2015` |
+| `walts` | waltbrennan.calderweb.net | live (last updated 2009) | W6 home, guestbook, duck race, Festival 2008, links (`W-walts-*`) | Walt Brennan's Harbor Festival page on an assigned free host. Template `personal` / `geocities`. Frozen 12 June 2009. Does not mention his 2025 death |
+| `harborpa` | harborpa.com | live | W6 home (`W-harborpa-0001`) | Harbor Public Affairs, named in the lobby register. Template `corporate` / `consultancy`. One simple page, no client list |
 
 ## Email-only domains (not websites)
 
@@ -52,7 +58,7 @@ These hosts appear as email addresses (and sometimes as the host part of those a
 |---|---|---|
 | Friends of Eastfield | Background Daily Record piece: mailers have «no address on them and no website» | No site. Do not create one |
 | «the site» / Calder Mill | Calderpedia A66 («The site is the subject of the proposed Eastfield Waterfront») | Physical site, not a URL |
-| Harbor Public Affairs | Named as a lobbying vendor on A26 | Organisation name only; no website is referenced. A site is planned later (`harborpa.com` in WEBSITES.md §4) and is not added here |
+| Harbor Public Affairs | Named as a lobbying vendor on A26 | W6 adds the planned one-page site at `harborpa.com`. The company page does not list Northgate or other clients |
 
 ## Character line
 
@@ -67,7 +73,7 @@ Paul Navarro's fallback, «I'd refer you to our website,» points at the existin
 
 ## Coverage at W1
 
-26 site configs (25 from W1, plus parked `portcalderjazz.com` in W3), 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. W2 corporate/government/blog chrome and the later graphics step still apply. W5 replaces the remaining thin chrome on wiki, forum, document and anonymous sites, and adds saas landing chrome (Faceless; also Harbor Dental and AIWriterPro). Legacy, personal, smallbiz and parked stay on the thin chrome. See [GRAPHICS.md](../graphics/GRAPHICS.md).
+26 site configs (25 from W1, plus parked `portcalderjazz.com` in W3), 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. W2 corporate/government/blog chrome and the later graphics step still apply. W5 replaced the remaining thin chrome on wiki, forum, document and anonymous sites, and added saas landing chrome (Faceless; also Harbor Dental and AIWriterPro). W6 replaces the thin chrome on legacy, personal and smallbiz landing. Parked live views stay Browser-owned. See [GRAPHICS.md](../graphics/GRAPHICS.md).
 
 ## Background pages (W4)
 
@@ -84,6 +90,17 @@ Calderpedia has a main page, table of contents, infobox/tools, numbered referenc
 
 Approved new canon from this round: the Port Calder lighthouse was automated in 1998 and its last keeper was Samuel Okoro; Harbor Festival has had volunteers since at least 1979; the breaches HarborFit (March 2021), Slice of Calder (November 2022) and CalderLearn (August 2024) are universe fact, in addition to the already canonical Eastfield Neighbors breach (February 2023). A Threadline post names the 6:10 ferry captain «Dennis»; that remains a forum claim, not canon.
 
+
+## Legacy, personal, landing and background sites (W6)
+
+Implemented on `websites-w6` (not merged). New pages: Salty's 3, HarborDesk 2, Eastfield Community Garden 3, AIWriterPro 2, Harbor Dental 5, Calder Transit 6, Open Filings 1, Port Calder Public Library 8, Calder Power 6, Calder Credit Union 5, Walt's page 5, Harbor Public Affairs 1, portcalderjazz.com cache 3 (50 in total). Existing ids, URLs and wording are unchanged, except the approved rename of `corp-registries.example` to `openfilings.org`. Hidden pages stay hidden.
+
+New sites from the approved §4 list: `pclibrary.org`, `calderpower.com`, `caldercu.com`, `harborpa.com`, and Walt's page on the assigned free host `waltbrennan.calderweb.net`. The library staff page is the approved alternative path in: a 2024 cached version lists Mara Quinn and Priya Shah, with no new personal facts; the live 2026 page does not list Mara. Kestrel has a cached 2014 home and About (live wording unchanged). Salty's live design from 1 March 2026 shows a new banner tagline. The jazz domain remains parked when visited live.
+
+`corp-registries.example` is now an alias of `openfilings.org`. Typing or searching the old host still opens Open Filings / A63. Meridian is not linked from the public nav.
+
+New invented names, hours and prices are recorded as `claim` in `background-facts.json` and wait on Anders' confirmation. Facts already in the papers (library cut, e-readers, tax help, the February outage, smart meters, the credit union since 1952, Walter Brennan's death, Lou Benn) are recorded as `canon`.
+
 ## Test-only domains
 
 The media test pool in `tests/media.test.mjs` injects a virtual TokTok app (`toktok.app`). It is not part of the playable universe. The pool registers a site config so the site-reference validator still holds when that pool is loaded on top of the real world.
@@ -98,4 +115,4 @@ Test-only `toktok.app` is described in the previous section; it is not a playabl
 
 ## Parked domain (W3)
 
-`portcalderjazz.com` is registered so the Browser can show a parked state. The date and the «for sale» wording follow WEBSITES.md §4. The planned 2019 cached page is not authored here (that would be new content, for a later step). Because the domain changed hands, the parked view is a generic parking page, not a jazz-club theme, and the site has no catalog logo.
+`portcalderjazz.com` is registered so the Browser can show a parked state. The date and the «for sale» wording follow WEBSITES.md §4. W6 adds a cached 2019 site (home, calendar, about), with `live: null`. Because the domain changed hands, the live parked view is still a generic parking page, not a jazz-club theme, and the live parked design has no catalog logo. The 2019 design uses a text wordmark.
