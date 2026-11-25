@@ -1,13 +1,13 @@
 # Dead Internet â€” status og videre arbeid
 
-Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget. Gjeldende grunnlag er `main` ved `6a98828`.
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 
 ## Overlevering
 
 - Fase 0â€“9, nettsteder W0â€“W8 og Casebook steg 0â€“4 er ferdige og merget.
-- Casebook steg 0–5, Danas synlige regel P, hjelp og tips er ferdige og merget gjennom PR #89 og #90.
-- Lagringsformat: v12. Eldre lagringer migreres. Tipsinnstillinger følger enheten, ikke lagringen.
-- Dokumentasjonen og de to kontrollrettelsene er med i main: kapitalisering av løse kontofornavn og frosne bevisreferanser for rapportens tidslinjehendelser. Se [sluttrapporten](docs/PR89-REVIEW.md). Videre arbeid velges fra [BACKLOG](docs/BACKLOG.md).
+- Casebook steg 0-5, Danas regel P, hjelp og tips er ferdige og merget.
+- Lagringsformat: v12. Eldre lagringer migreres. Tipsinnstillinger lagres separat.
+- Dokumentasjonsrydding og begge kontrollrettelser er med i main. Se [sluttrapporten](docs/PR89-REVIEW.md). Videre oppgaver finnes i [BACKLOG](docs/BACKLOG.md).
 - Danas tillitsfarm og andre personers relevanslekkasjer er **ikke rettet** i PR #89. F-1/F-2 og nye saksutfall er heller ikke rettet.
 
 ## LeserekkefÃ¸lge
@@ -15,7 +15,7 @@ Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget. Gjeldende grun
 1. [DESIGN.md](DESIGN.md): prinsipper, arkitektur og informasjonsgrenser.
 2. [Casebook](docs/CASEBOOK-DEDUCTION.md) og [Danas regel P](docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md): gjeldende funksjon inkludert PR #89.
 3. [Nettsteder](docs/WEBSITES.md) og [inventar](docs/WEBSITE-INVENTORY.md).
-4. [Restoppgaver og forslag](docs/BACKLOG.md), [kontrolliste for PR #89](docs/PR89-REVIEW.md).
+4. [Restoppgaver og forslag](docs/BACKLOG.md), [sluttrapport for PR #89](docs/PR89-REVIEW.md).
 5. Ved innholdsarbeid: [sakens forfattergrunnlag](docs/THE-QUIET-ACCOUNT.md), innholdsfilene og [saksavslutning](docs/CASE-ENDINGS-REVIEW.md).
 
 Full filoversikt og dokumentenes roller: [docs/README.md](docs/README.md). Gamle faseplaner og beslutningsreferater er [historikk](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/DEVPLAN.md), ikke neste oppgave.

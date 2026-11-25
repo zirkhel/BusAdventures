@@ -1,10 +1,10 @@
 # Utestående arbeid og forslag
 
-25. november 2026. Dette er en oversikt, ikke godkjenning av nye designvalg. Implementert funksjon står i DESIGN og fagbeskrivelsene. PR #89 og #90 er merget.
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 
-## Nå: ferdigstill gjennomgangen av PR #89
+## Videre arbeid
 
-Se [kontrollisten](PR89-REVIEW.md). Avklar åpne spørsmål før merge. Rett bare avtalte mangler; ikke utvid spilldesign som del av dokumentasjonsarbeidet.
+Gjennomgangen av PR #89 er avsluttet. Se [sluttrapporten](PR89-REVIEW.md). Velg en avgrenset oppgave nedenfor; nye designvalg krever avklaring.
 
 ## Kjente problemer som gjenstår
 

@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 25. november 2026. Beskriver main etter merge av PR #89 og #90 (`6a98828`). Status og arbeidsrekkefølge står i DEVPLAN._
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Casebook: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md). Nettsteder: [docs/WEBSITES.md](docs/WEBSITES.md). Saksavslutning: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 
@@ -72,7 +72,7 @@ Mysterier er pakker i samme univers, ikke kopier av verden. De har egne forutset
 
 ## Lagring og grensesnitt
 
-PR #89 bruker v12; eldre lagringer migreres. Rapporter uten historisk øyeblikksbilde får `snapshot: null`, ikke oppdiktet historikk. Tips lagres separat per enhet. Eksport/import og nytt spill ligger i Settings.
+Spillet bruker v12; eldre lagringer migreres. Rapporter uten historisk øyeblikksbilde får `snapshot: null`, ikke oppdiktet historikk. Tips lagres separat per enhet. Eksport/import og nytt spill ligger i Settings.
 
 Telefonen eier hjemskjerm, varsler, bilder og navigasjon. Hver app har sin tilbakestabel. Connect-adresser åpnes i Connect; nettsteder i Browser. Browser-bokmerker er adskilt fra Casebook-bevis. Archive ligger i Browser; sammenligning ligger i Casebook.
 

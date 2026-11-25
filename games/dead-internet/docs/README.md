@@ -1,6 +1,6 @@
 # Dokumentoversikt
 
-Oppdatert 25. november 2026 etter godkjent merge av PR #89 og #90 til main (`6a98828`). Nye designvalg og senere merger krever fortsatt godkjenning fra Anders.
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget til main (`6a98828`).
 
 ## Aktive dokumenter
 
@@ -15,7 +15,7 @@ Oppdatert 25. november 2026 etter godkjent merge av PR #89 og #90 til main (`6a9
 | [Medier](MEDIA-APPS-PROPOSAL.md) | Implementerte medier vs senere TokTok |
 | [Saksavslutning](CASE-ENDINGS-REVIEW.md) | Eksisterende utfall og åpne funn, ikke nye vedtak |
 | [BACKLOG](BACKLOG.md) | Kjente problemer, videre oppgaver og forslag som trenger avklaring |
-| [PR #89-kontroll](PR89-REVIEW.md) | Kontrollert, rapportert og fortsatt uavklart |
+| [PR #89-kontroll](PR89-REVIEW.md) | Avsluttet gjennomgang og resultater |
 
 ## Bevarte spesialreferanser
 
