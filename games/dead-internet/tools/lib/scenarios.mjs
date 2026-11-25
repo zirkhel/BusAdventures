@@ -159,7 +159,74 @@ function breakJuno(g) {
   g.sleep();
 }
 
+
+/** Official sites, a stock face, and repeated phrasing, then the same case as Lights Out. */
+function designAsClue(g) {
+  g.start();
+  // 18 Harbor Street and the firms that share it, starting from HarborDesk.
+  g.search("HarborDesk"); g.open("B18"); g.open("W-harbordesk-0003"); g.open("W-harbordesk-0004");
+  g.open("W-quayledger-0001"); g.open("W-northlamp-0001");
+  // The testimonial face is a purchased stock portrait: image search leads to Faceless #44812
+  // and to other independent uses, not only Brightline.
+  g.searchImage("IMG06A"); g.open("A31"); g.open("W-havenmutual-0001"); g.open("A09");
+  g.search("Brightline Media"); g.open("W-brightline-0001"); g.open("A19"); g.open("A20");
+  g.open("A20", "v2024");
+  // "Fifteen years" and no Brightline archive before 2023; Kestrel has a 2014 cache.
+  g.search("Kestrel Logistics"); g.open("W-kestrel-0001"); g.open("W-kestrel-0001", "v2014");
+  // The same phrasing as Eastfield Notes v2, in Insights and in two Garden personas.
+  g.open("W-brightline-0020"); g.open("W-garden-0001"); g.open("W-garden-0002"); g.open("A34");
+  // Lumen is a commercial theme, also used by Harbor Dental — a deliberate red herring.
+  g.search("Harbor Dental"); g.open("W-harbordental-0001");
+  // The same investigation as gather(), from here on, so the case still closes logically.
+  g.search("Mara Quinn obituary"); g.open("A11");
+  g.open("A02"); g.open("A05");
+  const sign = ev(g, { artifact: "A05", image: "IMG01" });
+  g.searchImage("IMG01"); g.open("A33");
+  const orig = ev(g, { artifact: "A33" });
+  g.search("Theo Quinn"); g.open("A06");
+  ask(g, "theo", "calder_mill");
+  ask(g, "theo", "calder_mill");
+  show(g, "theo", "A33");
+  g.sleep();
+  g.open("A32");
+  const emails = ev(g, { artifact: "A32" });
+  g.search("bl-ops.net"); g.open("A19");
+  ask(g, "dana", "mara");
+  ask(g, "dana", "mara");
+  show(g, "dana", "A32");
+  g.open("A25");
+  const invoice = ev(g, { artifact: "A25" });
+  ask(g, "dana", "brightline");
+  g.sleep();
+  ask(g, "iris", "brightline");
+  show(g, "iris", "A32");
+  show(g, "iris", "A33");
+  g.open("A23"); g.open("A22");
+  const dash = ev(g, { artifact: "A23" }), brief = ev(g, { artifact: "A22" });
+  g.search("Northgate lobbying"); g.open("A26");
+  const lobby = ev(g, { artifact: "A26" });
+  const h2 = hyp(g, { subject: "brightline", predicate: "operates", object: "acc_maraquinn" }).id;
+  [emails, dash, brief].forEach(e => g.link(h2, e));
+  const h3 = hyp(g, { subject: "northgate", predicate: "paid", object: "brightline" }).id;
+  [invoice, lobby].forEach(e => g.link(h3, e));
+  g.note("Theo's email: recovery address r…@bl-ops.net. bl-ops.net = Brightline client portal.");
+  g.review("daily_record", [h2, h3]);
+  g.publish("daily_record", [h2, h3]);
+  g.sleep();
+  return { h2, h3, sign, orig };
+}
+
 export const SCENARIOS = [
+  { id: "design_as_clue", title: "Stock faces and shared phrases, then the Daily Record before the vote", run: designAsClue,
+    expect: g => [
+      ["Lights Out reached", g.s.endings.includes("quiet_account:lights_out")],
+      ["S2 and S3 exposed through the Daily Record", g.s.exposed.S2?.channel === "daily_record" && g.s.exposed.S3?.channel === "daily_record"],
+      ["Faceless #44812 was found from an independent stock-photo use", "A31" in g.s.seen],
+      ["the 2024 Brightline team cache was opened", g.s.seen.A20 != null],
+      ["Kestrel's 2014 cache was opened", "W-kestrel-0001" in g.s.seen],
+      ["the shared phrasing was read on Insights and on Garden personas", "W-brightline-0020" in g.s.seen && "W-garden-0001" in g.s.seen && "W-garden-0002" in g.s.seen],
+      ["credibility went up", g.s.credibility > 50],
+    ] },
   { id: "lights_out", title: "Brother and journalist → Daily Record before the vote", run: brotherAndJournalist,
     expect: g => [
       ["Lights Out reached", g.s.endings.includes("quiet_account:lights_out")],
