@@ -58,7 +58,7 @@ Konto er ikke person. Tre kontoer kan se ut som tre opphav selv om samme skjulte
 
 Spillerens vurderinger er ikke fasit. Rettede Supports-koblinger kan påvirke Danas dekning og dermed kuttet. Kildekort og egne forbehold påvirker ikke hennes opptelling eller verdens poengregel. Redaksjonell gjennomgang og konsekvenser etter publisering er forskjellige lag.
 
-**Kjent avvik:** flere personreaksjoner bruker fortsatt `showSupports`, og Danas bevisreaksjon kan gi gjentatt tillit. PR #89 retter hennes redaksjonelle vurdering/kutt, ikke alle dialogreaksjoner. Se [BACKLOG](docs/BACKLOG.md).
+**Kjent avvik:** flere personreaksjoner bruker fortsatt `showSupports`. PR #89 retter hennes redaksjonelle vurdering/kutt, ikke alle dialogreaksjoner. Danas generelle bevisreaksjon (`dana.evidence`) gir nå +1 tillit én gang totalt, via eksisterende `once`/`fired`. Gamle lagringer beholder opptjent tillit og registrerte reaksjoner. Se [BACKLOG](docs/BACKLOG.md).
 
 ## Verdensmodell og tid
 
