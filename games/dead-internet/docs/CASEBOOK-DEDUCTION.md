@@ -1,6 +1,6 @@
 # Dead Internet: Casebook som deduksjonsverktøy
 
-_Status 25. november 2026: steg 0–2 er merget (steg 2 som PR #85 `d6dbb8c`), steg 3 (sammenligning og koblinger) er merget som PR #86 `5d64cbc`, W8 (Archive i Browser) som PR #87 `50f65fb`, og steg 4 (kildevurdering) er implementert 25.11.2026 som PR #88 og justert etter Anders' beslutninger samme dag (venter på merge; se DESIGN.md, «Implementert steg 4»). Anders bestemte 25.11.2026 at en kobling alltid er mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (se DESIGN.md, «Implementert steg 2» og «Implementert steg 3», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
+_Status 25. november 2026: steg 0–2 er merget (steg 2 som PR #85 `d6dbb8c`), steg 3 (sammenligning og koblinger) er merget som PR #86 `5d64cbc`, W8 (Archive i Browser) som PR #87 `50f65fb`, steg 4 (kildevurdering) er merget som PR #88 `20d2f49` med Anders' beslutninger 25.11.2026 (se DESIGN.md, «Implementert steg 4»), og steg 5 (rapportering) er startet 25.11.2026 på greina `casebook-step-5`. Anders bestemte 25.11.2026 at en kobling alltid er mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (se DESIGN.md, «Implementert steg 2» og «Implementert steg 3», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
 
 ## Kort fortalt
 
@@ -231,7 +231,7 @@ Hvert steg er én liten PR med egne tester og kan stoppes etter.
 | 1 | Triage: beviskort, merker, kommentar, «Legg bort», filternedtrekk, «Ikke gjennomgått» øverst. Sitat som bevis. Lagring v7. | Etter testen |
 | 2 | Teorier: for/mot, status med logg, åpne spørsmål, alternativer, fri tittel. Velger med søk erstatter «Other evidence». | |
 | 3 | Sammenligning og koblinger (valgmodus, sammenligningsskjerm, seks koblingstyper). | |
-| 4 | Kildekort og spillerens egen uavhengighetstelling. ~~Dana bruker spillerens forbehold.~~ | Implementert 25.11.2026 (PR #88). Dana-delen er flyttet til steg 5: planendring godkjent av Anders 25.11.2026. |
+| 4 | Kildekort og spillerens egen uavhengighetstelling. ~~Dana bruker spillerens forbehold.~~ | Merget som PR #88 `20d2f49`. Dana-delen er flyttet til steg 5: planendring godkjent av Anders 25.11.2026. |
 | 5 | Rapport: for/mot/egne forbehold i byggeren, øyeblikksbilde. Ett tips om sammenligning i tips-systemet. Dana bruker spillerens forbehold (flyttet fra steg 4). | Grenser fra Anders 25.11.2026: Danas vurdering før publisering holdes atskilt fra verdens poengberegning etterpå; at Dana leser spillerens forbehold, gir ikke i seg selv grunnlag for å endre poengreglene; nye tall i Timeline merkes som spillerens egen opptelling. |
 | 6 | Innhold: vise koblinger og teorier til karakterer. Forfatterveiledning: hvert mysterium skal ha motsigelser og «ekkokamre» (mange kilder, ett opphav). | Med neste mysterium |
 

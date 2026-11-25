@@ -454,7 +454,7 @@ Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node g
 
 **For W8** (levert, se «Browser eier nettleseren» under). Browser Archive kaller `phone.compare([{ artifact, version: a }, { artifact, version: b }])` (eller uten `version` for gjeldende side). Casebook sjekker selv at versjonene er tilgjengelige og sett, viser endringene og lar spilleren lagre begge kopiene før de kobles. Se docs/WEBSITES.md §9.1.
 
-### Implementert steg 4 (25. november 2026, PR #88, justert etter Anders' gjennomgang samme dag)
+### Implementert steg 4 (25. november 2026, merget som PR #88 · `20d2f49`)
 
 **Kildekort per synlig kilde.** `core/sources.js` (ny) gir ett kort per synlig kilde, med de samme nøklene som `apparentSource` gir og som spørsmål fra steg 2 kobles til (`account:…`, `contact:…`, `site:…`, `page:…`, `handle:…`). Kortet har to spørsmål, «Do I trust this source?» og «Is it who it claims to be?», med svarene Yes, Unsure og No. Et nytt trykk på samme svar tar det tilbake. I tillegg har kortet «Same origin as …» (andre synlige kilder, valgt med søk), en egen kommentar, kildens bevis og spørsmålene som er koblet til kilden, med et felt for å stille et nytt. Alle svar står tomme til spilleren svarer, i én nøytral farge, og kortet sier «Your own assessment. The Casebook never says whether you're right.» Lagres i `s.sourceViews[nøkkel] = { trust, authentic, sameAs, note, day, edited? }` gjennom handlingene `assessSource` og `linkSources` (begge går gjennom `dispatch`, logges og spilles av likt).
 
