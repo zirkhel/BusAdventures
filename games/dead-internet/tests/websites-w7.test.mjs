@@ -174,11 +174,11 @@ test("18 Harbor Street is used by Brightline and four innocent firms", () => {
   assert.match(w.artifacts.get("W-northlamp-0001").versions[0].body, /Suite 210, 18 Harbor Street/);
 });
 
-test("background facts record the W7 address, tenants and 2024 community leads as claims", () => {
+test("background facts record the W7 address, tenants and 2024 community leads as canon", () => {
   const byId = new Map((raw.backgroundFacts || []).map(f => [f.id, f]));
   for (const id of ["bf-harbordesk-tenants", "bf-havenmutual-office", "bf-bl-community-leads-2024"]) {
     const f = byId.get(id);
     assert.ok(f, id);
-    assert.equal(f.status, "claim", id);
+    assert.equal(f.status, "canon", id);
   }
 });
