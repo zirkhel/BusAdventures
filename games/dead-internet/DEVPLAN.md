@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W7 merget som PR #73–#81, handover PR #82 `8978002`; nettsidefotografiene merget som PR #83 `b2a7f76`; rettelser etter fotografiene merget som PR #84 `48191f7`; PR #72 lukket uten merge; Casebook steg 2 merget som PR #85 `d6dbb8c`; Casebook steg 3 merget som PR #86 `5d64cbc`; W8 påbegynt)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W7 merget som PR #73–#81, handover PR #82 `8978002`; nettsidefotografiene merget som PR #83 `b2a7f76`; rettelser etter fotografiene merget som PR #84 `48191f7`; PR #72 lukket uten merge; Casebook steg 2 merget som PR #85 `d6dbb8c`; Casebook steg 3 merget som PR #86 `5d64cbc`; W8 implementert på greina `websites-w8`, PR venter på gjennomgang)._
 
 ## Overlevering (25. nov 2026)
 
@@ -15,7 +15,7 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Rettelser etter fotografiene: PR #84 (`fixes-after-photos`) er merget til `main` (`48191f7`). Threadline-profiler viser navn og «Threads started» (`accountByHandle()` gir en id; `app/sites/forum.js` slår nå opp kontoen). Walter Brennan-sitatet etter hans død er et tilsiktet spor og har test. Godkjent enhetskanon er registrert. Harbor Festival er i oktober alle år, og de to Eastfield Notes-innleggene har oktober-URL-er med videresending fra de gamle juli-adressene (`urlAliases`). Vinneranden i 2025 er nr. 3,117. Se «Rettelser etter fotografiene» under.
 - PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026. Den var en etterlatt rest av merget PR #71 (Casebook-filene var identiske med `main`). Greina `codex/casebook-step-1` er beholdt.
 
-**Neste steg:** W8 (Archive i Browser med «Compare with…», se docs/WEBSITES.md §9.1) er påbegynt 25.11.2026 med Anders' ja, på greina `websites-w8`. Deretter Casebook steg 4–5. Ekstern spilltest etter steg 5 og avklaring av saksavslutning. Ingen andre åpne PR-er. Nye PR-er merges bare etter Anders' ja.
+**Neste steg:** Anders ser gjennom PR-en for W8 (Archive i Browser med «Compare with…», implementert 25.11.2026 på greina `websites-w8`) og designvalgene under «W8». Deretter Casebook steg 4–5. Ekstern spilltest etter steg 5 og avklaring av saksavslutning. Ingen andre åpne PR-er. Nye PR-er merges bare etter Anders' ja.
 
 ### Nettstedsarbeid (W0–W7 og grafikk) — greiner og beslutninger
 
@@ -101,7 +101,20 @@ Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.
 
 **W7 — godkjent kanon.** Anders godkjente 25. november 2026 de tre W7-påstandsgruppene, som er fremmet til `canon`: HarborDesks leietakere på 18 Harbor Street (Quay Ledger Suite 110, Amber Fern Tutoring Suite 120, North Lamp Studio Suite 210, Gull Wing Surveys Suite 305); Haven Mutuals kontor i 9 Market Row, Old Town, siden 2009; community leads på 2024-cachen Samira Holt, Jonah Ellison og Tamsin Roe. Domenene `havenmutual.com`, `quayledger.com` og `northlamp.studio` er tatt med.
 
-**Gjenstår etter W7.** W8 (Archive-kobling, venter på Casebook steg 3). WEB0001–WEB0004 og øvrige planlagte fotografier er fortsatt ikke produsert. Lukke PR #72. Casebook steg 2–5. Ekstern spilltest etter steg 5.
+**W8 — Archive i Browser (25. nov 2026, greina `websites-w8`, venter på PR-gjennomgang; skal ikke merges før Anders sier ja).** Archive-skjermen i Browser viser alle kopier av én adresse som spilleren kan åpne (Seekers cachede kopier, gjeldende side, egne lagrede kopier), eldst først, og sender to av dem til Casebooks sammenligning med `phone.compare()`. Filer: `core/archive.js` (ny), `core/game.js` (`g.archive`), `app/apps/browser.js`, `app/phone.js` (`archive()`, `versions()` åpner Archive for sette sider), `app/render.js` («All copies in Archive» på «Not available»-sider; brukt i `connect.js`, `messages.js`, `news.js`), `app/style.css`, `app/apps/casebook.js` (én endring: en ulagret side heter «Page», ikke «Saved page», i tekstdelen av sammenligningen), `tests/archive.test.mjs` (ny), `tests/twin.test.mjs`, `tools/test-browser-archive-ui.mjs` (ny). Lagringen er uendret (v10). Ingen ny kanon, ingen nye arkivkopier, ingen nye bilder. Se DESIGN.md, «Archive i Browser (W8)».
+
+Designvalg for W8 (venter på Anders):
+1. *Archive er en skjerm i Browser per adresse*, ikke en egen app. Inngangene er en tynn stripe på sider med minst to kopier, knapper i banneret på cachede og lagrede kopier, «All copies in Archive» på «Not available»-sider, og «Other versions» / «View available versions», som nå åpner Archive for sider spilleren har sett. «View cached versions» per domene er uendret.
+2. *Spillerens egne lagrede kopier står i Archive.* En lagret versjon som også er cachet eller gjeldende, merkes «Saved in Casebook». En lagret versjon som ikke lenger finnes andre steder, står som «Your saved copy». Utdrag og bilder står ikke der.
+3. *Archive krever at siden er sett*, unntatt en side som er borte eller slettet når «Not available»-siden allerede tilbyr Seekers kopi. En side bak innlogging viser ingen kopier, heller ikke antallet.
+4. *Sammenligningen er alltid eldst først*, uansett hvilken rekkefølge kopiene krysses av i. Det kan krysses av høyst to; en tredje erstatter den eldste avkryssingen.
+5. *Hver eldre kopi har «Compare with current»*, og banneret på en cachet eller lagret kopi har «Compare with current page», slik at den vanligste sammenligningen er ett trykk.
+6. *Ingen nye arkivkopier.* De eksisterende cachede versjonene gir 14 sider med to kopier (Kestrel forside og «About» 2014, Brightline Team 2024, Eastfield Notes forside og «waterfront», bibliotekets ansattside, fem oppdaterte Daily Record-saker med flere). Vil Anders ha flere (for eksempel en eldre Brightline-forside eller en Eastfield Garden-side), er det ny kanon og et eget valg.
+7. *Bilder på siden sammenlignes ikke.* Sammenligningen viser felt og tekst; at Kestrels 2014-side har et bilde av varebilen, ser spilleren ved å åpne kopien. En bildesammenligning av sidebilder kan komme senere.
+
+Verifisering av W8: se PR-en. Kjernetester (`node --test --test-concurrency=1`), validator, `simulate.mjs` med identisk utskrift som `main`, `tools/test-casebook-ui.mjs` og `tools/test-browser-archive-ui.mjs` (390×844, hver for seg). Skjermbilder: `/workspace/dead-internet-shots/w8-*.png`.
+
+**Gjenstår etter W7.** W8 er implementert (over). WEB0001–WEB0004 og øvrige planlagte fotografier er fortsatt ikke produsert. Lukke PR #72. Casebook steg 2–5. Ekstern spilltest etter steg 5.
 
 **Fotografier — nye/endrede filer (PR #83, `websites-photos`).** 20 nye webp i `assets/images/` (`web0001-…` til `web0024-…`), ni SVG-erstatninger (`web0028-harbordesk-window.webp`, `web0029-garden-beds.webp`, `web0031-library-reading-room.webp`, `web0032-calderpower-pylons.webp`, `web0033-caldercu-front.webp`, `web0034-walts-2008.webp`, `web0035-harborpa-desk.webp`, `web0037-notes-fog.webp`, `web0038-market-row.webp`), `graphics/catalog.json` (status, brief, usedIn, ny stilnøkkel «web photo»), generert `GRAPHICS.md` og `COMFYUI.md`, `content/universe/images.json`, `images`-felt i artefaktfilene for Northgate, Kestrel, by, Calderpedia, Eastfield Notes, bibliotek, Calder CU, Calder Power, Walt, Faceless og Brightline (bakgrunn), nye plassholdere, `graphics/sources/web-photos/` (stilprompt, kart over genererte filer, etterbehandlingsskript), `graphics/sources/web0024-tiles/`, test `tests/websites-photos.test.mjs`. Skjermbilder `/workspace/dead-internet-shots/photos-*.png` og kontaktark `/workspace/dead-internet-shots/photos-contact-sheet.png`.
 
@@ -444,7 +457,7 @@ Verifisering av steg 3: 218 kjernetester (`node --test --test-concurrency=1`), v
 - [x] W5 Wiki, Forum, Document, Anonymous (og saas-Landing) — merget PR #79
 - [x] W6 Legacy, Personal, øvrig Landing og eldre design — merget PR #80 · `4e5bff8`
 - [x] W7 Spor i design (Anders sa ja 25. november 2026), ny gjennomspillingstest — merget PR #81 · `9190200`
-- [ ] W8 «Compare with…» fra Archive (påbegynt 25.11.2026 på greina `websites-w8`; inngangen `phone.compare()` er merget i PR #86, se docs/WEBSITES.md §9.1)
+- [x] W8 «Compare with…» fra Archive (25.11.2026, greina `websites-w8`, venter på PR-gjennomgang; se «W8» over og docs/WEBSITES.md §9.1)
 - [x] Grafikk WEB0001–WEB0024, de tolv viktigste først — merget i PR #83 `b2a7f76` (bildegeneratoren, ikke ComfyUI)
 - [x] Bytt `corp-registries.example` til `openfilings.org`, med test for søk, gamle adresser og referanser — merget PR #80 · `4e5bff8`
 
