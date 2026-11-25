@@ -134,6 +134,22 @@ function archives(g) {
   });
 }
 
+/**
+ * Deep equality that reports the first differing path. The snapshots are large (step 5 reports freeze
+ * every linked piece of evidence), and a full diff of them runs out of memory.
+ */
+function same(actual, expected, message) {
+  const walk = (x, y, path) => {
+    if (JSON.stringify(x) === JSON.stringify(y)) return null;
+    if (x && y && typeof x === "object" && typeof y === "object") {
+      for (const k of new Set([...Object.keys(x), ...Object.keys(y)])) { const d = walk(x[k], y[k], `${path}.${k}`); if (d) return d; }
+    }
+    return `${path}: ${JSON.stringify(x)?.slice(0, 200)} ≠ ${JSON.stringify(y)?.slice(0, 200)}`;
+  };
+  const d = walk(actual, expected, "$");
+  assert.ok(!d, `${message}: ${d}`);
+}
+
 /** Everything the player can see in the Casebook, plus the reviewer. */
 function snapshot({ g, hyps }) {
   const strip = v => { const { source, supports, mentions, ...rest } = v; return rest; };
@@ -179,8 +195,8 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   assert.ok(a.casebook.hypotheses.some(h => h.ownSourceCount < h.sourceCount), "the player's own source count is part of the comparison");
   assert.ok(a.editorNotes.notes.length > 5 && new Set(a.editorNotes.notes.map(n => n.kind)).size >= 4 && a.reportBasis.theories.length > 3 && a.reportBasis.events.length,
     "step 5 editor notes and report snapshots are part of the comparison");
-  assert.deepEqual(b, a, "a world where everything has one hidden source looks the same");
-  assert.deepEqual(c, a, "a world where everything has its own hidden source looks the same");
+  same(b, a, "a world where everything has one hidden source looks the same");
+  same(c, a, "a world where everything has its own hidden source looks the same");
 });
 
 test("twin worlds: the editor cuts the same claims; only the consequences differ", async () => {
@@ -193,8 +209,8 @@ test("twin worlds: the editor cuts the same claims; only the consequences differ
     return { cut: r.ok ? r.report.cut : null, refused: !!r.refused, lines: r.lines ?? null, snap, connect: c.ok ? p.g.casebook().reports.at(-1).snapshot : c };
   };
   const base = await cutIn(await loadWorld());
-  assert.deepEqual(await cutIn(twin(await loadWorld(), () => "one-source")), base);
-  assert.deepEqual(await cutIn(twin(await loadWorld(), (kind, id) => `${kind}:${id}`)), base);
+  same(await cutIn(twin(await loadWorld(), () => "one-source")), base, "one hidden source: same cut and snapshots");
+  same(await cutIn(twin(await loadWorld(), (kind, id) => `${kind}:${id}`)), base, "own hidden sources: same cut and snapshots");
 });
 
 test("sources are counted as they look: three persona accounts are three sources", async () => {
