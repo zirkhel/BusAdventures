@@ -82,10 +82,8 @@ function threadView(phone, site, v, a, used) {
 
 function profileView(phone, site, v, a, blocks, used) {
   const handle = String(pathOf(a.url || "") || "").split("/").filter(Boolean).pop() || "";
-  const acc = phone.accountByHandle?.(handle) || [...phone.g.w.accounts.values()].find(x =>
-    x.handle === handle || x.handle === `@${handle}` || x.displayName === handle);
-  const started = acc ? listedPages(phone.g, site.id).filter(t =>
-    (t.page === "thread" || t.type === "thread") && t.author === acc.id && pageNo(t.url) <= 1) : [];
+  const acc = profileAccount(phone, handle);
+  const started = threadsStartedBy(phone, site, acc);
   return [
     h("div.forum-crumb", "threadline › user"),
     h("h1", acc ? phone.ctx.span(acc.displayName || acc.handle, { type: "handle", id: acc.id }) : phone.ctx.text(v.title)),
@@ -96,6 +94,23 @@ function profileView(phone, site, v, a, blocks, used) {
         h("b", t.title), t.date ? h("span.muted", fmtDate(t.date)) : null))) : null,
     ...leftoverImages(phone, used),
   ];
+}
+
+/**
+ * The account behind a profile URL. accountByHandle() gives an account id, so look the account up.
+ * @param {any} phone @param {string} handle
+ */
+export function profileAccount(phone, handle) {
+  const w = phone.g.w;
+  const id = phone.accountByHandle?.(handle);
+  return (id && w.accounts.get(id)) || [...w.accounts.values()].find(x =>
+    x.handle === handle || x.handle === `@${handle}` || x.displayName === handle) || null;
+}
+
+/** First pages of the threads an account started on this forum. @param {any} phone @param {any} site @param {any} acc */
+export function threadsStartedBy(phone, site, acc) {
+  return acc ? listedPages(phone.g, site.id).filter(t =>
+    (t.page === "thread" || t.type === "thread") && t.author === acc.id && pageNo(t.url) <= 1) : [];
 }
 
 /** Parse the existing thread body format: "name: text" / "name (OP): text". */
