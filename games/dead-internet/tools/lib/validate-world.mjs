@@ -220,8 +220,9 @@ export function validateWorld(raw, opts = {}) {
     for (const c of arr(img.supports)) if (!w.claims.has(c)) err(`image ${img.id}`, `supports unknown claim ${c}`);
     for (const d of arr(img.depicts)) if (!isRef(d)) err(`image ${img.id}`, `depicts unknown ${d}`);
     // Every image has a metadata decision: an object (fictional EXIF) or null (stripped from this copy).
-    if (!("meta" in img)) err(`image ${img.id}`, "no meta: give fictional EXIF or null for stripped");
-    else if (img.meta !== null) {
+    // Video frames and posters are part of their clip, whose own meta is the "Video info".
+    if (img.kind !== "frame" && !("meta" in img)) err(`image ${img.id}`, "no meta: give fictional EXIF or null for stripped");
+    else if (img.meta != null) {
       if (typeof img.meta !== "object") err(`image ${img.id}`, "meta must be an object or null");
       else {
         for (const k of Object.keys(img.meta)) if (!META_KEYS.has(k)) err(`image ${img.id}`, `unknown meta field ${k}`);

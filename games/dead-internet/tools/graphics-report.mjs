@@ -58,7 +58,7 @@ ${Object.entries(cat.characters).map(([k, v]) => `- **${k}:** ${v}`).join("\n")}
 ${order.join(" → ")}
 
 ## Bildeinfo (fiktiv EXIF)
-Metadata står i \`content/universe/images.json\` (\`meta\`), ikke i katalogen. «Image info» i bildeviseren viser Taken, Camera (\`device\`), Location (bare når feltet finnes; \`null\` vises som «—»), Software og Note. \`meta: null\` betyr fjernet og vises som «None. It was stripped from this copy.». Alle bilder skal ha et \`meta\`-valg, og \`taken\` («YYYY-MM-DD HH:MM») kan ikke være senere enn første versjon av siden som viser bildet (validatoren og \`tests/image-meta.test.mjs\`). Enheter: Lumen-telefoner (privatpersoner), Caldwell C-kameraer, «Daily Record photo desk», Orrin-kameraer (Orrin D7 profesjonelt, Orrin S5/S20 kompakt), skanneprogram i \`software\`, stockgeneratoren i \`software\`.
+Metadata står i \`content/universe/images.json\` (\`meta\`), ikke i katalogen. «Image info» i bildeviseren viser Taken, Camera (\`device\`), Location (bare når feltet finnes; \`null\` vises som «—»), Software og Note. \`meta: null\` betyr fjernet og vises som «None. It was stripped from this copy.». Alle bilder unntatt videorammer (de har klippets «Video info») skal ha et \`meta\`-valg, og \`taken\` («YYYY-MM-DD HH:MM») kan ikke være senere enn første versjon av siden som viser bildet (validatoren og \`tests/image-meta.test.mjs\`). Enheter: Lumen-telefoner (privatpersoner), Caldwell C-kameraer, «Daily Record photo desk», Orrin-kameraer (Orrin D7 profesjonelt, Orrin S5/S20 kompakt), skanneprogram i \`software\`, stockgeneratoren i \`software\`.
 
 | ID | Valg | Taken | Camera | Location | Software | Note |
 |---|---|---|---|---|---|---|

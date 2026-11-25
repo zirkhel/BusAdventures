@@ -38,8 +38,8 @@ function miniRaw() {
       { id: "acc_ed", platform: "social", handle: "@ed", displayName: "Ed", claimsToBe: "ed", operatedBy: "ed", created: "2020-01-01" },
     ],
     images: [
-      { id: "I1", kind: "photo", source: "ann-blog" },
-      { id: "I2", kind: "photo", derivedFrom: "I1", transforms: ["mirror"], source: "fake", supports: ["C2"] },
+      { id: "I1", kind: "photo", source: "ann-blog", meta: null },
+      { id: "I2", kind: "photo", derivedFrom: "I1", transforms: ["mirror"], source: "fake", supports: ["C2"], meta: null },
     ],
     artifacts: [
       { id: "P1", type: "profile", platform: "social", author: "acc_ann", title: "Ann Lee (@ann)", date: "2029-12-01", source: "acc", mentions: ["ann"],

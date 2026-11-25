@@ -25,7 +25,7 @@ const POOL = {
     status: [{ from: "2020-01-01", state: "live" }] }],
   "pools/toktok/creators.json": CREATORS.map(h => ({ id: `acc_tt_${h}`, platform: "toktok", handle: `@${h}`, displayName: h, pool: "toktok", created: "2024-01-01" })),
   "pools/toktok/images.json": [
-    { id: "IMGK0", kind: "photo", caption: "A kitchen set" },
+    { id: "IMGK0", kind: "photo", caption: "A kitchen set", meta: null },
     { id: "VID0001P", kind: "frame", derivedFrom: "IMGK0" },
     { id: "VID0001F1", kind: "frame", derivedFrom: "IMGK0" },
     { id: "VID0002F1", kind: "frame", derivedFrom: "IMGK0" },
