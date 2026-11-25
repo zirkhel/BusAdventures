@@ -1,6 +1,6 @@
 # Dead Internet: Casebook som deduksjonsverktøy
 
-_Status 25. november 2026: steg 0–2 er merget (steg 2 som PR #85 `d6dbb8c`), steg 3 (sammenligning og koblinger) er merget som PR #86 `5d64cbc`, W8 (Archive i Browser) som PR #87 `50f65fb`, og steg 4 (kildevurdering) er startet 25.11.2026 på greina `casebook-step-4`. Anders bestemte 25.11.2026 at en kobling alltid er mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (se DESIGN.md, «Implementert steg 2» og «Implementert steg 3», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
+_Status 25. november 2026: steg 0–2 er merget (steg 2 som PR #85 `d6dbb8c`), steg 3 (sammenligning og koblinger) er merget som PR #86 `5d64cbc`, W8 (Archive i Browser) som PR #87 `50f65fb`, og steg 4 (kildevurdering) er implementert 25.11.2026 på greina `casebook-step-4` (venter på PR-gjennomgang; se DESIGN.md, «Implementert steg 4»). Anders bestemte 25.11.2026 at en kobling alltid er mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (se DESIGN.md, «Implementert steg 2» og «Implementert steg 3», som gjelder foran forslaget der de avviker, særlig `against` som eget felt). Opprinnelig forslag til diskusjon, 24. november 2026. Ingenting var implementert da. Gjennomgangen er gjort mot `main` i zirkhel/BusAdventures (etter PR #64)._
 
 ## Kort fortalt
 
@@ -136,6 +136,8 @@ Kommentar: «Alle tre poster bare reposter …»
 ```
 Alle tre spørsmålene står tomme til spilleren svarer.
 
+> **Implementert i steg 4 (25.11.2026):** kortet har de to spørsmålene (Yes / Unsure / No, et nytt trykk tar svaret tilbake), «Same origin as …» med søk, kommentar, kildens bevis og spørsmålene fra steg 2 som er koblet til kilden. Kildenøklene er de samme som spørsmålene bruker. Spillerens egen telling slår sammen kilder etter «Same origin as» på kortene og «Same origin»-koblinger mellom bevis, og teorikortet viser «3 sources (1 in your count)». Dana og rapportbyggeren leser ikke kortene ennå; det hører til steg 5.
+
 ### F. Teori som arbeidsdokument
 ```
 Brightline operates @maraquinn          [ Arbeidsteori ▾ ]
@@ -227,7 +229,7 @@ Hvert steg er én liten PR med egne tester og kan stoppes etter.
 | 1 | Triage: beviskort, merker, kommentar, «Legg bort», filternedtrekk, «Ikke gjennomgått» øverst. Sitat som bevis. Lagring v7. | Etter testen |
 | 2 | Teorier: for/mot, status med logg, åpne spørsmål, alternativer, fri tittel. Velger med søk erstatter «Other evidence». | |
 | 3 | Sammenligning og koblinger (valgmodus, sammenligningsskjerm, seks koblingstyper). | |
-| 4 | Kildekort og spillerens egen uavhengighetstelling. Dana bruker spillerens forbehold. | |
+| 4 | Kildekort og spillerens egen uavhengighetstelling. Dana bruker spillerens forbehold. | Implementert 25.11.2026 (greina `casebook-step-4`), uten Dana-delen: den endrer Danas tekst og er flyttet til steg 5. |
 | 5 | Rapport: for/mot/egne forbehold i byggeren, øyeblikksbilde. Ett tips om sammenligning i tips-systemet. | |
 | 6 | Innhold: vise koblinger og teorier til karakterer. Forfatterveiledning: hvert mysterium skal ha motsigelser og «ekkokamre» (mange kilder, ett opphav). | Med neste mysterium |
 

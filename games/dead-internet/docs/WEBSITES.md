@@ -507,7 +507,7 @@ Slik testes: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.
 
 **W8 (25. nov 2026, merget PR #87 `50f65fb`).** Archive i Browser er bygget etter §8 og §9.1. Anders avgjorde designvalgene 25.11.2026 (se §9.1 og DEVPLAN under «W8»), og rettelsene ble lagt på samme PR før merge. W0–W8 er ferdige.
 
-Neste steg: Casebook steg 2 og 3 er merget (PR #85 `d6dbb8c`, PR #86 `5d64cbc`). W8 er merget (PR #87 `50f65fb`), så W0–W8 er ferdige. Casebook steg 4 (kildevurdering) er startet 25.11.2026; deretter steg 5. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
+Neste steg: Casebook steg 2 og 3 er merget (PR #85 `d6dbb8c`, PR #86 `5d64cbc`). W8 er merget (PR #87 `50f65fb`), så W0–W8 er ferdige. Casebook steg 4 (kildevurdering) er implementert 25.11.2026 på greina `casebook-step-4` og venter på PR-gjennomgang; deretter steg 5. Et nettsted er én synlig kilde (`site:domene`) og får ett kildekort; et dokument eller en forumtråd er sin egen kilde (`page:adresse`), som før (`apparentSource`). Steg 4 endrer ingen nettsider. Ekstern spilltest etter steg 5. De planlagte WEB-fotografiene er levert (PR #83). Nye PR-er merges bare etter Anders' ja.
 
 
 
