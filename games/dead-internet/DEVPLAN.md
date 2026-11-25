@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W7 merget som PR #73–#81, handover PR #82 `8978002`; nettsidefotografiene merget som PR #83 `b2a7f76`; rettelser etter fotografiene merget som PR #84 `48191f7`; PR #72 lukket uten merge; Casebook steg 2 merget som PR #85 `d6dbb8c`; Casebook steg 3 implementert på greina `casebook-step-3`, PR venter på gjennomgang)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W7 merget som PR #73–#81, handover PR #82 `8978002`; nettsidefotografiene merget som PR #83 `b2a7f76`; rettelser etter fotografiene merget som PR #84 `48191f7`; PR #72 lukket uten merge; Casebook steg 2 merget som PR #85 `d6dbb8c`; Casebook steg 3 merget som PR #86 `5d64cbc`; W8 påbegynt)._
 
 ## Overlevering (25. nov 2026)
 
@@ -8,14 +8,14 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 
 **Status**
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Katalogen har nå 83 ferdige grafikkelementer (61 fra før, pluss logoer og nettsidebilder fra grafikksteget 25. nov).
-- Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2 (teorier og spørsmål) er merget som PR #85 (`d6dbb8c`) etter Anders' ja; han godkjente alle seks designvalg. Lagringen er v9. Steg 3 (sammenligning og koblinger) er implementert 25. nov 2026 med Anders' ja, på greina `casebook-step-3`; PR-en venter på gjennomgang og merges ikke før Anders sier ja. Lagringen på greina er v10. Steg 4–5 gjenstår. Se «Steg 3» under og DESIGN.md, «Implementert steg 3».
+- Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2 (teorier og spørsmål) er merget som PR #85 (`d6dbb8c`) etter Anders' ja; han godkjente alle seks designvalg. Lagringen er v9. Steg 3 (sammenligning og koblinger) er merget som PR #86 (`5d64cbc`) etter Anders' ja, med hans beslutning om koblinger (alltid nøyaktig to bevis, retning for «Supports» og «Possibly manipulated»; punkt 2–8 godkjent). Lagringen er v10. Steg 4–5 gjenstår. Se «Steg 3» under og DESIGN.md, «Implementert steg 3».
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
 - Nettsteder: W0–W7 og grafikksteget er merget til `main` som PR #73–#81 (`origin/main` `9190200`): #73 W0 `a3b3a63`, #74 W1 `7193fa7`, #75 W2 `05493e9`, #76 grafikk `dec0458`, #77 W3 `2c6aa9f`, #78 W4 `24a20c3`, #79 W5 `9b6ce40`, #80 W6 `4e5bff8`, #81 W7 `9190200`. De 122 bakgrunnssidene fra W4 beholdes (når de først er skrevet, tar vi dem ikke bort). Godkjent ny kanon fra W4: ordfører Denise Harlan og 11 rådsmedlemmer (Ana Ruiz pluss 10 nye navn); rådhuset 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30. Godkjent ny kanon fra W5: fyret automatisert i 1998, siste fyrmester Samuel Okoro; Harbor Festival har hatt frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024) er universfakta. 6:10-fergekapteinen «Dennis» er bare en forum-påstand. Godkjent ny kanon fra W6: bibliotekets hverdagsåpningstider (ons–fre 10–18, lør 10–16, stengt søn) og de øvrige ansatte Tomás Rinaldi, Helen Cho og June Ellery (Priya Shah er fortsatt på Eastfield); Harbor Dental-teamet Dr Nina Pell, Dr Omar Rahman og hygieniker Chris Vale, åpningstider man–fre 8–17, lør 9–13, stengt søn, og parkering bak praksisen av Harbor Street; HarborDesk-rom på Dock Road og prisene Plus $79 / Studio $149; domenet `openfilings.org` og navnet Open Filings. Godkjent ny kanon fra W7: HarborDesks leietakere på 18 Harbor Street (Quay Ledger Suite 110, Amber Fern Tutoring Suite 120, North Lamp Studio Suite 210, Gull Wing Surveys Suite 305); Haven Mutuals kontor i 9 Market Row, Old Town, siden 2009; community leads på Brightlines cachete Team-side fra 2024, Samira Holt, Jonah Ellison og Tamsin Roe. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
 - Nettsidefotografier: PR #83 (`websites-photos`) er merget til `main` (`b2a7f76`). Den leverer de 20 gjenstående WEB0001–WEB0024 og fotoversjoner av SVG-heltene WEB0028, WEB0029, WEB0031–WEB0035, WEB0037 og WEB0038. Katalogen har da 123 ferdige elementer. Laget med bildegeneratoren, ikke ComfyUI. Se «Fotografier» under.
 - Rettelser etter fotografiene: PR #84 (`fixes-after-photos`) er merget til `main` (`48191f7`). Threadline-profiler viser navn og «Threads started» (`accountByHandle()` gir en id; `app/sites/forum.js` slår nå opp kontoen). Walter Brennan-sitatet etter hans død er et tilsiktet spor og har test. Godkjent enhetskanon er registrert. Harbor Festival er i oktober alle år, og de to Eastfield Notes-innleggene har oktober-URL-er med videresending fra de gamle juli-adressene (`urlAliases`). Vinneranden i 2025 er nr. 3,117. Se «Rettelser etter fotografiene» under.
 - PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026. Den var en etterlatt rest av merget PR #71 (Casebook-filene var identiske med `main`). Greina `codex/casebook-step-1` er beholdt.
 
-**Neste steg:** Anders ser over endringen av koblinger i PR #86 (Casebook steg 3; alltid to bevis, retning for «Supports» og «Possibly manipulated», 25.11.2026; punkt 2–8 er godkjent). Deretter W8 (Archive-kobling, se docs/WEBSITES.md §9.1 for hva den trenger fra steg 3) og steg 4–5. Ekstern spilltest etter steg 5 og avklaring av saksavslutning. Ingen andre åpne PR-er. Nye PR-er merges bare etter Anders' ja.
+**Neste steg:** W8 (Archive i Browser med «Compare with…», se docs/WEBSITES.md §9.1) er påbegynt 25.11.2026 med Anders' ja, på greina `websites-w8`. Deretter Casebook steg 4–5. Ekstern spilltest etter steg 5 og avklaring av saksavslutning. Ingen andre åpne PR-er. Nye PR-er merges bare etter Anders' ja.
 
 ### Nettstedsarbeid (W0–W7 og grafikk) — greiner og beslutninger
 
@@ -385,7 +385,7 @@ Verifisering av steg 2: 208 kjernetester (`node --test --test-concurrency=1`), v
 6. *Notes-fanens tall* teller notater pluss åpne spørsmål.
 
 ### Steg 3 — Sammenligning og koblinger
-_Implementert 25. november 2026 på greina `casebook-step-3` (PR #86), venter på PR-gjennomgang. Skal ikke merges før Anders sier ja. Anders gikk gjennom PR-en 25.11.2026: koblinger er endret til alltid to bevis (se designvalg 1), punkt 2–8 er godkjent som de er._
+_Implementert 25. november 2026 og merget som PR #86 · `5d64cbc` etter Anders’ ja. Anders gikk gjennom PR-en 25.11.2026: koblinger er endret til alltid to bevis (se designvalg 1), punkt 2–8 er godkjent som de er._
 - [x] Valgmodus (langt trykk) og sammenligning av bilder, dokumenter, meldinger, artikler og versjoner (25. nov 2026)
 - [x] Bytte mellom to bilder og zoom (25. nov 2026)
 - [x] Seks koblingstyper med kort, valgfri begrunnelse (25. nov 2026). En kobling er alltid mellom nøyaktig to bevis, med retning for «Supports» og «Possibly manipulated» (Anders, 25.11.2026)
@@ -396,7 +396,7 @@ Filer: `core/compare.js` (ny: `compareView`, `textChanges`), `core/workbench.js`
 
 Verifisering av steg 3: 218 kjernetester (`node --test --test-concurrency=1`), validator (0 feil/advarsler), alle 12 scenarioer og begge automatiske spillere med identisk utskrift som `main` `d6dbb8c` (26 linjer, sammenlignet linje for linje). Playwright på 390×844: langt trykk starter valgmodus, tre bevis sammenlignes, spilleren velger to av de tre for en kobling, seks koblingstyper, kobling med begrunnelse, «Supports» med «Swap A and B», samme kobling igjen gir «already connected», retningen leses riktig fra begge ender, redigert fra beviskortet, to kopier av samme side med endringer, to bilder med bytte og zoom, flere lagt bort samtidig, koblinger på teorikortet, ny lasting. W8-inngangen testes for seg: `phone.compare()` med to versjoner, endringer vises, begge kopiene lagres før de kan kobles. DOM-tvillingtesten sammenligner også 72 koblinger (begge retninger for de rettede typene), 29 sammenligninger (6 sidepar), koblingsredigereren for alle typer med og uten bytte, og valgmodus i tre tvillingverdener. En bevisst lekkasje (skjult `sourceOf` i `compareView`, vist i Source-raden) ble fanget av tvillingtesten, forbudstesten og DOM-testen, og er fjernet. Skjermbilder: `/workspace/dead-internet-shots/cb3-*.png`.
 
-**Designvalg (Anders’ gjennomgang 25.11.2026: punkt 1 endret, punkt 2–8 godkjent som de er):**
+**Designvalg (Anders’ gjennomgang 25.11.2026: punkt 1 endret, punkt 2–8 godkjent som de er; merget):**
 1. *En kobling er alltid mellom nøyaktig to bevis* (Anders’ beslutning 25.11.2026, erstatter «én kobling per sett og type» med to eller flere bevis). Spilleren kan fortsatt sammenligne mange bevis samtidig, men velger to når en kobling opprettes. Det gjør betydningen tydelig og unngår at en gruppekobling sier noe om alle par.
 
    | Type | Betydning | Retning |
@@ -444,7 +444,7 @@ Verifisering av steg 3: 218 kjernetester (`node --test --test-concurrency=1`), v
 - [x] W5 Wiki, Forum, Document, Anonymous (og saas-Landing) — merget PR #79
 - [x] W6 Legacy, Personal, øvrig Landing og eldre design — merget PR #80 · `4e5bff8`
 - [x] W7 Spor i design (Anders sa ja 25. november 2026), ny gjennomspillingstest — merget PR #81 · `9190200`
-- [ ] W8 «Compare with…» fra Archive (etter Casebook steg 3; inngangen `phone.compare()` er klar på greina `casebook-step-3`, se docs/WEBSITES.md §9.1)
+- [ ] W8 «Compare with…» fra Archive (påbegynt 25.11.2026 på greina `websites-w8`; inngangen `phone.compare()` er merget i PR #86, se docs/WEBSITES.md §9.1)
 - [x] Grafikk WEB0001–WEB0024, de tolv viktigste først — merget i PR #83 `b2a7f76` (bildegeneratoren, ikke ComfyUI)
 - [x] Bytt `corp-registries.example` til `openfilings.org`, med test for søk, gamle adresser og referanser — merget PR #80 · `4e5bff8`
 
