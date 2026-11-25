@@ -173,3 +173,28 @@ test("intended crack: Walter Brennan is quoted in February 2026, after his death
     .filter(i => i.level !== "INFO" && /DR-2026-0051|walter_brennan|bf-walter-brennan/.test(`${i.where} ${i.msg}`));
   assert.deepEqual(issues, [], "the validator does not flag the crack");
 });
+
+// Anders, 25 Nov 2026: Harbor Festival is always in October, and the 2025 duck race has one winner.
+test("Harbor Festival is in October everywhere, and the 2025 duck race has one winner", () => {
+  const month = d => String(d).slice(5, 7);
+  // Pages and photos from a festival day.
+  for (const id of ["B06", "DR-2025-0322", "UF-2025-0052", "W-eastfieldnotes-0016", "W-eastfieldnotes-0022"]) {
+    const a = world.artifacts.get(id);
+    assert.equal(month(a.date), "10", `${id} ${a.date}`);
+    for (const c of a.comments || []) assert.equal(month(c.date), "10", `${id} ${c.id}`);
+  }
+  for (const id of ["NIMG0001", "WEB0018", "WEB0034"]) assert.equal(month(world.images.get(id).meta.taken), "10", id);
+  assert.equal(world.entities.get("evt_festival").date, "2025-10-11");
+  // Festival days are Saturdays (the 2025 race is "on Saturday", 11 October).
+  for (const d of ["2025-10-11", "2022-10-08", "2021-10-09", world.images.get("WEB0034").meta.taken.slice(0, 10)])
+    assert.equal(new Date(d + "T12:00:00Z").getUTCDay(), 6, d);
+  // No text about the festival puts it in July or summer, and none tells of a move.
+  for (const a of world.artifacts.values()) {
+    const text = [a.title, ...a.versions.flatMap(v => [v.title, v.body]), ...(a.comments || []).map(c => c.text)].filter(Boolean).join("\n");
+    if (!/harbou?r festival|duck race|festival weekend/i.test(text)) continue;
+    assert.doesNotMatch(text, /\bJuly\b|\bsummer\b|\bmoved to October\b/i, a.id);
+  }
+  const winners = [...world.artifacts.values()].flatMap(a => a.versions.flatMap(v => [...String(v.body || "").matchAll(/won by duck (?:number |#)(\d+(?:,\d{3})*)/g)].map(m => [a.id, m[1]])));
+  assert.ok(winners.length >= 2, "both reports name the winner");
+  assert.deepEqual([...new Set(winners.map(w => w[1]))], ["3,117"], JSON.stringify(winners));
+});

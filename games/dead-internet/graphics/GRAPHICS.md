@@ -89,7 +89,7 @@ Metadata står i `content/universe/images.json` (`meta`), ikke i katalogen. «Im
 | WEB0031 | stripped | | | | | |
 | WEB0032 | stripped | | | | | |
 | WEB0033 | stripped | | | | | |
-| WEB0034 | EXIF | 2008-07-19 15:32 | Orrin S5 |  |  |  |
+| WEB0034 | EXIF | 2008-10-11 15:32 | Orrin S5 |  |  |  |
 | WEB0035 | stripped | | | | | |
 | WEB0036 | stripped | | | | | |
 | WEB0037 | EXIF | 2019-08-03 07:41 | Lumen 5 | Harbor St, Eastfield |  |  |
@@ -108,7 +108,7 @@ Metadata står i `content/universe/images.json` (`meta`), ikke i katalogen. «Im
 | WEB0015 | EXIF | 2025-04-19 11:03 | Lumen 6 | Eastfield |  |  |
 | WEB0016 | EXIF | 2019-06-13 18:12 | Lumen 5 | Eastfield Library |  |  |
 | WEB0017 | EXIF | 2021-05-09 07:56 | Lumen 5 | Pier 2, Port Calder |  |  |
-| WEB0018 | EXIF | 2022-07-15 18:47 | Lumen 5 | Harbor St, Eastfield |  |  |
+| WEB0018 | EXIF | 2022-10-08 09:12 | Lumen 5 | Harbor St, Eastfield |  |  |
 | WEB0019 | EXIF | 2022-08-31 10:24 | Lumen 5 | Eastfield |  |  |
 | WEB0021 | stripped | | | | | |
 | WEB0022 | stripped | | | | | |

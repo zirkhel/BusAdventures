@@ -430,7 +430,7 @@
   "platform": "eastfieldnotes",
   "url": "eastfieldnotes.blog/2021/07/harbor-festival-dog-run",
   "author": "acc_eastfieldnotes",
-  "date": "2021-07-02",
+  "date": "2021-10-09",
   "title": "The dog run under Harbor Festival",
   "filler": true,
   "source": "mara-blog",
@@ -446,20 +446,20 @@
    {
     "id": "c1",
     "account": "acc_en_nando",
-    "date": "2021-07-02",
+    "date": "2021-10-09",
     "text": "That was my terrier. I was sorry. A bit.",
     "likes": 4
    },
    {
     "id": "c2",
     "account": "acc_en_june",
-    "date": "2021-07-03",
+    "date": "2021-10-10",
     "text": "The run is always in the worst place and I go every year anyway."
    },
    {
     "id": "c3",
     "account": "acc_en_helenk",
-    "date": "2021-07-03",
+    "date": "2021-10-10",
     "text": "If you go at ten it's quieter, and the chip stall isn't open yet."
    }
   ]
@@ -616,7 +616,7 @@
   "platform": "eastfieldnotes",
   "url": "eastfieldnotes.blog/2022/07/festival-weekend",
   "author": "acc_eastfieldnotes",
-  "date": "2022-07-16",
+  "date": "2022-10-08",
   "title": "Festival weekend",
   "images": ["WEB0018"],
   "filler": true,
@@ -626,14 +626,14 @@
    {
     "id": "v1",
     "cached": true,
-    "body": "The harbour is loud and I am working Saturday anyway. If you need a quiet half hour, the library is open, the fans are on, and I have put the chairs back from the wall. Dogs can wait in the shade by the side door; I will bring water.\n— M."
+    "body": "The harbour is loud and I am working Saturday anyway. If you need a quiet half hour, the library is open, the heating is on, and I have put the chairs back from the wall. Dogs can wait out of the wind by the side door; I will bring water.\n— M."
    }
   ],
   "comments": [
    {
     "id": "c1",
     "account": "acc_en_nando",
-    "date": "2022-07-16",
+    "date": "2022-10-08",
     "text": "Thank you for the water bowl. We used it."
    }
   ]
