@@ -689,7 +689,8 @@
     "text": "She fought for the Mill. Fought for US. And then she 'changed her mind'? Dead people don't change their minds. That part I'm right about.",
     "supports": [
      "S8"
-    ]
+    ],
+    "repeatText": "Her account changed its tune. Mara didn't tell me why. That's the distinction."
    },
    {
     "id": "pattern",
@@ -709,7 +710,8 @@
      "acc_junopark",
      "acc_mike",
      "acc_pat"
-    ]
+    ],
+    "repeatText": "The timestamps are there to check. Who's behind them? That's the part I haven't established."
    },
    {
     "id": "mirror",
@@ -727,7 +729,8 @@
      {
       "setFlag": "tip_flip"
      }
-    ]
+    ],
+    "repeatText": "Look at the lettering in the photos. Flip them. Check for yourself."
    },
    {
     "id": "murder",
@@ -742,7 +745,8 @@
     "text": "Kestrel van. Kestrel works Northgate sites. Northgate needed Mara gone before the vote. Connect the dots. I did. With string.",
     "supports": [
      "F1"
-    ]
+    ],
+    "repeatText": "The van, the client list, the development. That's my connection. No, I don't have a written order."
    },
    {
     "id": "theo",
@@ -752,7 +756,8 @@
     "text": "The brother had the password. I'm just saying what everyone's thinking.",
     "supports": [
      "F2"
-    ]
+    ],
+    "repeatText": "No, Theo hasn't admitted anything to me. Most of what he says to me is 'stop messaging'."
    },
    {
     "id": "police",
@@ -802,7 +807,8 @@
     ],
     "mentions": [
      "static_channel"
-    ]
+    ],
+    "repeatText": "I already sent you the address. And I meant what I said about keeping it to yourself."
    },
    {
     "id": "paper",
@@ -815,7 +821,8 @@
     "text": "The Record deleted her quote. Who pays the Record? NORTHGATE ADS ON EVERY PAGE.",
     "supports": [
      "F4"
-    ]
+    ],
+    "repeatText": "I kept what they published. I wasn't in the newsroom when they decided to change it."
    }
   ],
   "fallback": {
@@ -824,6 +831,12 @@
      "text": "Interesting. Very interesting. I'll add it to the file."
     }
    ]
+  },
+  "memory": {
+   "unknownPerson": "{name}? I don't have anything on them. And before you ask: no, that doesn't make them suspicious.",
+   "unknownTopic": "Nothing in my file on that. The file has limits. Despite what Dana says.",
+   "repeatAsk": "Still nothing. Asking twice doesn't give me a second source.",
+   "repeatShow": "You've sent me this already. What do you think I've missed?"
   }
  },
  {
