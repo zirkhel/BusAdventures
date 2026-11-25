@@ -1,0 +1,4 @@
+/* Landing · saas (W5) — airy marketing chrome on top of simple.css. */
+.tmpl-landing.var-saas .site-nav-link { color: var(--site-accent, #8a4fff); font-weight: 600; }
+.tmpl-landing.var-saas h1 { letter-spacing: -0.03em; }
+.tmpl-landing.var-saas .site-tagline { color: var(--site-accent, #8a4fff); }

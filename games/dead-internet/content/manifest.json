@@ -8,7 +8,8 @@
   "entities": [
    "universe/entities.json",
    "universe/pools/news/entities.json",
-   "universe/entities-background.json"
+   "universe/entities-background.json",
+   "universe/entities-background-w5.json"
   ],
   "accounts": [
    "universe/accounts.json",
@@ -16,7 +17,8 @@
    "universe/pools/news-unfiltered/authors.json",
    "universe/pools/news-comments/dailyrecord-readers.json",
    "universe/pools/news-comments/unfiltered-readers.json",
-   "universe/accounts-background.json"
+   "universe/accounts-background.json",
+   "universe/accounts-background-w5.json"
   ],
   "images": [
    "universe/images.json",
@@ -32,7 +34,12 @@
    "universe/artifacts/sites-w4-northgate.json",
    "universe/artifacts/sites-w4-city.json",
    "universe/artifacts/sites-w4-kestrel.json",
-   "universe/artifacts/sites-w4-eastfieldnotes.json"
+   "universe/artifacts/sites-w4-eastfieldnotes.json",
+   "universe/artifacts/sites-w5-calderpedia.json",
+   "universe/artifacts/sites-w5-threadline.json",
+   "universe/artifacts/sites-w5-docshare.json",
+   "universe/artifacts/sites-w5-spillcheck.json",
+   "universe/artifacts/sites-w5-faceless.json"
   ],
   "characters": "universe/characters.json",
   "canon": "universe/canon.json",

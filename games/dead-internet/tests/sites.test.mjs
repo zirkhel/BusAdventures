@@ -120,7 +120,7 @@ test("W2 templates handle Northgate, the city portal and Eastfield Notes", () =>
     assert.equal(canRenderSite(phone, viewArtifact(g, id)), true, id);
   }
   // Connect and news stay on their existing renderers.
-  assert.equal(canRenderSite(phone, viewArtifact(g, "A16")), false);
+  assert.equal(canRenderSite(phone, viewArtifact(g, "A57")), false);
   const news = [...world.artifacts.values()].find(a => a.platform === "dailyrecord" && a.type === "article");
   assert.ok(news);
   assert.equal(canRenderSite(phone, viewArtifact(g, news.id)), false);
@@ -138,14 +138,14 @@ test("every live site design has a catalog logo or icon", () => {
   }
 });
 
-test("landing, legacy, wiki and document pages use the thin site chrome", () => {
+test("W5 templates handle wiki, forum, document and anonymous pages", () => {
   const g = new Game(world, { seed: 1 });
   g.start();
   const phone = { g };
-  for (const id of ["W-harbordental-0001", "B19", "B17", "B18", "B23", "A18"]) {
+  for (const id of ["W-harbordental-0001", "B19", "B17", "B18", "B23", "A18", "A16", "A30"]) {
     assert.equal(canRenderSite(phone, viewArtifact(g, id)), true, id);
   }
-  // Raw static.channel and forum threads stay on the existing renderer.
+  // Raw static.channel and Connect stay on the existing renderer.
   assert.equal(canRenderSite(phone, viewArtifact(g, "A44")), false);
-  assert.equal(canRenderSite(phone, viewArtifact(g, "A16")), false);
+  assert.equal(canRenderSite(phone, viewArtifact(g, "A57")), false);
 });

@@ -1,0 +1,58 @@
+[
+ {
+  "id": "samuel_okoro",
+  "kind": "person",
+  "name": "Samuel Okoro",
+  "aliases": [
+   "Samuel Okoro"
+  ],
+  "isHuman": true,
+  "bio": "Last keeper of the Port Calder lighthouse, until it was automated in 1998.",
+  "relations": []
+ },
+ {
+  "id": "port_calder_lighthouse",
+  "kind": "place",
+  "name": "Port Calder lighthouse",
+  "aliases": [
+   "Port Calder lighthouse"
+  ],
+  "isHuman": false,
+  "bio": "Lighthouse at the harbour mouth, automated in 1998.",
+  "relations": []
+ },
+ {
+  "id": "harborfit",
+  "kind": "org",
+  "name": "HarborFit",
+  "aliases": [
+   "HarborFit"
+  ],
+  "isHuman": false,
+  "bio": "A Port Calder gym chain.",
+  "relations": []
+ },
+ {
+  "id": "slice_of_calder",
+  "kind": "org",
+  "name": "Slice of Calder",
+  "aliases": [
+   "Slice of Calder"
+  ],
+  "isHuman": false,
+  "bio": "A Port Calder pizza chain.",
+  "relations": []
+ },
+ {
+  "id": "calderlearn",
+  "kind": "org",
+  "name": "CalderLearn",
+  "aliases": [
+   "CalderLearn",
+   "Port Calder Schools portal"
+  ],
+  "isHuman": false,
+  "bio": "The schools portal used by Port Calder public schools.",
+  "relations": []
+ }
+]

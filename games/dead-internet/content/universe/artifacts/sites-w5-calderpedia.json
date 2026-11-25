@@ -1,0 +1,691 @@
+[
+ {
+  "id": "W-calderpedia-0001",
+  "site": "calderpedia",
+  "page": "main",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org",
+  "date": "2026-01-20",
+  "title": "Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Welcome to Calderpedia, the free encyclopaedia of Port Calder and the towns around the creek.\n\nThis project has been running on the same software since 2014. Anyone with a login may edit, and the habit of the place is to prefer a quiet citation over a loud opinion.\n\n== Featured ==\ncalderpedia.org/Port_Calder — the city itself.\ncalderpedia.org/Calder_Mill — the old girl on the Eastfield waterfront.\ncalderpedia.org/Harbor_Festival — music, chowder, and a long evening on the pier.\n\n== Places ==\ncalderpedia.org/Eastfield, calderpedia.org/Northpoint, calderpedia.org/Old_Town, calderpedia.org/The_Heights, calderpedia.org/Calder_Creek, calderpedia.org/Port_Calder_lighthouse, calderpedia.org/Eastfield–Northpoint_ferry, calderpedia.org/Dock_Road, calderpedia.org/Route_14\n\n== Institutions ==\ncalderpedia.org/The_Daily_Record, calderpedia.org/Saltys_Fish_Bar, calderpedia.org/Calder_Credit_Union, calderpedia.org/City_Council, calderpedia.org/Denise_Harlan, calderpedia.org/Kestrel_Logistics, calderpedia.org/Northgate_Development, calderpedia.org/Port_Calder_Public_Library\n\n== Other articles ==\ncalderpedia.org/Chowder_competitions, calderpedia.org/Fog, calderpedia.org/Dead_internet_theory, calderpedia.org/Harbor_Festival\n\nUse Random article in the menu, or start from the city page."
+   }
+  ],
+  "mentions": [
+   "eastfield",
+   "calder_mill"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0002",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Eastfield",
+  "date": "2025-09-14",
+  "title": "Eastfield — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Eastfield is the harbour district of Port Calder. It sits along the water between the ferry landing and Calder Creek, and it is the part of the city most often described as 'the old harbour'.\n\n== History ==\nThe district grew around Calder Mill (calderpedia.org/Calder_Mill), which opened in 1887 and closed in 2009. Rows of terraced houses, a branch library, and the Eastfield Community Garden sit behind the mill wall. Locals still call the mill 'the old girl'.\n\n== Today ==\nThe harbour, the creek mouth, and the mill site remain the centre of the neighbourhood. A large redevelopment of the mill site has been proposed; that proposal is described on the mill page, not here.\n\n== References ==\n[1] calderpedia.org/Port_Calder\n[2] calderpedia.org/Calder_Mill\n"
+   }
+  ],
+  "mentions": [
+   "eastfield",
+   "calder_mill"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0003",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Northpoint",
+  "date": "2025-08-02",
+  "title": "Northpoint — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Northpoint is a district of Port Calder, north of the harbour mouth. It is one of the four districts named on the city's page, with Eastfield, Old Town and the Heights.\n\n== Character ==\nThe streets run up from the north dock and the ferry. Housing is a mix of older terraces and later blocks, including Northpoint Landing (completed 2023). The lighthouse stands at the harbour mouth on this side of the water: calderpedia.org/Port_Calder_lighthouse.\n\n== References ==\n[1] calderpedia.org/Port_Calder\n"
+   }
+  ],
+  "mentions": [
+   "eastfield",
+   "northpoint_landing",
+   "port_calder_lighthouse"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0004",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Old_Town",
+  "date": "2025-07-18",
+  "title": "Old Town — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Old Town is the inland historic district of Port Calder. It is one of the four districts named on the city's page.\n\n== Character ==\nThe streets are narrower than in Northpoint or the Heights, and the civic buildings sit at the edge of the district rather than in the middle of it. Foundry Lofts, a residential conversion completed in 2017, stands on a former workshop site.\n\n== References ==\n[1] calderpedia.org/Port_Calder\n"
+   }
+  ],
+  "mentions": [
+   "foundry_lofts"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0005",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/The_Heights",
+  "date": "2025-07-18",
+  "title": "The Heights — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Heights is a residential district of Port Calder, above Old Town. It is one of the four districts named on the city's page.\n\n== Character ==\nThe streets are wider here, and the views, on a clear day, run as far as the harbour mouth. Heights Commons, completed in 2020, is a later addition of low blocks and a courtyard.\n\n== References ==\n[1] calderpedia.org/Port_Calder\n"
+   }
+  ],
+  "mentions": [
+   "heights_commons"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0006",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Port_Calder_lighthouse",
+  "date": "2025-10-05",
+  "title": "Port Calder lighthouse — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Port Calder lighthouse stands at the harbour mouth on the Northpoint side. It has been a working aid to navigation since the nineteenth century.\n\n== Automation ==\nThe light was automated in 1998. Samuel Okoro was the last keeper. After 1998 the cottage was closed to the public, and the light has been run from shore.\n\n== Access ==\nThe breakwater walk is open in good weather. The tower itself is not.\n\n== References ==\n[1] Port Calder Harbor Authority, notice on automation (1998), cited in local histories.\n"
+   }
+  ],
+  "mentions": [
+   "port_calder_lighthouse",
+   "samuel_okoro"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0007",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Eastfield–Northpoint_ferry",
+  "date": "2025-06-30",
+  "title": "Eastfield–Northpoint ferry — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Eastfield–Northpoint ferry is a short harbour crossing between the Eastfield landing and the north dock. It is a city service.\n\n== Service ==\nBoats run through the day, with a thinner timetable in the evening and in fog. Delays are common when the wind is up or when work is under way at the docks. The crossing is short; the waiting is not always.\n\n== References ==\n[1] calderpedia.org/Eastfield\n[2] calderpedia.org/Northpoint\n"
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0008",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Harbor_Festival",
+  "date": "2025-10-20",
+  "title": "Harbor Festival — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Harbor Festival is Port Calder's late-season waterfront festival: music, food stalls, a dog run, and a long evening on the pier. It is usually held in October.\n\n== Volunteers ==\nThe festival has been staffed by volunteers since at least 1979. The roster changes, the work does not: stalls, bins, and a late sweep of the pier.\n\n== Chowder ==\nA chowder competition is part of the usual programme. See calderpedia.org/Chowder_competitions.\n\n== References ==\n[1] Festival programmes held at the Port Calder Public Library, cited from 1979 onward.\n"
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0009",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Calder_Creek",
+  "date": "2025-05-22",
+  "title": "Calder Creek — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Creek reaches the harbour at Eastfield. It is a short, tidal stream, and in summer it is sometimes more mud than water.\n\n== Course ==\nThe creek runs through the lower part of Eastfield and opens beside the mill wall. Walkers use the path after rain at their own risk. Occasional fish kills and algal blooms have been reported in the local paper.\n\n== References ==\n[1] calderpedia.org/Eastfield\n"
+   }
+  ],
+  "mentions": [
+   "eastfield",
+   "calder_mill"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0010",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Route_14",
+  "date": "2026-01-08",
+  "title": "Route 14 — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Route 14 is a city bus route in Port Calder. It is widely used and, as often, widely complained about.\n\n== Route ==\nThe 14 is commonly described as running between the harbour side and the inland districts.[citation needed] A published timetable exists, but this article does not yet have a sourced map of every stop.\n\n== Reliability ==\nDrivers are the subject of at least one appreciation thread on a local forum. Official statements on delays belong on the transit authority's own site.\n\n== References ==\n[1] Citation needed for a complete stop list.\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0011",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/The_Daily_Record",
+  "date": "2025-11-02",
+  "title": "The Daily Record — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Daily Record is Port Calder's newspaper, published since 1911. It is the city's paper of record in the ordinary sense: council meetings, the harbour, obituaries, and the rest of a small city's day.\n\n== History ==\nThe paper has been in continuous publication since 1911. Its offices and its website are described on the paper's own pages, not here.\n\n== Coverage ==\nLocal news, politics, business, culture, and sport. The paper also carries sponsored pages, which it marks as such.\n\n== References ==\n[1] The Daily Record masthead: \"Port Calder's paper since 1911\".\n"
+   }
+  ],
+  "mentions": [
+   "daily_record"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0012",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Saltys_Fish_Bar",
+  "date": "2025-04-12",
+  "title": "Salty's Fish Bar — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Salty's Fish Bar is a fish-and-chip shop in Port Calder, open since 1971.\n\n== Reputation ==\nIt is the answer most often given when someone asks where to eat fried fish in the city. Whether the oil was changed in 2019, and whether that mattered, is a local argument and not a settled fact.\n\n== References ==\n[1] The shop's own sign and website: \"since 1971\".\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0013",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Calder_Credit_Union",
+  "date": "2025-03-09",
+  "title": "Calder Credit Union — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Credit Union is a local credit union in Port Calder, founded in 1952.\n\n== Role ==\nIt serves residents and small organisations in the city. This article is a stub; a history of branches and mergers has not yet been written.\n\n== References ==\n[1] Institution's published founding year, 1952.\n"
+   }
+  ],
+  "mentions": [
+   "calder_cu"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0014",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Denise_Harlan",
+  "date": "2026-02-02",
+  "title": "Denise Harlan — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Denise Harlan is the Mayor of Port Calder.\n\n== Office ==\nThe mayor sits with the City Council, which has eleven voting members. City Hall is at 40 Civic Center, Port Calder. A short official page is maintained on the city portal.\n\n== References ==\n[1] City of Port Calder, council roster, portcalder.gov/council\n"
+   }
+  ],
+  "mentions": [
+   "denise_harlan",
+   "city_council"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0015",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/City_Council",
+  "date": "2026-02-02",
+  "title": "Port Calder City Council — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Port Calder City Council is the city's elected council: a mayor and eleven voting members.\n\n== Membership ==\nDenise Harlan is Mayor. The eleven members represent districts including Eastfield, Old Town, Northpoint, the Heights, Harbor, and an at-large seat. Councilmember Ana Ruiz represents Eastfield. Meetings, agendas and ordinances are published on the city portal at portcalder.gov/council.\n\n== References ==\n[1] portcalder.gov/council\n"
+   }
+  ],
+  "mentions": [
+   "denise_harlan",
+   "city_council",
+   "ana",
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0016",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Kestrel_Logistics",
+  "date": "2026-01-16",
+  "title": "Kestrel Logistics — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Kestrel Logistics is a Port Calder delivery firm, founded in 1998.\n\n== Operations ==\nThe company has 140 vans on the road. In 2023 it moved into the former cannery on Dock Road. In 2025 it added sixty jobs and opened same-day delivery to every address in the city. Its slogan is \"We know the way\".\n\nThis article is a stub.\n\n== References ==\n[1] Company site, kestrel-logistics.com\n"
+   }
+  ],
+  "mentions": [
+   "kestrel"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0017",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Chowder_competitions",
+  "date": "2025-10-21",
+  "title": "Chowder competitions — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder holds an unusually high number of chowder competitions.[1] The best known is the pot judged at Harbor Festival (calderpedia.org/Harbor_Festival), but church halls and harbour clubs run their own pots through the year.\n\n== Claims ==\nWriters often say the city has more chowder contests per head than anywhere else on this coast. That claim is repeated; a sourced comparison has not yet been added. See the talk page.\n\n== References ==\n[1] calderpedia.org/Port_Calder\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0018",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Dead_internet_theory",
+  "date": "2025-09-01",
+  "title": "Dead internet theory — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Dead internet theory is a popular claim that much of what looks like human activity online is in fact automated, coordinated, or otherwise not what it seems.\n\n== Status ==\nThe phrase is used in forum arguments and in newspaper features. It is not a settled finding, and this article does not treat it as one. Readers looking for local examples should be careful: a neighbourhood argument is not a proof of a theory.\n\n== References ==\n[1] General press usage; no single originating paper is agreed.\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0019",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Northgate_Development",
+  "date": "2026-01-20",
+  "title": "Northgate Development — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Northgate Development is a Port Calder property company. It plans and builds housing in the city.\n\n== Work ==\nCompleted projects include Foundry Lofts (Old Town, 2017), Heights Commons (the Heights, 2020) and Northpoint Landing (2023). A further scheme, Eastfield Waterfront, has been proposed for the Calder Mill site. Details of that proposal belong on the mill page and on the company's own site.\n\n== References ==\n[1] northgatedev.com/projects\n[2] calderpedia.org/Calder_Mill\n"
+   }
+  ],
+  "mentions": [
+   "northgate",
+   "calder_mill",
+   "waterfront",
+   "foundry_lofts",
+   "heights_commons",
+   "northpoint_landing"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0020",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Dock_Road",
+  "date": "2025-06-01",
+  "title": "Dock Road — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Dock Road runs along the working side of Port Calder's harbour.\n\n== Buildings ==\nThe former Calder cannery on Dock Road became the depot of Kestrel Logistics in 2023. Other sheds and yards remain in industrial use. It is not a scenic walk, except in the sense that some people like cranes.\n\n== References ==\n[1] calderpedia.org/Kestrel_Logistics\n"
+   }
+  ],
+  "mentions": [
+   "kestrel"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0021",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Fog",
+  "date": "2025-01-11",
+  "title": "Fog — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Fog is a usual feature of Port Calder's harbour weather, especially in the morning and in the shoulder seasons.\n\n== Effects ==\nFerry horns sound closer than they are. The lighthouse is often the last thing visible from the breakwater. The city page mentions fog as one of the things the place is known for, along with ferries and chowder.\n\n== References ==\n[1] calderpedia.org/Port_Calder\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0022",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Port_Calder_Public_Library",
+  "date": "2025-08-22",
+  "title": "Port Calder Public Library — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder Public Library is the city's public library service. It has more than one branch; the Eastfield branch is the one most often mentioned in neighbourhood writing.\n\n== Services ==\nThe library runs reading circles, a book bus in the school holidays, and the usual desk work of reservations and returns. Fines, opening times and the catalogue are on the library's own website, which is not this one.\n\n== References ==\n[1] City portal note on the library: portcalder.gov/residents/library\n"
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0023",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Pier_3",
+  "date": "2025-12-20",
+  "title": "Pier 3 — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Pier 3 is a pier on the Port Calder harbour side, used by walkers, anglers, and, in winter, people who should perhaps have stayed on the wall.\n\n== Use ==\nThe pier is public. In cold snaps the water off the end has been known to take a dog, and to give it back. Official notices about ice, when they are posted, are posted at the shore end.\n\n== References ==\n[1] calderpedia.org/Eastfield\n"
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0024",
+  "site": "calderpedia",
+  "page": "history",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Port_Calder/history",
+  "date": "2025-11-11",
+  "title": "Revision history of Port Calder",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This is the revision history of calderpedia.org/Port_Calder.\n\n11 November 2025 — current revision. Lede on the city, its districts, the Daily Record, fog, ferries and chowder competitions. (The article was created on this date in the present form.)\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0025",
+  "site": "calderpedia",
+  "page": "history",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Calder_Mill/history",
+  "date": "2025-12-01",
+  "title": "Revision history of Calder Mill",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This is the revision history of calderpedia.org/Calder_Mill.\n\n1 December 2025 — current revision. Dates 1887–2009, employment at peak, local name 'the old girl', the proposed waterfront scheme, and the 2024–2025 petition. (The article was created on this date in the present form.)\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0026",
+  "site": "calderpedia",
+  "page": "history",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Harbor_Festival/history",
+  "date": "2025-10-20",
+  "title": "Revision history of Harbor Festival",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This is the revision history of calderpedia.org/Harbor_Festival.\n\n3 October 2024 — page created as a short stub (date, pier, music).\n20 October 2025 — current revision. Volunteers since at least 1979; link to chowder competitions added.\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0027",
+  "site": "calderpedia",
+  "page": "history",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Denise_Harlan/history",
+  "date": "2026-02-02",
+  "title": "Revision history of Denise Harlan",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This is the revision history of calderpedia.org/Denise_Harlan.\n\n2 February 2026 — current revision. Mayor of Port Calder; eleven-member council; City Hall address. (The article was created on this date in the present form.)\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0028",
+  "site": "calderpedia",
+  "page": "history",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/The_Daily_Record/history",
+  "date": "2025-11-02",
+  "title": "Revision history of The Daily Record",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This is the revision history of calderpedia.org/The_Daily_Record.\n\n14 March 2019 — page created with the founding year 1911.\n2 November 2025 — current revision. Masthead citation and a short note on sponsored pages.\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0029",
+  "site": "calderpedia",
+  "page": "talk",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Talk:Chowder_competitions",
+  "date": "2025-11-12",
+  "title": "Talk: Chowder competitions",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Is the chowder claim sourced?\n\nThe city page says Port Calder is known for \"an unusually high number of chowder competitions.\" The chowder article repeats it and then admits there is no comparison. That is honest, but it is also thin.\n\nIf someone has a count, or even a list of the regular pots, it should go in the article. Until then the sentence should stay modest.\n\n— a passing editor, 12 November 2025\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0030",
+  "site": "calderpedia",
+  "page": "talk",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Talk:Route_14",
+  "date": "2026-01-09",
+  "title": "Talk: Route 14",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The route description is marked citation needed, and it should stay that way until someone sits down with a timetable that we can cite. \"Harbour side to the inland districts\" is true in the loose sense and useless in the useful sense.\n\nPlease do not add stop lists from memory.\n"
+   }
+  ]
+ },
+ {
+  "id": "W-calderpedia-0031",
+  "site": "calderpedia",
+  "page": "talk",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Talk:Dead_internet_theory",
+  "date": "2025-09-02",
+  "title": "Talk: Dead internet theory",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "This is a general article. It is not a place to settle an argument about a particular account, firm, or neighbourhood blog. If you have a source that defines the phrase, add it. If you have a grievance, this is the wrong page.\n"
+   }
+  ]
+ }
+]

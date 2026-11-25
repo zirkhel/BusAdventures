@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W4 merget som PR #73–#78, `origin/main` `24a20c3`)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W4 merget som PR #73–#78, `origin/main` `24a20c3`; W5 på greinen `websites-w5`, ikke merget)._
 
 ## Overlevering (25. nov 2026)
 
@@ -10,14 +10,14 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Katalogen har nå 83 ferdige grafikkelementer (61 fra før, pluss logoer og nettsidebilder fra grafikksteget 25. nov).
 - Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2–5 gjenstår.
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
-- Nettsteder: W0–W4 og grafikksteget er merget til `main` som PR #73–#78 (`origin/main` `24a20c3`): #73 W0 `a3b3a63`, #74 W1 `7193fa7`, #75 W2 `05493e9`, #76 grafikk `dec0458`, #77 W3 `2c6aa9f`, #78 W4 `24a20c3`. De 122 bakgrunnssidene fra W4 beholdes (når de først er skrevet, tar vi dem ikke bort). Godkjent ny kanon fra W4: ordfører Denise Harlan og 11 rådsmedlemmer (Ana Ruiz pluss 10 nye navn); rådhuset 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
+- Nettsteder: W0–W4 og grafikksteget er merget til `main` som PR #73–#78 (`origin/main` `24a20c3`): #73 W0 `a3b3a63`, #74 W1 `7193fa7`, #75 W2 `05493e9`, #76 grafikk `dec0458`, #77 W3 `2c6aa9f`, #78 W4 `24a20c3`. De 122 bakgrunnssidene fra W4 beholdes (når de først er skrevet, tar vi dem ikke bort). Godkjent ny kanon fra W4: ordfører Denise Harlan og 11 rådsmedlemmer (Ana Ruiz pluss 10 nye navn); rådhuset 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30. **W5** (Wiki, Forum, Document, Anonymous, pluss saas-varianten av Landing, og innhold til Calderpedia, Threadline, Docshare, SpillCheck og Faceless Stock) ligger på greinen `websites-w5` og er **ikke merget**. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
 - Åpen PR #72 (`codex/casebook-step-1`) er en etterlatt duplikat av merget PR #71 og skal lukkes, ikke merges.
 
-**Neste steg:** W5 (Wiki, Forum, Document, Anonymous, med innhold til Calderpedia, Threadline, Docshare, SpillCheck og Faceless Stock), deretter W6–W8. Casebook steg 2 (teorier og spørsmål) kan gå parallelt. `corp-registries.example` skal byttes med et troverdig domene (med egen test). Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest. Nye nettside-PR-er merges bare etter Anders' ja.
+**Neste steg:** W6–W8 (Legacy, Personal, øvrig Landing, eldre design, spor i design etter ja, Archive-kobling). Casebook steg 2 (teorier og spørsmål) kan gå parallelt. `corp-registries.example` skal byttes med et troverdig domene (med egen test). Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest. W5 og øvrige nye nettside-PR-er merges bare etter Anders' ja.
 
-### Nettstedsarbeid (W0–W4 og grafikk) — greiner og beslutninger
+### Nettstedsarbeid (W0–W5 og grafikk) — greiner og beslutninger
 
-W0–W4 og grafikksteget er merget til `main` som PR #73–#78 (`24a20c3`). W5 startes på `websites-w5` fra den tippen. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
+W0–W4 og grafikksteget er merget til `main` som PR #73–#78 (`24a20c3`). W5 er implementert på `websites-w5` fra den tippen og er ikke merget. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
 
 | Steg | Grein | Commit / PR | Hva |
 |---|---|---|---|
@@ -27,6 +27,7 @@ W0–W4 og grafikksteget er merget til `main` som PR #73–#78 (`24a20c3`). W5 s
 | Grafikk | `websites-w2-graphics` | merget PR #76 · `dec0458` | Logo/favicon på alle konfigurerte nettsteder, heltebilder på malte sider, tynn chrome for landing/legacy/personal/wiki/document. |
 | W3 | `websites-w3` | merget PR #77 · `2c6aa9f` | Frem-knapp, bokmerker adskilt fra Casebook, tekststørrelse, nettstedets 404 og vedlikehold, parkert-side, «This site can't be reached», lagring versjon 8, Seeker viser offisielt nettsted først ved merkenavn/domene. |
 | W4 | `websites-w4` | merget PR #78 · `24a20c3` | Bakgrunnssider runde 1 (122 nye sider, beholdt) for Northgate, City of Port Calder, Eastfield Notes, Kestrel og Brightline, pluss `universe/background-facts.json` med validator. Godkjent kanon: 10 nye rådsnavn + ordfører Denise Harlan; rådhuset 40 Civic Center, skranke 8:30–16:30. |
+| W5 | `websites-w5` | åpen PR, ikke merget | Wiki, Forum, Document, Anonymous (og saas-Landing for Faceless). Calderpedia, Threadline, Docshare, SpillCheck og Faceless Stock flyttet over, med innhold. |
 
 **W0 — nye/endrede filer.** `core/site-view.js` (ny), `app/render.js`, `tests/sites.test.mjs`, oppdateringer i DEVPLAN, WEBSITES.md og DESIGN.md.
 
@@ -65,7 +66,16 @@ PLAYWRIGHT_MODULE=/path/to/playwright node games/dead-internet/tools/test-casebo
 
 Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. W4-tester: `tests/websites-w4.test.mjs`. Etter katalogendringer: `node games/dead-internet/tools/graphics-report.mjs` og `node games/dead-internet/tools/make-placeholders.mjs` (bare nye plassholdere skal sjekkes inn). Ny-spill i Playwright: case-menypunkt → `form.intro-form` submit → «Swipe up to unlock» → ev. `.it-notips` → Browser i docken → `form.addr-form`. Skjermbilder 390×844: `/workspace/dead-internet-shots/`.
 
-**Gjenstår etter W4.** W5 fulle maler for Wiki, Forum, Document, Anonymous (Calderpedia, Threadline, Docshare, SpillCheck, Faceless Stock). W6–W8. Cachet 2019-versjon av portcalderjazz.com (nevnt i WEBSITES.md, ikke funnet opp i W3). Prosjektsidene for Foundry Lofts, Heights Commons og Northpoint Landing finnes nå (W4), men WEB0001–WEB0004 og øvrige gjenstående WEB-bilder er fortsatt ikke produsert. Omdøping av `corp-registries.example`. Lukke PR #72. Casebook steg 2–5.
+
+**W5 — nye/endrede filer.** Malene `app/sites/wiki.js`, `forum.js`, `document.js`, `anonymous.js`, `landing.js` (kun `variant: saas`; `smallbiz`/`parked` forblir tynn chrome) og tilhørende CSS; `app/sites/index.js` og `index.html`. Innhold: `artifacts/sites-w5-calderpedia.json` (31), `sites-w5-threadline.json` (27), `sites-w5-docshare.json` (8), `sites-w5-spillcheck.json` (5), `sites-w5-faceless.json` (5), `entities-background-w5.json` (5), `accounts-background-w5.json` (9 lette kontoer), seks nye oppføringer i `background-facts.json`, kirurgisk nav og manifest. Tester: `tests/websites-w5.test.mjs`, oppdatert `tests/sites.test.mjs`. Skjermbilder: `/workspace/dead-internet-shots/w5-*.png`. Dokumenter.
+
+**W5 — innhold og tall.** Nye sider, i tillegg til de eksisterende som er urørt: Calderpedia 31 (hovedside, 23 nye artikler, 5 historikk, 3 diskusjon; totalt 25 artikler med B17 og A66). Threadline 27 (indeks, 5 tavler, 12 nye tråder, 9 profiler; eksisterende tråder inkludert A16/A17 side 4 ligger i tavlene). Docshare 8 (markedsføringshjem, 4 offentlige fylldokumenter, 3 utløpte lenker; evidens- og lekkasjedokumenter er ikke listet på hjemmesiden). SpillCheck 5 (hjem, 29 kjente brudd, How we verify, FAQ, Privacy; A30 uendret og uten lenke fra hjem/nav). Faceless Stock 5 (hjem, Pricing, License, How it works, bibliotekvegg). Verden har nå 394 artefakter. Bakgrunnsfakta: 30 (24 fra W4 + 6).
+
+**W5 — designbeslutninger.** Eksisterende ID-er, URL-er og ordlyd er uendret. Skjulte sider forblir skjulte (DS-UF-02). Calderpedia bruker britisk stavemåte (*harbour*) som B17. Innholdsfortegnelse fra `== overskrift ==`; historikk-URL-er er stier (`/Title/history`), ikke `?action=history`, fordi `pathOf` fjerner spørringsstrenger. Tilfeldig artikkel er en knapp, ikke en nav-href. Forummalen parser det eksisterende «handle: tekst» / «handle (OP): tekst»-formatet, inkludert A16/A17. Paginering viser søskensider (`?page=`). Docshare-hjemmet er ikke et katalog over alle filer; bare de nye `W-docshare-*`-fylldokumentene er offentlige, og evidens (A18, A22, DS-UF-*) nås bare via URL. SpillCheck er en oppslagsjeneste, ikke en lekkasjeportal, og viser ikke Mara-oppslaget på hjem/nav. Faceless-biblioteket er en innloggingsvegg uten `meta.logins` (validatoren krever en innlogging for `access.loggedIn`, og en hemmelig innlogging ville vært et spor); de to eksisterende offentlige prøveportrettene (A31, A31B) er lenket fra hjem og nav. Saas-Landing ble tatt tidlig i W5 fordi Faceless hører til der; Harbor Dental og AIWriterPro deler chrome, men ikke ordlyd. Ingen IMG02 på Calderpedia, ingen Lou på Kestrel-stubben, ikke noe `pclibrary.org`, ingen nye QA-personfakta. Lette Threadline-kontoer har `pool` og ingen `claimsToBe`/`operatedBy`.
+
+**W5 — ny kanon som venter på ja.** Fyret automatisert i 1998, siste fyrmester Samuel Okoro. Harbor Festival har hatt frivillige siden minst 1979. SpillCheck-brudd som nye universfakta: HarborFit (mars 2021), Slice of Calder (november 2022), CalderLearn (august 2024), i tillegg til det allerede kanoniske Eastfield Neighbors (februar 2023). Øvrige navn på bruddlisten er oppdiktede lister og klubber, ikke registrert som egne entiteter. Et trådinnlegg kaller 6:10-fergekapteinen Dennis; det er en forum-påstand, ikke registrert som kanon.
+
+**Gjenstår etter W5.** W6–W8. Cachet 2019-versjon av portcalderjazz.com (nevnt i WEBSITES.md, ikke funnet opp i W3). Prosjektsidene for Foundry Lofts, Heights Commons og Northpoint Landing finnes nå (W4), men WEB0001–WEB0004 og øvrige gjenstående WEB-bilder er fortsatt ikke produsert. Omdøping av `corp-registries.example`. Lukke PR #72. Casebook steg 2–5.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
@@ -327,10 +337,10 @@ Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 
 - [x] W1 Nettstedsmodell (`core/sites.js`, `content/universe/sites/*.json`, `site`/`page`/`blocks`, designvalg etter dato, 404-data, automatiske lister, validator og inventar). Ingen synlige endringer i Browser ennå.
 - [x] W2 Malverk og tre maler (Corporate, Government, Blog). Northgate (`glossy`), bykommunen (`municipal`, monospace bare på registeroppslag) og Eastfield Notes (`classic` / `minimal` etter 22. okt 2025) er flyttet over. Eksisterende tekst er uendret. Motoren brukes også av andre nettsteder med de samme malnavnene.
 - [x] Logo, favicon og heltebilder på konfigurerte nettsteder (grein `websites-w2-graphics`). Tynn chrome for landing/legacy/personal/wiki/document slik at merke og bilde synes. Katalogen er oppdatert; GRAPHICS.md er generert. Dette er ikke W3 eller W5.
-- [ ] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering)
-- [ ] W4 Bakgrunn runde 1 (ca. 110 sider) og fil med bakgrunnsfakta
-- [ ] W5 Wiki, Forum, Document, Anonymous
-- [ ] W6 Legacy, Personal, Landing og eldre design
+- [x] W3 Browser (frem, bokmerker, tekststørrelse, nettstedstilstander, lagringsmigrering) — merget PR #77
+- [x] W4 Bakgrunn runde 1 (122 sider, beholdt) og fil med bakgrunnsfakta — merget PR #78
+- [x] W5 Wiki, Forum, Document, Anonymous (og saas-Landing) — på `websites-w5`, ikke merget
+- [ ] W6 Legacy, Personal, øvrig Landing og eldre design
 - [ ] W7 Spor i design (bare med Anders' ja), ny gjennomspillingstest
 - [ ] W8 «Compare with…» fra Archive (etter Casebook steg 3)
 - [ ] Grafikk WEB0001–WEB0024, de tolv viktigste først

@@ -19,11 +19,31 @@
    },
    "nav": [
     {
-     "label": "Portrait 44812",
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Pricing",
+     "href": "/pricing"
+    },
+    {
+     "label": "License",
+     "href": "/license"
+    },
+    {
+     "label": "How it works",
+     "href": "/how-it-works"
+    },
+    {
+     "label": "Library",
+     "href": "/gallery"
+    },
+    {
+     "label": "Sample 44812",
      "href": "/portrait/44812"
     },
     {
-     "label": "Portrait 51007",
+     "label": "Sample 51007",
      "href": "/portrait/51007"
     }
    ]

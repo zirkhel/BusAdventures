@@ -16,7 +16,12 @@
      "accent": "#2f6fde"
     }
    },
-   "nav": []
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ]
   }
  ],
  "notFound": {

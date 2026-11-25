@@ -1,0 +1,162 @@
+[
+ {
+  "id": "W-docshare-0001",
+  "site": "docshare",
+  "page": "home",
+  "type": "page",
+  "platform": "docshare",
+  "url": "docshare.link",
+  "date": "2026-01-10",
+  "title": "Docshare — share a file, send a link",
+  "filler": true,
+  "source": "docshare",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Send a link, not a stack of paper.\n\nDocshare hosts a file and gives you a URL. Recipients can view it. They cannot edit it. When you have finished with a link, you can let it expire, and it will say so.\n\nThis is a public homepage, not a catalogue of every file anyone has ever uploaded. If you were sent a link, open that link. If you do not have one, this page will not invent one for you.\n\nPricing is simple: a free link for a short time, and a paid link if you need it to stay up."
+   }
+  ]
+ },
+ {
+  "id": "W-docshare-0002",
+  "site": "docshare",
+  "page": "document",
+  "type": "document",
+  "platform": "docshare",
+  "url": "docshare.link/d/harbor-festival-2025-roster",
+  "date": "2025-10-04",
+  "title": "Harbor Festival 2025 — volunteer roster",
+  "filler": true,
+  "source": "docshare",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "HARBOR FESTIVAL 2025 — volunteer roster (final)\nPier, Saturday–Sunday.\n\n06:00–12:00  A. Patel, J. Morris, S. Keene (bins)\n12:00–18:00  D. Okonkwo, L. Berry, M. Stead\n18:00–close  R. Gale, T. Bloom, night sweep: P. Ruiz\n\nDog run: two people at all times, rota on the shed door.\nFirst aid is the tent by the steps, not the food row.\n\nUploaded by: festival.volunteers"
+   }
+  ]
+ },
+ {
+  "id": "W-docshare-0003",
+  "site": "docshare",
+  "page": "document",
+  "type": "document",
+  "platform": "docshare",
+  "url": "docshare.link/d/pta-cake-sale-april",
+  "date": "2026-03-06",
+  "title": "Eastfield PTA — cake sale, April",
+  "filler": true,
+  "source": "docshare",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "EASTFIELD PTA — cake sale\nSaturday 11 April, 10:00–13:00, school yard (or hall if it rains).\n\nPlease bring: one cake, or a tray of buns, labelled if there are nuts.\nWe need two tables and a cash box. Sign-up on the sheet in the office.\n\nLeftovers go to the staff room. Do not leave cream cakes in the sun.\n\nUploaded by: eastfield.pta"
+   }
+  ]
+ },
+ {
+  "id": "W-docshare-0004",
+  "site": "docshare",
+  "page": "document",
+  "type": "document",
+  "platform": "docshare",
+  "url": "docshare.link/d/wedding-seating-draft-3",
+  "date": "2026-02-14",
+  "title": "Seating plan — draft 3",
+  "filler": true,
+  "source": "docshare",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "SEATING PLAN — draft 3 (please don't circulate)\nHall, 4 April.\n\nTable 1: the couple, both mothers, both fathers, officiant.\nTable 2: aunts (window side).\nTable 3: college friends. Do not sit J. next to M.\nTable 4: work people, plus two spare seats.\nTable 5: everyone we forgot in draft 2.\n\nStill unplaced: cousin with the dog (the dog is not invited).\n\nUploaded by: r.and.t.drafts"
+   }
+  ]
+ },
+ {
+  "id": "W-docshare-0005",
+  "site": "docshare",
+  "page": "document",
+  "type": "document",
+  "platform": "docshare",
+  "url": "docshare.link/d/harbor-van-menu",
+  "date": "2026-01-22",
+  "title": "Harbor van — menu",
+  "filler": true,
+  "source": "docshare",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "THE HARBOR VAN\nThursday–Sunday, north dock, from noon.\n\nChowder, cup or bowl\nFish roll\nSomething fried with peas\nTea, coffee, a bun if we baked\n\nCard or cash. We run out. We will say so.\n\nUploaded by: harbor.van"
+   }
+  ]
+ },
+ {
+  "id": "W-docshare-0006",
+  "site": "docshare",
+  "page": "expired",
+  "type": "document",
+  "platform": "docshare",
+  "url": "docshare.link/d/expired-festival-2019",
+  "date": "2025-01-01",
+  "title": "This link has expired",
+  "filler": true,
+  "source": "docshare",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The file is gone, or the link was allowed to lapse.\n\nDocshare does not keep a public copy after a link expires. If you still need the file, ask the person who sent you the URL."
+   }
+  ]
+ },
+ {
+  "id": "W-docshare-0007",
+  "site": "docshare",
+  "page": "expired",
+  "type": "document",
+  "platform": "docshare",
+  "url": "docshare.link/d/expired-minutes-old",
+  "date": "2025-01-01",
+  "title": "This link has expired",
+  "filler": true,
+  "source": "docshare",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The file is gone, or the link was allowed to lapse.\n\nDocshare does not keep a public copy after a link expires. If you still need the file, ask the person who sent you the URL."
+   }
+  ]
+ },
+ {
+  "id": "W-docshare-0008",
+  "site": "docshare",
+  "page": "expired",
+  "type": "document",
+  "platform": "docshare",
+  "url": "docshare.link/d/expired-menu-v1",
+  "date": "2025-01-01",
+  "title": "This link has expired",
+  "filler": true,
+  "source": "docshare",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The file is gone, or the link was allowed to lapse.\n\nDocshare does not keep a public copy after a link expires. If you still need the file, ask the person who sent you the URL."
+   }
+  ]
+ }
+]

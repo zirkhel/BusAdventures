@@ -12,7 +12,7 @@ Every referenced website must exist in-game as a site, or as a site that used to
 |---|---|---|---|---|
 | `seeker` | seeker.search | live | Browser search (app-owned) | Seeker is the in-phone search engine |
 | `connect` | connect.social | live | profiles and posts (Connect app) | Social network URLs |
-| `threadline` | threadline.net | live | existing threads | Forum URLs |
+| `threadline` | threadline.net | live | existing threads (A16, A17 page 4, A62, B13–B15, B24, BG-THR-01/02) plus W5 index, 5 boards, 12 new threads, 9 profiles (`W-threadline-*`) | Forum. Template `forum` / `classic`. Existing wording unchanged |
 | `dailyrecord` | dailyrecord-pc.com | live | articles + archive (news app) | Newspaper URLs |
 | `unfiltered` | unfiltered.news | live | articles (news app) | Newspaper URLs |
 | `eastfieldnotes` | eastfieldnotes.blog | live | A14 front (2 versions), A15 (cache-only), A33, A34, A36, About + 36 W4 posts (`W-eastfieldnotes-*`) | Mara's blog; theme change 22 Oct 2025. New posts are single-version; last post remains A33 (14 May 2025) |
@@ -21,10 +21,10 @@ Every referenced website must exist in-game as a site, or as a site that used to
 | `northgate` | northgatedev.com | live | A40 project, A41 statement (hidden until shown), plus 18 W4 pages (`W-northgate-*`) | Paul's «our website». Projects, leadership, newsroom, sustainability, investors |
 | `kestrel` | kestrel-logistics.com | live | A38 plus 16 W4 pages (`W-kestrel-*`) | Client list, fleet, careers, news (Biscuit retold, late-delivery note without a fire cause). Lou Adair is never named |
 | `city` | portcalder.gov | live | A53, B16, BG-CITY-01, A26, A27, A28, plus 32 W4 pages (`W-city-*`) | City portal. City Hall at 40 Civic Center; Mayor Denise Harlan and 11 members (Ana Ruiz kept on her existing page) |
-| `spillcheck` | spillcheck.io | live | A30 + lookup | Breach checker |
-| `facelessstock` | facelessstock.com | live | A31, A31B | Stock portraits |
-| `docshare` | docshare.link | live | existing shared documents | File links |
-| `calderpedia` | calderpedia.org | live | A66, B17 | Wiki |
+| `spillcheck` | spillcheck.io | live | A30 (exact lookup, unlinked from home/nav) plus W5 home, breaches, how we verify, FAQ, privacy (`W-spillcheck-*`) | Breach *checker*, not a leak portal. Template `anonymous` / `terminal` |
+| `facelessstock` | facelessstock.com | live | A31, A31B (public samples) plus W5 home, pricing, license, how it works, library wall (`W-faceless-*`) | Synthetic portraits. Template `landing` / `saas`. Library is a sign-in wall without `meta.logins` |
+| `docshare` | docshare.link | live | existing documents (A18, A22, DS-UF-*, DS-UF-02 hidden) plus W5 marketing home, 4 public filler docs, 3 expired links (`W-docshare-*`) | File links. Template `document` / `viewer`. Home does not catalogue evidence/leaks |
+| `calderpedia` | calderpedia.org | live | B17, A66 plus W5 main page, 23 new articles, 5 history, 3 talk (`W-calderpedia-*`; 25 articles in total) | Wiki. Template `wiki` / `standard`. British spelling. No IMG02 |
 | `harbordesk` | harbordesk.co | live | B18 | Virtual office page |
 | `saltys` | saltys-portcalder.com | live | B19 | Fish bar page |
 | `eastfieldgarden` | eastfieldgarden.org | live | B20 | Garden page |
@@ -67,13 +67,22 @@ Paul Navarro's fallback, «I'd refer you to our website,» points at the existin
 
 ## Coverage at W1
 
-26 site configs (25 from W1, plus parked `portcalderjazz.com` in W3), 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. Thin chrome (not the full W5 templates) shows logo and hero on landing, legacy, personal, wiki and document sites. See [GRAPHICS.md](../graphics/GRAPHICS.md).
+26 site configs (25 from W1, plus parked `portcalderjazz.com` in W3), 196 artifacts (three new minimal pages). Existing page ids, URLs and wording are unchanged. Presentation for Northgate, the City portal and Eastfield Notes was updated in W2; the same engine also covers other sites already tagged corporate, government or blog. A later graphics step (branch `websites-w2-graphics`) gave every configured site an SVG logo and a favicon, and added hero images on existing pages without changing wording. W2 corporate/government/blog chrome and the later graphics step still apply. W5 replaces the remaining thin chrome on wiki, forum, document and anonymous sites, and adds saas landing chrome (Faceless; also Harbor Dental and AIWriterPro). Legacy, personal, smallbiz and parked stay on the thin chrome. See [GRAPHICS.md](../graphics/GRAPHICS.md).
 
 ## Background pages (W4)
 
 Round 1 (merged as PR #78, `24a20c3`) added 122 new pages on five sites, plus `content/universe/background-facts.json` (24 entries, `status: canon | claim`, checked by the validator). The 122 pages are kept; once written, they are not removed. Existing page ids, URLs and wording are unchanged. A15 stays off the live blog; A41 and A42 stay hidden. Brightline background lives in the Quiet Account mystery pack. New Eastfield Notes posts are the same in cache and live; comments (0–6) use light neighbour accounts, occasionally Priya, and two spam accounts. No `pclibrary.org` domain was invented. No new photographs: official homes reuse IMG12, WEB0010, WEB0005 and WEB0007. Evidence photos were not used as decoration.
 
 Approved new canon from this round: Mayor Denise Harlan and 11 council members (Ana Ruiz plus ten new names); City Hall at 40 Civic Center, Port Calder, public desk weekdays 8:30–16:30. Other universe-binding facts include the three completed Northgate projects, Helen March and Marcus Veld, Kestrel's two trucks and EV pilot, and the Harbor Street water-main dates. Brightline homepage statistics and case-study figures remain `claim`, not canon.
+
+
+## Wiki, forum, documents and anonymous sites (W5)
+
+Implemented on `websites-w5` (not merged). New pages: Calderpedia 31, Threadline 27, Docshare 8, SpillCheck 5, Faceless Stock 5 (76 in total). Existing ids, URLs and wording are unchanged, including A16/A17, A18/A22, A30, A31/A31B, B17, A66 and the DS-UF / BG-THR set. Hidden pages stay hidden.
+
+Calderpedia has a main page, table of contents, infobox/tools, numbered references, history on five articles (path suffix `/Title/history`), talk on three (including «Is the chowder claim sourced?»), and a Random article button. Threadline lists boards and threads (page 4 of A16 is paginated, not listed as a separate first page). Docshare viewer chrome shows the filename, «Shared via link · View only», and an expired state; evidence documents are reachable only by URL. SpillCheck is terminal-styled and is not a leak portal. Faceless Stock is a saas landing; the library is a sign-in wall with no working login, and the two public sample listings remain the practical path.
+
+Six new universe-binding facts were appended (lighthouse automated 1998 and last keeper Samuel Okoro; Harbor Festival volunteers since at least 1979; HarborFit / Slice of Calder / CalderLearn breach dates). They wait on Anders' confirmation, as the W4 council and City Hall facts did before they were accepted.
 
 ## Test-only domains
 
