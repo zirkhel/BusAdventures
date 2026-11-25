@@ -212,6 +212,119 @@ try {
   await p2.close();
   console.log('PASS mobile 390×844 step 2: free theory, search picker, for/against, status history, alternative, question linked to a person, answered, Notes, reload, rejected fold');
 
+  // ── Step 3: selection mode, comparison and connections ─────────────────────
+  const g3 = new Game(w, { seed: 7 }); g3.start();
+  const PAGE = 'W-kestrel-0005';
+  const ids3 = {};
+  for (const id of ['A54', 'A55', 'A56', PAGE]) { g3.s.artifacts[id] = { ...g3.s.artifacts[id], visible: true }; const o = g3.open(id); ids3[id] = g3.save({ artifact: id, version: o.view.versionId }).id; }
+  const old = g3.view(PAGE).cachedVersions[0];
+  g3.open(PAGE, old); ids3.old = g3.save({ artifact: PAGE, version: old }).id;
+  const pics = [];
+  for (const a of w.artifacts.values()) {
+    if (pics.length === 2 || a.access || !(a.images || []).length || w.disabled?.has(a.id)) continue;
+    g3.s.artifacts[a.id] = { ...g3.s.artifacts[a.id], visible: true };
+    const o = g3.open(a.id); if (!o.ok || o.view.locked || !(o.view.images || []).length) continue;
+    pics.push(g3.save({ artifact: a.id, version: o.view.versionId, image: o.view.images[0] }).id);
+  }
+  const friends = ['A54', 'A55', 'A56'].map(id => ids3[id]);
+  g3.hypothesize({ title: 'The three friends are one voice', evidence: friends });
+  const t3 = Object.fromEntries(Object.entries(ids3).map(([k, id]) => [k, g3.compare([{ evidence: id }, { evidence: friends[0] }]).items[0].title]));
+  const p3 = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  p3.on('pageerror', e => errors.push(e.message));
+  await p3.goto(base + '/__fixture');
+  await p3.evaluate(({ key, save }) => localStorage.setItem(key, save), { key: saveKey(w), save: serialize(g3.s) });
+  const b3 = name => p3.getByRole('button', { name, exact: true });
+  const shot3 = async name => { await p3.waitForFunction(() => !document.querySelector('.toast'), null, { timeout: 5000 }); await p3.waitForTimeout(350); await p3.screenshot({ path: resolve(shots, name) }); };
+  const open3 = async intro => {
+    await p3.goto(base + '/games/dead-internet/');
+    await p3.getByRole('button', { name: 'Continue investigation' }).click();
+    await p3.getByText('Swipe up to unlock').click();
+    if (intro) await p3.locator('.it-notips').click();
+    await p3.locator('.dock button').nth(3).click();
+  };
+  const row3 = title => p3.locator('.ev-item', { has: p3.locator('.ev-open b', { hasText: title }) }).first();
+  await open3(true);
+  // Long press starts selection mode.
+  const first3 = row3(t3.A54).locator('.ev-open');
+  await first3.scrollIntoViewIfNeeded();
+  const box = await first3.boundingBox();
+  await p3.mouse.move(box.x + 40, box.y + box.height / 2); await p3.mouse.down(); await p3.waitForTimeout(700); await p3.mouse.up();
+  await p3.getByText('1 selected', { exact: true }).waitFor();
+  await row3(t3.A55).locator('.ev-open').click();
+  await row3(t3.A56).locator('.ev-open').click();
+  await p3.getByText('3 selected', { exact: true }).waitFor();
+  assert.equal(await p3.locator('.ev-item.selected').count(), 3);
+  await shot3('cb3-select.png');
+  await b3('Compare (3)').click();
+  // The comparison lines up visible fields and marks rows that differ, without concluding.
+  await p3.locator('.cmp-table').waitFor();
+  assert.deepEqual(await p3.locator('.cmp-row.head .cmp-letter').allInnerTexts(), ['A', 'B', 'C']);
+  assert.ok(await p3.locator('.cmp-row.differs', { hasText: 'Source' }).count() === 1, 'three accounts look like three sources');
+  await shot3('cb3-compare.png');
+  await b3('How are they connected?').click();
+  assert.equal(await p3.locator('.link-kinds .chip').count(), 6, 'six kinds');
+  await b3('Same origin').click();
+  await p3.getByRole('textbox', { name: 'Because' }).fill('All three only repost the same lines');
+  await shot3('cb3-connect.png');
+  await b3('Save connection').click();
+  await p3.getByText('Your connections (1)', { exact: true }).waitFor();
+  assert.equal(await p3.locator('.link-row .stance').first().textContent(), 'Same origin');
+  await b3('Back').click();
+  await b3('Done').click();
+  // On the evidence card: the connection, editable.
+  await row3(t3.A55).locator('.ev-open').click();
+  await p3.getByText('Connections (1)', { exact: true }).waitFor();
+  await p3.locator('.link-row').first().click();
+  assert.equal(await p3.getByRole('textbox', { name: 'Because' }).inputValue(), 'All three only repost the same lines');
+  await b3('Related').click();
+  await b3('Save changes').click();
+  assert.equal(await p3.locator('.link-row .stance').first().textContent(), 'Related');
+  await b3('Back').click();
+  // Two copies of the same page: paragraph changes.
+  await row3(t3[PAGE]).locator('.ev-open').click();
+  await b3('Compare with…').click();
+  await p3.getByRole('searchbox', { name: 'Search evidence' }).fill('About Kestrel');
+  assert.equal(await p3.locator('.picker-item').count(), 1, 'only the other copy');
+  await p3.locator('.picker-item').first().click();
+  await p3.getByText('Changes from A to B', { exact: true }).waitFor();
+  assert.ok(await p3.locator('.cmp-change.op-removed, .cmp-change.op-added').count() > 0);
+  await p3.getByText('Changes from A to B', { exact: true }).scrollIntoViewIfNeeded();
+  await shot3('cb3-versions.png');
+  await b3('Back').click(); await b3('Back').click();
+  // Two images: switch between them at the same zoom.
+  await b3('Select').click();
+  for (const id of pics) await row3(t3[Object.keys(ids3).find(k => ids3[k] === id)] ?? '').count();
+  const picTitles = pics.map(id => g3.compare([{ evidence: id }, { evidence: friends[0] }]).items[0].title);
+  for (const tt of picTitles) await row3(tt).locator('.ev-open').click();
+  await b3('Compare (2)').click();
+  await p3.locator('.cmp-stage').waitFor();
+  await b3('Zoom in').click();
+  await p3.getByText('150%', { exact: true }).waitFor();
+  const srcA = await p3.locator('.cmp-img').getAttribute('src');
+  await b3('Show B').click();
+  assert.notEqual(await p3.locator('.cmp-img').getAttribute('src'), srcA, 'switched image');
+  await p3.getByText('150%', { exact: true }).waitFor();
+  assert.ok(await p3.locator('.cmp-row', { hasText: 'Camera' }).count() + await p3.locator('.cmp-row', { hasText: 'Metadata' }).count() >= 1, 'image info lined up');
+  await p3.locator('.cmp-stage').scrollIntoViewIfNeeded();
+  await shot3('cb3-images.png');
+  assert.ok(await p3.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no horizontal overflow');
+  await b3('Back').click();
+  // Selection: set two aside at once.
+  await b3('Set aside').click();
+  await b3('Irrelevant').click();
+  for (const tt of picTitles) assert.equal(await p3.locator('.ev-open b', { hasText: tt }).count(), 0, 'set aside');
+  // The theory shows connections among its evidence; everything survives a reload.
+  await p3.reload();
+  await open3(false);
+  await p3.locator('.seg.tabs button', { hasText: 'Theories' }).click();
+  await p3.locator('.hyp-row', { hasText: 'The three friends are one voice' }).click();
+  await p3.getByText('Connections (1)', { exact: true }).waitFor();
+  assert.equal(await p3.locator('.link-row .stance').first().textContent(), 'Related');
+  await p3.locator('.link-row').first().scrollIntoViewIfNeeded();
+  await shot3('cb3-theory.png');
+  await p3.close();
+  console.log('PASS mobile 390×844 step 3: long press selection, compare three, six kinds, connection with reason, edit on card, page versions with changes, two images switch and zoom, set aside several, theory connections, reload');
+
   const snapshots = [];
   for (const mode of ['base', 'merged', 'split']) {
     const p = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -287,6 +400,24 @@ try {
       for (const label of ['Evidence', 'Person or thing', 'Source', 'Theory']) { click(label); result.screens.push(overlay()); phone.closeOverlay(); }
       phone.replaceTop({ kind: 'report', case: 'quiet_account', hyps: [], events: [] }); result.screens.push(dom());
       result.step2 = [g.s.hypotheses.length, g.s.questions.length];
+      // Step 3: connections of every kind, comparisons (evidence, images, two copies of a page), the editor.
+      const kinds = ['supports', 'contradicts', 'related', 'same_origin', 'manipulated', 'unrelated'];
+      for (let i = 0; i + 1 < ev.length && i < 120; i += 2) g.addLink({ items: [ev[i], ev[i + 1]], kind: kinds[i / 2 % 6], note: i % 4 ? 'Because I think so' : '' });
+      g.addLink({ items: ev.slice(0, 3), kind: 'same_origin' });
+      const versioned = [...w.artifacts.values()].filter(a => g.s.seen[a.id] != null && (g.view(a.id).cachedVersions || []).length).slice(0, 6);
+      const pairs = [...Array(20).keys()].map(i => [{ evidence: ev[i * 3 % ev.length] }, { evidence: ev[(i * 3 + 1) % ev.length] }]);
+      const imgs = g.s.evidence.filter(e => e.image).slice(0, 6).map(e => ({ evidence: e.id }));
+      pairs.push(imgs.slice(0, 2), imgs.slice(2, 5), ev.slice(0, 3).map(id => ({ evidence: id })));
+      for (const a of versioned) pairs.push([{ artifact: a.id, version: g.view(a.id).cachedVersions[0] }, { artifact: a.id }]);
+      for (const items of pairs) {
+        phone.replaceTop({ kind: 'compare', items }); result.screens.push(dom());
+        if (items.length === 2 && items.every(x => x.evidence && g.s.evidence.find(e => e.id === x.evidence)?.image)) { click('Show B'); result.screens.push(dom()); }
+      }
+      for (const l of g.s.links.slice(0, 12)) { phone.replaceTop({ kind: 'link', items: l.items, id: l.id }); result.screens.push(dom()); }
+      phone.replaceTop({ kind: 'link', items: ev.slice(0, 2) }); result.screens.push(dom());
+      for (const id of ev.slice(0, 30)) { phone.replaceTop({ kind: 'evidence', id }); result.screens.push(dom()); }
+      phone.replaceTop({ kind: 'main', tab: 'evidence', group: 'all', select: ev.slice(0, 5) }); result.screens.push(dom());
+      result.step3 = [g.s.links.length, pairs.length, versioned.length];
       // The same Save action used by text selection must produce evidence, not a note.
       const e = g.s.evidence.find(e => e.artifact && !e.quote && !e.image);
       const notes = g.s.notes.length;
@@ -298,9 +429,10 @@ try {
   }
   assert.ok(snapshots[0].count > 100);
   assert.ok(snapshots[0].step2[1] > 10, 'questions in the twin DOM test');
+  assert.ok(snapshots[0].step3[0] > 50 && snapshots[0].step3[2] > 0, 'connections and page versions in the twin DOM test');
   assert.ok(snapshots.every(s => s.quoteSaved));
   assert.deepEqual(snapshots[1], snapshots[0], 'merged hidden origins must not change DOM');
   assert.deepEqual(snapshots[2], snapshots[0], 'split hidden origins must not change DOM');
   assert.deepEqual(errors, []);
-  console.log(`PASS twin DOM: ${snapshots[0].count} evidence cards plus every filter/group, ${snapshots[0].step2[0]} theories, ${snapshots[0].step2[1]} questions and their search pickers, identical text, CSS classes, controls`);
+  console.log(`PASS twin DOM: ${snapshots[0].count} evidence cards plus every filter/group, ${snapshots[0].step2[0]} theories, ${snapshots[0].step2[1]} questions and their search pickers, ${snapshots[0].step3[0]} connections, ${snapshots[0].step3[1]} comparisons (${snapshots[0].step3[2]} page versions), identical text, CSS classes, controls`);
 } finally { await browser?.close(); await new Promise(r => server.close(r)); }

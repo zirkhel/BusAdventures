@@ -52,8 +52,12 @@ test("two copies of the same page show paragraph changes; only reachable version
   assert.ok(c.changes.text.some(x => x.op !== "same"), "the 2014 copy differs from today's page");
   assert.equal(c.saved, false);
   // A version the player cannot reach is not shown, and nothing unseen can be compared.
-  const hidden = [...w.artifacts.values()].find(a => a.versions.some(v => !v.cached) && a.versions.length > 1 && g.view(a.id).versionId !== a.versions[0].id && !a.versions[0].cached);
-  if (hidden) { g.s.seen[hidden.id] ??= 1; assert.equal(g.compare([{ artifact: hidden.id, version: hidden.versions[0].id }, { artifact: PAGE }]).items[0].error, "not_available"); }
+  assert.equal(g.compare([{ artifact: PAGE, version: "v1999" }, { artifact: PAGE }]).items[0].error, "not_available");
+  // A version that is neither live nor cached stays out of reach, as in the Browser.
+  const art = w.artifacts.get(PAGE), v2014 = art.versions.find(v => v.id === old);
+  v2014.cached = false;
+  assert.equal(g.compare([{ artifact: PAGE, version: old }, { artifact: PAGE }]).items[0].error, "not_available");
+  v2014.cached = true;
   const unseen = [...w.artifacts.values()].find(a => g.s.seen[a.id] == null);
   assert.equal(g.compare([{ artifact: unseen.id }, { artifact: PAGE }]).items[0].error, "not_seen");
   assert.deepEqual(textChanges("a\n\nb\n\nc", "a\n\nc\n\nd").map(x => x.op + ":" + x.text), ["same:a", "removed:b", "same:c", "added:d"]);

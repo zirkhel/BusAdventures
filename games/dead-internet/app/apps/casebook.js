@@ -3,15 +3,17 @@
 // (optionally with a structured [subject] [relation] [object] claim for publishing) with
 // evidence for and against, a status with history and alternatives, free notes and open questions.
 // It shows counts and sources, never whether a theory is right.
-// Screens: main {tab, filter?} · hyp {id} · builder {id?, title?, subject?, predicate?, object?, alternativeOf?}
+// Screens: main {tab, filter?, select?} · hyp {id} · builder {id?, title?, subject?, predicate?, object?, alternativeOf?, evidence?}
 //          question {id}   (open questions live in Notes)
+//          compare {items, show?, zoom?} · link {items, id?, kind?, note?}   (comparison and the player's links)
 //          event {id} · eventEdit {id?, draft}   (Timeline: the player's own reconstruction)
 //          reports · report {case, channel?, hyps, events, review?} · reportDone {id, n0, e0}
 // Items can belong to one, several or no cases (cases: [], unclassified by default). The filter
 // (desc.filter: undefined = all, "" = unclassified, or a case id) only narrows the lists.
 
-import { h, icon, fmtDate, fmtEventDate, TOPIC_NOTE } from "../ui.js";
-import { img, avatar } from "../media.js";
+import { h, icon, fmtDate, fmtEventDate, TOPIC_NOTE, onLongPress } from "../ui.js";
+import { img, avatar, imageUrl } from "../media.js";
+import { imageInfoRows } from "../phone.js";
 import { richText } from "../render.js";
 
 const KIND_TITLES = { person: "Person", account: "Account", org: "Organisation", place: "Place", event: "Event", project: "Project", system: "System" };
@@ -39,6 +41,9 @@ const ERRORS = {
 const STATUS = { open: "Working theory", convinced: "Convinced", rejected: "Rejected" };
 const Q_STATUS = { open: "Open", answered: "Answered", dropped: "Set aside" };
 const LINK_KINDS = { evidence: "Evidence", topics: "Person or thing", sources: "Source", theories: "Theory" };
+/** How the player says pieces of evidence relate. Their claim, never checked. */
+const CONNECTIONS = { supports: "Supports", contradicts: "Contradicts", related: "Related", same_origin: "Same origin", manipulated: "Possibly manipulated", unrelated: "Unrelated" };
+const LETTERS = "ABCDEFGH";
 
 export function casebookApp(phone) {
   const g = phone.g, w = g.w;
@@ -78,10 +83,14 @@ export function casebookApp(phone) {
     const sub = [e.quote ? "Excerpt" : e.message ? "Message" : e.image ? "Image" : "Saved page",
       e.marks.reviewed ? "Reviewed" : "Not reviewed", e.marks.important ? "Important" : "", e.marks.doubtful ? "Doubtful" : "",
       e.shelf ? `Set aside: ${e.shelf}` : ""].filter(Boolean).join(" · ");
-    const row = h("div.ev-item",
-      h("button.ev-open", { onclick: open }, thumb,
-        h("div.ev-main", h("b", phone.evidenceTitle(e)), h("div.muted.ev-sub", sub), h("div.muted.ev-day", `${phone.sourceLabel(e)} · saved day ${e.day}`))),
-      opts.toggle ? opts.toggle : h("button.icon-btn.ev-more", { "aria-label": "More", onclick: () => evMenu(e) }, icon("more")));
+    const selecting = opts.selected != null;
+    const btn = h("button.ev-open", { onclick: selecting ? opts.onToggle : open, ...(selecting ? { "aria-pressed": String(opts.selected) } : {}) }, thumb,
+        h("div.ev-main", h("b", phone.evidenceTitle(e)), h("div.muted.ev-sub", sub), h("div.muted.ev-day", `${phone.sourceLabel(e)} · saved day ${e.day}`)));
+    // Long press starts selection mode (to compare, link or set aside several at once).
+    if (opts.onLongPress) onLongPress(btn, opts.onLongPress);
+    const row = h("div.ev-item", { class: selecting && opts.selected ? "selected" : "" }, btn,
+      selecting ? h("span.sel-box", { "aria-hidden": "true" }, opts.selected ? icon("check") : null)
+        : opts.toggle ? opts.toggle : h("button.icon-btn.ev-more", { "aria-label": "More", onclick: () => evMenu(e) }, icon("more")));
     return row;
   }
 
@@ -140,6 +149,7 @@ export function casebookApp(phone) {
     };
     const theories = g.casebook().hypotheses.filter(hy => hy.evidence.includes(e.id) || hy.against.includes(e.id));
     const questions = g.casebook().questions.filter(q => q.links.evidence.includes(e.id));
+    const links = g.casebook().links.filter(l => l.items.includes(e.id));
     const events = g.timeline().filter(ev => ev.evidence.some(x => x.id === e.id));
     return h("div.evidence-detail.pad",
       h("h2", phone.evidenceTitle(e)),
@@ -156,6 +166,9 @@ export function casebookApp(phone) {
         h("span.stance", hy.against.includes(e.id) ? "Against" : "For"), h("div.pi-main", h("b", hy.label)))),
       questions.length ? h("div.section-title", "Questions") : null,
       questions.map(q => questionRow(q)),
+      h("div.section-title", `Connections (${links.length})`),
+      links.map(l => linkRow(l, e.id)),
+      h("button.btn.wide", { onclick: () => compareWith(e), disabled: g.s.evidence.length < 2 }, "Compare with…"),
       events.length ? h("div.section-title", "Timeline") : null,
       events.map(ev => h("button.hist-row", { onclick: () => phone.push("casebook", { kind: "event", id: ev.id }) }, ev.title)),
       e.shelf ? h("p.muted", `Set aside: ${e.shelf === "finished" ? "finished with it" : "irrelevant"} · day ${e.shelvedDay}`) : null,
@@ -173,6 +186,7 @@ export function casebookApp(phone) {
       { label: e.shelf ? "Restore evidence" : "Set aside…", run: () => e.shelf ? update({ shelf: null }) : shelve(e) },
     ];
     if (g.s.hypotheses.length) items.push({ label: "Link to a theory…", run: () => linkToTheory(e) });
+    if (g.s.evidence.length > 1) items.push({ label: "Compare with…", run: () => compareWith(e) });
     if (e.artifact) items.push({ label: "Show to someone…", run: () => showTo(e) });
     items.push({ label: `Case: ${casesLabel(e)}…`, run: () => pickCases("evidence", e) });
     items.push({ label: "Add to Timeline", run: () => phone.newEvent({ title: phone.evidenceTitle(e), source: e.message ? { message: e.message } : { artifact: e.artifact, version: e.version, image: e.image }, evidence: [{ id: e.id, stance: "supports" }] }) });
@@ -208,22 +222,43 @@ export function casebookApp(phone) {
       } });
   }
 
+  // ── Selection mode ────────────────────────────────────────────────────
+  // Long press (or "Select") on the Evidence tab. A bar at the top acts on what is ticked.
+  function selectBar(desc) {
+    const sel = desc.select;
+    const done = () => phone.replaceTop({ ...desc, select: undefined });
+    const shelveAll = () => phone.actionSheet(`Set aside ${sel.length} — your reason`, [
+      { label: "Irrelevant", run: () => { sel.forEach(id => g.editEvidence(id, { shelf: "irrelevant" })); done(); } },
+      { label: "Finished with it", run: () => { sel.forEach(id => g.editEvidence(id, { shelf: "finished" })); done(); } }]);
+    return h("div.select-bar",
+      h("b", `${sel.length} selected`),
+      h("button.chip", { disabled: sel.length < 2, onclick: () => phone.push("casebook", { kind: "compare", items: sel.map(id => ({ evidence: id })) }) }, `Compare (${sel.length})`),
+      h("button.chip", { disabled: sel.length < 2, onclick: () => phone.push("casebook", { kind: "link", items: [...sel] }) }, "Link"),
+      h("button.chip", { disabled: !sel.length, onclick: shelveAll }, "Set aside"),
+      h("button.bar-link", { onclick: done }, "Done"));
+  }
+  const selectOpts = (desc, e) => desc.select ? { selected: desc.select.includes(e.id),
+    onToggle: () => phone.replaceTop({ ...desc, select: desc.select.includes(e.id) ? desc.select.filter(x => x !== e.id) : [...desc.select, e.id] }) }
+    : { onLongPress: () => phone.replaceTop({ ...desc, select: [e.id] }) };
+
   function evidenceTab(desc) {
     const filter = desc.triage || "active";
     const list = [...g.s.evidence].reverse().filter(e => inFilter(e, desc.filter)).filter(e =>
       filter === "shelved" ? !!e.shelf : !e.shelf && (filter === "active" || (filter === "unreviewed" ? !e.marks.reviewed : !!e.marks[filter])));
-    const controls = triageFilters(desc);
+    const controls = [triageFilters(desc), desc.select ? selectBar(desc)
+      : g.s.evidence.length > 1 ? h("div.select-start", h("button.bar-link", { onclick: () => phone.replaceTop({ ...desc, select: [] }) }, "Select")) : null];
     if (!g.s.evidence.length) return [controls, h("div.empty", h("b", "No evidence yet."), h("div.muted", "Save a page, image, message or excerpt to collect it here."))];
     if (!list.length) return [controls, h("div.empty.muted", "No evidence with these filters.")];
     const pending = list.filter(e => !e.marks.reviewed);
     const reviewed = list.filter(e => e.marks.reviewed);
-    const triage = [controls, pending.length ? h("div.section-title", `Not reviewed (${pending.length})`) : null, pending.map(e => evItem(e)),
+    const item = e => evItem(e, selectOpts(desc, e));
+    const triage = [controls, pending.length ? h("div.section-title", `Not reviewed (${pending.length})`) : null, pending.map(item),
       reviewed.length ? h("div.section-title", `Reviewed (${reviewed.length})`) : null];
     const mode = desc.group ?? "about";
     const toggle = h("div.seg.small",
       h("button", { class: mode === "about" ? "on" : "", onclick: () => phone.replaceTop({ ...desc, group: "about" }) }, "By who it's about"),
       h("button", { class: mode === "all" ? "on" : "", onclick: () => phone.replaceTop({ ...desc, group: "all" }) }, "Newest first"));
-    if (mode === "all") return [...triage, toggle, reviewed.map(e => evItem(e))];
+    if (mode === "all") return [...triage, toggle, reviewed.map(item)];
     const groups = new Map();
     for (const e of reviewed) {
       const about = g.evidenceAbout(e.id)?.about || [];
@@ -240,7 +275,7 @@ export function casebookApp(phone) {
           k === "_other" ? h("span.ev-ico.sm", icon("book")) : avatar(w, k, 32),
           h("div.pi-main", h("b", k === "_other" ? "Other" : t?.name || k), h("div.muted", k === "_other" ? "" : KIND_TITLES[t?.kind] || "")),
           h("span.count", String(groups.get(k).length)), h("span.chev", { class: isOpen ? "open" : "" }, "›")),
-        isOpen ? groups.get(k).map(e => evItem(e)) : null);
+        isOpen ? groups.get(k).map(item) : null);
     })];
   }
 
@@ -290,6 +325,8 @@ export function casebookApp(phone) {
     const qIn = /** @type {HTMLInputElement} */ (h("input.text-input", { type: "text", "aria-label": "Question about this theory", placeholder: "A question this theory raises…" }));
     const ask = () => { const r = g.addQuestion({ text: qIn.value, links: { theories: [hy.id] } }); if (r.error) { phone.toast("Write the question first."); return; } phone.refresh(); };
     const alts = hy.alternatives.map(id => cb.hypotheses.find(x => x.id === id)).filter(Boolean);
+    const mine = new Set([...hy.evidence, ...hy.against]);
+    const links = cb.links.filter(l => l.items.filter(id => mine.has(id)).length >= 2);
     const addAlt = () => phone.actionSheet("Another explanation", [
       { label: "Write a new alternative…", icon: "plus", run: () => phone.push("casebook", { kind: "builder", alternativeOf: hy.id }) },
       { label: "Link an existing theory…", icon: "book", run: () => phone.picker({ title: "Alternative to this theory", empty: "No other theories yet.",
@@ -312,6 +349,9 @@ export function casebookApp(phone) {
       h("div.section-title", `Against (${against.length})`),
       against.length ? against.map(e => evItem(e, { toggle: more(e) })) : h("div.empty.muted.small", "Nothing against it yet."),
       h("div.pad", h("button.btn.wide", { onclick: () => add("contradicts"), disabled: !g.s.evidence.length }, icon("plus"), " Against")),
+      h("div.section-title", `Connections (${links.length})`),
+      links.length ? links.map(l => linkRow(l)) : h("div.empty.muted.small", "None between this theory's evidence yet. Compare two pieces to connect them."),
+      mine.size > 1 ? h("div.pad", h("button.btn.wide", { onclick: () => phone.push("casebook", { kind: "compare", items: [...hy.evidence, ...hy.against].map(id => ({ evidence: id })) }) }, `Compare all (${mine.size})`)) : null,
       h("div.section-title", `Questions (${questions.length})`),
       questions.map(q => questionRow(q)),
       h("div.pad.q-add", qIn, h("button.btn", { onclick: ask }, "Ask")),
@@ -369,13 +409,14 @@ export function casebookApp(phone) {
       const triple = complete ? { subject: desc.subject, predicate: desc.predicate, object: pred?.arity === 2 ? desc.object : null } : { predicate: null };
       const title = words.value.trim();
       const r = desc.id ? g.dispatch({ type: "updateHypothesis", id: desc.id, patch: { title, ...triple } })
-        : g.hypothesize({ title, ...(complete ? triple : {}) });
+        : g.hypothesize({ title, ...(complete ? triple : {}), ...(desc.evidence ? { evidence: desc.evidence } : {}) });
       if (r.error) { phone.toast(ERRORS[r.error] || r.error); return; }
       if (!desc.id && desc.alternativeOf) g.linkAlternative(desc.alternativeOf, r.id);
       phone.back();
       if (!desc.id && !desc.alternativeOf) phone.push("casebook", { kind: "hyp", id: r.id });
     };
     return h("div.builder",
+      desc.evidence?.length ? h("div.hint.muted", `Starts with ${desc.evidence.length} pieces of evidence for it.`) : null,
       desc.alternativeOf ? h("div.hint.muted", `An alternative to “${g.casebook().hypotheses.find(x => x.id === desc.alternativeOf)?.label || ""}”.`) : null,
       h("label.field-label", "In your own words"), words,
       h("div.field-label", "As a claim you could publish (optional)"),
@@ -386,6 +427,120 @@ export function casebookApp(phone) {
       h("div.preview", { class: preview ? "" : "muted" }, preview ? `“${preview}”` : started ? "Finish the claim, or clear it." : "No claim yet. That's fine while you think."),
       started ? h("button.btn.wide", { onclick: () => set({ subject: undefined, predicate: undefined, object: undefined }) }, "Clear claim") : null,
       btn);
+  }
+
+  // ── Comparison and connections ──────────────────────────────────────────
+  // Side by side with the visible fields lined up (core/compare.js). The screen never says what
+  // a difference means. Connections are the player's own claims and are never checked.
+
+  function compareWith(e) {
+    pickEvidence("Compare with", [e.id], id => phone.push("casebook", { kind: "compare", items: [{ evidence: e.id }, { evidence: id }] }));
+  }
+
+  /** A connection as one row: its kind, the other evidence, the player's reason. */
+  function linkRow(l, from) {
+    const others = l.items.filter(id => id !== from).map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
+    return h("button.hist-row.link-row", { onclick: () => phone.push("casebook", { kind: "link", items: [...l.items], id: l.id }) },
+      h("span.stance", CONNECTIONS[l.kind]),
+      h("div.pi-main", h("b", others.map(e => phone.evidenceTitle(e)).join(" · ")), l.note ? h("div.muted", `“${l.note}”`) : null));
+  }
+
+  function linkEditor(desc) {
+    const l = desc.id ? g.casebook().links.find(x => x.id === desc.id) : null;
+    if (desc.id && !l) return h("div.empty", "This connection was removed.");
+    const kind = desc.pick ?? l?.kind ?? null; // desc.kind is the screen kind ("link")
+    const items = (l?.items ?? desc.items).map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
+    const note = /** @type {HTMLInputElement} */ (h("input.text-input", { type: "text", "aria-label": "Because", placeholder: "Because… (optional)" }));
+    note.value = desc.note ?? l?.note ?? "";
+    note.addEventListener("input", () => { desc.note = note.value; });
+    const save = () => {
+      const r = l ? g.editLink(l.id, { kind, note: note.value }) : g.addLink({ items: items.map(e => e.id), kind, note: note.value });
+      if (r.error) { phone.toast(r.error === "duplicate_link" ? "You already connected these that way." : "Pick how they are connected."); return; }
+      phone.back();
+    };
+    return h("div.link-editor.pad",
+      h("div.field-label", `Evidence (${items.length})`),
+      items.map((e, i) => h("div.cmp-name", h("span.cmp-letter", LETTERS[i] || "·"), h("b", phone.evidenceTitle(e)))),
+      h("div.field-label", "How are they connected?"),
+      h("div.evidence-marks.link-kinds", Object.entries(CONNECTIONS).map(([id, label]) =>
+        h("button.chip", { "aria-pressed": String(kind === id), onclick: () => phone.replaceTop({ ...desc, pick: id, note: note.value }) }, `${kind === id ? "✓ " : ""}${label}`))),
+      h("label.field-label", "Because"), note,
+      h("div.hint.muted", "Your own reading. Nothing checks it."),
+      h("button.btn.primary.wide", { disabled: !kind, onclick: save }, l ? "Save changes" : "Save connection"),
+      l ? h("button.btn.wide.danger-btn", { onclick: () => phone.sheet("Remove this connection? The evidence stays.", [{ label: "Remove connection", danger: true, run: () => { g.removeLink(l.id); phone.back(); } }]) }, icon("trash"), " Remove connection") : null);
+  }
+
+  /** Two images: show one at a time at the same zoom and position, and switch between them. */
+  function imagePair(desc, pics) {
+    const show = Math.min(desc.show ?? 0, pics.length - 1), zoom = desc.zoom ?? 1;
+    const im = img(pics[show].image, { cls: "cmp-img", eager: true });
+    const stage = h("div.cmp-stage", im);
+    let pan = desc.pan ?? { x: 0, y: 0 };
+    const apply = () => { im.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`; };
+    apply();
+    let start = null;
+    stage.addEventListener("pointerdown", e => { if (zoom === 1) return; start = { x: e.clientX - pan.x, y: e.clientY - pan.y }; stage.setPointerCapture(e.pointerId); });
+    stage.addEventListener("pointermove", e => { if (!start) return; pan = { x: e.clientX - start.x, y: e.clientY - start.y }; apply(); });
+    stage.addEventListener("pointerup", () => { if (start) desc.pan = pan; start = null; });
+    const set = patch => phone.replaceTop({ ...desc, pan, ...patch });
+    return h("div.cmp-images",
+      stage,
+      h("div.cmp-img-cap.muted", `${LETTERS[pics[show].i]} · ${pics[show].title}`),
+      h("div.cmp-img-tools",
+        h("div.seg.small", pics.map((p, k) => h("button", { class: k === show ? "on" : "", "aria-label": `Show ${LETTERS[p.i]}`, onclick: () => set({ show: k }) }, `Show ${LETTERS[p.i]}`))),
+        h("button.icon-btn", { "aria-label": "Zoom out", disabled: zoom <= 1, onclick: () => set({ zoom: Math.max(1, zoom / 1.5), ...(zoom / 1.5 <= 1 ? { pan: { x: 0, y: 0 } } : {}) }) }, "−"),
+        h("span.muted.cmp-zoom", `${Math.round(zoom * 100)}%`),
+        h("button.icon-btn", { "aria-label": "Zoom in", disabled: zoom >= 5, onclick: () => set({ zoom: Math.min(5, zoom * 1.5) }) }, "+")));
+  }
+
+  function compareScreen(desc) {
+    const c = g.compare(desc.items);
+    if (c.error) return h("div.empty", "Pick at least two things to compare.");
+    const ok = c.items.map((x, i) => ({ ...x, i })).filter(x => !x.error);
+    const missing = c.items.filter(x => x.error).length;
+    const KIND = { page: "Saved page", excerpt: "Excerpt", image: "Image", message: "Message" };
+    const rows = [["What", x => x.kind === "page" && x.evidence == null ? "Page" : KIND[x.kind], "kind"], ["Source", x => x.source, "source"], ["Platform", x => x.platform, "platform"],
+      ["Address", x => x.url, "url"], ["Date", x => x.date ? fmtDate(x.date) : x.day != null && x.kind === "message" ? `Day ${x.day}` : null, "date"],
+      ["Copy", x => x.copy, "copy"], ["Author", x => x.author, "author"],
+      ["Saved", x => x.evidence ? `Day ${g.s.evidence.find(e => e.id === x.evidence)?.day}` : "Not saved", null]];
+    // Image info lines up too, row by row, for images.
+    const pics = ok.filter(x => x.image);
+    const infoRows = pics.length ? [...new Set(pics.flatMap(x => imageInfoRows(x.imageInfo, x.image).map(([k]) => k)))] : [];
+    const val = v => v == null || v === "" ? h("span.muted", "—") : String(v);
+    const table = h("div.cmp-table", { style: `--cols: ${ok.length}` },
+      h("div.cmp-row.head", h("div.cmp-label"), ok.map(x => h("div.cmp-cell", h("span.cmp-letter", LETTERS[x.i]), h("b", x.title || "—")))),
+      rows.map(([label, f, key]) => h("div.cmp-row", { class: key && c.differs[key] ? "differs" : "" }, h("div.cmp-label", label), ok.map(x => h("div.cmp-cell", val(f(x)))))),
+      infoRows.map(k => h("div.cmp-row", h("div.cmp-label", k), ok.map(x => h("div.cmp-cell", x.image ? val(Object.fromEntries(imageInfoRows(x.imageInfo, x.image))[k]) : h("span.muted", "—"))))));
+    const ids = ok.map(x => x.evidence).filter(Boolean);
+    const saveAll = () => {
+      const next = desc.items.map((r, i) => {
+        if (r.evidence || c.items[i].error) return r;
+        // Saves exactly the copy shown here, so the evidence is the version that was compared.
+        const res = g.save(r.message ? { message: r.message } : { artifact: r.artifact, version: c.items[i].version ?? undefined, ...(r.image ? { image: r.image } : {}) });
+        return res.ok ? { evidence: res.id } : r;
+      });
+      phone.toast("Saved to Casebook."); phone.replaceTop({ ...desc, items: next });
+    };
+    const texts = ok.filter(x => x.text || x.attachments?.length);
+    return h("div.compare",
+      h("div.hint.muted", "Side by side. Rows marked • differ. What it means is up to you."),
+      missing ? h("div.hint.muted", `${missing} ${missing === 1 ? "item isn't" : "items aren't"} available to compare.`) : null,
+      h("div.cmp-scroll", table),
+      ok.length > 2 ? h("div.hint.muted", `Swipe the table sideways to see all ${ok.length}.`) : null,
+      pics.length >= 2 ? [h("div.section-title", "Images"), imagePair(desc, pics)] : pics.length === 1 ? h("div.pad", img(pics[0].image, { cls: "evidence-preview" })) : null,
+      c.changes ? [h("div.section-title", `Changes from ${LETTERS[ok[0].i]} to ${LETTERS[ok[1].i]}`),
+        c.changes.title ? h("div.cmp-change.title", h("span.muted", "Title: "), h("s", c.changes.title[0]), " → ", c.changes.title[1]) : null,
+        c.changes.text.every(x => x.op === "same") ? h("div.empty.muted.small", "The text is the same.") :
+          c.changes.text.map(x => h("div.cmp-change", { class: `op-${x.op}` }, h("span.cmp-op", { "aria-label": x.op }, x.op === "removed" ? "−" : x.op === "added" ? "+" : ""), h("span", x.text)))] : null,
+      texts.map(x => [h("div.section-title", `${LETTERS[x.i]} · ${KIND[x.kind] || "Page"}`),
+        h("div.cmp-text", x.text ? richText(phone, x.text) : null, x.attachments?.length ? h("div.muted", `Attached: ${x.attachments.join(", ")}`) : null)]),
+      h("div.section-title", `Your connections (${c.links.length})`),
+      c.links.map(l => linkRow(l)),
+      h("div.pad.cmp-actions",
+        c.saved ? h("button.btn.primary.wide", { onclick: () => phone.push("casebook", { kind: "link", items: ids }) }, "How are they connected?")
+          : h("button.btn.primary.wide", { onclick: saveAll }, "Save to Casebook to connect them"),
+        c.saved ? h("button.btn.wide", { onclick: () => phone.push("casebook", { kind: "builder", evidence: ids }) }, "New theory from this") : null,
+        c.saved ? h("button.btn.wide", { onclick: () => phone.newEvent({ evidence: ids.map(id => ({ id, stance: "supports" })) }) }, "New event from this") : null));
   }
 
   // ── Questions ───────────────────────────────────────────────────────────
@@ -766,6 +921,8 @@ export function casebookApp(phone) {
       if (desc.kind === "hyp") return [bar("Theory"), h("div.scroll", hypDetail(desc))];
       if (desc.kind === "builder") return [bar(desc.id ? "Edit theory" : desc.alternativeOf ? "Alternative" : "New theory"), h("div.scroll", builder(desc))];
       if (desc.kind === "question") return [bar("Question"), h("div.scroll", questionDetail(desc))];
+      if (desc.kind === "compare") return [bar("Compare"), h("div.scroll", compareScreen(desc))];
+      if (desc.kind === "link") return [bar(desc.id ? "Connection" : "New connection"), h("div.scroll", linkEditor(desc))];
       if (desc.kind === "event") return [bar("Event"), h("div.scroll", eventDetail(desc))];
       if (desc.kind === "eventEdit") return [bar(desc.id ? "Edit event" : "New event"), h("div.scroll", eventEditor(desc))];
       if (desc.kind === "reports") return [bar("Reports"), h("div.scroll", reportsScreen())];
