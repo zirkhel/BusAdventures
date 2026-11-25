@@ -82,7 +82,7 @@ export function cleanCases(g, list) {
   return { ok: out };
 }
 
-const LISTS = { evidence: "evidence", hypothesis: "hypotheses", note: "notes", event: "timeline" };
+const LISTS = { evidence: "evidence", hypothesis: "hypotheses", note: "notes", event: "timeline", question: "questions" };
 
 /** Set which cases an item belongs to. An empty list makes it unclassified. */
 export function setCases(g, kind, id, cases) {

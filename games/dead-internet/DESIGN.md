@@ -53,7 +53,7 @@ games/dead-internet/
     sites.js                nettstedsmodell: status, design, lenker, 404 (W1)
     site-view.js            publicView(): hvitelistet visning til malene (W0)
     browser.js              adresseoppslag, bokmerker, tekststørrelse, frem/tilbake (W3, ingen DOM)
-    save.js                 lagring, versjonering, migrering, eksport/import (SAVE_VERSION 8)
+    save.js                 lagring, versjonering, migrering, eksport/import (SAVE_VERSION 9)
     content.js              laster content/manifest.json (fetch eller fs injiseres)
     util.js
   content/
@@ -184,7 +184,7 @@ Tiden går bare når spilleren velger **Sleep**. Da kjøres planlagte effekter (
 
 ## Lagring
 
-`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 7: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»), 6→7 beviskort med tomme egne vurderinger og lagret visningskopi.
+`state` er ett JSON-objekt. `save.js` legger på format og versjon, støtter eksport/import og migrering, og fjerner referanser til innhold som ikke lenger finnes. Lagringen injiseres (`localStorage` i nettleseren, `Map` i tester). Nøkkel: `ba_deadinternet_<world-id>`. Lagringsversjon 9: 1→2 oppdagelse, 2→3 tom tidslinje, 3→4 saker (alt blir uklassifisert, gamle rapporter får sin sak), 4→5 sakstilstander, 5→6 tom `media` (følger, likes, «Not interested»), 6→7 beviskort med tomme egne vurderinger og lagret visningskopi, 7→8 Browser-bokmerker og tekststørrelse, 8→9 teorier med «mot», status med logg og alternativer, og tomme spørsmål (se «Implementert steg 2»).
 
 ## Teststrategi (Anders, 24. nov)
 
@@ -402,6 +402,25 @@ Nye sidebevis får eksplisitt versjon og `snapshot` av kjernens rensede visnings
 Migrering v6→v7 beholder alle eksisterende referanser og kommentarer og fyller tomme vurderinger. En eksplisitt gammel versjon gjenopprettes som lagret kopi selv om den ikke er cachet. Hvis et gammelt bevis mangler versjon, kan den historiske versjonen ikke rekonstrueres sikkert: migreringen binder den til nåværende versjon når den finnes. Ingen vurderinger utledes fra at spilleren tidligere har åpnet kilden.
 
 Playwright-testen kjøres separat fra de avhengighetsfrie kjernetestene: `node games/dead-internet/tools/test-casebook-ui.mjs`. Den bruker installert `playwright`, eller en pakke angitt med `PLAYWRIGHT_MODULE`; `PLAYWRIGHT_CHANNEL` kan velge en installert nettleser. Den starter en lokal server, tester 390×844 og sammenligner tekst, CSS-klasser og kontrollverdier i tvillingverdenene. Skjermbildet lagres lokalt i `test-results/`.
+
+### Implementert steg 2 (25. november 2026, venter på PR-gjennomgang)
+
+**Teorier.** En teori er spillerens egne ord (`title`) og/eller en strukturert påstand `[subject] [predicate] [object]`. Minst én av dem må finnes. Casebook viser egne ord først (`theoryLabel`); en teori med begge viser påstanden under som «As a claim: …». Bare teorier med strukturert påstand kan vurderes av Dana og publiseres (`isStructured`). `review()` hopper over de andre, `publish()` filtrerer dem bort, og rapportbyggeren viser bare påstandene og sier hvor mange teorier som bare står med egne ord. Steg 5 bygger den strukturerte publiseringen videre (manipulerte dokumenter, falske identiteter); modellen hindrer ikke det.
+
+- **For og mot:** `evidence` er fortsatt listen over bevis *for* (samme felt som før, og den eneste listen scoring og Dana leser, så simulator og avslutninger er uendret). `against` er bevis *mot*. Et bevis er enten for eller mot én teori, aldri begge: `linkEvidence(g, h, e, on, stance)` med `stance` `supports`/`contradicts` flytter det. Visningen teller begge sider med synlige kilder (`apparentSource`): `evidenceCount`/`sourceCount` (for) og `againstCount`/`againstSourceCount`.
+- **Status med historikk:** `open` («Working theory»), `convinced` («Convinced»), `rejected` («Rejected»). Hver endring logges i `statusLog` med dag. Forkastede teorier foldes sammen i en egen gruppe i Theories-fanen, og alle koblinger beholdes. Fargene er nøytrale; ingen status ser ut som en vurdering fra spillet.
+- **Alternativer:** `alternatives` lagres én gang på den ene teorien og vises på begge (`alternativesOf`). Spilleren kan skrive et nytt alternativ eller koble en eksisterende teori.
+- **Redigering:** `updateHypothesis` tar bare `title`, `note` og trippelen. `predicate: null` fjerner påstanden hvis teorien har egne ord. Bevis, status og alternativer har egne handlinger.
+
+**Spørsmål.** `s.questions` er spillerens egne spørsmål, med ett hjem i Notes (segmentet «Notes / Questions»). Et spørsmål har tekst, status `open`/`answered`/`dropped` («Set aside») med `statusLog`, et valgfritt eget svar, saker (`setCases("question", …)`) og koblinger `links: { evidence, topics, sources, theories }`. Koblinger godtas bare til det spilleren ser eller har laget: lagrede bevis, undersøkte navn som ikke er hemmelige (`s.known`), synlige kildenøkler fra lagrede bevis (`apparentSource`) og egne teorier. Teorikortet og beviskortet viser spørsmålene som er koblet til dem, ved referanse. Fjernes et bevis eller en teori, forsvinner koblingen fra spørsmålene. Spillet lager aldri spørsmål.
+
+**Velger med søk.** «Other evidence»-listen under en teori er borte. «+ For», «+ Against», «Attach evidence» (Timeline) og «Link evidence» (spørsmål) åpner én velger (`pickEvidence`) med søkefelt alltid synlig: viktige bevis først, så resten som ikke er lagt bort, så det som er lagt bort. Søket treffer tittel, synlig kilde, spillerens kommentar og utdrag. Allerede koblede bevis vises ikke.
+
+**Spillerlaget er usynlig for reglene.** Ingen av handlingene (`setTheoryStatus`, `linkAlternative`, `addQuestion`, `updateQuestion`, `linkQuestion`, `deleteQuestion`, `linkEvidence` med `contradicts`) fyrer hendelser eller leses av betingelser. En fuzz-test i `tests/theories.test.mjs` sjekker at 300 tilfeldige handlinger ikke endrer `flags`, `counters`, `trust`, `credibility`, `fired`, `notifications`, `pending`, `messages` eller `endings`.
+
+**Lagring v9.** Migrering 8→9 (`migrateTheories` i `core/workbench.js`): alle eksisterende koblinger blir «for», `against: []`, `status: "open"` med én loggrad fra teoriens dag, `alternatives: []`, `title: ""` og `s.questions = []`. Ingenting utledes. v7-lagringer går 7→8→9. `deserialize` beholder en teori med egne ord selv om relasjonen er borte fra innholdet (påstanden fjernes, med advarsel), og renser `against`, `alternatives` og spørsmålskoblinger.
+
+**Lekkasjevern.** Tvillingverden-testen spiller også teorier med egne ord, bevis mot, status, alternativer og spørsmål koblet til bevis, personer, kilder og teorier, og sammenligner `casebookView` (nå med `questions`) og `visibleSources()`. Forbudstesten dekker nå også `core/workbench.js`, og hver visningsfunksjon i `core/casebook.js` (`casebookView`, `theoryLabel`, `visibleSources`, `alternativesOf` med flere) sjekkes for kanonhjelpere og `.source`. DOM-testen i Playwright sammenligner Theories-fanen, alle teorikort, byggeren, Questions-listen, alle spørsmålskort, rapportbyggeren og innholdet i søkevelgerne i tre tvillingverdener.
 
 ## Saksavslutning og konsekvenser (gjennomgang 24. nov 2026, ikke diskutert ennå)
 

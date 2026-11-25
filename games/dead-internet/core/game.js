@@ -9,7 +9,7 @@ import { isVisible, isLive, accountActive, viewArtifact, mentionsOf } from "./ar
 import { search, searchImage, imageInfo } from "./search.js";
 import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
-import { updateEvidence } from "./workbench.js";
+import { updateEvidence, addQuestion, updateQuestion, linkQuestion, deleteQuestion } from "./workbench.js";
 import { savedArtifactView } from "./artifacts.js";
 import * as CB from "./casebook.js";
 import * as TL from "./timeline.js";
@@ -66,7 +66,13 @@ export class Game {
       case "createHypothesis": r = CB.createHypothesis(this, a.hypothesis); break;
       case "updateHypothesis": r = CB.updateHypothesis(this, a.id, a.patch); break;
       case "deleteHypothesis": r = CB.deleteHypothesis(this, a.id); TL.forgetTheory(this, a.id); break;
-      case "linkEvidence": r = CB.linkEvidence(this, a.hypothesis, a.evidence, a.on ?? true); break;
+      case "linkEvidence": r = CB.linkEvidence(this, a.hypothesis, a.evidence, a.on ?? true, a.stance ?? "supports"); break;
+      case "setTheoryStatus": r = CB.setTheoryStatus(this, a.id, a.status); break;
+      case "linkAlternative": r = CB.linkAlternative(this, a.hypothesis, a.other, a.on ?? true); break;
+      case "addQuestion": r = addQuestion(this, a.question); break;
+      case "updateQuestion": r = updateQuestion(this, a.id, a.patch); break;
+      case "linkQuestion": r = linkQuestion(this, a.id, a.kind, a.ref, a.on ?? true); break;
+      case "deleteQuestion": r = deleteQuestion(this, a.id); break;
       case "addNote": r = CB.addNote(this, a.text, a.from, a.about); break;
       case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
       case "deleteNote": r = CB.deleteNote(this, a.id); break;
@@ -109,7 +115,16 @@ export class Game {
   editEvidence(id, patch) { return this.dispatch({ type: "updateEvidence", id, patch }); }
   save(ref) { return this.dispatch({ type: "saveEvidence", ref }); }
   hypothesize(hypothesis) { return this.dispatch({ type: "createHypothesis", hypothesis }); }
-  link(hypothesis, evidence, on = true) { return this.dispatch({ type: "linkEvidence", hypothesis, evidence, on }); }
+  /** Link evidence to a theory: stance "supports" (for, the default) or "contradicts" (against). */
+  link(hypothesis, evidence, on = true, stance = "supports") { return this.dispatch({ type: "linkEvidence", hypothesis, evidence, on, ...(stance !== "supports" ? { stance } : {}) }); }
+  /** The player's own status for a theory: open (working theory), convinced or rejected. Logged with the day. */
+  setTheoryStatus(id, status) { return this.dispatch({ type: "setTheoryStatus", id, status }); }
+  linkAlternative(hypothesis, other, on = true) { return this.dispatch({ type: "linkAlternative", hypothesis, other, on }); }
+  /** An open question in Notes. question: { text, links?: { evidence, topics, sources, theories } }. */
+  addQuestion(question) { return this.dispatch({ type: "addQuestion", question }); }
+  editQuestion(id, patch) { return this.dispatch({ type: "updateQuestion", id, patch }); }
+  linkQuestion(id, kind, ref, on = true) { return this.dispatch({ type: "linkQuestion", id, kind, ref, on }); }
+  deleteQuestion(id) { return this.dispatch({ type: "deleteQuestion", id }); }
   /** Free note. `from` says where it was written (artifact/message), `about` what it names. */
   note(t, from, about) { return this.dispatch({ type: "addNote", text: t, ...(from ? { from } : {}), ...(about ? { about } : {}) }); }
   editNote(id, t) { return this.dispatch({ type: "updateNote", id, text: t }); }
@@ -297,6 +312,8 @@ export class Game {
   /** Who and what a piece of evidence is about, and its source key. Never the claims it supports. */
   evidenceAbout(evId) { const e = this.s.evidence.find(x => x.id === evId); return e ? CB.evidenceAbout(this, e) : null; }
   hypothesisLabel(h) { return CB.hypothesisLabel(this, h); }
+  /** Visible sources among the saved evidence (key, label, count), for pickers. Never hidden origins. */
+  visibleSources() { return CB.visibleSources(this); }
   /** References (names, handles, addresses, dates, numbers) in a text, for tappable content. */
   scan(text) { return scanText(this.w, text); }
   /** Search suggestions from earlier searches and things already met. */

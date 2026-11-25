@@ -684,3 +684,27 @@ h2.np-head { font-size: 23px; }
 .evidence-marks .chip { color: inherit; min-height: 44px; }
 .evidence-marks [aria-pressed="true"] { border-color: currentColor; font-weight: 700; }
 .evidence-preview { max-width: 100%; max-height: 240px; object-fit: contain; }
+
+/* Casebook step 2: theories (status, for/against, alternatives) and questions. Neutral colours only:
+   nothing here may look like a verdict from the game. */
+.hyp-claim { padding-top: 0; }
+.hyp-status { display: flex; align-items: center; gap: 10px; padding-top: 4px; padding-bottom: 4px; }
+.hyp-status .muted { font-size: 13px; }
+.status-chip { margin: 0; font-weight: 600; }
+.status-chip .chev { font-size: 11px; opacity: .6; }
+.stance { flex: none; min-width: 64px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ink2); }
+.status-log { padding: 0 16px; }
+.log-row { font-size: 13px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.q-row { min-height: 52px; }
+.q-row b { white-space: normal; }
+.q-mark { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: var(--ink2); }
+.q-row.answered b, .q-row.dropped b { color: var(--ink2); }
+.q-add { display: flex; gap: 8px; align-items: center; }
+.q-add .text-input { flex: 1; min-width: 0; }
+.question-detail .case-row { padding-left: 0; padding-right: 0; }
+.question-detail .section-title { margin-left: 0; margin-right: 0; }
+.question-detail .status-log { padding: 0; }
+.question-detail .ev-item { margin: 0 -16px; }
+.q-links { padding: 4px 0 0; }
+.q-links .chip .ico { opacity: .7; }
+.question-detail .danger-btn { margin-top: 20px; display: inline-flex; justify-content: center; align-items: center; gap: 4px; }

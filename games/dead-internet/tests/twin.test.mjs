@@ -73,6 +73,16 @@ function play(w) {
   const t = g.addEvent({ title: "Mara dies", date: { kind: "exact", value: "2025-07-02" },
     evidence: all.slice(0, 6).map((id, k) => ({ id, stance: k % 2 ? "contradicts" : "supports" })) });
   g.linkEventTheory(t.id, extra[0]);
+  // Step 2: theories in the player's own words, evidence against, status, alternatives, questions.
+  const own = [g.hypothesize({ title: "The obituary was planted" }).id,
+    g.hypothesize({ title: "Owen is behind the forum posts", subject: "owen", predicate: "connected_to", object: "mara" }).id];
+  all.forEach((e, k) => g.link(own[k % 2], e, true, k % 3 ? "contradicts" : "supports"));
+  all.slice(0, 40).forEach(e => g.link(extra[1], e, true, "contradicts"));
+  g.setTheoryStatus(own[0], "convinced"); g.setTheoryStatus(extra[2], "rejected");
+  g.linkAlternative(own[0], extra[0]); g.linkAlternative(extra[3], own[1]);
+  g.visibleSources().forEach((s, k) => g.addQuestion({ text: `Who is behind ${s.label}?`,
+    links: { sources: [s.key], evidence: [all[k % all.length]], topics: ["mara", "calvin", "owen"].slice(0, 1 + k % 3), theories: [own[k % 2], extra[k % 4]] } }));
+  g.s.questions.forEach((q, k) => g.editQuestion(q.id, { status: ["open", "answered", "dropped"][k % 3], answer: k % 3 === 1 ? "My answer" : "" }));
   g.s.trust.dana = 99;
   return { g, hyps: [r.h2, r.h3, ...extra] };
 }
@@ -86,6 +96,7 @@ function snapshot({ g, hyps }) {
       view: e.artifact ? g.view(e.artifact, e.version ?? undefined) : null })),
     timeline: g.timeline(),
     topics: g.topics(),
+    sources: g.visibleSources(),
     review: g.review("daily_record", hyps),
     _hiddenInViews: g.s.evidence.filter(e => e.artifact).map(e => g.view(e.artifact, e.version ?? undefined))
       .filter(v => JSON.stringify(v) !== JSON.stringify(strip(v))).map(v => v.id),
@@ -99,6 +110,7 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   const a = snapshot(base), b = snapshot(merged), c = snapshot(split);
   assert.deepEqual(a._hiddenInViews, [], "artifact views carry no hidden source, supports or mentions");
   assert.ok(a.evidence.length > 100, "the player saved enough to make the comparison meaningful");
+  assert.ok(a.casebook.questions.length > 20 && a.casebook.hypotheses.some(h => h.againstCount > 0 && !h.structured), "step 2 views are part of the comparison");
   assert.deepEqual(b, a, "a world where everything has one hidden source looks the same");
   assert.deepEqual(c, a, "a world where everything has its own hidden source looks the same");
 });
@@ -134,12 +146,22 @@ test("the presentation layer and provenance never touch canon helpers", async ()
   const { join, dirname } = await import("node:path");
   const { fileURLToPath } = await import("node:url");
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const files = ["core/provenance.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
+  const files = ["core/provenance.js", "core/workbench.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
     ...(await readdir(join(root, "app/apps"))).filter(f => f.endsWith(".js")).map(f => `app/apps/${f}`)];
   const banned = /\b(supportOf|truthOf|matchClaim|evidenceFacts|supportsOf|operatedBy|isHuman)\b|\.(claims|facts)\b|import[^;]*\bsourceOf\b/;
   for (const f of files) {
     const code = (await readFile(join(root, f), "utf8")).split("\n").filter(l => !/^\s*(\/\/|\*|\/\*)/.test(l)).join("\n");
     assert.doesNotMatch(code, banned, `${f} reads hidden canon`);
+  }
+  // The Casebook views live next to scoring in core/casebook.js: each view function must stay clean.
+  const cb = await readFile(join(root, "core/casebook.js"), "utf8");
+  const views = ["evidenceAbout", "hypothesisLabel", "theoryLabel", "counts", "visibleSources", "casebookView", "alternativesOf", "isStructured",
+    "createHypothesis", "updateHypothesis", "deleteHypothesis", "linkEvidence", "setTheoryStatus", "linkAlternative"];
+  for (const name of views) {
+    const start = cb.search(new RegExp(`^(export )?function ${name}\\b`, "m"));
+    assert.ok(start >= 0, `core/casebook.js has ${name}`);
+    const body = cb.slice(start, cb.indexOf("\n}\n", start) + 2);
+    assert.doesNotMatch(body.replace(/\/\/.*$/gm, ""), /\b(supportOf|apparentSupportOf|truthOf|matchClaim|evidenceFacts|supportsOf|mentionsOf|sourceOf|operatedBy|isHuman)\b|\.(claims|facts)\b|\.source\b/, `${name} reads hidden canon`);
   }
 });
 

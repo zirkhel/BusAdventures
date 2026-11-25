@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W7 merget som PR #73–#81, handover PR #82 `8978002`; nettsidefotografiene merget som PR #83 `b2a7f76`; rettelser etter fotografiene i PR #84, ikke merget)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W7 merget som PR #73–#81, handover PR #82 `8978002`; nettsidefotografiene merget som PR #83 `b2a7f76`; rettelser etter fotografiene merget som PR #84 `48191f7`; PR #72 lukket uten merge; Casebook steg 2 implementert på greina `casebook-step-2`, ikke merget)._
 
 ## Overlevering (25. nov 2026)
 
@@ -8,14 +8,14 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 
 **Status**
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Katalogen har nå 83 ferdige grafikkelementer (61 fra før, pluss logoer og nettsidebilder fra grafikksteget 25. nov).
-- Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2–5 gjenstår.
+- Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2 (teorier og spørsmål) er implementert 25. nov 2026 med Anders' ja, på greina `casebook-step-2` (PR mot `main`, ikke merget, venter på Anders' gjennomgang). Lagringen er nå v9. Steg 3–5 gjenstår. Se «Steg 2» under og DESIGN.md, «Implementert steg 2».
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
 - Nettsteder: W0–W7 og grafikksteget er merget til `main` som PR #73–#81 (`origin/main` `9190200`): #73 W0 `a3b3a63`, #74 W1 `7193fa7`, #75 W2 `05493e9`, #76 grafikk `dec0458`, #77 W3 `2c6aa9f`, #78 W4 `24a20c3`, #79 W5 `9b6ce40`, #80 W6 `4e5bff8`, #81 W7 `9190200`. De 122 bakgrunnssidene fra W4 beholdes (når de først er skrevet, tar vi dem ikke bort). Godkjent ny kanon fra W4: ordfører Denise Harlan og 11 rådsmedlemmer (Ana Ruiz pluss 10 nye navn); rådhuset 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30. Godkjent ny kanon fra W5: fyret automatisert i 1998, siste fyrmester Samuel Okoro; Harbor Festival har hatt frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024) er universfakta. 6:10-fergekapteinen «Dennis» er bare en forum-påstand. Godkjent ny kanon fra W6: bibliotekets hverdagsåpningstider (ons–fre 10–18, lør 10–16, stengt søn) og de øvrige ansatte Tomás Rinaldi, Helen Cho og June Ellery (Priya Shah er fortsatt på Eastfield); Harbor Dental-teamet Dr Nina Pell, Dr Omar Rahman og hygieniker Chris Vale, åpningstider man–fre 8–17, lør 9–13, stengt søn, og parkering bak praksisen av Harbor Street; HarborDesk-rom på Dock Road og prisene Plus $79 / Studio $149; domenet `openfilings.org` og navnet Open Filings. Godkjent ny kanon fra W7: HarborDesks leietakere på 18 Harbor Street (Quay Ledger Suite 110, Amber Fern Tutoring Suite 120, North Lamp Studio Suite 210, Gull Wing Surveys Suite 305); Haven Mutuals kontor i 9 Market Row, Old Town, siden 2009; community leads på Brightlines cachete Team-side fra 2024, Samira Holt, Jonah Ellison og Tamsin Roe. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
 - Nettsidefotografier: PR #83 (`websites-photos`) er merget til `main` (`b2a7f76`). Den leverer de 20 gjenstående WEB0001–WEB0024 og fotoversjoner av SVG-heltene WEB0028, WEB0029, WEB0031–WEB0035, WEB0037 og WEB0038. Katalogen har da 123 ferdige elementer. Laget med bildegeneratoren, ikke ComfyUI. Se «Fotografier» under.
-- Rettelser etter fotografiene: PR #84 (`fixes-after-photos`, ikke merget). Threadline-profiler viser navn og «Threads started» (`accountByHandle()` gir en id; `app/sites/forum.js` slår nå opp kontoen). Walter Brennan-sitatet etter hans død er et tilsiktet spor og har test. Godkjent enhetskanon er registrert. Harbor Festival er i oktober, og vinneranden i 2025 er nr. 3,117. Se «Rettelser etter fotografiene» under.
-- Åpen PR #72 (`codex/casebook-step-1`) er en etterlatt duplikat av merget PR #71 og skal lukkes, ikke merges.
+- Rettelser etter fotografiene: PR #84 (`fixes-after-photos`) er merget til `main` (`48191f7`). Threadline-profiler viser navn og «Threads started» (`accountByHandle()` gir en id; `app/sites/forum.js` slår nå opp kontoen). Walter Brennan-sitatet etter hans død er et tilsiktet spor og har test. Godkjent enhetskanon er registrert. Harbor Festival er i oktober alle år, og de to Eastfield Notes-innleggene har oktober-URL-er med videresending fra de gamle juli-adressene (`urlAliases`). Vinneranden i 2025 er nr. 3,117. Se «Rettelser etter fotografiene» under.
+- PR #72 (`codex/casebook-step-1`) ble lukket uten merge 25. nov 2026. Den var en etterlatt rest av merget PR #71 (Casebook-filene var identiske med `main`). Greina `codex/casebook-step-1` er beholdt.
 
-**Neste steg:** W8 (Archive-kobling) venter på Casebook steg 3. Gjenstår: Anders' ja og merge av rettelsene (PR #84), lukke etterlatt PR #72, Casebook steg 2–5, og ekstern spilltest etter steg 5 og avklaring av saksavslutning. Nye nettside-PR-er merges bare etter Anders' ja.
+**Neste steg:** Anders' gjennomgang og merge-ja for Casebook steg 2 (`casebook-step-2`), med de åpne designvalgene under «Steg 2». Deretter steg 3–5. W8 (Archive-kobling) venter på Casebook steg 3. Ekstern spilltest etter steg 5 og avklaring av saksavslutning. Ingen andre åpne PR-er. Nye PR-er merges bare etter Anders' ja.
 
 ### Nettstedsarbeid (W0–W7 og grafikk) — greiner og beslutninger
 
@@ -32,7 +32,7 @@ W0–W7 og grafikksteget er merget til `main` som PR #73–#81 (`9190200`). Arbe
 | W5 | `websites-w5` | merget PR #79 · `9b6ce40` | Wiki, Forum, Document, Anonymous (og saas-Landing for Faceless). Calderpedia, Threadline, Docshare, SpillCheck og Faceless Stock flyttet over, med innhold. Godkjent kanon: fyret automatisert 1998, siste fyrmester Samuel Okoro; Harbor Festival-frivillige siden minst 1979; bruddene HarborFit (mars 2021), Slice of Calder (november 2022) og CalderLearn (august 2024). «Dennis» er bare en forum-påstand. |
 | W6 | `websites-w6` | merget PR #80 · `4e5bff8` | Legacy, Personal, øvrig Landing (`smallbiz`; parkert er fortsatt Browser-eid). Nye bakgrunnsnettsteder (bibliotek, Calder Power, Calder CU, Walts side, Harbor PA), cachet 2019-versjon av portcalderjazz.com, cachet Kestrel 2014, omdøping av `corp-registries.example` til `openfilings.org`. |
 | Foto | `websites-photos` | merget PR #83 · `b2a7f76` | WEB0001–WEB0024 (uten 0005/0007/0010/0020, som fantes) og fotoversjoner av WEB0028–WEB0038 utenom 0030/0036. Laget med bildegeneratoren, ikke ComfyUI. Enhetsnavnene i bildeinfo ble godkjent som kanon (PR #84). |
-| Rettelser | `fixes-after-photos` | PR #84, ikke merget | Threadline-profiler, test for Walt-sporet, enhetskanon, Harbor Festival i oktober og én vinnerand. |
+| Rettelser | `fixes-after-photos` | merget PR #84 · `48191f7` | Threadline-profiler, test for Walt-sporet, enhetskanon, Harbor Festival i oktober med oktober-URL-er og `urlAliases`, og én vinnerand (#3,117). |
 | W7 | `websites-w7` | merget PR #81 · `9190200` | Spor i design som innhold (§9.2–§9.3). Calvins ansikt på uavhengige sider, 18 Harbor Street med fire uskyldige firmaer, cachet Team 2024, felles formuleringer, Lumen som blindvei, ny gjennomspilling `design_as_clue`. Godkjent kanon: HarborDesk-leietakerne, Haven Mutuals kontor, community leads 2024. |
 
 **W0 — nye/endrede filer.** `core/site-view.js` (ny), `app/render.js`, `tests/sites.test.mjs`, oppdateringer i DEVPLAN, WEBSITES.md og DESIGN.md.
@@ -122,7 +122,7 @@ Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.
 - Tester: `node --test --test-concurrency=1 games/dead-internet/tests/*.test.mjs`, `node games/dead-internet/tools/validate.mjs` og `node games/dead-internet/tools/simulate.mjs` fra repo-roten. Mobil røyktest (Playwright, 390×844) ved UI-endringer: et lagret spill kan legges i `localStorage`, telefonen låses opp med «Swipe up to unlock», introen lukkes med `.it-notips`, og Casebook er det fjerde ikonet i docken.
 
 
-**Rettelser etter fotografiene (PR #84, `fixes-after-photos`).**
+**Rettelser etter fotografiene (PR #84, `fixes-after-photos`, merget `48191f7`).**
 - *Threadline-profiler:* `phone.accountByHandle()` gir en konto-id, men profilmalen brukte den som et kontoobjekt. Profilene fikk derfor tomt navn og manglet «Threads started». `profileAccount()` og `threadsStartedBy()` i `app/sites/forum.js` slår nå opp kontoen. Test `tests/threadline-profiles.test.mjs`: truthseeker_88 viser navnet sitt og trådene A16 og A62. Alle ni profiler finner sin konto. theo_q har ingen egne tråder, fordi han bare svarer på side 4 (A17).
 - *Walter Brennan-sporet:* DR-2026-0051 (lag 5, 12. feb 2026) siterer Walter Brennan («Five thousand ducks»), som døde 31. okt 2025. Dette er et tilsiktet spor og skal ikke rettes. Test i `tests/news.test.mjs`, og validatoren melder ingenting.
 - *Enhetskanon:* `bf-device-orrin-d7` (northgate), `bf-device-orrin-s20` (kestrel), `bf-device-orrin-s5` og `bf-device-halden-photoscan-2400` (walts), og `bf-device-lumen-6` (calderpedia). Alle har status `canon` og test i `tests/image-meta.test.mjs`. Maras Lumen 5 er ikke bakgrunnsfakta, på grunn av QA_PEOPLE.
@@ -366,9 +366,23 @@ _Implementert 25. november 2026 på egen branch; venter på Anders’ PR-gjennom
 Verifisering av steg 1: 111 kjernetester, validator (0 feil/advarsler), alle 11 scenarioer og begge automatiske spillere. Playwright på 390×844: merker, kommentar, lagret kopi/original, retur med faktisk rulleposisjon, legg bort/gjenopprett, filtre og ny lasting. DOM-testen sammenligner 411 beviskort og alle filter/grupperingsvalg i tre tvillingverdener. Kjør med `node games/dead-internet/tools/test-casebook-ui.mjs` (Playwright installert; valgfritt `PLAYWRIGHT_MODULE` og `PLAYWRIGHT_CHANNEL`).
 
 ### Steg 2 — Teorier og spørsmål
-- [ ] Fri formulering, bevis for og mot, status med historikk, alternative forklaringer
-- [ ] Ubesvarte spørsmål i Notes, valgfritt knyttet til bevis, personer, kilder, teorier og saker
-- [ ] Velger med søk i stedet for lange «Other evidence»-lister
+_Implementert 25. november 2026 på greina `casebook-step-2` (Anders sa ja samme dag); venter på Anders’ PR-gjennomgang og eksplisitte merge-godkjenning._
+- [x] Fri formulering, bevis for og mot, status med historikk, alternative forklaringer (25. nov 2026)
+- [x] Ubesvarte spørsmål i Notes, valgfritt knyttet til bevis, personer, kilder, teorier og saker (25. nov 2026)
+- [x] Velger med søk i stedet for lange «Other evidence»-lister (25. nov 2026)
+- [x] Lagring v9 med migrering fra v8 og v7; tvillingverden-test, forbudstest og DOM-test utvidet
+
+Filer: `core/casebook.js` (teorier: `title`, `against`, `status`/`statusLog`, `alternatives`, `isStructured`, `theoryLabel`, `visibleSources`, `casebookView` med spørsmål; `review`/`publish` bruker bare strukturerte teorier), `core/workbench.js` (spørsmål og migrering 8→9), `core/game.js` (handlingene `setTheoryStatus`, `linkAlternative`, `addQuestion`, `updateQuestion`, `linkQuestion`, `deleteQuestion`, og `stance` på `linkEvidence`), `core/state.js` (`SAVE_VERSION` 9, `questions`), `core/save.js`, `core/cases.js` (sakstype `question`), `app/apps/casebook.js`, `app/phone.js` (velgeren: `search`, `keywords`), `app/style.css`, `tests/theories.test.mjs` (ny), `tests/twin.test.mjs`, `tests/url-aliases.test.mjs` (v8-lagringen skrives nå eksplisitt som v8), `tools/test-casebook-ui.mjs`. `core/provenance.js` og `core/artifacts.js` er ikke endret.
+
+Verifisering av steg 2: 208 kjernetester (`node --test --test-concurrency=1`), validator (0 feil/advarsler), alle 11 scenarioer og begge automatiske spillere med identisk utskrift som `main` (sammenlignet linje for linje). Playwright på 390×844: teori med egne ord, «+ For» med søkevelger (viktige først, søk på egen kommentar), «+ Against», flytte mellom for og mot, status med historikk, nytt alternativ, spørsmål fra teorien koblet til en person, besvart med eget svar, spørsmål i Notes, ny lasting med alt i behold, forkastet teori foldet bort, ingen horisontal overflyt. DOM-tvillingtesten sammenligner nå også 3 teorier, 24 spørsmål, byggeren, rapportbyggeren og søkevelgerne. Skjermbilder: `/workspace/dead-internet-shots/cb2-*.png` (kjør med `CB_SHOTS=<mappe>`; standard `test-results/`).
+
+**Designvalg som trenger Anders' syn:**
+1. *For-listen beholder feltet `evidence`.* Bevis mot ligger i et eget felt `against`, i stedet for `evidence: [{id, stance}]` som i forslaget. Da leser scoring og Dana nøyaktig det samme som før, og avslutningene er garantert uendret. Steg 5 bestemmer hvordan Dana skal kommentere bevis mot.
+2. *Bare teorier med strukturert påstand kan publiseres.* Teorier med bare egne ord vises ikke som valg i rapportbyggeren (det står hvor mange det gjelder). Alternativet er å vise dem gråtonet med «Add a claim».
+3. *Statusordene* er «Working theory», «Convinced» og «Rejected», i samme nøytrale farge. Forkastede teorier foldes sammen, men står fortsatt i rapportbyggeren hvis de har en påstand.
+4. *Spørsmål fra en teori* lagres i Notes med kobling til teorien (ett hjem), i stedet for som egne sjekkpunkter på teorien. Status er Open, Answered og Set aside, med et valgfritt eget svar.
+5. *«Kilder» i et spørsmål* er synlige kildenøkler fra `apparentSource` (konto, nettsted, avsender). Steg 4 kan bruke de samme nøklene til kildekortene.
+6. *Notes-fanens tall* teller notater pluss åpne spørsmål.
 
 ### Steg 3 — Sammenligning og koblinger
 - [ ] Valgmodus (langt trykk) og sammenligning av bilder, dokumenter, meldinger, artikler og versjoner
