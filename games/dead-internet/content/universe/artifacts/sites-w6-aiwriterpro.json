@@ -1,0 +1,42 @@
+[
+ {
+  "id": "W-aiwriterpro-0001",
+  "site": "aiwriterpro",
+  "page": "page",
+  "type": "page",
+  "platform": "aiwriterpro",
+  "url": "aiwriterpro.app/pricing",
+  "date": "2026-02-01",
+  "title": "Pricing",
+  "filler": true,
+  "source": "aiwriterpro",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Start free. Stay if it sounds like you.\n\nStarter — free. Ten posts a month, one voice.\nPro — $19 a month. Thirty days of posts, scheduled, in a voice you approve.\nStudio — $49 a month. Several voices, a calendar, and a button that says regenerate.\n\nPrices are what we show on this page. The posts are what you publish."
+   }
+  ]
+ },
+ {
+  "id": "W-aiwriterpro-0002",
+  "site": "aiwriterpro",
+  "page": "page",
+  "type": "page",
+  "platform": "aiwriterpro",
+  "url": "aiwriterpro.app/faq",
+  "date": "2026-02-01",
+  "title": "FAQ",
+  "filler": true,
+  "source": "aiwriterpro",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Does it sound like me?\nA satisfied customer said it sounds just like them. You can edit every line before it goes out.\n\nCan I schedule a month in advance?\nYes. Thirty days of posts in thirty seconds, if you do not linger on the preview.\n\nDo you post as me?\nOnly if you connect an account and press the button. We do not press it for you."
+   }
+  ]
+ }
+]

@@ -1,0 +1,40 @@
+{
+ "id": "harborpa",
+ "platform": "harborpa",
+ "domain": "harborpa.com",
+ "org": "harbor_pa",
+ "designs": [
+  {
+   "id": "d2020",
+   "from": "2020-01-01",
+   "template": "corporate",
+   "variant": "consultancy",
+   "theme": {
+    "logo": "LOGO_HARBORPA",
+    "palette": {
+     "bg": "#f4f1ea",
+     "ink": "#2b2b2b",
+     "accent": "#2b2b2b"
+    }
+   },
+   "header": {
+    "mast": "Harbor Public Affairs",
+    "tagline": "Advice for civic work"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    }
+   ],
+   "footer": {
+    "text": "Harbor Public Affairs · Port Calder"
+   }
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "Harbor Public Affairs has no page at that address."
+ },
+ "status": []
+}

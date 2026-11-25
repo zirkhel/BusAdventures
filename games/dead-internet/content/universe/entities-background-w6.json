@@ -1,0 +1,131 @@
+[
+ {
+  "id": "pclibrary",
+  "kind": "org",
+  "name": "Port Calder Public Library",
+  "aliases": [
+   "Port Calder Public Library",
+   "the library",
+   "Eastfield library",
+   "Eastfield branch"
+  ],
+  "isHuman": false,
+  "bio": "The city library service, with Eastfield and Northpoint branches.",
+  "relations": []
+ },
+ {
+  "id": "calder_power",
+  "kind": "org",
+  "name": "Calder Power",
+  "aliases": [
+   "Calder Power"
+  ],
+  "isHuman": false,
+  "bio": "The electricity utility for Port Calder.",
+  "relations": []
+ },
+ {
+  "id": "harbor_pa",
+  "kind": "org",
+  "name": "Harbor Public Affairs",
+  "aliases": [
+   "Harbor Public Affairs"
+  ],
+  "isHuman": false,
+  "bio": "A Port Calder public-affairs consultancy, listed as a vendor on lobbying disclosures.",
+  "relations": []
+ },
+ {
+  "id": "walter_brennan",
+  "kind": "person",
+  "name": "Walter Brennan",
+  "aliases": [
+   "Walt Brennan",
+   "Walt"
+  ],
+  "isHuman": true,
+  "born": "1944",
+  "died": "2025-10-31",
+  "bio": "Harbor Festival volunteer since 1979. Ran the duck race for thirty years. Died 31 October 2025, aged 81.",
+  "relations": []
+ },
+ {
+  "id": "nina_pell",
+  "kind": "person",
+  "name": "Nina Pell",
+  "aliases": [
+   "Dr Nina Pell",
+   "Dr. Nina Pell"
+  ],
+  "isHuman": true,
+  "bio": "Dentist at Harbor Dental.",
+  "relations": []
+ },
+ {
+  "id": "omar_rahman",
+  "kind": "person",
+  "name": "Omar Rahman",
+  "aliases": [
+   "Dr Omar Rahman",
+   "Dr. Omar Rahman"
+  ],
+  "isHuman": true,
+  "bio": "Dentist at Harbor Dental.",
+  "relations": []
+ },
+ {
+  "id": "chris_vale",
+  "kind": "person",
+  "name": "Chris Vale",
+  "aliases": [
+   "Chris Vale"
+  ],
+  "isHuman": true,
+  "bio": "Hygienist at Harbor Dental.",
+  "relations": []
+ },
+ {
+  "id": "tomas_rinaldi",
+  "kind": "person",
+  "name": "Tomás Rinaldi",
+  "aliases": [
+   "Tomas Rinaldi"
+  ],
+  "isHuman": true,
+  "bio": "Staff member at the Eastfield library branch.",
+  "relations": []
+ },
+ {
+  "id": "helen_cho_lib",
+  "kind": "person",
+  "name": "Helen Cho",
+  "aliases": [
+   "Helen Cho"
+  ],
+  "isHuman": true,
+  "bio": "Staff member at the Northpoint library branch.",
+  "relations": []
+ },
+ {
+  "id": "june_ellery",
+  "kind": "person",
+  "name": "June Ellery",
+  "aliases": [
+   "June Ellery"
+  ],
+  "isHuman": true,
+  "bio": "Catalogue and administration at Port Calder Public Library.",
+  "relations": []
+ },
+ {
+  "id": "lou_benn",
+  "kind": "person",
+  "name": "Lou Benn",
+  "aliases": [
+   "Lou Benn"
+  ],
+  "isHuman": true,
+  "bio": "Pianist in the house band at the Anchor jazz nights.",
+  "relations": []
+ }
+]

@@ -9,14 +9,46 @@
    "template": "landing",
    "variant": "saas",
    "theme": {
-    "logo": "LOGO_HARBORDENTAL"
+    "logo": "LOGO_HARBORDENTAL",
+    "palette": {
+     "bg": "#f6fbfc",
+     "ink": "#16323c",
+     "accent": "#1c8a8a"
+    }
    },
    "nav": [
     {
      "label": "Home",
      "href": "/"
+    },
+    {
+     "label": "Services",
+     "href": "/services"
+    },
+    {
+     "label": "Team",
+     "href": "/team"
+    },
+    {
+     "label": "Hours",
+     "href": "/hours"
+    },
+    {
+     "label": "Parking",
+     "href": "/parking"
+    },
+    {
+     "label": "Contact",
+     "href": "/contact"
     }
-   ]
+   ],
+   "header": {
+    "mast": "Harbor Dental",
+    "tagline": "Book online"
+   },
+   "footer": {
+    "text": "Harbor Dental · Harbor Street, Port Calder. Theme: Lumen by Pixelfold."
+   }
   }
  ],
  "notFound": {

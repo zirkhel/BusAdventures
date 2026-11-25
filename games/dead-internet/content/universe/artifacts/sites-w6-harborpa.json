@@ -1,0 +1,25 @@
+[
+ {
+  "id": "W-harborpa-0001",
+  "site": "harborpa",
+  "page": "home",
+  "type": "page",
+  "platform": "harborpa",
+  "url": "harborpa.com",
+  "date": "2020-06-01",
+  "title": "Harbor Public Affairs",
+  "filler": true,
+  "source": "harborpa",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Harbor Public Affairs advises organisations that need to talk to civic institutions in Port Calder and the region.\n\nWe work quietly, we write clearly, and we do not publish a client list on this page.\n\nIf you want to reach us, use the telephone number on the card we already gave you. The form below does not send."
+   }
+  ],
+  "images": [
+   "WEB0035"
+  ]
+ }
+]

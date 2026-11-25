@@ -1,6 +1,6 @@
 {
  "id": "eastfieldgarden",
- "platform": "web",
+ "platform": "eastfieldgarden",
  "domain": "eastfieldgarden.org",
  "designs": [
   {
@@ -9,14 +9,38 @@
    "template": "personal",
    "variant": "club",
    "theme": {
-    "logo": "LOGO_EASTFIELDGARDEN"
+    "logo": "LOGO_EASTFIELDGARDEN",
+    "palette": {
+     "bg": "#f4f8f0",
+     "ink": "#1a2a14",
+     "accent": "#3d6b3a"
+    }
    },
    "nav": [
     {
      "label": "Home",
      "href": "/"
+    },
+    {
+     "label": "Plots and waitlist",
+     "href": "/plots"
+    },
+    {
+     "label": "Work days",
+     "href": "/work-days"
+    },
+    {
+     "label": "Committee",
+     "href": "/committee"
     }
-   ]
+   ],
+   "header": {
+    "mast": "Eastfield Community Garden",
+    "tagline": "42 plots and a tool shed"
+   },
+   "footer": {
+    "text": "Eastfield Community Garden · est. 2016"
+   }
   }
  ],
  "notFound": {

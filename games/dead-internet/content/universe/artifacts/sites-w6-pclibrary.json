@@ -1,0 +1,179 @@
+[
+ {
+  "id": "W-pclibrary-0001",
+  "site": "pclibrary",
+  "page": "home",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org",
+  "date": "2026-03-01",
+  "title": "Port Calder Public Library",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Welcome to the library.\n\nThis site has opening times, branch information, e-reader lending, and the tax help desk. The catalogue is on this site; fines and holds are handled here, not on the city portal.\n\nThe Eastfield and Northpoint branches have reduced hours from October 2025."
+   }
+  ],
+  "images": [
+   "WEB0031"
+  ]
+ },
+ {
+  "id": "W-pclibrary-0002",
+  "site": "pclibrary",
+  "page": "page",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org/hours",
+  "date": "2025-10-01",
+  "title": "Hours",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "From October 2025, the Eastfield and Northpoint branches are closed on Mondays and Tuesdays.\n\nEastfield and Northpoint: Wednesday to Friday, 10:00 to 18:00. Saturday, 10:00 to 16:00. Closed Sunday, Monday and Tuesday.\n\nThese hours followed the council vote of 18 August 2025."
+   }
+  ]
+ },
+ {
+  "id": "W-pclibrary-0003",
+  "site": "pclibrary",
+  "page": "page",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org/branches",
+  "date": "2026-01-15",
+  "title": "Branches",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder Public Library has two branches with public opening hours listed on this site: Eastfield and Northpoint.\n\nEach branch has its own page for the building and what it offers. Opening times are on the hours page."
+   }
+  ]
+ },
+ {
+  "id": "W-pclibrary-0004",
+  "site": "pclibrary",
+  "page": "page",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org/branches/eastfield",
+  "date": "2025-10-01",
+  "title": "Eastfield branch",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Eastfield branch serves the Eastfield neighbourhood. It has been a Monday library for a long time; from October 2025 it is closed on Mondays and Tuesdays, except for the tax help desk advertised separately.\n\nStory time was on Mondays. Please ask at the desk about the current children's timetable."
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-pclibrary-0005",
+  "site": "pclibrary",
+  "page": "page",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org/branches/northpoint",
+  "date": "2025-10-01",
+  "title": "Northpoint branch",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Northpoint branch serves Northpoint. From October 2025 it is closed on Mondays and Tuesdays.\n\nA quiet room is available when the branch is open."
+   }
+  ]
+ },
+ {
+  "id": "W-pclibrary-0006",
+  "site": "pclibrary",
+  "page": "page",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org/e-readers",
+  "date": "2025-11-18",
+  "title": "E-readers",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder libraries lend e-readers for three weeks at a time. Each comes loaded with 40 classics and a charger.\n\nAsk at the desk. Holds and fines for e-readers are handled on this site, not on the city portal."
+   }
+  ]
+ },
+ {
+  "id": "W-pclibrary-0007",
+  "site": "pclibrary",
+  "page": "page",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org/tax-help",
+  "date": "2026-03-01",
+  "title": "Tax help",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The Eastfield branch offers a tax help desk this spring, 10am to 2pm on Tuesdays until April, as advertised in the local paper.\n\nBring the papers you have. The desk cannot file for you, and it does not give legal advice."
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-pclibrary-0008",
+  "site": "pclibrary",
+  "page": "page",
+  "type": "page",
+  "platform": "pclibrary",
+  "url": "pclibrary.org/staff",
+  "date": "2026-01-15",
+  "title": "Staff",
+  "filler": true,
+  "source": "pclibrary",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "date": "2024-06-01",
+    "cached": true,
+    "body": "Staff of Port Calder Public Library, as listed in 2024.\n\nEastfield branch: Mara Quinn, Priya Shah, Tomás Rinaldi.\nNorthpoint branch: Helen Cho.\nCatalogue and administration: June Ellery.\n\nFor opening times, see the hours page."
+   },
+   {
+    "id": "v2",
+    "date": "2026-01-15",
+    "cached": true,
+    "body": "Staff of Port Calder Public Library.\n\nEastfield branch: Priya Shah, Tomás Rinaldi.\nNorthpoint branch: Helen Cho.\nCatalogue and administration: June Ellery.\n\nFor opening times, see the hours page."
+   }
+  ],
+  "live": "v2"
+ }
+]

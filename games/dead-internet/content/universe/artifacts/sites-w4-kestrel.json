@@ -19,11 +19,18 @@
   ],
   "versions": [
    {
+    "id": "v2014",
+    "date": "2014-08-01",
+    "cached": true,
+    "body": "We know the way.\n\nKestrel has been a Port Calder delivery firm since 1998. We run vans across the city and the neighbouring towns.\n\nIf you are waiting on a parcel, call the office. We know the way."
+   },
+   {
     "id": "v1",
     "cached": true,
     "body": "We know the way.\n\nKestrel has been delivering for Port Calder since 1998. One hundred and forty vans are on the road every day. In 2023 we moved into the old cannery on Dock Road, and in the autumn of 2025 we took on sixty new people.\n\nSame-day delivery has been available to every address in the city since 10 September 2025. Order by noon, open your door by six.\n\nIf you are waiting on a parcel this week, the news page has any service notes."
    }
-  ]
+  ],
+  "live": "v1"
  },
  {
   "id": "W-kestrel-0002",
@@ -112,11 +119,18 @@
   ],
   "versions": [
    {
+    "id": "v2014",
+    "date": "2014-08-01",
+    "cached": true,
+    "body": "Kestrel Logistics started in 1998 with a handful of vans and a rented yard. We have been a Port Calder company the whole way.\n\nThe slogan on the door is the same one on the vans: we know the way."
+   },
+   {
     "id": "v1",
     "cached": true,
     "body": "Kestrel Logistics started in 1998 with a handful of vans and a rented yard. We have been a Port Calder company the whole way.\n\nIn 2023 we moved into the former Calder cannery on Dock Road. In 2025 we added sixty jobs there and opened same-day delivery to the whole city. The slogan on the door is the same one on the vans: we know the way.\n\nA list of the organisations we are proud to deliver for is at kestrel-logistics.com/clients."
    }
-  ]
+  ],
+  "live": "v1"
  },
  {
   "id": "W-kestrel-0006",

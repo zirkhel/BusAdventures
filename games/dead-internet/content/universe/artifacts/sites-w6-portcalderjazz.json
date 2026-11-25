@@ -1,0 +1,65 @@
+[
+ {
+  "id": "W-portcalderjazz-0001",
+  "site": "portcalderjazz",
+  "page": "home",
+  "type": "page",
+  "platform": "portcalderjazz",
+  "url": "portcalderjazz.com",
+  "date": "2019-06-01",
+  "title": "Port Calder Jazz",
+  "filler": true,
+  "source": "portcalderjazz",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Thursday nights at the Anchor.\n\nPort Calder Jazz is the house night: the same four musicians, a small room, and a bar that knows when not to use the blender.\n\nPianist Lou Benn usually starts the first set a little after nine. Come earlier if you want a chair."
+   }
+  ],
+  "live": null
+ },
+ {
+  "id": "W-portcalderjazz-0002",
+  "site": "portcalderjazz",
+  "page": "page",
+  "type": "page",
+  "platform": "portcalderjazz",
+  "url": "portcalderjazz.com/calendar",
+  "date": "2019-06-01",
+  "title": "Calendar",
+  "filler": true,
+  "source": "portcalderjazz",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Thursday nights at the Anchor, weekly, unless the room is booked for something else — and it rarely is.\n\nJune 2019 is the usual run. If a Thursday is dark, we will put a note on the door of the Anchor, not always on this page."
+   }
+  ],
+  "live": null
+ },
+ {
+  "id": "W-portcalderjazz-0003",
+  "site": "portcalderjazz",
+  "page": "page",
+  "type": "page",
+  "platform": "portcalderjazz",
+  "url": "portcalderjazz.com/about",
+  "date": "2019-05-01",
+  "title": "About",
+  "filler": true,
+  "source": "portcalderjazz",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder Jazz is a Thursday night at the Anchor, not a club with a membership list.\n\nThe house band has been four musicians for a long time. Lou Benn is at the piano. The others will tell you their names if you buy them a drink.\n\nThis site is for the night. It is not a ticket office."
+   }
+  ],
+  "live": null
+ }
+]

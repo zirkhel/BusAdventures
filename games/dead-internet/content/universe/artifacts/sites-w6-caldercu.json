@@ -1,0 +1,114 @@
+[
+ {
+  "id": "W-caldercu-0001",
+  "site": "caldercu",
+  "page": "home",
+  "type": "page",
+  "platform": "caldercu",
+  "url": "caldercu.com",
+  "date": "2026-02-23",
+  "title": "Calder Credit Union",
+  "filler": true,
+  "source": "caldercu",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Your neighbors bank here.\n\nCalder Credit Union has served Port Calder since 1952. We now have a branch on 4th Street in Eastfield. Free mints included.\n\nAccounts, the new branch, and a little of the history are on this site."
+   }
+  ],
+  "images": [
+   "WEB0033"
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-caldercu-0002",
+  "site": "caldercu",
+  "page": "about",
+  "type": "page",
+  "platform": "caldercu",
+  "url": "caldercu.com/about",
+  "date": "2025-08-01",
+  "title": "About us",
+  "filler": true,
+  "source": "caldercu",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Credit Union has been a Port Calder institution since 1952.\n\nWe are a credit union, not a high-street bank with another city's name on the door. Members belong to the place they live.\n\nThe 4th Street branch is the newest room we have opened."
+   }
+  ]
+ },
+ {
+  "id": "W-caldercu-0003",
+  "site": "caldercu",
+  "page": "page",
+  "type": "page",
+  "platform": "caldercu",
+  "url": "caldercu.com/branches/4th-street",
+  "date": "2026-02-01",
+  "title": "4th Street branch",
+  "filler": true,
+  "source": "caldercu",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Our Eastfield branch is on 4th Street. There are two counters and a small waiting area.\n\nIf you are already a member, you can use this branch as well as the others. If you are not, ask at the desk.\n\nFree mints are in the glass bowl, not in the window."
+   }
+  ],
+  "images": [
+   "WEB0033"
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-caldercu-0004",
+  "site": "caldercu",
+  "page": "page",
+  "type": "page",
+  "platform": "caldercu",
+  "url": "caldercu.com/accounts",
+  "date": "2025-08-01",
+  "title": "Accounts",
+  "filler": true,
+  "source": "caldercu",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "We offer everyday accounts, savings, and a youth account.\n\nRates change, and the ones that apply to you are the ones we print for you at the desk. This page is not an offer."
+   }
+  ]
+ },
+ {
+  "id": "W-caldercu-0005",
+  "site": "caldercu",
+  "page": "page",
+  "type": "page",
+  "platform": "caldercu",
+  "url": "caldercu.com/contact",
+  "date": "2026-02-01",
+  "title": "Contact",
+  "filler": true,
+  "source": "caldercu",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Credit Union, 4th Street, Eastfield, and our other Port Calder counters.\n\nTelephone the desk during opening hours. The form on this page does not send a message."
+   }
+  ]
+ }
+]

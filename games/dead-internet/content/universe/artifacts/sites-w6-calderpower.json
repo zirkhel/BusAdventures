@@ -1,0 +1,128 @@
+[
+ {
+  "id": "W-calderpower-0001",
+  "site": "calderpower",
+  "page": "home",
+  "type": "page",
+  "platform": "calderpower",
+  "url": "calderpower.com",
+  "date": "2026-02-20",
+  "title": "Calder Power",
+  "filler": true,
+  "source": "calderpower",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Power supplies electricity to Port Calder and the surrounding area.\n\nFor the latest outage information, see the outages page. Smart meters are being fitted in parts of Eastfield.\n\nIf your lights are out, check that page first."
+   }
+  ],
+  "images": [
+   "WEB0032"
+  ]
+ },
+ {
+  "id": "W-calderpower-0002",
+  "site": "calderpower",
+  "page": "page",
+  "type": "page",
+  "platform": "calderpower",
+  "url": "calderpower.com/outages",
+  "date": "2026-02-20",
+  "title": "Outage updates",
+  "filler": true,
+  "source": "calderpower",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Current and recent outages are listed here.\n\n17 February 2026: a failed transformer at the Harbor Street substation cut power in the evening. About 14,000 homes were affected. Power was restored the same night. An earlier statement referred to an animal-related fault and a higher number of homes; that statement was wrong, and we apologise.\n\nWe will update this page if a new outage is confirmed."
+   }
+  ]
+ },
+ {
+  "id": "W-calderpower-0003",
+  "site": "calderpower",
+  "page": "page",
+  "type": "page",
+  "platform": "calderpower",
+  "url": "calderpower.com/outages/2026-02-17",
+  "date": "2026-02-20",
+  "title": "Harbor Street substation, 17 February 2026",
+  "filler": true,
+  "source": "calderpower",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "On the evening of 17 February 2026, a failed transformer at the Harbor Street substation caused a loss of supply.\n\nAbout 14,000 homes were affected. Traffic lights in Eastfield were among the loads that went dark. Supply was restored the same night.\n\nOur first public statement said the cause was an animal-related fault and that about 40,000 homes were affected. The cause was a failed transformer, and the lower figure is the one we stand by."
+   }
+  ]
+ },
+ {
+  "id": "W-calderpower-0004",
+  "site": "calderpower",
+  "page": "page",
+  "type": "page",
+  "platform": "calderpower",
+  "url": "calderpower.com/smart-meters",
+  "date": "2026-02-17",
+  "title": "Smart meters",
+  "filler": true,
+  "source": "calderpower",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Power has been fitting smart meters in about a third of Eastfield homes since December 2025.\n\nA smart meter reports use every half hour. It can also switch a home off remotely. We have not used that function to disconnect a home, and we have no plan to use it that way for ordinary supply.\n\nIf you have questions about a new box on the wall, the billing page explains how the readings appear on a bill."
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpower-0005",
+  "site": "calderpower",
+  "page": "page",
+  "type": "page",
+  "platform": "calderpower",
+  "url": "calderpower.com/billing",
+  "date": "2025-12-01",
+  "title": "Billing",
+  "filler": true,
+  "source": "calderpower",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Bills are issued monthly. If you have a smart meter, the bill uses the half-hourly readings. If you do not, we will read the meter as before.\n\nThis page does not take payments. The telephone number and the postal address are on the bill you already have."
+   }
+  ]
+ },
+ {
+  "id": "W-calderpower-0006",
+  "site": "calderpower",
+  "page": "about",
+  "type": "page",
+  "platform": "calderpower",
+  "url": "calderpower.com/about",
+  "date": "2025-06-01",
+  "title": "About Calder Power",
+  "filler": true,
+  "source": "calderpower",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Power is the electricity utility for Port Calder.\n\nThis website is for account holders and for anyone checking an outage. We do not discuss individual streets on the home page, and we do not publish switching maps."
+   }
+  ]
+ }
+]

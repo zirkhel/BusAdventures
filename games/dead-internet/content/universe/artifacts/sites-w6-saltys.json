@@ -1,0 +1,65 @@
+[
+ {
+  "id": "W-saltys-0001",
+  "site": "saltys",
+  "page": "page",
+  "type": "page",
+  "platform": "saltys",
+  "url": "saltys-portcalder.com/menu",
+  "date": "2026-01-15",
+  "title": "Menu",
+  "filler": true,
+  "source": "saltys",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The board does not change much, and neither do we.\n\nCod and chips.\nHaddock and chips.\nThe famous harbor chowder.\nA bun if you ask for one.\nPeas, mushy or otherwise.\nTea, and a slice of something if there is cake.\n\nIf it is not on this list, we probably do not have it."
+   }
+  ],
+  "images": [
+   "WEB0020"
+  ]
+ },
+ {
+  "id": "W-saltys-0002",
+  "site": "saltys",
+  "page": "page",
+  "type": "page",
+  "platform": "saltys",
+  "url": "saltys-portcalder.com/hours",
+  "date": "2026-01-15",
+  "title": "Hours",
+  "filler": true,
+  "source": "saltys",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Open daily 11–21.\n\nKitchen stops a little before closing. If the chowder pot is empty, it is empty."
+   }
+  ]
+ },
+ {
+  "id": "W-saltys-0003",
+  "site": "saltys",
+  "page": "page",
+  "type": "page",
+  "platform": "saltys",
+  "url": "saltys-portcalder.com/story",
+  "date": "2026-01-15",
+  "title": "Our story",
+  "filler": true,
+  "source": "saltys",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Salty's Fish Bar has been on Harbor Street since 1971.\n\nWe fry fish. We ladle chowder. We did NOT change the oil in 2019, no matter what anyone tells you.\n\nCome in out of the fog."
+   }
+  ]
+ }
+]

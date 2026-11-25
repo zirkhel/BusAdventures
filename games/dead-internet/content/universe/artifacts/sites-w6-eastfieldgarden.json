@@ -1,0 +1,77 @@
+[
+ {
+  "id": "W-eastfieldgarden-0001",
+  "site": "eastfieldgarden",
+  "page": "page",
+  "type": "page",
+  "platform": "eastfieldgarden",
+  "url": "eastfieldgarden.org/plots",
+  "date": "2025-04-01",
+  "title": "Plots and waitlist",
+  "filler": true,
+  "source": "eastfieldgarden",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "There are 42 plots. The waitlist is two years, give or take a season.\n\nPlot holders are listed on the shed noticeboard, not here. If you want to join the waitlist, come to a work day and write your name in the book in the shed.\n\nWe grow too many zucchini. That is not a reason to skip the waitlist."
+   }
+  ],
+  "images": [
+   "IMG05O"
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-eastfieldgarden-0002",
+  "site": "eastfieldgarden",
+  "page": "page",
+  "type": "page",
+  "platform": "eastfieldgarden",
+  "url": "eastfieldgarden.org/work-days",
+  "date": "2025-04-01",
+  "title": "Work days",
+  "filler": true,
+  "source": "eastfieldgarden",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Work days are every second Saturday, 9am to 1pm, weather permitting, and often when it does not.\n\nBring gloves if you have them. Tools are in the shed. Tea is in the thermos that is less stained than the other one.\n\nNew people are welcome. The zucchini will still be there."
+   }
+  ],
+  "images": [
+   "WEB0029"
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-eastfieldgarden-0003",
+  "site": "eastfieldgarden",
+  "page": "page",
+  "type": "page",
+  "platform": "eastfieldgarden",
+  "url": "eastfieldgarden.org/committee",
+  "date": "2025-04-01",
+  "title": "Committee",
+  "filler": true,
+  "source": "eastfieldgarden",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The garden is run by a small committee of plot holders. We meet in the shed when the rain is only moderate.\n\nMinutes go on the noticeboard. There is no membership form on this site, and no online booking for plots."
+   }
+  ],
+  "mentions": [
+   "eastfield"
+  ]
+ }
+]

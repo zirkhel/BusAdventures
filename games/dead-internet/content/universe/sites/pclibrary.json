@@ -1,0 +1,60 @@
+{
+ "id": "pclibrary",
+ "platform": "pclibrary",
+ "domain": "pclibrary.org",
+ "org": "pclibrary",
+ "designs": [
+  {
+   "id": "d2015",
+   "from": "2015-01-01",
+   "template": "government",
+   "variant": "library",
+   "theme": {
+    "logo": "LOGO_PCLIBRARY",
+    "palette": {
+     "bg": "#f7f3ea",
+     "ink": "#2a2118",
+     "accent": "#4a3b28"
+    }
+   },
+   "header": {
+    "mast": "Port Calder Public Library",
+    "tagline": "Catalogue and opening times"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Hours",
+     "href": "/hours"
+    },
+    {
+     "label": "Branches",
+     "href": "/branches"
+    },
+    {
+     "label": "E-readers",
+     "href": "/e-readers"
+    },
+    {
+     "label": "Tax help",
+     "href": "/tax-help"
+    },
+    {
+     "label": "Staff",
+     "href": "/staff"
+    }
+   ],
+   "footer": {
+    "text": "Port Calder Public Library · a city service"
+   }
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "The library has no page at that address."
+ },
+ "status": []
+}

@@ -1,0 +1,56 @@
+{
+ "id": "caldercu",
+ "platform": "caldercu",
+ "domain": "caldercu.com",
+ "org": "calder_cu",
+ "designs": [
+  {
+   "id": "d2015",
+   "from": "2015-06-01",
+   "template": "corporate",
+   "variant": "classic-2015",
+   "theme": {
+    "logo": "LOGO_CALDERCU",
+    "palette": {
+     "bg": "#f4efe4",
+     "ink": "#1e2f24",
+     "accent": "#2e4d3a"
+    }
+   },
+   "header": {
+    "mast": "Calder Credit Union",
+    "tagline": "Since 1952"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "About",
+     "href": "/about"
+    },
+    {
+     "label": "4th Street",
+     "href": "/branches/4th-street"
+    },
+    {
+     "label": "Accounts",
+     "href": "/accounts"
+    },
+    {
+     "label": "Contact",
+     "href": "/contact"
+    }
+   ],
+   "footer": {
+    "text": "Calder Credit Union · serving Port Calder since 1952"
+   }
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "Calder Credit Union has no page at that address."
+ },
+ "status": []
+}
