@@ -1,6 +1,6 @@
 # Dead Internet: Et mer autentisk internett i Browser
 
-> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0 og W1 er implementert** (25. november 2026). W2–W8 gjenstår. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md).
+> **Status: Godkjent designretning (Anders, 24. november 2026).** Avklaringene er samlet i §0 og innarbeidet i dokumentet. Der et avsnitt nedenfor fortsatt sier «forslag», gjelder beslutningene i §0. **W0–W2 er implementert** (25. november 2026). W3–W8 gjenstår. Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md).
 
 ## 0. Beslutninger (Anders, 24. november 2026)
 
@@ -431,7 +431,7 @@ Logoer: Kestrel 2014 og Northgate før 2024 kan være tekstlogoer. Nye nettstede
 |---|---|---|---|
 | **W0** Lekkasjevern | **Ferdig.** PR #68: `media()` fjerner `source`, `supports` og `mentions`; `tests/twin.test.mjs` er permanent. 25. nov: `publicView` i `core/site-view.js` hvitelister visningsfelt (tittel, dato, body/blocks, bilder, forfatter, URL, versjon, cache-flagg og øvrige visningsfelt). `filler`, `covers`, `pool`, `hidden` og andre forfatterfelt sendes aldri til malene. `renderArtifact` / `renderLogin` / `renderGone` kjører visningen gjennom hvitelisten. DOM-tvillingtesten forblir i Casebook-arbeidet. | `core/site-view.js`, `app/render.js`, `tests/sites.test.mjs` | Casebook steg 0 |
 | **W1** Nettstedsmodell | **Ferdig** (25. nov). `content/universe/sites/*.json` for alle refererte nettsteder, `site`/`page` på eksisterende sider, `core/sites.js` (design etter dato, lenkeoppslag, status, 404-data, `listedPages`). Validatoren avslår nav-lenker som ikke løses, og `site-ref` avslår domenereferanser uten nettsted (e-postdomener unntatt). Inventar: [WEBSITE-INVENTORY.md](WEBSITE-INVENTORY.md). Ingen synlige endringer. | `core/sites.js`, `core/content.js`, `core/world.js`, `tools/lib/validate-world.mjs`, `content/universe/sites/`, tester | W0 |
-| **W2** Malverk + 3 maler | Rammeverk for maler, blokker og temaer. Corporate, Government, Blog. Northgate, bykommunen og Eastfield Notes flyttes over med dagens tekst. | `app/sites/*.js` (ny), `app/render.js`, `app/style.css` → `app/sites/*.css` | W1 |
+| **W2** Malverk + 3 maler | **Ferdig** (25. nov). `app/sites/` med blokker og malene Corporate, Government og Blog. Northgate, Port Calder City Portal og Eastfield Notes viser dagens tekst i de nye malene (Eastfield Notes bytter til `minimal` på den levende siden etter 22. okt 2025; cachete versjoner beholder `classic`). CSS ligger i `app/sites/*.css`. | `app/sites/`, `app/render.js`, `index.html` | W1 |
 | **W3** Browser | Frem-knapp, bokmerker, tekststørrelse, nettstedets 404/vedlikehold/parkert, «can't be reached», lagringsmigrering | `app/apps/browser.js`, `app/phone.js`, `core/save.js` | W1 |
 | **W4** Bakgrunn, runde 1 | Innhold til Northgate, bykommunen, Eastfield Notes, Kestrel, Brightline (ca. 110 sider) + fil med bakgrunnsfakta | `content/universe/sites/`, mysteriefiler for Brightline-sidene | W2 |
 | **W5** Fire maler til | Wiki, Forum, Document, Anonymous. Calderpedia, Threadline, Docshare, SpillCheck og Faceless flyttes over, med innhold. | `app/sites/`, innhold | W2 |

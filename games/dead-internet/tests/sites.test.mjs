@@ -108,3 +108,20 @@ test("existing Quiet Account page wording is unchanged", () => {
   assert.match(body("A53"), /Ana Ruiz represents Eastfield/);
   assert.match(body("A14"), /a librarian's notes on the old girl/);
 });
+
+import { viewArtifact } from "../core/artifacts.js";
+import { canRenderSite } from "../app/sites/index.js";
+
+test("W2 templates handle Northgate, the city portal and Eastfield Notes", () => {
+  const g = new Game(world, { seed: 1 });
+  g.start();
+  const phone = { g };
+  for (const id of ["A40", "A53", "A14", "A26", "B16"]) {
+    assert.equal(canRenderSite(phone, viewArtifact(g, id)), true, id);
+  }
+  // Connect and news stay on their existing renderers.
+  assert.equal(canRenderSite(phone, viewArtifact(g, "A16")), false);
+  const news = [...world.artifacts.values()].find(a => a.platform === "dailyrecord" && a.type === "article");
+  assert.ok(news);
+  assert.equal(canRenderSite(phone, viewArtifact(g, news.id)), false);
+});

@@ -20,6 +20,9 @@ import { mediaReport } from "../tools/lib/media.mjs";
 const CREATORS = ["kaylacooks", "beanthecat", "drivetimedan", "gymrat", "plantmom"];
 const POOL = {
   "pools/toktok/platforms.json": [{ id: "toktok", name: "TokTok", kind: "video", domain: "toktok.app" }],
+  "pools/toktok/sites.json": [{ id: "toktok", domain: "toktok.app", platform: "toktok",
+    designs: [{ id: "d1", from: "2020-01-01", template: "legacy" }],
+    status: [{ from: "2020-01-01", state: "live" }] }],
   "pools/toktok/creators.json": CREATORS.map(h => ({ id: `acc_tt_${h}`, platform: "toktok", handle: `@${h}`, displayName: h, pool: "toktok", created: "2024-01-01" })),
   "pools/toktok/images.json": [
     { id: "IMGK0", kind: "photo", caption: "A kitchen set" },
@@ -60,7 +63,7 @@ const withPool = (extra = {}, mysteries = []) => loadContent(async p => {
   const data = JSON.parse(await readFile(join(CONTENT_DIR, p), "utf8"));
   if (p !== "manifest.json") return data;
   const f = data.files, more = (k, ...xs) => { f[k] = [...[].concat(f[k] || []), ...xs]; };
-  more("platforms", "pools/toktok/platforms.json"); more("accounts", "pools/toktok/creators.json");
+  more("platforms", "pools/toktok/platforms.json"); more("sites", "pools/toktok/sites.json"); more("accounts", "pools/toktok/creators.json");
   more("images", "pools/toktok/images.json"); more("scripts", "pools/toktok/scripts.json"); more("videos", "pools/toktok/videos.json");
   more("artifacts", "pools/toktok/clips.json", "pools/dailyrecord/articles.json");
   data.mysteries.push(...mysteries);
