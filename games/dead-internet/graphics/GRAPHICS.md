@@ -8,6 +8,7 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 - **photo:** Realistic smartphone photo, natural light, slight noise, no text overlays, no real brands.
 - **profile:** Square avatar, realistic, as a person would choose for themselves. Synthetic personas: subtly too smooth, with one visible AI tell.
 - **ui:** Fictional interface, original design, no resemblance to real products.
+- **web photo:** Website photos WEB0001–WEB0038 (image generator, not ComfyUI): documentary photo of Port Calder, overcast pewter-grey sky, soft flat diffuse light, wet surfaces after rain, muted slate-blue / grey / weathered red-brick palette with small warm accents, slight sensor noise, no HDR, no readable text or logos unless the brief names one. Phone photos (Eastfield Notes) are softer with phone noise; 2008/2014/1987 pictures are deliberately low-resolution, flash-lit or faded. Full prompt: graphics/sources/web-photos/STYLE.md.
 
 ## Faste karakterer
 - **mara:** Woman, 34, warm round face, freckles, short dark curly hair, small silver hoop earrings, green parka. Face reference: graphics/references/mara.webp (the IMG13 original). Use it for every image of Mara.
