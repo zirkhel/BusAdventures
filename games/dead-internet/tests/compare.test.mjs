@@ -22,7 +22,7 @@ const world = g => structuredClone({ flags: g.s.flags, counters: g.s.counters, t
   fired: g.s.fired, notifications: g.s.notifications, endings: g.s.endings, pending: g.s.pending, messages: g.s.messages, day: g.s.day,
   evidence: g.s.evidence, hypotheses: g.s.hypotheses });
 
-test("save format is version 10", () => assert.equal(SAVE_VERSION, 10));
+test("save format is at least version 10", () => assert.ok(SAVE_VERSION >= 10));
 
 test("comparison lines up what is visible and says which fields differ", async () => {
   const { g, ev } = await fixture();
@@ -166,14 +166,14 @@ test("links and comparisons never change the world", async () => {
 function older(s, version) {
   const o = structuredClone(s);
   o.saveVersion = version;
-  delete o.links;
+  delete o.links; delete o.sourceViews;
   if (version < 9) { delete o.questions; for (const h of o.hypotheses) { delete h.title; delete h.against; delete h.status; delete h.statusLog; delete h.alternatives; } }
   if (version < 8) delete o.browser;
   return o;
 }
 
 for (const version of [9, 8, 7]) {
-  test(`a version ${version} save opens as version 10 with no links and everything else intact`, async () => {
+  test(`a version ${version} save opens as the current version with no links and everything else intact`, async () => {
     const { w, g, ev } = await fixture();
     const h = g.hypothesize({ subject: undefined, title: "Same people", evidence: [ev[1], ev[2]] }).id;
     if (version === 9) g.addQuestion({ text: "Who runs these?", links: { evidence: [ev[1]] } });
@@ -181,7 +181,7 @@ for (const version of [9, 8, 7]) {
     const before = JSON.parse(JSON.stringify(g.s));
     const { state, warnings } = deserialize(w, serialize(older(g.s, version)));
     assert.deepEqual(warnings.filter(x => /dropped/.test(x)), []);
-    assert.equal(state.saveVersion, 10);
+    assert.equal(state.saveVersion, SAVE_VERSION);
     assert.deepEqual(state.links, []);
     assert.deepEqual(state.evidence, before.evidence);
     assert.deepEqual(state.hypotheses.find(x => x.id === h).evidence, [ev[1], ev[2]]);

@@ -151,7 +151,7 @@ function older(s, version) {
   const o = structuredClone(s);
   o.saveVersion = version;
   delete o.questions;
-  delete o.links;
+  delete o.links; delete o.sourceViews;
   for (const h of o.hypotheses) { delete h.title; delete h.against; delete h.status; delete h.statusLog; delete h.alternatives; }
   if (version < 8) delete o.browser;
   return o;

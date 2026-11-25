@@ -16,6 +16,7 @@ import { nameOf, str } from "./world.js";
 import { isCase, soleCase } from "./cases.js";
 import { apparentSource, visibleRefsOfEvidence } from "./provenance.js";
 import { forgetInQuestions, forgetInLinks, isDirected } from "./workbench.js";
+import { ownCount } from "./sources.js";
 
 // ── Evidence ────────────────────────────────────────────────────────────────
 
@@ -281,8 +282,11 @@ export function casebookView(g) {
     notes: g.s.notes.map(n => ({ ...n })),
     hypotheses: g.s.hypotheses.map(h => {
       const forC = counts(g, h.evidence), against = counts(g, h.against);
+      // The player's own count (core/sources.js): their "same origin" answers and links merge sources.
+      const ownFor = ownCount(g, h.evidence), ownAgainst = ownCount(g, h.against);
       return { ...h, label: theoryLabel(g, h), structured: isStructured(h), claimLabel: isStructured(h) ? hypothesisLabel(g, h) : null,
         evidenceCount: forC.n, sourceCount: forC.sources, againstCount: against.n, againstSourceCount: against.sources,
+        ownSourceCount: ownFor.own, ownAgainstSourceCount: ownAgainst.own, notTrustedFor: ownFor.notTrusted, notAuthenticFor: ownFor.notAuthentic,
         alternatives: alternativesOf(g, h), statusLog: h.statusLog.map(x => ({ ...x })) };
     }),
     // The player's own questions (core/workbench.js). Only ever written by the player.

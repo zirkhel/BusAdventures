@@ -10,6 +10,7 @@ import { search, searchImage, imageInfo } from "./search.js";
 import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
 import { updateEvidence, addQuestion, updateQuestion, linkQuestion, deleteQuestion, addLink, updateLink, removeLink } from "./workbench.js";
+import { assessSource, linkSources, sourceCard, sourcesView } from "./sources.js";
 import { compareView } from "./compare.js";
 import { archiveView } from "./archive.js";
 import { savedArtifactView } from "./artifacts.js";
@@ -78,6 +79,8 @@ export class Game {
       case "addLink": r = addLink(this, a.link); break;
       case "updateLink": r = updateLink(this, a.id, a.patch); break;
       case "removeLink": r = removeLink(this, a.id); break;
+      case "assessSource": r = assessSource(this, a.key, a.patch); break;
+      case "linkSources": r = linkSources(this, a.a, a.b, a.on ?? true); break;
       case "addNote": r = CB.addNote(this, a.text, a.from, a.about); break;
       case "updateNote": r = CB.updateNote(this, a.id, a.text); break;
       case "deleteNote": r = CB.deleteNote(this, a.id); break;
@@ -134,6 +137,13 @@ export class Game {
   addLink(link) { return this.dispatch({ type: "addLink", link }); }
   editLink(id, patch) { return this.dispatch({ type: "updateLink", id, patch }); }
   removeLink(id) { return this.dispatch({ type: "removeLink", id }); }
+  /** The player's own source card: patch = { trust, authentic } (yes|unsure|no|null) and/or { note }. */
+  assessSource(key, patch) { return this.dispatch({ type: "assessSource", key, patch }); }
+  /** "Same origin as" between two visible sources, both ways (the player's opinion). */
+  linkSources(a, b, on = true) { return this.dispatch({ type: "linkSources", a, b, on }); }
+  /** One source card (visible sources only), and every visible source with the player's answers. */
+  sourceCard(key) { return sourceCard(this, key); }
+  sources() { return sourcesView(this); }
   /** Free note. `from` says where it was written (artifact/message), `about` what it names. */
   note(t, from, about) { return this.dispatch({ type: "addNote", text: t, ...(from ? { from } : {}), ...(about ? { about } : {}) }); }
   editNote(id, t) { return this.dispatch({ type: "updateNote", id, text: t }); }
