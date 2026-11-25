@@ -328,8 +328,12 @@ export class Phone {
     this.push("browser", { kind: "results", q: addr, results, title: `Cached: ${addr}`, cacheOnly: true });
   }
 
-  /** The versions of a document the player can reach: the live one and Seeker's cached copies. */
+  /** Browser's Archive for one address (W8): every copy the player can open, and "Compare with…". */
+  archive(id) { this.push("browser", { kind: "archive", id }); }
+
+  /** The versions of a document the player can reach. A page they have seen opens in the Archive. */
   versions(id) {
+    if (!this.g.archive(id).error) { this.archive(id); return; }
     const v = this.g.view(id);
     const items = [];
     if (!v.error && !v.locked) items.push({ label: `Current version${v.date ? ` · ${fmtDate(v.date)}` : ""}`, icon: "globe", run: () => this.openArtifact(id, undefined, this.appFor(id)) });

@@ -136,7 +136,7 @@ export function newsApp(phone, pf) {
     const v = desc.view;
     if (!v) return h("div.empty", "Nothing here.");
     if (v.locked) return renderLogin(phone, v, () => { const r = g.open(desc.id); phone.replaceTop({ ...desc, view: r.view }); });
-    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"));
+    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"), () => phone.archive(desc.id));
     const art = renderArtifact(phone, v, { app: id });
     if (v.cached) art.prepend(h("div.cache-banner", h("b", "Seeker cache"), ` A copy as it appeared on ${fmtDate(v.date)}.`));
     return art;

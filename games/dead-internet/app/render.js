@@ -231,7 +231,7 @@ export function renderLogin(phone, v, onDone) {
 }
 
 /** Page that is gone, deleted or never existed. */
-export function renderGone(phone, v, onCached) {
+export function renderGone(phone, v, onCached, onArchive) {
   v = publicView(v);
   const has = (v.cachedVersions || []).length > 0;
   const msg = v.error === "deleted" ? "This content has been deleted." :
@@ -239,7 +239,8 @@ export function renderGone(phone, v, onCached) {
       "This page can't be found.";
   return h("article.page.k-gone",
     h("div.gone", icon("globe", "big"), h("h1", "Not available"), h("p", msg), v.url ? h("div.muted", v.url) : null,
-      has ? h("button.btn", { onclick: () => onCached(v.cachedVersions[v.cachedVersions.length - 1]) }, "Seeker cached copy") : null));
+      has ? h("button.btn", { onclick: () => onCached(v.cachedVersions[v.cachedVersions.length - 1]) }, "Seeker cached copy") : null,
+      has && onArchive ? h("button.btn", { onclick: onArchive }, "All copies in Archive") : null));
 }
 
 export { onLongPress };

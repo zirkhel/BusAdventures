@@ -11,6 +11,7 @@ import { fire, applyEffects, runPending, text } from "./rules.js";
 import { sendMessage, canContact, contacts, thread, availablePrompts } from "./dialogue.js";
 import { updateEvidence, addQuestion, updateQuestion, linkQuestion, deleteQuestion, addLink, updateLink, removeLink } from "./workbench.js";
 import { compareView } from "./compare.js";
+import { archiveView } from "./archive.js";
 import { savedArtifactView } from "./artifacts.js";
 import * as CB from "./casebook.js";
 import * as TL from "./timeline.js";
@@ -304,6 +305,8 @@ export class Game {
 
   // ── Queries (no state change) ─────────────────────────────────────────────
   view(id, version) { return viewArtifact(this, id, version ? { version } : {}); }
+  /** Browser's Archive: every reachable copy of a page the player has seen (W8). No state changes. */
+  archive(id) { return archiveView(this, id); }
   imageInfo(id) { return imageInfo(this, id); }
   contacts() { return contacts(this); }
   canContact(id) { return canContact(this, id); }

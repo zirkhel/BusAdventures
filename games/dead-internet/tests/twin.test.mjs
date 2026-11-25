@@ -17,6 +17,7 @@ import { loadWorld } from "../tools/lib/node-world.mjs";
 import { Game } from "../core/game.js";
 import { gather } from "../tools/lib/scenarios.mjs";
 import { scanText } from "../core/refs.js";
+import { archivePair } from "../core/archive.js";
 
 /**
  * Rewrite hidden canon. `src(kind, id)` gives the new hidden source key for each thing.
@@ -55,6 +56,8 @@ function play(w) {
     if (w.disabled?.has(a.id)) continue;
     g.s.artifacts[a.id] = { ...g.s.artifacts[a.id], visible: true };
     const o = g.open(a.id);
+    // W8: deleted pages are reached through their cached copy, which then shows in the Archive.
+    if (o.view?.error && o.view.cachedVersions?.length) { const vid = o.view.cachedVersions.at(-1); g.open(a.id, vid); g.save({ artifact: a.id, version: vid }); continue; }
     if (!o.ok || o.view?.locked) continue;
     g.save({ artifact: a.id, version: o.view.versionId });
     for (const im of o.view.images || []) g.save({ artifact: a.id, image: im });
@@ -102,11 +105,20 @@ function comparisons(g) {
   for (let i = 0; i < msgs.length; i++) refs.push([{ evidence: msgs[i].id }, { evidence: ev[i * 5 % ev.length].id }]);
   for (let i = 0; i + 2 < ev.length; i += 11) refs.push(ev.slice(i, i + 3).map(e => ({ evidence: e.id })));
   for (const id of Object.keys(g.s.seen)) {
-    const v = g.view(id); if (!v?.cachedVersions?.length) continue;
+    const v = g.view(id); if (!v?.cachedVersions?.length || v.error) continue;
     for (const ver of v.cachedVersions) refs.push([{ artifact: id, version: ver }, { artifact: id }]);
   }
   for (const m of g.s.messages.filter(m => m.from !== "player").slice(0, 10)) refs.push([{ message: m.id }, { evidence: ev[0].id }]);
   return refs.map(r => g.compare(r));
+}
+
+/** W8: Browser's Archive for every page the player has seen, and the comparisons it hands over. */
+function archives(g) {
+  return Object.keys(g.s.seen).sort().map(id => {
+    const ar = g.archive(id);
+    const pairs = ar.error ? [] : ar.entries.slice(1).map((_, i) => g.compare(archivePair(ar, i, i + 1)));
+    return { id, ar, pairs };
+  });
 }
 
 /** Everything the player can see in the Casebook, plus the reviewer. */
@@ -121,6 +133,7 @@ function snapshot({ g, hyps }) {
     sources: g.visibleSources(),
     review: g.review("daily_record", hyps),
     compare: comparisons(g),
+    archive: archives(g),
     _hiddenInViews: g.s.evidence.filter(e => e.artifact).map(e => g.view(e.artifact, e.version ?? undefined))
       .filter(v => JSON.stringify(v) !== JSON.stringify(strip(v))).map(v => v.id),
   };
@@ -134,6 +147,8 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   assert.deepEqual(a._hiddenInViews, [], "artifact views carry no hidden source, supports or mentions");
   assert.ok(a.evidence.length > 100, "the player saved enough to make the comparison meaningful");
   assert.ok(a.casebook.links.length > 300 && a.casebook.links.some(l => l.directed) && a.compare.length > 250 && a.compare.some(c => c.samePage && c.changes?.text.some(x => x.op !== "same")), "step 3 links and comparisons are part of the comparison");
+  assert.ok(a.archive.filter(x => x.ar.canCompare).length >= 10 && a.archive.some(x => x.ar.status === "deleted"), "W8 Archive views are part of the comparison");
+  assert.deepEqual(a.archive.flatMap(x => x.pairs).filter(c => c.error || c.items.some(i => i.error)), [], "every Archive pair compares");
   assert.deepEqual(a.compare.filter(c => c.error || c.items.some(x => x.error)), [], "every comparison in the twin test is valid");
   assert.ok(a.compare.every(c => c.items.every(x => !("supports" in x) && !("mentions" in x) && !("source" in x && typeof x.source !== "string"))), "comparison items carry no hidden fields");
   assert.ok(a.casebook.questions.length > 20 && a.casebook.hypotheses.some(h => h.againstCount > 0 && !h.structured), "step 2 views are part of the comparison");
@@ -172,7 +187,7 @@ test("the presentation layer and provenance never touch canon helpers", async ()
   const { join, dirname } = await import("node:path");
   const { fileURLToPath } = await import("node:url");
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const files = ["core/provenance.js", "core/workbench.js", "core/compare.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
+  const files = ["core/provenance.js", "core/workbench.js", "core/compare.js", "core/archive.js", ...(await readdir(join(root, "app"))).filter(f => f.endsWith(".js")).map(f => `app/${f}`),
     ...(await readdir(join(root, "app/apps"))).filter(f => f.endsWith(".js")).map(f => `app/apps/${f}`)];
   const banned = /\b(supportOf|truthOf|matchClaim|evidenceFacts|supportsOf|operatedBy|isHuman)\b|\.(claims|facts)\b|import[^;]*\bsourceOf\b/;
   for (const f of files) {

@@ -4,6 +4,7 @@
 //   imageResults {image, flip, results} · lookup {platform, q, url}
 //   history (recent pages, searches and bookmarks)
 //   notfound · maintenance · parked · gone · sitehome  (W3 site-status pages)
+//   archive {id, pick?}  (W8: every copy of one address, and "Compare with…" into Casebook)
 
 import { h, icon, fmtDate } from "../ui.js";
 import { suggestBox } from "../suggest.js";
@@ -11,6 +12,7 @@ import { img } from "../media.js";
 import { renderArtifact, renderGone } from "../render.js";
 import { hostOf, designFor } from "../../core/sites.js";
 import { textScale, TEXT_SIZES } from "../../core/browser.js";
+import { archivePair } from "../../core/archive.js";
 import { renderNotFound, renderMaintenance, renderParked, renderUnreachable, renderSiteHome, renderSiteLogin } from "../sites/status.js";
 
 export function browserApp(phone) {
@@ -38,6 +40,7 @@ export function browserApp(phone) {
   function addressValue(desc) {
     if (desc.kind === "page") return desc.url || "";
     if (desc.kind === "results") return desc.q || "";
+    if (desc.kind === "archive") return desc.url || g.archive(desc.id).url || "";
     if (desc.kind === "lookup" || desc.kind === "notfound" || desc.kind === "maintenance" || desc.kind === "parked" || desc.kind === "gone" || desc.kind === "sitehome") return desc.url || "";
     return "";
   }
@@ -59,6 +62,7 @@ export function browserApp(phone) {
 
   function leadIcon(desc) {
     if (desc.kind === "page" && desc.view?.cached) return h("span.addr-tag", "cached");
+    if (desc.kind === "archive") return h("span.addr-tag", "archive");
     if (desc.kind === "page" && desc.view?.locked) return icon("lock", "addr-ico");
     if (desc.kind === "gone") return icon("globe", "addr-ico");
     if (desc.kind === "page" || desc.kind === "sitehome" || desc.kind === "notfound" || desc.kind === "maintenance" || desc.kind === "parked") {
@@ -192,11 +196,70 @@ export function browserApp(phone) {
       });
       return renderSiteLogin(phone, v, form) || form;
     }
-    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"));
+    if (v.error) return renderGone(phone, v, ver => phone.openArtifact(desc.id, ver, "browser"), () => phone.archive(desc.id));
     const art = renderArtifact(phone, v);
-    if (v.saved) art.prepend(h("div.cache-banner", h("b", "Saved copy"), " This is the version you saved to Casebook."));
-    if (v.cached) art.prepend(h("div.cache-banner", h("b", "Seeker cache"), ` This is a copy of ${v.url || "the page"} as it appeared on ${fmtDate(v.date)}. The current page may have changed or been removed.`));
+    const ar = g.archive(desc.id);
+    const current = !ar.error && ar.entries.find(x => x.kind === "current");
+    if (!ar.error && ar.entries.length >= 2) art.prepend(archiveStrip(desc, ar));
+    if (v.saved) art.prepend(h("div.cache-banner", h("b", "Saved copy"), " This is the version you saved to Casebook.",
+      current && current.version !== v.versionId ? compareCurrent(desc, v, current) : null));
+    if (v.cached) art.prepend(h("div.cache-banner", h("b", "Seeker cache"), ` This is a copy of ${v.url || "the page"} as it appeared on ${fmtDate(v.date)}. The current page may have changed or been removed.`,
+      current ? compareCurrent(desc, v, current) : null));
     return art;
+  }
+
+  /** A thin strip on a page with more than one copy: opens the Archive. */
+  function archiveStrip(desc, ar) {
+    const n = ar.entries.length;
+    return h("button.archive-strip", { onclick: () => phone.archive(desc.id) },
+      icon("clock"), h("span", h("b", "Archive"), ` · ${n} copies of this page`), h("span.archive-go", "›"));
+  }
+
+  /** From a cached or saved copy straight to the comparison with the current page (older first). */
+  function compareCurrent(desc, v, current) {
+    const here = v.saved ? savedRef(desc.id, v.versionId) : { artifact: desc.id, version: v.versionId };
+    if (!here) return null;
+    return h("div.banner-actions", h("button.banner-btn", { onclick: () => phone.compare([here, current.ref]) }, "Compare with current page"),
+      h("button.banner-btn", { onclick: () => phone.archive(desc.id) }, "All copies"));
+  }
+  const savedRef = (id, version) => {
+    const e = g.s.evidence.find(x => x.artifact === id && x.version === version && !x.quote && !x.image);
+    return e ? { evidence: e.id } : null;
+  };
+
+  // ── Archive (W8) ─────────────────────────────────────────────────────────
+  // Every copy of one address the player can open: Seeker's cached copies, the current page and
+  // their own saved copies, oldest first. Pick two to compare them in Casebook. Nothing here says
+  // what changed or why; the comparison only lines the copies up.
+  const KIND_LABEL = { cached: "Seeker cache", current: "Current page", saved: "Your saved copy" };
+  function archive(desc) {
+    const ar = g.archive(desc.id);
+    if (ar.error) return h("div.empty", h("b", "No archive for this address."), h("div.muted", "Open the page first."));
+    const pick = (desc.pick || []).filter(i => i < ar.entries.length);
+    const toggle = i => phone.replaceTop({ ...desc, pick: pick.includes(i) ? pick.filter(x => x !== i) : [...pick, i].slice(-2) });
+    const current = ar.entries.findIndex(x => x.kind === "current");
+    const open = x => {
+      if (x.kind === "saved") { const view = g.evidenceView(x.ref.evidence); phone.push("browser", { kind: "page", id: ar.id, version: x.version, view: { ...view, saved: true, cached: false }, url: view.url || "" }); return; }
+      if (x.kind === "current") { phone.openArtifact(ar.id, undefined, phone.appFor(ar.id)); return; }
+      phone.openArtifact(ar.id, x.version, "browser");
+    };
+    const compare = (i, j) => phone.compare(archivePair(ar, i, j));
+    const rows = ar.entries.map((x, i) => h("div.arch-row", { class: pick.includes(i) ? "picked" : "" },
+      h("button.arch-pick", { "aria-pressed": String(pick.includes(i)), "aria-label": `Select ${KIND_LABEL[x.kind]}${x.date ? `, ${fmtDate(x.date)}` : ""}`, onclick: () => toggle(i) },
+        h("span.sel-box", pick.includes(i) ? "✓" : "")),
+      h("button.arch-open", { onclick: () => open(x) },
+        h("div.arch-date", x.date ? fmtDate(x.date) : "Undated"),
+        h("div.arch-kind", KIND_LABEL[x.kind], x.saved.length && x.kind !== "saved" ? h("span.arch-saved", " · Saved in Casebook") : null),
+        x.title && x.title !== ar.title ? h("div.arch-title.muted", `“${x.title}”`) : null),
+      current >= 0 && i !== current ? h("button.arch-cmp", { "aria-label": `Compare ${KIND_LABEL[x.kind].toLowerCase()}${x.date ? ` from ${fmtDate(x.date)}` : ""} with the current page`, onclick: () => compare(i, current) }, "Compare with current") : null));
+    const bar = h("div.arch-bar",
+      pick.length === 2 ? h("button.btn.primary.wide", { onclick: () => compare(pick[0], pick[1]) }, "Compare these two")
+        : h("div.muted.small", ar.canCompare ? (pick.length ? "Pick one more copy to compare." : "Tick two copies to compare them side by side.") : "Only one copy so far. Nothing to compare yet."));
+    return h("div.archive",
+      h("div.arch-head", icon("clock", "big"), h("div", h("h1", "Archive"), h("div.muted", ar.url || ""), ar.title ? h("div.arch-page", ar.title) : null)),
+      h("div.arch-note.muted", "Copies of this address you can open: the current page, copies Seeker kept, and copies you saved."),
+      ar.status !== "live" ? h("div.arch-status", ar.status === "deleted" ? "The page has been deleted. Only copies remain." : "The page isn't available now. Only copies remain.") : null,
+      bar, rows);
   }
 
   function loginForm(v, onDone) {
@@ -224,6 +287,7 @@ export function browserApp(phone) {
     if (desc.kind === "parked") return renderParked(phone, desc);
     if (desc.kind === "gone") return renderUnreachable(phone, desc);
     if (desc.kind === "sitehome") return renderSiteHome(phone, desc);
+    if (desc.kind === "archive") return archive(desc);
     return page(desc);
   }
 
@@ -239,6 +303,7 @@ export function browserApp(phone) {
     if (desc.kind === "sitehome") return desc.url || "Home";
     if (desc.kind === "page") return desc.view?.title || desc.url || "Page";
     if (desc.kind === "lookup") return desc.q || "Lookup";
+    if (desc.kind === "archive") return "Archive";
     return "";
   }
 
