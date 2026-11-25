@@ -5,7 +5,7 @@
 // It shows counts and sources, never whether a theory is right.
 // Screens: main {tab, filter?, select?} · hyp {id} · builder {id?, title?, subject?, predicate?, object?, alternativeOf?, evidence?}
 //          question {id}   (open questions live in Notes)
-//          compare {items, show?, zoom?} · link {items, id?, kind?, note?}   (comparison and the player's links)
+//          compare {items, show?, zoom?} · link {a, b, id?, pick?, note?, swap?}   (comparison and the player's links)
 //          event {id} · eventEdit {id?, draft}   (Timeline: the player's own reconstruction)
 //          reports · report {case, channel?, hyps, events, review?} · reportDone {id, n0, e0}
 // Items can belong to one, several or no cases (cases: [], unclassified by default). The filter
@@ -149,7 +149,7 @@ export function casebookApp(phone) {
     };
     const theories = g.casebook().hypotheses.filter(hy => hy.evidence.includes(e.id) || hy.against.includes(e.id));
     const questions = g.casebook().questions.filter(q => q.links.evidence.includes(e.id));
-    const links = g.casebook().links.filter(l => l.items.includes(e.id));
+    const links = g.casebook().links.filter(l => l.a === e.id || l.b === e.id);
     const events = g.timeline().filter(ev => ev.evidence.some(x => x.id === e.id));
     return h("div.evidence-detail.pad",
       h("h2", phone.evidenceTitle(e)),
@@ -233,7 +233,7 @@ export function casebookApp(phone) {
     return h("div.select-bar",
       h("b", `${sel.length} selected`),
       h("button.chip", { disabled: sel.length < 2, onclick: () => phone.push("casebook", { kind: "compare", items: sel.map(id => ({ evidence: id })) }) }, `Compare (${sel.length})`),
-      h("button.chip", { disabled: sel.length < 2, onclick: () => phone.push("casebook", { kind: "link", items: [...sel] }) }, "Link"),
+      h("button.chip", { disabled: sel.length < 2, onclick: () => connectTwo(sel) }, "Link"),
       h("button.chip", { disabled: !sel.length, onclick: shelveAll }, "Set aside"),
       h("button.bar-link", { onclick: done }, "Done"));
   }
@@ -326,7 +326,7 @@ export function casebookApp(phone) {
     const ask = () => { const r = g.addQuestion({ text: qIn.value, links: { theories: [hy.id] } }); if (r.error) { phone.toast("Write the question first."); return; } phone.refresh(); };
     const alts = hy.alternatives.map(id => cb.hypotheses.find(x => x.id === id)).filter(Boolean);
     const mine = new Set([...hy.evidence, ...hy.against]);
-    const links = cb.links.filter(l => l.items.filter(id => mine.has(id)).length >= 2);
+    const links = cb.links.filter(l => mine.has(l.a) && mine.has(l.b));
     const addAlt = () => phone.actionSheet("Another explanation", [
       { label: "Write a new alternative…", icon: "plus", run: () => phone.push("casebook", { kind: "builder", alternativeOf: hy.id }) },
       { label: "Link an existing theory…", icon: "book", run: () => phone.picker({ title: "Alternative to this theory", empty: "No other theories yet.",
@@ -437,33 +437,69 @@ export function casebookApp(phone) {
     pickEvidence("Compare with", [e.id], id => phone.push("casebook", { kind: "compare", items: [{ evidence: e.id }, { evidence: id }] }));
   }
 
-  /** A connection as one row: its kind, the other evidence, the player's reason. */
-  function linkRow(l, from) {
-    const others = l.items.filter(id => id !== from).map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
-    return h("button.hist-row.link-row", { onclick: () => phone.push("casebook", { kind: "link", items: [...l.items], id: l.id }) },
+  // A connection is always between exactly two pieces of evidence. "Supports" and "Possibly
+  // manipulated" have a direction (A → B); the other four do not. It is the player's reading only.
+  const DIRECTED = new Set(["supports", "manipulated"]);
+  /** The connection as a sentence, with A and B given as text or elements. */
+  function linkSentence(kind, A, B) {
+    switch (kind) {
+      case "supports": return [A, " supports ", B];
+      case "contradicts": return [A, " and ", B, " contradict each other"];
+      case "related": return [A, " and ", B, " are connected"];
+      case "same_origin": return [A, " and ", B, " have the same origin"];
+      case "manipulated": return [A, " may be manipulated, compared with ", B];
+      case "unrelated": return [A, " and ", B, " are not connected"];
+      default: return [A, " · ", B];
+    }
+  }
+  const evTitle = id => { const e = g.s.evidence.find(x => x.id === id); return e ? phone.evidenceTitle(e) : "—"; };
+  /** A connection as one row. Seen from one piece of evidence (`from`), that side is "this". */
+  function linkRow(l, from, letterOf) {
+    const name = (id, first) => id === from ? (first ? "This" : "this") : h("b", letterOf?.(id) ? `${letterOf(id)} · ${evTitle(id)}` : evTitle(id));
+    // An undirected connection seen from B reads from B's side; a directed one always keeps its order.
+    const [x, y] = !DIRECTED.has(l.kind) && from === l.b ? [l.b, l.a] : [l.a, l.b];
+    return h("button.hist-row.link-row", { onclick: () => phone.push("casebook", { kind: "link", a: l.a, b: l.b, id: l.id }) },
       h("span.stance", CONNECTIONS[l.kind]),
-      h("div.pi-main", h("b", others.map(e => phone.evidenceTitle(e)).join(" · ")), l.note ? h("div.muted", `“${l.note}”`) : null));
+      h("div.pi-main", h("div.link-text", linkSentence(l.kind, name(x, true), name(y, false))), l.note ? h("div.muted", `“${l.note}”`) : null));
+  }
+
+  /** Connect two of several: pick the first, then the second. Two go straight to the editor. */
+  function connectTwo(ids) {
+    if (ids.length === 2) { phone.push("casebook", { kind: "link", a: ids[0], b: ids[1] }); return; }
+    const opts = (skip, run) => ids.filter(id => id !== skip).map(id => ({ label: `${LETTERS[ids.indexOf(id)] ?? "·"} · ${evTitle(id)}`, run: () => run(id) }));
+    phone.actionSheet("A connection is between two. Pick the first.", opts(null, a =>
+      phone.actionSheet("…and the second.", opts(a, b => phone.push("casebook", { kind: "link", a, b })))));
   }
 
   function linkEditor(desc) {
     const l = desc.id ? g.casebook().links.find(x => x.id === desc.id) : null;
     if (desc.id && !l) return h("div.empty", "This connection was removed.");
     const kind = desc.pick ?? l?.kind ?? null; // desc.kind is the screen kind ("link")
-    const items = (l?.items ?? desc.items).map(id => g.s.evidence.find(e => e.id === id)).filter(Boolean);
+    const base = l ? [l.a, l.b] : [desc.a, desc.b];
+    const [a, b] = desc.swap ? [base[1], base[0]] : base;
+    const ends = [a, b].map(id => g.s.evidence.find(e => e.id === id));
+    if (ends.some(x => !x)) return h("div.empty", "This evidence is no longer in your Casebook.");
     const note = /** @type {HTMLInputElement} */ (h("input.text-input", { type: "text", "aria-label": "Because", placeholder: "Because… (optional)" }));
     note.value = desc.note ?? l?.note ?? "";
     note.addEventListener("input", () => { desc.note = note.value; });
     const save = () => {
-      const r = l ? g.editLink(l.id, { kind, note: note.value }) : g.addLink({ items: items.map(e => e.id), kind, note: note.value });
+      const r = l ? g.editLink(l.id, { kind, note: note.value, ...(desc.swap ? { swap: true } : {}) }) : g.addLink({ a, b, kind, note: note.value });
       if (r.error) { phone.toast(r.error === "duplicate_link" ? "You already connected these that way." : "Pick how they are connected."); return; }
+      if (r.duplicate) phone.toast("You already connected these that way. Reason updated.");
       phone.back();
     };
+    const directed = kind && DIRECTED.has(kind);
     return h("div.link-editor.pad",
-      h("div.field-label", `Evidence (${items.length})`),
-      items.map((e, i) => h("div.cmp-name", h("span.cmp-letter", LETTERS[i] || "·"), h("b", phone.evidenceTitle(e)))),
+      ends.map((e, i) => h("div.cmp-name", h("span.cmp-letter", LETTERS[i]), h("b", phone.evidenceTitle(e)))),
       h("div.field-label", "How are they connected?"),
       h("div.evidence-marks.link-kinds", Object.entries(CONNECTIONS).map(([id, label]) =>
         h("button.chip", { "aria-pressed": String(kind === id), onclick: () => phone.replaceTop({ ...desc, pick: id, note: note.value }) }, `${kind === id ? "✓ " : ""}${label}`))),
+      kind ? h("div.link-sentence", { "aria-live": "polite" }, linkSentence(kind, h("b", "A"), h("b", "B")), ".") : null,
+      directed ? h("div.link-direction",
+        h("div.link-dir-row", h("span.cmp-letter", "A"), h("span", phone.evidenceTitle(ends[0])), h("span.muted.small", kind === "supports" ? "supports" : "suspected")),
+        h("div.link-arrow", { "aria-hidden": "true" }, "↓"),
+        h("div.link-dir-row", h("span.cmp-letter", "B"), h("span", phone.evidenceTitle(ends[1])), h("span.muted.small", kind === "supports" ? "is supported" : "reference")),
+        h("button.btn.wide", { onclick: () => phone.replaceTop({ ...desc, swap: !desc.swap, pick: kind, note: note.value }) }, "⇅ Swap A and B")) : null,
       h("label.field-label", "Because"), note,
       h("div.hint.muted", "Your own reading. Nothing checks it."),
       h("button.btn.primary.wide", { disabled: !kind, onclick: save }, l ? "Save changes" : "Save connection"),
@@ -535,9 +571,9 @@ export function casebookApp(phone) {
       texts.map(x => [h("div.section-title", `${LETTERS[x.i]} · ${KIND[x.kind] || "Page"}`),
         h("div.cmp-text", x.text ? richText(phone, x.text) : null, x.attachments?.length ? h("div.muted", `Attached: ${x.attachments.join(", ")}`) : null)]),
       h("div.section-title", `Your connections (${c.links.length})`),
-      c.links.map(l => linkRow(l)),
+      c.links.map(l => linkRow(l, null, id => { const i = c.items.findIndex(x => x.evidence === id); return i >= 0 ? LETTERS[i] : null; })),
       h("div.pad.cmp-actions",
-        c.saved ? h("button.btn.primary.wide", { onclick: () => phone.push("casebook", { kind: "link", items: ids }) }, "How are they connected?")
+        c.saved ? h("button.btn.primary.wide", { onclick: () => connectTwo(ids) }, ids.length === 2 ? "How are they connected?" : "Connect two of these")
           : h("button.btn.primary.wide", { onclick: saveAll }, "Save to Casebook to connect them"),
         c.saved ? h("button.btn.wide", { onclick: () => phone.push("casebook", { kind: "builder", evidence: ids }) }, "New theory from this") : null,
         c.saved ? h("button.btn.wide", { onclick: () => phone.newEvent({ evidence: ids.map(id => ({ id, stance: "supports" })) }) }, "New event from this") : null));

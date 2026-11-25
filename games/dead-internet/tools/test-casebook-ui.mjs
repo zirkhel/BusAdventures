@@ -261,21 +261,65 @@ try {
   assert.deepEqual(await p3.locator('.cmp-row.head .cmp-letter').allInnerTexts(), ['A', 'B', 'C']);
   assert.ok(await p3.locator('.cmp-row.differs', { hasText: 'Source' }).count() === 1, 'three accounts look like three sources');
   await shot3('cb3-compare.png');
-  await b3('How are they connected?').click();
+  // Three compared, but a connection is between exactly two: pick them.
+  await b3('Connect two of these').click();
+  await p3.getByText('A connection is between two. Pick the first.').waitFor();
+  assert.equal(await p3.locator('.ctx-item').count(), 3);
+  await p3.locator('.ctx-item', { hasText: `A · ${t3.A54}` }).click();
+  assert.equal(await p3.locator('.ctx-item').count(), 2, 'the first is not offered again');
+  await p3.locator('.ctx-item', { hasText: `B · ${t3.A55}` }).click();
   assert.equal(await p3.locator('.link-kinds .chip').count(), 6, 'six kinds');
+  assert.deepEqual(await p3.locator('.link-editor .cmp-name b').allInnerTexts(), [t3.A54, t3.A55], 'exactly two ends');
   await b3('Same origin').click();
-  await p3.getByRole('textbox', { name: 'Because' }).fill('All three only repost the same lines');
+  assert.equal(await p3.locator('.link-sentence').innerText(), 'A and B have the same origin.');
+  assert.equal(await p3.getByRole('button', { name: '⇅ Swap A and B' }).count(), 0, 'no direction to swap');
+  await p3.getByRole('textbox', { name: 'Because' }).fill('Both only repost the same lines');
   await shot3('cb3-connect.png');
   await b3('Save connection').click();
   await p3.getByText('Your connections (1)', { exact: true }).waitFor();
   assert.equal(await p3.locator('.link-row .stance').first().textContent(), 'Same origin');
+  assert.equal(await p3.locator('.link-row .link-text').first().innerText(), `A · ${t3.A54} and B · ${t3.A55} have the same origin`);
   await b3('Back').click();
+  // Two selected go straight to the editor. "Supports" has a direction, and A and B can be swapped.
   await b3('Done').click();
-  // On the evidence card: the connection, editable.
+  await b3('Select').click();
+  await row3(t3.A56).locator('.ev-open').click();
+  await row3(t3.A54).locator('.ev-open').click();
+  await b3('Link').click();
+  await b3('Supports').click();
+  assert.equal(await p3.locator('.link-sentence').innerText(), 'A supports B.');
+  assert.deepEqual(await p3.locator('.link-dir-row span:nth-child(2)').allInnerTexts(), [t3.A56, t3.A54]);
+  await b3('⇅ Swap A and B').click();
+  assert.deepEqual(await p3.locator('.link-dir-row span:nth-child(2)').allInnerTexts(), [t3.A54, t3.A56], 'swapped');
+  assert.deepEqual(await p3.locator('.link-editor .cmp-name b').allInnerTexts(), [t3.A54, t3.A56]);
+  assert.equal(await p3.locator('.chip[aria-pressed="true"]').innerText(), '✓ Supports', 'kind kept across the swap');
+  await p3.getByRole('textbox', { name: 'Because' }).fill('Mike posted it first');
+  await shot3('cb3-direction.png');
+  await b3('Save connection').click();
+  // The same direction again is the same connection; the other way round would be a new one.
+  await b3('Link').click();
+  await b3('Supports').click();
+  await b3('⇅ Swap A and B').click();
+  await b3('Save connection').click();
+  await p3.getByText('You already connected these that way. Reason updated.').waitFor();
+  await b3('Done').click();
+  // Each end reads the direction from its own side.
+  await row3(t3.A56).locator('.ev-open').click();
+  await p3.getByText('Connections (1)', { exact: true }).waitFor();
+  assert.equal(await p3.locator('.link-row .link-text').first().innerText(), `${t3.A54} supports this`);
+  await b3('Back').click();
+  await row3(t3.A54).locator('.ev-open').click();
+  await p3.getByText('Connections (2)', { exact: true }).waitFor();
+  assert.deepEqual((await p3.locator('.link-row .link-text').allInnerTexts()).sort(), [`This and ${t3.A55} have the same origin`, `This supports ${t3.A56}`].sort());
+  await p3.locator('.link-row').last().scrollIntoViewIfNeeded();
+  await shot3('cb3-card.png');
+  await b3('Back').click();
+  // On the other end of an undirected connection it reads from that side; edit it there.
   await row3(t3.A55).locator('.ev-open').click();
   await p3.getByText('Connections (1)', { exact: true }).waitFor();
+  assert.equal(await p3.locator('.link-row .link-text').first().innerText(), `This and ${t3.A54} have the same origin`);
   await p3.locator('.link-row').first().click();
-  assert.equal(await p3.getByRole('textbox', { name: 'Because' }).inputValue(), 'All three only repost the same lines');
+  assert.equal(await p3.getByRole('textbox', { name: 'Because' }).inputValue(), 'Both only repost the same lines');
   await b3('Related').click();
   await b3('Save changes').click();
   assert.equal(await p3.locator('.link-row .stance').first().textContent(), 'Related');
@@ -318,12 +362,12 @@ try {
   await open3(false);
   await p3.locator('.seg.tabs button', { hasText: 'Theories' }).click();
   await p3.locator('.hyp-row', { hasText: 'The three friends are one voice' }).click();
-  await p3.getByText('Connections (1)', { exact: true }).waitFor();
-  assert.equal(await p3.locator('.link-row .stance').first().textContent(), 'Related');
-  await p3.locator('.link-row').first().scrollIntoViewIfNeeded();
+  await p3.getByText('Connections (2)', { exact: true }).waitFor();
+  assert.deepEqual((await p3.locator('.link-row .link-text').allInnerTexts()).sort(), [`${t3.A54} and ${t3.A55} are connected`, `${t3.A54} supports ${t3.A56}`].sort(), 'direction kept after reload');
+  await p3.locator('.link-row').last().scrollIntoViewIfNeeded();
   await shot3('cb3-theory.png');
   await p3.close();
-  console.log('PASS mobile 390×844 step 3: long press selection, compare three, six kinds, connection with reason, edit on card, page versions with changes, two images switch and zoom, set aside several, theory connections, reload');
+  console.log('PASS mobile 390×844 step 3: long press selection, compare three, pick two of three, six kinds, connection with reason, Supports with swap, duplicate refused, direction read from each end, edit on card, page versions with changes, two images switch and zoom, set aside several, theory connections, reload');
 
   // The W8 entry point: Browser Archive will call phone.compare() with two versions of one page.
   {
@@ -435,8 +479,8 @@ try {
       result.step2 = [g.s.hypotheses.length, g.s.questions.length];
       // Step 3: connections of every kind, comparisons (evidence, images, two copies of a page), the editor.
       const kinds = ['supports', 'contradicts', 'related', 'same_origin', 'manipulated', 'unrelated'];
-      for (let i = 0; i + 1 < ev.length && i < 120; i += 2) g.addLink({ items: [ev[i], ev[i + 1]], kind: kinds[i / 2 % 6], note: i % 4 ? 'Because I think so' : '' });
-      g.addLink({ items: ev.slice(0, 3), kind: 'same_origin' });
+      for (let i = 0; i + 1 < ev.length && i < 120; i += 2) g.addLink({ a: ev[i], b: ev[i + 1], kind: kinds[i / 2 % 6], note: i % 4 ? 'Because I think so' : '' });
+      for (let i = 0; i + 1 < ev.length && i < 60; i += 5) g.addLink({ a: ev[i + 1], b: ev[i], kind: ['supports', 'manipulated'][i % 2] });
       const versioned = [...w.artifacts.values()].filter(a => g.s.seen[a.id] != null && (g.view(a.id).cachedVersions || []).length).slice(0, 6);
       const pairs = [...Array(20).keys()].map(i => [{ evidence: ev[i * 3 % ev.length] }, { evidence: ev[(i * 3 + 1) % ev.length] }]);
       const imgs = g.s.evidence.filter(e => e.image).slice(0, 6).map(e => ({ evidence: e.id }));
@@ -446,8 +490,11 @@ try {
         phone.replaceTop({ kind: 'compare', items }); result.screens.push(dom());
         if (items.length === 2 && items.every(x => x.evidence && g.s.evidence.find(e => e.id === x.evidence)?.image)) { click('Show B'); result.screens.push(dom()); }
       }
-      for (const l of g.s.links.slice(0, 12)) { phone.replaceTop({ kind: 'link', items: l.items, id: l.id }); result.screens.push(dom()); }
-      phone.replaceTop({ kind: 'link', items: ev.slice(0, 2) }); result.screens.push(dom());
+      for (const l of [...g.s.links.slice(0, 12), ...g.s.links.filter(l => ['supports', 'manipulated'].includes(l.kind)).slice(0, 6)]) {
+        phone.replaceTop({ kind: 'link', a: l.a, b: l.b, id: l.id }); result.screens.push(dom());
+        phone.replaceTop({ kind: 'link', a: l.a, b: l.b, id: l.id, swap: true }); result.screens.push(dom());
+      }
+      for (const pick of kinds) for (const swap of [false, true]) { phone.replaceTop({ kind: 'link', a: ev[0], b: ev[1], pick, swap }); result.screens.push(dom()); }
       for (const id of ev.slice(0, 30)) { phone.replaceTop({ kind: 'evidence', id }); result.screens.push(dom()); }
       phone.replaceTop({ kind: 'main', tab: 'evidence', group: 'all', select: ev.slice(0, 5) }); result.screens.push(dom());
       result.step3 = [g.s.links.length, pairs.length, versioned.length];

@@ -15,7 +15,7 @@ import { applyEffects, fire } from "./rules.js";
 import { nameOf, str } from "./world.js";
 import { isCase, soleCase } from "./cases.js";
 import { apparentSource, visibleRefsOfEvidence } from "./provenance.js";
-import { forgetInQuestions, forgetInLinks } from "./workbench.js";
+import { forgetInQuestions, forgetInLinks, isDirected } from "./workbench.js";
 
 // ── Evidence ────────────────────────────────────────────────────────────────
 
@@ -288,7 +288,7 @@ export function casebookView(g) {
     // The player's own questions (core/workbench.js). Only ever written by the player.
     questions: (g.s.questions || []).map(q => ({ ...q, links: structuredClone(q.links), statusLog: q.statusLog.map(x => ({ ...x })) })),
     // The player's own links between evidence (core/workbench.js).
-    links: (g.s.links || []).map(l => ({ ...l, items: [...l.items] })),
+    links: (g.s.links || []).map(l => ({ ...l, directed: isDirected(l.kind) })),
     // The player's own timeline, for reports later. Events carry only what the player entered.
     timeline: (g.s.timeline || []).map(e => ({ ...e })),
     reports: g.s.reports.map(r => ({ id: r.id, day: r.day, case: r.case, channel: r.channel, items: r.items.map(i => ({ label: i.label })),

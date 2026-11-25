@@ -84,26 +84,63 @@ test("images show their caption and image info; messages their sender and day", 
   }
 });
 
-test("links: six kinds, optional reason, one link per set and kind, and they follow removed evidence", async () => {
+test("a link is always exactly two pieces of evidence", async () => {
+  const { g, ev } = await fixture();
+  assert.equal(g.addLink({ a: ev[0], kind: "related" }).error, "need_two");
+  assert.equal(g.addLink({ a: ev[0], b: ev[0], kind: "related" }).error, "need_two", "not with itself");
+  assert.equal(g.addLink({ items: [ev[0], ev[1], ev[2]], kind: "related" }).error, "need_two", "no group links");
+  assert.equal(g.addLink({ items: [ev[0], ev[1]], kind: "related" }).error, "need_two", "only a and b");
+  assert.equal(g.addLink({ a: ev[0], b: "E999", kind: "related" }).error, "unknown_evidence");
+  assert.equal(g.addLink({ a: ev[0], b: ev[1], kind: "proves" }).error, "bad_kind");
+  assert.deepEqual(g.s.links, []);
+  const id = g.addLink({ a: ev[0], b: ev[1], kind: "related" }).id;
+  assert.deepEqual(Object.keys(g.s.links[0]).sort(), ["a", "b", "day", "id", "kind", "note"]);
+  assert.equal(g.editLink(id, { a: ev[2], items: [ev[2]] }).ok, true, "patch cannot change the pair");
+  assert.deepEqual([g.s.links[0].a, g.s.links[0].b], [ev[0], ev[1]]);
+});
+
+test("links: six kinds, direction for supports and possibly manipulated, one per pair, kind and direction", async () => {
   const { g, w, ev } = await fixture();
-  assert.equal(g.addLink({ items: [ev[0]], kind: "related" }).error, "need_two");
-  assert.equal(g.addLink({ items: [ev[0], "E999"], kind: "related" }).error, "unknown_evidence");
-  assert.equal(g.addLink({ items: [ev[0], ev[1]], kind: "proves" }).error, "bad_kind");
-  const ids = ["supports", "contradicts", "related", "same_origin", "manipulated", "unrelated"].map(kind => g.addLink({ items: [ev[1], ev[2]], kind }).id);
+  const kinds = ["supports", "contradicts", "related", "same_origin", "manipulated", "unrelated"];
+  const ids = kinds.map(kind => g.addLink({ a: ev[1], b: ev[2], kind }).id);
   assert.equal(new Set(ids).size, 6);
-  const again = g.addLink({ items: [ev[2], ev[1]], kind: "same_origin", note: "Both only repost" });
-  assert.deepEqual([again.duplicate, again.id], [true, ids[3]]);
+  assert.deepEqual(g.casebook().links.map(l => l.directed), [true, false, false, false, true, false]);
+  // Undirected: b–a is the same link as a–b (a new reason replaces the old one).
+  for (const [i, kind] of kinds.entries()) if (!["supports", "manipulated"].includes(kind)) {
+    const again = g.addLink({ a: ev[2], b: ev[1], kind, note: "Both only repost" });
+    assert.deepEqual([again.duplicate, again.id], [true, ids[i]], kind);
+  }
   assert.equal(g.casebook().links.find(l => l.id === ids[3]).note, "Both only repost");
-  assert.equal(g.editLink(ids[0], { kind: "contradicts" }).error, "duplicate_link");
+  assert.equal(g.addLink({ a: ev[1], b: ev[2], kind: "supports" }).duplicate, true, "same direction is the same link");
+  // Directed: the other way round is a different claim and a different link.
+  const back = g.addLink({ a: ev[2], b: ev[1], kind: "supports" });
+  assert.ok(back.ok && !back.duplicate && back.id !== ids[0]);
+  const ref = g.addLink({ a: ev[2], b: ev[1], kind: "manipulated", note: "Cropped?" });
+  assert.ok(ref.ok && !ref.duplicate);
+  const sup = g.casebook().links.find(l => l.id === ids[0]);
+  assert.deepEqual([sup.a, sup.b], [ev[1], ev[2]], "a supports b, in the order given");
+  // Swapping a directed link onto an existing one is refused; an undirected swap is just the same link.
+  assert.equal(g.editLink(ids[0], { swap: true }).error, "duplicate_link");
+  g.removeLink(back.id);
+  assert.equal(g.editLink(ids[0], { swap: true }).ok, true);
+  assert.deepEqual([g.s.links.find(l => l.id === ids[0]).a, g.s.links.find(l => l.id === ids[0]).b], [ev[2], ev[1]]);
+  assert.equal(g.editLink(ids[2], { swap: true }).ok, true, "undirected swap is harmless");
+  // Changing the kind follows the same rule.
+  assert.equal(g.editLink(ids[0], { kind: "contradicts" }).error, "duplicate_link", "contradicts already exists, either way round");
   g.removeLink(ids[1]);
   assert.equal(g.editLink(ids[0], { kind: "contradicts", note: "Dates don't match" }).ok, true);
   assert.equal(g.casebook().links.find(l => l.id === ids[0]).kind, "contradicts");
-  const three = g.addLink({ items: [ev[0], ev[1], ev[2]], kind: "related" }).id;
-  assert.equal(g.compare([{ evidence: ev[1] }, { evidence: ev[2] }]).links.length, 6, "links among the compared items");
+  assert.equal(g.editLink(ids[5], { kind: "manipulated" }).error, "duplicate_link", "A suspected against B exists");
+  assert.equal(g.editLink(ids[5], { kind: "manipulated", swap: true }).error, "duplicate_link", "so does B suspected against A");
+  g.removeLink(ref.id);
+  assert.equal(g.editLink(ids[5], { kind: "manipulated", swap: true }).ok, true);
+  // The comparison shows links whose two ends are both compared.
+  const other = g.addLink({ a: ev[0], b: ev[1], kind: "related" }).id;
+  assert.equal(g.compare([{ evidence: ev[1] }, { evidence: ev[2] }]).links.length, g.s.links.length - 1);
+  assert.equal(g.compare([{ evidence: ev[0] }, { evidence: ev[1] }, { evidence: ev[2] }]).links.length, g.s.links.length);
+  // A removed piece of evidence takes its links with it.
   g.dispatch({ type: "removeEvidence", id: ev[2] });
-  const left = g.casebook().links;
-  assert.deepEqual(left.map(l => l.id), [three]);
-  assert.deepEqual(left[0].items, [ev[0], ev[1]]);
+  assert.deepEqual(g.casebook().links.map(l => l.id), [other]);
   const r = replay(w, { seed: 7 }, g.s.log);
   assert.deepEqual(r.s.links, g.s.links, "links replay exactly");
 });
@@ -117,8 +154,8 @@ test("links and comparisons never change the world", async () => {
   for (let i = 0; i < 300; i++) {
     const a = ev[rnd(ev.length)], b = ev[rnd(ev.length)];
     switch (rnd(4)) {
-      case 0: g.addLink({ items: [a, b], kind: kinds[rnd(6)], note: rnd(2) ? `n${i}` : "" }); break;
-      case 1: if (g.s.links.length) g.editLink(g.s.links[rnd(g.s.links.length)].id, { kind: kinds[rnd(6)] }); break;
+      case 0: g.addLink({ a, b, kind: kinds[rnd(6)], note: rnd(2) ? `n${i}` : "" }); break;
+      case 1: if (g.s.links.length) g.editLink(g.s.links[rnd(g.s.links.length)].id, { kind: kinds[rnd(6)], swap: !!rnd(2) }); break;
       case 2: if (g.s.links.length) g.removeLink(g.s.links[rnd(g.s.links.length)].id); break;
       case 3: g.compare([{ evidence: a }, { evidence: b }, { artifact: PAGE }]); break;
     }
@@ -150,17 +187,24 @@ for (const version of [9, 8, 7]) {
     assert.deepEqual(state.hypotheses.find(x => x.id === h).evidence, [ev[1], ev[2]]);
     if (version === 9) assert.equal(state.questions[0].text, "Who runs these?");
     const g2 = new Game(w, { seed: 7, state });
-    assert.ok(g2.addLink({ items: [ev[1], ev[2]], kind: "same_origin" }).ok);
+    assert.ok(g2.addLink({ a: ev[1], b: ev[2], kind: "same_origin" }).ok);
   });
 }
 
-test("a version 10 save round-trips links; broken links are cleaned", async () => {
+test("a version 10 save round-trips links with their direction; broken, duplicate and group links are cleaned", async () => {
   const { w, g, ev } = await fixture();
-  g.addLink({ items: [ev[0], ev[1]], kind: "contradicts", note: "Dates" });
+  g.addLink({ a: ev[0], b: ev[1], kind: "contradicts", note: "Dates" });
+  g.addLink({ a: ev[1], b: ev[0], kind: "supports" });
+  g.addLink({ a: ev[0], b: ev[1], kind: "supports" });
   assert.deepEqual(deserialize(w, serialize(g.s)).state, JSON.parse(JSON.stringify(g.s)));
   const s = structuredClone(g.s);
-  s.links.push({ id: "L900", items: [ev[0], "E404"], kind: "related", note: "", day: 1 }, { id: "L901", items: [ev[0], ev[1]], kind: "weird", note: "", day: 1 });
+  s.links.push(
+    { id: "L900", a: ev[0], b: "E404", kind: "related", note: "", day: 1 },
+    { id: "L901", a: ev[0], b: ev[1], kind: "weird", note: "", day: 1 },
+    { id: "L902", a: ev[1], b: ev[0], kind: "contradicts", note: "", day: 1 },     // same as the first, other way round
+    { id: "L903", a: ev[1], b: ev[1], kind: "related", note: "", day: 1 },
+    { id: "L904", items: [ev[0], ev[1], ev[2]], kind: "related", note: "", day: 1 }); // group links are not a thing
   const { state, warnings } = deserialize(w, serialize(s));
-  assert.deepEqual(state.links.map(l => l.id), [g.s.links[0].id]);
-  assert.ok(warnings.includes("dropped link L900"));
+  assert.deepEqual(state.links.map(l => l.id), g.s.links.map(l => l.id));
+  for (const id of ["L900", "L901", "L902", "L903", "L904"]) assert.ok(warnings.includes(`dropped link ${id}`), id);
 });

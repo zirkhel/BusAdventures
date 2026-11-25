@@ -14,6 +14,7 @@
 // claims or facts. tests/twin.test.mjs checks that it gives identical results in twin worlds.
 
 import { asArray } from "./util.js";
+import { isDirected } from "./workbench.js";
 import { viewArtifact, savedArtifactView } from "./artifacts.js";
 import { apparentSource } from "./provenance.js";
 
@@ -111,6 +112,6 @@ export function compareView(g, refs) {
   const samePage = !!pair && pair[0].artifact && pair[0].artifact === pair[1].artifact && pair[0].kind === "page" && pair[1].kind === "page";
   const changes = samePage ? { title: pair[0].pageTitle !== pair[1].pageTitle ? [pair[0].pageTitle, pair[1].pageTitle] : null, text: textChanges(pair[0].text, pair[1].text) } : null;
   const ids = new Set(ok.map(x => x.evidence).filter(Boolean));
-  const links = (g.s.links || []).filter(l => l.items.filter(id => ids.has(id)).length >= 2).map(l => ({ ...l, items: [...l.items] }));
+  const links = (g.s.links || []).filter(l => ids.has(l.a) && ids.has(l.b)).map(l => ({ ...l, directed: isDirected(l.kind) }));
   return { items, differs, samePage, changes, links, saved: items.every(x => x.evidence) };
 }

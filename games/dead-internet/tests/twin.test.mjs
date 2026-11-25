@@ -83,10 +83,11 @@ function play(w) {
   g.visibleSources().forEach((s, k) => g.addQuestion({ text: `Who is behind ${s.label}?`,
     links: { sources: [s.key], evidence: [all[k % all.length]], topics: ["mara", "calvin", "owen"].slice(0, 1 + k % 3), theories: [own[k % 2], extra[k % 4]] } }));
   g.s.questions.forEach((q, k) => g.editQuestion(q.id, { status: ["open", "answered", "dropped"][k % 3], answer: k % 3 === 1 ? "My answer" : "" }));
-  // Step 3: connections of every kind, including the three "friends" (one hidden source) and three-item links.
+  // Step 3: connections of every kind between two pieces of evidence, including the three "friends" (one hidden source).
   const kinds = ["supports", "contradicts", "related", "same_origin", "manipulated", "unrelated"];
-  for (let i = 0; i + 1 < all.length; i += 2) g.addLink({ items: [all[i], all[i + 1]], kind: kinds[i / 2 % 6], note: i % 4 ? "Because" : "" });
-  for (let i = 0; i + 2 < all.length; i += 7) g.addLink({ items: all.slice(i, i + 3), kind: kinds[i % 6] });
+  for (let i = 0; i + 1 < all.length; i += 2) g.addLink({ a: all[i], b: all[i + 1], kind: kinds[i / 2 % 6], note: i % 4 ? "Because" : "" });
+  // Both directions of the directed kinds, and links seen from either end.
+  for (let i = 0; i + 1 < all.length; i += 5) g.addLink({ a: all[i + 1], b: all[i], kind: ["supports", "manipulated"][i % 2] });
   g.s.trust.dana = 99;
   return { g, hyps: [r.h2, r.h3, ...extra] };
 }
@@ -132,7 +133,7 @@ test("twin worlds: the Casebook and the reviewer see only what the player can se
   const a = snapshot(base), b = snapshot(merged), c = snapshot(split);
   assert.deepEqual(a._hiddenInViews, [], "artifact views carry no hidden source, supports or mentions");
   assert.ok(a.evidence.length > 100, "the player saved enough to make the comparison meaningful");
-  assert.ok(a.casebook.links.length > 300 && a.compare.length > 250 && a.compare.some(c => c.samePage && c.changes?.text.some(x => x.op !== "same")), "step 3 links and comparisons are part of the comparison");
+  assert.ok(a.casebook.links.length > 300 && a.casebook.links.some(l => l.directed) && a.compare.length > 250 && a.compare.some(c => c.samePage && c.changes?.text.some(x => x.op !== "same")), "step 3 links and comparisons are part of the comparison");
   assert.deepEqual(a.compare.filter(c => c.error || c.items.some(x => x.error)), [], "every comparison in the twin test is valid");
   assert.ok(a.compare.every(c => c.items.every(x => !("supports" in x) && !("mentions" in x) && !("source" in x && typeof x.source !== "string"))), "comparison items carry no hidden fields");
   assert.ok(a.casebook.questions.length > 20 && a.casebook.hypotheses.some(h => h.againstCount > 0 && !h.structured), "step 2 views are part of the comparison");

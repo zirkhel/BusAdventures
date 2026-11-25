@@ -751,3 +751,12 @@ h2.np-head { font-size: 23px; }
 .link-editor .chip { margin-bottom: 6px; }
 .link-editor .btn { margin-top: 10px; }
 .link-row .stance { min-width: 92px; }
+
+/* Connections have two ends; "Supports" and "Possibly manipulated" read A → B. */
+.link-sentence { margin: 14px 0 4px; padding: 10px 12px; border-radius: 12px; background: var(--paper2); font-size: 15px; line-height: 1.4; }
+.link-direction { display: flex; flex-direction: column; gap: 4px; margin: 8px 0 4px; }
+.link-dir-row { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: center; font-weight: 600; }
+.link-arrow { padding-left: 4px; color: var(--ink2); font-size: 16px; line-height: 1; }
+.link-direction .btn { margin-top: 8px; }
+.link-text { line-height: 1.35; }
+.link-text b { display: inline; font-weight: 600; }
