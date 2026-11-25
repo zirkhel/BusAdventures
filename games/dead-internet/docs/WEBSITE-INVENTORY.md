@@ -71,9 +71,9 @@ Paul Navarro's fallback, «I'd refer you to our website,» points at the existin
 
 ## Background pages (W4)
 
-Round 1 adds about 122 new pages on five sites, plus `content/universe/background-facts.json` (24 entries, `status: canon | claim`, checked by the validator). Existing page ids, URLs and wording are unchanged. A15 stays off the live blog; A41 and A42 stay hidden. Brightline background lives in the Quiet Account mystery pack. New Eastfield Notes posts are the same in cache and live; comments (0–6) use light neighbour accounts, occasionally Priya, and two spam accounts. No `pclibrary.org` domain was invented. No new photographs: official homes reuse IMG12, WEB0010, WEB0005 and WEB0007. Evidence photos were not used as decoration.
+Round 1 (merged as PR #78, `24a20c3`) added 122 new pages on five sites, plus `content/universe/background-facts.json` (24 entries, `status: canon | claim`, checked by the validator). The 122 pages are kept; once written, they are not removed. Existing page ids, URLs and wording are unchanged. A15 stays off the live blog; A41 and A42 stay hidden. Brightline background lives in the Quiet Account mystery pack. New Eastfield Notes posts are the same in cache and live; comments (0–6) use light neighbour accounts, occasionally Priya, and two spam accounts. No `pclibrary.org` domain was invented. No new photographs: official homes reuse IMG12, WEB0010, WEB0005 and WEB0007. Evidence photos were not used as decoration.
 
-New facts that bind the universe include the three completed Northgate projects, Helen March and Marcus Veld, City Hall's address and hours, Mayor Denise Harlan, the ten new councilmembers, Kestrel's two trucks and EV pilot, and the Harbor Street water-main dates. Brightline homepage statistics and case-study figures are registered as `claim`, not canon.
+Approved new canon from this round: Mayor Denise Harlan and 11 council members (Ana Ruiz plus ten new names); City Hall at 40 Civic Center, Port Calder, public desk weekdays 8:30–16:30. Other universe-binding facts include the three completed Northgate projects, Helen March and Marcus Veld, Kestrel's two trucks and EV pilot, and the Harbor Street water-main dates. Brightline homepage statistics and case-study figures remain `claim`, not canon.
 
 ## Test-only domains
 

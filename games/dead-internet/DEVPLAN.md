@@ -1,6 +1,6 @@
 # Dead Internet — utviklingsplan
 
-_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W3 merget, W4 bakgrunnssider på `websites-w4`)._
+_Avkrysningsliste. Oppdateres når oppgaver blir ferdige. Sist oppdatert 25. november 2026 (W0–W4 merget som PR #73–#78, `origin/main` `24a20c3`)._
 
 ## Overlevering (25. nov 2026)
 
@@ -10,23 +10,23 @@ Repoet er overleveringsgrunnlaget. Les i denne rekkefølgen: denne seksjonen, «
 - Fase 0–9 er ferdige og live på https://bus-adventures.vercel.app/games/dead-internet/. Katalogen har nå 83 ferdige grafikkelementer (61 fra før, pluss logoer og nettsidebilder fra grafikksteget 25. nov).
 - Casebook steg 0 (PR #68) og steg 1 (PR #71) er merget. Steg 2–5 gjenstår.
 - Saksavslutning er gjennomgått ([docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md)). To feil (F-1, F-2) er funnet, men ikke rettet. Forslagene er ikke diskutert.
-- Nettsteder: W0–W3 og grafikksteget er merget (PR #73–#77, `origin/main` `2c6aa9f`). W4 (bakgrunnssider runde 1 for Northgate, City of Port Calder, Eastfield Notes, Kestrel og Brightline, pluss `background-facts.json`) er ferdig på greinen `websites-w4`. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
+- Nettsteder: W0–W4 og grafikksteget er merget til `main` som PR #73–#78 (`origin/main` `24a20c3`): #73 W0 `a3b3a63`, #74 W1 `7193fa7`, #75 W2 `05493e9`, #76 grafikk `dec0458`, #77 W3 `2c6aa9f`, #78 W4 `24a20c3`. De 122 bakgrunnssidene fra W4 beholdes (når de først er skrevet, tar vi dem ikke bort). Godkjent ny kanon fra W4: ordfører Denise Harlan og 11 rådsmedlemmer (Ana Ruiz pluss 10 nye navn); rådhuset 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30. Inventar: [docs/WEBSITE-INVENTORY.md](docs/WEBSITE-INVENTORY.md). Design og stegstatus: [docs/WEBSITES.md](docs/WEBSITES.md). Katalogen: [graphics/GRAPHICS.md](graphics/GRAPHICS.md) (generert fra `graphics/catalog.json`).
 - Åpen PR #72 (`codex/casebook-step-1`) er en etterlatt duplikat av merget PR #71 og skal lukkes, ikke merges.
 
-**Neste steg:** W5–W8 (maler og mer bakgrunnsinnhold). Casebook steg 2 (teorier og spørsmål) kan gå parallelt. `corp-registries.example` skal byttes med et troverdig domene (med egen test). Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest. W4-PR-en merges bare etter Anders' ja.
+**Neste steg:** W5 (Wiki, Forum, Document, Anonymous, med innhold til Calderpedia, Threadline, Docshare, SpillCheck og Faceless Stock), deretter W6–W8. Casebook steg 2 (teorier og spørsmål) kan gå parallelt. `corp-registries.example` skal byttes med et troverdig domene (med egen test). Etter Casebook steg 5 og avklaring av saksavslutning: ekstern spilltest. Nye nettside-PR-er merges bare etter Anders' ja.
 
 ### Nettstedsarbeid (W0–W4 og grafikk) — greiner og beslutninger
 
-W0–W3 og grafikksteget er merget til `main` som PR #73–#77 (`2c6aa9f`). W4 ligger på `websites-w4` fra den tippen. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
+W0–W4 og grafikksteget er merget til `main` som PR #73–#78 (`24a20c3`). W5 startes på `websites-w5` fra den tippen. Arbeidet er gjort i `/workspace/BusAdventures`. Windows-maskinen er ikke rørt. Casebook-filene `core/artifacts.js`, `core/casebook.js`, `core/provenance.js`, `app/apps/casebook.js` og `tests/twin.test.mjs` er ikke rørt.
 
 | Steg | Grein | Commit / PR | Hva |
 |---|---|---|---|
-| W0 | `websites-w0` | `bc67d47` · PR #73 | Hviteliste `publicView()` i `core/site-view.js`. `renderArtifact` / login / gone sender bare visningsfelt til malene. |
-| W1 | `websites-w1` | `2611469` · PR #74 | Nettstedsmodell `core/sites.js`, 25 nettsteder i `content/universe/sites/`, inventar og `site-ref`-validator. Ingen synlig endring. |
-| W2 | `websites-w2` | `4f0200b` · PR #75 | Malverk Corporate, Government, Blog i `app/sites/`. Tekst uendret. |
-| Grafikk | `websites-w2-graphics` | `bd20641` · PR #76 | Logo/favicon på alle konfigurerte nettsteder, heltebilder på malte sider, tynn chrome for landing/legacy/personal/wiki/document. |
+| W0 | `websites-w0` | merget PR #73 · `a3b3a63` | Hviteliste `publicView()` i `core/site-view.js`. `renderArtifact` / login / gone sender bare visningsfelt til malene. |
+| W1 | `websites-w1` | merget PR #74 · `7193fa7` | Nettstedsmodell `core/sites.js`, 25 nettsteder i `content/universe/sites/`, inventar og `site-ref`-validator. Ingen synlig endring. |
+| W2 | `websites-w2` | merget PR #75 · `05493e9` | Malverk Corporate, Government, Blog i `app/sites/`. Tekst uendret. |
+| Grafikk | `websites-w2-graphics` | merget PR #76 · `dec0458` | Logo/favicon på alle konfigurerte nettsteder, heltebilder på malte sider, tynn chrome for landing/legacy/personal/wiki/document. |
 | W3 | `websites-w3` | merget PR #77 · `2c6aa9f` | Frem-knapp, bokmerker adskilt fra Casebook, tekststørrelse, nettstedets 404 og vedlikehold, parkert-side, «This site can't be reached», lagring versjon 8, Seeker viser offisielt nettsted først ved merkenavn/domene. |
-| W4 | `websites-w4` | denne greinen | Bakgrunnssider runde 1 (~122 nye sider) for Northgate, City of Port Calder, Eastfield Notes, Kestrel og Brightline, pluss `universe/background-facts.json` med validator. |
+| W4 | `websites-w4` | merget PR #78 · `24a20c3` | Bakgrunnssider runde 1 (122 nye sider, beholdt) for Northgate, City of Port Calder, Eastfield Notes, Kestrel og Brightline, pluss `universe/background-facts.json` med validator. Godkjent kanon: 10 nye rådsnavn + ordfører Denise Harlan; rådhuset 40 Civic Center, skranke 8:30–16:30. |
 
 **W0 — nye/endrede filer.** `core/site-view.js` (ny), `app/render.js`, `tests/sites.test.mjs`, oppdateringer i DEVPLAN, WEBSITES.md og DESIGN.md.
 
@@ -51,7 +51,7 @@ W0–W3 og grafikksteget er merget til `main` som PR #73–#77 (`2c6aa9f`). W4 l
 
 **W4 — innhold og tall.** Nye sider, i tillegg til de eksisterende som er urørt: Northgate 18 (totalt 20 inkl. A40 og skjulte A41), City of Port Calder 32 (totalt 38 inkl. A53, B16, BG-CITY-01, A26–A28), Eastfield Notes 37 (totalt 42 inkl. A14 og de fire kanoninnleggene), Kestrel 16 (totalt 17 inkl. A38), Brightline 19 i mysteriepakken (totalt 24 inkl. A19–A21, A42 og portalen er et annet nettsted). 24 bakgrunnsfakta, 16 nye entiteter, 7 lette kommentarkontoer.
 
-**W4 — designbeslutninger.** Nye sider er bakgrunn (`filler`; de fleste `index: weak`) slik at merkenavn-søk fortsatt får minst tre bakgrunnstreff blant de første ti unike artefaktene. Eksisterende ID-er, URL-er og ordlyd er uendret. A15 forblir cache-only, A41 og A42 forblir skjulte; Statement er tatt ut av Brightlines offentlige nav. Brightlines nye sider ligger i mysteriefilen, ikke i universfilene. Nye Eastfield Notes-innlegg er like i cache og live (én versjon); siste innlegg er fortsatt A33 14. mai 2025; Brightline endret bare de fire kanoninnleggene. Theo nevnes bare som «my brother», uten navn. Ingen Lou på Kestrel (og ingenting om brannårsaken), ingen Brightline/Meridian på Northgate, ingen navngitte Brightline-kunder, ikke noe `pclibrary.org`. Rådhuset: 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30 (ny kanon). Rådet: ordfører Denise Harlan og 11 medlemmer (Ana Ruiz + 10 nye navn). Dokumentet ba om «9 navn»; et fullt råd på 11 krevde 10 nye navn ut over Ana — avklaring til Anders. Hjemmesidene gjenbruker eksisterende katalogbilder (IMG12, WEB0010, WEB0005, WEB0007); ingen nye bilder i denne runden, evidensbilder er ikke brukt som pynt. Investorer og sporing er vanlige sider («by appointment» / «sign in on the app»), ikke nye `meta.logins`. Bloggmalen viser kommentarfelt på innlegg (0–6 kommentarer).
+**W4 — designbeslutninger.** Nye sider er bakgrunn (`filler`; de fleste `index: weak`) slik at merkenavn-søk fortsatt får minst tre bakgrunnstreff blant de første ti unike artefaktene. Eksisterende ID-er, URL-er og ordlyd er uendret. A15 forblir cache-only, A41 og A42 forblir skjulte; Statement er tatt ut av Brightlines offentlige nav. Brightlines nye sider ligger i mysteriefilen, ikke i universfilene. Nye Eastfield Notes-innlegg er like i cache og live (én versjon); siste innlegg er fortsatt A33 14. mai 2025; Brightline endret bare de fire kanoninnleggene. Theo nevnes bare som «my brother», uten navn. Ingen Lou på Kestrel (og ingenting om brannårsaken), ingen Brightline/Meridian på Northgate, ingen navngitte Brightline-kunder, ikke noe `pclibrary.org`. Rådhuset: 40 Civic Center, Port Calder, skranke hverdager 8:30–16:30 (godkjent ny kanon). Rådet: ordfører Denise Harlan og 11 medlemmer (Ana Ruiz + 10 nye navn, godkjent; §7.3 skrev «9 navn»). De 122 sidene beholdes. Hjemmesidene gjenbruker eksisterende katalogbilder (IMG12, WEB0010, WEB0005, WEB0007); ingen nye bilder i denne runden, evidensbilder er ikke brukt som pynt. Investorer og sporing er vanlige sider («by appointment» / «sign in on the app»), ikke nye `meta.logins`. Bloggmalen viser kommentarfelt på innlegg (0–6 kommentarer).
 
 
 **Slik testes det** (fra repo-roten, etter deloppgave og før PR):
@@ -65,7 +65,7 @@ PLAYWRIGHT_MODULE=/path/to/playwright node games/dead-internet/tools/test-casebo
 
 Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. W4-tester: `tests/websites-w4.test.mjs`. Etter katalogendringer: `node games/dead-internet/tools/graphics-report.mjs` og `node games/dead-internet/tools/make-placeholders.mjs` (bare nye plassholdere skal sjekkes inn). Ny-spill i Playwright: case-menypunkt → `form.intro-form` submit → «Swipe up to unlock» → ev. `.it-notips` → Browser i docken → `form.addr-form`. Skjermbilder 390×844: `/workspace/dead-internet-shots/`.
 
-**Gjenstår etter denne bunten.** W5 fulle maler for Wiki, Forum, Document, Anonymous. W6–W8. Cachet 2019-versjon av portcalderjazz.com (nevnt i WEBSITES.md, ikke funnet opp i W3). Prosjektsidene for Foundry Lofts, Heights Commons og Northpoint Landing finnes nå (W4), men WEB0001–WEB0004 og øvrige gjenstående WEB-bilder er fortsatt ikke produsert. Omdøping av `corp-registries.example`. Lukke PR #72. Casebook steg 2–5.
+**Gjenstår etter W4.** W5 fulle maler for Wiki, Forum, Document, Anonymous (Calderpedia, Threadline, Docshare, SpillCheck, Faceless Stock). W6–W8. Cachet 2019-versjon av portcalderjazz.com (nevnt i WEBSITES.md, ikke funnet opp i W3). Prosjektsidene for Foundry Lofts, Heights Commons og Northpoint Landing finnes nå (W4), men WEB0001–WEB0004 og øvrige gjenstående WEB-bilder er fortsatt ikke produsert. Omdøping av `corp-registries.example`. Lukke PR #72. Casebook steg 2–5.
 
 **Faste regler**
 - Ingen merge uten Anders' eget ja. Små, avgrensede PR-er. DESIGN.md og DEVPLAN.md oppdateres i samme PR som endringen.
