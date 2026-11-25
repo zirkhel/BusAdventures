@@ -1,6 +1,6 @@
 # Utestående arbeid og forslag
 
-25. november 2026. Dette er en oversikt, ikke godkjenning av nye designvalg. Implementert funksjon står i DESIGN og fagbeskrivelsene. PR #89 er inkludert som implementert, ikke merget.
+25. november 2026. Dette er en oversikt, ikke godkjenning av nye designvalg. Implementert funksjon står i DESIGN og fagbeskrivelsene. PR #89 og #90 er merget.
 
 ## Nå: ferdigstill gjennomgangen av PR #89
 

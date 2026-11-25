@@ -1,6 +1,6 @@
 # Dead Internet — teknisk design
 
-_Oppdatert 25. november 2026. Beskriver implementasjonen ved PR #89 `50d5643`; PR-en er ikke merget. Status og arbeidsrekkefølge står i DEVPLAN._
+_Oppdatert 25. november 2026. Beskriver main etter merge av PR #89 og #90 (`6a98828`). Status og arbeidsrekkefølge står i DEVPLAN._
 Medieappene i detalj: [docs/MEDIA-APPS-PROPOSAL.md](docs/MEDIA-APPS-PROPOSAL.md).
 Spilldesign og sak: [docs/THE-QUIET-ACCOUNT.md](docs/THE-QUIET-ACCOUNT.md). Casebook: [docs/CASEBOOK-DEDUCTION.md](docs/CASEBOOK-DEDUCTION.md). Nettsteder: [docs/WEBSITES.md](docs/WEBSITES.md). Saksavslutning: [docs/CASE-ENDINGS-REVIEW.md](docs/CASE-ENDINGS-REVIEW.md). Opprinnelig plan: [docs/PLAN.md](docs/PLAN.md). Oppgaver: [DEVPLAN.md](DEVPLAN.md).
 

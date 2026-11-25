@@ -1,6 +1,6 @@
 # Dokumentoversikt
 
-Gjennomgått 25. november 2026 mot PR #89 `50d5643`. Dokumentene inkluderer PR-en som implementert, ikke merget. Bare Anders kan godkjenne merge og nye designvalg.
+Oppdatert 25. november 2026 etter godkjent merge av PR #89 og #90 til main (`6a98828`). Nye designvalg og senere merger krever fortsatt godkjenning fra Anders.
 
 ## Aktive dokumenter
 

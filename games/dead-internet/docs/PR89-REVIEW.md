@@ -1,6 +1,6 @@
 # PR #89 — gjennomgang før merge
 
-Kontrollert 25. november 2026: PR #89 ved `50d5643703a9f7e136809e788eefb64059971383`, mot `main` ved `20d2f49`. Rettelser og dokumentasjon leveres i [PR #90](https://github.com/zirkhel/BusAdventures/pull/90), som har `casebook-step-5` som base. Ingen av PR-ene er merget eller mergegodkjent.
+PR #90 ble merget inn i #89, deretter #89 inn i main etter eksplisitt godkjenning fra Anders 25. november 2026. Mergecommit: `6a98828`. Gjennomgangen nedenfor er avsluttet.
 
 ## Resultat av gjennomgangen
 

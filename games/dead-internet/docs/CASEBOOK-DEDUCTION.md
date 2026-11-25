@@ -1,6 +1,6 @@
 # Casebook — funksjon og informasjonsgrenser
 
-Gjeldende for PR #89 ved `50d5643`, 25. november 2026. Steg 0–4 er merget; steg 5 nedenfor er implementert, men ikke merget. [Status og kontroller](PR89-REVIEW.md).
+Gjeldende for main ved `6a98828`, 25. november 2026. Casebook steg 0–5 er merget. [Gjennomgang og kontroller](PR89-REVIEW.md).
 
 ## Arbeidsflaten
 

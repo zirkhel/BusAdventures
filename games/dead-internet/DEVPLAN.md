@@ -1,13 +1,13 @@
 # Dead Internet — status og videre arbeid
 
-Oppdatert 25. november 2026. Grunnlag: `main` ved `20d2f49` og **åpen PR #89 ved `50d5643`**. Dokumentasjonen tar med PR-en, men den er ikke merget eller mergegodkjent.
+Oppdatert 25. november 2026. PR #90 og #89 er godkjent og merget. Gjeldende grunnlag er `main` ved `6a98828`.
 
 ## Overlevering
 
 - Fase 0–9, nettsteder W0–W8 og Casebook steg 0–4 er ferdige og merget.
-- Casebook steg 5, rapportering, synlig vurderingsregel P for Dana, hjelp og tips er implementert i [PR #89](https://github.com/zirkhel/BusAdventures/pull/89). Siste kodecommit `50d5643` presiserer avsenderidentitet og støttekoblinger i replikkene.
-- Lagringsformat: v11 på dette `main`-grunnlaget, v12 i PR #89. Tipsinnstillinger følger enheten, ikke lagringen.
-- Gjennomgangen av PR #89 er ferdig. PR #90 samler dokumentasjonsrydding og to rettelser: kapitalisering av løse kontofornavn og frosne bevisreferanser for rapportens tidslinjehendelser. 287/287 tester, validator, simulator og mobilkontroll er grønne. Neste steg er gjennomgang og eksplisitt mergegodkjenning fra Anders; deretter #90 inn i #89, så #89 inn i main. Se [kontrollisten](docs/PR89-REVIEW.md).
+- Casebook steg 0�5, Danas synlige regel P, hjelp og tips er ferdige og merget gjennom PR #89 og #90.
+- Lagringsformat: v12. Eldre lagringer migreres. Tipsinnstillinger f�lger enheten, ikke lagringen.
+- Dokumentasjonen og de to kontrollrettelsene er med i main: kapitalisering av l�se kontofornavn og frosne bevisreferanser for rapportens tidslinjehendelser. Se [sluttrapporten](docs/PR89-REVIEW.md). Videre arbeid velges fra [BACKLOG](docs/BACKLOG.md).
 - Danas tillitsfarm og andre personers relevanslekkasjer er **ikke rettet** i PR #89. F-1/F-2 og nye saksutfall er heller ikke rettet.
 
 ## Leserekkefølge
