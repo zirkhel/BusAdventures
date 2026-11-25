@@ -21,5 +21,17 @@
   { "id": "caldertransit", "name": "Calder Transit", "kind": "site", "domain": "caldertransit.gov" },
   { "id": "harbor_authority", "name": "Port Calder Harbor Authority", "kind": "site", "domain": "harbor.portcalder.gov" },
   { "id": "eastfield_neighbors", "name": "Eastfield Neighbors", "kind": "forum", "domain": "eastfieldneighbors.net" },
-  { "id": "brightline_portal", "name": "Brightline Client Portal", "kind": "site", "domain": "portal.bl-ops.net" }
+  { "id": "brightline_portal", "name": "Brightline Client Portal", "kind": "site", "domain": "portal.bl-ops.net" },
+  { "id": "harbordesk", "name": "HarborDesk", "kind": "site", "domain": "harbordesk.co" },
+  { "id": "saltys", "name": "Salty's Fish Bar", "kind": "site", "domain": "saltys-portcalder.com" },
+  { "id": "eastfieldgarden", "name": "Eastfield Community Garden", "kind": "site", "domain": "eastfieldgarden.org" },
+  { "id": "aiwriterpro", "name": "AIWriterPro", "kind": "site", "domain": "aiwriterpro.app" },
+  { "id": "openfilings", "name": "Open Filings", "kind": "site", "domain": "openfilings.org" },
+  { "id": "pclibrary", "name": "Port Calder Public Library", "mast": "Port Calder Public Library", "mastSub": "Catalogue and opening times", "kind": "site", "domain": "pclibrary.org" },
+  { "id": "calderpower", "name": "Calder Power", "kind": "site", "domain": "calderpower.com" },
+  { "id": "caldercu", "name": "Calder Credit Union", "kind": "site", "domain": "caldercu.com" },
+  { "id": "walts", "name": "Walt's Harbor Festival Page", "short": "Walt Brennan", "kind": "site", "domain": "waltbrennan.calderweb.net" },
+  { "id": "harborpa", "name": "Harbor Public Affairs", "kind": "site", "domain": "harborpa.com" },
+  { "id": "portcalderjazz", "name": "Port Calder Jazz", "kind": "site", "domain": "portcalderjazz.com" }
+
 ]

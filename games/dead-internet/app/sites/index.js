@@ -15,14 +15,16 @@ import { renderForum } from "./forum.js";
 import { renderDocument } from "./document.js";
 import { renderAnonymous } from "./anonymous.js";
 import { renderLanding } from "./landing.js";
+import { renderLegacy } from "./legacy.js";
+import { renderPersonal } from "./personal.js";
 
 const TEMPLATES = {
   corporate: renderCorporate,
   government: renderGovernment,
   blog: renderBlog,
   landing: renderLanding,
-  legacy: renderSimple,
-  personal: renderSimple,
+  legacy: renderLegacy,
+  personal: renderPersonal,
   wiki: renderWiki,
   document: renderDocument,
   forum: renderForum,

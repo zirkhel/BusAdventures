@@ -1,6 +1,6 @@
 {
  "id": "saltys",
- "platform": "web",
+ "platform": "saltys",
  "domain": "saltys-portcalder.com",
  "designs": [
   {
@@ -16,12 +16,71 @@
      "accent": "#c41200"
     }
    },
+   "header": {
+    "mast": "Salty's Fish Bar",
+    "tagline": "since 1971"
+   },
    "nav": [
     {
      "label": "Home",
      "href": "/"
+    },
+    {
+     "label": "Menu",
+     "href": "/menu"
+    },
+    {
+     "label": "Hours",
+     "href": "/hours"
+    },
+    {
+     "label": "Our story",
+     "href": "/story"
     }
-   ]
+   ],
+   "footer": {
+    "text": "Salty's Fish Bar · Harbor Street, Port Calder · since 1971"
+   }
+  },
+  {
+   "id": "d2026banner",
+   "from": "2026-03-01",
+   "template": "legacy",
+   "variant": "2008",
+   "theme": {
+    "logo": "LOGO_SALTYS",
+    "palette": {
+     "bg": "#fff8f0",
+     "ink": "#3a0000",
+     "accent": "#e01400"
+    }
+   },
+   "header": {
+    "mast": "Salty's Fish Bar",
+    "tagline": "New banner. Same chowder.",
+    "bestViewed": "Best viewed in Internet Explorer 6 at 1024×768"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Menu",
+     "href": "/menu"
+    },
+    {
+     "label": "Hours",
+     "href": "/hours"
+    },
+    {
+     "label": "Our story",
+     "href": "/story"
+    }
+   ],
+   "footer": {
+    "text": "Salty's Fish Bar · Harbor Street, Port Calder · since 1971"
+   }
   }
  ],
  "notFound": {

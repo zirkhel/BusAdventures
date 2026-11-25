@@ -1,6 +1,6 @@
 {
  "id": "aiwriterpro",
- "platform": "web",
+ "platform": "aiwriterpro",
  "domain": "aiwriterpro.app",
  "designs": [
   {
@@ -9,14 +9,34 @@
    "template": "landing",
    "variant": "saas",
    "theme": {
-    "logo": "LOGO_AIWRITERPRO"
+    "logo": "LOGO_AIWRITERPRO",
+    "palette": {
+     "bg": "#0f1220",
+     "ink": "#eef1ff",
+     "accent": "#8a4fff"
+    }
    },
    "nav": [
     {
      "label": "Home",
      "href": "/"
+    },
+    {
+     "label": "Pricing",
+     "href": "/pricing"
+    },
+    {
+     "label": "FAQ",
+     "href": "/faq"
     }
-   ]
+   ],
+   "header": {
+    "mast": "AIWriterPro",
+    "tagline": "Never run out of posts"
+   },
+   "footer": {
+    "text": "AIWriterPro · posts that sound just like you"
+   }
   }
  ],
  "notFound": {

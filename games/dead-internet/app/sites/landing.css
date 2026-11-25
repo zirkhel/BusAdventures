@@ -1,4 +1,21 @@
-/* Landing · saas (W5) — airy marketing chrome on top of simple.css. */
+/* Landing · saas (W5) and smallbiz (W6). Parked live views use status.js. */
 .tmpl-landing.var-saas .site-nav-link { color: var(--site-accent, #8a4fff); font-weight: 600; }
 .tmpl-landing.var-saas h1 { letter-spacing: -0.03em; }
 .tmpl-landing.var-saas .site-tagline { color: var(--site-accent, #8a4fff); }
+
+.tmpl-landing.var-smallbiz {
+  background: var(--site-bg, #f7f4ef);
+  color: var(--site-ink, #1d2a22);
+}
+.tmpl-landing.var-smallbiz .site-head {
+  background: var(--site-accent, #2c4a6e); color: #f7f4ef;
+  border-bottom: 0;
+}
+.tmpl-landing.var-smallbiz .mast, .tmpl-landing.var-smallbiz .site-tagline,
+.tmpl-landing.var-smallbiz .site-nav-link { color: #f7f4ef; }
+.tmpl-landing.var-smallbiz .site-nav-full {
+  display: flex; flex-wrap: wrap; gap: 0; background: rgba(0,0,0,.18); padding: 0 8px;
+}
+.tmpl-landing.var-smallbiz .site-nav-link { min-height: 44px; font-weight: 600; }
+.tmpl-landing.var-smallbiz .site-logo-img { background: #fff; border-radius: 4px; padding: 2px; }
+.tmpl-landing.var-smallbiz .site-foot { font-size: 12px; }

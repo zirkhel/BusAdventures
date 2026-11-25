@@ -1,0 +1,56 @@
+{
+ "id": "calderpower",
+ "platform": "calderpower",
+ "domain": "calderpower.com",
+ "org": "calder_power",
+ "designs": [
+  {
+   "id": "d2015",
+   "from": "2015-01-01",
+   "template": "corporate",
+   "variant": "utility",
+   "theme": {
+    "logo": "LOGO_CALDERPOWER",
+    "palette": {
+     "bg": "#f3f6f7",
+     "ink": "#1a3a4a",
+     "accent": "#1a3a4a"
+    }
+   },
+   "header": {
+    "mast": "Calder Power",
+    "tagline": "Keeping the lights on"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Outages",
+     "href": "/outages"
+    },
+    {
+     "label": "Smart meters",
+     "href": "/smart-meters"
+    },
+    {
+     "label": "Billing",
+     "href": "/billing"
+    },
+    {
+     "label": "About",
+     "href": "/about"
+    }
+   ],
+   "footer": {
+    "text": "Calder Power · Port Calder"
+   }
+  }
+ ],
+ "notFound": {
+  "title": "Page not found",
+  "text": "Calder Power has no page at that address."
+ },
+ "status": []
+}

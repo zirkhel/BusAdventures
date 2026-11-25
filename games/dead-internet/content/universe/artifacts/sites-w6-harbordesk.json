@@ -1,0 +1,42 @@
+[
+ {
+  "id": "W-harbordesk-0001",
+  "site": "harbordesk",
+  "page": "page",
+  "type": "page",
+  "platform": "harbordesk",
+  "url": "harbordesk.co/pricing",
+  "date": "2026-01-15",
+  "title": "Pricing",
+  "filler": true,
+  "source": "harbordesk",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A prestigious address should not cost a prestigious rent.\n\nHarbor Street address — from $29 a month. Your mail is scanned and forwarded. Call answering is included on the Standard plan.\n\nStandard — $29/month. Address, mail scanning, and a phone greeting.\nPlus — $79/month. Everything in Standard, plus a meeting room you can book.\nStudio — $149/month. A desk in the Dock Road rooms, two days a week.\n\nYou will probably never need the meeting room. That is the point."
+   }
+  ]
+ },
+ {
+  "id": "W-harbordesk-0002",
+  "site": "harbordesk",
+  "page": "page",
+  "type": "page",
+  "platform": "harbordesk",
+  "url": "harbordesk.co/locations",
+  "date": "2026-01-15",
+  "title": "Locations",
+  "filler": true,
+  "source": "harbordesk",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "18 Harbor Street is our flagship virtual address. Mail is received there, scanned, and sent on. Several firms already use it, and the front door looks the way a front door should.\n\nDock Road has the rooms. If you need a table, a kettle, and a door that closes, book a room there.\n\nBoth are in Port Calder. Neither requires you to keep a plant."
+   }
+  ]
+ }
+]

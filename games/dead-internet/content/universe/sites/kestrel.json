@@ -5,6 +5,43 @@
  "org": "kestrel",
  "designs": [
   {
+   "id": "d2014",
+   "from": "2014-01-01",
+   "template": "corporate",
+   "variant": "industrial",
+   "theme": {
+    "logo": "LOGO_KESTREL_2014",
+    "palette": {
+     "bg": "#efefe8",
+     "ink": "#14213d",
+     "accent": "#f2a900"
+    },
+    "font": "condensed",
+    "radius": 0
+   },
+   "header": {
+    "mast": "Kestrel Logistics",
+    "tagline": "We know the way"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "About",
+     "href": "/about"
+    },
+    {
+     "label": "Who we deliver for",
+     "href": "/clients"
+    }
+   ],
+   "footer": {
+    "text": "Kestrel Logistics · since 1998 · We know the way"
+   }
+  },
+  {
    "id": "d2019",
    "from": "2019-06-01",
    "template": "corporate",

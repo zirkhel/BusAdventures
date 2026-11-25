@@ -1,6 +1,6 @@
 {
  "id": "harbordesk",
- "platform": "web",
+ "platform": "harbordesk",
  "domain": "harbordesk.co",
  "designs": [
   {
@@ -9,14 +9,34 @@
    "template": "landing",
    "variant": "smallbiz",
    "theme": {
-    "logo": "LOGO_HARBORDESK"
+    "logo": "LOGO_HARBORDESK",
+    "palette": {
+     "bg": "#f7f4ef",
+     "ink": "#1d2a22",
+     "accent": "#2c4a6e"
+    }
    },
    "nav": [
     {
      "label": "Home",
      "href": "/"
+    },
+    {
+     "label": "Pricing",
+     "href": "/pricing"
+    },
+    {
+     "label": "Locations",
+     "href": "/locations"
     }
-   ]
+   ],
+   "header": {
+    "mast": "HarborDesk",
+    "tagline": "A prestigious address. No desk required."
+   },
+   "footer": {
+    "text": "HarborDesk · 18 Harbor Street and Dock Road, Port Calder"
+   }
   }
  ],
  "notFound": {

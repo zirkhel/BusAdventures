@@ -1,7 +1,7 @@
 {
  "id": "corp_registries",
- "platform": "web",
- "domain": "corp-registries.example",
+ "platform": "openfilings",
+ "domain": "openfilings.org",
  "designs": [
   {
    "id": "d1",
@@ -9,14 +9,30 @@
    "template": "government",
    "variant": "registry",
    "theme": {
-    "logo": "LOGO_CORPREGISTRIES"
+    "logo": "LOGO_OPENFILINGS",
+    "palette": {
+     "bg": "#f4f5f6",
+     "ink": "#1a1a1a",
+     "accent": "#4a5868"
+    }
    },
    "nav": [
     {
-     "label": "Meridian Holdings Ltd",
-     "href": "/meridian-holdings-ltd"
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "About",
+     "href": "/"
     }
-   ]
+   ],
+   "header": {
+    "mast": "Open Filings",
+    "tagline": "A public index of company records"
+   },
+   "footer": {
+    "text": "Open Filings · public company records"
+   }
   }
  ],
  "notFound": {
@@ -24,5 +40,8 @@
   "text": "No company matches that identifier."
  },
  "status": [],
- "notes": "Placeholder domain, to be replaced later with a believable fictional name (WEBSITES.md §13.4). Not renamed in W1."
+ "notes": "Renamed in W6 from the placeholder corp-registries.example to openfilings.org. The old host remains in domains so searches, typed addresses and saved games still resolve.",
+ "domains": [
+  "corp-registries.example"
+ ]
 }

@@ -9,14 +9,50 @@
    "template": "government",
    "variant": "transit",
    "theme": {
-    "logo": "LOGO_CALDERTRANSIT"
+    "logo": "LOGO_CALDERTRANSIT",
+    "palette": {
+     "bg": "#f4f7fb",
+     "ink": "#0f2a46",
+     "accent": "#163a5f"
+    }
    },
    "nav": [
     {
      "label": "Home",
      "href": "/"
+    },
+    {
+     "label": "Routes",
+     "href": "/routes"
+    },
+    {
+     "label": "Route 14",
+     "href": "/routes/14"
+    },
+    {
+     "label": "Fares",
+     "href": "/fares"
+    },
+    {
+     "label": "Alerts",
+     "href": "/alerts"
+    },
+    {
+     "label": "Live map",
+     "href": "/map"
+    },
+    {
+     "label": "About",
+     "href": "/about"
     }
-   ]
+   ],
+   "header": {
+    "mast": "Calder Transit",
+    "tagline": "Service information for Port Calder"
+   },
+   "footer": {
+    "text": "Calder Transit · a city service of Port Calder"
+   }
   }
  ],
  "notFound": {

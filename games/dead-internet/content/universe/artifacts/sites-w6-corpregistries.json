@@ -1,0 +1,22 @@
+[
+ {
+  "id": "W-corpregistries-0001",
+  "site": "corp_registries",
+  "page": "home",
+  "type": "page",
+  "platform": "openfilings",
+  "url": "openfilings.org",
+  "date": "2025-01-01",
+  "title": "Open Filings",
+  "filler": true,
+  "source": "corp-registries",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Open Filings is a public index of company records. Search by company name.\n\nWe list filings that are on the public record. We do not provide legal advice, and we do not publish a directory of every company on the front page.\n\nRecords are shown as filed."
+   }
+  ]
+ }
+]

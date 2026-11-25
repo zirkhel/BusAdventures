@@ -50,6 +50,7 @@ export function renderBlock(phone, block, ctx = {}) {
     h("div.muted", richText(phone, item.label || item.text || "")),
   ]);
   if (t === "notice") return h("div.site-notice", block.title ? h("b", richText(phone, block.title)) : null, block.text ? para(phone, block.text) : null);
+  if (t === "quirk") return quirk(phone, block, ctx);
   if (t === "comments" && block.items) {
     return h("section.comments", block.items.map(c => h("div.comment", h("b", c.author || ""), c.date ? h("span.muted", fmtDate(c.date)) : null, para(phone, c.text || ""))));
   }
@@ -78,4 +79,29 @@ function textBlock(phone, block, ctx) {
     block.title ? h("h2", richText(phone, block.title)) : null,
     image ? figure(phone, image, ctx) : null,
     text ? para(phone, text) : null);
+}
+
+function quirk(phone, block, ctx) {
+  const kind = block.kind || "note";
+  if (kind === "counter") {
+    return h("div.site-quirk.quirk-counter", "You are visitor number ", h("span.counter", block.value || "000000"));
+  }
+  if (kind === "bestviewed") {
+    return h("div.site-quirk.quirk-best", richText(phone, block.text || "Best viewed in Internet Explorer 6"));
+  }
+  if (kind === "construction") {
+    return h("div.site-quirk.quirk-construction", block.text || "UNDER CONSTRUCTION");
+  }
+  if (kind === "webring") {
+    return h("div.site-quirk.quirk-webring",
+      h("div", richText(phone, block.title || "Webring")),
+      block.prev ? h("div", richText(phone, "Previous: " + block.prev)) : null,
+      block.next ? h("div", richText(phone, "Next: " + block.next)) : null);
+  }
+  if (kind === "broken") {
+    return h("div.site-quirk.quirk-broken",
+      h("div.broken-img", "X"),
+      h("div.muted", richText(phone, block.text || "Image cannot be displayed")));
+  }
+  return h("div.site-quirk", block.text ? para(phone, block.text) : null);
 }

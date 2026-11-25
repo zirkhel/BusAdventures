@@ -1,0 +1,102 @@
+[
+ {
+  "id": "W-harbordental-0002",
+  "site": "harbordental",
+  "page": "page",
+  "type": "page",
+  "platform": "harbordental",
+  "url": "harbordental.com/services",
+  "date": "2025-06-01",
+  "title": "Services",
+  "filler": true,
+  "source": "harbordental",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Check-ups, cleanings, fillings, and the usual quiet work of a high-street practice.\n\nWe also see children, and we will tell you plainly if a tooth can wait.\n\nBook online, or call the desk if the form feels like too much."
+   }
+  ]
+ },
+ {
+  "id": "W-harbordental-0003",
+  "site": "harbordental",
+  "page": "page",
+  "type": "page",
+  "platform": "harbordental",
+  "url": "harbordental.com/team",
+  "date": "2025-06-01",
+  "title": "Our team",
+  "filler": true,
+  "source": "harbordental",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Dr Nina Pell and Dr Omar Rahman see patients at the Harbor Street practice. Chris Vale looks after hygiene appointments.\n\nThe desk will tell you who you are booked with. Faces on this page are the people who work here."
+   }
+  ]
+ },
+ {
+  "id": "W-harbordental-0004",
+  "site": "harbordental",
+  "page": "page",
+  "type": "page",
+  "platform": "harbordental",
+  "url": "harbordental.com/hours",
+  "date": "2025-06-01",
+  "title": "Hours",
+  "filler": true,
+  "source": "harbordental",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Monday to Friday, 8:00 to 17:00.\nSaturday, 9:00 to 13:00.\nClosed Sunday.\n\nThe last appointment is half an hour before closing."
+   }
+  ]
+ },
+ {
+  "id": "W-harbordental-0005",
+  "site": "harbordental",
+  "page": "page",
+  "type": "page",
+  "platform": "harbordental",
+  "url": "harbordental.com/parking",
+  "date": "2025-06-01",
+  "title": "Parking",
+  "filler": true,
+  "source": "harbordental",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Patient parking is behind the surgery, off Harbor Street. The spaces are marked for the practice.\n\nHarbor Street itself is often busy, and in spring the market restrictions apply. If the small lot is full, use the public parking a short walk up the street."
+   }
+  ]
+ },
+ {
+  "id": "W-harbordental-0006",
+  "site": "harbordental",
+  "page": "page",
+  "type": "page",
+  "platform": "harbordental",
+  "url": "harbordental.com/contact",
+  "date": "2025-06-01",
+  "title": "Contact",
+  "filler": true,
+  "source": "harbordental",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Harbor Dental is on Harbor Street, Port Calder.\n\nBook online, or telephone the desk during opening hours. This form does not send a message; it is here so the page has a form."
+   }
+  ]
+ }
+]

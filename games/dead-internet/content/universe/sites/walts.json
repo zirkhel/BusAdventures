@@ -1,0 +1,66 @@
+{
+ "id": "walts",
+ "platform": "walts",
+ "domain": "waltbrennan.calderweb.net",
+ "designs": [
+  {
+   "id": "d2009",
+   "from": "2005-01-01",
+   "template": "personal",
+   "variant": "geocities",
+   "theme": {
+    "logo": "LOGO_WALTS",
+    "palette": {
+     "bg": "#000080",
+     "ink": "#ffff80",
+     "accent": "#800080"
+    }
+   },
+   "header": {
+    "mast": "Walt's Harbor Festival Page",
+    "tagline": "Volunteering since 1979",
+    "updated": "12 June 2009",
+    "construction": true,
+    "counter": "014827",
+    "broken": [
+     "Harbor Festival 1987 — image cannot be displayed"
+    ],
+    "webring": {
+     "title": "Port Calder Pages webring",
+     "prev": "Joan's knitting page",
+     "next": "Harbor Radio"
+    }
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Guestbook",
+     "href": "/guestbook"
+    },
+    {
+     "label": "Duck race",
+     "href": "/ducks"
+    },
+    {
+     "label": "Festival 2008",
+     "href": "/2008"
+    },
+    {
+     "label": "Links",
+     "href": "/links"
+    }
+   ],
+   "footer": {
+    "text": "Walt Brennan · hosted on CalderWeb · last updated 12 June 2009"
+   }
+  }
+ ],
+ "notFound": {
+  "title": "404",
+  "text": "That file is not on Walt's page."
+ },
+ "status": []
+}

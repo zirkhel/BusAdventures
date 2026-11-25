@@ -3,8 +3,43 @@
  "domain": "portcalderjazz.com",
  "designs": [
   {
-   "id": "d1",
+   "id": "d2010",
    "from": "2010-01-01",
+   "template": "landing",
+   "variant": "smallbiz",
+   "theme": {
+    "logo": "text:Port Calder Jazz",
+    "palette": {
+     "bg": "#1a1420",
+     "ink": "#f4efe4",
+     "accent": "#c9a227"
+    }
+   },
+   "header": {
+    "mast": "Port Calder Jazz",
+    "tagline": "Thursday nights at the Anchor"
+   },
+   "nav": [
+    {
+     "label": "Home",
+     "href": "/"
+    },
+    {
+     "label": "Calendar",
+     "href": "/calendar"
+    },
+    {
+     "label": "About",
+     "href": "/about"
+    }
+   ],
+   "footer": {
+    "text": "Port Calder Jazz · nights at the Anchor"
+   }
+  },
+  {
+   "id": "d1",
+   "from": "2022-01-01",
    "template": "landing",
    "variant": "parked",
    "theme": {},
@@ -21,5 +56,6 @@
    "state": "parked"
   }
  ],
- "notes": "Listed in WEBSITES.md as a parked domain (changed hands in 2022). Added in W3 so the parked state can be visited. No 2019 cache and no new story facts."
+ "notes": "Parked from 2022 after the domain changed hands (WEBSITES.md §4). W6 adds a cached 2019 site. The live address still shows the generic parking page.",
+ "platform": "portcalderjazz"
 }

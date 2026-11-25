@@ -1,0 +1,61 @@
+/* Personal template (W6). Variants: geocities, club. */
+.tmpl-personal {
+  background: var(--site-bg, #f4f8f0);
+  color: var(--site-ink, #1a2a14);
+}
+.tmpl-personal .site-shell { display: flex; flex-direction: column; min-height: 100%; }
+.tmpl-personal .site-head {
+  margin: 0; padding: 0; border-bottom: 0;
+  background: var(--site-accent, #3d6b3a); color: #f4f8f0;
+}
+.tmpl-personal .site-brand { display: flex; align-items: center; gap: 10px; padding: 10px 12px 8px; }
+.tmpl-personal .site-logo-img {
+  display: block; height: 44px; width: 44px; object-fit: contain;
+  background: #fff; border-radius: 50%; padding: 2px; flex: none;
+}
+.tmpl-personal .mast {
+  font-size: 17px; font-weight: 700; letter-spacing: 0; text-transform: none; color: #f4f8f0;
+}
+.tmpl-personal .site-tagline { display: block; font-size: 11px; font-weight: 400; color: #f4f8f0; opacity: .85; }
+.tmpl-personal .site-nav-full { display: flex; flex-wrap: wrap; gap: 0; padding: 0 4px; background: rgba(0,0,0,.15); }
+.tmpl-personal .site-nav-link {
+  border: 0; background: none; color: #f4f8f0; font-size: 13px; padding: 10px 8px; min-height: 44px;
+}
+.tmpl-personal .site-nav-link:hover, .tmpl-personal .site-nav-link:active { background: rgba(0,0,0,.2); }
+.tmpl-personal h1 { font-size: 22px; margin: 14px 12px 8px; font-weight: 700; }
+.tmpl-personal .site-date, .tmpl-personal .site-updated { padding: 0 12px 8px; font-size: 12px; opacity: .75; }
+.tmpl-personal .page-body { padding: 0 12px 16px; }
+.tmpl-personal .site-hero { margin: 0 0 12px; }
+.tmpl-personal .site-hero .fig { margin: 0; max-height: none; }
+.tmpl-personal .site-hero img { width: 100%; height: auto; max-height: 52vh; object-fit: cover; }
+.tmpl-personal .site-foot {
+  margin-top: auto; padding: 12px; font-size: 12px; opacity: .75;
+  border-top: 1px solid rgba(0,0,0,.1);
+}
+
+/* Club: calm 2016 volunteer site */
+.tmpl-personal.var-club .mast { font-family: Georgia, "Times New Roman", serif; }
+
+/* Geocities: loud, tight, handmade */
+.tmpl-personal.var-geocities {
+  background-color: #000080;
+  background-image: radial-gradient(#1a1a8a 1px, transparent 1px);
+  background-size: 12px 12px;
+  color: #ffff80;
+  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
+  font-size: 13px;
+}
+.tmpl-personal.var-geocities .site-head { background: #800080; }
+.tmpl-personal.var-geocities .site-logo-img { border-radius: 0; background: #ffff80; }
+.tmpl-personal.var-geocities .mast { color: #ffff00; text-shadow: 2px 2px #000; }
+.tmpl-personal.var-geocities .site-nav-full { background: #400040; }
+.tmpl-personal.var-geocities .site-nav-link { color: #80ffff; text-decoration: underline; }
+.tmpl-personal.var-geocities h1 { color: #ff80ff; text-align: center; font-size: 22px; }
+.tmpl-personal.var-geocities .site-foot { color: #80ffff; border-top: 2px ridge #ffff80; }
+.tmpl-personal.var-geocities a, .tmpl-personal.var-geocities .site-nav-link:hover { color: #ff80ff; }
+
+.tmpl-personal .site-comments { margin: 12px; padding: 8px; border-top: 1px solid rgba(0,0,0,.15); }
+.tmpl-personal .site-comment { margin: 10px 0; }
+.tmpl-personal .cm-head { margin-bottom: 2px; }
+.tmpl-personal.var-geocities .site-comments { border-top: 2px ridge #ffff80; color: #ffff80; }
+.tmpl-personal.var-geocities .site-quirks { margin: 12px; }

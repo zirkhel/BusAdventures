@@ -1,0 +1,122 @@
+[
+ {
+  "id": "W-caldertransit-0002",
+  "site": "caldertransit",
+  "page": "page",
+  "type": "page",
+  "platform": "caldertransit",
+  "url": "caldertransit.gov/routes",
+  "date": "2026-01-15",
+  "title": "Routes",
+  "filler": true,
+  "source": "caldertransit",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Transit runs city buses and the Eastfield–Northpoint ferry.\n\nRoute 14 is the one people ask about most. Other routes and printed timetables are at the interchange and in the app.\n\nService information on this site is for Port Calder."
+   }
+  ]
+ },
+ {
+  "id": "W-caldertransit-0003",
+  "site": "caldertransit",
+  "page": "page",
+  "type": "page",
+  "platform": "caldertransit",
+  "url": "caldertransit.gov/routes/14",
+  "date": "2026-01-15",
+  "title": "Route 14",
+  "filler": true,
+  "source": "caldertransit",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Route 14 is a city bus route serving the harbour side and inland districts.\n\nDuring Harbor Street roadworks, some Harbor Street stops are being skipped. Riders should allow a little extra time. We apologise for the inconvenience, and for the wind.\n\nA published timetable is available from the interchange and in the app."
+   }
+  ]
+ },
+ {
+  "id": "W-caldertransit-0004",
+  "site": "caldertransit",
+  "page": "page",
+  "type": "page",
+  "platform": "caldertransit",
+  "url": "caldertransit.gov/fares",
+  "date": "2025-09-01",
+  "title": "Fares",
+  "filler": true,
+  "source": "caldertransit",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Single fares and day tickets are sold on the bus, at the interchange, and in the app.\n\nThis page does not take payments. Concession rules follow the city scheme."
+   }
+  ]
+ },
+ {
+  "id": "W-caldertransit-0005",
+  "site": "caldertransit",
+  "page": "page",
+  "type": "page",
+  "platform": "caldertransit",
+  "url": "caldertransit.gov/alerts",
+  "date": "2026-01-15",
+  "title": "Alerts",
+  "filler": true,
+  "source": "caldertransit",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Harbor Street stops on Route 14 are still being skipped during roadworks. Please use the nearest open stop and allow extra time.\n\nWe are improving the tracker data feed. If a bus appears on the map and does not arrive, treat the printed time as the guide."
+   }
+  ]
+ },
+ {
+  "id": "W-caldertransit-0006",
+  "site": "caldertransit",
+  "page": "page",
+  "type": "page",
+  "platform": "caldertransit",
+  "url": "caldertransit.gov/about",
+  "date": "2025-09-01",
+  "title": "About Calder Transit",
+  "filler": true,
+  "source": "caldertransit",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Calder Transit is the transit authority for Port Calder. This website has service information for buses and the ferry.\n\nThe live map is mentioned in the press. It is not published on this page."
+   }
+  ]
+ },
+ {
+  "id": "W-caldertransit-0007",
+  "site": "caldertransit",
+  "page": "page",
+  "type": "page",
+  "platform": "caldertransit",
+  "url": "caldertransit.gov/map",
+  "date": "2025-11-17",
+  "title": "Live map",
+  "filler": true,
+  "source": "caldertransit",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "The live map is temporarily unavailable.\n\nPlease use printed times, the stop displays, or the app. We are working on the data feed."
+   }
+  ]
+ }
+]

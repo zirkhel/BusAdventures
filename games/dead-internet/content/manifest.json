@@ -9,7 +9,8 @@
    "universe/entities.json",
    "universe/pools/news/entities.json",
    "universe/entities-background.json",
-   "universe/entities-background-w5.json"
+   "universe/entities-background-w5.json",
+   "universe/entities-background-w6.json"
   ],
   "accounts": [
    "universe/accounts.json",
@@ -18,7 +19,8 @@
    "universe/pools/news-comments/dailyrecord-readers.json",
    "universe/pools/news-comments/unfiltered-readers.json",
    "universe/accounts-background.json",
-   "universe/accounts-background-w5.json"
+   "universe/accounts-background-w5.json",
+   "universe/accounts-background-w6.json"
   ],
   "images": [
    "universe/images.json",
@@ -39,7 +41,20 @@
    "universe/artifacts/sites-w5-threadline.json",
    "universe/artifacts/sites-w5-docshare.json",
    "universe/artifacts/sites-w5-spillcheck.json",
-   "universe/artifacts/sites-w5-faceless.json"
+   "universe/artifacts/sites-w5-faceless.json",
+   "universe/artifacts/sites-w6-saltys.json",
+   "universe/artifacts/sites-w6-harbordesk.json",
+   "universe/artifacts/sites-w6-eastfieldgarden.json",
+   "universe/artifacts/sites-w6-aiwriterpro.json",
+   "universe/artifacts/sites-w6-harbordental.json",
+   "universe/artifacts/sites-w6-caldertransit.json",
+   "universe/artifacts/sites-w6-corpregistries.json",
+   "universe/artifacts/sites-w6-pclibrary.json",
+   "universe/artifacts/sites-w6-calderpower.json",
+   "universe/artifacts/sites-w6-caldercu.json",
+   "universe/artifacts/sites-w6-walts.json",
+   "universe/artifacts/sites-w6-harborpa.json",
+   "universe/artifacts/sites-w6-portcalderjazz.json"
   ],
   "characters": "universe/characters.json",
   "canon": "universe/canon.json",
@@ -52,7 +67,9 @@
    "universe/sites/aiwriterpro.json",
    "universe/sites/brightline.json",
    "universe/sites/brightline_portal.json",
+   "universe/sites/caldercu.json",
    "universe/sites/calderpedia.json",
+   "universe/sites/calderpower.json",
    "universe/sites/caldertransit.json",
    "universe/sites/city.json",
    "universe/sites/connect.json",
@@ -66,15 +83,18 @@
    "universe/sites/harbor_authority.json",
    "universe/sites/harbordental.json",
    "universe/sites/harbordesk.json",
+   "universe/sites/harborpa.json",
    "universe/sites/kestrel.json",
    "universe/sites/northgate.json",
+   "universe/sites/pclibrary.json",
    "universe/sites/portcalderjazz.json",
    "universe/sites/saltys.json",
    "universe/sites/seeker.json",
    "universe/sites/spillcheck.json",
    "universe/sites/static_channel.json",
    "universe/sites/threadline.json",
-   "universe/sites/unfiltered.json"
+   "universe/sites/unfiltered.json",
+   "universe/sites/walts.json"
   ],
   "backgroundFacts": "universe/background-facts.json"
  },

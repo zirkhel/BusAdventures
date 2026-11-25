@@ -1,0 +1,56 @@
+/* Legacy template (W6). Variants: 2002, 2008. Full top nav, table layout, small type. */
+.tmpl-legacy {
+  background: var(--site-bg, #fff8f0);
+  color: var(--site-ink, #3a0000);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.tmpl-legacy .site-shell { display: flex; flex-direction: column; min-height: 100%; }
+.tmpl-legacy .site-head {
+  margin: 0; padding: 0; border-bottom: 0;
+  background: var(--site-accent, #c41200); color: #fff8f0;
+}
+.tmpl-legacy .site-brand { display: flex; align-items: center; gap: 10px; padding: 10px 12px 8px; }
+.tmpl-legacy .site-logo-img {
+  display: block; height: 44px; width: auto; max-width: 120px; object-fit: contain;
+  background: #fff8f0; border-radius: 4px; padding: 2px; flex: none;
+}
+.tmpl-legacy .mast {
+  font-family: Georgia, "Times New Roman", serif; font-size: 18px; font-weight: 700;
+  letter-spacing: 0; text-transform: none; color: #fff8f0;
+}
+.tmpl-legacy .site-tagline { display: block; font-size: 11px; font-weight: 400; color: #fff8f0; opacity: .9; }
+.tmpl-legacy .site-nav-full {
+  display: flex; flex-wrap: wrap; gap: 0; background: #8a0c00; padding: 0 4px;
+}
+.tmpl-legacy .site-nav-link {
+  border: 0; background: none; color: #fff8f0; font-size: 12px; padding: 10px 8px;
+  min-height: 44px; white-space: nowrap;
+}
+.tmpl-legacy .site-nav-link:hover, .tmpl-legacy .site-nav-link:active { background: #6c0800; }
+.tmpl-legacy .site-legacy-table { width: 100%; border-collapse: collapse; }
+.tmpl-legacy .site-legacy-cell { padding: 0; vertical-align: top; }
+.tmpl-legacy h1 {
+  font-family: Georgia, "Times New Roman", serif; font-size: 20px; margin: 14px 12px 8px; font-weight: 700;
+}
+.tmpl-legacy .site-date { padding: 0 12px 8px; }
+.tmpl-legacy .page-body { padding: 0 12px 16px; }
+.tmpl-legacy .site-hero { margin: 0 0 12px; }
+.tmpl-legacy .site-hero .fig { margin: 0; max-height: none; }
+.tmpl-legacy .site-hero img { width: 100%; height: auto; max-height: 52vh; object-fit: cover; image-rendering: auto; }
+.tmpl-legacy .var-2008 .site-hero img, .tmpl-legacy.var-2008 .site-hero img { image-rendering: pixelated; }
+.tmpl-legacy .site-foot {
+  margin-top: auto; padding: 12px; font-size: 11px; color: #6a3030;
+  border-top: 3px double var(--site-accent, #c41200);
+}
+.tmpl-legacy .quirk-best {
+  text-align: center; font-size: 11px; padding: 8px 12px 4px; opacity: .8;
+}
+.tmpl-legacy.var-2002 {
+  background: #e6e6ff; color: #000080;
+  font-family: "Times New Roman", Times, serif;
+}
+.tmpl-legacy.var-2002 .site-head { background: #000080; }
+.tmpl-legacy.var-2002 .site-nav-full { background: #000060; }
+.tmpl-legacy.var-2002 .mast, .tmpl-legacy.var-2002 .site-nav-link { color: #ffff80; }
+.tmpl-legacy.var-2002 .site-foot { border-top-color: #000080; color: #000060; }

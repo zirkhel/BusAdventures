@@ -75,3 +75,19 @@
 /* Document viewer: slim file-host bar */
 .tmpl-document .site-head { background: #fafafa; border-bottom: 1px solid #ddd; }
 .tmpl-document .mast { font-family: -apple-system, "Segoe UI", sans-serif; font-size: 14px; font-weight: 600; }
+
+.site-quirk { margin: 12px 0; font-size: 12px; }
+.quirk-counter .counter {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  background: #111; color: #9f9; padding: 2px 6px; letter-spacing: 0.12em;
+}
+.quirk-construction {
+  display: inline-block; background: #222; color: #ffd200; font-weight: 700;
+  letter-spacing: 0.08em; padding: 6px 10px; border: 2px solid #ffd200;
+}
+.quirk-webring { border: 1px solid currentColor; padding: 8px; text-align: center; }
+.quirk-broken { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.broken-img {
+  width: 120px; height: 80px; border: 2px solid #888; background: #ddd;
+  color: #c00; font: 700 28px/80px "Comic Sans MS", sans-serif; text-align: center;
+}
