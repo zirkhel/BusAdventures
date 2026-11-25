@@ -1,4 +1,6 @@
-# The Quiet Account: designbeskrivelse (fase 0)
+# The Quiet Account — forfattergrunnlag og opprinnelig saksdesign
+
+> Forfatterdokument med skjult kanon, ikke spillerhjelp eller gjeldende teknisk spesifikasjon. Historiske UI-skisser og «før fase 1»-spørsmål nedenfor er ikke utestående oppgaver. Implementasjonen og senere kanonavklaringer finnes i innholdsfilene; gjeldende mekanikk står i [DESIGN](../DESIGN.md), [regel P](PUNKT9-SYNLIG-VURDERINGSREGEL.md) og [saksavslutning](CASE-ENDINGS-REVIEW.md). Ved motstrid: registrer og avklar, ikke endre kanon på egen hånd. Fremtidige mysterier er frø, ikke ferdig implementert innhold.
 
 _Dead Internet, første etterforskning. Versjon 1, 24. november 2026. Papirtestbar, ingen kode._
 

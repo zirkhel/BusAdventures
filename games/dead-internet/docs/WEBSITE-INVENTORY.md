@@ -1,14 +1,14 @@
 # Dead Internet: website inventory
 
-_25. November 2026. Every domain or website reference in playable content (`content/`), and how it is represented in the W1 site model. The validator (`site-ref`) fails if a new domain appears in content without a matching site or an email-only exception._
+_25. November 2026. Every domain or website reference in playable content (`content/`), and how it is represented in the completed W0–W8 site model. The validator (`site-ref`) fails if a new domain appears in content without a matching site or an email-only exception._
 
 ## Rule
 
-Every referenced website must exist in-game as a site, or as a site that used to exist (`gone`, `parked`, `maintenance`, or cache-only), per `docs/WEBSITES.md`. Names of organisations without any claim that they have a website are listed under «Not a website reference» and do not get a site invented for them.
+Every referenced website must exist in-game as a site, or as a site that used to exist (`gone`, `parked`, `maintenance`, or cache-only), per `docs/WEBSITES.md`. Names without a website reference do not automatically get an invented site. See the explicit exceptions below.
 
 ## Sites in the model
 
-| Site id | Domain | Status | In-game pages (W1) | Why it is here |
+| Site id | Domain | Status | In-game pages | Why it is here |
 |---|---|---|---|---|
 | `seeker` | seeker.search | live | Browser search (app-owned) | Seeker is the in-phone search engine |
 | `connect` | connect.social | live | profiles and posts (Connect app) | Social network URLs |
@@ -55,7 +55,7 @@ These hosts appear as email addresses (and sometimes as the host part of those a
 | `calder-mail.com` | Mara's contact address, SpillCheck query, forwarded mail | Consumer mail host |
 | `bl-ops.net` | Renee's mail, careers@, recovery@ | Brightline ops/email host. The public portal is the separate site `portal.bl-ops.net` |
 
-## Explicitly not a website
+## Explicit exceptions and later additions
 
 | Name | Where | Treatment |
 |---|---|---|
@@ -112,7 +112,7 @@ New independent sites: `havenmutual.com` (corporate / `agency`, so that variant 
 
 IMG06A and IMG06B are purchased copies of IMG06S. Image search from the HarborDesk testimonial reaches Faceless #44812, Haven Mutual and Calvin's profile. IMG01/IMG02 image search is unchanged. The mill photograph on Calderpedia stays deferred. Brightline customer cases stay anonymous.
 
-The W7 invented names and addresses were approved on 25 November 2026 and are now canon: the four HarborDesk tenants at 18 Harbor Street, Haven Mutual's office at 9 Market Row since 2009, and the 2024 community leads Samira Holt, Jonah Ellison and Tamsin Roe. The Lumen footer is the approved red herring from §9.3.
+The W7 invented names and addresses were approved on 25 November 2026 and are now canon: the four HarborDesk tenants at 18 Harbor Street, Haven Mutual's office at 9 Market Row since 2009, and the 2024 community leads Samira Holt, Jonah Ellison and Tamsin Roe. The Lumen footer is the approved red herring from the original website design plan.
 
 ## Test-only domains
 
@@ -122,17 +122,17 @@ The media test pool in `tests/media.test.mjs` injects a virtual TokTok app (`tok
 
 Every site in this inventory now has a catalog logo (`theme.logo`, SVG). Wide wordmarks (Daily Record, Unfiltered, Eastfield Notes) also have a square `theme.icon` for the Browser address bar; other sites reuse the square mark as the favicon.
 
-Hero photographs and illustrations were attached to existing artifacts only, with no wording changes. Evidence photographs were not reused as decoration (in particular NIMG0003 and NIMG0005). Planned WEB0001–WEB0024 images that have no existing page to live on were left unproduced. (Superseded: see «Website photos» below.)
+Hero photographs and illustrations were attached to existing artifacts only, with no wording changes. Evidence photographs were not reused as decoration (in particular NIMG0003 and NIMG0005). The planned WEB images have since been delivered; see «Website photos» below.
 
 Test-only `toktok.app` is described in the previous section; it is not a playable-universe site.
 
 ### Website photos (PR #83, `websites-photos`, merged `b2a7f76`)
 
-The 20 remaining planned photos from WEBSITES.md §10 now exist (WEB0001–WEB0004, WEB0006, WEB0008, WEB0009, WEB0011–WEB0019, WEB0021–WEB0024), and the SVG stand-in heroes WEB0028, WEB0029, WEB0031–WEB0035, WEB0037 and WEB0038 are photographs under the same ids. WEB0030 (AIWriterPro dashboard) and WEB0036 (Faceless abstract) stay SVG. They were made with the image generator, not ComfyUI, from one shared style prompt (`graphics/sources/web-photos/STYLE.md`) with the existing photos as references. Only `images` fields changed: no ids, URLs or wording. New pictures sit on background pages of Northgate (three project pages, two news items, About), Brightline (Work), Kestrel (Warehouse job, Sixty jobs, and the cached 2014 home and About only), the library (Eastfield branch, Hours), the city (Waste), Calderpedia (lighthouse, Old Town, Calder Creek), Eastfield Notes (four posts 2019–2022), Calder CU (4th Street), Calder Power (Smart meters), Walt's page (home and Festival 2008) and Faceless (How it works). Every new image is its own original, so image search from IMG01, IMG02, IMG06S and the other evidence photos finds nothing new. Northgate's home and A40 keep IMG12. No new canon.
+The 20 remaining planned photos from the original website plan (archived in `history/2026-11-25/docs/WEBSITES.md`) now exist (WEB0001–WEB0004, WEB0006, WEB0008, WEB0009, WEB0011–WEB0019, WEB0021–WEB0024), and the SVG stand-in heroes WEB0028, WEB0029, WEB0031–WEB0035, WEB0037 and WEB0038 are photographs under the same ids. WEB0030 (AIWriterPro dashboard) and WEB0036 (Faceless abstract) stay SVG. They were made with the image generator, not ComfyUI, from one shared style prompt (`graphics/sources/web-photos/STYLE.md`) with the existing photos as references. Only `images` fields changed: no ids, URLs or wording. New pictures sit on background pages of Northgate (three project pages, two news items, About), Brightline (Work), Kestrel (Warehouse job, Sixty jobs, and the cached 2014 home and About only), the library (Eastfield branch, Hours), the city (Waste), Calderpedia (lighthouse, Old Town, Calder Creek), Eastfield Notes (four posts 2019–2022), Calder CU (4th Street), Calder Power (Smart meters), Walt's page (home and Festival 2008) and Faceless (How it works). Every new image is its own original, so image search from IMG01, IMG02, IMG06S and the other evidence photos finds nothing new. Northgate's home and A40 keep IMG12. No new canon.
 
 ## Parked domain (W3)
 
-`portcalderjazz.com` is registered so the Browser can show a parked state. The date and the «for sale» wording follow WEBSITES.md §4. W6 adds a cached 2019 site (home, calendar, about), with `live: null`. Because the domain changed hands, the live parked view is still a generic parking page, not a jazz-club theme, and the live parked design has no catalog logo. The 2019 design uses a text wordmark.
+`portcalderjazz.com` is registered so the Browser can show a parked state. The date and the «for sale» wording follow the original website plan. W6 adds a cached 2019 site (home, calendar, about), with `live: null`. Because the domain changed hands, the live parked view is still a generic parking page, not a jazz-club theme, and the live parked design has no catalog logo. The 2019 design uses a text wordmark.
 
 ### Fixes after the photos (PR #84, `fixes-after-photos`, merged `48191f7`)
 
