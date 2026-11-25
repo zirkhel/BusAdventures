@@ -20,6 +20,8 @@ const PROGRESS_CONDS = new Set(["seen", "notSeen", "saved", "visible", "live", "
 const VIDEO_TRANSFORMS = new Set(["reupload", "crop", "mirror", "speed", "reencode", "trim", "overlay"]);
 const INDEX = new Set(["full", "weak", "exact", "none", "cache"]);
 const TRANSFORMS = new Set(["crop", "mirror", "recolor", "compress", "composite", "resize"]);
+// Fields "Image info" shows (app/phone.js).
+const META_KEYS = new Set(["taken", "device", "location", "software", "note"]);
 const TRUTH = new Set(["facts", "operatedBy", "notHuman", "relation"]);
 const ON_KEYS = new Set(["any", "ask", "show", "showSupports", "reply"]);
 
@@ -217,6 +219,15 @@ export function validateWorld(raw, opts = {}) {
     for (const t of arr(img.transforms)) if (!TRANSFORMS.has(t)) err(`image ${img.id}`, `unknown transform ${t}`);
     for (const c of arr(img.supports)) if (!w.claims.has(c)) err(`image ${img.id}`, `supports unknown claim ${c}`);
     for (const d of arr(img.depicts)) if (!isRef(d)) err(`image ${img.id}`, `depicts unknown ${d}`);
+    // Every image has a metadata decision: an object (fictional EXIF) or null (stripped from this copy).
+    if (!("meta" in img)) err(`image ${img.id}`, "no meta: give fictional EXIF or null for stripped");
+    else if (img.meta !== null) {
+      if (typeof img.meta !== "object") err(`image ${img.id}`, "meta must be an object or null");
+      else {
+        for (const k of Object.keys(img.meta)) if (!META_KEYS.has(k)) err(`image ${img.id}`, `unknown meta field ${k}`);
+        if (img.meta.taken != null && !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(img.meta.taken)) err(`image ${img.id}`, `meta.taken must be "YYYY-MM-DD HH:MM", not ${img.meta.taken}`);
+      }
+    }
     let cur = img, seen = new Set();
     while (cur?.derivedFrom) { if (seen.has(cur.id)) { err(`image ${img.id}`, "derivation cycle"); break; } seen.add(cur.id); cur = w.images.get(cur.derivedFrom); }
     if (!w.imageUse.has(img.id) && !arr([...w.accounts.values()].map(a => a.avatar)).includes(img.id)) warn(`image ${img.id}`, "not used by any artifact or account");
@@ -314,9 +325,16 @@ export function validateWorld(raw, opts = {}) {
         if (ent?.died && d > ent.died) err(where, `${d}: written by ${ent.name}, who died ${ent.died}`);
       }
     }
-    for (const i of [...arr(a.images), ...a.versions.flatMap(v => arr(v.images))]) {
+    // A photo cannot be taken after the page first showed it: the earliest version that shows it.
+    const firstShown = new Map();
+    for (const v of a.versions) {
+      const d = (v.date ?? a.date)?.slice(0, 10);
+      if (!d) continue;
+      for (const i of arr(v.images ?? a.images)) if (!firstShown.has(i) || d < firstShown.get(i)) firstShown.set(i, d);
+    }
+    for (const [i, d] of firstShown) {
       const taken = w.images.get(i)?.meta?.taken?.slice(0, 10);
-      if (taken && a.date && taken > a.date && a.versions.every(v => (v.date ?? a.date) < taken)) err(where, `image ${i} taken ${taken}, after the artifact (${a.date})`);
+      if (taken && taken > d) err(where, `image ${i} taken ${taken}, after this page first showed it (${d})`);
     }
   }
   // Copies cannot be older than their originals.

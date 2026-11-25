@@ -31,6 +31,97 @@ Production list for Dead Internet graphics. Ids are stable and used by the world
 ## Produksjonsrekkefølge
 IMG02 → IMG01 → IMG03 → IMG04S → IMG04 → IMG05O → IMG05 → IMG06S → IMG06 → IMG07 → IMG08 → IMG09 → IMG10 → IMG11 → IMG12 → IMG13 → IMG14 → IMG15 → IMG16 → IMG17 → IMG18 → IMG19 → IMG20 → IMG21 → IMG22 → IMG23 → LOGO_SEEKER → LOGO_CONNECT → LOGO_THREADLINE → LOGO_DAILYRECORD → LOGO_BRIGHTLINE → LOGO_NORTHGATE → LOGO_CITY → LOGO_SPILLCHECK → LOGO_FACELESS → LOGO_DOCSHARE → NIMG0001 → NIMG0002 → NIMG0003 → NIMG0004 → NIMG0005 → LOGO_UNFILTERED → LOGO_KESTREL → LOGO_CALDERPEDIA → LOGO_EASTFIELDNOTES → LOGO_UNFILTERED_ICON → LOGO_DAILYRECORD_ICON → IMG24 → AVA_NORTHGATE → AVA_BRIGHTLINE → DRP01 → DRP02 → DRP03 → DRP04 → DRP05 → DRP06 → DRP07 → UFP01 → UFP02 → UFP03 → UFP04 → LOGO_CALDERTRANSIT → LOGO_HARBORAUTHORITY → LOGO_HARBORDENTAL → LOGO_HARBORDESK → LOGO_SALTYS → LOGO_EASTFIELDGARDEN → LOGO_AIWRITERPRO → LOGO_CORPREGISTRIES → LOGO_EASTFIELDNEIGHBORS → LOGO_STATIC → LOGO_EASTFIELDNOTES_MINIMAL → LOGO_EASTFIELDNOTES_ICON → WEB0005 → WEB0007 → WEB0010 → WEB0020 → WEB0025 → WEB0026 → WEB0027 → WEB0001 → WEB0002 → WEB0003 → WEB0004 → WEB0006 → WEB0008 → WEB0009 → WEB0011 → WEB0012 → WEB0013 → WEB0014 → WEB0015 → WEB0016 → WEB0017 → WEB0018 → WEB0019 → WEB0021 → WEB0022 → WEB0023 → WEB0024 → WEB0028 → WEB0029 → WEB0030 → LOGO_PCLIBRARY → LOGO_CALDERPOWER → LOGO_CALDERCU → LOGO_WALTS → LOGO_HARBORPA → LOGO_OPENFILINGS → LOGO_KESTREL_2014 → WEB0031 → WEB0032 → WEB0033 → WEB0034 → WEB0035 → IMG06A → IMG06B → LOGO_HAVENMUTUAL → LOGO_QUAYLEDGER → LOGO_NORTHLAMP → WEB0036 → WEB0037 → WEB0038
 
+## Bildeinfo (fiktiv EXIF)
+Metadata står i `content/universe/images.json` (`meta`), ikke i katalogen. «Image info» i bildeviseren viser Taken, Camera (`device`), Location (bare når feltet finnes; `null` vises som «—»), Software og Note. `meta: null` betyr fjernet og vises som «None. It was stripped from this copy.». Alle bilder skal ha et `meta`-valg, og `taken` («YYYY-MM-DD HH:MM») kan ikke være senere enn første versjon av siden som viser bildet (validatoren og `tests/image-meta.test.mjs`). Enheter: Lumen-telefoner (privatpersoner), Caldwell C-kameraer, «Daily Record photo desk», Orrin-kameraer (Orrin D7 profesjonelt, Orrin S5/S20 kompakt), skanneprogram i `software`, stockgeneratoren i `software`.
+
+| ID | Valg | Taken | Camera | Location | Software | Note |
+|---|---|---|---|---|---|---|
+| IMG02 | EXIF | 2025-05-14 06:52 | Lumen 7 | Harbor St, Eastfield |  |  |
+| IMG01 | EXIF | 2025-05-14 06:52 | Lumen 7 | — |  |  |
+| IMG03 | EXIF | 2025-09-12 10:31 | Daily Record photo desk | Calder Mill |  |  |
+| IMG04S | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG04 | stripped | | | | | |
+| IMG05O | EXIF | 2024-06-08 09:14 | Lumen 7 | Eastfield Community Garden |  |  |
+| IMG05 | stripped | | | | | |
+| IMG06S | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG06 | stripped | | | | | |
+| IMG07 | EXIF | 2025-11-02 15:40 | Caldwell C3 |  |  |  |
+| IMG08 | EXIF |  |  |  | Studio Compose 12 |  |
+| IMG09 | EXIF | 2025-12-12 16:05 | Lumen 7 |  |  |  |
+| IMG10 | EXIF |  |  |  | ScanEasy |  |
+| IMG11 | EXIF | 2023-08-19 18:20 | Caldwell C3 |  |  |  |
+| IMG12 | stripped | | | | | |
+| IMG13 | EXIF | 2021-02-27 12:03 | Lumen 5 |  |  |  |
+| IMG14 | stripped | | | | | |
+| IMG15 | stripped | | | | | |
+| IMG16 | stripped | | | | | |
+| IMG17 | stripped | | | | | |
+| IMG18 | stripped | | | | | |
+| IMG19 | stripped | | | | | |
+| IMG20 | stripped | | | | | |
+| IMG21 | stripped | | | | | |
+| IMG22 | EXIF | 2019-07-04 22:47 | Lumen 3 |  |  |  |
+| IMG23 | stripped | | | | | |
+| IMG24 | EXIF | 2024-11-03 13:12 | Caldwell C1 |  |  |  |
+| AVA_NORTHGATE | stripped | | | | | |
+| AVA_BRIGHTLINE | stripped | | | | | |
+| DRP01 | stripped | | | | | |
+| DRP02 | stripped | | | | | |
+| DRP03 | stripped | | | | | |
+| DRP04 | stripped | | | | | |
+| DRP05 | stripped | | | | | |
+| DRP06 | stripped | | | | | |
+| DRP07 | stripped | | | | | |
+| UFP01 | stripped | | | | | |
+| UFP02 | stripped | | | | | |
+| UFP03 | stripped | | | | | |
+| UFP04 | stripped | | | | | |
+| WEB0005 | stripped | | | | | |
+| WEB0007 | stripped | | | | | |
+| WEB0010 | stripped | | | | | |
+| WEB0020 | EXIF | 2025-08-14 12:31 | Lumen 6 |  |  |  |
+| WEB0025 | stripped | | | | | |
+| WEB0026 | stripped | | | | | |
+| WEB0027 | stripped | | | | | |
+| WEB0028 | stripped | | | | | |
+| WEB0029 | stripped | | | | | |
+| WEB0030 | stripped | | | | | |
+| WEB0031 | stripped | | | | | |
+| WEB0032 | stripped | | | | | |
+| WEB0033 | stripped | | | | | |
+| WEB0034 | EXIF | 2008-07-19 15:32 | Orrin S5 |  |  |  |
+| WEB0035 | stripped | | | | | |
+| WEB0036 | stripped | | | | | |
+| WEB0037 | EXIF | 2019-08-03 07:41 | Lumen 5 | Harbor St, Eastfield |  |  |
+| WEB0038 | stripped | | | | | |
+| WEB0001 | EXIF | 2017-08-24 10:14 | Orrin D7 |  |  |  |
+| WEB0002 | EXIF | 2020-06-02 17:05 | Orrin D7 |  |  |  |
+| WEB0003 | EXIF | 2023-10-12 10:40 | Orrin D7 |  |  |  |
+| WEB0004 | EXIF | 2026-01-08 09:20 | Orrin D7 |  |  |  |
+| WEB0006 | stripped | | | | | |
+| WEB0008 | stripped | | | | | |
+| WEB0009 | EXIF | 2014-05-27 10:12 | Orrin S20 |  |  |  |
+| WEB0011 | stripped | | | | | |
+| WEB0012 | stripped | | | | | |
+| WEB0013 | EXIF | 2025-09-27 07:22 | Lumen 6 | Northpoint |  |  |
+| WEB0014 | EXIF | 2025-06-29 15:48 | Lumen 6 | Old Town |  |  |
+| WEB0015 | EXIF | 2025-04-19 11:03 | Lumen 6 | Eastfield |  |  |
+| WEB0016 | EXIF | 2019-06-13 18:12 | Lumen 5 | Eastfield Library |  |  |
+| WEB0017 | EXIF | 2021-05-09 07:56 | Lumen 5 | Pier 2, Port Calder |  |  |
+| WEB0018 | EXIF | 2022-07-15 18:47 | Lumen 5 | Harbor St, Eastfield |  |  |
+| WEB0019 | EXIF | 2022-08-31 10:24 | Lumen 5 | Eastfield |  |  |
+| WEB0021 | stripped | | | | | |
+| WEB0022 | stripped | | | | | |
+| WEB0023 | EXIF | 2007-11-04 16:20 |  |  | Halden PhotoScan 2400 | Scanned from a print. |
+| WEB0024 | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG06A | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| IMG06B | EXIF |  |  |  | Faceless Stock generator v4 |  |
+| NIMG0001 | EXIF | 2025-10-11 18:10 | Daily Record photo desk |  |  |  |
+| NIMG0002 | EXIF |  |  |  |  | No metadata. |
+| NIMG0003 | EXIF | 2025-01-12 09:05 | Lumen 8 |  |  |  |
+| NIMG0004 | EXIF | 2026-02-17 19:48 | Daily Record photo desk |  |  |  |
+| NIMG0005 | EXIF | 2026-01-26 05:40 | Lumen 9 |  |  |  |
+
 ## Alle bilder
 | ID | Fil | Størrelse | Type | Prioritet | Status | Brukt i | Avhengighet | Beskrivelse |
 |---|---|---|---|---|---|---|---|---|
