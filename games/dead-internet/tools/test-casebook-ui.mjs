@@ -325,6 +325,39 @@ try {
   await p3.close();
   console.log('PASS mobile 390×844 step 3: long press selection, compare three, six kinds, connection with reason, edit on card, page versions with changes, two images switch and zoom, set aside several, theory connections, reload');
 
+  // The W8 entry point: Browser Archive will call phone.compare() with two versions of one page.
+  {
+    const p = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    p.on('pageerror', e => errors.push(e.message));
+    await p.goto(base + '/__fixture');
+    const r = await p.evaluate(async () => {
+      const dir = '/games/dead-internet/';
+      const { loadContent } = await import(dir + 'core/content.js');
+      const { buildWorld } = await import(dir + 'core/world.js');
+      const { Game } = await import(dir + 'core/game.js');
+      const { Phone } = await import(dir + 'app/phone.js');
+      const w = buildWorld(await loadContent(path => fetch(dir + 'content/' + path).then(r => r.json())));
+      const g = new Game(w, { seed: 7 }); g.start();
+      const id = 'W-kestrel-0005'; g.s.artifacts[id] = { visible: true };
+      const old = g.view(id).cachedVersions[0];
+      g.open(id, old); g.open(id);
+      const phone = new Phone(document.getElementById('phone'), g, {});
+      phone.openApp('casebook');
+      phone.compare([{ artifact: id, version: old }, { artifact: id }]);
+      window.__g = g; window.__old = old;
+      return { evidence: g.s.evidence.length, old };
+    });
+    assert.equal(r.evidence, 0);
+    await p.getByText('Changes from A to B', { exact: true }).waitFor();
+    await p.getByRole('button', { name: 'Save to Casebook to connect them', exact: true }).click();
+    await p.getByRole('button', { name: 'How are they connected?', exact: true }).waitFor();
+    const saved = await p.evaluate(() => window.__g.s.evidence.map(e => [e.artifact, e.version ?? null]));
+    assert.equal(saved.length, 2, 'both copies saved');
+    assert.ok(saved.some(([, v]) => v === r.old), 'the archived version is saved as that version');
+    await p.close();
+    console.log('PASS W8 hook: phone.compare() with two versions of a page, changes shown, both copies saved before connecting');
+  }
+
   const snapshots = [];
   for (const mode of ['base', 'merged', 'split']) {
     const p = await browser.newPage({ viewport: { width: 390, height: 844 } });
