@@ -475,7 +475,9 @@ Avvik fra §11: W2-motoren gjelder alle nettsteder med de tre malnavnene, ikke b
 - Walt-sitatet i DR-2026-0051 etter hans død er et tilsiktet spor, med test.
 - Enhetsnavnene Orrin D7/S5/S20, Halden PhotoScan 2400 og Lumen 6 er kanon i `background-facts.json`. Maras Lumen 5 står bare i bildeinfo og i dokumentasjonen.
 - Harbor Festival-revisjonen fant ingen måned som kolliderte innenfor samme år. Anders bestemte at festivalen alltid er i oktober. Derfor er Eastfield Notes-innleggene fra 2021 og 2022, kommentarene deres og bildene WEB0018/WEB0034 flyttet til andre lørdag i oktober. Ingen tekst forteller om en flytting.
-- URL-ene beholder `/07/`, slik at lenker og lagrede referanser virker.
+- De to innleggene har nye oktober-URL-er (`/2021/10/harbor-festival-dog-run`, `/2022/10/festival-weekend`) og samme id-er.
+- De gamle juli-adressene videresender via det nye artefaktfeltet `urlAliases`, i samme ånd som `domains` for openfilings. Bokmerker på en gammel adresse flyttes når et lagret spill lastes.
+- Test: `tests/url-aliases.test.mjs`.
 - Vinneranden i 2025 er nr. 3,117 i begge Daily Record-sakene (B06 er rettet fra #212).
 - Walts skann fra 1987 med skannedato 2007 er i orden.
 

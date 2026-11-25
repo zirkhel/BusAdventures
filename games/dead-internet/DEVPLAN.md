@@ -70,7 +70,7 @@ node games/dead-internet/tools/simulate.mjs
 PLAYWRIGHT_MODULE=/path/to/playwright node games/dead-internet/tools/test-casebook-ui.mjs
 ```
 
-Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. W4-tester: `tests/websites-w4.test.mjs`. W5-tester: `tests/websites-w5.test.mjs`. W6-tester: `tests/websites-w6.test.mjs`. W7-tester: `tests/websites-w7.test.mjs`. Fototester: `tests/websites-photos.test.mjs`, bildeinfo: `tests/image-meta.test.mjs`, Threadline-profiler: `tests/threadline-profiles.test.mjs`. Etter katalogendringer: `node games/dead-internet/tools/graphics-report.mjs` og `node games/dead-internet/tools/make-placeholders.mjs` (bare nye plassholdere skal sjekkes inn). Ny-spill i Playwright: case-menypunkt → `form.intro-form` submit → «Swipe up to unlock» → ev. `.it-notips` → Browser i docken → `form.addr-form`. Skjermbilder 390×844: `/workspace/dead-internet-shots/`.
+Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.mjs`. W4-tester: `tests/websites-w4.test.mjs`. W5-tester: `tests/websites-w5.test.mjs`. W6-tester: `tests/websites-w6.test.mjs`. W7-tester: `tests/websites-w7.test.mjs`. Fototester: `tests/websites-photos.test.mjs`, bildeinfo: `tests/image-meta.test.mjs`, Threadline-profiler: `tests/threadline-profiles.test.mjs`, flyttede adresser: `tests/url-aliases.test.mjs`. Etter katalogendringer: `node games/dead-internet/tools/graphics-report.mjs` og `node games/dead-internet/tools/make-placeholders.mjs` (bare nye plassholdere skal sjekkes inn). Ny-spill i Playwright: case-menypunkt → `form.intro-form` submit → «Swipe up to unlock» → ev. `.it-notips` → Browser i docken → `form.addr-form`. Skjermbilder 390×844: `/workspace/dead-internet-shots/`.
 
 
 **W5 — nye/endrede filer.** Malene `app/sites/wiki.js`, `forum.js`, `document.js`, `anonymous.js`, `landing.js` (kun `variant: saas`; `smallbiz`/`parked` forblir tynn chrome) og tilhørende CSS; `app/sites/index.js` og `index.html`. Innhold: `artifacts/sites-w5-calderpedia.json` (31), `sites-w5-threadline.json` (27), `sites-w5-docshare.json` (8), `sites-w5-spillcheck.json` (5), `sites-w5-faceless.json` (5), `entities-background-w5.json` (5), `accounts-background-w5.json` (9 lette kontoer), seks nye oppføringer i `background-facts.json`, kirurgisk nav og manifest. Tester: `tests/websites-w5.test.mjs`, oppdatert `tests/sites.test.mjs`. Skjermbilder: `/workspace/dead-internet-shots/w5-*.png`. Dokumenter.
@@ -131,7 +131,15 @@ Nettstedstester ligger i `tests/sites.test.mjs`. W3-tester: `tests/browser.test.
   - Eastfield Notes W-eastfieldnotes-0016 er flyttet fra 2. juli til lørdag 9. okt 2021, med kommentarene 9.–10. okt.
   - W-eastfieldnotes-0022 er flyttet fra 16. juli til lørdag 8. okt 2022. Kommentaren er flyttet til samme dag, og to sommerord er byttet: «the fans are on» → «the heating is on», «in the shade» → «out of the wind».
   - Bildedatoer: WEB0018 er tatt 8. okt 2022 kl. 09:12, WEB0034 11. okt 2008 kl. 15:32. Begge er lørdager, og som i 2025 (11. okt) er det andre lørdag i oktober.
-  - URL-er og id-er er uendret, så `/2021/07/` og `/2022/07/` står fortsatt i adressene. Det er bevisst, slik at lenker og lagrede referanser virker.
+  - Nye kanoniske URL-er (Anders, før merge): `eastfieldnotes.blog/2021/10/harbor-festival-dog-run` og `eastfieldnotes.blog/2022/10/festival-weekend`. Id-ene er uendret.
+  - De gamle adressene (`/2021/07/…`, `/2022/07/…`) ligger i det nye artefaktfeltet `urlAliases` og videresender. Mekanismen er i samme ånd som nettstedets `domains` for openfilings:
+    - `indexSites` (`core/sites.js`) legger aliasene inn i `artifactByUrl`, og `resolveBrowse` viser den nye adressen.
+    - `canonicalUrl()` brukes av «cached copies».
+    - `deserialize` (`core/save.js`) flytter bokmerker på en gammel adresse til den nye og fjerner duplikater.
+    - Validatoren avviser et alias som er en annen sides adresse eller ligger på en annen vert.
+  - Ingen andre sider, kommentarer eller lenker nevner de gamle adressene. Seeker, arkivet og navigasjonen viser den nye.
+  - Lagrede bevis peker på artefakt-id og versjon og er uberørt.
+  - Test `tests/url-aliases.test.mjs`.
   - Innleggene står fortsatt i datorekkefølge (0023 4. sep 2022 kommer nå før 0022).
   - Walts skann fra 1987 med skannedato 2007 er i orden.
 - *Vinneranden:* B06 sier nå «won by duck number 3,117», som DR-2025-0322 (Mila fra Northpoint).

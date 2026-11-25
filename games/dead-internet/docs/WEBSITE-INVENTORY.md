@@ -144,6 +144,6 @@ The 20 remaining planned photos from WEBSITES.md §10 now exist (WEB0001–WEB00
   - Halden PhotoScan 2400 (Walt's 1987 scan, scanned 2007, WEB0023)
   - Lumen 6 (Calderpedia WEB0013–WEB0015, Salty's WEB0020)
 - **Mara's Lumen 5 (2019–2022):** approved, but recorded only in image meta and the handover, because no new background canon may be about a Quiet Account person.
-- **Harbor Festival is in October (decided):** Eastfield Notes `W-eastfieldnotes-0016` is now dated 9 Oct 2021 and `W-eastfieldnotes-0022` 8 Oct 2022, each with its comments. WEB0018 is now taken 8 Oct 2022 and WEB0034 11 Oct 2008. The URLs keep `/2021/07/` and `/2022/07/`. No text describes a move.
+- **Harbor Festival is in October (decided):** Eastfield Notes `W-eastfieldnotes-0016` is now dated 9 Oct 2021 and `W-eastfieldnotes-0022` 8 Oct 2022, each with its comments. WEB0018 is now taken 8 Oct 2022 and WEB0034 11 Oct 2008. Their canonical URLs are now `eastfieldnotes.blog/2021/10/harbor-festival-dog-run` and `eastfieldnotes.blog/2022/10/festival-weekend`, with the same ids. The old `/2021/07/` and `/2022/07/` addresses are kept in the new artifact field `urlAliases` and redirect to the new ones, like a site's former `domains`. Old bookmarks move to the new address when a save loads. No text describes a move.
 - **2025 duck race:** won by duck number 3,117 (Mila from Northpoint) in both B06 and DR-2025-0322.
 - **Intended crack:** Walter Brennan is quoted in DR-2026-0051 (12 Feb 2026) after his death on 31 Oct 2025. Keep it.
