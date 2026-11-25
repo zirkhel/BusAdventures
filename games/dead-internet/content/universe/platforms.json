@@ -32,6 +32,9 @@
   { "id": "caldercu", "name": "Calder Credit Union", "kind": "site", "domain": "caldercu.com" },
   { "id": "walts", "name": "Walt's Harbor Festival Page", "short": "Walt Brennan", "kind": "site", "domain": "waltbrennan.calderweb.net" },
   { "id": "harborpa", "name": "Harbor Public Affairs", "kind": "site", "domain": "harborpa.com" },
-  { "id": "portcalderjazz", "name": "Port Calder Jazz", "kind": "site", "domain": "portcalderjazz.com" }
+  { "id": "portcalderjazz", "name": "Port Calder Jazz", "kind": "site", "domain": "portcalderjazz.com" },
+  { "id": "havenmutual", "name": "Haven Mutual", "kind": "site", "domain": "havenmutual.com" },
+  { "id": "quayledger", "name": "Quay Ledger", "kind": "site", "domain": "quayledger.com" },
+  { "id": "northlamp", "name": "North Lamp Studio", "kind": "site", "domain": "northlamp.studio", "short": "North Lamp" }
 
 ]

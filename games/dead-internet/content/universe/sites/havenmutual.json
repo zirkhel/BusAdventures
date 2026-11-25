@@ -1,0 +1,49 @@
+{
+  "id": "havenmutual",
+  "platform": "havenmutual",
+  "domain": "havenmutual.com",
+  "org": "haven_mutual",
+  "designs": [
+    {
+      "id": "d2024",
+      "from": "2024-03-01",
+      "template": "corporate",
+      "variant": "agency",
+      "theme": {
+        "logo": "LOGO_HAVENMUTUAL",
+        "hero": "WEB0038",
+        "palette": {
+          "bg": "#f5f8fa",
+          "ink": "#1c3a4a",
+          "accent": "#2a6b7c"
+        }
+      },
+      "nav": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "Cover",
+          "href": "/cover"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact"
+        }
+      ],
+      "header": {
+        "mast": "Haven Mutual",
+        "tagline": "Cover for the harbour you already have."
+      },
+      "footer": {
+        "text": "Haven Mutual · 9 Market Row, Old Town, Port Calder. Theme: Lumen by Pixelfold."
+      }
+    }
+  ],
+  "notFound": {
+    "title": "Not found",
+    "text": "There is no page at that address."
+  },
+  "status": []
+}

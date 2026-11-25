@@ -1,0 +1,42 @@
+[
+  {
+    "id": "W-northlamp-0001",
+    "site": "northlamp",
+    "page": "home",
+    "type": "page",
+    "platform": "northlamp",
+    "url": "northlamp.studio",
+    "date": "2025-04-18",
+    "title": "North Lamp Studio",
+    "filler": true,
+    "source": "northlamp",
+    "index": "full",
+    "versions": [
+      {
+        "id": "v1",
+        "cached": true,
+        "body": "North Lamp paints signs, sets type, and keeps a lamp in the window on the days we are in.\n\nMail: Suite 210, 18 Harbor Street, Port Calder. That is a virtual address. The studio itself is a first-floor room on Quay Lane, when the stairs agree.\n\nWe do shop fronts, menus, and the occasional civic leaflet. We do not do political campaigns."
+      }
+    ]
+  },
+  {
+    "id": "W-northlamp-0002",
+    "site": "northlamp",
+    "page": "page",
+    "type": "page",
+    "platform": "northlamp",
+    "url": "northlamp.studio/work",
+    "date": "2025-04-18",
+    "title": "Work",
+    "filler": true,
+    "source": "northlamp",
+    "index": "weak",
+    "versions": [
+      {
+        "id": "v1",
+        "cached": true,
+        "body": "Recent work: a lettered awning for a fish bar, a series of library event posters, and a wedding invitation that used too much gold.\n\nWe do not publish a client list. If you saw a sign you liked, you can ask. If we made it, we will say so."
+      }
+    ]
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "id": "quayledger",
+  "platform": "quayledger",
+  "domain": "quayledger.com",
+  "org": "quay_ledger",
+  "designs": [
+    {
+      "id": "d2022",
+      "from": "2022-05-01",
+      "template": "landing",
+      "variant": "smallbiz",
+      "theme": {
+        "logo": "LOGO_QUAYLEDGER",
+        "palette": {
+          "bg": "#f7f3ea",
+          "ink": "#3a3228",
+          "accent": "#7a5a32"
+        }
+      },
+      "nav": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact"
+        }
+      ],
+      "header": {
+        "mast": "Quay Ledger",
+        "tagline": "Books for small harbour firms."
+      },
+      "footer": {
+        "text": "Quay Ledger · Suite 110, 18 Harbor Street, Port Calder"
+      }
+    }
+  ],
+  "notFound": {
+    "title": "Not found",
+    "text": "There is no page at that address."
+  },
+  "status": []
+}

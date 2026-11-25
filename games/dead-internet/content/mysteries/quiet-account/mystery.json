@@ -48,7 +48,9 @@
    "artifacts/records.json",
    "artifacts/misc.json",
    "artifacts/news-consequences.json",
-   "artifacts/brightline-background.json"
+   "artifacts/brightline-background.json",
+   "artifacts/sites-w7-brightline.json",
+   "artifacts/connect-w7.json"
   ],
   "canon": "canon.json",
   "rules": "rules.json"
