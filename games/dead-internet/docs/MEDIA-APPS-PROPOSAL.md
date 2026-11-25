@@ -20,4 +20,4 @@ For You, Following, profil, kommentarer, deling, metadata, transkripsjon og søk
 
 ## Historikk
 
-Den [opprinnelige medieplanen](history/2026-11-25/docs/MEDIA-APPS-PROPOSAL.md) bevarer datamodellforslag, fortellingslag og godkjenningsreferater. Gamle faseplasseringer, størrelsesanslag og «ingenting implementert» gjelder ikke dagens kode. Ikke kopier gamle JSON-skisser som om de var et API; sjekk innholdsmodellen og validatoren først.
+Den [opprinnelige medieplanen](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/MEDIA-APPS-PROPOSAL.md) bevarer datamodellforslag, fortellingslag og godkjenningsreferater. Gamle faseplasseringer, størrelsesanslag og «ingenting implementert» gjelder ikke dagens kode. Ikke kopier gamle JSON-skisser som om de var et API; sjekk innholdsmodellen og validatoren først.

@@ -42,4 +42,4 @@ Se [kontrollisten](PR89-REVIEW.md). Avklar åpne spørsmål før merge. Rett bar
 
 ## Sporbarhet
 
-Detaljer og historiske begrunnelser er bevart i [tidligere DEVPLAN](history/2026-11-25/DEVPLAN.md), [avslutningsgjennomgangen](history/2026-11-25/docs/CASE-ENDINGS-REVIEW.md) og [medieplanen](history/2026-11-25/docs/MEDIA-APPS-PROPOSAL.md). Historiske forslag er ikke implisitte godkjenninger.
+Detaljer og historiske begrunnelser er bevart i [tidligere DEVPLAN](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/DEVPLAN.md), [avslutningsgjennomgangen](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/CASE-ENDINGS-REVIEW.md) og [medieplanen](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/MEDIA-APPS-PROPOSAL.md). Historiske forslag er ikke implisitte godkjenninger.

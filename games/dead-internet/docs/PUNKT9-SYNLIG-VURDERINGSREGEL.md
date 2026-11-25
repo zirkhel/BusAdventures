@@ -1,6 +1,6 @@
 # Dana — synlig vurderingsregel P
 
-Implementert i PR #89 ved `50d5643`, ikke merget. Oppdatert 25. november 2026. Dette er gjeldende implementasjonsbeskrivelse, ikke en ny designgodkjenning. Tidligere L/P-forslag, prototypemålinger og beslutningsreferater er [arkivert](history/2026-11-25/docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md).
+Implementert i PR #89 ved `50d5643`, ikke merget. Oppdatert 25. november 2026. Dette er gjeldende implementasjonsbeskrivelse, ikke en ny designgodkjenning. Tidligere L/P-forslag, prototypemålinger og beslutningsreferater er [arkivert](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/PUNKT9-SYNLIG-VURDERINGSREGEL.md).
 
 ## Grunnlag og grenser
 
@@ -39,37 +39,7 @@ Scenarioene lager eksplisitte Supports-koblinger, blant annet A32 → A22. Spill
 
 ## Danas replikker
 
-Ordrett fra `content/strings/en.json`, `review.dana.v`, ved `50d5643`. Ved senere tekstendring oppdateres både innhold og denne oversikten. `{claim}`, `{object}` og `{n}` fylles ved visning.
-
-- **`none`:** "{claim}": what you've marked as supporting doesn't, taken together, cover who this is about. As it stands, it doesn't go forward.
-
-- **`one`:** "{claim}": taken together, what you've marked as supporting covers who this is about, but only from one visible origin. That's a lead, not enough to take forward. I need a second visible origin, and material that shows this, not just names them.
-
-- **`several`:** "{claim}": taken together, the material you've marked as supporting, with the supporting connections you've made, covers who this is about, across {n} different visible origins. That's enough for me to take it to the desk, not to say it's true. Being named isn't being shown: check that each one shows this, and that they don't trace back to the same place.
-
-- **`bold.none`:** "{claim}": that's a big claim, and what you've marked as supporting doesn't, taken together, cover who it's about. It doesn't go forward.
-
-- **`bold.one`:** "{claim}": that's a big claim. Taken together, your material covers who it's about, but only from one visible origin. That's not enough to take forward.
-
-- **`bold.several`:** "{claim}": a big claim. Taken together, the material you've marked as supporting, with the supporting connections you've made, covers who it's about, across {n} different visible origins, so I'll take it to the desk. That doesn't make it true. Being named isn't being shown: what else could explain what you've found?
-
-- **`predicate.paid.none`:** "{claim}": what you've marked as supporting doesn't, taken together, cover both parties, let alone show a payment. It doesn't go forward.
-
-- **`predicate.paid.one`:** "{claim}": taken together, your material covers both parties, but only from one visible origin. That doesn't establish a payment, and one visible origin isn't enough to take forward.
-
-- **`predicate.paid.several`:** "{claim}": taken together, the material you've marked as supporting, with the supporting connections you've made, covers both parties, across {n} different visible origins. That's enough to take to the desk, but it doesn't establish a payment. For money I want the paper trail: an invoice, a contract, a transfer.
-
-- **`predicate.caused.none`:** "{claim}": you want me to print that someone caused {object}? What you've marked as supporting doesn't, taken together, even cover both. It doesn't go forward.
-
-- **`predicate.caused.one`:** "{claim}": taken together, your material covers both, but only from one visible origin. Covering both says nothing about what anyone did, and one visible origin isn't enough to take forward. Show me documents, and tell me what else could explain it.
-
-- **`predicate.caused.several`:** "{claim}": taken together, the material you've marked as supporting, with the supporting connections you've made, covers both, across {n} different visible origins, so I'll take it to the desk. That shows they turn up in the same story, not that one caused the other. I'd need documents that show what was done and by whom, and a reason the other explanations don't fit.
-
-- **`ownOutlet.none`:** "{claim}": first, that's my own paper, so I have a stake in this. What you've marked as supporting doesn't, taken together, cover both, so it stays out.
-
-- **`ownOutlet.one`:** "{claim}": that's my own paper, so you should know I have a stake in this. Taken together, your material covers both, but only from one visible origin, and that isn't enough to take forward, for my paper or anyone's. Bring a second, and documents if you have them: a contract, an invoice, a payment.
-
-- **`ownOutlet.several`:** "{claim}": that's my own paper, so you should know I have a stake in this. I'm holding it to the same rule as anyone: taken together, the material you've marked as supporting, with the supporting connections you've made, covers both, across {n} different visible origins, so it goes to the desk. That shows a connection, not what it is. Bring documents, and tell me what else it could be.
+De 15 gjeldende replikkene eies av [content/strings/en.json](../content/strings/en.json), `review.dana.v`. Dokumentasjonen dupliserer dem ikke. De beskriver samlet dekning, bruker «with the supporting connections you've made», og skiller mellom redaksjonell behandling og sannhet. Tekst ved egen avis opplyser om interessekonflikt. Ingen replikk skal omtale navnetreff som bevis for betaling eller årsak, eller ulike synlige opphav som bekreftet uavhengige.
 
 ## Lekkasjetesting og gjenstående arbeid
 

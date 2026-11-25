@@ -18,7 +18,7 @@ Oppdatert 25. november 2026. Grunnlag: `main` ved `20d2f49` og **åpen PR #89 ve
 4. [Restoppgaver og forslag](docs/BACKLOG.md), [kontrolliste for PR #89](docs/PR89-REVIEW.md).
 5. Ved innholdsarbeid: [sakens forfattergrunnlag](docs/THE-QUIET-ACCOUNT.md), innholdsfilene og [saksavslutning](docs/CASE-ENDINGS-REVIEW.md).
 
-Full filoversikt og dokumentenes roller: [docs/README.md](docs/README.md). Gamle faseplaner og beslutningsreferater er [historikk](docs/history/2026-11-25/DEVPLAN.md), ikke neste oppgave.
+Full filoversikt og dokumentenes roller: [docs/README.md](docs/README.md). Gamle faseplaner og beslutningsreferater er [historikk](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/DEVPLAN.md), ikke neste oppgave.
 
 ## Arbeidsregler
 
@@ -30,15 +30,15 @@ Full filoversikt og dokumentenes roller: [docs/README.md](docs/README.md). Gamle
 
 ## Teststrategi og belastning
 
-Full testdekning beholdes; hyppighet og parallellitet begrenses.
+Full testdekning beholdes; hyppighet og parallellitet begrenses. Ingen tester slettes som del av oppryddingen.
 
 1. Under utvikling: kjør bare tester som berører endringen, sekvensielt. Ikke full pakke etter hver liten endring.
 2. Etter deloppgaven: relevante regresjonstester; tvillingverden ved Casebook, proveniens eller informasjon som vises til spilleren; én mobil røyktest ved UI-endringer.
-3. Før PR: hele testpakken én gang, validator og simulator, deretter nødvendig Playwright-røyktest. Rapporter feil og hvilke kontroller som ikke er kjørt. Ved dokumentasjonsendringer kontrolleres også lenker, innhold mot kode og diff.
+3. Før PR: hele testpakken én gang, validator og simulator, deretter nødvendig Playwright-røyktest. Registrer commit og resultat. Gjenbruk den kjøringen når bare dokumentasjon endres etterpå; kontroller da lenker, innhold mot kode og diff. Ny kodeendring eller feil utløser relevante nye kontroller. Rapporter det som ikke er kjørt.
 4. Maksimalt én Playwright-worker og én nettleser om gangen. Ingen samtidige fullpakker, kontinuerlige bakgrunnstester eller unødvendige nettleseroppstarter.
 5. Hvis en test henger, undersøk den eksisterende prosessen i stedet for å starte flere. Ingen permanente globale systemendringer.
 
-Kommandoer fra repo-roten (kjøres én om gangen):
+Kommandoer fra repo-roten. Velg kontroll etter endringen; listen er ikke en rutine som skal kjøres hver gang. Kjør én om gangen:
 
 ```sh
 node --test --test-concurrency=1 games/dead-internet/tests/names.test.mjs

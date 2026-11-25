@@ -594,73 +594,8 @@ Plantet i saken, men ikke forklart. Spilleren kan ikke løse dem nå, og det ska
 
 ---
 
-## 19. En spilløkt på 5–15 minutter
+## Mobilopplevelse og historiske skisser
 
-Spillet er laget for bussturen. Hver økt har en naturlig rytme: **noe nytt, et spor, en handling, en pause.**
+Spillet er laget for korte økter: noe nytt, et spor, en handling og en pause. Ingen sanntidsfrist; spilleren kan legge bort telefonen. Behold lesbar tekst og store trykkflater. Gjeldende navigasjon, hjelp og rapportering står i [DESIGN](../DESIGN.md) og [Casebook](CASEBOOK-DEDUCTION.md).
 
-1. **Låseskjerm (10 sek):** Varsler fra natten. *Theo Quinn sent 3 attachments. @maraquinn posted. Daily Record: Council confirms vote.* Dato og «Day 3 of 8» står diskret øverst.
-2. **Recap (valgfritt, 10 sek):** Casebook viser «Since last time» basert på spillerens egne lagrede bevis og notater, aldri på sannheten. *You saved 2 items. Open question you wrote: «who owns bl-ops.net?»*
-3. **Følg et spor (3–8 min):** Åpne vedlegg fra Theo, se `bl-ops.net`, søk på det i Seeker, finn Brightline. Lese, sveipe, knipe for å zoome. Langt trykk eller bokmerkeikon lagrer som bevis. Et ark glir opp: *Link to… Mara Quinn / Brightline / new hypothesis*.
-4. **Handle (1–3 min):** Send en melding, vis et bevis, eller koble bevis til en hypotese. Meldinger velges som emner og bevis, med forhåndsskrevne formuleringer som spilleren kan velge mellom.
-5. **Avslutt (10 sek):** Trykk Sleep, eller bare lukk appen. Alt er lagret. Neste gang venter svar.
-
-**Grensesnittprinsipper på mobil:**
-- Én hånd. Navigasjon i bunnen, tilbake med sveip fra kanten og knapp.
-- Ark (bottom sheets) i stedet for dialogbokser.
-- Ingen presis klikking. Alle trykkflater minst 44 punkter.
-- Lesbar tekst: minst 16 px brødtekst, justerbar.
-- Ingen tidspress i sanntid. Telefonen kan legges bort midt i alt.
-
----
-
-## 20. Papirtest: slik kjører du den
-
-Formålet er å teste om det er gøy å nøste opp, og om spilleren står fast, før en eneste linje kode skrives.
-
-**Materiell:**
-- Ett kort per artefakt (A01–A32) med tekst og eventuelt utskrevet bilde. Merk baksiden med ID, men ikke med S/F-koder.
-- En «søkeliste» for spilllederen: hvilke søkeord som gir hvilke kort (§13), og noen fyllkort.
-- Personkort for spilllederen med Vet / Tror / Skjuler / Tillit fra §7.
-- Et ark for spilleren: Casebook med plass til hypoteser i formatet [subjekt] [relasjon] [objekt] + bevis-ID.
-- Et dagsark for spilllederen: handlingsteller og hendelser D1–D15.
-
-**Gjennomføring (45–60 min):**
-1. Les introteksten og gi spilleren A01 og A02.
-2. Spilleren sier hva hen gjør: «I search for…», «I open…», «I message Theo and show A05.» Spilllederen gir kort eller svarer som personen.
-3. Tell betydningsfulle handlinger. Ved 15 eller «sleep»: ny dag, del ut hendelser.
-4. Spilleren publiserer når hen vil. Spilllederen vurderer etter §16 og leser opp utfallet.
-
-**Notér underveis:**
-- Hvor lenge går det mellom hver gang spilleren finner noe nytt? Over tre minutter uten fremgang er et faresignal.
-- Hvilke søkeord prøvde spilleren som ikke ga noe? Det er kandidater til nytt innhold.
-- Ble spilleren lurt av F1? Var det morsomt eller frustrerende?
-- Oppdaget spilleren Calvin-laget uten hint?
-- Hvilke kort ble aldri brukt?
-
----
-
-## 21. Konsekvenser for motoren
-
-Dette er det saken krever av motoren, og som må med i fase 1. Alt er generelt nok til andre etterforskningsspill.
-
-1. **Én verden, ikke saker.** Innhold ligger i én verden. Et `mystery`-objekt er bare en gruppering for forfatter og vurdering (hvilke påstander som teller), ikke en meny for spilleren.
-2. **Person ≠ konto.** `Account.operatedBy` kan peke på en person, en organisasjon, et system (Autopilot) eller «ukjent».
-3. **Artefakter med versjoner.** `versions[]` med dato og innhold, `deletedAt`, og om versjonen finnes i cache.
-4. **Indeksering som egenskap.** `index: full | weak | exact-only | cache-only | none` og `access` (betingelse).
-5. **Bilder som artefakter** med metadata, opphav, kopier, transformasjoner og kanonisk manipulasjon (§10).
-6. **Påstander og støtte.** Artefakter har `supports: [{ claim, strength }]`. Kildestyrke regnes ut fra uavhengige kilder.
-7. **Personkunnskap og tillit.** Vet / tror / skjuler med betingelser, og en tillitsverdi per person.
-8. **Regler med utløsere** for handlinger, dager og terskler, og effekter som endrer artefakter, sender meldinger og setter flagg.
-9. **Varige verdensflagg** som overlever saken og kan leses av senere innhold.
-10. **Autopilot som en egen type samtalepartner:** skriptet, repeterende, med «sprekk-trinn». Gir samtidig en naturlig fremtidig plass for AI-dialog, siden det i fiksjonen *er* en maskin.
-
----
-
-## 22. Åpne spørsmål
-
-Disse kan vente til etter papirtesten, men bør avgjøres før fase 1.
-
-1. **Skal Iris' innlogging være med?** Den gir en sterk moralsk avveining, men også en snarvei. Alternativ: fjern A24 og la A29 bare komme fra Paul.
-2. **Avstemningen dag 8:** gir den nok spenning uten å straffe trege spillere? Alternativ: avstemningen skjer først når spilleren har publisert eller etter dag 12.
-3. **Spillerens navn og kjønn:** fritt valg, eller et fast navn (Sam)?
-4. **Hvor tydelig skal kildestyrke vises** i Casebook? Som tall, som symboler, eller bare via Dana?
+Gamle papirtestinstruksjoner, motorforslag og spørsmål før fase 1 er tatt ut av dette dokumentet. De finnes i [opprinnelig forfattergrunnlag](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/THE-QUIET-ACCOUNT.md). De er ikke åpne oppgaver. Restarbeid og forslag vedlikeholdes i [BACKLOG](BACKLOG.md).

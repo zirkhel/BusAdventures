@@ -66,4 +66,4 @@ Settings har av/på og «Show intro tips again». Sistnevnte nullstiller bare se
 
 Tvillingverdener skal gi identisk synlig informasjon, Dana-vurdering, avslag og kutt når bare skjult kanon endres. Bare verdens konsekvenser etter publisering kan avvike. Se [PR-kontroller](PR89-REVIEW.md) og [restoppgaver](BACKLOG.md).
 
-Den opprinnelige trinnplanen, gamle datamodellskisser og tidligere vurderinger ligger i [historikk](history/2026-11-25/docs/CASEBOOK-DEDUCTION.md). De er ikke gjeldende API eller oppgaver.
+Den opprinnelige trinnplanen, gamle datamodellskisser og tidligere vurderinger ligger i [historikk](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/CASEBOOK-DEDUCTION.md). De er ikke gjeldende API eller oppgaver.

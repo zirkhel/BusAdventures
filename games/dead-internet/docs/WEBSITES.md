@@ -1,6 +1,6 @@
 # Nettsteder og Archive — gjeldende funksjon
 
-W0–W8 og nettsidefotografiene er merget før PR #89. Denne beskrivelsen erstatter den gamle implementeringsplanen. [Inventaret](WEBSITE-INVENTORY.md) beskriver nettstedene; [historikken](history/2026-11-25/docs/WEBSITES.md) bevarer designbegrunnelser og tidligere beslutninger.
+W0–W8 og nettsidefotografiene er merget før PR #89. Denne beskrivelsen erstatter den gamle implementeringsplanen. [Inventaret](WEBSITE-INVENTORY.md) beskriver nettstedene; [historikken](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/WEBSITES.md) bevarer designbegrunnelser og tidligere beslutninger.
 
 ## Arkitektur og innhold
 

@@ -1,6 +1,6 @@
 # Saksavslutning — mekanikk og åpne funn
 
-Oppdatert 25. november 2026. Avslutningsdefinisjonene er ikke endret av PR #89. Den tidligere gjennomgangen ble gjort før regel P; den er bevart som [historisk gjennomgang](history/2026-11-25/docs/CASE-ENDINGS-REVIEW.md). Kanttilfellene nedenfor må reproduseres på dagens gren før retting. Dette dokumentet godkjenner ikke nye utfall.
+Oppdatert 25. november 2026. Avslutningsdefinisjonene er ikke endret av PR #89. Den tidligere gjennomgangen ble gjort før regel P; den er bevart som [historisk gjennomgang](https://github.com/zirkhel/BusAdventures/blob/50d5643703a9f7e136809e788eefb64059971383/games/dead-internet/docs/CASE-ENDINGS-REVIEW.md). Kanttilfellene nedenfor må reproduseres på dagens gren før retting. Dette dokumentet godkjenner ikke nye utfall.
 
 ## Publisering og konsekvenser
 

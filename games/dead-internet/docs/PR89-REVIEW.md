@@ -37,3 +37,7 @@ Simulatorens rapporterte forskjell er antall handlinger: +1 i design_as_clue, li
 ## Utenfor PR #89
 
 Tillitsfarm, øvrig persondialog, F-1/F-2, nye avslutninger, nye påstandstyper og nye apper. Se [BACKLOG](BACKLOG.md). Disse skal ikke snikes inn for å få kontrollisten grønn.
+
+## Dokumentasjonsopprydding i PR #90
+
+PR #90 bygger på #89 og samler gjeldende beskrivelse, restoppgaver og denne kontrollisten. Historiske fullkopier er erstattet av lenker til `50d5643`. Ingen spillkode eller tester er endret. De registrerte 287 testene, validatoren og simulatoren gjenbrukes; dokumentasjonsoppfølgingen kontrollerer lenker og diff uten å starte spilltestene på nytt. Åpne punkter ovenfor er ikke dermed godkjent.
