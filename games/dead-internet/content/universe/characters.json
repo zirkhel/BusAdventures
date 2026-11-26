@@ -28,6 +28,7 @@
       "mara"
      ]
     },
+    "repeatText": "Still here! Let's talk about Thursday instead. Community center, 7pm!",
     "text": "Haha what do you mean? I'm right here 💛 It was a hard summer, that's all. Thursday, 7pm, community center!",
     "supports": [
      "S8"
@@ -38,6 +39,7 @@
     "on": {
      "ask": "calder_mill"
     },
+    "repeatText": "The Mill again! Such a landmark. But I'm looking forward, not back!",
     "text": "The Mill! Such a landmark. Honestly it's time for something new though 💛",
     "supports": [
      "S8"
@@ -48,6 +50,7 @@
     "on": {
      "ask": "theo"
     },
+    "repeatText": "Coffee with Theo would be lovely! We should all do that sometime!",
     "text": "Theo's doing great! We should all get coffee sometime 💛",
     "supports": [
      "S8"
@@ -61,6 +64,7 @@
       "acc_junopark"
      ]
     },
+    "repeatText": "You should talk to Juno! Bestie energy, always!",
     "text": "Juno is my bestie!! 🌱 You'd love her."
    },
    {
@@ -72,6 +76,7 @@
       "evt_vote"
      ]
     },
+    "repeatText": "Homes and a fresh start for Eastfield! That's what I keep coming back to!",
     "text": "Eastfield needs homes, not nostalgia 💛 I really believe that now."
    },
    {
@@ -99,6 +104,7 @@
       "calvin"
      ]
     },
+    "repeatText": "Still no idea, haha! Thursday is much more my thing. Are you coming?",
     "text": "Haha I don't know what that is! Are you coming Thursday? 💛"
    }
   ],
@@ -1273,6 +1279,7 @@
       "northgate"
      ]
     },
+    "repeatText": "Client confidentiality, of course! But community voices are what Brightline is all about. Shall we set up that call?",
     "text": "Hi! Calvin here 👋 We don't comment on client work, but at Brightline we believe every community deserves to be heard. Happy to set up a call!"
    }
   ],

@@ -44,5 +44,5 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Iris’ portalsvar beholder engangsoppførselen slik at øvrige svar om Garden og Meridian fortsatt kan nås. Bevisreaksjoner og ukjente emner er ikke endret i denne deloppgaven.
 - Juno har urolige standardsvar etter første og andre bevisreaksjon; eksisterende bevisreaksjoner prioriteres fortsatt, og tausheten etter tredje stadium beholdes. Dana har korte påminnelser for åtte besvarte emner; avslutningsspesifikke svar har fortsatt prioritet. Ingen nye effekter eller endrede progresjonsvilkår.
 - Paul har fire korte påminnelser og et eget svar om Mara/Brightline etter den fortrolige innrømmelsen. Han vedkjenner seg samtalen, men avviser videre diskusjon på denne kontoen. Eksisterende utløsere, dokumentlevering og konsekvenser beholdes.
-- Videre mulig dialogoppfølging: de tilsiktet kunstige gjentakelsene hos Maras konto og Calvin.
+- Maras konto har seks emnetilpassede avledninger ved gjentatte spørsmål; Calvin har én for klientspørsmål. Den kunstige tonen beholdes. Calvins spørsmål om egen identitet beholder originalsvaret og telleren som utløser en eksisterende hendelse etter tre forsøk. Ingen ny kunnskap eller nye hendelser er lagt til.
 - Endringen er ikke testkjørt, etter instruksen om ingen tester uten uttrykkelig bestilling.
