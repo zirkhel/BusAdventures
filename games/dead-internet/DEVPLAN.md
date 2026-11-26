@@ -46,3 +46,9 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Paul har fire korte påminnelser og et eget svar om Mara/Brightline etter den fortrolige innrømmelsen. Han vedkjenner seg samtalen, men avviser videre diskusjon på denne kontoen. Eksisterende utløsere, dokumentlevering og konsekvenser beholdes.
 - Maras konto har seks emnetilpassede avledninger ved gjentatte spørsmål; Calvin har én for klientspørsmål. Den kunstige tonen beholdes. Calvins spørsmål om egen identitet beholder originalsvaret og telleren som utløser en eksisterende hendelse etter tre forsøk. Ingen ny kunnskap eller nye hendelser er lagt til.
 - Endringen er ikke testkjørt, etter instruksen om ingen tester uten uttrykkelig bestilling.
+
+## Tydeligere åpning 26. november
+
+- Godkjent etter spilltest: åpningen spør hvem som står bak Maras konto. «Read Mara's message» åpner samtalen direkte ved nytt spill, med eksisterende introduksjonstips. Fortsettelse av lagringer beholder dagens inngang.
+- Casebook viser sakens undersøkelsesspørsmål og lenke tilbake til meldingen. Innholdet ligger i sakens `start`-data; ingen spor markeres og ingen oppgaveliste legges til.
+- Ikke testkjørt, inkludert mobilvisning, etter instruks.
