@@ -7,7 +7,8 @@
 //   { id, entity, account, kind: "person"|"autopilot", source, trust:{start,min,max},
 //     knows:[claim], believes:[claim], has:[artifact], contactIf?, silentIf?,
 //     prompts?: [{ id, label, if? }],
-//     responses: [{ id, on, if?, once?, text, attach?, supports?, mentions?, effects?, delayDays? }],
+//     responses: [{ id, on, if?, once?, text, repeatText?, attach?, supports?, mentions?, effects?, delayDays? }],
+//     memory?: { unknownPerson, unknownTopic, repeatAsk, repeatShow },
 //     fallback?: { ask?:[{if?,text}], show?:[...], reply?:[...], any?:[...] } }
 //   on: { any:true } | { ask: id|[ids] } | { show: artifact|[...] } | { showSupports: claim|[...] } | { reply: option }
 //
@@ -65,6 +66,8 @@ export function sendMessage(g, charId, msg) {
     playerText = fill(str(g.w, "messages.ask"), { name: nameOf(g.w, msg.topic) });
   } else if (msg.kind === "show") {
     if (!msg.artifact || g.s.seen[msg.artifact] == null) return { error: "not_seen" };
+    // Remember the visible version, so a changed page is not mistaken for the same evidence.
+    if (c.memory) m.version = g.view(msg.artifact, msg.version).versionId ?? msg.version;
     m.supports = supportsOf(g, msg.artifact, msg.version);
     playerText = fill(str(g.w, "messages.show"), { title: nameOf(g.w, msg.artifact) });
   } else if (msg.kind === "reply") {
@@ -75,7 +78,7 @@ export function sendMessage(g, charId, msg) {
   } else return { error: "bad_kind" };
 
   g.s.messages.push({ id: `M${g.s.nextId++}`, thread: charId, from: "player", day: g.s.day, text: playerText,
-    kind: msg.kind, topic: msg.topic ?? null, artifact: msg.artifact ?? null, version: msg.version ?? null, attach: [], supports: [] });
+    kind: msg.kind, topic: msg.topic ?? null, artifact: msg.artifact ?? null, version: m.version ?? null, attach: [], supports: [] });
 
   let reply = null;
   if (!(c.silentIf && check(c.silentIf, g.ctx))) reply = resolveResponse(g, c, m);
@@ -85,11 +88,23 @@ export function sendMessage(g, charId, msg) {
 }
 
 function resolveResponse(g, c, m) {
+  // Opt-in conversational memory. Reminder replies carry no new evidence, attachments or effects.
+  const say = text => {
+    g.receiveMessage({ from: c.id, text, attach: [], supports: [], source: c.source ?? c.id });
+    return { text };
+  };
+  const shownBefore = c.memory && m.kind === "show" && g.s.messages.slice(0, -1).some(x =>
+    x.thread === c.id && x.from === "player" && x.kind === "show" && x.artifact === m.artifact && x.version === (m.version ?? null));
   for (const r of asArray(c.responses)) {
     if (!matchesOn(g, r.on, m)) continue;
     const key = `resp:${c.id}:${r.id}`;
-    if (r.once && g.s.fired[key] != null) continue;
     if (r.if && !check(r.if, g.ctx)) continue;
+    if (g.s.fired[key] != null) {
+      // Still look for a newly eligible authored response before acknowledging repeated evidence.
+      if (shownBefore) continue;
+      if (r.repeatText && m.kind === "ask") return say(r.repeatText);
+      if (r.once) continue;
+    }
     g.s.fired[key] = g.s.day;
     const message = r.text == null ? null : {
       from: c.id, text: r.text, attach: asArray(r.attach), supports: asArray(r.supports),
@@ -104,6 +119,14 @@ function resolveResponse(g, c, m) {
     if (message) g.receiveMessage(message);
     applyEffects(g, r.effects, { response: key });
     return message ? { text: message.text } : null;
+  }
+  if (shownBefore && c.memory.repeatShow) return say(c.memory.repeatShow);
+  if (c.memory && m.kind === "ask") {
+    const key = `fallback:${c.id}:ask:${m.topic}`;
+    const template = g.s.fired[key] != null ? c.memory.repeatAsk :
+      g.w.entities.get(m.topic)?.kind === "person" ? c.memory.unknownPerson : c.memory.unknownTopic;
+    g.s.fired[key] = g.s.day;
+    return say(fill(template, { name: nameOf(g.w, m.topic) }));
   }
   const list = [...asArray(c.fallback?.[m.kind]), ...asArray(c.fallback?.any)];
   const fb = list.find(f => check(f.if, g.ctx));

@@ -73,6 +73,18 @@ export function casebookApp(phone) {
   const casesRow = (kind, item) => h("button.case-row", { onclick: () => pickCases(kind, item) },
     icon("book"), h("span.muted", "Case"), h("b", casesLabel(item)), h("span.chev", "›"));
 
+  // A reminder of the case premise, never a generated hint or relevance marker.
+  function caseObjectives() {
+    return g.cases().map(c => {
+      const start = w.mysteries.get(c.id)?.start;
+      if (!start?.objective) return null;
+      return h("div.hint", h("b", c.title), h("p", start.objective),
+        start.openingThread && g.thread(start.openingThread).length
+          ? h("button.bar-link", { onclick: () => phone.push("messages", { kind: "thread", id: start.openingThread }) }, start.openingLabel)
+          : null);
+    });
+  }
+
   function filterBar(desc) {
     const f = desc.filter;
     const chip = (label, val) => h("button.chip", { class: f === val ? "on" : "", onclick: () => phone.replaceTop({ ...desc, filter: val, scroll: 0 }) }, label);
@@ -817,7 +829,7 @@ export function casebookApp(phone) {
       ["notes", phone.str("casebook.notes"), n(g.s.notes) + n((g.s.questions || []).filter(q => q.status === "open"))], ["timeline", "Timeline", n(g.s.timeline)]];
     return [h("div.seg.tabs.four", tabs.map(([id, label, n]) => h("button", { class: tab === id ? "on" : "", onclick: () => phone.replaceTop({ ...desc, tab: id, scroll: 0 }) },
       h("span", label), h("small", String(n))))),
-      h("div.cb", tab === "evidence" ? null : filterBar(desc), tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab(desc) : tab === "timeline" ? timelineTab(desc) : notesTab(desc))];
+      h("div.cb", caseObjectives(), tab === "evidence" ? null : filterBar(desc), tab === "evidence" ? evidenceTab(desc) : tab === "theories" ? theoriesTab(desc) : tab === "timeline" ? timelineTab(desc) : notesTab(desc))];
   }
 
   // ── Timeline ────────────────────────────────────────────────────────────

@@ -84,16 +84,16 @@ function intro(m) {
     const playerName = name.value.trim().replace(/\s+/g, " ").slice(0, 20) || world.meta.player?.defaultName || "Sam";
     const g = new Game(world, { seed: (Date.now() % 2147483647) >>> 0, playerName });
     g.start(m.id);
-    run(g, true);
+    run(g, true, m.start);
   };
   root.replaceChildren(h("div.intro",
     h("button.intro-back", { onclick: () => menu(null) }, "‹ ", world.strings.menu.back),
     h("div.intro-top", h("h1", S.title), h("div.tagline", S.tagline)),
     h("p.intro-text", m.start?.intro || ""),
-    h("form.intro-form", { onsubmit: start }, h("label", S.namePrompt, name), h("button.btn.primary", { type: "submit" }, S.start))));
+    h("form.intro-form", { onsubmit: start }, h("label", S.namePrompt, name), h("button.btn.primary", { type: "submit" }, m.start?.openingLabel || S.start))));
 }
 
-function run(game, fresh) {
+function run(game, fresh, opening = null) {
   // A new game starts with tips on and none seen. Loading a save or reloading keeps the player's
   // tip preferences (they are per device, not in the save).
   if (fresh) savePrefs(store, newGamePrefs());
@@ -116,7 +116,10 @@ function run(game, fresh) {
       } catch (err) { phone.toast(`Import failed: ${err?.message || err}`); }
     },
   });
-  phone.lock();
+  if (fresh && opening?.openingThread && game.thread(opening.openingThread).length) {
+    phone.push("messages", { kind: "thread", id: opening.openingThread });
+    phone.tips.intro();
+  } else phone.lock();
   /** @type {any} */ (window).deadInternet = { game, phone, world };
 }
 

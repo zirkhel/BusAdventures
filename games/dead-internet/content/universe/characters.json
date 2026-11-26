@@ -28,6 +28,7 @@
       "mara"
      ]
     },
+    "repeatText": "Still here! Let's talk about Thursday instead. Community center, 7pm!",
     "text": "Haha what do you mean? I'm right here 💛 It was a hard summer, that's all. Thursday, 7pm, community center!",
     "supports": [
      "S8"
@@ -38,6 +39,7 @@
     "on": {
      "ask": "calder_mill"
     },
+    "repeatText": "The Mill again! Such a landmark. But I'm looking forward, not back!",
     "text": "The Mill! Such a landmark. Honestly it's time for something new though 💛",
     "supports": [
      "S8"
@@ -48,6 +50,7 @@
     "on": {
      "ask": "theo"
     },
+    "repeatText": "Coffee with Theo would be lovely! We should all do that sometime!",
     "text": "Theo's doing great! We should all get coffee sometime 💛",
     "supports": [
      "S8"
@@ -61,6 +64,7 @@
       "acc_junopark"
      ]
     },
+    "repeatText": "You should talk to Juno! Bestie energy, always!",
     "text": "Juno is my bestie!! 🌱 You'd love her."
    },
    {
@@ -72,6 +76,7 @@
       "evt_vote"
      ]
     },
+    "repeatText": "Homes and a fresh start for Eastfield! That's what I keep coming back to!",
     "text": "Eastfield needs homes, not nostalgia 💛 I really believe that now."
    },
    {
@@ -99,6 +104,7 @@
       "calvin"
      ]
     },
+    "repeatText": "Still no idea, haha! Thursday is much more my thing. Are you coming?",
     "text": "Haha I don't know what that is! Are you coming Thursday? 💛"
    }
   ],
@@ -163,6 +169,7 @@
     "if": {
      "flag": "mara_memorialized"
     },
+    "repeatText": "her page still says Remembering. i told you about the books on her bench.",
     "text": "her page says Remembering now. people keep leaving library books on her bench. she would have hated that. she would have loved that."
    },
    {
@@ -171,6 +178,7 @@
      "ask": "calder_mill"
     },
     "once": true,
+    "repeatText": "the old girl. that was what she called the mill. i remember.",
     "text": "she called it the old girl. nobody calls it that unless they knew her. ok. you knew her. what do you want.",
     "effects": [
      {
@@ -210,6 +218,7 @@
       "lou"
      ]
     },
+    "repeatText": "i told you about lou and his letter. i have nothing more to say about him.",
     "text": "the driver was some guy named lou. he wrote me a letter. it was awful and kind. it was an accident.",
     "supports": [
      "S1"
@@ -255,6 +264,7 @@
       "n": 1
      }
     },
+    "repeatText": "july 2nd. route 9. please don't make me keep going over it.",
     "text": "july 2nd. route 9. she always said that intersection would kill someone. she was right about everything, it's exhausting.",
     "supports": [
      "S1"
@@ -290,6 +300,7 @@
       "acc_truthseeker"
      ]
     },
+    "repeatText": "still the same messages from owen. i already told you what i think.",
     "text": "that guy has been messaging me for months. 3am essays. if anyone hacked her account it's him.",
     "supports": [
      "F3"
@@ -307,6 +318,7 @@
      }
     },
     "once": true,
+    "repeatText": "i told you. i never sent the certificate. talking about it again doesn't make it easier.",
     "text": "i never sent connect the death certificate. it's in a drawer. i couldn't make it real. maybe if i had none of this would have happened.",
     "effects": [
      {
@@ -325,6 +337,7 @@
     "on": {
      "ask": "acc_maraquinn"
     },
+    "repeatText": "i already reported it. the form letter was all i got back.",
     "text": "i reported it in january. connect sent me a form letter. it's like shouting into a vent.",
     "supports": [
      "S8"
@@ -341,6 +354,7 @@
     "if": {
      "flag": "theo_convinced"
     },
+    "repeatText": "i still don't know who they are. the recovery address is in what i sent you.",
     "text": "never heard of them. but that recovery address. bl-ops. is that them?"
    }
   ],
@@ -409,6 +423,7 @@
      ]
     },
     "once": true,
+    "repeatText": "I told you: I wrote the death notice, then quoted the account months later. That's the discrepancy I can speak to.",
     "text": "I wrote Mara's death notice in July. In December I quoted her account in a story about the Waterfront. You can imagine how that felt when I noticed.",
     "supports": [
      "S1",
@@ -536,6 +551,7 @@
       }
      ]
     },
+    "repeatText": "Still no answer from Paul. You have Northgate's statement; I don't have anything beyond that.",
     "text": "Northgate says it 'was not aware of any concerns regarding individual accounts'. Paul Navarro has stopped answering my emails, which is the most honest thing he's done all year."
    },
    {
@@ -547,6 +563,7 @@
       "waterfront"
      ]
     },
+    "repeatText": "As I said, they're our biggest advertiser. The lobbying disclosure at City Hall is somewhere you can look beyond Paul's fact sheets.",
     "text": "Biggest advertiser we have. Paul Navarro answers every question with a fact sheet. Draw your own conclusions, but draw them carefully. If they paid anyone to talk up the Waterfront, it has to be in their lobbying disclosure at City Hall. Nobody ever reads those."
    },
    {
@@ -573,6 +590,7 @@
       }
      ]
     },
+    "repeatText": "Disconnected number, full mailbox. That's where my follow-up stands. I haven't found Calvin.",
     "text": "Hal wants a follow-up every day now. Funny how that works. Brightline's number is disconnected, the Harbor Street mailbox is full, and nobody has found Calvin Marsh. I'm starting to think nobody will."
    },
    {
@@ -584,6 +602,7 @@
       "renee"
      ]
     },
+    "repeatText": "Voicemail and emailed quotes. I told you the hours they arrived. I haven't spoken to him on a call.",
     "text": "I've called Brightline's number six times. Always the same very pleasant voicemail. Calvin Marsh has given me three quotes, all by email, all at 3am.",
     "supports": [
      "S7"
@@ -597,6 +616,7 @@
       "the_garden"
      ]
     },
+    "repeatText": "I already gave you Iris Bell's handle: @irisbellwrites. Her email was withdrawn. She needs to speak for herself.",
     "text": "I'd never heard of them before you. Their registry filing is thin. Thin like a cardboard set. Oh, and in December someone called Iris Bell emailed the newsroom asking how to 'report a fake account if you made it'. Then she unsent it. Her handle is @irisbellwrites.",
     "mentions": [
      "iris",
@@ -611,6 +631,7 @@
       "hal"
      ]
     },
+    "repeatText": "Hal called the follow-up too thin and too risky. I've told you where I disagree with him.",
     "text": "Hal spiked my follow-up in December. 'Too thin, too risky.' He wasn't wrong about thin. He was wrong about risky."
    },
    {
@@ -621,6 +642,7 @@
       "acc_truthseeker"
      ]
     },
+    "repeatText": "I've told you my experience with Owen. Check what he sends; his name alone doesn't settle anything.",
     "text": "Owen has emailed the newsroom 214 times. About 3 of them were right. That's a better hit rate than some of my sources."
    }
   ],
@@ -689,7 +711,8 @@
     "text": "She fought for the Mill. Fought for US. And then she 'changed her mind'? Dead people don't change their minds. That part I'm right about.",
     "supports": [
      "S8"
-    ]
+    ],
+    "repeatText": "Her account changed its tune. Mara didn't tell me why. That's the distinction."
    },
    {
     "id": "pattern",
@@ -709,7 +732,8 @@
      "acc_junopark",
      "acc_mike",
      "acc_pat"
-    ]
+    ],
+    "repeatText": "The timestamps are there to check. Who's behind them? That's the part I haven't established."
    },
    {
     "id": "mirror",
@@ -727,7 +751,8 @@
      {
       "setFlag": "tip_flip"
      }
-    ]
+    ],
+    "repeatText": "Look at the lettering in the photos. Flip them. Check for yourself."
    },
    {
     "id": "murder",
@@ -742,7 +767,8 @@
     "text": "Kestrel van. Kestrel works Northgate sites. Northgate needed Mara gone before the vote. Connect the dots. I did. With string.",
     "supports": [
      "F1"
-    ]
+    ],
+    "repeatText": "The van, the client list, the development. That's my connection. No, I don't have a written order."
    },
    {
     "id": "theo",
@@ -752,7 +778,8 @@
     "text": "The brother had the password. I'm just saying what everyone's thinking.",
     "supports": [
      "F2"
-    ]
+    ],
+    "repeatText": "No, Theo hasn't admitted anything to me. Most of what he says to me is 'stop messaging'."
    },
    {
     "id": "police",
@@ -802,7 +829,8 @@
     ],
     "mentions": [
      "static_channel"
-    ]
+    ],
+    "repeatText": "I already sent you the address. And I meant what I said about keeping it to yourself."
    },
    {
     "id": "paper",
@@ -815,7 +843,8 @@
     "text": "The Record deleted her quote. Who pays the Record? NORTHGATE ADS ON EVERY PAGE.",
     "supports": [
      "F4"
-    ]
+    ],
+    "repeatText": "I kept what they published. I wasn't in the newsroom when they decided to change it."
    }
   ],
   "fallback": {
@@ -824,6 +853,12 @@
      "text": "Interesting. Very interesting. I'll add it to the file."
     }
    ]
+  },
+  "memory": {
+   "unknownPerson": "{name}? I don't have anything on them. And before you ask: no, that doesn't make them suspicious.",
+   "unknownTopic": "Nothing in my file on that. The file has limits. Despite what Dana says.",
+   "repeatAsk": "Still nothing. Asking twice doesn't give me a second source.",
+   "repeatShow": "You've sent me this already. What do you think I've missed?"
   }
  },
  {
@@ -1041,6 +1076,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "The Garden is what we called it. I told you how the accounts and Autopilot worked. That is what I know.",
     "text": "We called it the Garden. Forty-ish accounts. Some were real people who'd stopped posting. Some were… invented. I wrote six. The DMs were Autopilot, a chatbot with the style guide loaded.",
     "supports": [
      "S2",
@@ -1064,6 +1100,7 @@
      "flag": "iris_open"
     },
     "once": true,
+    "repeatText": "Yes. I wrote that December post. I told you when I found out about Mara. Please don't make me say it all again.",
     "text": "They gave me Mara in November. A style guide built from her old posts. I wrote the December one. The 'changed my mind' one. I didn't know she was dead until I googled her. I quit four days later.",
     "supports": [
      "S2",
@@ -1090,6 +1127,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "I told you what Renee called it: continuity work. Deleting posts and softening the rest.",
     "text": "Renee had someone go through her blog in October. Delete the angry posts, soften the rest. 'Continuity work.'",
     "supports": [
      "S5"
@@ -1115,6 +1153,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "I told you how we made Juno. I'm still sorry if you talked to her.",
     "text": "Juno was mine first. She's a costume. A stock photo, Mara's old garden pictures flipped around, and Autopilot for the DMs. I'm sorry if you talked to her.",
     "supports": [
      "S4"
@@ -1133,6 +1172,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "Cameras off. Slack at four in the morning. That's what I saw, not an explanation for it.",
     "text": "I never met either of them. Video calls, cameras off. Calvin answered Slack at 4am, every night. I thought he just never slept. Now I don't know what I thought.",
     "supports": [
      "S7"
@@ -1149,6 +1189,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "Those were Renee's words about NGD. I can repeat them, but I can't tell you more than I heard.",
     "text": "Client code NGD. Renee said the client loved the Quinn backstory. Her words: 'They know. They love it.'",
     "supports": [
      "S3",
@@ -1163,6 +1204,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "Meridian was the name on my paychecks. I don't know more about the company.",
     "text": "My paychecks came from Meridian Holdings. I assumed it was a payroll company. Was it not?"
    },
    {
@@ -1237,6 +1279,7 @@
       "northgate"
      ]
     },
+    "repeatText": "Client confidentiality, of course! But community voices are what Brightline is all about. Shall we set up that call?",
     "text": "Hi! Calvin here 👋 We don't comment on client work, but at Brightline we believe every community deserves to be heard. Happy to set up a call!"
    }
   ],
@@ -1364,6 +1407,32 @@
       }
      }
     ]
+   },
+   {
+    "id": "unsettled",
+    "on": {
+     "any": true
+    },
+    "if": {
+     "counterGte": {
+      "id": "juno_stage",
+      "n": 2
+     }
+    },
+    "text": "I keep coming back to the garden and Mara. When I try to remember somewhere else, there's nothing. I don't understand."
+   },
+   {
+    "id": "uncertain",
+    "on": {
+     "any": true
+    },
+    "if": {
+     "counterGte": {
+      "id": "juno_stage",
+      "n": 1
+     }
+    },
+    "text": "Sorry, I'm still thinking about that photo. I remember the garden. I thought I was sure."
    },
    {
     "id": "mara",
@@ -1518,6 +1587,23 @@
     "text": "As I said: legal team."
    },
    {
+    "id": "after_leak",
+    "on": {
+     "ask": [
+      "mara",
+      "acc_maraquinn",
+      "evt_mara_death",
+      "brightline",
+      "the_garden"
+     ]
+    },
+    "if": {
+     "flag": "paul_leaked"
+    },
+    "text": "You heard what I said about what we asked for. That was not a statement from Northgate. I'm not discussing it further on this account.",
+    "repeatText": "I haven't taken back what I told you. But I said I wouldn't discuss it further here."
+   },
+   {
     "id": "calvin",
     "on": {
      "ask": [
@@ -1528,7 +1614,8 @@
     "text": "Calvin? Met him on video a few times. His camera never worked. Bandwidth, he said. Why?",
     "supports": [
      "S7"
-    ]
+    ],
+    "repeatText": "As I said, we spoke on video. His camera was off. I can't add anything to that."
    },
    {
     "id": "brightline",
@@ -1538,7 +1625,8 @@
       "the_garden"
      ]
     },
-    "text": "We work with many community partners. I can't discuss specific vendors."
+    "text": "We work with many community partners. I can't discuss specific vendors.",
+    "repeatText": "I've already given you our position on vendors. I'm not going to expand on it here."
    },
    {
     "id": "waterfront",
@@ -1549,7 +1637,8 @@
       "evt_vote"
      ]
     },
-    "text": "Eastfield Waterfront will bring 1,200 homes to Port Calder, 30% below market. Happy to send our fact sheet."
+    "text": "Eastfield Waterfront will bring 1,200 homes to Port Calder, 30% below market. Happy to send our fact sheet.",
+    "repeatText": "The figures I gave you are our public position on the Waterfront. I can refer you to the same fact sheet."
    },
    {
     "id": "mara",
@@ -1560,7 +1649,8 @@
       "evt_mara_death"
      ]
     },
-    "text": "I'm sorry, I don't follow individual accounts. Our condolences to anyone who has lost someone."
+    "text": "I'm sorry, I don't follow individual accounts. Our condolences to anyone who has lost someone.",
+    "repeatText": "I've offered our condolences. I have no further comment on individual accounts."
    }
   ],
   "fallback": {

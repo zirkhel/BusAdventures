@@ -60,6 +60,8 @@ Spillerens vurderinger er ikke fasit. Rettede Supports-koblinger kan påvirke Da
 
 **Kjent avvik:** flere personreaksjoner bruker fortsatt `showSupports`. PR #89 retter hennes redaksjonelle vurdering/kutt, ikke alle dialogreaksjoner. Danas generelle bevisreaksjon (`dana.evidence`) gir nå +1 tillit én gang totalt, via eksisterende `once`/`fired`. Gamle lagringer beholder opptjent tillit og registrerte reaksjoner. Se [BACKLOG](docs/BACKLOG.md).
 
+Owen har innholdsdefinert `memory` og `repeatText` for ukjente emner og gjentakelser. Påminnelser gir ikke nye vedlegg, bevismerker eller effekter. Nye kvalifiserende bevisreaksjoner sjekkes før gjentakelsessvaret. Hukommelsen bruker eksisterende `fired` og samtalehistorikk, med sideversjon for viste bevis; lagringsformatet er uendret. Person og konto likestilles ikke. Førstesvar og eksisterende `showSupports`-utløsere er beholdt.
+
 ## Verdensmodell og tid
 
 Artefakter har stabile ID-er, tilgang og versjoner. Levende side kan endres eller slettes; tilgjengelig cache og spillerens lagrede kopier er egne lesemuligheter. Bilder har metadata, original/avledning og transformasjoner. Video- og feedmodellen finnes, men TokTok-appen gjenstår.

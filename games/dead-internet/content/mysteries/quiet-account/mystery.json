@@ -9,7 +9,10 @@
  },
  "start": {
   "menu": true,
-  "intro": "Mara Quinn died on July 2nd. You were at the funeral.",
+  "intro": "Mara Quinn died on July 2nd. You were at the funeral. Now her account has messaged you. Find out who's behind it.",
+  "objective": "Who is behind Mara Quinn's account?",
+  "openingThread": "persona_mara",
+  "openingLabel": "Read Mara's message",
   "known": [
    "mara",
    "acc_maraquinn",

@@ -226,6 +226,8 @@ a.lnk:active { opacity: .6; }
 .thread-row { display: flex; gap: 12px; align-items: center; width: 100%; padding: 10px 16px; border-bottom: 1px solid var(--line); }
 .thread-row:active { background: var(--paper2); }
 .tr-main { flex: 1; min-width: 0; }
+.tr-open { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; text-align: left; }
+.msg-avatar { min-width: 44px; min-height: 44px; display: grid; place-items: center; }
 .tr-head { display: flex; justify-content: space-between; font-size: 15px; }
 .tr-head .muted { font-size: 13px; }
 .tr-last { font-size: 14px; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

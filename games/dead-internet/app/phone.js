@@ -223,7 +223,7 @@ export class Phone {
   openAccount(accId) {
     const pid = this.g.w.profileOf.get(accId);
     if (pid) this.openArtifact(pid, undefined, "connect");
-    else this.toast("No profile found.");
+    else if (this.g.w.accounts.has(accId)) this.push("connect", { kind: "account", id: accId });
   }
 
   /** News apps where an account has a byline: [{app, name}]. */

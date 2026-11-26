@@ -381,10 +381,14 @@ export function validateWorld(raw, opts = {}) {
     for (const k of [...arr(c.knows), ...arr(c.believes), ...arr(c.observed)]) if (!w.claims.has(k)) err(where, `knowledge of unknown claim ${k}`);
     for (const k of arr(c.knows)) if (w.claims.get(k)?.truth === "false") err(where, `"knows" false claim ${k} (use believes)`);
     checkCond(where, c.contactIf); checkCond(where, c.silentIf);
+    if (c.memory) for (const key of ["unknownPerson", "unknownTopic", "repeatAsk", "repeatShow"])
+      if (typeof c.memory[key] !== "string" || !c.memory[key].trim()) err(where, `memory.${key} must be non-empty text`);
     for (const p of arr(c.prompts)) checkCond(`${where} prompt ${p.id}`, p.if);
     const ids = new Set();
     for (const r of arr(c.responses)) {
       const rw = `${where} response ${r.id}`;
+      if (r.repeatText != null && (typeof r.repeatText !== "string" || !r.repeatText.trim() || !r.on?.ask))
+        err(rw, "repeatText must be non-empty text on an ask response");
       if (ids.has(r.id)) err(rw, "duplicate response id");
       ids.add(r.id);
       const keys = Object.keys(r.on || {});
