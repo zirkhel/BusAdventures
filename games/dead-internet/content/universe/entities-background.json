@@ -210,5 +210,34 @@
     "to": "northgate"
    }
   ]
+ },
+ {
+  "id": "port_calder_high",
+  "kind": "org",
+  "name": "Port Calder High",
+  "aliases": [
+   "Port Calder High",
+   "Port Calder High School"
+  ],
+  "isHuman": false,
+  "bio": "One of the three public high schools in Port Calder.",
+  "relations": []
+ },
+ {
+  "id": "joan_ames",
+  "kind": "person",
+  "name": "Joan Ames",
+  "aliases": [
+   "Joan Ames",
+   "Principal Ames"
+  ],
+  "isHuman": true,
+  "bio": "Principal of Port Calder High.",
+  "relations": [
+   {
+    "type": "works_for",
+    "to": "port_calder_high"
+   }
+  ]
  }
 ]

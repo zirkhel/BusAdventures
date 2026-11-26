@@ -70,6 +70,8 @@ Sleep kjører planlagte effekter, dagsregler og avslutninger. Dialog velger før
 
 Mysterier er pakker i samme univers, ikke kopier av verden. De har egne forutsetninger, frister, påstander, avslutninger og grenser for narrative lag. Spillerens bevis kan være uklassifiserte eller knyttet til flere saker. Senere mysterier kan bruke eksisterende bakgrunnsinnhold som bevis når det er eksplisitt registrert og validert.
 
+**Bakgrunnspersoner.** Et navn med tittel i bakgrunnsinnhold (for eksempel «Principal Joan Ames») skal ikke ende i et tomt søk. Det holder med en bakgrunnsentitet i `entities-background*.json` og én liten side der personen naturlig står, som en Calderpedia-stubb eller en ansattside. Siden skal være en blindvei med vilje: kort, nøytral, kildebasert, uten nye hemmeligheter og uten markering. `validate.mjs --info` lister navn med tittel som bare står på én side og ikke finnes som entitet.
+
 ## Lagring og grensesnitt
 
 Spillet bruker v12; eldre lagringer migreres. Rapporter uten historisk øyeblikksbilde får `snapshot: null`, ikke oppdiktet historikk. Tips lagres separat per enhet. Eksport/import og nytt spill ligger i Settings.

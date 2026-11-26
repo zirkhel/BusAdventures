@@ -15,7 +15,7 @@
    {
     "id": "v1",
     "cached": true,
-    "body": "Welcome to Calderpedia, the free encyclopaedia of Port Calder and the towns around the creek.\n\nThis project has been running on the same software since 2014. Anyone with a login may edit, and the habit of the place is to prefer a quiet citation over a loud opinion.\n\n== Featured ==\ncalderpedia.org/Port_Calder — the city itself.\ncalderpedia.org/Calder_Mill — the old girl on the Eastfield waterfront.\ncalderpedia.org/Harbor_Festival — music, chowder, and a long evening on the pier.\n\n== Places ==\ncalderpedia.org/Eastfield, calderpedia.org/Northpoint, calderpedia.org/Old_Town, calderpedia.org/The_Heights, calderpedia.org/Calder_Creek, calderpedia.org/Port_Calder_lighthouse, calderpedia.org/Eastfield–Northpoint_ferry, calderpedia.org/Dock_Road, calderpedia.org/Route_14\n\n== Institutions ==\ncalderpedia.org/The_Daily_Record, calderpedia.org/Saltys_Fish_Bar, calderpedia.org/Calder_Credit_Union, calderpedia.org/City_Council, calderpedia.org/Denise_Harlan, calderpedia.org/Kestrel_Logistics, calderpedia.org/Northgate_Development, calderpedia.org/Port_Calder_Public_Library\n\n== Other articles ==\ncalderpedia.org/Chowder_competitions, calderpedia.org/Fog, calderpedia.org/Dead_internet_theory, calderpedia.org/Harbor_Festival\n\nUse Random article in the menu, or start from the city page."
+    "body": "Welcome to Calderpedia, the free encyclopaedia of Port Calder and the towns around the creek.\n\nThis project has been running on the same software since 2014. Anyone with a login may edit, and the habit of the place is to prefer a quiet citation over a loud opinion.\n\n== Featured ==\ncalderpedia.org/Port_Calder — the city itself.\ncalderpedia.org/Calder_Mill — the old girl on the Eastfield waterfront.\ncalderpedia.org/Harbor_Festival — music, chowder, and a long evening on the pier.\n\n== Places ==\ncalderpedia.org/Eastfield, calderpedia.org/Northpoint, calderpedia.org/Old_Town, calderpedia.org/The_Heights, calderpedia.org/Calder_Creek, calderpedia.org/Port_Calder_lighthouse, calderpedia.org/Eastfield–Northpoint_ferry, calderpedia.org/Dock_Road, calderpedia.org/Route_14\n\n== Institutions ==\ncalderpedia.org/The_Daily_Record, calderpedia.org/Saltys_Fish_Bar, calderpedia.org/Calder_Credit_Union, calderpedia.org/City_Council, calderpedia.org/Denise_Harlan, calderpedia.org/Kestrel_Logistics, calderpedia.org/Northgate_Development, calderpedia.org/Port_Calder_Public_Library, calderpedia.org/Port_Calder_High_School\n\n== Other articles ==\ncalderpedia.org/Chowder_competitions, calderpedia.org/Fog, calderpedia.org/Dead_internet_theory, calderpedia.org/Harbor_Festival\n\nUse Random article in the menu, or start from the city page."
    }
   ],
   "mentions": [
@@ -535,6 +535,30 @@
   ],
   "mentions": [
    "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0032",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Port_Calder_High_School",
+  "date": "2026-03-03",
+  "title": "Port Calder High School — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Port Calder High School is one of the three public high schools in Port Calder.[1]\n\n== Staff ==\nThe principal is Joan Ames.[2]\n\n== Events ==\nIn April 2025 the school was locked down for two hours after a phone call warned of an armed man near the school. Police found nobody, and the number the call came from no longer exists.[2]\n\nFrom January 2026, phones go in lockers during lessons.[1]\n\nThe school's robotics team, the Calder Cogs, reached the state finals in 2026.[3]\n\nThis article is a stub. You can help Calderpedia by expanding it.\n\n== References ==\n[1] dailyrecord-pc.com/2025/11/19/port-calder-schools-ban-phones-in-class\n[2] dailyrecord-pc.com/2025/04/03/port-calder-high-lockdown-lifted-after-credible\n[3] dailyrecord-pc.com/2026/03/02/robotics\n"
+   }
+  ],
+  "mentions": [
+   "port_calder_high",
+   "joan_ames"
   ]
  },
  {
