@@ -163,6 +163,7 @@
     "if": {
      "flag": "mara_memorialized"
     },
+    "repeatText": "her page still says Remembering. i told you about the books on her bench.",
     "text": "her page says Remembering now. people keep leaving library books on her bench. she would have hated that. she would have loved that."
    },
    {
@@ -171,6 +172,7 @@
      "ask": "calder_mill"
     },
     "once": true,
+    "repeatText": "the old girl. that was what she called the mill. i remember.",
     "text": "she called it the old girl. nobody calls it that unless they knew her. ok. you knew her. what do you want.",
     "effects": [
      {
@@ -210,6 +212,7 @@
       "lou"
      ]
     },
+    "repeatText": "i told you about lou and his letter. i have nothing more to say about him.",
     "text": "the driver was some guy named lou. he wrote me a letter. it was awful and kind. it was an accident.",
     "supports": [
      "S1"
@@ -255,6 +258,7 @@
       "n": 1
      }
     },
+    "repeatText": "july 2nd. route 9. please don't make me keep going over it.",
     "text": "july 2nd. route 9. she always said that intersection would kill someone. she was right about everything, it's exhausting.",
     "supports": [
      "S1"
@@ -290,6 +294,7 @@
       "acc_truthseeker"
      ]
     },
+    "repeatText": "still the same messages from owen. i already told you what i think.",
     "text": "that guy has been messaging me for months. 3am essays. if anyone hacked her account it's him.",
     "supports": [
      "F3"
@@ -307,6 +312,7 @@
      }
     },
     "once": true,
+    "repeatText": "i told you. i never sent the certificate. talking about it again doesn't make it easier.",
     "text": "i never sent connect the death certificate. it's in a drawer. i couldn't make it real. maybe if i had none of this would have happened.",
     "effects": [
      {
@@ -325,6 +331,7 @@
     "on": {
      "ask": "acc_maraquinn"
     },
+    "repeatText": "i already reported it. the form letter was all i got back.",
     "text": "i reported it in january. connect sent me a form letter. it's like shouting into a vent.",
     "supports": [
      "S8"
@@ -341,6 +348,7 @@
     "if": {
      "flag": "theo_convinced"
     },
+    "repeatText": "i still don't know who they are. the recovery address is in what i sent you.",
     "text": "never heard of them. but that recovery address. bl-ops. is that them?"
    }
   ],
@@ -1054,6 +1062,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "The Garden is what we called it. I told you how the accounts and Autopilot worked. That is what I know.",
     "text": "We called it the Garden. Forty-ish accounts. Some were real people who'd stopped posting. Some were… invented. I wrote six. The DMs were Autopilot, a chatbot with the style guide loaded.",
     "supports": [
      "S2",
@@ -1077,6 +1086,7 @@
      "flag": "iris_open"
     },
     "once": true,
+    "repeatText": "Yes. I wrote that December post. I told you when I found out about Mara. Please don't make me say it all again.",
     "text": "They gave me Mara in November. A style guide built from her old posts. I wrote the December one. The 'changed my mind' one. I didn't know she was dead until I googled her. I quit four days later.",
     "supports": [
      "S2",
@@ -1103,6 +1113,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "I told you what Renee called it: continuity work. Deleting posts and softening the rest.",
     "text": "Renee had someone go through her blog in October. Delete the angry posts, soften the rest. 'Continuity work.'",
     "supports": [
      "S5"
@@ -1128,6 +1139,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "I told you how we made Juno. I'm still sorry if you talked to her.",
     "text": "Juno was mine first. She's a costume. A stock photo, Mara's old garden pictures flipped around, and Autopilot for the DMs. I'm sorry if you talked to her.",
     "supports": [
      "S4"
@@ -1146,6 +1158,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "Cameras off. Slack at four in the morning. That's what I saw, not an explanation for it.",
     "text": "I never met either of them. Video calls, cameras off. Calvin answered Slack at 4am, every night. I thought he just never slept. Now I don't know what I thought.",
     "supports": [
      "S7"
@@ -1162,6 +1175,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "Those were Renee's words about NGD. I can repeat them, but I can't tell you more than I heard.",
     "text": "Client code NGD. Renee said the client loved the Quinn backstory. Her words: 'They know. They love it.'",
     "supports": [
      "S3",
@@ -1176,6 +1190,7 @@
     "if": {
      "flag": "iris_open"
     },
+    "repeatText": "Meridian was the name on my paychecks. I don't know more about the company.",
     "text": "My paychecks came from Meridian Holdings. I assumed it was a payroll company. Was it not?"
    },
    {

@@ -37,3 +37,10 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Ikke start kontinuerlige bakgrunnstester eller nye kopier av en test som henger.
 - Gjenbruk eksisterende resultater når de gjelder samme kode. Oppgi tydelig hva som ikke er testet.
 - Ingen permanente endringer i globale systeminnstillinger.
+
+## Dialogoppfølging 26. november
+
+- Iris og Theo har korte påminnelser for tidligere besvarte emner, inkludert innrømmelsene om Mara og dødsattesten. Bruker eksisterende `repeatText`; ingen nye vedlegg, bevismerker eller tillitseffekter fra påminnelsene. Eksisterende vilkår gjelder fortsatt.
+- Iris’ portalsvar beholder engangsoppførselen slik at øvrige svar om Garden og Meridian fortsatt kan nås. Bevisreaksjoner og ukjente emner er ikke endret i denne deloppgaven.
+- Neste dialogoppfølging: Junos tone gjennom eksisterende stadier, deretter Danas gjentakelser.
+- Endringen er ikke testkjørt, etter instruksen om ingen tester uten uttrykkelig bestilling.
