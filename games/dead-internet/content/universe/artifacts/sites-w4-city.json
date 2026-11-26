@@ -716,13 +716,16 @@
   "source": "city",
   "index": "weak",
   "mentions": [
-   "city_council"
+   "city_council",
+   "hal_okonjo",
+   "carla_mendes",
+   "ray_delgado"
   ],
   "versions": [
    {
     "id": "v1",
     "cached": true,
-    "body": "City Hall, 40 Civic Center, Port Calder.\n\nThe public desk is open Monday to Friday, 8:30 to 16:30, closed on public holidays. The council chamber is on the first floor.\n\nSwitchboard and general enquiries go through the desk. CalderFix is for street reports. The clerk handles records and agendas.\n\nPlease do not send the same question to every member of the council. It does not make an answer arrive sooner."
+    "body": "City Hall, 40 Civic Center, Port Calder.\n\nThe public desk is open Monday to Friday, 8:30 to 16:30, closed on public holidays. The council chamber is on the first floor.\n\nSwitchboard and general enquiries go through the desk. CalderFix is for street reports. The clerk handles records and agendas.\n\nDepartments\nPublic Works: Hal Okonjo, director\nEngineering: Carla Mendes, city engineer\nFire Department: Chief Ray Delgado (emergencies: call 911, not this page)\n\nPlease do not send the same question to every member of the council. It does not make an answer arrive sooner."
    }
   ]
  }

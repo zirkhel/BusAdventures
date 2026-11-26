@@ -533,6 +533,7 @@ export function validateWorld(raw, opts = {}) {
   checkSites(w, raw, err, warn);
   checkClueImageShare(w, warn);
   checkBackgroundFacts(w, raw, err, warn);
+  checkBackgroundNames(w, info);
   return { issues, runs: allRuns[[...w.mysteries.values()].find(x => x.testing)?.id] };
 }
 
@@ -664,5 +665,35 @@ function checkBackgroundFacts(w, raw, err, warn) {
         err(where, `new canon fact about Quiet Account person ${f.subject} is not allowed`);
       }
     }
+  }
+}
+
+// A titled name in a page ("Principal Joan Ames", "city engineer Carla Mendes") that is no
+// entity and appears on no other page is a dead end: searching for it finds only the page
+// itself. INFO only; the fix is a background entity and a small page where the person
+// naturally appears (see DESIGN.md, "Background people").
+const TITLED_NAME_RE = /\b(?:Principal|Mayor|Councilmember|Councillor|Chief|Officer|Detective|Sergeant|Captain|Dr\.|Professor|Judge|Pastor|Reverend|engineer|spokesperson|spokeswoman|spokesman|director|manager|owner|president|chair|coach|superintendent)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z']+)+)/g;
+function checkBackgroundNames(w, info) {
+  const known = new Set();
+  for (const e of w.entities.values()) for (const n of [e.name, ...(e.aliases || [])]) known.add(String(n).toLowerCase());
+  for (const c of w.characters?.values?.() || []) if (c.name) known.add(String(c.name).toLowerCase());
+  for (const acc of w.accounts.values()) if (acc.name) known.add(String(acc.name).toLowerCase());
+  const pagesWith = new Map(); // name -> Set(artifact ids)
+  const texts = [];
+  for (const a of w.artifacts.values()) {
+    const text = (a.versions || []).map(v => `${v.title || ""}\n${v.body || ""}`).join("\n") + `\n${a.title || ""}`;
+    texts.push([a.id, text]);
+    for (const m of text.matchAll(TITLED_NAME_RE)) {
+      const name = m[1];
+      if (/\b(?:Officer|Director|Manager|Executive|Engineer|Council|Department)\b/.test(name)) continue;
+      if (!pagesWith.has(name)) pagesWith.set(name, new Set());
+      pagesWith.get(name).add(a.id);
+    }
+  }
+  for (const [name, ids] of pagesWith) {
+    if (known.has(name.toLowerCase())) continue;
+    const elsewhere = texts.filter(([id, t]) => !ids.has(id) && t.includes(name)).length;
+    if (ids.size + elsewhere > 1) continue;
+    info(`name ${name}`, `named only on ${[...ids].join(", ")}: no entity and no other page, so a search ends there`);
   }
 }
