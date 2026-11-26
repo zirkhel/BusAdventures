@@ -1580,6 +1580,23 @@
     "text": "As I said: legal team."
    },
    {
+    "id": "after_leak",
+    "on": {
+     "ask": [
+      "mara",
+      "acc_maraquinn",
+      "evt_mara_death",
+      "brightline",
+      "the_garden"
+     ]
+    },
+    "if": {
+     "flag": "paul_leaked"
+    },
+    "text": "You heard what I said about what we asked for. That was not a statement from Northgate. I'm not discussing it further on this account.",
+    "repeatText": "I haven't taken back what I told you. But I said I wouldn't discuss it further here."
+   },
+   {
     "id": "calvin",
     "on": {
      "ask": [
@@ -1590,7 +1607,8 @@
     "text": "Calvin? Met him on video a few times. His camera never worked. Bandwidth, he said. Why?",
     "supports": [
      "S7"
-    ]
+    ],
+    "repeatText": "As I said, we spoke on video. His camera was off. I can't add anything to that."
    },
    {
     "id": "brightline",
@@ -1600,7 +1618,8 @@
       "the_garden"
      ]
     },
-    "text": "We work with many community partners. I can't discuss specific vendors."
+    "text": "We work with many community partners. I can't discuss specific vendors.",
+    "repeatText": "I've already given you our position on vendors. I'm not going to expand on it here."
    },
    {
     "id": "waterfront",
@@ -1611,7 +1630,8 @@
       "evt_vote"
      ]
     },
-    "text": "Eastfield Waterfront will bring 1,200 homes to Port Calder, 30% below market. Happy to send our fact sheet."
+    "text": "Eastfield Waterfront will bring 1,200 homes to Port Calder, 30% below market. Happy to send our fact sheet.",
+    "repeatText": "The figures I gave you are our public position on the Waterfront. I can refer you to the same fact sheet."
    },
    {
     "id": "mara",
@@ -1622,7 +1642,8 @@
       "evt_mara_death"
      ]
     },
-    "text": "I'm sorry, I don't follow individual accounts. Our condolences to anyone who has lost someone."
+    "text": "I'm sorry, I don't follow individual accounts. Our condolences to anyone who has lost someone.",
+    "repeatText": "I've offered our condolences. I have no further comment on individual accounts."
    }
   ],
   "fallback": {
