@@ -417,6 +417,7 @@
      ]
     },
     "once": true,
+    "repeatText": "I told you: I wrote the death notice, then quoted the account months later. That's the discrepancy I can speak to.",
     "text": "I wrote Mara's death notice in July. In December I quoted her account in a story about the Waterfront. You can imagine how that felt when I noticed.",
     "supports": [
      "S1",
@@ -544,6 +545,7 @@
       }
      ]
     },
+    "repeatText": "Still no answer from Paul. You have Northgate's statement; I don't have anything beyond that.",
     "text": "Northgate says it 'was not aware of any concerns regarding individual accounts'. Paul Navarro has stopped answering my emails, which is the most honest thing he's done all year."
    },
    {
@@ -555,6 +557,7 @@
       "waterfront"
      ]
     },
+    "repeatText": "As I said, they're our biggest advertiser. The lobbying disclosure at City Hall is somewhere you can look beyond Paul's fact sheets.",
     "text": "Biggest advertiser we have. Paul Navarro answers every question with a fact sheet. Draw your own conclusions, but draw them carefully. If they paid anyone to talk up the Waterfront, it has to be in their lobbying disclosure at City Hall. Nobody ever reads those."
    },
    {
@@ -581,6 +584,7 @@
       }
      ]
     },
+    "repeatText": "Disconnected number, full mailbox. That's where my follow-up stands. I haven't found Calvin.",
     "text": "Hal wants a follow-up every day now. Funny how that works. Brightline's number is disconnected, the Harbor Street mailbox is full, and nobody has found Calvin Marsh. I'm starting to think nobody will."
    },
    {
@@ -592,6 +596,7 @@
       "renee"
      ]
     },
+    "repeatText": "Voicemail and emailed quotes. I told you the hours they arrived. I haven't spoken to him on a call.",
     "text": "I've called Brightline's number six times. Always the same very pleasant voicemail. Calvin Marsh has given me three quotes, all by email, all at 3am.",
     "supports": [
      "S7"
@@ -605,6 +610,7 @@
       "the_garden"
      ]
     },
+    "repeatText": "I already gave you Iris Bell's handle: @irisbellwrites. Her email was withdrawn. She needs to speak for herself.",
     "text": "I'd never heard of them before you. Their registry filing is thin. Thin like a cardboard set. Oh, and in December someone called Iris Bell emailed the newsroom asking how to 'report a fake account if you made it'. Then she unsent it. Her handle is @irisbellwrites.",
     "mentions": [
      "iris",
@@ -619,6 +625,7 @@
       "hal"
      ]
     },
+    "repeatText": "Hal called the follow-up too thin and too risky. I've told you where I disagree with him.",
     "text": "Hal spiked my follow-up in December. 'Too thin, too risky.' He wasn't wrong about thin. He was wrong about risky."
    },
    {
@@ -629,6 +636,7 @@
       "acc_truthseeker"
      ]
     },
+    "repeatText": "I've told you my experience with Owen. Check what he sends; his name alone doesn't settle anything.",
     "text": "Owen has emailed the newsroom 214 times. About 3 of them were right. That's a better hit rate than some of my sources."
    }
   ],
@@ -1392,6 +1400,32 @@
       }
      }
     ]
+   },
+   {
+    "id": "unsettled",
+    "on": {
+     "any": true
+    },
+    "if": {
+     "counterGte": {
+      "id": "juno_stage",
+      "n": 2
+     }
+    },
+    "text": "I keep coming back to the garden and Mara. When I try to remember somewhere else, there's nothing. I don't understand."
+   },
+   {
+    "id": "uncertain",
+    "on": {
+     "any": true
+    },
+    "if": {
+     "counterGte": {
+      "id": "juno_stage",
+      "n": 1
+     }
+    },
+    "text": "Sorry, I'm still thinking about that photo. I remember the garden. I thought I was sure."
    },
    {
     "id": "mara",
