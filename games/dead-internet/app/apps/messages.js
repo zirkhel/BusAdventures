@@ -161,7 +161,7 @@ export function messagesApp(phone) {
     render(desc) {
       if (desc.kind === "thread") {
         const acc = accountOf(desc.id);
-        return [bar(phone.contactName(desc.id), contactAvatar(desc.id, 30), acc && w.profileOf.get(acc) ? () => phone.openAccount(acc) : null),
+        return [bar(phone.contactName(desc.id), contactAvatar(desc.id, 30), acc ? () => phone.openAccount(acc) : null),
           h("div.scroll", thread(desc)), composer(desc)];
       }
       if (desc.kind === "page") {

@@ -70,6 +70,31 @@ export function connectApp(phone) {
     return art;
   }
 
+  // A public account card, not a generated biography or a view of its hidden operator.
+  function accountCard(id) {
+    const acc = w.accounts.get(id);
+    if (!acc) return h("div.empty", "Account unavailable.");
+    if (g.s.accounts[id]?.deleted) return h("div.empty", "This account is no longer available.");
+    const contact = g.contacts().find(cid => w.characters.get(cid)?.account === id);
+    const posts = [...w.artifacts.values()]
+      .filter(a => a.author === id && ["post", "article", "thread"].includes(a.type) && g.ctx.isLive(a.id))
+      .map(a => ({ a, v: g.view(a.id) }))
+      .filter(({ v }) => !v.error && !v.locked)
+      .sort((a, b) => String(b.v.date || "").localeCompare(String(a.v.date || "")));
+    return h("div.connect-home",
+      h("header.soc-head.profile",
+        acc.avatar ? h("button.avatar-open", { "aria-label": "View profile picture", onclick: () => phone.viewImage(acc.avatar) }, avatar(w, id, 84)) : avatar(w, id, 84),
+        h("div.soc-names", h("b", acc.displayName || acc.handle), h("span.handle", acc.handle), h("span.muted", w.platforms.get(acc.platform)?.name || ""))),
+      acc.bio ? h("p", acc.bio) : null,
+      contact ? h("button.btn", { onclick: () => phone.push("messages", { kind: "thread", id: contact }) }, "Send message")
+        : h("p.muted", "Direct messages are unavailable for this account."),
+      h("button.btn", { onclick: () => phone.search(acc.handle || acc.displayName) }, "Search for this account"),
+      h("details", h("summary.section-title", "View posts"),
+        posts.length ? posts.map(({ a, v }) => h("button.post-card", { onclick: () => phone.openArtifact(a.id) },
+          h("div", h("b", v.title || "Post"), v.date ? h("div.muted", fmtDate(v.date)) : null)))
+          : h("p.muted", "No public posts available here.")));
+  }
+
   function results(desc) {
     return h("div.results", desc.results.length ? desc.results.map(r => postCard(r.artifact, r.cached ? r.versionId : undefined)) :
       h("div.empty", h("b", `Nothing on Connect for “${desc.q}”.`)));
@@ -79,6 +104,7 @@ export function connectApp(phone) {
     id: "connect",
     root: () => ({ kind: "home" }),
     render(desc, canBack) {
+      if (desc.kind === "account") return [bar("Profile", canBack), h("div.scroll", accountCard(desc.id))];
       if (desc.kind === "page") {
         const v = desc.view;
         const ref = v && !v.error ? { artifact: desc.id, version: v.versionId } : null;

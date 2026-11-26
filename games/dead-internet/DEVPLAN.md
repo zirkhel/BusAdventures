@@ -52,3 +52,9 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Godkjent etter spilltest: åpningen spør hvem som står bak Maras konto. «Read Mara's message» åpner samtalen direkte ved nytt spill, med eksisterende introduksjonstips. Fortsettelse av lagringer beholder dagens inngang.
 - Casebook viser sakens undersøkelsesspørsmål og lenke tilbake til meldingen. Innholdet ligger i sakens `start`-data; ingen spor markeres og ingen oppgaveliste legges til.
 - Ikke testkjørt, inkludert mobilvisning, etter instruks.
+
+## Kontoer uten profilside
+
+- «View profile» åpner et felles profilkort når en konto mangler en forfattet profilside. Kortet bruker navn, brukernavn, bilde og eventuell eksisterende bio; aldri skjult operatør eller identitet.
+- Kortet tilbyr kontosøk, tilgjengelige offentlige innlegg og melding når kontoen finnes i kontaktlisten. Slettede kontoer får en utilgjengelig-melding. Eksisterende profilsider beholdes.
+- Ikke testkjørt eller mobilkontrollert, etter instruks.
