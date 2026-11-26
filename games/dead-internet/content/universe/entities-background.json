@@ -239,5 +239,62 @@
     "to": "port_calder_high"
    }
   ]
+ },
+ {
+  "id": "hal_okonjo",
+  "kind": "person",
+  "name": "Hal Okonjo",
+  "aliases": [
+   "Hal Okonjo"
+  ],
+  "isHuman": true,
+  "bio": "Public works director for the City of Port Calder.",
+  "relations": []
+ },
+ {
+  "id": "carla_mendes",
+  "kind": "person",
+  "name": "Carla Mendes",
+  "aliases": [
+   "Carla Mendes"
+  ],
+  "isHuman": true,
+  "bio": "City engineer for the City of Port Calder.",
+  "relations": []
+ },
+ {
+  "id": "ray_delgado",
+  "kind": "person",
+  "name": "Ray Delgado",
+  "aliases": [
+   "Ray Delgado",
+   "Chief Delgado"
+  ],
+  "isHuman": true,
+  "bio": "Fire chief in Port Calder.",
+  "relations": []
+ },
+ {
+  "id": "glen_morrow",
+  "kind": "person",
+  "name": "Glen Morrow",
+  "aliases": [
+   "Glen Morrow"
+  ],
+  "isHuman": true,
+  "bio": "Spokesperson for the Port Calder Harbor Authority.",
+  "relations": []
+ },
+ {
+  "id": "lisa_moran",
+  "kind": "person",
+  "name": "Lisa Moran",
+  "aliases": [
+   "Lisa Moran",
+   "Coach Moran"
+  ],
+  "isHuman": true,
+  "bio": "Volunteer coach of the Eastfield Under-12s youth football team.",
+  "relations": []
  }
 ]

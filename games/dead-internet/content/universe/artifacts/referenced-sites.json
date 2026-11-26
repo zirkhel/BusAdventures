@@ -55,8 +55,9 @@
       {
         "id": "v1",
         "cached": true,
-        "body": "Port Calder Harbor Authority."
+        "body": "Port Calder Harbor Authority.\n\nFerry docks, moorings and the working harbor.\n\nMedia enquiries: Glen Morrow, communications."
       }
-    ]
+    ],
+    "mentions": ["glen_morrow"]
   }
 ]
