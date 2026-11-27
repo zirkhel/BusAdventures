@@ -179,11 +179,11 @@
   "topics": {
    "internet": {
     "title": "The internet on your phone",
-    "text": "These are fictional services, with familiar roles. Seeker is a search engine, like Google or Bing. Connect is a social network, like Facebook. Threadline is a discussion forum, like Reddit. Messages is your private inbox. The Browser opens websites; its Seeker home button always returns to search. On a website, choose Add to phone home to give it an icon on your phone. Open the site again and choose Remove from phone home to remove the shortcut. These comparisons describe the tools, not how trustworthy their content is."
+    "text": "These are fictional services, with familiar roles. Seeker is a search engine, like Google or Bing. Connect is a social network, like Facebook. Threadline combines social posts, discussion threads and online communities, like Twitter/X, Discord and Reddit. Messages is your private inbox. The Browser opens websites; its Seeker home button always returns to search. On a website, choose Add to phone home to give it an icon on your phone. Open the site again and choose Remove from phone home to remove the shortcut. These comparisons describe the tools, not how trustworthy their content is."
    },
    "websites": {
     "title": "What the different websites are",
-    "text": "The Daily Record is a local newspaper; Unfiltered is an alternative news outlet. Eastfield Notes is a personal blog. Calderpedia is a community encyclopedia, like Wikipedia. Docshare hosts shared documents; Faceless Stock is a stock-image library. SpillCheck is a data-breach lookup service. City portals and public-record sites publish official information. Company websites describe their own businesses. Older personal pages and community sites are also part of this internet. A site being available does not mean it matters to your investigation."
+    "text": "The Daily Record is a local newspaper; Unfiltered is an alternative news outlet. Eastfield Notes is a personal blog. Calderpedia is this world's Wikipedia: a community-written encyclopedia. Docshare hosts shared documents; Faceless Stock is a stock-image library. SpillCheck is a data-breach lookup service. City portals and public-record sites publish official information. Company websites describe their own businesses. Older personal pages and community sites are also part of this internet. A site being available does not mean it matters to your investigation."
    },
    "archive_casebook": {
     "title": "Archive, bookmarks and Casebook",
