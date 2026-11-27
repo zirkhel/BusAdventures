@@ -209,11 +209,19 @@ export function casebookApp(phone) {
   /** A small link to one help topic. */
   const helpLink = topic => h("button.lnk.help-link", { onclick: () => phone.push("casebook", { kind: "help", topic }) }, w.strings.help?.topics?.[topic]?.title || "Help");
 
+  function reviewerIntroduction() {
+    if (!g.canContact("dana")) return null;
+    const H = w.strings.help;
+    return h("div.hint", h("b", H.reviewerIntroTitle), h("p", H.reviewerIntroText),
+      h("button.btn", { onclick: () => phone.push("messages", { kind: "thread", id: "dana" }) }, H.reviewerContact));
+  }
+
   /** Help topics: open any time; reading them never resets or shows tips. */
   function helpScreen(desc) {
     const H = w.strings.help || {}, topics = H.topics || {};
     return h("div.help.pad",
       h("p.muted", H.lead),
+      h("h3", H.contactTitle), h("p", H.contactText), reviewerIntroduction(),
       Object.entries(topics).map(([k, t]) => h("details.help-topic", { "data-topic": k, open: desc.topic === k || null },
         h("summary", h("b", t.title)), h("p", t.text))));
   }
@@ -1110,6 +1118,7 @@ export function casebookApp(phone) {
         h("div.muted.small", "Optional. Events you pick go in as you wrote them."),
       // Two boxes, kept visibly apart (Anders, 25.11.2026): her own read of the sources, and what she reads
       // back from the player's own marks. Neither one is a verdict.
+      ch?.reviewer === "dana" ? reviewerIntroduction() : null,
       desc.review ? h("div.review.review-hers", h("div.review-who", `${reviewer || "Review"}: how your sources look to me`), desc.review.map(l => h("p", l.text))) : null,
       desc.review && desc.notes?.length ? h("div.review.review-own", h("div.review-who.review-own-head", `${reviewer}: what you've marked yourself`),
         desc.notes.map(l => h("p", { "data-kind": l.kind }, l.text))) : null,

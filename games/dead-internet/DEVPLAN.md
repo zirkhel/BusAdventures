@@ -58,3 +58,9 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - «View profile» åpner et felles profilkort når en konto mangler en forfattet profilside. Kortet bruker navn, brukernavn, bilde og eventuell eksisterende bio; aldri skjult operatør eller identitet.
 - Kortet tilbyr kontosøk, tilgjengelige offentlige innlegg og melding når kontoen finnes i kontaktlisten. Slettede kontoer får en utilgjengelig-melding. Eksisterende profilsider beholdes.
 - Ikke testkjørt eller mobilkontrollert, etter instruks.
+
+## Hjelp og journalistkontakt 27. november
+
+- Generell hjelp forklarer redaksjonell vurdering uten å forutsette at spilleren kjenner Dana. Den forklarer veien fra artikkelens byline til profil og melding.
+- Når Dana allerede kan kontaktes, viser hjelpen og rapportbyggeren navn, journalistrolle, avis, forbehold og en knapp til samtalen. Profilsider har direkte meldingsknapp for tilgjengelige kontakter. Kontaktvilkår beholdes.
+- Ingen tester eller mobilkontroll kjørt, etter instruks.
