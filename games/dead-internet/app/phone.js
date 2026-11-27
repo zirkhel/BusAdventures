@@ -803,6 +803,12 @@ export class Phone {
       this.#recentWidget(),
       h("div.home-grid",
         [...this.platformApp.values()].map(id => newsIcon(id)),
+        (this.g.s.browser?.shortcuts || []).map(id => {
+          const site = this.g.w.sites.get(id);
+          if (!site) return null;
+          return h("button.app-icon", { "aria-label": `Open ${site.name || site.domain}`, onclick: () => this.browse(site.domain) },
+            h("span.app-tile", icon("globe")), h("span.app-label", site.name || site.domain));
+        }),
         appIcon("settings", "Settings", "gear")),
       h("div.dock",
         appIcon("browser", this.str("apps.browser"), "globe"),

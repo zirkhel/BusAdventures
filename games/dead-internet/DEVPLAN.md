@@ -73,3 +73,5 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Nytt spill bygger standardtilstand på nytt: ingen opptjent kunnskap, meldingshistorikk, Casebook, bokmerker eller søk. Forfatterdefinert startinnhold beholdes. Ingen tester kjørt.
 
 - Navigasjon: Home nederst går til telefonens hjemskjerm. Home øverst til venstre går alltid til aktiv apps startside (Seeker i Browser) og nullstiller appens navigasjonsstakk. Tilbake er en egen knapp når historikk finnes. Den ekstra Seeker-raden er fjernet. Ikke testkjørt.
+
+- Nettsteder kan legges til og fjernes fra telefonens hjemskjerm via nettleseren. Ikonene åpner nettstedets hjemmeside og følger gjeldende tilgang/status. Snarveier lagres som nettsteds-ID-er i `browser.shortcuts`; eldre lagringer får tom liste, og Start over fjerner dem. Dette er snarveier, ikke nye apper eller tjenester. Ingen tester kjørt.

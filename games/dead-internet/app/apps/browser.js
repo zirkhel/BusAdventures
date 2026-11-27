@@ -37,6 +37,21 @@ export function browserApp(phone) {
       evidenceButton(desc));
   }
 
+  function shortcutButton(desc) {
+    const host = hostOf(desc.url || desc.view?.url || "");
+    const id = desc.site || (host && g.w.siteByDomain.get(host));
+    const site = id && g.w.sites.get(id);
+    if (!site) return null;
+    const added = (g.s.browser?.shortcuts || []).includes(id);
+    return h("div", h("button.bar-link", { type: "button", style: { minHeight: "44px", padding: "0 12px" }, onclick: () => {
+      const shortcuts = g.s.browser.shortcuts || [];
+      g.s.browser.shortcuts = added ? shortcuts.filter(x => x !== id) : [...shortcuts, id];
+      g.emit("state", { action: "homeShortcut" });
+      phone.refresh();
+      phone.toast(added ? "Removed from phone home." : "Added to phone home.");
+    } }, added ? "Remove from phone home" : "Add to phone home"));
+  }
+
   function addressValue(desc) {
     if (desc.kind === "page") return desc.url || "";
     if (desc.kind === "results") return desc.q || "";
@@ -331,7 +346,7 @@ export function browserApp(phone) {
     root: () => ({ kind: "home" }),
     title: titleOf,
     render(desc, canBack) {
-      return [addressBar(desc), h("div.scroll", { style: { zoom: String(textScale(g.s)) } }, bodyOf(desc))];
+      return [addressBar(desc), shortcutButton(desc), h("div.scroll", { style: { zoom: String(textScale(g.s)) } }, bodyOf(desc))];
     },
   };
 }
