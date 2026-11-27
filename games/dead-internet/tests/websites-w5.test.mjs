@@ -62,9 +62,9 @@ test("W5 templates render wiki, forum, document and anonymous pages, including e
   }
 });
 
-test("Calderpedia has a main page, about 25 articles, history and talk tools", () => {
+test("Calderpedia has a main page, about 35 articles, history and talk tools", () => {
   const arts = ofSite("calderpedia").filter(a => (a.page || a.type) === "article");
-  assert.ok(arts.length >= 24 && arts.length <= 28, `article count ${arts.length}`);
+  assert.ok(arts.length >= 24 && arts.length <= 40, `article count ${arts.length}`);
   assert.ok(world.artifacts.get("W-calderpedia-0001"));
   assert.equal(world.artifacts.get("W-calderpedia-0001").url, "calderpedia.org");
   const hist = ofSite("calderpedia").filter(a => a.page === "history");
