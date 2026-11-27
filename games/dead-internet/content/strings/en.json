@@ -175,15 +175,27 @@
  },
  "help": {
   "title": "Help",
-  "lead": "How the Casebook and Dana's review work. Reading help doesn't change your tips or your game.",
+  "lead": "How the Casebook and editorial review work. Reading help doesn't change your tips or your game.",
   "topics": {
+   "internet": {
+    "title": "The internet on your phone",
+    "text": "These are fictional services, with familiar roles. Seeker is a search engine, like Google or Bing. Connect is a social network, like Facebook. Threadline combines social posts, discussion threads and online communities, like Twitter/X, Discord and Reddit. Messages is your private inbox. The Browser opens websites; its Seeker home button always returns to search. On a website, choose Add to phone home to give it an icon on your phone. Open the site again and choose Remove from phone home to remove the shortcut. These comparisons describe the tools, not how trustworthy their content is."
+   },
+   "websites": {
+    "title": "What the different websites are",
+    "text": "The Daily Record is a local newspaper; Unfiltered is an alternative news outlet. Eastfield Notes is a personal blog. Calderpedia is this world's Wikipedia: a community-written encyclopedia. Docshare hosts shared documents; Faceless Stock is a stock-image library. SpillCheck is a data-breach lookup service. City portals and public-record sites publish official information. Company websites describe their own businesses. Older personal pages and community sites are also part of this internet. A site being available does not mean it matters to your investigation."
+   },
+   "archive_casebook": {
+    "title": "Archive, bookmarks and Casebook",
+    "text": "Archive shows available copies of a page, similar to a web archive such as the Wayback Machine. A browser bookmark saves an address so you can return to it. Casebook is your investigation notebook: save material there, write questions and compare what you find. A bookmark is not a saved evidence copy."
+   },
    "supports_dana": {
-    "title": "Supporting links and Dana",
-    "text": "Dana considers the supporting links you make between evidence added in support of the claim. The link is your assessment. It doesn't confirm that the evidence or the claim is correct."
+    "title": "Supporting links and editorial review",
+    "text": "The newspaper reviewer considers the supporting links you make between evidence added in support of the claim. The link is your assessment. It doesn't confirm that the evidence or the claim is correct."
    },
    "supports_direction": {
     "title": "Which way a supporting link points",
-    "text": "“A supports B” means you think A backs up B. When Dana reviews a claim, A also counts as being about whoever B itself names. B gains nothing from A, and it goes only one step: A doesn't pick up names that B only has through another link. Only supporting links count. Your other connections are your own notes."
+    "text": "“A supports B” means you think A backs up B. When the newspaper reviewer reviews a claim, A also counts as being about whoever B itself names. B gains nothing from A, and it goes only one step: A doesn't pick up names that B only has through another link. Only supporting links count. Your other connections are your own notes."
    },
    "aliases": {
     "title": "Short names and nicknames",
@@ -194,14 +206,19 @@
     "text": "These are three different things. Your own count follows your own answers: source cards and “Same origin” connections. Visible origins are where each piece visibly comes from, such as the account that posted it, the person who sent it or the site. Neither says what is proven. Different visible origins can still trace back to the same place, and being named in something isn't being shown by it."
    },
    "dana": {
-    "title": "What Dana's review means",
-    "text": "Dana looks at two things: whether what you've marked as supporting, taken together, covers who a claim is about, and from how many different visible origins. With fewer than two, the claim is cut before publishing. A claim that goes forward isn't confirmed: Dana never says whether it is true and never calls your origins independent, and she tells you when the story touches her own paper."
+    "title": "What editorial review means",
+    "text": "The newspaper reviewer looks at two things: whether what you've marked as supporting, taken together, covers who a claim is about, and from how many different visible origins. With fewer than two, the claim is cut before publishing. A claim that goes forward isn't confirmed: the reviewer never says whether it is true and never calls your origins independent, and the reviewer declares a conflict when the story touches the paper itself."
    }
   },
-  "supportsShort": "Dana considers this connection when reviewing evidence linked as supporting your claim. It doesn't confirm that either item proves the claim.",
+  "supportsShort": "The newspaper reviewer considers this connection when reviewing evidence linked as supporting your claim. It doesn't confirm that either item proves the claim.",
   "supportsMore": "How supporting links work",
   "open": "Help",
   "aliasLine": "{alias} → {name}, introduced in {evidence}",
-  "aliasHead": "Short names"
+  "aliasHead": "Short names",
+  "contactTitle": "Contacting a journalist",
+  "contactText": "Open the byline on a news article to find the journalist's profile. If direct messages are available, choose Send message. You can ask about people or topics you have looked into and show material you have found. A journalist may want to know more about you before reviewing a report.",
+  "reviewerIntroTitle": "Dana Reyes · Journalist, Daily Record",
+  "reviewerIntroText": "Dana covers local news for the Daily Record. You can ask her about the story and show her material you have found. She also reviews submissions to the paper, but may need to get to know you first. Her review does not confirm that a claim is true.",
+  "reviewerContact": "Open conversation"
  }
 }

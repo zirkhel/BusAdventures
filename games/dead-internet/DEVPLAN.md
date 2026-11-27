@@ -58,3 +58,20 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - «View profile» åpner et felles profilkort når en konto mangler en forfattet profilside. Kortet bruker navn, brukernavn, bilde og eventuell eksisterende bio; aldri skjult operatør eller identitet.
 - Kortet tilbyr kontosøk, tilgjengelige offentlige innlegg og melding når kontoen finnes i kontaktlisten. Slettede kontoer får en utilgjengelig-melding. Eksisterende profilsider beholdes.
 - Ikke testkjørt eller mobilkontrollert, etter instruks.
+
+## Hjelp og journalistkontakt 27. november
+
+- Generell hjelp forklarer redaksjonell vurdering uten å forutsette at spilleren kjenner Dana. Den forklarer veien fra artikkelens byline til profil og melding.
+- Når Dana allerede kan kontaktes, viser hjelpen og rapportbyggeren navn, journalistrolle, avis, forbehold og en knapp til samtalen. Profilsider har direkte meldingsknapp for tilgjengelige kontakter. Kontaktvilkår beholdes.
+- Ingen tester eller mobilkontroll kjørt, etter instruks.
+
+- Hjelpen har en kort oversikt over internettjenestene, med kjente sammenligninger og skillet mellom Archive, bokmerker og Casebook. Nettleseren har en fast «Seeker home»-knapp på alle skjermene; den åpner søkehjemmet og beholder tilbakehistorikken. Ikke testkjørt.
+
+## Full nullstilling ved Start over
+
+- Start over sletter verdens lagring og alle separate nylig-besøkt-historikker for samme verden, også fra eldre gjennomspillinger. Tips nullstilles, og automatisk lagring stoppes under omstarten. Andre spill og eksporterte filer berøres ikke.
+- Nytt spill bygger standardtilstand på nytt: ingen opptjent kunnskap, meldingshistorikk, Casebook, bokmerker eller søk. Forfatterdefinert startinnhold beholdes. Ingen tester kjørt.
+
+- Navigasjon: Home nederst går til telefonens hjemskjerm. Home øverst til venstre går alltid til aktiv apps startside (Seeker i Browser) og nullstiller appens navigasjonsstakk. Tilbake er en egen knapp når historikk finnes. Den ekstra Seeker-raden er fjernet. Ikke testkjørt.
+
+- Nettsteder kan legges til og fjernes fra telefonens hjemskjerm via nettleseren. Ikonene åpner nettstedets hjemmeside og følger gjeldende tilgang/status. Snarveier lagres som nettsteds-ID-er i `browser.shortcuts`; eldre lagringer får tom liste, og Start over fjerner dem. Dette er snarveier, ikke nye apper eller tjenester. Ingen tester kjørt.

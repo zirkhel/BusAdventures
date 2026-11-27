@@ -18,7 +18,7 @@ function storage() {
   try { const k = "__di_test"; localStorage.setItem(k, "1"); localStorage.removeItem(k); return localStorage; }
   catch {
     const m = new Map();
-    return { getItem: k => m.get(k) ?? null, setItem: (k, v) => m.set(k, String(v)), removeItem: k => m.delete(k) };
+    return { get length() { return m.size; }, key: i => [...m.keys()][i] ?? null, getItem: k => m.get(k) ?? null, setItem: (k, v) => m.set(k, String(v)), removeItem: k => m.delete(k) };
   }
 }
 const store = storage();
@@ -97,10 +97,22 @@ function run(game, fresh, opening = null) {
   // A new game starts with tips on and none seen. Loading a save or reloading keeps the player's
   // tip preferences (they are per device, not in the save).
   if (fresh) savePrefs(store, newGamePrefs());
-  game.on("state", () => saveTo(store, world, game.s));
+  let restarting = false;
+  game.on("state", () => { if (!restarting) saveTo(store, world, game.s); });
   saveTo(store, world, game.s);
   phone = new Phone(root, game, {
-    restart() { clearSave(store, world); location.reload(); },
+    restart() {
+      restarting = true;
+      try {
+        clearSave(store, world);
+        savePrefs(store, newGamePrefs());
+        phone.recent = [];
+        location.reload();
+      } catch {
+        restarting = false;
+        phone.toast("Could not clear local storage. Start over was not completed.");
+      }
+    },
     exportSave() {
       const blob = new Blob([serialize(game.s)], { type: "application/json" });
       const a = h("a", { href: URL.createObjectURL(blob), download: `dead-internet-day${game.s.day}.json` });

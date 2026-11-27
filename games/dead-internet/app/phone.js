@@ -171,11 +171,22 @@ export class Phone {
     return name.startsWith("apps.") ? appId[0].toUpperCase() + appId.slice(1) : name;
   }
 
-  /** The top-left button of every app: back while there is somewhere to go back to, otherwise home. */
+  /** App home is distinct from the phone's bottom Home button. */
+  appHome() {
+    const app = this.apps[this.where];
+    if (!app) return;
+    this.closeOverlay();
+    this.stacks[this.where] = [app.root()];
+    if (this.where === "browser") this.browserForward = [];
+    this.#render();
+  }
+
+  /** Persistent app home at the left, followed by Back when there is history. */
   backButton() {
     const atRoot = (this.stacks[this.where]?.length ?? 1) <= 1 && !this.overlay.childElementCount && !this.top?.returnTo;
-    return h("button.icon-btn.nav-btn", { "aria-label": atRoot ? "Home" : "Back", onclick: () => this.back() },
-      icon(atRoot ? "home" : "back"), atRoot ? h("span.nav-label", "Home") : null);
+    const label = this.where === "browser" ? "Seeker home" : `${this.apps[this.where]?.name || this.where} home`;
+    return [h("button.icon-btn.nav-btn", { "aria-label": label, title: label, onclick: () => this.appHome() }, icon("home")),
+      atRoot ? null : h("button.icon-btn.nav-btn", { "aria-label": "Back", onclick: () => this.back() }, icon("back"))];
   }
 
   /**
@@ -792,6 +803,12 @@ export class Phone {
       this.#recentWidget(),
       h("div.home-grid",
         [...this.platformApp.values()].map(id => newsIcon(id)),
+        (this.g.s.browser?.shortcuts || []).map(id => {
+          const site = this.g.w.sites.get(id);
+          if (!site) return null;
+          return h("button.app-icon", { "aria-label": `Open ${site.name || site.domain}`, onclick: () => this.browse(site.domain) },
+            h("span.app-tile", icon("globe")), h("span.app-label", site.name || site.domain));
+        }),
         appIcon("settings", "Settings", "gear")),
       h("div.dock",
         appIcon("browser", this.str("apps.browser"), "globe"),

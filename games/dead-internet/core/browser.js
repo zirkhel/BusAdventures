@@ -9,7 +9,7 @@ export const TEXT_SIZES = [0.85, 1, 1.15, 1.3];
 export const DEFAULT_TEXT_SIZE = 1;
 
 export function emptyBrowserState() {
-  return { bookmarks: [], textSize: DEFAULT_TEXT_SIZE };
+  return { bookmarks: [], shortcuts: [], textSize: DEFAULT_TEXT_SIZE };
 }
 
 /** Fill in the browser field on a save (version 8). */
@@ -18,6 +18,7 @@ export function migrateBrowser(s) {
   const size = Number(b.textSize);
   s.browser = {
     bookmarks: Array.isArray(b.bookmarks) ? b.bookmarks.filter(x => x && x.url) : [],
+    shortcuts: Array.isArray(b.shortcuts) ? [...new Set(b.shortcuts.filter(x => typeof x === "string"))] : [],
     textSize: Number.isInteger(size) && size >= 0 && size < TEXT_SIZES.length ? size : DEFAULT_TEXT_SIZE,
   };
   return s;

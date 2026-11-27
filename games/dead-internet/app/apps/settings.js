@@ -39,7 +39,7 @@ export function settingsApp(phone) {
             h("button.set-row.btnrow", { onclick: () => phone.host.exportSave() }, h("span", "Export save"), icon("back", "rot")),
             h("button.set-row.btnrow", { onclick: () => file.click() }, h("span", "Import save"), icon("back", "rot")), file),
           h("div.set-group",
-            h("button.set-row.btnrow.danger", { onclick: () => phone.sheet("Start over? Your current game on this device will be erased.", [
+            h("button.set-row.btnrow.danger", { onclick: () => phone.sheet("Start over? This resets the whole game world on this device, including messages, Casebook, searches, browsing history and bookmarks. Intro tips restart. Exported save files are kept.", [
               { label: "Export save first", run: () => phone.host.exportSave() },
               { label: "Start over", danger: true, run: () => phone.host.restart() }]) }, h("span", "Start over"))),
           h("div.set-about.muted", `${g.w.meta.title} · content ${g.w.meta.contentVersion} · Bus Adventures`),

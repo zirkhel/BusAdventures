@@ -64,6 +64,8 @@ export function connectApp(phone) {
     const art = renderArtifact(phone, v);
     if (v.cached) art.prepend(h("div.cache-banner", h("b", "Archive copy"), ` Copy from ${fmtDate(v.date)}.`));
     if (v.type === "profile" && !v.cached && v.author) {
+      const contact = g.contacts().find(id => w.characters.get(id)?.account === v.author);
+      if (contact) art.append(h("button.btn", { onclick: () => phone.push("messages", { kind: "thread", id: contact }) }, "Send message"));
       const posts = postsBy(v.author);
       if (posts.length) art.append(h("div.section-title", "Posts"), ...posts.map(p => postCard(p.id)));
     }
