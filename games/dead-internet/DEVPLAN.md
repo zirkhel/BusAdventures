@@ -64,3 +64,5 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Generell hjelp forklarer redaksjonell vurdering uten å forutsette at spilleren kjenner Dana. Den forklarer veien fra artikkelens byline til profil og melding.
 - Når Dana allerede kan kontaktes, viser hjelpen og rapportbyggeren navn, journalistrolle, avis, forbehold og en knapp til samtalen. Profilsider har direkte meldingsknapp for tilgjengelige kontakter. Kontaktvilkår beholdes.
 - Ingen tester eller mobilkontroll kjørt, etter instruks.
+
+- Hjelpen har en kort oversikt over internettjenestene, med kjente sammenligninger og skillet mellom Archive, bokmerker og Casebook. Nettleseren har en fast «Seeker home»-knapp på alle skjermene; den åpner søkehjemmet og beholder tilbakehistorikken. Ikke testkjørt.

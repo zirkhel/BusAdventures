@@ -177,6 +177,18 @@
   "title": "Help",
   "lead": "How the Casebook and editorial review work. Reading help doesn't change your tips or your game.",
   "topics": {
+   "internet": {
+    "title": "The internet on your phone",
+    "text": "These are fictional services, with familiar roles. Seeker is a search engine, like Google or Bing. Connect is a social network, like Facebook. Threadline is a discussion forum, like Reddit. Messages is your private inbox. The Browser opens websites; its Seeker home button always returns to search. These comparisons describe the tools, not how trustworthy their content is."
+   },
+   "websites": {
+    "title": "What the different websites are",
+    "text": "The Daily Record is a local newspaper; Unfiltered is an alternative news outlet. Eastfield Notes is a personal blog. Calderpedia is a community encyclopedia, like Wikipedia. Docshare hosts shared documents; Faceless Stock is a stock-image library. SpillCheck is a data-breach lookup service. City portals and public-record sites publish official information. Company websites describe their own businesses. Older personal pages and community sites are also part of this internet. A site being available does not mean it matters to your investigation."
+   },
+   "archive_casebook": {
+    "title": "Archive, bookmarks and Casebook",
+    "text": "Archive shows available copies of a page, similar to a web archive such as the Wayback Machine. A browser bookmark saves an address so you can return to it. Casebook is your investigation notebook: save material there, write questions and compare what you find. A bookmark is not a saved evidence copy."
+   },
    "supports_dana": {
     "title": "Supporting links and editorial review",
     "text": "The newspaper reviewer considers the supporting links you make between evidence added in support of the claim. The link is your assessment. It doesn't confirm that the evidence or the claim is correct."
