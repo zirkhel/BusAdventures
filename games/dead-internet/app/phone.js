@@ -231,6 +231,20 @@ export class Phone {
     this.push(appId || this.appFor(id), { kind: "page", id, version: version ?? null, view: r.view, url: r.view?.url || "" });
   }
 
+  isFriend(id) { return (this.g.s.friends || []).includes(id); }
+
+  toggleFriend(id) {
+    if (!this.g.w.accounts.has(id)) return;
+    const list = this.g.s.friends || [];
+    this.g.s.friends = this.isFriend(id) ? list.filter(x => x !== id) : [...list, id];
+    this.g.emit("state", { action: "friend" });
+    this.refresh();
+  }
+
+  friendButton(id) {
+    return h("button.btn", { onclick: () => this.toggleFriend(id) }, this.isFriend(id) ? "Remove friend" : "Add friend");
+  }
+
   openAccount(accId) {
     const pid = this.g.w.profileOf.get(accId);
     if (pid) this.openArtifact(pid, undefined, "connect");

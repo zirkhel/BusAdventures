@@ -223,6 +223,8 @@ export function registerDefaultActions(cs) {
       when: (r, o, p) => !!r.id && (!r.alias || ["investigated", "saved"].includes(p.g.discovery(r.id))) &&
         p.g.predicates().some(pr => (pr.subjectKinds || []).includes(p.g.w.entities.get(r.id)?.kind ?? (p.g.w.accounts.has(r.id) ? "account" : ""))),
       run: (r, o, p) => { if (p.g.known().includes(r.id)) p.push("casebook", { kind: "builder", subject: r.id }); } })
+    .register({ id: "friend", icon: "people", types: ["account", "handle"], label: (r, p) => p.isFriend(r.id) ? "Remove friend" : "Add friend",
+      when: (r, o, p) => p.g.w.accounts.has(r.id), run: (r, o, p) => p.toggleFriend(r.id) })
     .register({ id: "profile", icon: "people", types: ["person", "account", "handle", "org"], label: "View profile", run: (r, o, p) => p.g.w.accounts.has(r.id) ? p.openAccount(r.id) : p.findProfile(r.text) })
     .register({ id: "search", icon: "search", types: [...TEXTISH, "email", "domain", "url"], label: "Search with Seeker", run: (r, o, p) => p.search(r.text) });
   // Look-ups offered by tools in the world (data: platforms[].lookup).

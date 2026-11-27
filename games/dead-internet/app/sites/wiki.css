@@ -16,3 +16,9 @@
 .tmpl-wiki .wiki-refs { margin: 16px 16px 0; padding-top: 8px; border-top: 1px solid #a2a9b1; font-size: 13px; }
 .tmpl-wiki .wiki-ref { margin: 0 0 6px; }
 .tmpl-wiki .page-body { padding: 0 16px 16px; }
+
+.tmpl-wiki, .tmpl-wiki .site-shell { background: #fff; color: #202122; color-scheme: light; }
+.tmpl-wiki .muted { color: #54595d; }
+.tmpl-wiki .wiki-article-link { color: #0645ad; text-decoration: none; overflow-wrap: anywhere; }
+.tmpl-wiki .wiki-article-link:hover { text-decoration: underline; }
+.tmpl-wiki .wiki-body { line-height: 1.65; }

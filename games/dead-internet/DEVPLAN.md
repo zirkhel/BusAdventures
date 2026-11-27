@@ -75,3 +75,10 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Navigasjon: Home nederst går til telefonens hjemskjerm. Home øverst til venstre går alltid til aktiv apps startside (Seeker i Browser) og nullstiller appens navigasjonsstakk. Tilbake er en egen knapp når historikk finnes. Den ekstra Seeker-raden er fjernet. Ikke testkjørt.
 
 - Nettsteder kan legges til og fjernes fra telefonens hjemskjerm via nettleseren. Ikonene åpner nettstedets hjemmeside og følger gjeldende tilgang/status. Snarveier lagres som nettsteds-ID-er i `browser.shortcuts`; eldre lagringer får tom liste, og Start over fjerner dem. Dette er snarveier, ikke nye apper eller tjenester. Ingen tester kjørt.
+
+## Connect, venner og Calderpedia — 27. november
+
+- Connect viser tilgjengelige offentlige innlegg i eksisterende feedrekkefølge, med bilder og Show more. Ingen sortering etter etterforskningsrelevans.
+- Friends er spillerens egen kontoliste på tvers av apper, uten forespørsler, tillitseffekter eller skjulte identitetskoblinger. Legg til/fjern via kontoens kontekstmeny eller profil; listen nås fra Connect og Messages. Gamle lagringer får tom liste; Start over nullstiller den.
+- Calderpedia har lys bakgrunn, formaterte overskrifter også på forsiden og lesbare artikkellenker i stedet for rå URL-er med understreker. Seks nye allmenne artikler om regnbuer, skuddår, sekskanter, månelys, skygger og papirbretting ligger i delt universinnhold, uten saksstøtte eller markering i grensesnittet.
+- Ingen tester, validator, simulator eller mobilkontroll kjørt etter brukerens instruks.

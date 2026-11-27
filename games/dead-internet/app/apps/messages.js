@@ -170,7 +170,7 @@ export function messagesApp(phone) {
         const save = ref ? h("button.icon-btn", { "aria-label": "Save as evidence", onclick: () => phone.saveEvidence(ref) }, icon(phone.isSaved(ref) ? "bookmarked" : "bookmark")) : null;
         return [bar("Attachment", save), h("div.scroll", page(desc))];
       }
-      return [bar(phone.str("apps.messages")), h("div.scroll", list())];
+      return [bar(phone.str("apps.messages")), h("button.btn", { onclick: () => phone.push("connect", { kind: "home", tab: "friends" }) }, "Friends"), h("div.scroll", list())];
     },
   };
 }
