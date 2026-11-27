@@ -66,3 +66,8 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 - Ingen tester eller mobilkontroll kjørt, etter instruks.
 
 - Hjelpen har en kort oversikt over internettjenestene, med kjente sammenligninger og skillet mellom Archive, bokmerker og Casebook. Nettleseren har en fast «Seeker home»-knapp på alle skjermene; den åpner søkehjemmet og beholder tilbakehistorikken. Ikke testkjørt.
+
+## Full nullstilling ved Start over
+
+- Start over sletter verdens lagring og alle separate nylig-besøkt-historikker for samme verden, også fra eldre gjennomspillinger. Tips nullstilles, og automatisk lagring stoppes under omstarten. Andre spill og eksporterte filer berøres ikke.
+- Nytt spill bygger standardtilstand på nytt: ingen opptjent kunnskap, meldingshistorikk, Casebook, bokmerker eller søk. Forfatterdefinert startinnhold beholdes. Ingen tester kjørt.

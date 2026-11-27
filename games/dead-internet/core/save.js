@@ -140,4 +140,15 @@ export function loadFrom(storage, w) {
   return deserialize(w, raw);
 }
 
-export function clearSave(storage, w) { storage.removeItem(saveKey(w)); }
+/** Erase this world's save and all of its per-run browsing history. */
+export function clearSave(storage, w) {
+  storage.removeItem(saveKey(w));
+  const prefix = `ba_deadinternet_recent_${w.meta.id}_`;
+  // Collect first: removing a key shifts the remaining Storage indices.
+  const keys = [];
+  for (let i = 0; i < (storage.length ?? 0); i++) {
+    const key = storage.key(i);
+    if (key?.startsWith(prefix)) keys.push(key);
+  }
+  for (const key of keys) storage.removeItem(key);
+}
