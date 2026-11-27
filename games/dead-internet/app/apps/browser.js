@@ -331,10 +331,7 @@ export function browserApp(phone) {
     root: () => ({ kind: "home" }),
     title: titleOf,
     render(desc, canBack) {
-      return [addressBar(desc),
-        h("div.browser-home-row", h("button.bar-link", { type: "button", "aria-label": "Seeker home", style: { minHeight: "44px", padding: "0 12px" },
-          onclick: () => { if (desc.kind !== "home") phone.push("browser", { kind: "home" }); } }, "⌂ Seeker home")),
-        h("div.scroll", { style: { zoom: String(textScale(g.s)) } }, bodyOf(desc))];
+      return [addressBar(desc), h("div.scroll", { style: { zoom: String(textScale(g.s)) } }, bodyOf(desc))];
     },
   };
 }

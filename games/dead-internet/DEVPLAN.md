@@ -71,3 +71,5 @@ Oppdatert etter Anders sin instruks 26. november 2026: **Ingen tester skal kjør
 
 - Start over sletter verdens lagring og alle separate nylig-besøkt-historikker for samme verden, også fra eldre gjennomspillinger. Tips nullstilles, og automatisk lagring stoppes under omstarten. Andre spill og eksporterte filer berøres ikke.
 - Nytt spill bygger standardtilstand på nytt: ingen opptjent kunnskap, meldingshistorikk, Casebook, bokmerker eller søk. Forfatterdefinert startinnhold beholdes. Ingen tester kjørt.
+
+- Navigasjon: Home nederst går til telefonens hjemskjerm. Home øverst til venstre går alltid til aktiv apps startside (Seeker i Browser) og nullstiller appens navigasjonsstakk. Tilbake er en egen knapp når historikk finnes. Den ekstra Seeker-raden er fjernet. Ikke testkjørt.
