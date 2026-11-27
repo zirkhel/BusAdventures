@@ -108,6 +108,7 @@ export function deserialize(w, text) {
     for (const x of s[k] || []) x.cases = (Array.isArray(x.cases) ? x.cases : []).filter(id => w.mysteries.has(id));
   for (const [k, ok] of [["follows", id => w.accounts.has(id)], ["likes", id => w.artifacts.has(id)], ["notInterested", id => w.artifacts.has(id)]])
     for (const id of Object.keys(s.media[k])) if (!ok(id)) { delete s.media[k][id]; drop(k, id); }
+  s.friends = [...new Set((Array.isArray(s.friends) ? s.friends : []).filter(id => w.accounts.has(id)))];
   for (const id of Object.keys(s.trust)) if (!w.characters.has(id)) delete s.trust[id];
   for (const c of w.characters.values()) if (!(c.id in s.trust)) s.trust[c.id] = c.trust?.start ?? 0;
   if (s.browser && Array.isArray(s.browser.bookmarks)) {

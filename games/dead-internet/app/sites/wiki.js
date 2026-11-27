@@ -34,8 +34,6 @@ export function renderWiki(phone, o) {
     main = [h("div.page-body", blocks.map(b => renderBlock(phone, b, used))), ...leftoverImages(phone, used)];
   } else if (page === "talk") {
     main = [h("div.page-body", blocks.map(b => renderBlock(phone, b, used))), ...leftoverImages(phone, used)];
-  } else if (page === "main" || page === "home") {
-    main = [h("div.page-body", blocks.map(b => renderBlock(phone, b, used))), ...leftoverImages(phone, used)];
   } else {
     const text = (v.body || blocks.filter(b => b.t === "text").map(b => b.text || b.body || "").join("\n\n") || "");
     const parsed = parseWiki(text);
@@ -46,7 +44,7 @@ export function renderWiki(phone, o) {
       toc,
       ...other,
       h("div.page-body.wiki-body", bodyNodes),
-      parsed.refs.length ? h("section.wiki-refs", h("h2", "References"), parsed.refs.map((r, i) => h("div.wiki-ref", h("b", `[${i + 1}] `), phone.ctx.text(r)))) : null,
+      parsed.refs.length ? h("section.wiki-refs", h("h2", "References"), parsed.refs.map((r, i) => h("div.wiki-ref", h("b", `[${i + 1}] `), wikiText(phone, r)))) : null,
       ...leftoverImages(phone, used),
     ];
   }
@@ -142,5 +140,16 @@ function wikiToc(headings) {
 
 function wikiPara(phone, text) {
   const lines = String(text).split("\n");
-  return h("p.p", lines.map((l, i) => [phone.ctx.text(l), i < lines.length - 1 ? h("br") : null]));
+  return h("p.p", lines.map((l, i) => [wikiText(phone, l), i < lines.length - 1 ? h("br") : null]));
+}
+
+// Keep the authored URL as the destination, but show an encyclopedia-style title.
+function wikiText(phone, text) {
+  return String(text).split(/(calderpedia\.org\/[^\s,()]+)/g).map(part => {
+    if (!part.startsWith("calderpedia.org/")) return phone.ctx.text(part);
+    const url = part.replace(/[.;]+$/, "");
+    const suffix = part.slice(url.length);
+    const label = decodeURIComponent(url.slice("calderpedia.org/".length)).replaceAll("_", " ");
+    return [h("a.wiki-article-link", { href: `https://${url}`, onclick: e => { e.preventDefault(); e.stopPropagation(); phone.browse(url); } }, label), suffix];
+  });
 }

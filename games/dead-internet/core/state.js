@@ -49,6 +49,8 @@ export function createState(w, opts = {}) {
     saved: {},
     /** queries typed, in order */
     searches: [],
+    /** Player-selected accounts; no inferred identity links or contact permissions. */
+    friends: [],
     /** all direct messages, both directions */
     messages: [],
     /** effects scheduled for a later day: { day, effects, source } */

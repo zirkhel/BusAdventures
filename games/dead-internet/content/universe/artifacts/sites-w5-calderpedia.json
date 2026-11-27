@@ -15,7 +15,7 @@
    {
     "id": "v1",
     "cached": true,
-    "body": "Welcome to Calderpedia, the free encyclopaedia of Port Calder and the towns around the creek.\n\nThis project has been running on the same software since 2014. Anyone with a login may edit, and the habit of the place is to prefer a quiet citation over a loud opinion.\n\n== Featured ==\ncalderpedia.org/Port_Calder — the city itself.\ncalderpedia.org/Calder_Mill — the old girl on the Eastfield waterfront.\ncalderpedia.org/Harbor_Festival — music, chowder, and a long evening on the pier.\n\n== Places ==\ncalderpedia.org/Eastfield, calderpedia.org/Northpoint, calderpedia.org/Old_Town, calderpedia.org/The_Heights, calderpedia.org/Calder_Creek, calderpedia.org/Port_Calder_lighthouse, calderpedia.org/Eastfield–Northpoint_ferry, calderpedia.org/Dock_Road, calderpedia.org/Route_14\n\n== Institutions ==\ncalderpedia.org/The_Daily_Record, calderpedia.org/Saltys_Fish_Bar, calderpedia.org/Calder_Credit_Union, calderpedia.org/City_Council, calderpedia.org/Denise_Harlan, calderpedia.org/Kestrel_Logistics, calderpedia.org/Northgate_Development, calderpedia.org/Port_Calder_Public_Library, calderpedia.org/Port_Calder_High_School\n\n== Other articles ==\ncalderpedia.org/Chowder_competitions, calderpedia.org/Fog, calderpedia.org/Dead_internet_theory, calderpedia.org/Harbor_Festival\n\nUse Random article in the menu, or start from the city page."
+    "body": "Welcome to Calderpedia, the free encyclopaedia of Port Calder and the towns around the creek.\n\nThis project has been running on the same software since 2014. Anyone with a login may edit, and the habit of the place is to prefer a quiet citation over a loud opinion.\n\n== Featured ==\ncalderpedia.org/Port_Calder — the city itself.\ncalderpedia.org/Calder_Mill — the old girl on the Eastfield waterfront.\ncalderpedia.org/Harbor_Festival — music, chowder, and a long evening on the pier.\n\n== Places ==\ncalderpedia.org/Eastfield, calderpedia.org/Northpoint, calderpedia.org/Old_Town, calderpedia.org/The_Heights, calderpedia.org/Calder_Creek, calderpedia.org/Port_Calder_lighthouse, calderpedia.org/Eastfield–Northpoint_ferry, calderpedia.org/Dock_Road, calderpedia.org/Route_14\n\n== Institutions ==\ncalderpedia.org/The_Daily_Record, calderpedia.org/Saltys_Fish_Bar, calderpedia.org/Calder_Credit_Union, calderpedia.org/City_Council, calderpedia.org/Denise_Harlan, calderpedia.org/Kestrel_Logistics, calderpedia.org/Northgate_Development, calderpedia.org/Port_Calder_Public_Library, calderpedia.org/Port_Calder_High_School\n\n== Other articles ==\ncalderpedia.org/Chowder_competitions, calderpedia.org/Fog, calderpedia.org/Dead_internet_theory, calderpedia.org/Harbor_Festival\n\n== Science and everyday life ==\ncalderpedia.org/Rainbows\ncalderpedia.org/Leap_years\ncalderpedia.org/Hexagons\ncalderpedia.org/Moonlight\ncalderpedia.org/Shadows\ncalderpedia.org/Paper_folding\n\nUse Random article in the menu, or start from the city page."
    }
   ],
   "mentions": [
@@ -720,5 +720,125 @@
     "body": "This is a general article. It is not a place to settle an argument about a particular account, firm, or neighbourhood blog. If you have a source that defines the phrase, add it. If you have a grievance, this is the wrong page.\n"
    }
   ]
- }
+ },
+{
+  "id": "W-calderpedia-facts-rainbows",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Rainbows",
+  "date": "2026-01-20",
+  "title": "Rainbows — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+    {
+      "id": "v1",
+      "cached": true,
+      "body": "Rainbows form when sunlight is refracted and reflected inside water droplets. The different colours leave the droplets at different angles.\n\n== A moving view ==\nA rainbow is not a solid object at a particular place. Its apparent position depends on where the observer stands, which is why walking towards it does not lead to a pot of gold.\n\n== Looking for one ==\nLook away from the sun towards rain or spray. The sun needs to be behind you."
+    }
+  ]
+},
+{
+  "id": "W-calderpedia-facts-leap_years",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Leap_years",
+  "date": "2026-01-20",
+  "title": "Leap years — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+    {
+      "id": "v1",
+      "cached": true,
+      "body": "A leap year adds a day to the calendar to help keep it aligned with the seasons. In the Gregorian calendar, the extra day is February 29.\n\n== The rule ==\nYears divisible by four are leap years, except century years that are not divisible by 400. The year 2000 was a leap year; 1900 was not.\n\n== Why add a day? ==\nThe time Earth takes to orbit the Sun is not an exact number of days. A calendar of only 365-day years would gradually drift through the seasons."
+    }
+  ]
+},
+{
+  "id": "W-calderpedia-facts-hexagons",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Hexagons",
+  "date": "2026-01-20",
+  "title": "Hexagons — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+    {
+      "id": "v1",
+      "cached": true,
+      "body": "A regular hexagon has six equal sides and six equal angles. Each interior angle is 120 degrees.\n\n== No gaps ==\nThree regular hexagons fit around a point without leaving a gap. Repeating them makes a tiling, like the pattern often seen in honeycomb.\n\n== Familiar patterns ==\nHexagonal grids also appear in board games and floor tiles. Not every six-sided shape is a regular hexagon."
+    }
+  ]
+},
+{
+  "id": "W-calderpedia-facts-moonlight",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Moonlight",
+  "date": "2026-01-20",
+  "title": "Moonlight — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+    {
+      "id": "v1",
+      "cached": true,
+      "body": "Moonlight is sunlight reflected by the Moon. The Moon does not produce the visible light that makes it shine in the night sky.\n\n== Phases ==\nAs the Moon orbits Earth, we see different portions of its sunlit half. These changing views produce the familiar phases.\n\n== Not an eclipse ==\nOrdinary lunar phases are not caused by Earth casting a shadow on the Moon. That happens during a lunar eclipse."
+    }
+  ]
+},
+{
+  "id": "W-calderpedia-facts-shadows",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Shadows",
+  "date": "2026-01-20",
+  "title": "Shadows — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+    {
+      "id": "v1",
+      "cached": true,
+      "body": "A shadow forms where an object blocks light. Its shape depends on the object, the light source and the surface receiving the shadow.\n\n== Changing length ==\nWith the Sun low in the sky, upright objects cast long shadows on level ground. When the Sun is higher, those shadows become shorter.\n\n== Soft edges ==\nA large light source can produce a fuzzy shadow edge because some of the source remains visible around the object."
+    }
+  ]
+},
+{
+  "id": "W-calderpedia-facts-paper_folding",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Paper_folding",
+  "date": "2026-01-20",
+  "title": "Paper folding — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "full",
+  "versions": [
+    {
+      "id": "v1",
+      "cached": true,
+      "body": "Folding a sheet in half doubles the number of layers. Repeating the process makes the folded stack thicker surprisingly quickly.\n\n== Doubling ==\nOne fold gives two layers, two folds give four, and three give eight. After ten ideal folds there would be 1,024 layers.\n\n== The practical limit ==\nReal paper has thickness and stiffness. As the stack grows, bending it becomes harder and the remaining width shrinks. The arithmetic alone does not say how many folds a particular sheet will allow."
+    }
+  ]
+}
 ]
