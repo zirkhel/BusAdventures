@@ -15,7 +15,7 @@
    {
     "id": "v1",
     "cached": true,
-    "body": "Welcome to Calderpedia, the free encyclopaedia of Port Calder and the towns around the creek.\n\nThis project has been running on the same software since 2014. Anyone with a login may edit, and the habit of the place is to prefer a quiet citation over a loud opinion.\n\n== Featured ==\ncalderpedia.org/Port_Calder — the city itself.\ncalderpedia.org/Calder_Mill — the old girl on the Eastfield waterfront.\ncalderpedia.org/Harbor_Festival — music, chowder, and a long evening on the pier.\n\n== Places ==\ncalderpedia.org/Eastfield, calderpedia.org/Northpoint, calderpedia.org/Old_Town, calderpedia.org/The_Heights, calderpedia.org/Calder_Creek, calderpedia.org/Port_Calder_lighthouse, calderpedia.org/Eastfield–Northpoint_ferry, calderpedia.org/Dock_Road, calderpedia.org/Route_14\n\n== Institutions ==\ncalderpedia.org/The_Daily_Record, calderpedia.org/Saltys_Fish_Bar, calderpedia.org/Calder_Credit_Union, calderpedia.org/City_Council, calderpedia.org/Denise_Harlan, calderpedia.org/Kestrel_Logistics, calderpedia.org/Northgate_Development, calderpedia.org/Port_Calder_Public_Library, calderpedia.org/Port_Calder_High_School\n\n== Other articles ==\ncalderpedia.org/Chowder_competitions, calderpedia.org/Fog, calderpedia.org/Dead_internet_theory, calderpedia.org/Harbor_Festival\n\n== Science and everyday life ==\ncalderpedia.org/Rainbows\ncalderpedia.org/Leap_years\ncalderpedia.org/Hexagons\ncalderpedia.org/Moonlight\ncalderpedia.org/Shadows\ncalderpedia.org/Paper_folding\n\nUse Random article in the menu, or start from the city page."
+    "body": "Welcome to Calderpedia, the free encyclopaedia of Port Calder and the towns around the creek.\n\nThis project has been running on the same software since 2014. Anyone with a login may edit, and the habit of the place is to prefer a quiet citation over a loud opinion.\n\n== Featured ==\ncalderpedia.org/Port_Calder — the city itself.\ncalderpedia.org/Calder_Mill — the old girl on the Eastfield waterfront.\ncalderpedia.org/Harbor_Festival — music, chowder, and a long evening on the pier.\n\n== Places ==\ncalderpedia.org/Eastfield, calderpedia.org/Northpoint, calderpedia.org/Old_Town, calderpedia.org/The_Heights, calderpedia.org/Calder_Creek, calderpedia.org/Port_Calder_lighthouse, calderpedia.org/Eastfield–Northpoint_ferry, calderpedia.org/Dock_Road, calderpedia.org/Route_14\n\n== Institutions ==\ncalderpedia.org/The_Daily_Record, calderpedia.org/Saltys_Fish_Bar, calderpedia.org/Calder_Credit_Union, calderpedia.org/City_Council, calderpedia.org/Denise_Harlan, calderpedia.org/Ana_Ruiz, calderpedia.org/Kestrel_Logistics, calderpedia.org/Northgate_Development, calderpedia.org/Brightline_Media, calderpedia.org/Port_Calder_Public_Library, calderpedia.org/Port_Calder_High_School\n\n== People ==\ncalderpedia.org/Mara_Quinn\n\n== Other articles ==\ncalderpedia.org/Eastfield_Waterfront, calderpedia.org/Chowder_competitions, calderpedia.org/Fog, calderpedia.org/Dead_internet_theory, calderpedia.org/Harbor_Festival\n\n== Science and everyday life ==\ncalderpedia.org/Rainbows\ncalderpedia.org/Leap_years\ncalderpedia.org/Hexagons\ncalderpedia.org/Moonlight\ncalderpedia.org/Shadows\ncalderpedia.org/Paper_folding\n\nUse Random article in the menu, or start from the city page."
    }
   ],
   "mentions": [
@@ -436,7 +436,7 @@
    {
     "id": "v1",
     "cached": true,
-    "body": "Northgate Development is a Port Calder property company. It plans and builds housing in the city.\n\n== Work ==\nCompleted projects include Foundry Lofts (Old Town, 2017), Heights Commons (the Heights, 2020) and Northpoint Landing (2023). A further scheme, Eastfield Waterfront, has been proposed for the Calder Mill site. Details of that proposal belong on the mill page and on the company's own site.\n\n== References ==\n[1] northgatedev.com/projects\n[2] calderpedia.org/Calder_Mill\n"
+    "body": "Northgate Development is a Port Calder property company. It plans and builds housing in the city.\n\n== Work ==\nCompleted projects include Foundry Lofts (Old Town, 2017), Heights Commons (the Heights, 2020) and Northpoint Landing (2023). A further scheme, Eastfield Waterfront, has been proposed for the Calder Mill site. See calderpedia.org/Eastfield_Waterfront.\n\n== People ==\nGerald Whitcombe is chief executive. Paul Navarro is vice president for communications and handles press enquiries.\n\n== References ==\n[1] northgatedev.com/projects\n[2] northgatedev.com/about/leadership\n[3] calderpedia.org/Calder_Mill\n"
    }
   ],
   "mentions": [
@@ -445,7 +445,9 @@
    "waterfront",
    "foundry_lofts",
    "heights_commons",
-   "northpoint_landing"
+   "northpoint_landing",
+   "gerald",
+   "paul"
   ]
  },
  {
@@ -559,6 +561,109 @@
   "mentions": [
    "port_calder_high",
    "joan_ames"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0033",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Brightline_Media",
+  "date": "2026-01-24",
+  "title": "Brightline Media — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Brightline Media is a marketing agency in Port Calder. It describes its work as \"audience continuity and community engagement\".\n\n== Services ==\nThe company's own site lists three services: Community Voices, Legacy Presence and Sentiment Programs. It publishes case studies without client names, saying that every organisation on its work page asked not to be identified.\n\n== People ==\nCalvin Marsh is listed as founder and chief executive, and Renee Okafor as head of operations.\n\n== Offices ==\nSuite 400, 18 Harbor Street, Port Calder.\n\nThis article is a stub. Most of what is known comes from the company's own pages.\n\n== References ==\n[1] Company site, brightlinemedia.co\n[2] brightlinemedia.co/team\n[3] brightlinemedia.co/work\n"
+   }
+  ],
+  "mentions": [
+   "brightline",
+   "calvin",
+   "renee"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0034",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Mara_Quinn",
+  "date": "2025-09-14",
+  "title": "Mara Quinn — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Mara Quinn (1991 – 2 July 2025) was a librarian and neighbourhood writer in Eastfield, Port Calder.\n\n== Life ==\nQuinn worked at the Eastfield branch of the Port Calder Public Library. She wrote the neighbourhood blog Eastfield Notes.\n\n== Save the Mill ==\nIn 2024 Quinn led the Save the Mill campaign against the proposed Eastfield Waterfront rezoning. The campaign gathered 4,100 signatures. In September 2024 organizers delivered the petition to City Hall in a wheelbarrow. Quinn told reporters: \"She's an old girl, but she's ours.\"\n\n== Death ==\nQuinn died on 2 July 2025, aged 34, after a collision with a delivery van at the Route 9 and Harbor Street intersection. She was survived by her brother.\n\n== See also ==\ncalderpedia.org/Calder_Mill\ncalderpedia.org/Eastfield_Waterfront\n\n== References ==\n[1] The Daily Record, obituary, 4 July 2025\n[2] The Daily Record, \"Petition\", 2 September 2024\n[3] Eastfield Notes, eastfieldnotes.blog\n"
+   }
+  ],
+  "mentions": [
+   "mara",
+   "eastfield",
+   "calder_mill",
+   "waterfront"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0035",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Eastfield_Waterfront",
+  "date": "2026-03-02",
+  "title": "Eastfield Waterfront — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Eastfield Waterfront is a proposed housing development on the former Calder Mill site in Eastfield. The developer is Northgate Development.\n\n== Proposal ==\nNorthgate presented plans for four towers on the mill site in March 2024. The company's current description is 1,200 new homes, 30% of them below market rate, with the restored Calder Mill sign in the lobby.\n\n== Opposition ==\nThe Save the Mill campaign (2024–2025) opposed the rezoning and gathered 4,100 signatures. It asked for a library, a market hall and the mill instead of towers.\n\n== Council ==\nThe rezoning is Ordinance 26-031. The city calendar lists it for the full council on 16 March 2026.\n\n== References ==\n[1] northgatedev.com/waterfront\n[2] The Daily Record, 14 March 2024\n[3] portcalder.gov/council/ordinances\n[4] calderpedia.org/Calder_Mill\n"
+   }
+  ],
+  "mentions": [
+   "waterfront",
+   "northgate",
+   "calder_mill",
+   "city_council",
+   "eastfield"
+  ]
+ },
+ {
+  "id": "W-calderpedia-0036",
+  "site": "calderpedia",
+  "page": "article",
+  "type": "page",
+  "platform": "calderpedia",
+  "url": "calderpedia.org/Ana_Ruiz",
+  "date": "2026-02-02",
+  "title": "Ana Ruiz — Calderpedia",
+  "filler": true,
+  "source": "calderpedia",
+  "index": "weak",
+  "versions": [
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Ana Ruiz is a member of the Port Calder City Council. She represents Eastfield.\n\n== Office ==\nEastfield has two council seats. The other is held by Farid Rahman. Councilmember pages are kept on the city portal.\n\nThis article is a stub.\n\n== References ==\n[1] City of Port Calder, council roster, portcalder.gov/council\n[2] portcalder.gov/council/ana-ruiz\n"
+   }
+  ],
+  "mentions": [
+   "ana",
+   "city_council",
+   "eastfield"
   ]
  },
  {
@@ -721,7 +826,7 @@
    }
   ]
  },
-{
+ {
   "id": "W-calderpedia-facts-rainbows",
   "site": "calderpedia",
   "page": "article",
@@ -734,14 +839,14 @@
   "source": "calderpedia",
   "index": "full",
   "versions": [
-    {
-      "id": "v1",
-      "cached": true,
-      "body": "Rainbows form when sunlight is refracted and reflected inside water droplets. The different colours leave the droplets at different angles.\n\n== A moving view ==\nA rainbow is not a solid object at a particular place. Its apparent position depends on where the observer stands, which is why walking towards it does not lead to a pot of gold.\n\n== Looking for one ==\nLook away from the sun towards rain or spray. The sun needs to be behind you."
-    }
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Rainbows form when sunlight is refracted and reflected inside water droplets. The different colours leave the droplets at different angles.\n\n== A moving view ==\nA rainbow is not a solid object at a particular place. Its apparent position depends on where the observer stands, which is why walking towards it does not lead to a pot of gold.\n\n== Looking for one ==\nLook away from the sun towards rain or spray. The sun needs to be behind you."
+   }
   ]
-},
-{
+ },
+ {
   "id": "W-calderpedia-facts-leap_years",
   "site": "calderpedia",
   "page": "article",
@@ -754,14 +859,14 @@
   "source": "calderpedia",
   "index": "full",
   "versions": [
-    {
-      "id": "v1",
-      "cached": true,
-      "body": "A leap year adds a day to the calendar to help keep it aligned with the seasons. In the Gregorian calendar, the extra day is February 29.\n\n== The rule ==\nYears divisible by four are leap years, except century years that are not divisible by 400. The year 2000 was a leap year; 1900 was not.\n\n== Why add a day? ==\nThe time Earth takes to orbit the Sun is not an exact number of days. A calendar of only 365-day years would gradually drift through the seasons."
-    }
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A leap year adds a day to the calendar to help keep it aligned with the seasons. In the Gregorian calendar, the extra day is February 29.\n\n== The rule ==\nYears divisible by four are leap years, except century years that are not divisible by 400. The year 2000 was a leap year; 1900 was not.\n\n== Why add a day? ==\nThe time Earth takes to orbit the Sun is not an exact number of days. A calendar of only 365-day years would gradually drift through the seasons."
+   }
   ]
-},
-{
+ },
+ {
   "id": "W-calderpedia-facts-hexagons",
   "site": "calderpedia",
   "page": "article",
@@ -774,14 +879,14 @@
   "source": "calderpedia",
   "index": "full",
   "versions": [
-    {
-      "id": "v1",
-      "cached": true,
-      "body": "A regular hexagon has six equal sides and six equal angles. Each interior angle is 120 degrees.\n\n== No gaps ==\nThree regular hexagons fit around a point without leaving a gap. Repeating them makes a tiling, like the pattern often seen in honeycomb.\n\n== Familiar patterns ==\nHexagonal grids also appear in board games and floor tiles. Not every six-sided shape is a regular hexagon."
-    }
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A regular hexagon has six equal sides and six equal angles. Each interior angle is 120 degrees.\n\n== No gaps ==\nThree regular hexagons fit around a point without leaving a gap. Repeating them makes a tiling, like the pattern often seen in honeycomb.\n\n== Familiar patterns ==\nHexagonal grids also appear in board games and floor tiles. Not every six-sided shape is a regular hexagon."
+   }
   ]
-},
-{
+ },
+ {
   "id": "W-calderpedia-facts-moonlight",
   "site": "calderpedia",
   "page": "article",
@@ -794,14 +899,14 @@
   "source": "calderpedia",
   "index": "full",
   "versions": [
-    {
-      "id": "v1",
-      "cached": true,
-      "body": "Moonlight is sunlight reflected by the Moon. The Moon does not produce the visible light that makes it shine in the night sky.\n\n== Phases ==\nAs the Moon orbits Earth, we see different portions of its sunlit half. These changing views produce the familiar phases.\n\n== Not an eclipse ==\nOrdinary lunar phases are not caused by Earth casting a shadow on the Moon. That happens during a lunar eclipse."
-    }
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Moonlight is sunlight reflected by the Moon. The Moon does not produce the visible light that makes it shine in the night sky.\n\n== Phases ==\nAs the Moon orbits Earth, we see different portions of its sunlit half. These changing views produce the familiar phases.\n\n== Not an eclipse ==\nOrdinary lunar phases are not caused by Earth casting a shadow on the Moon. That happens during a lunar eclipse."
+   }
   ]
-},
-{
+ },
+ {
   "id": "W-calderpedia-facts-shadows",
   "site": "calderpedia",
   "page": "article",
@@ -814,14 +919,14 @@
   "source": "calderpedia",
   "index": "full",
   "versions": [
-    {
-      "id": "v1",
-      "cached": true,
-      "body": "A shadow forms where an object blocks light. Its shape depends on the object, the light source and the surface receiving the shadow.\n\n== Changing length ==\nWith the Sun low in the sky, upright objects cast long shadows on level ground. When the Sun is higher, those shadows become shorter.\n\n== Soft edges ==\nA large light source can produce a fuzzy shadow edge because some of the source remains visible around the object."
-    }
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "A shadow forms where an object blocks light. Its shape depends on the object, the light source and the surface receiving the shadow.\n\n== Changing length ==\nWith the Sun low in the sky, upright objects cast long shadows on level ground. When the Sun is higher, those shadows become shorter.\n\n== Soft edges ==\nA large light source can produce a fuzzy shadow edge because some of the source remains visible around the object."
+   }
   ]
-},
-{
+ },
+ {
   "id": "W-calderpedia-facts-paper_folding",
   "site": "calderpedia",
   "page": "article",
@@ -834,11 +939,11 @@
   "source": "calderpedia",
   "index": "full",
   "versions": [
-    {
-      "id": "v1",
-      "cached": true,
-      "body": "Folding a sheet in half doubles the number of layers. Repeating the process makes the folded stack thicker surprisingly quickly.\n\n== Doubling ==\nOne fold gives two layers, two folds give four, and three give eight. After ten ideal folds there would be 1,024 layers.\n\n== The practical limit ==\nReal paper has thickness and stiffness. As the stack grows, bending it becomes harder and the remaining width shrinks. The arithmetic alone does not say how many folds a particular sheet will allow."
-    }
+   {
+    "id": "v1",
+    "cached": true,
+    "body": "Folding a sheet in half doubles the number of layers. Repeating the process makes the folded stack thicker surprisingly quickly.\n\n== Doubling ==\nOne fold gives two layers, two folds give four, and three give eight. After ten ideal folds there would be 1,024 layers.\n\n== The practical limit ==\nReal paper has thickness and stiffness. As the stack grows, bending it becomes harder and the remaining width shrinks. The arithmetic alone does not say how many folds a particular sheet will allow."
+   }
   ]
-}
+ }
 ]
